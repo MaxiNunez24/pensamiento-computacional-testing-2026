@@ -1,0 +1,16 @@
+site_name: Pensamiento Computacional y Testing de Aplicaciones 2026
+nav:
+  - Home: index.md
+  - About: about.md
+  - ¿Qué es una PC?: arquitectura/que_es_una_pc.md
+theme:
+  name: material
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
