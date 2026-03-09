@@ -1,8 +1,6 @@
 site_name: Pensamiento Computacional y Testing de Aplicaciones 2026
-nav:
-  - Home: index.md
-  - About: about.md
-  - ¿Qué es una PC?: arquitectura/que_es_una_pc.md
+site_author: Maximiliano Nuñez
+
 theme:
   name: material
   palette:
@@ -14,3 +12,10 @@ theme:
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
+
+nav:
+  - Inicio: index.md
+  - Cronograma del curso: cronograma.md
+  - Clases:
+      - Clase 1 - ¿Qué es una computadora?: clases/clase1.md
+      - Clase 2 - Sistema binario: clases/clase2.md
