@@ -2,8 +2,8 @@
 
 Contamos con aproximadamente 72 clases de 3:20hs, por lo que tenemos más de 200 horas para aprender a programar con buenas prácticas y poder desarrollar proyectos reales.
 
-| Semana | Miércoles | Viernes | Práctica |
-|------  |------     |------   |------    |
+|Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
+|------|------                                   |------                                                 |------                                   |
 | 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | Clase 2 | Ejercicio: identificar partes de una PC |
 | 16/3 | CPU, RAM y almacenamiento | Código binario | Conversión binario–decimal |
 | 23/3 | Compuertas lógicas | Algoritmos | Resolver problemas cotidianos |

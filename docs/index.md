@@ -88,6 +88,20 @@ Durante el curso construiremos:
 
 ---
 
+## 🤓​ Nerdearla 2026
+Del 22 al 26 de septiembre se va a realizar el evento tech gratuito más grande de hispanoamérica: **[Nerdearla 2026](https://nerdearla.com/)**.
+Y están todos invitados a participar! 
+
+La idea es que para ese entonces ya estemos capacitados para aprovechar al máximo las charlas y talleres que se van a dar, y que podamos compartir lo aprendido con la comunidad.
+
+Además de tener varios proyectos para presentar, un perfil en LinkedIn y un portfolio armado en GitHub, lo que va a ser un gran plus para conseguir trabajo. Ya que al evento asisten muchas empresas buscando talento.
+
+Organizaremos una visita grupal al evento, para que podamos asistir juntos y aprovechar la experiencia al máximo!
+
+(Es opcional ir al evento y más aún ir en busca de trabajo, pero es una gran oportunidad a tener en cuenta)
+
+---
+
 ## 👨‍💻 Profesor
 
 Maximiliano Nuñez
