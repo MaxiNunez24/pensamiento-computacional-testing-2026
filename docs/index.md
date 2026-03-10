@@ -10,6 +10,19 @@ Bienvenidos al curso donde aprenderemos a pensar como programadores y construir 
 - **Miércoles**: 13:20 a 16:40
 - **Viernes**: 14:00 a 17:20
 
+--- 
+
+## 🤔​ ¿Necesito saber algo antes?
+
+No!
+Este curso está pensado **desde cero absoluto**.
+
+Solo necesitás:
+
+- Curiosidad
+- Ganas de aprender
+- Practicar mucho 💪
+
 ---
 
 ## 🚀 Qué vas a aprender
@@ -21,6 +34,24 @@ Bienvenidos al curso donde aprenderemos a pensar como programadores y construir 
 - Control de versiones con Git
 - Desarrollo de proyectos reales
 - Introducción a Inteligencia Artificial
+
+---
+
+## 🧠 Filosofía del curso
+
+La programación se aprende programando.
+
+Vamos a:
+
+✔️ Probar
+
+✔️ Equivocarnos
+
+✔️ Corregir
+
+✔️ Mejorar
+
+Y repetir el proceso muchas veces.
 
 ---
 
@@ -36,25 +67,18 @@ Bienvenidos al curso donde aprenderemos a pensar como programadores y construir 
 
 ---
 
-## 💻 Instalación
+## ​📖 Material del curso
 
-Las herramientas que vamos a utilizar en el curso son:
+Podés navegar el contenido usando el menú de la izquierda:
 
-- Python
-- Visual Studio Code
-- Git
+🏠​ Inicio
 
----
+📅 Cronograma del curso
 
-## 🧠 Repositorios del curso
-
-- Ejercicios
-- Proyectos
-- Ejemplos
+📚 Clases
 
 ---
-
-## 🎯 Proyecto final
+## 🎯 Proyectos propuestos
 
 Durante el curso construiremos:
 
@@ -66,6 +90,10 @@ Durante el curso construiremos:
 
 ## 👨‍💻 Profesor
 
-Maxi Núñez  
-Licenciatura en Informática — UNLP  
-Instructor CFP 401
+Maximiliano Nuñez
+
+- Técnico en Informática Profesional y Personal - EEST N°2
+
+- Estudiante de Licenciatura en Informática — UNLP
+
+- Instructor CFP 401 "Laura Vicuña"

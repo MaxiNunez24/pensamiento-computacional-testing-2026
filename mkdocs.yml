@@ -3,6 +3,8 @@ site_author: Maximiliano Nuñez
 
 theme:
   name: material
+  favicon: assets/images/favicon.ico
+  logo: assets/images/favicon.ico
   palette:
     - scheme: default
       toggle:
@@ -14,8 +16,6 @@ theme:
         name: Switch to light mode
 
 nav:
-  - Inicio: index.md
-  - Cronograma del curso: cronograma.md
-  - Clases:
-      - Clase 1 - ¿Qué es una computadora?: clases/clase1.md
-      - Clase 2 - Sistema binario: clases/clase2.md
+  - 🏠​ Inicio: index.md
+  - 📅 Cronograma del curso: cronograma.md
+  - 📚 Clases: clases/clases.md
