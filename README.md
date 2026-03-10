@@ -66,18 +66,6 @@ Y repetir el proceso muchas veces.
 7. Proyecto de inteligencia artificial
 
 ---
-
-## ​📖 Material del curso
-
-Podés navegar el contenido usando el menú de la izquierda:
-
-🏠​ Inicio
-
-📅 Cronograma del curso
-
-📚 Clases
-
----
 ## 🎯 Proyectos propuestos
 
 Durante el curso construiremos:
