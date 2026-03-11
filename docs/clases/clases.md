@@ -10,9 +10,9 @@
 
 Antes de empezar a programar necesitamos instalar algunas herramientas.
 
-- [Instalar Python](instalacion/instalar_python.md)
-- [Instalar Git](instalacion/instalar_git.md)
-- [Instalar VS Code](instalacion/instalar_vs_code.md)
+- [Instalar Python](../instalacion/instalar_python.md)
+- [Instalar Git](../instalacion/instalar_git.md)
+- [Instalar VS Code](../instalacion/instalar_vscode.md)
 
 ---
 
