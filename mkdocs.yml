@@ -15,7 +15,26 @@ theme:
         icon: material/toggle-switch
         name: Switch to light mode
 
+  features: content.code.copy
+  
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+
+
+
 nav:
   - 🏠​ Inicio: index.md
   - 📅 Cronograma del curso: cronograma.md
-  - 📚 Clases: clases/clases.md
+  - 📚 Clases: 
+    - 📝 Índice: clases/clases.md
+    - 🧑‍🏫 Introducción: clases/01_introduccion.md
+    - 💽​ Instalación:
+      - 🐍 Python: instalacion/instalar_python.md
+      - 🧑‍💻 Visual Studio Code: instalacion/instalar_vscode.md
+      - 🪾​ Git: instalacion/instalar_git.md

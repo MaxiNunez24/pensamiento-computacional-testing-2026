@@ -1,6 +1,6 @@
 # ¡¡Bienvenidos al curso Pensamiento Computacional y Testing de Aplicaciones 2026!!
 
-Curso del CFP 401 "Laura Vicuña"
+!!! example "Curso del CFP 401 "Laura Vicuña""
 
 Bienvenidos al curso donde aprenderemos a pensar como programadores y construir software desde cero usando **Python**.
 
@@ -14,8 +14,7 @@ Bienvenidos al curso donde aprenderemos a pensar como programadores y construir 
 
 ## 🤔​ ¿Necesito saber algo antes?
 
-No!
-Este curso está pensado **desde cero absoluto**.
+!!! tip "No! Este curso está pensado **desde cero absoluto**."
 
 Solo necesitás:
 
@@ -39,17 +38,17 @@ Solo necesitás:
 
 ## 🧠 Filosofía del curso
 
-La programación se aprende programando.
+!!! example "La programación se aprende programando."
 
 Vamos a:
 
-✔️ Probar
+!!! info "✔️ Probar"
 
-✔️ Equivocarnos
+!!! warning "✔️ Equivocarnos"
 
-✔️ Corregir
+!!! success "✔️ Corregir"
 
-✔️ Mejorar
+!!! tip "✔️ Mejorar"
 
 Y repetir el proceso muchas veces.
 
@@ -69,7 +68,7 @@ Y repetir el proceso muchas veces.
 
 ## ​📖 Material del curso
 
-Podés navegar el contenido usando el menú de la izquierda:
+!!! info "Podés navegar el contenido usando el menú de la izquierda:"
 
 🏠​ Inicio
 
@@ -96,15 +95,15 @@ La idea es que para ese entonces ya estemos capacitados para aprovechar al máxi
 
 Además de tener varios proyectos para presentar, un perfil en LinkedIn y un portfolio armado en GitHub, lo que va a ser un gran plus para conseguir trabajo. Ya que al evento asisten muchas empresas buscando talento.
 
-Organizaremos una visita grupal al evento, para que podamos asistir juntos y aprovechar la experiencia al máximo!
+!!! tip "Organizaremos una visita grupal al evento, para que podamos asistir juntos y aprovechar la experiencia al máximo!"
 
-(Es opcional ir al evento y más aún ir en busca de trabajo, pero es una gran oportunidad a tener en cuenta)
+!!! warning "(Es opcional ir al evento y más aún ir en busca de trabajo, pero es una gran oportunidad a tener en cuenta)"
 
 ---
 
 ## 👨‍💻 Profesor
 
-Maximiliano Nuñez
+!!! tip "Maximiliano Nuñez"
 
 - Técnico en Informática Profesional y Personal - EEST N°2
 

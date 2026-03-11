@@ -1,48 +1,48 @@
 # 📅 Cronograma del curso
 
-Contamos con aproximadamente 72 clases de 3:20hs, por lo que tenemos más de 200 horas para aprender a programar con buenas prácticas y poder desarrollar proyectos reales.
+!!! tip "Contamos con aproximadamente 72 clases de 3:20hs, por lo que tenemos más de 200 horas para aprender a programar con buenas prácticas y poder desarrollar proyectos reales."
 
 |Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
 |------|------                                   |------                                                 |------                                   |
-| 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | Clase 2 | Ejercicio: identificar partes de una PC |
-| 16/3 | CPU, RAM y almacenamiento | Código binario | Conversión binario–decimal |
-| 23/3 | Compuertas lógicas | Algoritmos | Resolver problemas cotidianos |
-| 30/3 | Diagramas de flujo | ***3/4 - Sin clases (Viernes Santo)*** | Dibujar algoritmo propio |
-| 6/4  | Introducción a Python | Variables | Programa simple |
-| 13/4 | Tipos de datos | Operadores | Programa con variables |
-| 20/4 | Estructuras de control | Condicionales | Programa con condicionales |
-| 27/4 | Estructuras de control | ***1/5 - Sin clases (Día del Trabajador)*** | Programa con bucles |
-| 4/5  | Funciones | Funciones con parámetros | Programa con funciones |
-| 11/5 | Estructuras de datos | Listas | Programa con listas |
-| 18/5 | Estructuras de datos | Diccionarios | Programa con diccionarios |
-| 25/5 | Testing | Testing | Tests para programa con diccionarios |
-| 1/6  | Control de versiones | Git | Subir programa a GitHub |
-| 8/6  | Proyecto organizador del centro | Proyecto organizador del centro | Proyecto organizador del centro |
-| 15/6 | Clases normales | Clases normales | Bolsa de trabajo para alumnos |
-| 22/6 | Introducción a Inteligencia Artificial | Introducción a Inteligencia Artificial | Introducción a Inteligencia Artificial |
-| 29/6 | Repaso general | Repaso general | Repaso general |
-| 6/7  | Proyecto final | Proyecto final | Proyecto final |
-| 13/7 | Clases | ***10/7 - Sin clases (Independencia)*** | Proyecto final |
-| 20/7 | ***3/4 - Receso invernal*** | ***3/4 - Receso invernal*** | — |
-| 27/7 | ***3/4 - Receso invernal*** | ***3/4 - Receso invernal*** | — |
-| 3/8  | Proyecto final | Proyecto final | Proyecto final |
-| 10/8 | Proyecto final | Proyecto final | Proyecto final |
-| 17/8 | Proyecto final | Proyecto final | Proyecto final |
-| 24/8 | Proyecto final | Proyecto final | Proyecto final |
-| 31/8 | Proyecto final | Proyecto final | Proyecto final |
-| 7/9  | Proyecto final | Proyecto final | Proyecto final |
-| 14/9 | Proyecto final | Proyecto final | Proyecto final |
+| 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | ¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
+| 16/3 | Python Básico (Variables, Tipos de datos, Operadores, Input/Output) | Estructuras de Control (if-else, bucles) | Resolver problemas sencillos utilizando Python |
+| 23/3 | Funciones y modularización | Parámetros, retorno de valores y alcance de variables | Convertir programas en funciones reutilizables |
+| 30/3 | Listas y colecciones de datos | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
+| 6/4  | Diccionarios y estructuras clave-valor | Recorrer estructuras de datos y resolver problemas | Programa que administre datos |
+| 13/4 | Strings y manipulación de texto | Archivos (leer y escribir datos) | Programa que guarde información |
+| 20/4 | Introducción a la Programación Orientada a Objetos | Clases, objetos y métodos | Crear clases simples en Python |
+| 27/4 | Atributos, constructores y encapsulamiento | ***1/5 - Sin clases (Día del Trabajador)*** | Modelar objetos del mundo real |
+| 4/5  | Relaciones entre objetos | Organización de programas con POO | Refactorizar programas anteriores usando clases |
+| 11/5 | Introducción al testing | Casos de prueba y debugging | Escribir pruebas para programas |
+| 18/5 | Introducción a Git | Control de versiones y flujo de trabajo | Crear repositorio y registrar cambios |
+| 25/5 | GitHub y trabajo colaborativo | Publicar proyectos en GitHub | Subir programas del curso |
+| 1/6  | Introducción a frameworks web (Flask / Django) | Cómo funcionan las aplicaciones web | Mini app web simple |
+| 8/6  | Proyecto: Organizador del Centro | Proyecto: Organizador del Centro | Desarrollo del proyecto |
+| 15/6 | Proyecto: Organizador del Centro | Proyecto: Organizador del Centro | Continuar desarrollo |
+| 22/6 | Proyecto: Bolsa de trabajo para alumnos | Proyecto: Bolsa de trabajo para alumnos | Desarrollo del proyecto |
+| 29/6 | Introducción a Inteligencia Artificial | Herramientas y APIs de IA | Experimentos con IA |
+| 6/7  | Proyecto: IA o visión por computadora | Proyecto: IA o visión por computadora | Desarrollo del proyecto |
+| 13/7 | Continuar proyecto | ***10/7 - Sin clases (Independencia)*** | Avanzar proyecto |
+| 20/7 | ***3/4 - Receso invernal*** | ***3/4 - Receso invernal*** | No olvidarse de lo que dimos |
+| 27/7 | ***3/4 - Receso invernal*** | ***3/4 - Receso invernal*** | Recordar lo que vimos para volver a full |
+| 3/8  | Inicio del Proyecto Final | Diseño del proyecto final | Planificación |
+| 10/8 | Proyecto final | Proyecto final | Desarrollo |
+| 17/8 | Proyecto final | Proyecto final | Desarrollo |
+| 24/8 | Proyecto final | Proyecto final | Desarrollo |
+| 31/8 | Proyecto final | Proyecto final | Desarrollo |
+| 7/9  | Proyecto final | Proyecto final | Desarrollo |
+| 14/9 | Preparación para Nerdearla | Portfolio, GitHub y LinkedIn | Preparar proyectos para mostrar |
 | 21/9 | ***¡¡NERDEARLA!!***  | ***¡¡NERDEARLA!!***  | ***¡¡NERDEARLA!!***  |
-| 28/9 | Proyecto final | Proyecto final | Proyecto final |
-| 5/10 | Proyecto final | Proyecto final | Proyecto final |
-| 12/10 | Proyecto final | Proyecto final | Proyecto final |
-| 19/10 | Proyecto final | Proyecto final | Proyecto final |
-| 26/10 | Proyecto final | Proyecto final | Proyecto final |
-| 2/11 | Proyecto final | Proyecto final | Proyecto final |
-| 9/11 | ***Posible fecha EXPO 2026*** | ***Posible fecha EXPO 2026*** | Presentar nuestro curso de la mejor forma y con la mayor cantidad de proyectos |
-| 16/11 | Proyecto final | Proyecto final | Proyecto final |
-| 23/11 | Proyecto final | Proyecto final | Proyecto final |
-| 30/11 | Proyecto final | Proyecto final | Proyecto final |
-| 7/12 | Proyecto final | Proyecto final | Proyecto final |
-| 14/12 | ***¡Anteúltima clase!*** | ***¡Última clase!*** | Despedir este espectacular curso con un picnic o una salida a unas pizzas libres u otro lugar |
+| 28/9 | Reflexión sobre Nerdearla | Nuevas ideas para proyectos | Mejorar proyectos |
+| 5/10 | Continuar proyecto final | Continuar proyecto final | Testing |
+| 12/10 | Proyecto final | Proyecto final | Mejoras |
+| 19/10 | Proyecto final | Proyecto final | Documentación |
+| 26/10 | Proyecto final | Proyecto final | Preparación de presentación |
+| 2/11 | Preparación para Expo | Ensayo de presentaciones | Ajustes finales |
+| 9/11 | ***Posible fecha EXPO 2026*** | ***Posible fecha EXPO 2026*** | Presentar proyectos |
+| 16/11 | Reflexión sobre la Expo | Mejoras finales a los proyectos | Continuar desarrollo |
+| 23/11 | Proyecto final | Proyecto final | Ajustes |
+| 30/11 | Proyecto final | Proyecto final | Preparar entrega |
+| 7/12 | Proyecto final | Proyecto final | Ensayo final |
+| 14/12 | ***¡Anteúltima clase!*** | ***¡Última clase!*** | Despedir el curso con una salida o celebración |
 | 21/12 | ***¡FELICES FIESTAS!!*** | ***¡FELICES FIESTAS!!*** | ***¡FELICES FIESTAS!!*** |
