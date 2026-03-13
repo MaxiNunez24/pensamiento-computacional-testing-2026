@@ -122,7 +122,7 @@ INICIO
 
 leer añoNacimiento
 
-edad ← 2026 - añoNacimiento
+edad = 2026 - añoNacimiento
 
 mostrar edad
 
@@ -133,23 +133,25 @@ En este ejemplo aparecen tres tipos de acciones comunes:
 
 **leer**
 
-Permite ingresar un dato.
+*Permite ingresar un dato.*
 
 **mostrar**
 
-Permite mostrar información al usuario.
+*Permite mostrar información al usuario.*
 
 **asignación**
 
-Permite guardar un valor en una variable.
+*Permite guardar un valor en una variable.*
 
 ```
-edad ← 2026 - añoNacimiento
+edad = 2026 - añoNacimiento
 ```
 
 Esto significa:
 
 > guardar en la variable **edad** el resultado de la operación.
+
+!!! info "Una variable es un espacio de memoria RAM que se utiliza para almacenar datos."
 
 ---
 
@@ -209,6 +211,8 @@ Esto permite visualizar el algoritmo de forma más clara.
 
 Óvalo
 
+![Óvalo](../assets/images/ddf_inicio_fin.png)
+
 Representa el comienzo o el final del algoritmo.
 
 ---
@@ -217,13 +221,27 @@ Representa el comienzo o el final del algoritmo.
 
 Rectángulo
 
+![Rectángulo](../assets/images/ddf_proceso.png)
+
 Representa una operación o cálculo.
+
+---
+
+**Flujo**
+
+Flecha
+
+![Flecha](../assets/images/ddf_flujo.png)
+
+Indica la dirección del flujo del algoritmo.
 
 ---
 
 **Entrada / Salida**
 
 Paralelogramo
+
+![Paralelogramo](../assets/images/ddf_entrada_salida.png)
 
 Se utiliza para leer o mostrar datos.
 
@@ -232,6 +250,8 @@ Se utiliza para leer o mostrar datos.
 **Decisión**
 
 Rombo
+
+![Rombo](../assets/images/ddf_decision.png)
 
 Representa una pregunta que puede tener diferentes caminos.
 
@@ -249,13 +269,23 @@ Pasos del algoritmo:
 4. Mostrar resultado
 5. Fin
 
-Este mismo proceso puede representarse gráficamente mediante un **diagrama de flujo**.
+Este mismo proceso puede representarse gráficamente mediante un **diagrama de flujo** de esta manera:
+
+![Ejemplo Diagrama de Flujo](../assets/images/ddf_ejemplo2.png)
+
+??? "Otra forma de organizarlo sería:"
+    ![Ejemplo Diagrama de Flujo](../assets/images/ddf_ejemplo1.png)
+
+??? "Otro ejemplo también válido sería:"
+    ![Ejemplo Diagrama de Flujo](../assets/images/ddf_ejemplo3.png)
+    ![alt text](image.png)
 
 ---
 
 ## ✍️ Ejercicio 3 — Crear diagramas de flujo
 
 Dibujá el diagrama de flujo para los siguientes problemas.
+!!! Info "[La aplicación utilizada para los ejemplos anteriores es Smartdraw](https://app.smartdraw.com/?nsu=1)"
 
 ---
 
@@ -324,7 +354,7 @@ Realizá tres representaciones del problema:
 
 ---
 
-## 💡 Idea importante
+## 💡 Concepto importante
 
 Los lenguajes de programación cambian constantemente.
 
@@ -346,3 +376,121 @@ Un buen programador no solo sabe escribir código.
 
 También sabe **analizar problemas y transformarlos en pasos claros, eficientes y reutilizables que una máquina pueda ejecutar**.
 
+
+
+## 🧠 Ejercicios adicionales
+
+### 1️⃣ Número par o impar
+
+Crear un programa que:
+
+* pida un número al usuario
+* determine si el número es **par o impar**
+* muestre el resultado
+
+!!! info "Pista conceptual: un número es par si **el resto de dividirlo por 2 es 0**."
+
+---
+
+### 2️⃣ Número mayor
+
+El programa debe:
+
+* pedir **dos números**
+* determinar cuál es el **mayor**
+* mostrar el resultado
+
+---
+
+### 3️⃣ Calculadora básica
+
+Crear un programa que:
+
+* pida dos números
+* calcule:
+
+  * suma
+  * resta
+  * multiplicación
+* muestre los resultados
+
+---
+
+### 4️⃣ Edad de una persona
+
+El programa debe:
+
+* pedir el **año de nacimiento**
+* calcular la **edad actual**
+* mostrar la edad
+
+---
+
+### 5️⃣ Promedio de cuatro notas
+
+El programa debe:
+
+* pedir **4 notas**
+* calcular el **promedio**
+* mostrar el resultado
+
+---
+
+### 6️⃣ Conversión de minutos a horas
+
+El programa debe:
+
+* pedir una cantidad de **minutos**
+* convertirla a **horas**
+* mostrar el resultado
+
+!!! info "Ejemplo: 120 minutos → 2 horas"
+
+---
+
+### 7️⃣ Área de un triángulo
+
+El programa debe:
+
+* pedir **base**
+* pedir **altura**
+* calcular el área
+* mostrar el resultado
+
+!!! info "La fórmula es: Área = (base × altura) / 2"
+
+---
+
+### 8️⃣ Precio total de compra
+
+El programa debe:
+
+* pedir **precio de un producto**
+* pedir **cantidad**
+* calcular el **total a pagar**
+* mostrar el resultado
+
+---
+
+### 9️⃣ Descuento en una compra
+
+El programa debe:
+
+* pedir el **precio de un producto**
+* calcular el precio con **10% de descuento**
+* mostrar el precio final
+
+---
+
+### 🔟 Conversión de kilómetros a metros
+
+Crear un algoritmo que:
+
+* pida la **edad de una persona**
+* determine si es **mayor de edad**
+* muestre el resultado ("Es mayor de edad" o "No es mayor de edad")
+
+Regla:
+
+Mayor de edad → **18 años o más**
+!!! info "(Ayuda para pseudocódigo: mayor -> " > " , menor -> " < ", igual -> " == " )"
