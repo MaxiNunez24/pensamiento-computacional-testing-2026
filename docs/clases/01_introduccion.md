@@ -128,3 +128,22 @@ El código hexadecimal es un ***sistema de numeración*** que utiliza ***16 sím
 
 ??? "¿Qué número es en Decimal?"
     2^23 + 2^22 + 2^21 + 2^20 + 2^19 + 2^16 + 2^15 + 2^14 + 2^12 + 2^8 + 2^7 + 2^6 + 2^5 + 2^4 + 2^2 + 2^1 =  ***16 372 214***
+
+### Compuertas Lógicas
+Las compuertas lógicas son los ***bloques básicos*** de construcción de los circuitos digitales. Son dispositivos electrónicos que realizan operaciones lógicas sobre una o más entradas para producir una salida. Las compuertas lógicas más comunes incluyen:
+
+- **AND**: La salida es 1 solo si todas las entradas son 1.
+
+- **OR**: La salida es 1 si al menos una de las entradas es 1.
+
+- **NOT**: La salida es el inverso de la entrada (si la entrada es 1, la salida es 0, y viceversa).
+
+- **XOR**: La salida es 1 si exactamente una de las entradas es 1, pero no ambas.
+
+- **NAND**: La salida es 0 solo si todas las entradas son 1 (es la negación de AND).
+
+- **NOR**: La salida es 0 si al menos una de las entradas es 1 (es la negación de OR).
+
+![Compuertas Lógicas](../assets/images/compuertas_logicas.png)
+
+!!! example "[Experimentá con las compuertas lógicas y más en este simulador interactivo](https://logic.ly/demo/)" 

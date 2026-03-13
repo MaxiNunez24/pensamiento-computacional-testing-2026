@@ -34,6 +34,7 @@ nav:
   - 📚 Clases: 
     - 📝 Índice: clases/clases.md
     - 🧑‍🏫 Introducción: clases/01_introduccion.md
+    - 🧑‍💻 ¿Qué es programar?: clases/02_que_es_programar.md
     - 💽​ Instalación:
       - 🐍 Python: instalacion/instalar_python.md
       - 🧑‍💻 Visual Studio Code: instalacion/instalar_vscode.md

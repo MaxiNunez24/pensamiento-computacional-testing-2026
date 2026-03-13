@@ -3,6 +3,7 @@
 ## 🧠 Introducción
 
 - [Clase 1 – Introducción a la informática](01_introduccion.md)
+- [Clase 2 - ¿Qué es programar? Algoritmos, pseudocódigo y diagramas de flujo](02_que_es_programar.md)
 
 ---
 

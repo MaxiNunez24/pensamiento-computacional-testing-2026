@@ -4,7 +4,7 @@
 
 |Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
 |------|------                                   |------                                                 |------                                   |
-| 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | ¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
+| 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
 | 16/3 | Python Básico (Variables, Tipos de datos, Operadores, Input/Output) | Estructuras de Control (if-else, bucles) | Resolver problemas sencillos utilizando Python |
 | 23/3 | Funciones y modularización | Parámetros, retorno de valores y alcance de variables | Convertir programas en funciones reutilizables |
 | 30/3 | Listas y colecciones de datos | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
