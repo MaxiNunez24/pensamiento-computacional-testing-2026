@@ -482,7 +482,7 @@ El programa debe:
 
 ---
 
-### 🔟 Conversión de kilómetros a metros
+### 🔟 ¿Es mayor de edad?
 
 Crear un algoritmo que:
 

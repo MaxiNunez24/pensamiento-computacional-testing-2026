@@ -17,8 +17,12 @@ Antes de empezar a programar necesitamos instalar algunas herramientas.
 
 ---
 
+- [Clase 3 - Python básico](03_python_basico.md)
+
+
 ## 🐍 Python
 
+- Historia y características
 - Variables
 - Tipos de datos
 - Condicionales

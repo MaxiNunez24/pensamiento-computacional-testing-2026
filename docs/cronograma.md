@@ -1,11 +1,11 @@
 # 📅 Cronograma del curso
 
-!!! tip "Contamos con aproximadamente 72 clases de 3:20hs, por lo que tenemos más de 200 horas para aprender a programar con buenas prácticas y poder desarrollar proyectos reales."
+!!! tip "Contamos con aproximadamente 73 clases de 3:20hs, por lo que tenemos más de 200 horas para aprender a programar con buenas prácticas y poder desarrollar proyectos reales."
 
 |Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
 |------|------                                   |------                                                 |------                                   |
 | 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
-| 16/3 | Python Básico (Variables, Tipos de datos, Operadores, Input/Output) | Estructuras de Control (if-else, bucles) | Resolver problemas sencillos utilizando Python |
+| 16/3 | [Python Básico](./clases/03_python_basico.md) | Estructuras de Control (if-else, bucles) | Resolver problemas sencillos utilizando Python |
 | 23/3 | Funciones y modularización | Parámetros, retorno de valores y alcance de variables | Convertir programas en funciones reutilizables |
 | 30/3 | Listas y colecciones de datos | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
 | 6/4  | Diccionarios y estructuras clave-valor | Recorrer estructuras de datos y resolver problemas | Programa que administre datos |
