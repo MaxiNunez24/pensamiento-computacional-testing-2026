@@ -278,7 +278,6 @@ Este mismo proceso puede representarse gráficamente mediante un **diagrama de f
 
 ??? "Otro ejemplo también válido sería:"
     ![Ejemplo Diagrama de Flujo](../assets/images/ddf_ejemplo3.png)
-    ![alt text](image.png)
 
 ---
 

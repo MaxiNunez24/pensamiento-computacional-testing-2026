@@ -35,8 +35,14 @@ nav:
     - 📝 Índice: clases/clases.md
     - 🧑‍🏫 Introducción: clases/01_introduccion.md
     - 🧑‍💻 ¿Qué es programar?: clases/02_que_es_programar.md
-    - 💽​ Instalación:
-      - 🐍 Python: instalacion/instalar_python.md
-      - 🧑‍💻 Visual Studio Code: instalacion/instalar_vscode.md
-      - 🪾​ Git: instalacion/instalar_git.md
-    - 🐍 Python básico: clases/03_python_basico.md
+    - 🐍 Python Básico: 
+      - 📝 Contenidos: clases/python/python_basico.md
+      - 📜 Historía y características: clases/python/historia_caracteristicas.md
+      - 💽​ Instalación: 
+        - 💻 Instalando las herramientas: clases/instalacion/instalacion_herramientas.md
+        - 🐍 Instalando Python: clases/instalacion/instalar_python.md
+        - 🧑‍💻 Instalando VS Code: clases/instalacion/instalar_vscode.md
+      - 📁 Archivos de Python: clases/python/archivos_python.md
+      - ▶️ Ejecutar el programa: clases/python/ejecutar_programa.md
+      - 🖨️ La función print(): clases/python/funcion_print.md
+      - 📊 Variables: clases/python/variables.md

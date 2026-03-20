@@ -5,8 +5,8 @@
 |Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
 |------|------                                   |------                                                 |------                                   |
 | 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
-| 16/3 | [Python Básico](./clases/03_python_basico.md) | Estructuras de Control (if-else, bucles) | Resolver problemas sencillos utilizando Python |
-| 23/3 | Funciones y modularización | Parámetros, retorno de valores y alcance de variables | Convertir programas en funciones reutilizables |
+| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo y print()](./clases/python/python_basico.md) | [Python Básico: Variables, Tipos de datos y Operadores](./clases/python/python_basico.md) | Resolver problemas sencillos utilizando Python |
+| 23/3 | Estructuras de Control (if-else, bucles) | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | Convertir programas en funciones reutilizables |
 | 30/3 | Listas y colecciones de datos | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
 | 6/4  | Diccionarios y estructuras clave-valor | Recorrer estructuras de datos y resolver problemas | Programa que administre datos |
 | 13/4 | Strings y manipulación de texto | Archivos (leer y escribir datos) | Programa que guarde información |
@@ -23,8 +23,8 @@
 | 29/6 | Introducción a Inteligencia Artificial | Herramientas y APIs de IA | Experimentos con IA |
 | 6/7  | Proyecto: IA o visión por computadora | Proyecto: IA o visión por computadora | Desarrollo del proyecto |
 | 13/7 | Continuar proyecto | ***10/7 - Sin clases (Independencia)*** | Avanzar proyecto |
-| 20/7 | ***3/4 - Receso invernal*** | ***3/4 - Receso invernal*** | No olvidarse de lo que dimos |
-| 27/7 | ***3/4 - Receso invernal*** | ***3/4 - Receso invernal*** | Recordar lo que vimos para volver a full |
+| 20/7 | ***22/7 - Receso invernal*** | ***24/7 - Receso invernal*** | No olvidarse de lo que dimos |
+| 27/7 | ***29/7 - Receso invernal*** | ***31/7 - Receso invernal*** | Recordar lo que vimos para volver a full |
 | 3/8  | Inicio del Proyecto Final | Diseño del proyecto final | Planificación |
 | 10/8 | Proyecto final | Proyecto final | Desarrollo |
 | 17/8 | Proyecto final | Proyecto final | Desarrollo |

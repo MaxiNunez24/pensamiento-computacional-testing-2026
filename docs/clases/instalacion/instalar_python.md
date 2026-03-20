@@ -12,10 +12,20 @@
 py --version
 ```
 
-y ejecutar el intérprete de Python escribiendo:
+y ejecutar el intérprete de Python escribiendo (que es como arrancó el lenguaje):
 
 ```bash
 py 
 ```
-Esto debería abrir el intérprete interactivo de Python, donde podemos escribir código Python directamente.
+
+
+Esto abre el **intérprete interactivo (REPL)** donde podemos escribir código Python directamente y ver los resultados al instante:
+
+👉 Read – Eval – Print – Loop
+
+👉 Leer - Evaluar - Imprimir - Bucle
+
+
+
+## [🔙 ​Volver a Instalación de herramientas](./instalacion_herramientas.md)
 
