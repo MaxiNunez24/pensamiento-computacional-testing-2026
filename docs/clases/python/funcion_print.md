@@ -153,29 +153,6 @@ Cargando...Listo!
 
 ---
 
-## 🔤 Combinando texto y variables
-
-También podemos mezclar texto con valores:
-
-```python
-nombre = "Maxi"
-edad = 25
-
-print("Hola", nombre, "tenés", edad, "años")
-```
-
----
-
-### ⚠️ Forma más prolija (recomendada)
-
-```python
-print(f"Hola {nombre}, tenés {edad} años")
-```
-
-👉 Esto se llama **f-string** (lo vamos a usar mucho)
-
----
-
 ## 🧪 Ejercicios con `print()`
 
 Antes de avanzar, practicamos bien esto 👇
