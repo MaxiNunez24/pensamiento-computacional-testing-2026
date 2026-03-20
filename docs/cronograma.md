@@ -5,7 +5,7 @@
 |Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
 |------|------                                   |------                                                 |------                                   |
 | 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
-| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo y print()](./clases/python/python_basico.md) | [Python Básico: Variables, Tipos de datos y Operadores](./clases/python/python_basico.md) | Resolver problemas sencillos utilizando Python |
+| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo y print()](./clases/python/python_basico.md) | [Python Básico: Variables, Tipos de datos y Operadores](./clases/python/variables.md) | Resolver problemas sencillos utilizando Python |
 | 23/3 | Estructuras de Control (if-else, bucles) | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | Convertir programas en funciones reutilizables |
 | 30/3 | Listas y colecciones de datos | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
 | 6/4  | Diccionarios y estructuras clave-valor | Recorrer estructuras de datos y resolver problemas | Programa que administre datos |
