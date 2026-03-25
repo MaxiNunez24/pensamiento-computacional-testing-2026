@@ -4,7 +4,7 @@ Para escribir código en Python:
 
 * Creamos archivos con extensión: `.py`
 
-### 📌 Convención de nombres
+## 📌 Convención de nombres
 
 Usamos **snake_case** para nombrar archivos (todo en minúscula, con guiones bajos entre palabras):
 
