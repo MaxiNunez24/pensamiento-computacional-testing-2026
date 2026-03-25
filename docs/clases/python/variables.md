@@ -63,8 +63,11 @@ print(f"Hola {nombre}, tenés {edad} años")
 ## 📏 Reglas para nombres de variables
 
 ✔️ Pueden tener letras, números y `_`
+
 ✔️ No pueden empezar con números
+
 ✔️ No usar espacios
+
 ✔️ Son sensibles a mayúsculas/minúsculas
 
 ---
@@ -126,7 +129,7 @@ es_estudiante = True
 
 ---
 
-## 🔍 Ver el tipo de dato
+### 🔍 Ver el tipo de dato
 
 ```python
 print(type(nombre))
@@ -143,7 +146,7 @@ Los operadores nos permiten **hacer cálculos o comparaciones**
 
 ---
 
-## 🔢 Operadores matemáticos
+## 🔢 Operadores aritméticos
 
 ```python
 a = 10
@@ -193,10 +196,11 @@ print(not x)
 
 1. Crear una variable con tu nombre y otra con tu edad. Mostrarlas en pantalla.
 2. Crear dos números y mostrar:
+    * suma
+    * resta
+    * multiplicación
+    * división
 
-   * suma
-   * resta
-   * multiplicación
 3. Crear una variable con tu altura y mostrar su tipo
 4. Mostrar si un número es mayor que otro
 5. Crear una variable booleana e imprimirla
@@ -220,12 +224,16 @@ Hola Maxi, tenés 22 años y medís 1.81 metros
 * Una **variable** guarda información
 * Cada valor tiene un **tipo de dato**
 * Podemos usar **operadores** para trabajar con esos datos
-* Python es dinámico: no necesitamos declarar el tipo
+* Python es: 
+    * **Tipado Dinámico**: no necesitamos declarar el tipo y puede cambiar en tiempo de ejecución.
+    * **Tipado Fuerte**: cada valor tiene un tipo y no se mezclan entre sí automáticamente.
 
 ---
 
 💡 A partir de ahora:
+
 👉 Ya podés empezar a hacer programas más interesantes
+
 👉 En la próxima clase vamos a tomar datos del usuario 😏
 
 ---

@@ -1,4 +1,4 @@
-# ¡¡Bienvenidos al curso Pensamiento Computacional y Testing de Aplicaciones 2026!!
+# Pensamiento Computacional y Testing de Aplicaciones 2026
 
 !!! example "Curso del CFP 401 "Laura Vicuña""
 

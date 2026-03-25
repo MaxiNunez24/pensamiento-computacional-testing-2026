@@ -5,10 +5,10 @@
 |Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
 |------|------                                   |------                                                 |------                                   |
 | 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
-| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo y print()](./clases/python/python_basico.md) | [Python Básico: Variables, Tipos de datos y Operadores](./clases/python/python_basico.md) | Resolver problemas sencillos utilizando Python |
-| 23/3 | Estructuras de Control (if-else, bucles) | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | Convertir programas en funciones reutilizables |
-| 30/3 | Listas y colecciones de datos | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
-| 6/4  | Diccionarios y estructuras clave-valor | Recorrer estructuras de datos y resolver problemas | Programa que administre datos |
+| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo, e introducción a print()](./clases/python/python_basico.md) | [Python Básico: Continuación deprint() e Introducción a Variables](./clases/python/python_basico.md) | Resolver problemas sencillos utilizando Python |
+| 23/3 | [Python Básico: Variables, Tipos de datos y Operadores](./clases/python/python_basico.md) | input(), Estructuras de Control (if-else, bucles) | Convertir programas en funciones reutilizables |
+| 30/3 | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
+| 6/4  | Listas y colecciones de datos | Diccionarios y estructuras clave-valor | Programa que administre datos |
 | 13/4 | Strings y manipulación de texto | Archivos (leer y escribir datos) | Programa que guarde información |
 | 20/4 | Introducción a la Programación Orientada a Objetos | Clases, objetos y métodos | Crear clases simples en Python |
 | 27/4 | Atributos, constructores y encapsulamiento | ***1/5 - Sin clases (Día del Trabajador)*** | Modelar objetos del mundo real |
