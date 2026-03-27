@@ -1259,6 +1259,18 @@
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hola </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+<details class="warning">
+<summary>Para concatenar cadenas de texto se utiliza el operador <code>+</code> o las f-strings. Ambas son equivalentes. Ejemplo:</summary>
+<p><div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingrese su nombre: &quot;</span><span class="p">)</span>
+<span class="n">apellido</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingrese su apellido: &quot;</span><span class="p">)</span>
+
+<span class="n">nombre_completo</span> <span class="o">=</span> <span class="n">nombre</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">apellido</span>
+<span class="n">nombre_completo</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">apellido</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">nombre_completo</span><span class="p">)</span>
+</code></pre></div>
+En este ejemplo se necesita agregar un espacio entre el nombre y el apellido, por eso se incluye <code>" "</code> en la concatenación. En las f-strings, el espacio se agrega directamente dentro de la cadena.</p>
+</details>
 <hr />
 <h2 id="importante-input-siempre-devuelve-texto">🔴 IMPORTANTE: input siempre devuelve texto</h2>
 <p>Todo lo que el usuario escribe se guarda como <strong>string (str)</strong></p>
