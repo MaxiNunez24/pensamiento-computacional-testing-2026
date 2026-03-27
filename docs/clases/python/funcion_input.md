@@ -1,6 +1,6 @@
 # ⌨️​ La función `input()` (Entrada de datos)
 
-## 🔹 ¿Qué es input?
+## 🤔​ ¿Qué es input?
 
 Hasta ahora nuestros programas tenían valores “fijos” dentro del código.
 
@@ -14,7 +14,7 @@ input("Ingresá tu nombre: ")
 
 ---
 
-## 🔹 Guardar lo que escribe el usuario
+## 💾​ Guardar lo que escribe el usuario
 
 El valor ingresado se puede guardar en una variable:
 
@@ -28,7 +28,7 @@ Como en la variable `nombre` en este ejemplo.
 
 ---
 
-## 🔹 Usar input con f-string
+## 🖨️​ Usar input con f-string
 
 ```python
 nombre = input("Ingresá tu nombre: ")
@@ -52,9 +52,9 @@ Aunque el usuario escriba un número, Python lo guarda como texto.
 
 ---
 
-# 🔹 CASTING (Conversión de tipos)
+## 🔄​ CASTING (Conversión de tipos)
 
-## 📌 ¿Qué es el casting?
+### 📌 ¿Qué es el casting?
 
 Es convertir un tipo de dato en otro.
 
@@ -62,7 +62,7 @@ Es convertir un tipo de dato en otro.
 
 ---
 
-## 🔹 Convertir a entero
+#### 🔢 Convertir a entero
 
 ```python
 edad = int(input("Ingresá tu edad: "))
@@ -70,7 +70,7 @@ edad = int(input("Ingresá tu edad: "))
 
 ---
 
-## 🔹 Convertir a decimal
+#### 🔢 Convertir a punto flotante
 
 ```python
 altura = float(input("Ingresá tu altura: "))
@@ -78,7 +78,7 @@ altura = float(input("Ingresá tu altura: "))
 
 ---
 
-## 🔹 Ejemplo completo
+### ✅​ Ejemplo completo
 
 ```python
 edad = int(input("Ingresá tu edad: "))
@@ -88,7 +88,7 @@ print(f"El año que viene vas a tener {edad + 1}")
 
 ---
 
-## 🔴 Error común
+### 🔴 Error común
 
 ```python
 edad = input("Edad: ")
@@ -106,7 +106,7 @@ edad = int(input("Edad: "))
 
 ---
 
-## 🔹 Tipos de casting más usados
+### ​🔄​ Tipos de casting más usados
 
 ```python
 int()     # entero
@@ -116,13 +116,13 @@ str()     # texto
 
 ---
 
-# 🧪 EJERCICIOS (INPUT + CASTING)
+## 🧪 EJERCICIOS (INPUT + CASTING)
 
 👉 Importante: muchos de estos ya los vieron en diagramas/pseudocódigo → ahora los pasamos a Python
 
 ---
 
-## 🟢 1. Nombre
+### 🟢 1. Nombre
 
 Pedir el nombre del usuario y mostrar:
 
@@ -132,7 +132,7 @@ Hola Juan
 
 ---
 
-## 🟢 2. Edad
+### 🟢 2. Edad
 
 Pedir edad y mostrar:
 
@@ -142,7 +142,7 @@ Tenés X años
 
 ---
 
-## 🟡 3. Suma de dos números
+### 🟡 3. Suma de dos números
 
 Pedir dos números al usuario y mostrar la suma.
 
@@ -150,7 +150,7 @@ Pedir dos números al usuario y mostrar la suma.
 
 ---
 
-## 🟡 4. Conversión de metros a centímetros
+### 🟡 4. Conversión de metros a centímetros
 
 Pedir una medida en metros y convertirla a centímetros.
 
@@ -162,7 +162,7 @@ Pedir una medida en metros y convertirla a centímetros.
 
 ---
 
-## 🟡 5. Conversión de grados Celsius a Fahrenheit
+### 🟡 5. Conversión de grados Celsius a Fahrenheit
 
 Pedir temperatura en Celsius y convertir a Fahrenheit.
 
@@ -174,25 +174,25 @@ F = C * 9/5 + 32
 
 ---
 
-## 🟡 6. Precio con IVA
+### 🟡 6. Precio con IVA
 
 Pedir el precio de un producto y mostrar el precio final con 21% de IVA.
 
 ---
 
-## 🟡 7. Promedio de 3 números
+### 🟡 7. Promedio de 3 números
 
 Pedir tres números y mostrar el promedio.
 
 ---
 
-## 🔵 8. Conversión de horas a minutos
+### 🔵 8. Conversión de horas a minutos
 
 Pedir una cantidad de horas y convertirla a minutos.
 
 ---
 
-## 🔵 9. Sueldo mensual
+### 🔵 9. Sueldo mensual
 
 Pedir:
 
@@ -203,7 +203,7 @@ Mostrar sueldo total.
 
 ---
 
-## 🔵 10. Datos del usuario
+### 🔵 10. Datos del usuario
 
 Pedir:
 
@@ -219,15 +219,4 @@ Hola Juan, tenés 25 años y medís 1.75 metros
 
 ---
 
-## 💡 Sugerencia para clase
-
-Podés hacer:
-
-1. Explicación + ejemplo en vivo
-2. 2 ejercicios guiados
-3. 4 ejercicios en grupo
-4. 4 ejercicios individuales
-
----
-
-Si querés, en el siguiente paso te armo el apartado de **If-Else con el mismo estilo exacto**, incluyendo ejercicios progresivos y algunos integradores como hiciste acá 👍
+## [🔙 ​Volver a Python Básico](./python_basico.md)
