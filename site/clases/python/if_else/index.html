@@ -11,10 +11,8 @@
       
       
       
-        <link rel="prev" href="../funcion_print/">
+        <link rel="prev" href="../funcion_input/">
       
-      
-        <link rel="next" href="../funcion_input/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.ico">
@@ -22,7 +20,7 @@
     
     
       
-        <title>📊 Variables - Pensamiento Computacional y Testing de Aplicaciones 2026</title>
+        <title>🔀 If - Else - Pensamiento Computacional y Testing de Aplicaciones 2026</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#variables-tipos-de-datos-y-operadores" class="md-skip">
+        <a href="#condicionales-if-else-y-elif" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              📊 Variables
+              🔀 If - Else
             
           </span>
         </div>
@@ -628,31 +626,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    📊 Variables
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../variables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -662,242 +639,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#que-es-una-variable" class="md-nav__link">
-    <span class="md-ellipsis">
-      📦 ¿Qué es una variable?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ejemplo-basico" class="md-nav__link">
-    <span class="md-ellipsis">
-      ✨ Ejemplo básico
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usando-variables-con-print" class="md-nav__link">
-    <span class="md-ellipsis">
-      🖨️ Usando variables con print()
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🖨️ Usando variables con print()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#combinando-variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔤 Combinando variables
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#forma-recomendada-f-strings" class="md-nav__link">
-    <span class="md-ellipsis">
-      ⚠️ Forma recomendada (f-strings)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#desafio" class="md-nav__link">
-    <span class="md-ellipsis">
-      🚀 Desafío
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reglas-para-nombres-de-variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      📏 Reglas para nombres de variables
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📏 Reglas para nombres de variables">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#correctos" class="md-nav__link">
-    <span class="md-ellipsis">
-      ✅ Correctos
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#incorrectos" class="md-nav__link">
-    <span class="md-ellipsis">
-      ❌ Incorrectos
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tipos-de-datos" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔢 Tipos de datos
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔢 Tipos de datos">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#string-texto" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔤 String (texto)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#int-numero-entero" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔢 Int (número entero)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#float-numero-decimal" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔢 Float (número decimal)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#boolean-verdadero-o-falso" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔘 Boolean (verdadero o falso)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ver-el-tipo-de-dato" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔍 Ver el tipo de dato
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operadores" class="md-nav__link">
-    <span class="md-ellipsis">
-      ➕ Operadores
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operadores-aritmeticos" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔢 Operadores aritméticos
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operadores-de-comparacion" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔍 Operadores de comparación
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operadores-logicos" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔗 Operadores lógicos
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ejercicios" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧪 Ejercicios
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mini-cierre-conceptual" class="md-nav__link">
-    <span class="md-ellipsis">
-      🧩 Mini cierre conceptual
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#volver-a-python-basico" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔙 ​Volver a Python Básico
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -929,10 +670,31 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../if_else/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    🔀 If - Else
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -942,6 +704,263 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 ¿Qué es un if?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧠 ¿Qué es un if?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-basico" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✨ Ejemplo básico
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#muy-importante-indentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ ¡Muy importante! Indentación
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ ¡Muy importante! Indentación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-comun" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Error común
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regla-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Regla clave
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operadores-que-usamos-en-condiciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Operadores que usamos en condiciones
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Operadores que usamos en condiciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo-con-comparacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejemplo con comparación
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agregando-else" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔁 Agregando else
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔁 Agregando else">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejemplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✨ Ejemplo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 ¿Cómo funciona?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiples-caminos-elif" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔀 Múltiples caminos: elif
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejemplo_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✨ Ejemplo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importante" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Importante
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combinando-condiciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Combinando condiciones
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-comunes" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Errores comunes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Errores comunes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usar-en-vez-de" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Usar = en vez de ==
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#olvidar-los" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Olvidar los :
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mala-indentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Mala indentación
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relacion-con-diagramas-de-flujo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Relación con diagramas de flujo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desafio" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Desafío
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mini-cierre-conceptual" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Mini cierre conceptual
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volver-a-python-basico" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔙 ​Volver a Python Básico
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -989,15 +1008,16 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#que-es-una-variable" class="md-nav__link">
+  <a href="#que-es-un-if" class="md-nav__link">
     <span class="md-ellipsis">
-      📦 ¿Qué es una variable?
+      🧠 ¿Qué es un if?
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="🧠 ¿Qué es un if?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#ejemplo-basico" class="md-nav__link">
     <span class="md-ellipsis">
       ✨ Ejemplo básico
@@ -1005,30 +1025,35 @@
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#usando-variables-con-print" class="md-nav__link">
+  <a href="#muy-importante-indentacion" class="md-nav__link">
     <span class="md-ellipsis">
-      🖨️ Usando variables con print()
+      ⚠️ ¡Muy importante! Indentación
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🖨️ Usando variables con print()">
+    <nav class="md-nav" aria-label="⚠️ ¡Muy importante! Indentación">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#combinando-variables" class="md-nav__link">
+  <a href="#error-comun" class="md-nav__link">
     <span class="md-ellipsis">
-      🔤 Combinando variables
+      ❌ Error común
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#forma-recomendada-f-strings" class="md-nav__link">
+  <a href="#regla-clave" class="md-nav__link">
     <span class="md-ellipsis">
-      ⚠️ Forma recomendada (f-strings)
+      🧠 Regla clave
     </span>
   </a>
   
@@ -1040,37 +1065,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#desafio" class="md-nav__link">
+  <a href="#operadores-que-usamos-en-condiciones" class="md-nav__link">
     <span class="md-ellipsis">
-      🚀 Desafío
+      🔍 Operadores que usamos en condiciones
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reglas-para-nombres-de-variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      📏 Reglas para nombres de variables
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📏 Reglas para nombres de variables">
+    <nav class="md-nav" aria-label="🔍 Operadores que usamos en condiciones">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#correctos" class="md-nav__link">
+  <a href="#ejemplo-con-comparacion" class="md-nav__link">
     <span class="md-ellipsis">
-      ✅ Correctos
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#incorrectos" class="md-nav__link">
-    <span class="md-ellipsis">
-      ❌ Incorrectos
+      🧪 Ejemplo con comparación
     </span>
   </a>
   
@@ -1082,55 +1089,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tipos-de-datos" class="md-nav__link">
+  <a href="#agregando-else" class="md-nav__link">
     <span class="md-ellipsis">
-      🔢 Tipos de datos
+      🔁 Agregando else
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🔢 Tipos de datos">
+    <nav class="md-nav" aria-label="🔁 Agregando else">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#string-texto" class="md-nav__link">
+  <a href="#ejemplo" class="md-nav__link">
     <span class="md-ellipsis">
-      🔤 String (texto)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#int-numero-entero" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔢 Int (número entero)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#float-numero-decimal" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔢 Float (número decimal)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#boolean-verdadero-o-falso" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔘 Boolean (verdadero o falso)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ver-el-tipo-de-dato" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔍 Ver el tipo de dato
+      ✨ Ejemplo
     </span>
   </a>
   
@@ -1142,36 +1113,96 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operadores" class="md-nav__link">
+  <a href="#como-funciona" class="md-nav__link">
     <span class="md-ellipsis">
-      ➕ Operadores
+      🧠 ¿Cómo funciona?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#operadores-aritmeticos" class="md-nav__link">
+  <a href="#multiples-caminos-elif" class="md-nav__link">
     <span class="md-ellipsis">
-      🔢 Operadores aritméticos
+      🔀 Múltiples caminos: elif
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#operadores-de-comparacion" class="md-nav__link">
+  <a href="#ejemplo_1" class="md-nav__link">
     <span class="md-ellipsis">
-      🔍 Operadores de comparación
+      ✨ Ejemplo
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#operadores-logicos" class="md-nav__link">
+  <a href="#importante" class="md-nav__link">
     <span class="md-ellipsis">
-      🔗 Operadores lógicos
+      🧠 Importante
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combinando-condiciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Combinando condiciones
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-comunes" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Errores comunes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Errores comunes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usar-en-vez-de" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Usar = en vez de ==
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#olvidar-los" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Olvidar los :
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mala-indentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Mala indentación
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relacion-con-diagramas-de-flujo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Relación con diagramas de flujo
     </span>
   </a>
   
@@ -1181,6 +1212,15 @@
   <a href="#ejercicios" class="md-nav__link">
     <span class="md-ellipsis">
       🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desafio" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Desafío
     </span>
   </a>
   
@@ -1220,165 +1260,174 @@
 
 
 
-<h1 id="variables-tipos-de-datos-y-operadores">📊 Variables, tipos de datos y operadores</h1>
-<p>En esta clase vamos a empezar a programar “de verdad”.</p>
-<p>👉 Hasta ahora mostramos información…<br />
-👉 Ahora vamos a <strong>guardar datos, usarlos y hacer cálculos</strong></p>
-<hr />
-<h2 id="que-es-una-variable">📦 ¿Qué es una variable?</h2>
-<p>Una variable es un <strong>espacio en memoria donde guardamos un valor</strong>.</p>
-<p>👉 Pensalo como una caja con nombre</p>
-<hr />
-<h2 id="ejemplo-basico">✨ Ejemplo básico</h2>
-<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Maxi&quot;</span>
-<span class="n">edad</span> <span class="o">=</span> <span class="mi">22</span>
-</code></pre></div>
-<p>📌 Creamos dos variables:</p>
+<h1 id="condicionales-if-else-y-elif">🔀 Condicionales: if, else y elif</h1>
+<p>Hasta ahora nuestros programas ejecutaban todo en orden…</p>
+<p>👉 Pero en la vida real necesitamos tomar decisiones:</p>
 <ul>
-<li><code>nombre</code> guarda texto</li>
-<li><code>edad</code> guarda un número</li>
+<li>Si llueve → llevo paraguas ☔  </li>
+<li>Si tengo hambre → como 🍕  </li>
+<li>Si apruebo → festejo 🎉  </li>
 </ul>
+<p>En programación hacemos lo mismo con <strong>condicionales</strong></p>
 <hr />
-<h2 id="usando-variables-con-print">🖨️ Usando variables con <code>print()</code></h2>
-<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Maxi&quot;</span>
-<span class="n">edad</span> <span class="o">=</span> <span class="mi">22</span>
+<h2 id="que-es-un-if">🧠 ¿Qué es un <code>if</code>?</h2>
+<p>La estructura <code>if</code> nos permite ejecutar código <strong>solo si se cumple una condición</strong></p>
+<hr />
+<h3 id="ejemplo-basico">✨ Ejemplo básico</h3>
+<div class="highlight"><pre><span></span><code><span class="n">edad</span> <span class="o">=</span> <span class="mi">18</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">nombre</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">edad</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sos mayor de edad&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>📌 Si la condición es verdadera → se ejecuta el bloque
+📌 Si es falsa → no pasa nada</p>
+<hr />
+<h2 id="muy-importante-indentacion">⚠️ ¡Muy importante! Indentación</h2>
+<p>Python usa <strong>indentación (espacios)</strong> para definir bloques</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Esto está bien&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
-<h3 id="combinando-variables">🔤 Combinando variables</h3>
-<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hola&quot;</span><span class="p">,</span> <span class="n">nombre</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tenés&quot;</span><span class="p">,</span> <span class="n">edad</span><span class="p">,</span> <span class="s2">&quot;años&quot;</span><span class="p">)</span>
+<h3 id="error-comun">❌ Error común</h3>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="p">:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Esto rompe todo&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>👉 Esto da error porque falta indentación</p>
+<hr />
+<h3 id="regla-clave">🧠 Regla clave</h3>
+<p>👉 Todo lo que depende del <code>if</code> debe estar <strong>indentado (tab o 4 espacios)</strong></p>
+<hr />
+<h2 id="operadores-que-usamos-en-condiciones">🔍 Operadores que usamos en condiciones</h2>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span>   <span class="n">mayor</span> <span class="n">que</span>
+<span class="o">&lt;</span>   <span class="n">menor</span> <span class="n">que</span>
+<span class="o">&gt;=</span>  <span class="n">mayor</span> <span class="n">o</span> <span class="n">igual</span>
+<span class="o">&lt;=</span>  <span class="n">menor</span> <span class="n">o</span> <span class="n">igual</span>
+<span class="o">==</span>  <span class="n">igual</span>
+<span class="o">!=</span>  <span class="n">distinto</span>
 </code></pre></div>
 <hr />
-<h3 id="forma-recomendada-f-strings">⚠️ Forma recomendada (f-strings)</h3>
-<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hola </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">, tenés </span><span class="si">{</span><span class="n">edad</span><span class="si">}</span><span class="s2"> años&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>👉 Más limpio y más profesional</p>
-<h2 id="desafio">🚀 Desafío</h2>
-<p>👉 Crear un programa que muestre:</p>
-<div class="highlight"><pre><span></span><code>Hola Maxi, tenés 22 años y medís 1.81 metros
-</code></pre></div>
-<p>👉 Usar variables y <code>f-string</code></p>
-<hr />
-<hr />
-<h2 id="reglas-para-nombres-de-variables">📏 Reglas para nombres de variables</h2>
-<p>✔️ Pueden tener letras, números y <code>_</code></p>
-<p>✔️ No pueden empezar con números</p>
-<p>✔️ No usar espacios</p>
-<p>✔️ Son sensibles a mayúsculas/minúsculas</p>
-<hr />
-<h3 id="correctos">✅ Correctos</h3>
-<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Ana&quot;</span>
-<span class="n">edad_2</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">totalCompra</span> <span class="o">=</span> <span class="mi">100</span>
-</code></pre></div>
-<hr />
-<h3 id="incorrectos">❌ Incorrectos</h3>
-<div class="highlight"><pre><span></span><code><span class="mi">2</span><span class="n">edad</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">mi</span> <span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Juan&quot;</span>
-</code></pre></div>
-<hr />
-<h2 id="tipos-de-datos">🔢 Tipos de datos</h2>
-<p>Cada variable guarda un tipo de información.</p>
-<hr />
-<h3 id="string-texto">🔤 String (texto)</h3>
-<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Maxi&quot;</span>
-</code></pre></div>
-<hr />
-<h3 id="int-numero-entero">🔢 Int (número entero)</h3>
-<div class="highlight"><pre><span></span><code><span class="n">edad</span> <span class="o">=</span> <span class="mi">22</span>
-</code></pre></div>
-<hr />
-<h3 id="float-numero-decimal">🔢 Float (número decimal)</h3>
-<div class="highlight"><pre><span></span><code><span class="n">altura</span> <span class="o">=</span> <span class="mf">1.81</span>
-</code></pre></div>
-<hr />
-<h3 id="boolean-verdadero-o-falso">🔘 Boolean (verdadero o falso)</h3>
-<div class="highlight"><pre><span></span><code><span class="n">es_estudiante</span> <span class="o">=</span> <span class="kc">True</span>
-</code></pre></div>
-<hr />
-<h3 id="ver-el-tipo-de-dato">🔍 Ver el tipo de dato</h3>
-<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">nombre</span><span class="p">))</span> <span class="c1"># &lt;class &#39;str&#39;&gt;</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">edad</span><span class="p">))</span> <span class="c1"># &lt;class &#39;int&#39;&gt;</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">altura</span><span class="p">))</span> <span class="c1"># &lt;class &#39;float&#39;&gt;</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">es_estudiante</span><span class="p">))</span> <span class="c1"># &lt;class &#39;bool&#39;&gt;</span>
-</code></pre></div>
-<p>👉 Nos dice qué tipo de dato es cada variable</p>
-<hr />
-<h2 id="operadores">➕ Operadores</h2>
-<p>Los operadores nos permiten <strong>hacer cálculos o comparaciones</strong></p>
-<hr />
-<h2 id="operadores-aritmeticos">🔢 Operadores aritméticos</h2>
-<div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mi">3</span>
+<h3 id="ejemplo-con-comparacion">🧪 Ejemplo con comparación</h3>
+<div class="highlight"><pre><span></span><code><span class="n">nota</span> <span class="o">=</span> <span class="mi">7</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># suma</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># resta</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># multiplicación</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># división</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">//</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># división entera</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">%</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># resto</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># potencia</span>
+<span class="k">if</span> <span class="n">nota</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aprobado&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
-<h2 id="operadores-de-comparacion">🔍 Operadores de comparación</h2>
-<p>Devuelven <code>True</code> o <code>False</code></p>
-<div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mi">5</span>
+<h2 id="agregando-else">🔁 Agregando <code>else</code></h2>
+<p>¿Qué pasa si la condición es falsa?</p>
+<p>👉 Usamos <code>else</code></p>
+<hr />
+<h3 id="ejemplo">✨ Ejemplo</h3>
+<div class="highlight"><pre><span></span><code><span class="n">nota</span> <span class="o">=</span> <span class="mi">4</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># a mayor que b</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># a menor que b</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># a igual a b</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># a distinto de b</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># a mayor o igual que b</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># a menor o igual que b</span>
+<span class="k">if</span> <span class="n">nota</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aprobado&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Desaprobado&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
-<h2 id="operadores-logicos">🔗 Operadores lógicos</h2>
-<div class="highlight"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">y</span> <span class="o">=</span> <span class="kc">False</span>
+<h2 id="como-funciona">🧠 ¿Cómo funciona?</h2>
+<ul>
+<li>Si el <code>if</code> es verdadero → ejecuta ese bloque</li>
+<li>Si no → ejecuta el <code>else</code></li>
+</ul>
+<p>👉 Siempre se ejecuta <strong>uno de los dos</strong></p>
+<hr />
+<h2 id="multiples-caminos-elif">🔀 Múltiples caminos: <code>elif</code></h2>
+<p>Cuando tenemos más de dos opciones usamos <code>elif</code></p>
+<hr />
+<h2 id="ejemplo_1">✨ Ejemplo</h2>
+<div class="highlight"><pre><span></span><code><span class="n">nota</span> <span class="o">=</span> <span class="mi">8</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">x</span> <span class="ow">and</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># True si ambos son True (Y lógico)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">x</span> <span class="ow">or</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># True si al menos uno es True (Ó lógico)</span>
-<span class="nb">print</span><span class="p">(</span><span class="ow">not</span> <span class="n">x</span><span class="p">)</span>   <span class="c1"># False si x es True o True si x es False (NEGACIÓN lógico)</span>
+<span class="k">if</span> <span class="n">nota</span> <span class="o">&gt;=</span> <span class="mi">9</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Excelente&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aprobado&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Desaprobado&quot;</span><span class="p">)</span>
 </code></pre></div>
+<hr />
+<h2 id="importante">🧠 Importante</h2>
+<p>👉 Python evalúa de arriba hacia abajo</p>
+<p>👉 Se queda con la <strong>primera condición verdadera</strong></p>
+<hr />
+<h2 id="combinando-condiciones">🔗 Combinando condiciones</h2>
+<div class="highlight"><pre><span></span><code><span class="n">edad</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">tiene_dni</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span> <span class="ow">and</span> <span class="n">tiene_dni</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Puede votar&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="errores-comunes">⚠️ Errores comunes</h2>
+<h3 id="usar-en-vez-de">❌ Usar <code>=</code> en vez de <code>==</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">=</span> <span class="mi">18</span><span class="p">:</span>  <span class="c1"># ERROR</span>
+</code></pre></div>
+<p>✔️ Correcto:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">==</span> <span class="mi">18</span><span class="p">:</span>
+</code></pre></div>
+<hr />
+<h3 id="olvidar-los">❌ Olvidar los <code>:</code></h3>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span>   <span class="c1"># ERROR</span>
+</code></pre></div>
+<p>✔️ Correcto:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="p">:</span>
+</code></pre></div>
+<hr />
+<h3 id="mala-indentacion">❌ Mala indentación</h3>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span><span class="p">:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hola&quot;</span><span class="p">)</span>  <span class="c1"># ERROR</span>
+</code></pre></div>
+<hr />
+<h2 id="relacion-con-diagramas-de-flujo">🔄 Relación con diagramas de flujo</h2>
+<p>Un <code>if</code> se representa como una decisión:</p>
+<div class="highlight"><pre><span></span><code>        ¿edad &gt;= 18?
+           /   \
+         Sí     No
+        /         \
+  &quot;Mayor&quot;     &quot;Menor&quot;
+</code></pre></div>
+<p>👉 Cada camino representa una decisión del programa</p>
 <hr />
 <h2 id="ejercicios">🧪 Ejercicios</h2>
 <ol>
-<li>Crear una variable con tu nombre y otra con tu edad. Mostrarlas en pantalla.</li>
-<li>
-<p>Crear dos números y mostrar:</p>
-<ul>
-<li>suma</li>
-<li>resta</li>
-<li>multiplicación</li>
-<li>división</li>
+<li>Pedir la edad al usuario y mostrar si es mayor de edad</li>
+<li>Pedir un número y mostrar si es positivo</li>
+<li>Pedir una nota y mostrar si aprobó o no (&gt;= 6)</li>
+<li>Pedir dos números y mostrar cuál es mayor</li>
+<li>Pedir un número y mostrar si es par o impar</li>
+<li>Pedir una temperatura y decir si hace frío (&lt;15) o calor</li>
+<li>Pedir una contraseña y verificar si es correcta</li>
+<li>Pedir un número y decir si es mayor que 10, menor o igual</li>
+<li>Pedir tres notas y mostrar:<ul>
+<li>"Promociona" (&gt;= 8)</li>
+<li>"Aprueba" (&gt;= 6)</li>
+<li>"Recupera" (&lt; 6)</li>
 </ul>
 </li>
-<li>
-<p>Crear una variable con tu altura y mostrar su tipo</p>
-</li>
-<li>Mostrar si un número es mayor que otro</li>
-<li>Crear una variable booleana e imprimirla</li>
+<li>Pedir un número y decir si está entre 1 y 100</li>
 </ol>
+<hr />
+<h2 id="desafio">🚀 Desafío</h2>
+<p>👉 Crear un programa que:</p>
+<ul>
+<li>Pida la edad</li>
+<li>Pida si tiene licencia (True/False)</li>
+<li>Muestre si puede conducir</li>
+</ul>
 <hr />
 <h2 id="mini-cierre-conceptual">🧩 Mini cierre conceptual</h2>
 <ul>
-<li>Una <strong>variable</strong> guarda información</li>
-<li>Cada valor tiene un <strong>tipo de dato</strong></li>
-<li>Podemos usar <strong>operadores</strong> para trabajar con esos datos</li>
-<li>Python es: <ul>
-<li><strong>Tipado Dinámico</strong>: no necesitamos declarar el tipo y puede cambiar en tiempo de ejecución.</li>
-<li><strong>Tipado Fuerte</strong>: cada valor tiene un tipo y no se mezclan entre sí automáticamente.</li>
-</ul>
-</li>
+<li><code>if</code> permite tomar decisiones</li>
+<li><code>else</code> cubre el caso contrario</li>
+<li><code>elif</code> permite múltiples caminos</li>
+<li>La indentación en Python es obligatoria</li>
+<li>Las condiciones devuelven <code>True</code> o <code>False</code></li>
 </ul>
 <hr />
 <p>💡 A partir de ahora:</p>
-<p>👉 Ya podés empezar a hacer programas más interesantes</p>
-<p>👉 En la próxima clase vamos a tomar datos del usuario 😏</p>
+<p>👉 Tus programas ya pueden "pensar"</p>
+<p>👉 En la próxima clase vamos a repetir acciones automáticamente 😏</p>
 <hr />
 <h2 id="volver-a-python-basico"><a href="../python_basico/">🔙 ​Volver a Python Básico</a></h2>
 

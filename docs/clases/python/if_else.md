@@ -138,6 +138,7 @@ else:
 ## 🧠 Importante
 
 👉 Python evalúa de arriba hacia abajo
+
 👉 Se queda con la **primera condición verdadera**
 
 ---
@@ -220,10 +221,9 @@ Un `if` se representa como una decisión:
 7. Pedir una contraseña y verificar si es correcta
 8. Pedir un número y decir si es mayor que 10, menor o igual
 9. Pedir tres notas y mostrar:
-
-   * "Promociona" (>= 8)
-   * "Aprueba" (>= 6)
-   * "Recupera" (< 6)
+    * "Promociona" (>= 8)
+    * "Aprueba" (>= 6)
+    * "Recupera" (< 6)
 10. Pedir un número y decir si está entre 1 y 100
 
 ---
@@ -249,7 +249,9 @@ Un `if` se representa como una decisión:
 ---
 
 💡 A partir de ahora:
+
 👉 Tus programas ya pueden "pensar"
+
 👉 En la próxima clase vamos a repetir acciones automáticamente 😏
 
 ---
