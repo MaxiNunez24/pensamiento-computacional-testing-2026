@@ -5,9 +5,9 @@
 |Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
 |------|------                                   |------                                                 |------                                   |
 | 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
-| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo, e introducción a print()](./clases/python/python_basico.md) | [Python Básico: Continuación deprint() e Introducción a Variables](./clases/python/variables.md) | Resolver problemas sencillos utilizando Python |
-| 23/3 | [Python Básico: continuación de Variables, Tipos de datos y Operadores](./clases/python/variables.md) | input(), Estructuras de Control (if-else, bucles) | Convertir programas en funciones reutilizables |
-| 30/3 | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | ***3/4 - Sin clases (Viernes Santo)*** | Programas que procesen listas |
+| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo, e introducción a print()](./clases/python/python_basico.md) | [Python Básico: Continuación de print() e Introducción a Variables](./clases/python/variables.md) | Resolver problemas sencillos utilizando Python |
+| 23/3 | [Python Básico: continuación de Variables, Tipos de datos y Operadores](./clases/python/variables.md) | [Python Básico](./clases/python/python_basico.md): [input()](./clases/python/funcion_input.md), [Estructuras de Control (if-else)](./clases/python/if_else.md) | Resolver problemas más complejos utilizando datos ingresados por el usuario y controlando el flujo del programa |
+| 30/3 | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | ***3/4 - Sin clases (Viernes Santo)*** | Programas que contengan bucles y control de flujo más avanzado |
 | 6/4  | Listas y colecciones de datos | Diccionarios y estructuras clave-valor | Programa que administre datos |
 | 13/4 | Strings y manipulación de texto | Archivos (leer y escribir datos) | Programa que guarde información |
 | 20/4 | Introducción a la Programación Orientada a Objetos | Clases, objetos y métodos | Crear clases simples en Python |
