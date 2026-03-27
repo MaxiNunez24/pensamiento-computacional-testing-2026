@@ -58,6 +58,18 @@ print(f"Hola {nombre}, tenés {edad} años")
 
 👉 Más limpio y más profesional
 
+## 🚀 Desafío
+
+👉 Crear un programa que muestre:
+
+```
+Hola Maxi, tenés 22 años y medís 1.81 metros
+```
+
+👉 Usar variables y `f-string`
+
+---
+
 ---
 
 ## 📏 Reglas para nombres de variables
@@ -171,10 +183,10 @@ Devuelven `True` o `False`
 a = 10
 b = 5
 
-print(a > b)
-print(a < b)
-print(a == b)
-print(a != b)
+print(a > b) # a mayor que b
+print(a < b) # a menor que b
+print(a == b) # a igual a b
+print(a != b) # a distinto de b
 ```
 
 ---
@@ -185,9 +197,9 @@ print(a != b)
 x = True
 y = False
 
-print(x and y)
-print(x or y)
-print(not x)
+print(x and y) # True si ambos son True (Y lógico)
+print(x or y)  # True si al menos uno es True (Ó lógico)
+print(not x)   # False si x es True o True si x es False (NEGACIÓN lógico)
 ```
 
 ---
@@ -204,18 +216,6 @@ print(not x)
 3. Crear una variable con tu altura y mostrar su tipo
 4. Mostrar si un número es mayor que otro
 5. Crear una variable booleana e imprimirla
-
----
-
-## 🚀 Desafío
-
-👉 Crear un programa que muestre:
-
-```
-Hola Maxi, tenés 22 años y medís 1.81 metros
-```
-
-👉 Usar variables y `f-string`
 
 ---
 
