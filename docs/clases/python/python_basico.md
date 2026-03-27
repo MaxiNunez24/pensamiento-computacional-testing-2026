@@ -12,3 +12,5 @@
 ## [🖨️ La función `print()`](./funcion_print.md)
 
 ## [📊 Variables, Tipos de Datos y Operadores](./variables.md)
+
+## [⌨️ La función `input()`](./funcion_input.md)

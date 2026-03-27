@@ -1,4 +1,4 @@
-# 🖨️ La función `print()`
+# 🖨️ La función `print()` (Salida de datos)
 
 La función más importante para empezar es:
 

@@ -144,8 +144,10 @@ es_estudiante = True
 ### 🔍 Ver el tipo de dato
 
 ```python
-print(type(nombre))
-print(type(edad))
+print(type(nombre)) # <class 'str'>
+print(type(edad)) # <class 'int'>
+print(type(altura)) # <class 'float'>
+print(type(es_estudiante)) # <class 'bool'>
 ```
 
 👉 Nos dice qué tipo de dato es cada variable
@@ -187,6 +189,8 @@ print(a > b) # a mayor que b
 print(a < b) # a menor que b
 print(a == b) # a igual a b
 print(a != b) # a distinto de b
+print(a >= b) # a mayor o igual que b
+print(a <= b) # a menor o igual que b
 ```
 
 ---
