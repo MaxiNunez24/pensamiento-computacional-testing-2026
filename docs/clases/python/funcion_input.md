@@ -36,6 +36,18 @@ nombre = input("Ingresá tu nombre: ")
 print(f"Hola {nombre}")
 ```
 
+??? warning "Para concatenar cadenas de texto se utiliza el operador `+` o las f-strings. Ambas son equivalentes. Ejemplo:"
+    ```python
+    nombre = input("Ingrese su nombre: ")
+    apellido = input("Ingrese su apellido: ")
+    
+    nombre_completo = nombre + " " + apellido
+    nombre_completo = f"{nombre} {apellido}"
+
+    print(nombre_completo)
+    ```
+    En este ejemplo se necesita agregar un espacio entre el nombre y el apellido, por eso se incluye `" "` en la concatenación. En las f-strings, el espacio se agrega directamente dentro de la cadena.
+
 ---
 
 ## 🔴 IMPORTANTE: input siempre devuelve texto
