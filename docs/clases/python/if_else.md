@@ -220,7 +220,7 @@ Un `if` se representa como una decisión:
 6. Pedir una temperatura y decir si hace frío (<15) o calor
 7. Pedir una contraseña y verificar si es correcta
 8. Pedir un número y decir si es mayor que 10, menor o igual
-9. Pedir tres notas y mostrar:
+9. Pedir tres notas, calcular su promedio y mostrar:
     * "Promociona" (>= 8)
     * "Aprueba" (>= 6)
     * "Recupera" (< 6)
