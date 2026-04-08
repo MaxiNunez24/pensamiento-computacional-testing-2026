@@ -493,3 +493,6 @@ Regla:
 
 Mayor de edad → **18 años o más**
 !!! info "(Ayuda para pseudocódigo: mayor -> " > " , menor -> " < ", igual -> " == " )"
+
+## [⬅️​ ​Volver a Introducción a la Informática](./01_introduccion.md)
+## [➡️ Siguiente clase: Python Básico: Un poco de historia](./python/historia_caracteristicas.md)

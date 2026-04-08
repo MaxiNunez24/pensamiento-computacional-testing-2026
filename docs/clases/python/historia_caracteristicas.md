@@ -84,4 +84,5 @@ Como todo lenguaje, Python también tiene puntos débiles:
 
 ---
 
-## [🔙 ​Volver a Python Básico](./python_basico.md)
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: Instalando las herramientas](../instalacion/instalacion_herramientas.md)

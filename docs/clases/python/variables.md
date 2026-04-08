@@ -242,4 +242,4 @@ print(not x)   # False si x es True o True si x es False (NEGACIÓN lógico)
 
 ---
 
-## [🔙 ​Volver a Python Básico](./python_basico.md)
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)

@@ -231,4 +231,4 @@ Hola Juan, tenés 25 años y medís 1.75 metros
 
 ---
 
-## [🔙 ​Volver a Python Básico](./python_basico.md)
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)

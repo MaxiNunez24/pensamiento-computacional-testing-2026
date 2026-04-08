@@ -143,7 +143,9 @@ Las compuertas lógicas son los ***bloques básicos*** de construcción de los c
 - **NAND**: La salida es 0 solo si todas las entradas son 1 (es la negación de AND).
 
 - **NOR**: La salida es 0 si al menos una de las entradas es 1 (es la negación de OR).
-
 ![Compuertas Lógicas](../assets/images/compuertas_logicas.png)
 
 !!! example "[Experimentá con las compuertas lógicas y más en este simulador interactivo](https://logic.ly/demo/)" 
+
+## [⬅️​ ​Volver al Índice](./clases.md)
+## [➡️ Siguiente clase: ¿Qué es programar? Algoritmos, pseudocódigo y diagramas de flujo](02_que_es_programar.md)

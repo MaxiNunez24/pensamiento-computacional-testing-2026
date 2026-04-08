@@ -187,4 +187,4 @@ Python -> Java -> C++ -> JavaScript
 * Podemos combinar texto y variables
 
 
-## [🔙 ​Volver a Python Básico](./python_basico.md)
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)

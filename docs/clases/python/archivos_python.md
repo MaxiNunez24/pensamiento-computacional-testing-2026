@@ -4,6 +4,8 @@ Para escribir código en Python:
 
 * Creamos archivos con extensión: `.py`
 
+## [📺​ Video explicativo](https://www.youtube.com/watch?v=MzFvJ8nobFM)
+
 ## 📌 Convención de nombres
 
 Usamos **snake_case** para nombrar archivos (todo en minúscula, con guiones bajos entre palabras):
@@ -14,4 +16,5 @@ primer_programa.py
 
 ---
 
-## [🔙 ​Volver a Python Básico](./python_basico.md)
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: Ejecutar el programa](./ejecutar_programa.md)

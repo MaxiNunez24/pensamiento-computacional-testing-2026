@@ -8,6 +8,8 @@ Podés ejecutar el código de dos formas:
 
     Usualmente se encuentra en la parte superior derecha del editor, o también podés hacer clic derecho sobre el archivo y seleccionar "Run Python File in Terminal".
 
+## [📺​ Video explicativo](https://www.youtube.com/watch?v=7tfNpkiYfSY)
+
 ## Desde la terminal
 - La forma en que arrancó el lenguaje:
 
@@ -17,4 +19,5 @@ Podés ejecutar el código de dos formas:
 
 ---
 
-## [🔙 ​Volver a Python Básico](./python_basico.md)
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: La función print](./funcion_print.md)

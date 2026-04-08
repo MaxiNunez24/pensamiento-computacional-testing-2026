@@ -256,4 +256,4 @@ Un `if` se representa como una decisión:
 
 ---
 
-## [🔙 ​Volver a Python Básico](./python_basico.md)
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)

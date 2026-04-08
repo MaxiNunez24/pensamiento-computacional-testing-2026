@@ -27,5 +27,5 @@ Esto abre el **intérprete interactivo (REPL)** donde podemos escribir código P
 
 
 
-## [🔙 ​Volver a Instalación de herramientas](./instalacion_herramientas.md)
+## [⬅️​ ​Volver a Instalación de herramientas](./instalacion_herramientas.md)
 
