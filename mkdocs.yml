@@ -48,3 +48,8 @@ nav:
       - 📊 Variables: clases/python/variables.md
       - ⌨️ La función input(): clases/python/funcion_input.md
       - 🔀 If - Else: clases/python/if_else.md
+      - 🔄 Bucles (While y For): clases/python/bucles.md
+  - 🗃️​ Material de apoyo:
+    - 📝 Índice: material_apoyo/material_apoyo.md
+    - 📚 Libros: material_apoyo/libros.md
+    - 🎥 Videos: material_apoyo/videos.md

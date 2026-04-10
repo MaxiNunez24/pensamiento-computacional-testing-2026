@@ -243,3 +243,4 @@ print(not x)   # False si x es True o True si x es False (NEGACIÓN lógico)
 ---
 
 ## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: La función Input()](./funcion_input.md)

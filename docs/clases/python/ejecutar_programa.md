@@ -20,4 +20,4 @@ Podés ejecutar el código de dos formas:
 ---
 
 ## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: La función print](./funcion_print.md)
+## [➡️ Siguiente clase: Python Básico: La función print()](./funcion_print.md)

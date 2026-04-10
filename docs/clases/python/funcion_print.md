@@ -188,3 +188,4 @@ Python -> Java -> C++ -> JavaScript
 
 
 ## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: Variables](./variables.md)

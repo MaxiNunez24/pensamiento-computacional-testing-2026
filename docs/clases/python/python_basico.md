@@ -16,3 +16,5 @@
 ## [⌨️ La función `input()`](./funcion_input.md)
 
 ## [🔀 Estructuras de Control: If - Else](./if_else.md)
+
+## [🔄 Estructuras de Control: Bucles (While y For)](./bucles.md)

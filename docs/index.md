@@ -54,27 +54,17 @@ Y repetir el proceso muchas veces.
 
 ---
 
-## 📚 Contenidos
-
-1. Fundamentos de computación
-2. Python básico
-3. Estructuras de datos
-4. Testing
-5. Proyecto organizador del centro
-6. Bolsa de trabajo para alumnos
-7. Proyecto de inteligencia artificial
-
----
-
 ## ​📖 Material del curso
 
 !!! info "Podés navegar el contenido usando el menú de la izquierda:"
 
-🏠​ Inicio
+🏠​ Inicio  *- (esta sección)*
 
-📅 Cronograma del curso
+[📅 Cronograma del curso](./cronograma.md)
 
-📚 Clases
+[📚 Clases](./clases/clases.md)
+
+[🗃️ Material de apoyo](./material_apoyo/material_apoyo.md)
 
 ---
 ## 🎯 Proyectos propuestos
@@ -110,3 +100,5 @@ Además de tener varios proyectos para presentar, un perfil en LinkedIn y un por
 - Estudiante de Licenciatura en Informática — UNLP
 
 - Instructor CFP 401 "Laura Vicuña"
+
+## [➡️ Comenzar curso](./clases/01_introduccion.md)

@@ -153,6 +153,16 @@ if edad >= 18 and tiene_dni:
     print("Puede votar")
 ```
 
+### Recordar los Operadores lógicos (repaso de Variables):
+```python
+x = True
+y = False
+
+print(x and y) # True si ambos son True (Y lógico)
+print(x or y)  # True si al menos uno es True (Ó lógico)
+print(not x)   # False si x es True o True si x es False (NEGACIÓN lógico)
+```
+
 ---
 
 ## ⚠️ Errores comunes
@@ -257,3 +267,4 @@ Un `if` se representa como una decisión:
 ---
 
 ## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: Bucles](./bucles.md)
