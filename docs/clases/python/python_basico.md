@@ -17,4 +17,6 @@
 
 ## [🔀 Estructuras de Control: If - Else](./if_else.md)
 
-## [🔄 Estructuras de Control: Bucles (While y For)](./bucles.md)
+## [🔄 Estructuras de Control: While For)](./while.md)
+
+## [🔁 Estructuras de Control: For)](./for.md)

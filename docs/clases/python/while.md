@@ -68,6 +68,8 @@ print("¡Listo!")
         # Falta contador += 1 !
     ```
 
+    Para finalizar un programa que quedó atrapado en un bucle infinito, podés usar `Ctrl + C` en la terminal o cerrar la ventana del programa.
+    
 ---
 
 ## 🧩 Partes de un bucle `while`
