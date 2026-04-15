@@ -1,4 +1,4 @@
-# 🔀 Condicionales: if, else y elif
+# 🔀 Estructura de control: `if`, `else` y `elif`
 
 Hasta ahora nuestros programas ejecutaban todo en orden…
 
@@ -267,4 +267,4 @@ Un `if` se representa como una decisión:
 ---
 
 ## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: Bucles](./bucles.md)
+## [➡️ Siguiente clase: Python Básico: While](./while.md)

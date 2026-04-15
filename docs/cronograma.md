@@ -8,8 +8,8 @@
 | 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo, e introducción a print()](./clases/python/python_basico.md) | [Python Básico: Continuación de print() e Introducción a Variables](./clases/python/variables.md) | Resolver problemas sencillos utilizando Python |
 | 23/3 | [Python Básico: continuación de Variables, Tipos de datos y Operadores](./clases/python/variables.md) | [Python Básico: La función input()](./clases/python/funcion_input.md)| Resolver problemas más complejos utilizando datos ingresados por el usuario y controlando el flujo del programa |
 | 30/3 | [Estructuras de Control (if-else)](./clases/python/if_else.md)  | ***3/4 - Sin clases (Viernes Santo)*** | Resolver problemas más complejos utilizando datos ingresados por el usuario y controlando el flujo del programa |
-| 6/4  | [Repaso de If-Else-Elif y buenas prácticas](./clases/python/if_else.md) | [Bucles: while y for](./clases/python/bucles.md) | Programas que contengan bucles y control de flujo más avanzado |
-| 13/4 | Listas y colecciones de datos, Diccionarios y estructuras clave-valor | Archivos y manejo de Strings en Python| Programa que guarde información |
+| 6/4  | [Repaso de If-Else-Elif y buenas prácticas](./clases/python/if_else.md) | [Bucles while](./clases/python/while.md) | Programas que contengan bucles y control de flujo más avanzado |
+| 13/4 | [Bucles for](./clases/python/for.md) | Listas y colecciones de datos, Diccionarios y estructuras clave-valor | Programas que interactúen con colecciones de datos |
 | 20/4 | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | Introducción a la Programación Orientada a Objetos: Clases, objetos y métodos | Crear clases simples en Python |
 | 27/4 | Atributos, constructores y encapsulamiento | ***1/5 - Sin clases (Día del Trabajador)*** | Modelar objetos del mundo real |
 | 4/5  | Relaciones entre objetos | Organización de programas con POO | Refactorizar programas anteriores usando clases |
