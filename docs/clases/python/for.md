@@ -228,3 +228,5 @@ for i in range(6):
     for i in range(1, n + 1):
         print("*" * i)
     ```
+
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)

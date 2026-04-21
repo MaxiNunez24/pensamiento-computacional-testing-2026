@@ -6,7 +6,6 @@
 
 ## [📁 Archivos de Python](./archivos_python.md)
 
-
 ## [▶️ Ejecutar el programa](./ejecutar_programa.md)
 
 ## [🖨️ La función `print()`](./funcion_print.md)
@@ -20,3 +19,5 @@
 ## [🔄 Estructuras de Control: While For)](./while.md)
 
 ## [🔁 Estructuras de Control: For)](./for.md)
+
+## [🧮​ Estructuras de Control: Ejercicios](./ejercicios_estructuras_control.md)

@@ -9,9 +9,9 @@
 | 23/3 | [Python Básico: continuación de Variables, Tipos de datos y Operadores](./clases/python/variables.md) | [Python Básico: La función input()](./clases/python/funcion_input.md)| Resolver problemas más complejos utilizando datos ingresados por el usuario y controlando el flujo del programa |
 | 30/3 | [Estructuras de Control (if-else)](./clases/python/if_else.md)  | ***3/4 - Sin clases (Viernes Santo)*** | Resolver problemas más complejos utilizando datos ingresados por el usuario y controlando el flujo del programa |
 | 6/4  | [Repaso de If-Else-Elif y buenas prácticas](./clases/python/if_else.md) | [Bucles while](./clases/python/while.md) | Programas que contengan bucles y control de flujo más avanzado |
-| 13/4 | [Bucles for](./clases/python/for.md) | Listas y colecciones de datos, Diccionarios y estructuras clave-valor | Programas que interactúen con colecciones de datos |
-| 20/4 | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | Introducción a la Programación Orientada a Objetos: Clases, objetos y métodos | Crear clases simples en Python |
-| 27/4 | Atributos, constructores y encapsulamiento | ***1/5 - Sin clases (Día del Trabajador)*** | Modelar objetos del mundo real |
+| 13/4 | [Bucles for](./clases/python/for.md) | [Ejercicios de repaso: Estructuras de Control](./clases/python/ejercicios_estructuras_control.md) | Controlar el flujo de los programas con buenas prácticas |
+| 20/4 | Listas y colecciones de datos, Diccionarios y estructuras clave-valor | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | Programas modulares que interactúen con colecciones de datos |
+| 27/4 | Introducción a la Programación Orientada a Objetos: Clases, objetos, métodos, atributos, constructores y encapsulamiento | ***1/5 - Sin clases (Día del Trabajador)*** | Modelar objetos del mundo real |
 | 4/5  | Relaciones entre objetos | Organización de programas con POO | Refactorizar programas anteriores usando clases |
 | 11/5 | Introducción al testing | Casos de prueba y debugging | Escribir pruebas para programas |
 | 18/5 | Introducción a Git | Control de versiones y flujo de trabajo | Crear repositorio y registrar cambios |
