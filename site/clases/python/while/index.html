@@ -916,6 +916,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ejercicios_estructuras_control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧮​ Ejercicios Estructuras de Control
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1479,16 +1501,16 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Ejercicio 8</span>
 <span class="n">cantidad</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">suma</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">mayor</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">menor</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">mayor</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># Cualquier nota va a ser mayor que -1</span>
+<span class="n">menor</span> <span class="o">=</span> <span class="mi">11</span> <span class="c1"># Cualquier nota va a ser menor que 11</span>
 
 <span class="n">nota</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá una nota (-1 para terminar): &quot;</span><span class="p">))</span>
 <span class="k">while</span> <span class="n">nota</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
     <span class="n">cantidad</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">suma</span> <span class="o">+=</span> <span class="n">nota</span>
-    <span class="k">if</span> <span class="n">mayor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">nota</span> <span class="o">&gt;</span> <span class="n">mayor</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">nota</span> <span class="o">&gt;</span> <span class="n">mayor</span><span class="p">:</span>
         <span class="n">mayor</span> <span class="o">=</span> <span class="n">nota</span>
-    <span class="k">if</span> <span class="n">menor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">nota</span> <span class="o">&lt;</span> <span class="n">menor</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">nota</span> <span class="o">&lt;</span> <span class="n">menor</span><span class="p">:</span>
         <span class="n">menor</span> <span class="o">=</span> <span class="n">nota</span>
     <span class="n">nota</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá una nota (-1 para terminar): &quot;</span><span class="p">))</span>
 

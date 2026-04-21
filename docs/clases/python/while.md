@@ -285,16 +285,16 @@ while numero < 6:
     # Ejercicio 8
     cantidad = 0
     suma = 0
-    mayor = None
-    menor = None
+    mayor = -1 # Cualquier nota va a ser mayor que -1
+    menor = 11 # Cualquier nota va a ser menor que 11
 
     nota = float(input("Ingresá una nota (-1 para terminar): "))
     while nota != -1:
         cantidad += 1
         suma += nota
-        if mayor is None or nota > mayor:
+        if nota > mayor:
             mayor = nota
-        if menor is None or nota < menor:
+        if nota < menor:
             menor = nota
         nota = float(input("Ingresá una nota (-1 para terminar): "))
 

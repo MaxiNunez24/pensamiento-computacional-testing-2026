@@ -179,25 +179,28 @@ El programa debe seguir mostrando el menú hasta que el usuario elija **Salir**.
 
 ---
 
-### 3️⃣ Registro de asistencia 🌿
-
+### 3️⃣ Contador de intentos 🌿
+ 
 **Dificultad:** 🌿 Intermedio
-
-El programa tiene una lista con 5 nombres de alumnos definidos en el código. Por cada alumno, preguntá si asistió (`"si"` / `"no"`). Al finalizar, mostrá:
-
-- Cuántos alumnos **asistieron**
-- Los nombres de los que **faltaron**
-
+ 
+El programa le hace una pregunta de cultura general al usuario (podés elegir cualquiera). El usuario puede intentar responderla hasta que acierte o hasta que se agoten **5 intentos**.
+ 
+Mostrá en cada intento si la respuesta es correcta o no. Al finalizar, mostrá cuántos intentos usó.
+ 
 **Ejemplo de salida esperada:**
-
+ 
 ```
-¿Asistió Ana? si
-¿Asistió Bruno? no
-...
-✅ Asistieron: 3 alumnos
-❌ Faltaron: Bruno, Diego
+¿Cuál es la capital de Australia? Londres
+❌ Incorrecto, intentá de nuevo. (Intento 1 de 5)
+¿Cuál es la capital de Australia? Sídney
+❌ Incorrecto, intentá de nuevo. (Intento 2 de 5)
+¿Cuál es la capital de Australia? Canberra
+✅ ¡Correcto! Lo lograste en 3 intentos.
 ```
-
+ 
+!!! note "Pista"
+    Usá un contador de intentos que se incremente en cada vuelta del bucle. El bucle termina cuando el usuario acierta **o** cuando el contador llega a 5.
+    
 ---
 
 ### 4️⃣ Mini banco 🌶️
@@ -392,3 +395,6 @@ Pedí un número `n` e imprimí una pirámide **invertida** de asteriscos de `n`
 
 !!! tip "Desafío extra"
     ¿Podés hacer que la pirámide esté **centrada**? Para eso vas a necesitar agregar espacios antes de cada fila.
+
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: Listas](./listas.md)

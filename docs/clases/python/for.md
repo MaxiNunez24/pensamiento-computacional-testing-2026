@@ -230,3 +230,4 @@ for i in range(6):
     ```
 
 ## [⬅️​ ​Volver a Python Básico](./python_basico.md)
+## [➡️ Siguiente clase: Python Básico: Ejercicios Estructuras de Control](./ejercicios_estructuras_control.md)
