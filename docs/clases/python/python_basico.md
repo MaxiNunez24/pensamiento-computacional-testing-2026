@@ -21,3 +21,5 @@
 ## [🔁 Estructuras de Control: For)](./for.md)
 
 ## [🧮​ Estructuras de Control: Ejercicios](./ejercicios_estructuras_control.md)
+
+## [📋 Listas en Python](./listas.md)
