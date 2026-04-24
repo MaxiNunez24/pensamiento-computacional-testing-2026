@@ -327,3 +327,5 @@ Representá una matriz 3×3 con una lista anidada. Calculá la suma de cada fila
 
 !!! quote "Para cerrar"
     Las listas son el pan de cada día en Python. Dominarlas bien — desde cómo acceder a sus elementos hasta cómo copiarlas correctamente — te ahorra muchos errores y te abre la puerta a escribir código más limpio y expresivo.
+
+## [⬅️​ ​Volver a Python Básico](./python_basico.md)
