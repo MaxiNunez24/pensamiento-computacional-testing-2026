@@ -23,3 +23,7 @@
 ## [🧮​ Estructuras de Control: Ejercicios](./ejercicios_estructuras_control.md)
 
 ## [📋 Listas en Python](./listas.md)
+
+## [📒 Cuadernillo de ejercicios: Listas](./cuadernillo_listas_finde.md)
+
+## [🎲 Tuplas y Sets](./tuplas_sets.md)

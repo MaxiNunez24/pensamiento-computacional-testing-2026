@@ -20,8 +20,13 @@ theme:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed: 
+      alternate_style: true
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.snippets
@@ -52,6 +57,8 @@ nav:
       - 🔁 For: clases/python/for.md
       - 🧮​ Ejercicios Estructuras de Control: clases/python/ejercicios_estructuras_control.md
       - 📋 Listas en Python: clases/python/listas.md
+      - 📒 Cuadernillo de ejercicios sobre Listas: clases/python/cuadernillo_listas_finde.md
+      - 🎲 Tuplas y Sets: clases/python/tuplas_sets.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
     - 📚 Libros: material_apoyo/libros.md

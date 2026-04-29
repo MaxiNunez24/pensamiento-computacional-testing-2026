@@ -1,48 +1,252 @@
-# 📅 Cronograma del curso
+# 📅 Cronograma del Curso
 
-!!! tip "Contamos con aproximadamente 73 clases de 3:20hs, por lo que tenemos más de 200 horas para aprender a programar con buenas prácticas y poder desarrollar proyectos reales."
+!!! tip "Pensamiento Computacional y Testing de Aplicaciones — CFP 401"
+    Curso anual de **73 clases × 3:20hs ≈ 240hs** para aprender a programar con buenas prácticas y desarrollar **proyectos reales**. Las clases son los **miércoles de 13:20 a 16:40** y los **viernes de 14:00 a 17:20**.
 
-|Semana|              Miércoles                  |                      Viernes                          |                  Práctica               |
-|------|------                                   |------                                                 |------                                   |
-| 9/3  | [Presentación del curso e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Ejercicios: identificar partes de una PC, Resolver problemas paso a paso |
-| 16/3 | [Python Básico: Historia, Características, Instalación, Entorno de desarrollo, e introducción a print()](./clases/python/python_basico.md) | [Python Básico: Continuación de print() e Introducción a Variables](./clases/python/variables.md) | Resolver problemas sencillos utilizando Python |
-| 23/3 | [Python Básico: continuación de Variables, Tipos de datos y Operadores](./clases/python/variables.md) | [Python Básico: La función input()](./clases/python/funcion_input.md)| Resolver problemas más complejos utilizando datos ingresados por el usuario y controlando el flujo del programa |
-| 30/3 | [Estructuras de Control (if-else)](./clases/python/if_else.md)  | ***3/4 - Sin clases (Viernes Santo)*** | Resolver problemas más complejos utilizando datos ingresados por el usuario y controlando el flujo del programa |
-| 6/4  | [Repaso de If-Else-Elif y buenas prácticas](./clases/python/if_else.md) | [Bucles while](./clases/python/while.md) | Programas que contengan bucles y control de flujo más avanzado |
-| 13/4 | [Bucles for](./clases/python/for.md) | [Ejercicios de repaso: Estructuras de Control](./clases/python/ejercicios_estructuras_control.md) | Controlar el flujo de los programas con buenas prácticas |
-| 20/4 | Listas y colecciones de datos, Diccionarios y estructuras clave-valor | Funciones y modularización: Parámetros, retorno de valores y alcance de variables | Programas modulares que interactúen con colecciones de datos |
-| 27/4 | Introducción a la Programación Orientada a Objetos: Clases, objetos, métodos, atributos, constructores y encapsulamiento | ***1/5 - Sin clases (Día del Trabajador)*** | Modelar objetos del mundo real |
-| 4/5  | Relaciones entre objetos | Organización de programas con POO | Refactorizar programas anteriores usando clases |
-| 11/5 | Introducción al testing | Casos de prueba y debugging | Escribir pruebas para programas |
-| 18/5 | Introducción a Git | Control de versiones y flujo de trabajo | Crear repositorio y registrar cambios |
-| 25/5 | GitHub y trabajo colaborativo | Publicar proyectos en GitHub | Subir programas del curso |
-| 1/6  | Introducción a frameworks web (Flask / Django) | Cómo funcionan las aplicaciones web | Mini app web simple |
-| 8/6  | Proyecto: Organizador del Centro | Proyecto: Organizador del Centro | Desarrollo del proyecto |
-| 15/6 | Proyecto: Organizador del Centro | Proyecto: Organizador del Centro | Continuar desarrollo |
-| 22/6 | Proyecto: Bolsa de trabajo para alumnos | Proyecto: Bolsa de trabajo para alumnos | Desarrollo del proyecto |
-| 29/6 | Introducción a Inteligencia Artificial | Herramientas y APIs de IA | Experimentos con IA |
-| 6/7  | Proyecto: IA o visión por computadora | Proyecto: IA o visión por computadora | Desarrollo del proyecto |
-| 13/7 | Continuar proyecto | ***10/7 - Sin clases (Independencia)*** | Avanzar proyecto |
-| 20/7 | ***22/7 - Receso invernal*** | ***24/7 - Receso invernal*** | No olvidarse de lo que dimos |
-| 27/7 | ***29/7 - Receso invernal*** | ***31/7 - Receso invernal*** | Recordar lo que vimos para volver a full |
-| 3/8  | Inicio del Proyecto Final | Diseño del proyecto final | Planificación |
-| 10/8 | Proyecto final | Proyecto final | Desarrollo |
-| 17/8 | Proyecto final | Proyecto final | Desarrollo |
-| 24/8 | Proyecto final | Proyecto final | Desarrollo |
-| 31/8 | Proyecto final | Proyecto final | Desarrollo |
-| 7/9  | Proyecto final | Proyecto final | Desarrollo |
-| 14/9 | Preparación para Nerdearla | Portfolio, GitHub y LinkedIn | Preparar proyectos para mostrar |
-| 21/9 | ***¡¡NERDEARLA!!***  | ***¡¡NERDEARLA!!***  | ***¡¡NERDEARLA!!***  |
-| 28/9 | Reflexión sobre Nerdearla | Nuevas ideas para proyectos | Mejorar proyectos |
-| 5/10 | Continuar proyecto final | Continuar proyecto final | Testing |
-| 12/10 | Proyecto final | Proyecto final | Mejoras |
-| 19/10 | Proyecto final | Proyecto final | Documentación |
-| 26/10 | Proyecto final | Proyecto final | Preparación de presentación |
-| 2/11 | Preparación para Expo | Ensayo de presentaciones | Ajustes finales |
-| 9/11 | ***Posible fecha EXPO 2026*** | ***Posible fecha EXPO 2026*** | Presentar proyectos |
-| 16/11 | Reflexión sobre la Expo | Mejoras finales a los proyectos | Continuar desarrollo |
-| 23/11 | Proyecto final | Proyecto final | Ajustes |
-| 30/11 | Proyecto final | Proyecto final | Preparar entrega |
-| 7/12 | Proyecto final | Proyecto final | Ensayo final |
-| 14/12 | ***¡Anteúltima clase!*** | ***¡Última clase!*** | Despedir el curso con una salida o celebración |
-| 21/12 | ***¡FELICES FIESTAS!!*** | ***¡FELICES FIESTAS!!*** | ***¡FELICES FIESTAS!!*** |
+!!! info "📌 Sobre esta nueva versión del cronograma"
+    Esta es la **reorganización oficial** post-clase de Listas (29/4/2026). Refleja varios ajustes pedagógicos:
+
+    - 🔄 **POO se mueve después de funciones y archivos** (no antes), para que llegue con contexto y ejemplos significativos.
+    - 🆕 **Git y GitHub se introducen ANTES del primer proyecto** para que puedan continuar el trabajo en sus casas.
+    - 🚀 **Primer proyecto integrador**: Sistema de Asistencias del CFP (CLI con persistencia JSON), después de POO y antes de frameworks web.
+    - 🧪 **Testing con `pytest`** entrelazado con el proyecto, no como bloque suelto.
+    - 🌐 **Frameworks web pateados** para después del primer proyecto, como migración del Sistema de Asistencias a web.
+
+---
+
+## 🗺️ Vista general del año
+
+### 🌍 Bloques temáticos del año
+
+| Bloque | Período | Foco |
+|--------|---------|------|
+| **🌱 Bloque 1 — Fundamentos** | Mar–Abr | Algoritmos, Python básico, control de flujo, listas |
+| **🌿 Bloque 2 — Colecciones y Modularización** | May | Tuplas, sets, diccionarios, funciones |
+| **🛠️ Bloque 3 — Persistencia y Versionado** | May | Archivos, JSON, Git/GitHub |
+| **🏗️ Bloque 4 — POO y Primer Proyecto** | May–Jul | POO + Sistema de Asistencias del CFP |
+| **❄️ Receso invernal** | Jul–Ago | — |
+| **🌐 Bloque 5 — Web y Segundo Proyecto** | Ago–Sep | Flask + Bolsa de Trabajo |
+| **🤖 Bloque 6 — IA y Proyecto Final** | Sep–Nov | IA, APIs, proyecto final, Nerdearla y Expo |
+| **🎓 Cierre** | Dic | Presentación y despedida |
+
+### 🎯 Hitos del año
+
+| Fecha | Hito |
+|-------|------|
+| 🚀 **Vie 5/6** | Arranque del **Sistema de Asistencias** (primer proyecto) |
+| ✅ **Vie 10/7** | Cierre del primer proyecto en CLI |
+| 🌐 **Vie 28/8** | Segundo proyecto: bolsa de trabajo (web) |
+| 🎉 **21/9** | **Nerdearla** |
+| 🤖 **Mié 7/10** | Arranque del proyecto final con IA |
+| 🏆 **9/11** | **Expo CFP 2026** |
+| 🎓 **Vie 18/12** | Última clase y celebración de cierre |
+
+---
+
+## 🌱 Bloque 1 — Fundamentos *(ya cursado)*
+
+!!! success "✅ Estado: completado al 29/4/2026"
+    Este bloque cubrió desde la presentación del curso hasta listas. List comprehensions y listas de listas se refuerzan en el cuadernillo del finde largo.
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 9/3 | [Presentación e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Identificar partes de una PC, resolver problemas paso a paso |
+| 16/3 | [Python Básico: historia, instalación, `print()`](./clases/python/python_basico.md) | [Continuación de `print()` e introducción a Variables](./clases/python/variables.md) | Resolver problemas sencillos con Python |
+| 23/3 | [Variables, tipos de datos y operadores](./clases/python/variables.md) | [La función `input()`](./clases/python/funcion_input.md) | Datos ingresados por el usuario y control de flujo básico |
+| 30/3 | [Estructuras de Control (`if-else`)](./clases/python/if_else.md) | 🚫 *Sin clases (Viernes Santo)* | Problemas con condicionales |
+| 6/4 | [Repaso de `if-else-elif` y buenas prácticas](./clases/python/if_else.md) | [Bucles `while`](./clases/python/while.md) | Programas con bucles y control de flujo avanzado |
+| 13/4 | [Bucles `for`](./clases/python/for.md) | [Ejercicios de repaso: Estructuras de Control](./clases/python/ejercicios_estructuras_control.md) | Buenas prácticas en control de flujo |
+| 20/4 | [Listas: parte teórica y operaciones](./clases/python/listas.md) | [Listas: list comprehensions y listas de listas](./clases/python/listas.md) | Recorridos, transformaciones, matrices |
+
+---
+
+## 🌿 Bloque 2 — Colecciones y Modularización
+
+!!! info "🎯 Objetivos del bloque"
+    Que los alumnos:
+
+    - 🧰 Conozcan el **resto de las colecciones** de Python (tuplas, sets, diccionarios) y entiendan **cuándo usar cada una**.
+    - 🧱 Sepan **modularizar** programas con funciones bien diseñadas.
+    - 📐 Entiendan los conceptos de **scope**, **parámetros** y **valor de retorno**.
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 27/4 | [🔁 **Cierre de listas + Tuplas y Sets**](./clases/python/tuplas_sets.md) | 🚫 *Sin clases (1/5 — Día del Trabajador)* | 📒 [Cuadernillo de listas](./clases/python/cuadernillo_listas_finde.md) durante el feriado largo |
+| 4/5 | [🗝️ **Diccionarios I**: estructura clave-valor, operaciones básicas](./clases/python/diccionarios_1.md) | [🗝️ **Diccionarios II**: iteración, métodos avanzados, anidamiento](./clases/python/diccionarios_2.md) | Modelar datos con diccionarios |
+| 11/5 | [📦 **Funciones I**: definición, parámetros, retorno](./clases/python/funciones_1.md) | [📦 **Funciones II**: scope, valores por defecto, `*args`/`**kwargs`](./clases/python/funciones_2.md) | Refactorizar programas anteriores con funciones |
+
+!!! tip "🧪 Detalle pedagógico"
+    En **Funciones II** se introduce `*args`/`**kwargs` *de manera suave* (solo concepto y un ejemplo), no se profundiza. El objetivo es que les suene cuando lo vean en código de terceros.
+
+---
+
+## 🛠️ Bloque 3 — Persistencia y Versionado
+
+!!! info "🎯 Objetivos del bloque"
+    Que los alumnos:
+
+    - 💾 Sepan **guardar y leer datos** entre ejecuciones del programa, usando **JSON**.
+    - 🌳 Manejen un **workflow básico de Git** (`init`, `add`, `commit`, `status`, `log`, `push`, `clone`, `pull`).
+    - 🐙 Tengan una **cuenta de GitHub funcional** y un repositorio personal del curso.
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 18/5 | [💾 **Manejo de archivos**: lectura, escritura, modos](./clases/python/archivos.md) | [📋 **JSON**: serialización, deserialización, `json.dump`/`json.load`](./clases/python/json.md) | Programa que persista datos en JSON |
+| 25/5 | [🌳 **Git básico**: workflow esencial (init/add/commit/push)](./clases/python/git_basico.md) | [🐙 **GitHub**: clone/pull, repositorios, README](./clases/python/github.md) | Subir todos los programas del curso al repo personal |
+
+!!! warning "⚠️ Sobre Git"
+    Esta clase es **deliberadamente acotada**. NO vamos a ver branches, merges, conflictos ni PRs. Solo el workflow mínimo para que puedan **continuar el código de clase en sus casas** y empezar a versionar el primer proyecto. Lo avanzado lo veremos cuando arranquen a colaborar entre ellos.
+
+---
+
+## 🏗️ Bloque 4 — POO y Primer Proyecto
+
+!!! info "🎯 Objetivos del bloque"
+    Que los alumnos:
+
+    - 🧬 Entiendan **clases, objetos, atributos, métodos y constructores**.
+    - 🛡️ Apliquen **encapsulamiento** y métodos especiales (`__str__`, `__repr__`, `__init__`).
+    - 🚀 Construyan **un proyecto real**: Sistema de Asistencias del CFP, integrando todo lo visto.
+    - 🧪 Escriban **tests automatizados con `pytest`** sobre código propio.
+
+### 📚 Sub-bloque 4.1 — POO esencial
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 1/6 | [🧬 **POO I**: clases, objetos, `__init__`, atributos y métodos](./clases/python/poo_1.md) | [🛡️ **POO II**: encapsulamiento, `__str__`, `__repr__`, métodos especiales](./clases/python/poo_2.md) | Modelar entidades del mundo real |
+
+### 🚀 Sub-bloque 4.2 — Proyecto: Sistema de Asistencias del CFP
+
+!!! example "🎯 Descripción del proyecto"
+    Aplicación de **consola (CLI)** que permite registrar la asistencia de los alumnos a las clases del CFP. Debe permitir:
+
+    - Cargar un **listado de alumnos** y un **listado de clases**.
+    - Registrar **asistencia / inasistencia** por alumno y clase.
+    - Calcular **porcentaje de asistencia** por alumno y por clase.
+    - **Persistir** los datos en JSON entre ejecuciones.
+    - Exponer un **menú interactivo** por consola.
+
+| Semana | Miércoles | Viernes | Avance del proyecto |
+|--------|-----------|---------|---------------------|
+| 8/6 | [📐 **Análisis del problema**: requisitos, flujo, casos de uso](./clases/proyecto_asistencias/01_analisis.md) | [🏗️ **Modelado de clases**: `Alumno`, `Clase`, `Asistencia`, `RegistroAsistencias`](./clases/proyecto_asistencias/02_modelado.md) | Diagrama de clases y esqueleto |
+| 15/6 | [💾 **Persistencia con JSON**: guardar y cargar el estado](./clases/proyecto_asistencias/03_persistencia.md) | [🖥️ **CLI**: menú interactivo y validaciones](./clases/proyecto_asistencias/04_cli.md) | Versión funcional con persistencia |
+| 22/6 | [🔄 **Refactor** y mejoras de diseño](./clases/proyecto_asistencias/05_refactor.md) | [🧪 **Testing con `pytest`**: primeros tests sobre el proyecto](./clases/proyecto_asistencias/06_testing.md) | Tests cubriendo lógica de negocio |
+| 29/6 | [🧪 **Más testing**: edge cases, fixtures, parametrización](./clases/proyecto_asistencias/07_testing_avanzado.md) | [🐛 **Debugging y manejo de excepciones**](./clases/python/excepciones.md) | Suite de tests sólida |
+| 6/7 | [🔗 **Relaciones entre objetos**: composición, agregación](./clases/python/relaciones_objetos.md) | 🚫 *Sin clases (10/7 — feriado turístico Independencia)* | Aplicar al proyecto |
+| 13/7 | [🎁 **Cierre del Sistema de Asistencias**: documentación, README, demo](./clases/proyecto_asistencias/08_cierre.md) | [🤔 **Retrospectiva del proyecto** + intro al próximo bloque](./clases/python/retrospectiva.md) | Proyecto completo en GitHub |
+
+!!! tip "🧠 ¿Por qué testing DESPUÉS de tener algo funcionando?"
+    Pedagógicamente, escribir tests sobre **código que ya existe y se entiende** es mucho más significativo que escribir tests sobre ejercicios artificiales. Acá los chicos ya saben qué hace su código → ahora aprenden a verificarlo automáticamente. Es el momento perfecto.
+
+!!! warning "⚠️ Relaciones entre objetos van DESPUÉS del proyecto inicial"
+    A diferencia del cronograma original, las relaciones entre objetos (composición, herencia) las vemos **refactorizando código que ya escribieron**. Eso da contexto real y evita el trauma típico de "herencia por la herencia misma".
+
+---
+
+## ❄️ Receso invernal
+
+| Semana | Miércoles | Viernes |
+|--------|-----------|---------|
+| 20/7 | 🚫 *Receso invernal (22/7)* | 🚫 *Receso invernal (24/7)* |
+| 27/7 | 🚫 *Receso invernal (29/7)* | 🚫 *Receso invernal (31/7)* |
+
+!!! tip "🧘 Para mantener el ritmo en el receso"
+    Se les propondrá un **mini-desafío opcional** del estilo "agregale una feature al Sistema de Asistencias" para que los más entusiasmados sigan tocando código.
+
+---
+
+## 🌐 Bloque 5 — Web y Segundo Proyecto
+
+!!! info "🎯 Objetivos del bloque"
+    Que los alumnos:
+
+    - 🌐 Entiendan **cómo funciona la web** (request/response, HTTP, rutas).
+    - 🍶 Construyan **una aplicación web con Flask**.
+    - 🚀 Migren el Sistema de Asistencias a web (mismo dominio del problema, nuevo frontend).
+    - 💼 Construyan un **segundo proyecto desde cero**: una bolsa de trabajo.
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 3/8 | [🌐 **Cómo funciona la web**: HTTP, request/response, rutas](./clases/python/web_intro.md) | [🍶 **Flask I**: instalación, primera app, rutas básicas](./clases/python/flask_1.md) | App "Hola Mundo" web funcionando |
+| 10/8 | [🍶 **Flask II**: templates con Jinja2, formularios](./clases/python/flask_2.md) | [🍶 **Flask III**: persistencia con JSON, manejo de estado](./clases/python/flask_3.md) | Mini-app de notas web |
+| 17/8 | [🚀 **Migración del Sistema de Asistencias a Flask**: planificación](./clases/proyecto_asistencias_web/01_plan.md) | [🚀 **Migración**: rutas y vistas](./clases/proyecto_asistencias_web/02_rutas.md) | Asistencias web funcional |
+| 24/8 | [💼 **Bolsa de Trabajo**: análisis y diseño](./clases/proyecto_bolsa/01_analisis.md) | [💼 **Bolsa de Trabajo**: modelado e inicio](./clases/proyecto_bolsa/02_modelado.md) | Esqueleto del proyecto |
+| 31/8 | [💼 **Bolsa**: rutas, vistas, lógica](./clases/proyecto_bolsa/03_rutas.md) | [💼 **Bolsa**: persistencia y autenticación básica](./clases/proyecto_bolsa/04_auth.md) | Versión funcional |
+| 7/9 | [💼 **Bolsa**: refinamiento y testing](./clases/proyecto_bolsa/05_refinamiento.md) | [💼 **Bolsa**: cierre y deploy local](./clases/proyecto_bolsa/06_cierre.md) | Proyecto cerrado |
+
+---
+
+## 🎉 Nerdearla
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 14/9 | [🎤 **Preparación para Nerdearla**: cómo aprovechar el evento](./clases/extra/preparacion_nerdearla.md) | [🌟 **Portfolio, GitHub y LinkedIn**](./clases/extra/portfolio.md) | Preparar perfil profesional |
+| 21/9 | 🎉 **¡¡NERDEARLA!!** | 🎉 **¡¡NERDEARLA!!** | Asistir y tomar notas |
+| 28/9 | [💡 **Reflexión sobre Nerdearla**: lo que vimos, ideas](./clases/extra/reflexion_nerdearla.md) | [🚀 **Brainstorm**: qué proyecto final querés hacer](./clases/extra/brainstorm_proyecto_final.md) | Definir proyecto final |
+
+---
+
+## 🤖 Bloque 6 — IA y Proyecto Final
+
+!!! info "🎯 Objetivos del bloque"
+    Que los alumnos:
+
+    - 🤖 Entiendan qué es **una API de IA** y cómo consumirla desde Python.
+    - 🔌 Sepan integrar **modelos de lenguaje** o **visión por computadora** en un programa propio.
+    - 🏆 Construyan un **proyecto final original** que integre todo lo aprendido.
+
+### 🤖 Sub-bloque 6.1 — Introducción a IA
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 5/10 | [🤖 **Introducción a IA**: conceptos, modelos de lenguaje, prompts](./clases/python/ia_intro.md) | [🔌 **APIs de IA**: cómo consumir una API REST desde Python](./clases/python/apis_ia.md) | Primer programa que llame a una IA |
+
+### 🏆 Sub-bloque 6.2 — Proyecto Final con IA
+
+!!! example "🎯 Posibilidades para el proyecto final"
+    Cada alumno o equipo elige su rumbo:
+
+    - 🤖 **Asistente conversacional** sobre algún dominio (recetas, programación, etc.).
+    - 👁️ **Clasificador de imágenes** con un modelo pre-entrenado.
+    - 📝 **Resumidor / corrector** de textos con LLM.
+    - 🎨 **Generador creativo** (cuentos, ideas de proyectos, etc.).
+    - 🎯 **Cualquier idea propia** que integre IA + lo aprendido.
+
+| Semana | Miércoles | Viernes | Avance |
+|--------|-----------|---------|--------|
+| 12/10 | [🏆 **Proyecto final**: definición y diseño](./clases/proyecto_final/01_diseno.md) | [🏆 **Proyecto final**: setup, primeras pruebas](./clases/proyecto_final/02_setup.md) | Esqueleto |
+| 19/10 | [🏆 **Proyecto final**: lógica core](./clases/proyecto_final/03_logica.md) | [🏆 **Proyecto final**: integración con IA](./clases/proyecto_final/04_integracion.md) | Versión alpha |
+| 26/10 | [🏆 **Proyecto final**: refinamiento](./clases/proyecto_final/05_refinamiento.md) | [🏆 **Proyecto final**: testing y manejo de errores](./clases/proyecto_final/06_testing.md) | Versión beta |
+| 2/11 | [🎤 **Preparación para Expo**: storytelling y presentación](./clases/extra/preparacion_expo.md) | [🎤 **Ensayo de presentaciones**](./clases/extra/ensayo_expo.md) | Demo lista |
+| 9/11 | 🏆 **EXPO CFP 2026** | 🏆 **EXPO CFP 2026** | Presentar al público |
+
+---
+
+## 🎓 Cierre del año
+
+| Semana | Miércoles | Viernes | Práctica |
+|--------|-----------|---------|----------|
+| 16/11 | [💡 **Reflexión sobre la Expo**: feedback y mejoras](./clases/extra/reflexion_expo.md) | [🛠️ **Mejoras finales** al proyecto](./clases/proyecto_final/07_mejoras.md) | Pulido |
+| 23/11 | [🛠️ **Proyecto final**: ajustes](./clases/proyecto_final/07_mejoras.md) | [📚 **Documentación final**](./clases/proyecto_final/08_documentacion.md) | README + demo |
+| 30/11 | [🎁 **Preparación de entrega**](./clases/proyecto_final/09_entrega.md) | [🎁 **Entrega del proyecto final**](./clases/proyecto_final/09_entrega.md) | Entrega oficial |
+| 7/12 | [🎤 **Ensayo final**: presentación interna](./clases/proyecto_final/10_ensayo.md) | [🎤 **Presentaciones internas**](./clases/proyecto_final/10_ensayo.md) | Cada uno presenta |
+| 14/12 | 🎉 **¡Anteúltima clase!** Repaso del año | 🎓 **¡ÚLTIMA CLASE!** Despedida y celebración | 🍕 Salida grupal |
+| 21/12 | 🎄 **¡Felices Fiestas!** | 🎄 **¡Felices Fiestas!** | Descanso merecido 🧘 |
+
+---
+
+## 🧪 Notas finales
+
+!!! warning "📐 Esto es una guía, no un dogma"
+    El cronograma puede ajustarse según el ritmo del grupo. Si un tema necesita más tiempo, se reorganiza. Si avanzamos rápido, podemos agregar contenido extra (testing más avanzado, programación funcional, decoradores, async, etc.).
+
+!!! tip "🎯 Filosofía pedagógica"
+    Este cronograma prioriza:
+
+    - 🛠️ **Construir cosas reales** sobre acumular teoría.
+    - 🔄 **Refactorizar código propio** sobre escribir código nuevo siempre.
+    - 🧪 **Aprender herramientas (Git, testing) en contexto** sobre verlas como bloques aislados.
+    - 🚀 **Que cada alumno termine el año con dos proyectos completos en GitHub** y un proyecto final con IA propio.
+
+!!! info "💬 Dudas y feedback"
+    Si algo del cronograma no se entiende o querés proponer cambios, **escribilo en el grupo** o charlemoslo en clase. Esto se construye entre todos 🧬.

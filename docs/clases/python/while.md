@@ -190,8 +190,11 @@ while numero < 6:
 
 !!! exercise "Ejercicio 8 ⭐"
     Pedile al usuario que ingrese notas (de 0 a 10) **hasta que ingrese -1**. Al final mostrá:
+    
     - La cantidad de notas ingresadas
+    
     - El promedio
+   
     - La nota más alta y la más baja
 
 ---
