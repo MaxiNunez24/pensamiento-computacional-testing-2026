@@ -1,0 +1,9 @@
+{
+  "markdown.styles": [
+    ".vscode/material-preview.css"
+  ],
+  "markdown.preview.breaks": false,
+  "markdown.preview.typographer": true,
+  "markdown.preview.fontSize": 16,
+  "markdown-preview-enhanced.previewTheme": "one-dark.css"
+}

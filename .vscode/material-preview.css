@@ -1,0 +1,177 @@
+/* Material for MkDocs — VS Code Preview Styles */
+
+:root {
+  --md-primary: #3f51b5;
+  --md-accent: #00bcd4;
+  --md-text: #37474f;
+  --md-text-light: #546e7a;
+  --md-bg: #ffffff;
+  --md-surface: #f5f5f5;
+  --md-border: #e0e0e0;
+  --md-code-bg: #272822;
+  --md-inline-code-bg: #f0f0f0;
+  --md-inline-code-color: #e91e63;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--md-text);
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px 32px 64px;
+}
+
+/* ── Headings ─────────────────────────────────────────────── */
+h1 {
+  font-size: 2em;
+  font-weight: 300;
+  color: var(--md-primary);
+  border-bottom: 2px solid var(--md-primary);
+  padding-bottom: 8px;
+  margin-top: 0;
+}
+h2 {
+  font-size: 1.4em;
+  font-weight: 400;
+  color: var(--md-primary);
+  border-bottom: 1px solid var(--md-border);
+  padding-bottom: 4px;
+}
+h3 { font-size: 1.15em; color: var(--md-text-light); }
+h4 { font-size: 1em; color: var(--md-text-light); }
+
+/* ── Links ────────────────────────────────────────────────── */
+a { color: var(--md-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Code ─────────────────────────────────────────────────── */
+code {
+  font-family: 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.85em;
+  background: var(--md-inline-code-bg);
+  color: var(--md-inline-code-color);
+  border-radius: 3px;
+  padding: 2px 5px;
+}
+pre {
+  background: var(--md-code-bg);
+  border-radius: 6px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+pre code {
+  background: none;
+  color: #f8f8f2;
+  padding: 0;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+/* ── Tables ───────────────────────────────────────────────── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+thead tr { background: var(--md-primary); }
+th {
+  color: white;
+  font-weight: 500;
+  padding: 10px 16px;
+  text-align: left;
+}
+td { padding: 10px 16px; border-bottom: 1px solid var(--md-border); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--md-surface); }
+
+/* ── Blockquotes ──────────────────────────────────────────── */
+blockquote {
+  border-left: 4px solid var(--md-primary);
+  margin: 16px 0;
+  padding: 8px 16px;
+  background: var(--md-surface);
+  border-radius: 0 4px 4px 0;
+  color: var(--md-text-light);
+}
+blockquote p { margin: 4px 0; }
+
+/* ── Lists ────────────────────────────────────────────────── */
+ul, ol { padding-left: 24px; }
+li { margin: 4px 0; }
+
+/* ── Dividers ─────────────────────────────────────────────── */
+hr {
+  border: none;
+  border-top: 1px solid var(--md-border);
+  margin: 32px 0;
+}
+
+/* ── Admonitions (transformadas por admonition-preview.js) ── */
+.admonition {
+  border-radius: 4px;
+  margin: 20px 0;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+.admonition-title {
+  font-weight: 600;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.admonition-body {
+  padding: 12px 16px;
+  background: transparent;
+}
+.admonition-body p:first-child { margin-top: 0; }
+.admonition-body p:last-child  { margin-bottom: 0; }
+
+.admonition-body pre {
+  margin: 8px 0;
+  border-radius: 4px;
+}
+
+/* type colors */
+.admonition.note    { border-left: 4px solid #448aff; }
+.admonition.note    .admonition-title { background: #448aff22; color: #1565c0; }
+.admonition.info    { border-left: 4px solid #00b0ff; }
+.admonition.info    .admonition-title { background: #00b0ff22; color: #0277bd; }
+.admonition.tip     { border-left: 4px solid #00bfa5; }
+.admonition.tip     .admonition-title { background: #00bfa522; color: #00695c; }
+.admonition.warning { border-left: 4px solid #ff9100; }
+.admonition.warning .admonition-title { background: #ff910022; color: #e65100; }
+.admonition.danger  { border-left: 4px solid #ff1744; }
+.admonition.danger  .admonition-title { background: #ff174422; color: #b71c1c; }
+.admonition.success { border-left: 4px solid #00c853; }
+.admonition.success .admonition-title { background: #00c85322; color: #1b5e20; }
+.admonition.example { border-left: 4px solid #7c4dff; }
+.admonition.example .admonition-title { background: #7c4dff22; color: #4527a0; }
+.admonition.question { border-left: 4px solid #64dd17; }
+.admonition.question .admonition-title { background: #64dd1722; color: #33691e; }
+
+/* collapsible (??? syntax) */
+details.admonition { border-left: 4px solid #90a4ae; }
+details.admonition > summary {
+  font-weight: 600;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 14px;
+  background: #90a4ae22;
+  color: #37474f;
+  cursor: pointer;
+  list-style: none;
+}
+details.admonition > summary::-webkit-details-marker { display: none; }
+details.admonition > .admonition-body { padding: 12px 16px; background: transparent; }
