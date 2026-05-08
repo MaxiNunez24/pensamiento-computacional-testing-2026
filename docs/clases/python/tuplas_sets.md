@@ -156,6 +156,9 @@ La inmutabilidad de las tuplas tiene **dos consecuencias importantes**:
 
 #### 🛡️ 1. Protección contra modificaciones accidentales
 
+!!! note "👀 Adelanto"
+    Este ejemplo usa funciones, que vemos la semana que viene. Por ahora leelo como pseudocódigo y fijate en la idea principal.
+
 ```python
 def imprimir_punto(p):
     p[0] = 999  # Si p fuera lista, esto modificaría el original (¡efecto colateral!)
@@ -218,19 +221,6 @@ Esto se usa **muchísimo** en Python real. Mirá los casos típicos:
 
     Internamente Python crea la tupla `(b, a)` y la desempaqueta en `a, b`. ✨
 
-=== "🎁 Funciones que devuelven múltiples valores"
-
-    Una función puede "devolver dos cosas" usando una tupla:
-
-    ```python
-    def estadisticas(numeros):
-        return min(numeros), max(numeros), sum(numeros) / len(numeros)
-
-    minimo, maximo, promedio = estadisticas([3, 7, 2, 9, 4])
-    print(minimo, maximo, promedio)  # 2 9 5.0
-    ```
-
-    Acá `estadisticas` devuelve una tupla de 3 elementos, y los desempaquetamos en 3 variables.
 
 === "🔁 Iteración sobre listas de tuplas"
 
@@ -259,6 +249,19 @@ Esto se usa **muchísimo** en Python real. Mirá los casos típicos:
     for i, palabra in enumerate(palabras):
         print(f"{i}: {palabra}")
     ```
+=== "🎁 Funciones que devuelven múltiples valores"
+
+    Una función puede "devolver dos cosas" usando una tupla:
+
+    ```python
+    def estadisticas(numeros):
+        return min(numeros), max(numeros), sum(numeros) / len(numeros)
+
+    minimo, maximo, promedio = estadisticas([3, 7, 2, 9, 4])
+    print(minimo, maximo, promedio)  # 2 9 5.0
+    ```
+
+    Acá `estadisticas` devuelve una tupla de 3 elementos, y los desempaquetamos en 3 variables.
 
 ### 🎯 ¿Cuándo usar tuplas?
 
@@ -466,7 +469,7 @@ print(una_sola)  # {'Ana', 'Beto', 'Eva', 'Franco'}
 
 | Operación | Operador | Método | Significado |
 |-----------|----------|--------|-------------|
-| Unión | `A \| B` | `A.union(B)` | En A **o** en B |
+| Unión | `A | B` | `A.union(B)` | En A **o** en B |
 | Intersección | `A & B` | `A.intersection(B)` | En A **y** en B |
 | Diferencia | `A - B` | `A.difference(B)` | En A pero **no** en B |
 | Diferencia simétrica | `A ^ B` | `A.symmetric_difference(B)` | En **una sola** (no ambas) |
@@ -520,8 +523,8 @@ graph TD
     B -->|Sí| D{¿Va a cambiar?}
     C -->|No| E[🧮 Set]
     C -->|Sí| F[📋 Lista o 📦 Tupla<br/>según mutabilidad]
-    D -->|Sí| G[📋 Lista]
     D -->|No| H[📦 Tupla]
+    D -->|Sí| G[📋 Lista]
 ```
 
 ### 🌟 Ejemplos del mundo real
@@ -613,20 +616,32 @@ ips = [
     # {'192.168.0.1', '10.0.0.5', '172.16.0.2', '8.8.8.8'}
     ```
 
-### 🌿 Ejercicio 4 — Función con múltiples retornos
+### 🌿 Ejercicio 4 — Tupla con múltiples valores
 
-Escribí una función `analizar(numeros)` que reciba una lista de números y devuelva una tupla con: `(mínimo, máximo, promedio, cantidad_de_pares)`. Después llamala y desempaquetá el resultado.
+Dado el siguiente listado de números, calculá el mínimo, máximo, promedio y cantidad de pares. Guardá los cuatro resultados en una **tupla** llamada `resultado`, desempaquetala en cuatro variables e imprimí cada una.
+
+```python
+numeros = [3, 7, 2, 8, 5, 4, 9]
+```
+
+??? tip "💡 Pista"
+    Usá `min()`, `max()`, `sum()` y `len()` para calcular cada valor. Para contar pares podés iterar con un `for` y un `if n % 2 == 0`.
 
 ??? success "✅ Solución"
     ```python
-    def analizar(numeros):
-        minimo = min(numeros)
-        maximo = max(numeros)
-        promedio = sum(numeros) / len(numeros)
-        cant_pares = sum(1 for n in numeros if n % 2 == 0)
-        return minimo, maximo, promedio, cant_pares
+    numeros = [3, 7, 2, 8, 5, 4, 9]
 
-    mn, mx, prom, pares = analizar([3, 7, 2, 8, 5, 4, 9])
+    minimo = min(numeros)
+    maximo = max(numeros)
+    promedio = sum(numeros) / len(numeros)
+    cant_pares = 0
+    for n in numeros:
+        if n % 2 == 0:
+            cant_pares += 1
+
+    resultado = (minimo, maximo, promedio, cant_pares)
+
+    mn, mx, prom, pares = resultado
     print(f"Min: {mn}, Max: {mx}, Promedio: {prom:.2f}, Pares: {pares}")
     # Min: 2, Max: 9, Promedio: 5.43, Pares: 3
     ```
