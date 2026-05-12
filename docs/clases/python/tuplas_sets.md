@@ -263,6 +263,65 @@ Esto se usa **muchísimo** en Python real. Mirá los casos típicos:
 
     Acá `estadisticas` devuelve una tupla de 3 elementos, y los desempaquetamos en 3 variables.
 
+### 🤐 `zip()` — iterar dos colecciones en paralelo
+
+`zip()` combina dos (o más) iterables en tuplas de pares. Es la compañera natural del desempaquetado.
+
+```python
+alumnos = ["Ana", "Beto", "Cami"]
+notas   = [9, 6, 8]
+
+for alumno, nota in zip(alumnos, notas):   # ← desempaquetado de tuplas al vuelo
+    print(f"{alumno}: {nota}")
+# Ana: 9
+# Beto: 6
+# Cami: 8
+```
+
+`zip()` devuelve tuplas — por eso el desempaquetado `alumno, nota` funciona exactamente igual que con `enumerate()`.
+
+=== "🔲 `zip(*matriz)` — recorrer columnas"
+
+    ¿Recordás el ejercicio de "suma por columnas" del cuadernillo? Lo hacíamos con doble índice:
+
+    ```python
+    # Con doble índice (la que ya conocemos)
+    for c in range(len(matriz[0])):
+        total = sum(matriz[f][c] for f in range(len(matriz)))
+        print(f"Col {c} → {total}")
+    ```
+
+    Con `zip(*matriz)` el `*` desempaqueta las filas como argumentos separados, y `zip` las recorre columna por columna:
+
+    ```python
+    matriz = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+
+    for i, columna in enumerate(zip(*matriz)):
+        print(f"Col {i} → {columna} → suma: {sum(columna)}")
+    # Col 0 → (1, 4, 7) → suma: 12
+    # Col 1 → (2, 5, 8) → suma: 15
+    # Col 2 → (3, 6, 9) → suma: 18
+    ```
+
+    !!! tip "🧠 ¿Qué hace `zip(*matriz)`?"
+        El `*` desempaqueta la lista de filas como si escribieras `zip(fila0, fila1, fila2, ...)`. Después `zip` las combina por posición — columna por columna en vez de fila por fila. Es la forma pythónica de transponer una matriz.
+
+=== "⚠️ Largo del más corto"
+
+    `zip()` se detiene cuando se acaba el iterable más corto:
+
+    ```python
+    letras  = ["a", "b", "c", "d"]
+    numeros = [1, 2]
+
+    print(list(zip(letras, numeros)))  # [('a', 1), ('b', 2)]
+    # ← 'c' y 'd' quedaron afuera
+    ```
+
 ### 🎯 ¿Cuándo usar tuplas?
 
 !!! success "✅ Usá tuplas cuando..."
@@ -948,3 +1007,9 @@ A ^ B    # diferencia simétrica
     ```
 
 ¡Nos vemos la próxima! 🧬✨
+
+---
+
+## [⬅️ Anterior: Mini Parcial](./mini_parcial.md)
+## [📚 Índice](../clases.md#colecciones)
+## [➡️ Siguiente: Diccionarios](./diccionarios.md)

@@ -19,6 +19,7 @@ theme:
   
 markdown_extensions:
   - admonition
+  - attr_list
   - pymdownx.details
   - pymdownx.superfences:
       custom_fences:
@@ -40,8 +41,7 @@ nav:
     - 📝 Índice: clases/clases.md
     - 🧑‍🏫 Introducción: clases/01_introduccion.md
     - 🧑‍💻 ¿Qué es programar?: clases/02_que_es_programar.md
-    - 🐍 Python Básico: 
-      - 📝 Contenidos: clases/python/python_basico.md
+    - 🐍 Python Básico:
       - 📜 Historía y características: clases/python/historia_caracteristicas.md
       - 💽​ Instalación: 
         - 💻 Instalando las herramientas: clases/instalacion/instalacion_herramientas.md
@@ -60,6 +60,9 @@ nav:
       - 📒 Cuadernillo de ejercicios sobre Listas: clases/python/cuadernillo_listas_finde.md
       - 📝 Mini Parcial: clases/python/mini_parcial.md
       - 🎲 Tuplas y Sets: clases/python/tuplas_sets.md
+      - 🗝️ Diccionarios: clases/python/diccionarios.md
+      - 📦 Funciones I: clases/python/funciones_1.md
+      - 📦 Funciones II: clases/python/funciones_2.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
     - 📚 Libros: material_apoyo/libros.md

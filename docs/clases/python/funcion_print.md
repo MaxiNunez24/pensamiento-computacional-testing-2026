@@ -187,5 +187,6 @@ Python -> Java -> C++ -> JavaScript
 * Podemos combinar texto y variables
 
 
-## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: Variables](./variables.md)
+## [⬅️ Anterior: Ejecutar el programa](./ejecutar_programa.md)
+## [📚 Índice](../clases.md#variables)
+## [➡️ Siguiente: Variables, tipos de datos y operadores](./variables.md)

@@ -27,5 +27,7 @@ Esto abre el **intérprete interactivo (REPL)** donde podemos escribir código P
 
 
 
-## [⬅️​ ​Volver a Instalación de herramientas](./instalacion_herramientas.md)
+## [⬅️ Anterior: Instalando las herramientas](./instalacion_herramientas.md)
+## [📚 Índice](../clases.md#entorno)
+## [➡️ Siguiente: Instalando VS Code](./instalar_vscode.md)
 

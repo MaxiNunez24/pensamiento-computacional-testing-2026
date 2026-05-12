@@ -28,5 +28,6 @@ Para trabajar cómodamente con Python en VS Code necesitamos:
 * Debugger
 
 
-## [⬅️​ ​Volver a Python Básico](../python/python_basico.md)
-## [➡️ Siguiente clase: Python Básico: Archivos de Python](../python/archivos_python.md)
+## [⬅️ Anterior: Historia y características](../python/historia_caracteristicas.md)
+## [📚 Índice](../clases.md#entorno)
+## [➡️ Siguiente: Instalando Python](./instalar_python.md)

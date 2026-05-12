@@ -19,5 +19,6 @@ Podés ejecutar el código de dos formas:
 
 ---
 
-## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: La función print()](./funcion_print.md)
+## [⬅️ Anterior: Archivos de Python](./archivos_python.md)
+## [📚 Índice](../clases.md#entorno)
+## [➡️ Siguiente: La función print()](./funcion_print.md)

@@ -147,5 +147,5 @@ Las compuertas lógicas son los ***bloques básicos*** de construcción de los c
 
 !!! example "[Experimentá con las compuertas lógicas y más en este simulador interactivo](https://logic.ly/demo/)" 
 
-## [⬅️​ ​Volver al Índice](./clases.md)
-## [➡️ Siguiente clase: ¿Qué es programar? Algoritmos, pseudocódigo y diagramas de flujo](02_que_es_programar.md)
+## [📚 Índice](./clases.md#introduccion)
+## [➡️ Siguiente: ¿Qué es programar?](./02_que_es_programar.md)

@@ -210,4 +210,6 @@ Mateo: 6.0
 
 ---
 
-## [⬅️​ ​Volver al Cuadernillo de Listas](./cuadernillo_listas_finde.md)
+## [⬅️ Anterior: Cuadernillo de ejercicios sobre Listas](./cuadernillo_listas_finde.md)
+## [📚 Índice](../clases.md#listas)
+## [➡️ Siguiente: Tuplas y Sets](./tuplas_sets.md)

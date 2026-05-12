@@ -698,3 +698,10 @@ Hacé las siguientes consignas:
     4. **NO HAY PROBLEMA si no terminás todos**. Lo importante es que practiquen, no que sufran 🧪.
 
 ¡Buen finde largo, científicos! 🧬✨
+
+---
+
+## [⬅️ Anterior: Listas en Python](./listas.md)
+## [📚 Índice](../clases.md#listas)
+## [➡️ Siguiente: Mini Parcial](./mini_parcial.md)
+## [➡️ Siguiente: Mini Parcial](./mini_parcial.md)

@@ -231,5 +231,6 @@ Hola Juan, tenés 25 años y medís 1.75 metros
 
 ---
 
-## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: If-Else-Elif](./if_else.md)
+## [⬅️ Anterior: Variables, tipos de datos y operadores](./variables.md)
+## [📚 Índice](../clases.md#variables)
+## [➡️ Siguiente: If / Else](./if_else.md)

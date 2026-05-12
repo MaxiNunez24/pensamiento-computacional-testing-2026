@@ -396,5 +396,6 @@ Pedí un número `n` e imprimí una pirámide **invertida** de asteriscos de `n`
 !!! tip "Desafío extra"
     ¿Podés hacer que la pirámide esté **centrada**? Para eso vas a necesitar agregar espacios antes de cada fila.
 
-## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: Listas](./listas.md)
+## [⬅️ Anterior: For](./for.md)
+## [📚 Índice](../clases.md#estructuras-de-control)
+## [➡️ Siguiente: Listas en Python](./listas.md)

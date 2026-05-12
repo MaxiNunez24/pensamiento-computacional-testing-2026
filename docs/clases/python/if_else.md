@@ -266,5 +266,6 @@ Un `if` se representa como una decisión:
 
 ---
 
-## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: While](./while.md)
+## [⬅️ Anterior: La función input()](./funcion_input.md)
+## [📚 Índice](../clases.md#estructuras-de-control)
+## [➡️ Siguiente: While](./while.md)

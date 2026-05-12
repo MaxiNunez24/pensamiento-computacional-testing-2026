@@ -16,5 +16,6 @@ primer_programa.py
 
 ---
 
-## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: Ejecutar el programa](./ejecutar_programa.md)
+## [⬅️ Anterior: Instalando VS Code](../instalacion/instalar_vscode.md)
+## [📚 Índice](../clases.md#entorno)
+## [➡️ Siguiente: Ejecutar el programa](./ejecutar_programa.md)

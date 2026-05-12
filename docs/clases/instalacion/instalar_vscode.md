@@ -9,4 +9,6 @@
 7. Hacer clic en "Instalar" en la extensión de Python desarrollada por Microsoft.
 8. Después de la instalación, reiniciar las extensiones de Visual Studio Code para que los cambios surtan efecto.
 
-## [⬅️​ ​Volver a Instalación de herramientas](./instalacion_herramientas.md)
+## [⬅️ Anterior: Instalando Python](./instalar_python.md)
+## [📚 Índice](../clases.md#entorno)
+## [➡️ Siguiente: Archivos de Python](../python/archivos_python.md)

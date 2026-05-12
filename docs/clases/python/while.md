@@ -310,5 +310,6 @@ while numero < 6:
         print("No ingresaste ninguna nota.")
     ```
 
-## [⬅️​ ​Volver a Python Básico](./python_basico.md)
-## [➡️ Siguiente clase: Python Básico: For](./for.md)
+## [⬅️ Anterior: If / Else](./if_else.md)
+## [📚 Índice](../clases.md#estructuras-de-control)
+## [➡️ Siguiente: For](./for.md)

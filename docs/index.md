@@ -1,20 +1,26 @@
 # Pensamiento Computacional y Testing de Aplicaciones 2026
 
-!!! example "Curso del CFP 401 "Laura Vicuña""
+!!! info "Curso del CFP 401 «Laura Vicuña»"
 
 Bienvenidos al curso donde aprenderemos a pensar como programadores y construir software desde cero usando **Python**.
 
 ---
 
+!!! success "📍 Bloque actual — Bloque 2: Colecciones y Modularización"
+    Esta semana: **Tuplas, Sets y Diccionarios**. Continuá desde [📚 Clases → Bloque 2](./clases/clases.md#colecciones).
+
+---
+
 ## ⏱️ Horarios
+
 - **Miércoles**: 13:20 a 16:40
 - **Viernes**: 14:00 a 17:20
 
---- 
+---
 
-## 🤔​ ¿Necesito saber algo antes?
+## 🤔 ¿Necesito saber algo antes?
 
-!!! tip "No! Este curso está pensado **desde cero absoluto**."
+!!! tip "No. Este curso está pensado **desde cero absoluto**."
 
 Solo necesitás:
 
@@ -38,35 +44,27 @@ Solo necesitás:
 
 ## 🧠 Filosofía del curso
 
-!!! example "La programación se aprende programando."
+!!! quote "La programación se aprende programando."
 
 Vamos a:
 
-!!! info "✔️ Probar"
-
-!!! warning "✔️ Equivocarnos"
-
-!!! success "✔️ Corregir"
-
-!!! tip "✔️ Mejorar"
+- ✔️ Probar
+- ✔️ Equivocarnos
+- ✔️ Corregir
+- ✔️ Mejorar
 
 Y repetir el proceso muchas veces.
 
 ---
 
-## ​📖 Material del curso
+## 📖 Material del curso
 
-!!! info "Podés navegar el contenido usando el menú de la izquierda:"
-
-🏠​ Inicio  *- (esta sección)*
-
-[📅 Cronograma del curso](./cronograma.md)
-
-[📚 Clases](./clases/clases.md)
-
-[🗃️ Material de apoyo](./material_apoyo/material_apoyo.md)
+- [📅 Cronograma del curso](./cronograma.md) — fechas y contenidos semana a semana
+- [📚 Clases](./clases/clases.md) — todos los contenidos del curso
+- [🗃️ Material de apoyo](./material_apoyo/material_apoyo.md) — libros, videos y recursos adicionales
 
 ---
+
 ## 🎯 Proyectos propuestos
 
 Durante el curso construiremos:
@@ -77,28 +75,29 @@ Durante el curso construiremos:
 
 ---
 
-## 🤓​ Nerdearla 2026
+## 🤓 Nerdearla 2026
+
 Del 22 al 26 de septiembre se va a realizar el evento tech gratuito más grande de hispanoamérica: **[Nerdearla 2026](https://nerdearla.com/)**.
-Y están todos invitados a participar! 
+Y están todos invitados a participar!
 
 La idea es que para ese entonces ya estemos capacitados para aprovechar al máximo las charlas y talleres que se van a dar, y que podamos compartir lo aprendido con la comunidad.
 
-Además de tener varios proyectos para presentar, un perfil en LinkedIn y un portfolio armado en GitHub, lo que va a ser un gran plus para conseguir trabajo. Ya que al evento asisten muchas empresas buscando talento.
+Además de tener varios proyectos para presentar, un perfil en LinkedIn y un portfolio armado en GitHub — lo que va a ser un gran plus para conseguir trabajo, ya que al evento asisten muchas empresas buscando talento.
 
-!!! tip "Organizaremos una visita grupal al evento, para que podamos asistir juntos y aprovechar la experiencia al máximo!"
+!!! tip "Organizaremos una visita grupal al evento para asistir juntos y aprovechar la experiencia al máximo."
 
-!!! warning "(Es opcional ir al evento y más aún ir en busca de trabajo, pero es una gran oportunidad a tener en cuenta)"
+!!! note "Es opcional ir al evento y más aún ir en busca de trabajo, pero es una gran oportunidad a tener en cuenta."
 
 ---
 
 ## 👨‍💻 Profesor
 
-!!! tip "Maximiliano Nuñez"
+**Maximiliano Nuñez**
 
-- Técnico en Informática Profesional y Personal - EEST N°2
-
+- Técnico en Informática Profesional y Personal — EEST N°2
 - Estudiante de Licenciatura en Informática — UNLP
+- Instructor CFP 401 «Laura Vicuña»
 
-- Instructor CFP 401 "Laura Vicuña"
+---
 
 ## [➡️ Comenzar curso](./clases/01_introduccion.md)
