@@ -50,14 +50,15 @@
 - [🗝️ Diccionarios](./python/diccionarios.md)
 - [📦 Funciones I — Definición, parámetros y retorno](./python/funciones_1.md)
 - [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./python/funciones_2.md)
+- [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/bingo.md)
 
 ---
 
-## 🛠️ Bloque 3 — Persistencia y Versionado *(próximamente)*
+## 🛠️ Bloque 3 — Persistencia y Versionado *(próximamente)* { #persistencia }
 
-- 💾 Manejo de archivos
-- 📋 JSON
-- 🌳 Git básico + GitHub
+- [💾 Manejo de archivos](./python/archivos.md)
+- [📋 JSON](./python/json.md)
+- [🌳 Git y GitHub](./python/git_github.md)
 
 ---
 

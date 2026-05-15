@@ -551,6 +551,50 @@ print(una_sola)  # {'Ana', 'Beto', 'Eva', 'Franco'}
        Diferencia simétrica (^) = todo menos el medio
     ```
 
+#### 🔍 Relaciones entre conjuntos: subconjunto, superconjunto y disjunto
+
+Además de las operaciones que generan un nuevo set, Python tiene tres preguntas que devuelven `True` o `False`:
+
+| Pregunta | Operador | Método | Significa |
+|----------|----------|--------|-----------|
+| ¿A está contenido en B? | `A <= B` | `A.issubset(B)` | Todos los elementos de A están en B |
+| ¿A contiene a B? | `A >= B` | `A.issuperset(B)` | Todos los elementos de B están en A |
+| ¿A y B no comparten nada? | — | `A.isdisjoint(B)` | No tienen ningún elemento en común |
+
+```python
+materias_de_ana  = {"Python", "JavaScript", "Rust"}
+materias_comunes = {"Python", "JavaScript"}
+materias_de_beto = {"Java", "C++"}
+
+# ¿Todas las materias comunes están en las de Ana?
+print(materias_comunes.issubset(materias_de_ana))    # True
+print(materias_comunes <= materias_de_ana)            # True — equivalente
+
+# ¿Ana tiene todas las materias comunes?
+print(materias_de_ana.issuperset(materias_comunes))  # True
+print(materias_de_ana >= materias_comunes)            # True — equivalente
+
+# ¿Ana y Beto no comparten ninguna materia?
+print(materias_de_ana.isdisjoint(materias_de_beto))  # True — sin elementos en común
+```
+
+!!! tip "🎰 Aplicación directa en el Bingo"
+    En el ejercicio integrador de Bingo usamos `issubset` para verificar si un jugador ganó:
+
+    ```python
+    # ¿Todos los números del cartón ya salieron?
+    if carton.issubset(sorteados):
+        print("¡BINGO!")
+
+    # Con operador (equivalente, más compacto)
+    if carton <= sorteados:
+        print("¡BINGO!")
+    ```
+
+    La pregunta en castellano es literalmente: *"¿Es el cartón un subconjunto de los números sorteados?"*
+
+---
+
 ### 🎯 ¿Cuándo usar sets?
 
 !!! success "✅ Usá sets cuando..."
@@ -983,6 +1027,11 @@ A | B    # unión
 A & B    # intersección
 A - B    # diferencia
 A ^ B    # diferencia simétrica
+
+# Relaciones entre conjuntos
+A.issubset(B)     # A <= B  → todos los de A están en B
+A.issuperset(B)   # A >= B  → A contiene todos los de B
+A.isdisjoint(B)   # no comparten ningún elemento
 
 # Set comprehension
 {x * 2 for x in range(10) if x % 2 == 0}

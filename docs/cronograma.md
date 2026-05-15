@@ -76,8 +76,8 @@
 |--------|-----------|---------|----------|
 | 27/4 | ✅ Cierre de [Listas](./clases/python/listas.md) — asignación del [cuadernillo](./clases/python/cuadernillo_listas_finde.md) | 🚫 *Sin clases (1/5 — Día del Trabajador)* | 📒 [Cuadernillo de listas](./clases/python/cuadernillo_listas_finde.md) durante el finde largo |
 | 4/5 | ✅ Repaso del [Cuadernillo de Listas](./clases/python/cuadernillo_listas_finde.md) en clase | ✅ [Mini Parcial](./clases/python/mini_parcial.md) | — |
-| 11/5 | 🎲 [**Tuplas, Sets**](./clases/python/tuplas_sets.md) **y Diccionarios** | 📦 **Funciones I**: definición, parámetros, retorno | Ejercicios de funciones |
-| 18/5 | 📦 **Funciones II**: scope, valores por defecto, `*args`/`**kwargs` | 🧪 Práctica integradora de funciones | Refactorizar programas anteriores con funciones |
+| 11/5 | 🎲 [**Tuplas, Sets**](./clases/python/tuplas_sets.md) **y [Diccionarios](./clases/python/diccionarios.md)** | 📦 [**Funciones I**: definición, parámetros, retorno](./clases/python/funciones_1.md) | Ejercicios de funciones |
+| 18/5 | 📦 [**Funciones II**: scope, valores por defecto, `*args`/`**kwargs`](./clases/python/funciones_2.md) | 🎰 [**Bingo** — Ejercicio integrador de colecciones y funciones](./clases/python/bingo.md) | Construir el juego completo por etapas |
 
 !!! tip "🧪 Detalle pedagógico"
     En **Funciones II** se introduce `*args`/`**kwargs` *de manera suave* (solo concepto y un ejemplo), no se profundiza. El objetivo es que les suene cuando lo vean en código de terceros.
@@ -96,7 +96,7 @@
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
 | 25/5 | [💾 **Manejo de archivos**: lectura, escritura, modos](./clases/python/archivos.md) | [📋 **JSON**: serialización, deserialización, `json.dump`/`json.load`](./clases/python/json.md) | Programa que persista datos en JSON |
-| 1/6 | 🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README | — | Subir todos los programas del curso al repo personal |
+| 1/6 | [🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README](./clases/python/git_github.md) | — | Subir todos los programas del curso al repo personal |
 
 !!! tip "🤐 Git + GitHub en una sola clase (3h20m)"
     Combinamos ambas en una única sesión aprovechando la duración: **primera mitad** Git local (init/add/commit/status/log), **break**, **segunda mitad** GitHub (remote/push/clone/pull/README). NO vamos a ver branches, merges, conflictos ni PRs. Solo el workflow mínimo para que puedan versionar el primer proyecto y continuar el código en sus casas.
