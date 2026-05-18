@@ -10,6 +10,13 @@ Aquí podrás acceder a las grabaciones de las clases que hemos tenido hasta aho
 
 ---
 
+## 🎬 Videos de repaso (resúmenes por tema)
+Videos cortos de hasta 10 minutos organizados por tema. En lugar de buscar dentro de una grabación de más de una hora, acá podés ir directo al concepto que necesitás repasar. Cubren: Variables, Tipos de Datos, Operadores, Estructuras de Control (if, while, for), Listas, Tuplas, Sets, Diccionarios y Funciones.
+
+### [🔗 Enlace a los videos de repaso](https://drive.google.com/drive/folders/171Y-W8O7Lc9t1Esw9nIrfoEQfhB1w5nz?usp=drive_link)
+
+---
+
 ## 🖥️ **Midudev** - Curso completo de Python desde cero 2025
 En este curso completo de Python, el creador de contenido, educador y programador Midudev te guiará a través de los fundamentos de la programación en Python, desde lo más básico hasta temas más avanzados. Es un recurso ideal para complementar lo aprendido en clase y para practicar con ejemplos adicionales.
 
