@@ -4,13 +4,14 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 
 ---
 
-## 01 — Variables y Tipos de Datos (3 videos)
+## 01 — Variables y Tipos de Datos (4 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
 | 1 | [01_variables.md](./01_variables_y_tipos/01_variables.md) | Qué es una variable, cómo se crea, reglas de nombres |
 | 2 | [02_tipos_de_datos.md](./01_variables_y_tipos/02_tipos_de_datos.md) | str, int, float, bool, None, conversión de tipos |
 | 3 | [03_operadores.md](./01_variables_y_tipos/03_operadores.md) | Aritméticos, comparación, lógicos, precedencia |
+| 4 | [04_operaciones_con_strings.md](./01_variables_y_tipos/04_operaciones_con_strings.md) | Concatenación, len, upper/lower, strip, replace, split, join, find, in |
 
 ---
 
@@ -86,4 +87,4 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 
 ---
 
-**Total: 33 videos · ~160 minutos de contenido**
+**Total: 34 videos · ~166 minutos de contenido**

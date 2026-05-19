@@ -1,0 +1,2816 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Maximiliano Nuñez">
+      
+      
+      
+        <link rel="prev" href="../json/">
+      
+      
+        <link rel="next" href="../../../../material_apoyo/material_apoyo/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>🐙 Git y GitHub - Pensamiento Computacional y Testing de Aplicaciones 2026</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#git-y-github" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-header__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pensamiento Computacional y Testing de Aplicaciones 2026
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🐙 Git y GitHub
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-nav__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    Pensamiento Computacional y Testing de Aplicaciones 2026
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠​ Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📅 Cronograma del curso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📚 Clases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📚 Clases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../clases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📝 Índice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧑‍🏫 Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02_que_es_programar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧑‍💻 ¿Qué es programar?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🐍 Python Básico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🐍 Python Básico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_1" id="__nav_3_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔰 Introducción
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔰 Introducción
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_introduccion/historia_caracteristicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📜 Historía y características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_introduccion/archivos_python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📁 Archivos de Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_introduccion/ejecutar_programa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ▶️ Ejecutar el programa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2" id="__nav_3_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💽​ Instalación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    💽​ Instalación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instalacion/instalacion_herramientas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💻 Instalando las herramientas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instalacion/instalar_python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🐍 Instalando Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instalacion/instalar_vscode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧑‍💻 Instalando VS Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_3" id="__nav_3_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Variables y Tipos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📊 Variables y Tipos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/funcion_print/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🖨️ La función print()
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/funcion_input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ⌨️ La función input()
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_4" id="__nav_3_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔀 Estructuras de Control
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔀 Estructuras de Control
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/if_else/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔀 If - Else
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/while/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔄 While
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/for/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔁 For
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/ejercicios_estructuras_control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧮​ Ejercicios Estructuras de Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_5" id="__nav_3_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Listas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📋 Listas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_listas/listas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Listas en Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_listas/cuadernillo_listas_finde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📒 Cuadernillo de ejercicios sobre Listas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_listas/mini_parcial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📝 Mini Parcial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_6" id="__nav_3_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗂️ Colecciones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🗂️ Colecciones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_colecciones/tuplas_sets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎲 Tuplas y Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_colecciones/diccionarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗝️ Diccionarios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_7" id="__nav_3_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📦 Funciones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📦 Funciones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_funciones/funciones_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📦 Funciones I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_funciones/funciones_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📦 Funciones II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_funciones/bingo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎲 Bingo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_8" id="__nav_3_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💾 Persistencia
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    💾 Persistencia
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archivos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📁 Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📄 JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🐙 Git y GitHub
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🐙 Git y GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-el-control-de-versiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 ¿Qué es el control de versiones?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-1-git-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Parte 1 — Git local
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Parte 1 — Git local">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-inicial-una-sola-vez" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración inicial (una sola vez)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-flujo-de-trabajo-de-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗺️ El flujo de trabajo de Git
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-init-iniciar-un-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git init — Iniciar un repositorio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-status-ver-el-estado-actual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git status — Ver el estado actual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-add-preparar-cambios-para-el-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git add — Preparar cambios para el commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-commit-guardar-una-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git commit — Guardar una versión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-log-ver-el-historial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git log — Ver el historial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flujo-de-trabajo-tipico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flujo de trabajo típico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitignore-ignorar-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore — Ignorar archivos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-2-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🐙 Parte 2 — GitHub
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🐙 Parte 2 — GitHub">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crear-una-cuenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear una cuenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-un-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear un repositorio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conectar-tu-repo-local-con-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conectar tu repo local con GitHub
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-clone-descargar-un-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git clone — Descargar un repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-pull-traer-cambios-del-remoto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git pull — Traer cambios del remoto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-readmemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El README.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-visual-del-workflow-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗺️ Resumen visual del workflow completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Buenas prácticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Ejercicios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Ejercicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-1-tu-primer-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌱 Ejercicio 1 — Tu primer repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-2-subir-al-campus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌿 Ejercicio 2 — Subir al campus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-3-flujo-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌶️ Ejercicio 3 — Flujo completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⬅️ Anterior: JSON
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Índice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-poo-i-clases-y-objetos-proximamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ➡️ Siguiente: POO I — Clases y objetos (próximamente)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗃️​ Material de apoyo
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🗃️​ Material de apoyo
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../material_apoyo/material_apoyo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📝 Índice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../material_apoyo/libros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📚 Libros
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../material_apoyo/videos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎥 Videos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-el-control-de-versiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 ¿Qué es el control de versiones?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-1-git-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Parte 1 — Git local
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Parte 1 — Git local">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instalacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instalación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-inicial-una-sola-vez" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración inicial (una sola vez)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-flujo-de-trabajo-de-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗺️ El flujo de trabajo de Git
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-init-iniciar-un-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git init — Iniciar un repositorio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-status-ver-el-estado-actual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git status — Ver el estado actual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-add-preparar-cambios-para-el-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git add — Preparar cambios para el commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-commit-guardar-una-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git commit — Guardar una versión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-log-ver-el-historial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git log — Ver el historial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flujo-de-trabajo-tipico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flujo de trabajo típico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitignore-ignorar-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore — Ignorar archivos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-2-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🐙 Parte 2 — GitHub
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🐙 Parte 2 — GitHub">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crear-una-cuenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear una cuenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crear-un-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crear un repositorio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conectar-tu-repo-local-con-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conectar tu repo local con GitHub
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-clone-descargar-un-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git clone — Descargar un repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-pull-traer-cambios-del-remoto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git pull — Traer cambios del remoto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-readmemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El README.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-visual-del-workflow-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗺️ Resumen visual del workflow completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Buenas prácticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Ejercicios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Ejercicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-1-tu-primer-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌱 Ejercicio 1 — Tu primer repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-2-subir-al-campus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌿 Ejercicio 2 — Subir al campus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-3-flujo-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌶️ Ejercicio 3 — Flujo completo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⬅️ Anterior: JSON
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Índice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-poo-i-clases-y-objetos-proximamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ➡️ Siguiente: POO I — Clases y objetos (próximamente)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="git-y-github">🌳🐙 Git y GitHub</h1>
+<div class="admonition tip">
+<p class="admonition-title">🧠 ¿Por qué aprender esto ahora?</p>
+<p>Ya tenés varios programas funcionando. Hoy aprendemos a <strong>no perderlos nunca más</strong>, a trabajar desde <strong>cualquier computadora</strong> y a tener el historial de cada cambio que hiciste. Estas son habilidades que todo programador usa todos los días.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">🎯 Objetivos de la clase</p>
+<p>Al terminar la clase deberían poder:</p>
+<ul>
+<li>Entender qué es el control de versiones y por qué existe.</li>
+<li>Usar el workflow básico de Git: <code>init</code>, <code>status</code>, <code>add</code>, <code>commit</code>, <code>log</code>.</li>
+<li>Tener una cuenta de GitHub y un repositorio personal.</li>
+<li>Subir (<code>push</code>) su código a GitHub y bajarlo (<code>pull</code>/<code>clone</code>) desde otra máquina.</li>
+<li>Escribir un <code>README.md</code> básico.</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">📌 Alcance de esta clase</p>
+<p>Hoy cubrimos el <strong>workflow mínimo</strong> para versionar el primer proyecto y continuar el código en sus casas. No vemos branches, merges, conflictos ni Pull Requests — eso viene más adelante si se necesita.</p>
+</div>
+<hr />
+<h2 id="que-es-el-control-de-versiones">🧠 ¿Qué es el control de versiones?</h2>
+<p>Imaginá que cada vez que guardás tu proyecto tenés una <strong>foto de cómo estaba en ese momento</strong>. Si algo sale mal, podés volver a cualquier foto anterior. Eso es Git.</p>
+<p>Sin Git, muchos programadores hacen esto:</p>
+<div class="highlight"><pre><span></span><code>proyecto_v1.py
+proyecto_v2.py
+proyecto_final.py
+proyecto_final_ESTE.py
+proyecto_final_ESTE_ahora_si.py
+</code></pre></div>
+<p>Con Git, tenés un solo archivo y Git guarda el historial por vos.</p>
+<div class="admonition example">
+<p class="admonition-title">¿Git o GitHub?</p>
+<ul>
+<li><strong>Git</strong>: la herramienta que instalás en tu computadora y maneja el historial de versiones <strong>localmente</strong>.</li>
+<li><strong>GitHub</strong>: un sitio web donde podés subir tu repositorio Git para tenerlo <strong>en la nube</strong> (y compartirlo).</li>
+</ul>
+<p>Git funciona sin GitHub. GitHub necesita Git.</p>
+</div>
+<hr />
+<h2 id="parte-1-git-local">🔧 Parte 1 — Git local</h2>
+<h3 id="instalacion">Instalación</h3>
+<p>Instalá Git desde <a href="https://git-scm.com/">git-scm.com</a>. En Windows usá el instalador. Para verificar que quedó instalado:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>--version
+<span class="c1"># git version 2.x.x</span>
+</code></pre></div>
+<h3 id="configuracion-inicial-una-sola-vez">Configuración inicial (una sola vez)</h3>
+<p>Antes de usar Git, le decimos quiénes somos. Esta info aparece en cada commit que hagas:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.name<span class="w"> </span><span class="s2">&quot;Tu Nombre&quot;</span>
+git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.email<span class="w"> </span><span class="s2">&quot;tu@email.com&quot;</span>
+</code></pre></div>
+<p>Podés verificarla con:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>config<span class="w"> </span>--list
+</code></pre></div>
+<hr />
+<h3 id="el-flujo-de-trabajo-de-git">🗺️ El flujo de trabajo de Git</h3>
+<div class="highlight"><pre><span></span><code>Tu código                 Área de preparación           Repositorio
+(Working Directory)  →   (Staging Area / Index)  →    (Repository)
+                  git add archivo.py          git commit -m &quot;mensaje&quot;
+</code></pre></div>
+<p>Pensalo en tres zonas:</p>
+<ul>
+<li><strong>Working Directory</strong>: tu carpeta, donde editás los archivos.</li>
+<li><strong>Staging Area</strong>: la "sala de espera" — lo que decidiste incluir en el próximo commit.</li>
+<li><strong>Repository</strong>: el historial oficial de versiones (la base de datos de Git, en la carpeta <code>.git/</code>).</li>
+</ul>
+<hr />
+<h3 id="git-init-iniciar-un-repositorio"><code>git init</code> — Iniciar un repositorio</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>mi_proyecto<span class="w">          </span><span class="c1"># entramos a la carpeta del proyecto</span>
+git<span class="w"> </span>init<span class="w">                </span><span class="c1"># inicializamos Git</span>
+<span class="c1"># Initialized empty Git repository in .../mi_proyecto/.git/</span>
+</code></pre></div>
+<p>Esto crea una carpeta oculta <code>.git/</code> que contiene toda la historia del proyecto. <strong>No la toques ni la borres.</strong></p>
+<hr />
+<h3 id="git-status-ver-el-estado-actual"><code>git status</code> — Ver el estado actual</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>status
+</code></pre></div>
+<p>Es el comando que más vas a usar. Te dice:</p>
+<ul>
+<li>Qué archivos cambiaron desde el último commit.</li>
+<li>Qué está en el staging area listo para commitear.</li>
+<li>Qué archivos no están siendo rastreados por Git.</li>
+</ul>
+<hr />
+<h3 id="git-add-preparar-cambios-para-el-commit"><code>git add</code> — Preparar cambios para el commit</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>programa.py<span class="w">          </span><span class="c1"># agregar un archivo específico</span>
+git<span class="w"> </span>add<span class="w"> </span>.<span class="w">                    </span><span class="c1"># agregar TODOS los cambios del directorio actual</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">💡 <code>git add .</code> vs <code>git add archivo</code></p>
+<p><code>git add .</code> agrega todo lo que cambió. Es conveniente pero hay que usarlo con cuidado para no incluir archivos que no querés versionar (contraseñas, archivos temporales, etc.).</p>
+</div>
+<hr />
+<h3 id="git-commit-guardar-una-version"><code>git commit</code> — Guardar una versión</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Agrego función para calcular promedio&quot;</span>
+</code></pre></div>
+<p>Un commit es una <strong>foto del estado del proyecto</strong> con un mensaje que explica qué hiciste.</p>
+<div class="admonition success">
+<p class="admonition-title">✅ Mensajes de commit claros</p>
+<p>El mensaje debe responder: <strong>¿qué cambiaste?</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Mensajes malos</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;cambios&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;arreglé cosa&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;asdfgh&quot;</span>
+
+<span class="c1"># ✅ Mensajes buenos</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Agrego validación de nota mínima&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Corrijo error en cálculo de promedio con lista vacía&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Agrego persistencia JSON al menú principal&quot;</span>
+</code></pre></div>
+</div>
+<hr />
+<h3 id="git-log-ver-el-historial"><code>git log</code> — Ver el historial</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>log
+<span class="c1"># commit a3f8b2c... (HEAD -&gt; main)</span>
+<span class="c1"># Author: Maxi &lt;maxi@email.com&gt;</span>
+<span class="c1"># Date:   Wed May 13 10:00:00 2026 -0300</span>
+<span class="c1">#</span>
+<span class="c1">#     Agrego persistencia JSON al menú principal</span>
+
+git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w">   </span><span class="c1"># versión compacta (una línea por commit)</span>
+</code></pre></div>
+<hr />
+<h3 id="flujo-de-trabajo-tipico">Flujo de trabajo típico</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Hacés cambios en tus archivos</span>
+
+<span class="c1"># 2. Verificás el estado</span>
+git<span class="w"> </span>status
+
+<span class="c1"># 3. Preparás los cambios</span>
+git<span class="w"> </span>add<span class="w"> </span>.
+
+<span class="c1"># 4. Guardás la versión</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Descripción de lo que hiciste&quot;</span>
+
+<span class="c1"># 5. Podés ver el historial</span>
+git<span class="w"> </span>log<span class="w"> </span>--oneline
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">¿Con qué frecuencia hacer commits?</p>
+<p>No hay regla fija, pero un buen criterio es: <strong>cada vez que algo funciona</strong>. Así si rompés algo, podés volver al commit anterior.</p>
+</div>
+<hr />
+<h3 id="gitignore-ignorar-archivos"><code>.gitignore</code> — Ignorar archivos</h3>
+<p>Algunos archivos no queremos versionar: contraseñas, archivos temporales, caché, etc. Los listamos en un archivo especial <code>.gitignore</code>:</p>
+<div class="highlight"><pre><span></span><code># .gitignore
+__pycache__/
+*.pyc
+.env
+datos_privados.json
+</code></pre></div>
+<p>Git ignorará estos archivos como si no existieran.</p>
+<hr />
+<h2 id="parte-2-github">🐙 Parte 2 — GitHub</h2>
+<h3 id="crear-una-cuenta">Crear una cuenta</h3>
+<ol>
+<li>Entrá a <a href="https://github.com">github.com</a></li>
+<li>Hacé clic en <strong>Sign up</strong></li>
+<li>Elegí un nombre de usuario (va a ser público y parte de tus URLs)</li>
+<li>Verificá el email</li>
+</ol>
+<h3 id="crear-un-repositorio">Crear un repositorio</h3>
+<ol>
+<li>Una vez logueado, hacé clic en el <strong><code>+</code></strong> → <strong>New repository</strong></li>
+<li>Nombre: <code>pensamiento-computacional-2026</code> (o el que quieras)</li>
+<li>Descripción opcional</li>
+<li>Elegí <strong>Public</strong> (para que puedan verlo tus compañeros o futuros empleadores)</li>
+<li><strong>NO</strong> checkees "Add a README file" (ya tenemos código local)</li>
+<li>Hacé clic en <strong>Create repository</strong></li>
+</ol>
+<hr />
+<h3 id="conectar-tu-repo-local-con-github">Conectar tu repo local con GitHub</h3>
+<p>GitHub te muestra los comandos exactos después de crear el repo. En general son:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Vincular el repo local con el remoto</span>
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>https://github.com/tu-usuario/tu-repo.git
+
+<span class="c1"># Subir el código por primera vez</span>
+git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div>
+<p>Después de eso, cada vez que quieras subir nuevos commits:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>push
+</code></pre></div>
+<hr />
+<h3 id="git-clone-descargar-un-repo"><code>git clone</code> — Descargar un repo</h3>
+<p>Si querés trabajar desde <strong>otra computadora</strong>, o descargar el repo de un compañero:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/usuario/repositorio.git
+</code></pre></div>
+<p>Esto crea una carpeta con todo el proyecto y su historial.</p>
+<hr />
+<h3 id="git-pull-traer-cambios-del-remoto"><code>git pull</code> — Traer cambios del remoto</h3>
+<p>Si ya tenés el repo clonado y subiste cambios desde otra máquina:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull
+</code></pre></div>
+<p>Descarga y aplica los cambios más recientes.</p>
+<hr />
+<h3 id="el-readmemd">El <code>README.md</code></h3>
+<p>El archivo <code>README.md</code> es la <strong>portada</strong> de tu repositorio en GitHub. Aparece automáticamente en la página del proyecto.</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Pensamiento Computacional 2026</span>
+
+Repositorio de ejercicios y proyectos del curso de Pensamiento Computacional
+y Testing de Aplicaciones — CFP 401.
+
+<span class="gu">## Contenido</span>
+
+<span class="k">-</span><span class="w"> </span><span class="sb">`bloque_1/`</span> — Fundamentos de Python
+<span class="k">-</span><span class="w"> </span><span class="sb">`bloque_2/`</span> — Colecciones y funciones
+<span class="k">-</span><span class="w"> </span><span class="sb">`proyecto_asistencias/`</span> — Primer proyecto integrador
+
+<span class="gu">## Tecnologías</span>
+
+<span class="k">-</span><span class="w"> </span>Python 3.12
+<span class="k">-</span><span class="w"> </span>pytest
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Markdown básico para el README</p>
+<p><code># Título</code>, <code>## Subtítulo</code>, <code>**negrita**</code>, <code>*cursiva*</code>, <code>`código`</code>, listas con <code>-</code>.</p>
+</div>
+<hr />
+<h2 id="resumen-visual-del-workflow-completo">🗺️ Resumen visual del workflow completo</h2>
+<div class="highlight"><pre><span></span><code>Tu computadora                                   GitHub (nube)
+────────────────────────────────                 ──────────────
+
+  Editás archivos
+       │
+  git add .
+       │
+  git commit -m &quot;...&quot;
+       │
+  git push  ──────────────────────────────────►  tu repositorio en GitHub
+                                                        │
+  git pull  ◄─────────────────────────────────────────── (cambios desde otra máquina)
+
+  git clone ◄─────────────────────────────────────────── (primer download en nueva máquina)
+</code></pre></div>
+<hr />
+<h2 id="buenas-practicas">✅ Buenas prácticas</h2>
+<div class="admonition success">
+<p class="admonition-title">Hacé esto ✅</p>
+<ul>
+<li>Hacé commits pequeños y frecuentes (cada vez que algo funciona).</li>
+<li>Escribí mensajes de commit descriptivos y en presente: "Agrego X", "Corrijo Y".</li>
+<li>Siempre hacé <code>git pull</code> antes de empezar a trabajar si compartís el repo.</li>
+<li>Tené un <code>.gitignore</code> desde el principio.</li>
+<li>Escribí un <code>README.md</code> que explique de qué se trata el proyecto.</li>
+</ul>
+</div>
+<div class="admonition failure">
+<p class="admonition-title">Evitá esto ❌</p>
+<ul>
+<li>No subas contraseñas, tokens ni archivos con datos privados a GitHub.</li>
+<li>No hagas commits de archivos gigantes (imágenes pesadas, ejecutables, etc.).</li>
+<li>No uses <code>git push --force</code> a menos que sepas exactamente qué estás haciendo.</li>
+</ul>
+</div>
+<hr />
+<h2 id="ejercicios">🧪 Ejercicios</h2>
+<h3 id="ejercicio-1-tu-primer-repo">🌱 Ejercicio 1 — Tu primer repo</h3>
+<ol>
+<li>Creá una carpeta <code>hola_git/</code> y dentro un archivo <code>hola.py</code> que imprima "Hola, Git!".</li>
+<li>Inicializá Git en esa carpeta.</li>
+<li>Hacé un primer commit.</li>
+<li>Modificá el mensaje en el print, hacé un segundo commit.</li>
+<li>Mirá el historial con <code>git log --oneline</code>.</li>
+</ol>
+<h3 id="ejercicio-2-subir-al-campus">🌿 Ejercicio 2 — Subir al campus</h3>
+<ol>
+<li>Creá un repositorio en GitHub llamado <code>pensamiento-computacional-2026</code>.</li>
+<li>Vinculalo con tu repo local.</li>
+<li>Subí todos los ejercicios del curso que tengas organizados en carpetas.</li>
+<li>Agregá un <code>README.md</code> con tu nombre y una breve descripción del curso.</li>
+<li>Compartí la URL del repo en el grupo.</li>
+</ol>
+<h3 id="ejercicio-3-flujo-completo">🌶️ Ejercicio 3 — Flujo completo</h3>
+<ol>
+<li>Cloná el repo de un compañero.</li>
+<li>Explorá su código.</li>
+<li>Desde tu propio repo, hacé 3 commits seguidos con cambios distintos.</li>
+<li>Subí los cambios y verificá que se vean en GitHub.</li>
+</ol>
+<hr />
+<div class="admonition quote">
+<p class="admonition-title">Para cerrar</p>
+<p>Git y GitHub son las herramientas de colaboración más usadas en el mundo del software. Que puedan decir "tengo mis proyectos en GitHub" es algo que ya diferencia a un programador de alguien que solo aprendió a programar. ¡Bienvenidos al ecosistema! 🌍</p>
+</div>
+<h2 id="anterior-json"><a href="../json/">⬅️ Anterior: JSON</a></h2>
+<h2 id="indice"><a href="../../../clases/#persistencia">📚 Índice</a></h2>
+<h2 id="siguiente-poo-i-clases-y-objetos-proximamente">➡️ Siguiente: POO I — Clases y objetos <em>(próximamente)</em></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": "content.code.copy", "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

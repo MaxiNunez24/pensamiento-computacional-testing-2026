@@ -496,4 +496,4 @@ Mayor de edad → **18 años o más**
 
 ## [⬅️ Anterior: Introducción a la Informática](./01_introduccion.md)
 ## [📚 Índice](./clases.md#introduccion)
-## [➡️ Siguiente: Historia y características de Python](./python/historia_caracteristicas.md)
+## [➡️ Siguiente: Historia y características de Python](./python/01_introduccion/historia_caracteristicas.md)

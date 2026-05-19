@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(mkdocs build *)",
+      "Bash(Get-ChildItem -Recurse \"d:\\\\Dev\\\\pensamiento-computacional-testing-2026\\\\docs\\\\clases\\\\python\")",
+      "Bash(Select-Object FullName)",
+      "Bash(mkdocs --version)",
+      "Bash(pip show *)"
+    ]
+  }
+}

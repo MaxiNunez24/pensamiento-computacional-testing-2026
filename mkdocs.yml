@@ -42,27 +42,39 @@ nav:
     - 🧑‍🏫 Introducción: clases/01_introduccion.md
     - 🧑‍💻 ¿Qué es programar?: clases/02_que_es_programar.md
     - 🐍 Python Básico:
-      - 📜 Historía y características: clases/python/historia_caracteristicas.md
-      - 💽​ Instalación: 
+      - 🔰 Introducción:
+        - 📜 Historía y características: clases/python/01_introduccion/historia_caracteristicas.md
+        - 📁 Archivos de Python: clases/python/01_introduccion/archivos_python.md
+        - ▶️ Ejecutar el programa: clases/python/01_introduccion/ejecutar_programa.md
+      - 💽​ Instalación:
         - 💻 Instalando las herramientas: clases/instalacion/instalacion_herramientas.md
         - 🐍 Instalando Python: clases/instalacion/instalar_python.md
         - 🧑‍💻 Instalando VS Code: clases/instalacion/instalar_vscode.md
-      - 📁 Archivos de Python: clases/python/archivos_python.md
-      - ▶️ Ejecutar el programa: clases/python/ejecutar_programa.md
-      - 🖨️ La función print(): clases/python/funcion_print.md
-      - 📊 Variables: clases/python/variables.md
-      - ⌨️ La función input(): clases/python/funcion_input.md
-      - 🔀 If - Else: clases/python/if_else.md
-      - 🔄 While: clases/python/while.md
-      - 🔁 For: clases/python/for.md
-      - 🧮​ Ejercicios Estructuras de Control: clases/python/ejercicios_estructuras_control.md
-      - 📋 Listas en Python: clases/python/listas.md
-      - 📒 Cuadernillo de ejercicios sobre Listas: clases/python/cuadernillo_listas_finde.md
-      - 📝 Mini Parcial: clases/python/mini_parcial.md
-      - 🎲 Tuplas y Sets: clases/python/tuplas_sets.md
-      - 🗝️ Diccionarios: clases/python/diccionarios.md
-      - 📦 Funciones I: clases/python/funciones_1.md
-      - 📦 Funciones II: clases/python/funciones_2.md
+      - 📊 Variables y Tipos:
+        - 🖨️ La función print(): clases/python/02_variables_y_tipos/funcion_print.md
+        - 📊 Variables: clases/python/02_variables_y_tipos/variables.md
+        - 📐 Formato de strings: clases/python/02_variables_y_tipos/formato_strings.md
+        - ⌨️ La función input(): clases/python/02_variables_y_tipos/funcion_input.md
+      - 🔀 Estructuras de Control:
+        - 🔀 If - Else: clases/python/03_estructuras_de_control/if_else.md
+        - 🔄 While: clases/python/03_estructuras_de_control/while.md
+        - 🔁 For: clases/python/03_estructuras_de_control/for.md
+        - 🧮​ Ejercicios Estructuras de Control: clases/python/03_estructuras_de_control/ejercicios_estructuras_control.md
+      - 📋 Listas:
+        - 📋 Listas en Python: clases/python/04_listas/listas.md
+        - 📒 Cuadernillo de ejercicios sobre Listas: clases/python/04_listas/cuadernillo_listas_finde.md
+        - 📝 Mini Parcial: clases/python/04_listas/mini_parcial.md
+      - 🗂️ Colecciones:
+        - 🎲 Tuplas y Sets: clases/python/05_colecciones/tuplas_sets.md
+        - 🗝️ Diccionarios: clases/python/05_colecciones/diccionarios.md
+      - 📦 Funciones:
+        - 📦 Funciones I: clases/python/06_funciones/funciones_1.md
+        - 📦 Funciones II: clases/python/06_funciones/funciones_2.md
+        - 🎲 Bingo: clases/python/06_funciones/bingo.md
+      - 💾 Persistencia:
+        - 📁 Archivos: clases/python/07_persistencia/archivos.md
+        - 📄 JSON: clases/python/07_persistencia/json.md
+        - 🐙 Git y GitHub: clases/python/07_persistencia/git_github.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
     - 📚 Libros: material_apoyo/libros.md

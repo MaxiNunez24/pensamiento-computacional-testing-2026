@@ -16,49 +16,49 @@
 
 ### Entorno y primeros pasos { #entorno }
 
-- [📜 Historia y características de Python](./python/historia_caracteristicas.md)
+- [📜 Historia y características de Python](./python/01_introduccion/historia_caracteristicas.md)
 - [💻 Instalando las herramientas](./instalacion/instalacion_herramientas.md)
 - [🐍 Instalando Python](./instalacion/instalar_python.md)
 - [🧑‍💻 Instalando VS Code](./instalacion/instalar_vscode.md)
-- [📁 Archivos de Python](./python/archivos_python.md)
-- [▶️ Ejecutar el programa](./python/ejecutar_programa.md)
+- [📁 Archivos de Python](./python/01_introduccion/archivos_python.md)
+- [▶️ Ejecutar el programa](./python/01_introduccion/ejecutar_programa.md)
 
 ### Variables y tipos de datos { #variables }
 
-- [🖨️ La función `print()`](./python/funcion_print.md)
-- [📊 Variables, tipos de datos y operadores](./python/variables.md)
-- [⌨️ La función `input()`](./python/funcion_input.md)
+- [🖨️ La función `print()`](./python/02_variables_y_tipos/funcion_print.md)
+- [📊 Variables, tipos de datos y operadores](./python/02_variables_y_tipos/variables.md)
+- [⌨️ La función `input()`](./python/02_variables_y_tipos/funcion_input.md)
 
 ### Estructuras de control { #estructuras-de-control }
 
-- [🔀 If / Else](./python/if_else.md)
-- [🔄 While](./python/while.md)
-- [🔁 For](./python/for.md)
-- [🧮 Ejercicios: Estructuras de Control](./python/ejercicios_estructuras_control.md)
+- [🔀 If / Else](./python/03_estructuras_de_control/if_else.md)
+- [🔄 While](./python/03_estructuras_de_control/while.md)
+- [🔁 For](./python/03_estructuras_de_control/for.md)
+- [🧮 Ejercicios: Estructuras de Control](./python/03_estructuras_de_control/ejercicios_estructuras_control.md)
 
 ### Listas { #listas }
 
-- [📋 Listas en Python](./python/listas.md)
-- [📒 Cuadernillo de ejercicios: Listas](./python/cuadernillo_listas_finde.md)
-- [📝 Mini Parcial](./python/mini_parcial.md)
+- [📋 Listas en Python](./python/04_listas/listas.md)
+- [📒 Cuadernillo de ejercicios: Listas](./python/04_listas/cuadernillo_listas_finde.md)
+- [📝 Mini Parcial](./python/04_listas/mini_parcial.md)
 
 ---
 
 ## 🌿 Bloque 2 — Colecciones y Modularización *(en curso)* { #colecciones }
 
-- [🎲 Tuplas y Sets](./python/tuplas_sets.md)
-- [🗝️ Diccionarios](./python/diccionarios.md)
-- [📦 Funciones I — Definición, parámetros y retorno](./python/funciones_1.md)
-- [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./python/funciones_2.md)
-- [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/bingo.md)
+- [🎲 Tuplas y Sets](./python/05_colecciones/tuplas_sets.md)
+- [🗝️ Diccionarios](./python/05_colecciones/diccionarios.md)
+- [📦 Funciones I — Definición, parámetros y retorno](./python/06_funciones/funciones_1.md)
+- [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./python/06_funciones/funciones_2.md)
+- [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/06_funciones/bingo.md)
 
 ---
 
 ## 🛠️ Bloque 3 — Persistencia y Versionado *(próximamente)* { #persistencia }
 
-- [💾 Manejo de archivos](./python/archivos.md)
-- [📋 JSON](./python/json.md)
-- [🌳 Git y GitHub](./python/git_github.md)
+- [💾 Manejo de archivos](./python/07_persistencia/archivos.md)
+- [📋 JSON](./python/07_persistencia/json.md)
+- [🌳 Git y GitHub](./python/07_persistencia/git_github.md)
 
 ---
 

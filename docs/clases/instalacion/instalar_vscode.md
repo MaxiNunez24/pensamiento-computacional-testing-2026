@@ -11,4 +11,4 @@
 
 ## [⬅️ Anterior: Instalando Python](./instalar_python.md)
 ## [📚 Índice](../clases.md#entorno)
-## [➡️ Siguiente: Archivos de Python](../python/archivos_python.md)
+## [➡️ Siguiente: Archivos de Python](../python/01_introduccion/archivos_python.md)

@@ -1,0 +1,2595 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Maximiliano Nuñez">
+      
+      
+      
+        <link rel="prev" href="../funciones_2/">
+      
+      
+        <link rel="next" href="../../07_persistencia/archivos/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>🎲 Bingo - Pensamiento Computacional y Testing de Aplicaciones 2026</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bingo-ejercicio-integrador" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-header__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pensamiento Computacional y Testing de Aplicaciones 2026
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🎲 Bingo
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-nav__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    Pensamiento Computacional y Testing de Aplicaciones 2026
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠​ Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📅 Cronograma del curso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📚 Clases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📚 Clases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../clases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📝 Índice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../01_introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧑‍🏫 Introducción
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../02_que_es_programar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧑‍💻 ¿Qué es programar?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🐍 Python Básico
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🐍 Python Básico
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_1" id="__nav_3_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔰 Introducción
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔰 Introducción
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_introduccion/historia_caracteristicas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📜 Historía y características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_introduccion/archivos_python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📁 Archivos de Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_introduccion/ejecutar_programa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ▶️ Ejecutar el programa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2" id="__nav_3_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💽​ Instalación
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    💽​ Instalación
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instalacion/instalacion_herramientas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💻 Instalando las herramientas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instalacion/instalar_python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🐍 Instalando Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instalacion/instalar_vscode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧑‍💻 Instalando VS Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_3" id="__nav_3_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Variables y Tipos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📊 Variables y Tipos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/funcion_print/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🖨️ La función print()
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/funcion_input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ⌨️ La función input()
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_4" id="__nav_3_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔀 Estructuras de Control
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔀 Estructuras de Control
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/if_else/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔀 If - Else
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/while/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔄 While
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/for/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔁 For
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_estructuras_de_control/ejercicios_estructuras_control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧮​ Ejercicios Estructuras de Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_5" id="__nav_3_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Listas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📋 Listas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_listas/listas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Listas en Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_listas/cuadernillo_listas_finde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📒 Cuadernillo de ejercicios sobre Listas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_listas/mini_parcial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📝 Mini Parcial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_6" id="__nav_3_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗂️ Colecciones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🗂️ Colecciones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_colecciones/tuplas_sets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎲 Tuplas y Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_colecciones/diccionarios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗝️ Diccionarios
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_7" id="__nav_3_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📦 Funciones
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📦 Funciones
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funciones_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📦 Funciones I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funciones_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📦 Funciones II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎲 Bingo
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎲 Bingo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hoja-de-ruta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗺️ Hoja de ruta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-1-el-carton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 1 — El cartón
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-2-sortear-y-verificar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 2 — Sortear y verificar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-3-mostrar-el-estado-del-juego" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 3 — Mostrar el estado del juego
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-4-el-juego-completo-un-jugador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 4 — El juego completo (un jugador)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-5-multiples-jugadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 5 — Múltiples jugadores
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desafio-extra-estadisticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌶️🌶️ Desafío extra — Estadísticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cheatsheet-de-operaciones-de-sets-usadas-en-este-ejercicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Cheatsheet de operaciones de sets usadas en este ejercicio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#y-ahora-que-viene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 ¿Y ahora qué viene?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-funciones-ii" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⬅️ Anterior: Funciones II
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Índice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-manejo-de-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ➡️ Siguiente: Manejo de archivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_8" id="__nav_3_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💾 Persistencia
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    💾 Persistencia
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_persistencia/archivos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📁 Archivos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_persistencia/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📄 JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_persistencia/git_github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🐙 Git y GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗃️​ Material de apoyo
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🗃️​ Material de apoyo
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../material_apoyo/material_apoyo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📝 Índice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../material_apoyo/libros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📚 Libros
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../material_apoyo/videos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎥 Videos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hoja-de-ruta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗺️ Hoja de ruta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-1-el-carton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 1 — El cartón
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-2-sortear-y-verificar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 2 — Sortear y verificar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-3-mostrar-el-estado-del-juego" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 3 — Mostrar el estado del juego
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-4-el-juego-completo-un-jugador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 4 — El juego completo (un jugador)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etapa-5-multiples-jugadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etapa 5 — Múltiples jugadores
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desafio-extra-estadisticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌶️🌶️ Desafío extra — Estadísticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cheatsheet-de-operaciones-de-sets-usadas-en-este-ejercicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Cheatsheet de operaciones de sets usadas en este ejercicio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#y-ahora-que-viene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 ¿Y ahora qué viene?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-funciones-ii" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⬅️ Anterior: Funciones II
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Índice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-manejo-de-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ➡️ Siguiente: Manejo de archivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="bingo-ejercicio-integrador">🎰 Bingo — Ejercicio Integrador</h1>
+<div class="admonition info">
+<p class="admonition-title">🎯 ¿Qué vamos a construir?</p>
+<p>Un <strong>simulador de Bingo</strong> completo, desde cero. Vamos a pasar por 5 etapas progresivas: empezamos con un cartón como set, y terminamos con un juego multijugador con estadísticas.</p>
+<p>Este ejercicio integra todo lo que vimos en el Bloque 2:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>¿Dónde aparece?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sets</strong></td>
+<td>El cartón, los números sorteados, la condición de victoria</td>
+</tr>
+<tr>
+<td><strong>Listas</strong></td>
+<td>El historial del sorteo, la lista de jugadores</td>
+</tr>
+<tr>
+<td><strong>Diccionarios</strong></td>
+<td>Los datos de cada jugador (nombre + cartón)</td>
+</tr>
+<tr>
+<td><strong>Tuplas</strong></td>
+<td>El registro de partidas (nombre, cantidad de turnos)</td>
+</tr>
+<tr>
+<td><strong>Funciones</strong></td>
+<td>Cada acción del juego encapsulada y reutilizable</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">🧠 Por qué Bingo</p>
+<p>El Bingo es un ejemplo perfecto de por qué los sets existen: un cartón tiene números <strong>únicos</strong>, verificar si "salió" un número es una <strong>consulta de pertenencia</strong> (<code>in</code>), y la condición de victoria es una <strong>operación de subconjunto</strong> (<code>issubset</code>). En una lista esto sería mucho más engorroso.</p>
+</div>
+<hr />
+<h2 id="hoja-de-ruta">🗺️ Hoja de ruta</h2>
+<div class="highlight"><pre><span></span><code>Etapa 1 → Generar un cartón                   (set + random)
+Etapa 2 → Sortear y verificar                  (funciones + sets)
+Etapa 3 → Mostrar el estado del juego          (funciones + formateo)
+Etapa 4 → El juego completo (un jugador)       (bucle + integración)
+Etapa 5 → Múltiples jugadores                  (listas + dicts)
+🌶️ Extra → Estadísticas de partidas           (simulación)
+</code></pre></div>
+<hr />
+<h2 id="etapa-1-el-carton">Etapa 1 — El cartón</h2>
+<p>🌱 <em>Sets + random</em></p>
+<p>Un cartón de Bingo tiene <strong>15 números únicos</strong> entre el 1 y el 90.</p>
+<p><strong>Tu tarea:</strong></p>
+<ol>
+<li>Importá el módulo <code>random</code>.</li>
+<li>Generá un cartón usando <code>random.sample()</code> y convertilo a <code>set</code>.</li>
+<li>Imprimí el cartón ordenado para que sea legible.</li>
+</ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="c1"># Pista: random.sample(iterable, k) devuelve k elementos únicos al azar</span>
+<span class="c1"># range(1, 91) genera los números del 1 al 90</span>
+</code></pre></div>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="n">carton</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">),</span> <span class="mi">15</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tu cartón:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">carton</span><span class="p">))</span>
+</code></pre></div>
+<p>Probá ejecutarlo varias veces — cada vez obtenés un cartón diferente.</p>
+</details>
+<hr />
+<h2 id="etapa-2-sortear-y-verificar">Etapa 2 — Sortear y verificar</h2>
+<p>🌱🌿 <em>Funciones + sets</em></p>
+<p>Ahora necesitamos dos cosas: una función para sortear números (sin repetir) y otra para saber si el jugador ganó.</p>
+<p><strong>Tu tarea:</strong> Escribí estas tres funciones.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generar_carton</span><span class="p">(</span><span class="n">cantidad</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">maximo</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Genera y devuelve un cartón como set.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recibe el conjunto de números disponibles (bolillero).</span>
+<span class="sd">    Extrae uno al azar, lo elimina del bolillero y lo devuelve.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Devuelve True si todos los números del cartón ya fueron sorteados.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">🎱 El bolillero</p>
+<p>El bolillero es el conjunto de números que <strong>todavía no salieron</strong>. Empezamos con todos los números posibles y vamos sacando de ahí. Usar un set nos permite eliminar un número en O(1).</p>
+</div>
+<details class="tip">
+<summary>💡 Pista — <code>verificar_ganador</code></summary>
+<p>Los sets tienen una operación perfecta para esto: <code>A.issubset(B)</code> devuelve <code>True</code> si todos los elementos de <code>A</code> están en <code>B</code>. También podés escribirlo como <code>A &lt;= B</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">})</span>  <span class="c1"># True</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">})</span>  <span class="c1"># False</span>
+</code></pre></div>
+</details>
+<details class="tip">
+<summary>💡 Pista — <code>sortear_numero</code></summary>
+<p><code>random.choice()</code> elige un elemento al azar de una secuencia, pero los sets no son secuencias. Podés convertirlo:</p>
+<div class="highlight"><pre><span></span><code><span class="n">numero</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bolillero</span><span class="p">))</span>
+<span class="n">bolillero</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">numero</span>
+</code></pre></div>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generar_carton</span><span class="p">(</span><span class="n">cantidad</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">maximo</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maximo</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">cantidad</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">):</span>
+    <span class="n">numero</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bolillero</span><span class="p">))</span>
+    <span class="n">bolillero</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numero</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">carton</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">sorteados</span><span class="p">)</span>
+
+<span class="c1"># Prueba rápida</span>
+<span class="n">carton</span>   <span class="o">=</span> <span class="n">generar_carton</span><span class="p">()</span>
+<span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+<span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cartón:&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">carton</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¿Ganó?&quot;</span><span class="p">,</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">))</span>  <span class="c1"># False</span>
+
+<span class="c1"># Simulamos que &quot;salieron&quot; exactamente los números del cartón</span>
+<span class="n">sorteados</span> <span class="o">=</span> <span class="n">carton</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¿Ganó?&quot;</span><span class="p">,</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">))</span>  <span class="c1"># True</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="etapa-3-mostrar-el-estado-del-juego">Etapa 3 — Mostrar el estado del juego</h2>
+<p>🌿 <em>Funciones + formateo</em></p>
+<p>No alcanza con saber si ganó: queremos <strong>ver</strong> el cartón con los números marcados y cuántos faltan.</p>
+<p><strong>Tu tarea:</strong> Escribí la función <code>mostrar_carton</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Imprime el cartón mostrando qué números ya salieron (marcados con ✓)</span>
+<span class="sd">    y cuáles faltan.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>La salida debería verse algo así:</p>
+<div class="highlight"><pre><span></span><code>------------------------------
+ 5✓  12   23✓  44   67
+ 8   19✓  31   55✓  73✓
+ 11   27   38✓  61   88
+------------------------------
+Marcados: 6 / 15  |  Faltan: 9
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">💡 Sugerencia de diseño</p>
+<p>No te enrosques demasiado con el formato visual. Lo importante es que se vea <strong>qué números salieron y cuáles no</strong>. Una versión simple con una lista en una línea ya cumple el objetivo.</p>
+</div>
+<details class="tip">
+<summary>💡 Pista — versión simple</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+    <span class="n">marcados</span> <span class="o">=</span> <span class="n">carton</span> <span class="o">&amp;</span> <span class="n">sorteados</span>       <span class="c1"># intersección: salieron Y están en el cartón</span>
+    <span class="n">pendientes</span> <span class="o">=</span> <span class="n">carton</span> <span class="o">-</span> <span class="n">sorteados</span>     <span class="c1"># diferencia: en el cartón pero no salieron</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Marcados: &quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">marcados</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pendientes:&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">pendientes</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">marcados</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">carton</span><span class="p">)</span><span class="si">}</span><span class="s2"> — faltan </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pendientes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+    <span class="n">marcados</span>  <span class="o">=</span> <span class="n">carton</span> <span class="o">&amp;</span> <span class="n">sorteados</span>
+    <span class="n">pendientes</span> <span class="o">=</span> <span class="n">carton</span> <span class="o">-</span> <span class="n">sorteados</span>
+
+    <span class="n">numeros_ordenados</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">carton</span><span class="p">)</span>
+    <span class="n">fila</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">numeros_ordenados</span><span class="p">:</span>
+        <span class="n">marca</span> <span class="o">=</span> <span class="s2">&quot;✓&quot;</span> <span class="k">if</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">sorteados</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">fila</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}{</span><span class="n">marca</span><span class="si">}</span><span class="s2">  &quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fila</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Marcados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">marcados</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">carton</span><span class="p">)</span><span class="si">}</span><span class="s2">  |  Faltan: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pendientes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="etapa-4-el-juego-completo-un-jugador">Etapa 4 — El juego completo (un jugador)</h2>
+<p>🌿 <em>Bucle + integración</em></p>
+<p>Ahora unimos todo en un juego real: sorteamos números uno a uno hasta que el jugador gane.</p>
+<p><strong>Tu tarea:</strong> Escribí la función <code>jugar_solitario</code> que use las funciones anteriores.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">jugar_solitario</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simula una partida completa de un jugador.</span>
+<span class="sd">    Devuelve cuántos números se necesitaron para ganar.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">carton</span>    <span class="o">=</span> <span class="n">generar_carton</span><span class="p">()</span>
+    <span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+    <span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">turnos</span>    <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Empieza el juego!&quot;</span><span class="p">)</span>
+    <span class="n">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+        <span class="o">...</span>  <span class="c1"># ¿Qué va acá?</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎉 ¡BINGO! Ganaste en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">turnos</span>
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Dentro del <code>while</code>:</p>
+<ol>
+<li>Sorteá un número con <code>sortear_numero(bolillero)</code>.</li>
+<li>Agregalo a <code>sorteados</code>.</li>
+<li>Incrementá <code>turnos</code>.</li>
+<li>Mostrá el número que salió.</li>
+<li>Mostrá el cartón actualizado (opcional: solo si el número estaba en el cartón).</li>
+</ol>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">jugar_solitario</span><span class="p">():</span>
+    <span class="n">carton</span>    <span class="o">=</span> <span class="n">generar_carton</span><span class="p">()</span>
+    <span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+    <span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">turnos</span>    <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Empieza el juego!&quot;</span><span class="p">)</span>
+    <span class="n">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">)</span>
+    <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Presioná Enter para empezar...&quot;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+        <span class="n">numero</span> <span class="o">=</span> <span class="n">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">)</span>
+        <span class="n">sorteados</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+        <span class="n">turnos</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">numero</span> <span class="ow">in</span> <span class="n">carton</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎱 Salió el </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2"> — ¡está en tu cartón!&quot;</span><span class="p">)</span>
+            <span class="n">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Salió el </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎉 ¡BINGO! Ganaste en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">turnos</span>
+
+<span class="n">jugar_solitario</span><span class="p">()</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="etapa-5-multiples-jugadores">Etapa 5 — Múltiples jugadores</h2>
+<p>🌶️ <em>Listas + dicts</em></p>
+<p>Un Bingo real tiene varios jugadores. Vamos a representar cada jugador como un diccionario y guardarlos en una lista.</p>
+<p><strong>Tu tarea:</strong> Escribí <code>jugar_multijugador(nombres)</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">jugar_multijugador</span><span class="p">(</span><span class="n">nombres</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recibe una lista de nombres.</span>
+<span class="sd">    Simula una partida hasta que alguien gane.</span>
+<span class="sd">    Devuelve el nombre del ganador y cuántos turnos tomó.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Creá la lista de jugadores como dicts: {&quot;nombre&quot;: ..., &quot;carton&quot;: ...}</span>
+    <span class="n">jugadores</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+
+    <span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+    <span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">turnos</span>    <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">numero</span> <span class="o">=</span> <span class="n">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">)</span>
+        <span class="n">sorteados</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+        <span class="n">turnos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Turno </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2">: salió el </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">jugador</span> <span class="ow">in</span> <span class="n">jugadores</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">jugador</span><span class="p">[</span><span class="s2">&quot;carton&quot;</span><span class="p">],</span> <span class="n">sorteados</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🏆 ¡</span><span class="si">{</span><span class="n">jugador</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> ganó en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos!&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">jugador</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">],</span> <span class="n">turnos</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">🧠 Detalle importante</p>
+<p>¿Qué pasa si dos jugadores ganan en el mismo turno? En el Bingo real, ambos ganan. ¿Cómo lo modelarías?</p>
+</div>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">jugar_multijugador</span><span class="p">(</span><span class="n">nombres</span><span class="p">):</span>
+    <span class="n">jugadores</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span> <span class="s2">&quot;carton&quot;</span><span class="p">:</span> <span class="n">generar_carton</span><span class="p">()}</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nombres</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jugadores</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎴 Cartón de </span><span class="si">{</span><span class="n">j</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="s1">&#39;carton&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+    <span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">turnos</span>    <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">numero</span> <span class="o">=</span> <span class="n">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">)</span>
+        <span class="n">sorteados</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+        <span class="n">turnos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Turno </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">ganadores</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jugadores</span>
+                     <span class="k">if</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="s2">&quot;carton&quot;</span><span class="p">],</span> <span class="n">sorteados</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">ganadores</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ganadores</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🏆 ¡</span><span class="si">{</span><span class="n">ganadores</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> ganó en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos!&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🏆 ¡Empate! Ganaron: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ganadores</span><span class="p">)</span><span class="si">}</span><span class="s2"> en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ganadores</span><span class="p">,</span> <span class="n">turnos</span>
+
+<span class="n">ganadores</span><span class="p">,</span> <span class="n">turnos</span> <span class="o">=</span> <span class="n">jugar_multijugador</span><span class="p">([</span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="s2">&quot;Beto&quot;</span><span class="p">,</span> <span class="s2">&quot;Cami&quot;</span><span class="p">,</span> <span class="s2">&quot;Dante&quot;</span><span class="p">])</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="desafio-extra-estadisticas">🌶️🌶️ Desafío extra — Estadísticas</h2>
+<p><em>Simulación + listas + dicts</em></p>
+<p>Ahora que tenemos el juego funcionando, podemos responder preguntas interesantes:</p>
+<p><strong>¿Cuántos turnos se necesitan en promedio para ganar al Bingo?</strong></p>
+<p>Escribí una función <code>simular(partidas)</code> que:</p>
+<ol>
+<li>Simule <code>partidas</code> partidas de un jugador (sin imprimir nada).</li>
+<li>Guarde cuántos turnos tardó cada partida en una lista.</li>
+<li>Al final imprima:<ul>
+<li>El mínimo, máximo y promedio de turnos.</li>
+<li>Un histograma simple con <code>*</code> (cuántas partidas terminaron en cada rango).</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">simular</span><span class="p">(</span><span class="n">partidas</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">resultados</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">partidas</span><span class="p">):</span>
+        <span class="o">...</span>  <span class="c1"># jugar sin imprimir, guardar los turnos</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Partidas simuladas: </span><span class="si">{</span><span class="n">partidas</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mínimo:  </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span><span class="si">}</span><span class="s2"> turnos&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Máximo:  </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span><span class="si">}</span><span class="s2"> turnos&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Promedio: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> turnos&quot;</span><span class="p">)</span>
+    <span class="c1"># ¿Podés agregar el histograma?</span>
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista — versión sin <code>print</code> del juego</summary>
+<p>Necesitás una versión "silenciosa" de <code>jugar_solitario</code>. Podés agregar un parámetro <code>silencioso=False</code> a la función original:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">jugar_solitario</span><span class="p">(</span><span class="n">silencioso</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+        <span class="n">numero</span> <span class="o">=</span> <span class="n">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">)</span>
+        <span class="n">sorteados</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+        <span class="n">turnos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">silencioso</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Salió el </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="n">turnos</span>
+</code></pre></div>
+<p>Luego en <code>simular</code>: <code>turnos = jugar_solitario(silencioso=True)</code>.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">jugar_solitario</span><span class="p">(</span><span class="n">silencioso</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">carton</span>    <span class="o">=</span> <span class="n">generar_carton</span><span class="p">()</span>
+    <span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+    <span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">turnos</span>    <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+        <span class="n">numero</span> <span class="o">=</span> <span class="n">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">)</span>
+        <span class="n">sorteados</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+        <span class="n">turnos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">silencioso</span> <span class="ow">and</span> <span class="n">numero</span> <span class="ow">in</span> <span class="n">carton</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🎱 Salió el </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2"> — ¡está en tu cartón!&quot;</span><span class="p">)</span>
+            <span class="n">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">silencioso</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎉 ¡BINGO! Ganaste en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">turnos</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simular</span><span class="p">(</span><span class="n">partidas</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">resultados</span> <span class="o">=</span> <span class="p">[</span><span class="n">jugar_solitario</span><span class="p">(</span><span class="n">silencioso</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">partidas</span><span class="p">)]</span>
+
+    <span class="n">minimo</span>  <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span>
+    <span class="n">maximo</span>  <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span>
+    <span class="n">promedio</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📊 Estadísticas de </span><span class="si">{</span><span class="n">partidas</span><span class="si">}</span><span class="s2"> partidas simuladas&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Mínimo:   </span><span class="si">{</span><span class="n">minimo</span><span class="si">}</span><span class="s2"> turnos&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Máximo:   </span><span class="si">{</span><span class="n">maximo</span><span class="si">}</span><span class="s2"> turnos&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Promedio: </span><span class="si">{</span><span class="n">promedio</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> turnos&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Histograma por rangos de 10</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  Histograma:&quot;</span><span class="p">)</span>
+    <span class="n">rangos</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">maximo</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">limite</span> <span class="ow">in</span> <span class="n">rangos</span><span class="p">:</span>
+        <span class="n">desde</span> <span class="o">=</span> <span class="n">limite</span> <span class="o">-</span> <span class="mi">9</span>
+        <span class="n">cuenta</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resultados</span> <span class="k">if</span> <span class="n">desde</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">limite</span><span class="p">)</span>
+        <span class="n">barra</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">cuenta</span> <span class="o">*</span> <span class="mi">40</span> <span class="o">//</span> <span class="n">partidas</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">desde</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">–</span><span class="si">{</span><span class="n">limite</span><span class="si">:</span><span class="s2">&lt;3</span><span class="si">}</span><span class="s2"> │</span><span class="si">{</span><span class="n">barra</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cuenta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">simular</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+</code></pre></div>
+<details class="info">
+<summary>🤔 ¿Qué resultado esperás?</summary>
+<p>El promedio suele caer entre <strong>55 y 65 turnos</strong>. El mínimo teórico es 15 (que salgan los 15 de tu cartón en los primeros 15). ¿Cuándo viste eso en tus simulaciones?</p>
+</details>
+</details>
+<hr />
+<h2 id="cheatsheet-de-operaciones-de-sets-usadas-en-este-ejercicio">📌 Cheatsheet de operaciones de sets usadas en este ejercicio</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Crear un cartón único</span>
+<span class="n">carton</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">),</span> <span class="mi">15</span><span class="p">))</span>
+
+<span class="c1"># Verificar si un número &quot;cayó&quot; en el cartón</span>
+<span class="k">if</span> <span class="n">numero</span> <span class="ow">in</span> <span class="n">carton</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="c1"># Números del cartón que ya salieron (intersección)</span>
+<span class="n">marcados</span> <span class="o">=</span> <span class="n">carton</span> <span class="o">&amp;</span> <span class="n">sorteados</span>
+
+<span class="c1"># Números del cartón que todavía faltan (diferencia)</span>
+<span class="n">pendientes</span> <span class="o">=</span> <span class="n">carton</span> <span class="o">-</span> <span class="n">sorteados</span>
+
+<span class="c1"># ¿Ganó? (¿todos los del cartón están en sorteados?)</span>
+<span class="n">gano</span> <span class="o">=</span> <span class="n">carton</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">sorteados</span><span class="p">)</span>
+<span class="n">gano</span> <span class="o">=</span> <span class="n">carton</span> <span class="o">&lt;=</span> <span class="n">sorteados</span>          <span class="c1"># equivalente, más corto</span>
+</code></pre></div>
+<hr />
+<h2 id="y-ahora-que-viene">🚀 ¿Y ahora qué viene?</h2>
+<div class="admonition success">
+<p class="admonition-title">🎯 Lo que acabás de construir</p>
+<p>Sin darte cuenta, construiste un sistema con:</p>
+<ul>
+<li><strong>Separación de responsabilidades</strong>: cada función hace una sola cosa.</li>
+<li><strong>Estado mutable compartido</strong>: el bolillero y los sorteados se modifican entre turnos.</li>
+<li><strong>Abstracción</strong>: <code>jugar_multijugador</code> no sabe cómo funciona <code>verificar_ganador</code> por dentro.</li>
+<li><strong>Simulación</strong>: podés correr mil partidas y sacar estadísticas reales.</li>
+</ul>
+<p>Esto ya es el esqueleto de cómo se construyen sistemas más complejos. En el primer proyecto (Sistema de Asistencias) vamos a usar exactamente esta misma lógica: funciones bien definidas, datos persistidos, menú interactivo.</p>
+</div>
+<h2 id="anterior-funciones-ii"><a href="../funciones_2/">⬅️ Anterior: Funciones II</a></h2>
+<h2 id="indice"><a href="../../../clases/#colecciones">📚 Índice</a></h2>
+<h2 id="siguiente-manejo-de-archivos"><a href="../../07_persistencia/archivos/">➡️ Siguiente: Manejo de archivos</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": "content.code.copy", "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

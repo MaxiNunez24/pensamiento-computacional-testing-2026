@@ -1,4 +1,4 @@
-# 📅 Cronograma del Curso
+﻿# 📅 Cronograma del Curso
 
 !!! tip "Pensamiento Computacional y Testing de Aplicaciones — CFP 401"
     Curso anual de **73 clases × 3:20hs ≈ 240hs** para aprender a programar con buenas prácticas y desarrollar **proyectos reales**. Las clases son los **miércoles de 13:20 a 16:40** y los **viernes de 14:00 a 17:20**.
@@ -54,12 +54,12 @@
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
 | 9/3 | [Presentación e introducción a la Informática](./clases/01_introduccion.md) | [¿Qué es programar? Algoritmos, Pseudocódigo, Diagramas de flujo](./clases/02_que_es_programar.md) | Identificar partes de una PC, resolver problemas paso a paso |
-| 16/3 | [Python Básico: historia, instalación, `print()`](./clases/python/historia_caracteristicas.md) | [Continuación de `print()` e introducción a Variables](./clases/python/variables.md) | Resolver problemas sencillos con Python |
-| 23/3 | [Variables, tipos de datos y operadores](./clases/python/variables.md) | [La función `input()`](./clases/python/funcion_input.md) | Datos ingresados por el usuario y control de flujo básico |
-| 30/3 | [Estructuras de Control (`if-else`)](./clases/python/if_else.md) | 🚫 *Sin clases (Viernes Santo)* | Problemas con condicionales |
-| 6/4 | [Repaso de `if-else-elif` y buenas prácticas](./clases/python/if_else.md) | [Bucles `while`](./clases/python/while.md) | Programas con bucles y control de flujo avanzado |
-| 13/4 | [Bucles `for`](./clases/python/for.md) | [Ejercicios de repaso: Estructuras de Control](./clases/python/ejercicios_estructuras_control.md) | Buenas prácticas en control de flujo |
-| 20/4 | [Listas: parte teórica y operaciones](./clases/python/listas.md) | [Listas: list comprehensions y listas de listas](./clases/python/listas.md) | Recorridos, transformaciones, matrices |
+| 16/3 | [Python Básico: historia, instalación, `print()`](./clases/python/01_introduccion/historia_caracteristicas.md) | [Continuación de `print()` e introducción a Variables](./clases/python/02_variables_y_tipos/variables.md) | Resolver problemas sencillos con Python |
+| 23/3 | [Variables, tipos de datos y operadores](./clases/python/02_variables_y_tipos/variables.md) | [La función `input()`](./clases/python/02_variables_y_tipos/funcion_input.md) | Datos ingresados por el usuario y control de flujo básico |
+| 30/3 | [Estructuras de Control (`if-else`)](./clases/python/03_estructuras_de_control/if_else.md) | 🚫 *Sin clases (Viernes Santo)* | Problemas con condicionales |
+| 6/4 | [Repaso de `if-else-elif` y buenas prácticas](./clases/python/03_estructuras_de_control/if_else.md) | [Bucles `while`](./clases/python/03_estructuras_de_control/while.md) | Programas con bucles y control de flujo avanzado |
+| 13/4 | [Bucles `for`](./clases/python/03_estructuras_de_control/for.md) | [Ejercicios de repaso: Estructuras de Control](./clases/python/03_estructuras_de_control/ejercicios_estructuras_control.md) | Buenas prácticas en control de flujo |
+| 20/4 | [Listas: parte teórica y operaciones](./clases/python/04_listas/listas.md) | [Listas: list comprehensions y listas de listas](./clases/python/04_listas/listas.md) | Recorridos, transformaciones, matrices |
 
 ---
 
@@ -74,10 +74,10 @@
 
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
-| 27/4 | ✅ Cierre de [Listas](./clases/python/listas.md) — asignación del [cuadernillo](./clases/python/cuadernillo_listas_finde.md) | 🚫 *Sin clases (1/5 — Día del Trabajador)* | 📒 [Cuadernillo de listas](./clases/python/cuadernillo_listas_finde.md) durante el finde largo |
-| 4/5 | ✅ Repaso del [Cuadernillo de Listas](./clases/python/cuadernillo_listas_finde.md) en clase | ✅ [Mini Parcial](./clases/python/mini_parcial.md) | — |
-| 11/5 | 🎲 [**Tuplas, Sets**](./clases/python/tuplas_sets.md) **y [Diccionarios](./clases/python/diccionarios.md)** | 📦 [**Funciones I**: definición, parámetros, retorno](./clases/python/funciones_1.md) | Ejercicios de funciones |
-| 18/5 | 📦 [**Funciones II**: scope, valores por defecto, `*args`/`**kwargs`](./clases/python/funciones_2.md) | 🎰 [**Bingo** — Ejercicio integrador de colecciones y funciones](./clases/python/bingo.md) | Construir el juego completo por etapas |
+| 27/4 | ✅ Cierre de [Listas](./clases/python/04_listas/listas.md) — asignación del [cuadernillo](./clases/python/04_listas/cuadernillo_listas_finde.md) | 🚫 *Sin clases (1/5 — Día del Trabajador)* | 📒 [Cuadernillo de listas](./clases/python/04_listas/cuadernillo_listas_finde.md) durante el finde largo |
+| 4/5 | ✅ Repaso del [Cuadernillo de Listas](./clases/python/04_listas/cuadernillo_listas_finde.md) en clase | ✅ [Mini Parcial](./clases/python/04_listas/mini_parcial.md) | — |
+| 11/5 | 🎲 [**Tuplas, Sets**](./clases/python/05_colecciones/tuplas_sets.md) **y [Diccionarios](./clases/python/05_colecciones/diccionarios.md)** | 📦 [**Funciones I**: definición, parámetros, retorno](./clases/python/06_funciones/funciones_1.md) | Ejercicios de funciones |
+| 18/5 | 📦 [**Funciones II**: scope, valores por defecto, `*args`/`**kwargs`](./clases/python/06_funciones/funciones_2.md) | 🎰 [**Bingo** — Ejercicio integrador de colecciones y funciones](./clases/python/06_funciones/bingo.md) | Construir el juego completo por etapas |
 
 !!! tip "🧪 Detalle pedagógico"
     En **Funciones II** se introduce `*args`/`**kwargs` *de manera suave* (solo concepto y un ejemplo), no se profundiza. El objetivo es que les suene cuando lo vean en código de terceros.
@@ -95,8 +95,8 @@
 
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
-| 25/5 | [💾 **Manejo de archivos**: lectura, escritura, modos](./clases/python/archivos.md) | [📋 **JSON**: serialización, deserialización, `json.dump`/`json.load`](./clases/python/json.md) | Programa que persista datos en JSON |
-| 1/6 | [🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README](./clases/python/git_github.md) | — | Subir todos los programas del curso al repo personal |
+| 25/5 | [💾 **Manejo de archivos**: lectura, escritura, modos](./clases/python/07_persistencia/archivos.md) | [📋 **JSON**: serialización, deserialización, `json.dump`/`json.load`](./clases/python/07_persistencia/json.md) | Programa que persista datos en JSON |
+| 1/6 | [🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README](./clases/python/07_persistencia/git_github.md) | — | Subir todos los programas del curso al repo personal |
 
 !!! tip "🤐 Git + GitHub en una sola clase (3h20m)"
     Combinamos ambas en una única sesión aprovechando la duración: **primera mitad** Git local (init/add/commit/status/log), **break**, **segunda mitad** GitHub (remote/push/clone/pull/README). NO vamos a ver branches, merges, conflictos ni PRs. Solo el workflow mínimo para que puedan versionar el primer proyecto y continuar el código en sus casas.
