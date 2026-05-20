@@ -849,6 +849,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/formato_strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📐 Formato de strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../02_variables_y_tipos/funcion_input/" class="md-nav__link">
         
   
@@ -2218,7 +2246,7 @@
 <span class="c1"># (y así funciona cualquier app real)</span>
 </code></pre></div>
 <hr />
-<h2 id="abrir-un-archivo-con-open">📂 Abrir un archivo con <code>open()</code></h2>
+<h2 id="abrir-un-archivo-con-open">📂 Abrir un archivo con open()</h2>
 <p>La función <code>open()</code> abre un archivo y devuelve un <strong>objeto de archivo</strong> (file object) con el que podemos leer o escribir.</p>
 <div class="highlight"><pre><span></span><code><span class="n">archivo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;datos.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>  <span class="c1"># &quot;r&quot; = modo lectura</span>
 <span class="c1"># ... hacemos algo con el archivo ...</span>
@@ -2266,7 +2294,7 @@
 <p>Si abrís un archivo existente con <code>"w"</code>, su contenido se <strong>destruye</strong> inmediatamente, antes incluso de que escribas nada. Si querés conservar lo que había, usá <code>"a"</code>.</p>
 </div>
 <hr />
-<h2 id="el-bloque-with-la-forma-correcta">🛡️ El bloque <code>with</code> (la forma correcta)</h2>
+<h2 id="el-bloque-with-la-forma-correcta">🛡️ El bloque with (la forma correcta)</h2>
 <p>En lugar de acordarte siempre de hacer <code>.close()</code>, Python nos da el bloque <code>with</code>, que <strong>cierra el archivo automáticamente</strong> al terminar — incluso si ocurre un error.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ Forma manual (propensa a errores si hay excepciones)</span>
 <span class="n">archivo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;datos.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>

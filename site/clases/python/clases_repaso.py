@@ -1,2 +1,3 @@
-import os
-os.system("cls")
+import subprocess
+subprocess.run(["clear"])
+

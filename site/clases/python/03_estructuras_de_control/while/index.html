@@ -849,6 +849,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/formato_strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📐 Formato de strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../02_variables_y_tipos/funcion_input/" class="md-nav__link">
         
   
@@ -2182,7 +2210,7 @@
 
 
 
-<h1 id="bucle-while-en-python">🔄 Bucle <code>while</code> en Python</h1>
+<h1 id="bucle-while-en-python">🔄 Bucle while en Python</h1>
 <h2 id="que-es-un-bucle">🤔 ¿Qué es un bucle?</h2>
 <p>Hasta ahora, nuestros programas ejecutaban las instrucciones <strong>una sola vez</strong>, de arriba hacia abajo. Pero muchas veces necesitamos <strong>repetir</strong> una acción: pedirle datos al usuario hasta que ingrese algo válido, contar, acumular resultados, etc.</p>
 <p>Para eso existen los <strong>bucles</strong> (o <em>loops</em>): estructuras que repiten un bloque de código.</p>
@@ -2191,12 +2219,13 @@
 <p>En este curso, <code>while</code> es el <strong>primer bucle</strong> que vemos. Más adelante conoceremos <code>for</code>, que funciona de manera distinta. Por ahora, con <code>while</code> tenemos todo lo que necesitamos.</p>
 </div>
 <hr />
-<h2 id="como-funciona-el-while">📖 ¿Cómo funciona el <code>while</code>?</h2>
+<h2 id="como-funciona-el-while">📖 ¿Cómo funciona el while?</h2>
 <p><code>while</code> repite un bloque de código <strong>mientras</strong> una condición sea verdadera. Cuando la condición se vuelve falsa, el bucle termina y el programa continúa.</p>
-<div class="highlight"><pre><span></span><code>¿La condición es verdadera?
-    ├── SÍ → ejecuta el bloque → vuelve a verificar la condición
-    └── NO → sale del bucle
-</code></pre></div>
+<pre class="mermaid"><code>flowchart TD
+    A([inicio]) --&gt; B{¿condición\nverdadera?}
+    B --&gt;|Sí| C[ejecuta el bloque]
+    C --&gt; B
+    B --&gt;|No| D([sale del bucle])</code></pre>
 <hr />
 <h2 id="sintaxis-basica">📝 Sintaxis básica</h2>
 <div class="highlight"><pre><span></span><code><span class="k">while</span> <span class="n">condición</span><span class="p">:</span>
@@ -2236,7 +2265,7 @@
 <p>Para finalizar un programa que quedó atrapado en un bucle infinito, podés usar <code>Ctrl + C</code> en la terminal o cerrar la ventana del programa.</p>
 </div>
 <hr />
-<h2 id="partes-de-un-bucle-while">🧩 Partes de un bucle <code>while</code></h2>
+<h2 id="partes-de-un-bucle-while">🧩 Partes de un bucle while</h2>
 <p>Todo bucle <code>while</code> bien construido tiene tres componentes:</p>
 <table>
 <thead>
@@ -2265,7 +2294,7 @@
 </tbody>
 </table>
 <hr />
-<h2 id="while-con-entrada-del-usuario">📥 <code>while</code> con entrada del usuario</h2>
+<h2 id="while-con-entrada-del-usuario">📥 while con entrada del usuario</h2>
 <p>Una de las aplicaciones más útiles: repetir hasta que el usuario ingrese algo válido.</p>
 <div class="highlight"><pre><span></span><code><span class="n">respuesta</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
@@ -2294,7 +2323,7 @@
 <p>Inicializá la variable acumuladora en <code>0</code> antes del bucle, y dentro del bucle usá <code>+=</code> para ir sumando. Este patrón lo vas a ver constantemente en programación.</p>
 </div>
 <hr />
-<h2 id="break-y-continue">⏭️ <code>break</code> y <code>continue</code></h2>
+<h2 id="break-y-continue">⏭️ break y continue</h2>
 <p>A veces necesitamos más control sobre el flujo del bucle:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># break: sale del bucle inmediatamente, sin importar la condición</span>
 <span class="n">numero</span> <span class="o">=</span> <span class="mi">0</span>

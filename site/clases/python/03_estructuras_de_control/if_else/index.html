@@ -849,6 +849,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/formato_strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📐 Formato de strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../02_variables_y_tipos/funcion_input/" class="md-nav__link">
         
   
@@ -2462,7 +2490,7 @@
 
 
 
-<h1 id="estructura-de-control-if-else-y-elif">🔀 Estructura de control: <code>if</code>, <code>else</code> y <code>elif</code></h1>
+<h1 id="estructura-de-control-if-else-y-elif">🔀 Estructura de control: if, else y elif</h1>
 <p>Hasta ahora nuestros programas ejecutaban todo en orden…</p>
 <p>👉 Pero en la vida real necesitamos tomar decisiones:</p>
 <ul>
@@ -2472,7 +2500,7 @@
 </ul>
 <p>En programación hacemos lo mismo con <strong>condicionales</strong></p>
 <hr />
-<h2 id="que-es-un-if">🧠 ¿Qué es un <code>if</code>?</h2>
+<h2 id="que-es-un-if">🧠 ¿Qué es un if?</h2>
 <p>La estructura <code>if</code> nos permite ejecutar código <strong>solo si se cumple una condición</strong></p>
 <hr />
 <h3 id="ejemplo-basico">✨ Ejemplo básico</h3>
@@ -2515,7 +2543,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aprobado&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
-<h2 id="agregando-else">🔁 Agregando <code>else</code></h2>
+<h2 id="agregando-else">🔁 Agregando else</h2>
 <p>¿Qué pasa si la condición es falsa?</p>
 <p>👉 Usamos <code>else</code></p>
 <hr />
@@ -2535,7 +2563,7 @@
 </ul>
 <p>👉 Siempre se ejecuta <strong>uno de los dos</strong></p>
 <hr />
-<h2 id="multiples-caminos-elif">🔀 Múltiples caminos: <code>elif</code></h2>
+<h2 id="multiples-caminos-elif">🔀 Múltiples caminos: elif</h2>
 <p>Cuando tenemos más de dos opciones usamos <code>elif</code></p>
 <hr />
 <h2 id="ejemplo_1">✨ Ejemplo</h2>
@@ -2570,14 +2598,14 @@
 </code></pre></div>
 <hr />
 <h2 id="errores-comunes">⚠️ Errores comunes</h2>
-<h3 id="usar-en-vez-de">❌ Usar <code>=</code> en vez de <code>==</code></h3>
+<h3 id="usar-en-vez-de">❌ Usar = en vez de ==</h3>
 <div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">=</span> <span class="mi">18</span><span class="p">:</span>  <span class="c1"># ERROR</span>
 </code></pre></div>
 <p>✔️ Correcto:</p>
 <div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">==</span> <span class="mi">18</span><span class="p">:</span>
 </code></pre></div>
 <hr />
-<h3 id="olvidar-los">❌ Olvidar los <code>:</code></h3>
+<h3 id="olvidar-los">❌ Olvidar los :</h3>
 <div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span>   <span class="c1"># ERROR</span>
 </code></pre></div>
 <p>✔️ Correcto:</p>
@@ -2590,14 +2618,14 @@
 </code></pre></div>
 <hr />
 <h2 id="relacion-con-diagramas-de-flujo">🔄 Relación con diagramas de flujo</h2>
-<p>Un <code>if</code> se representa como una decisión:</p>
-<div class="highlight"><pre><span></span><code>        ¿edad &gt;= 18?
-           /   \
-         Sí     No
-        /         \
-  &quot;Mayor&quot;     &quot;Menor&quot;
-</code></pre></div>
-<p>👉 Cada camino representa una decisión del programa</p>
+<p>Un <code>if</code> se representa como una decisión con caminos que se ramifican y vuelven a unirse:</p>
+<pre class="mermaid"><code>flowchart TD
+    A{nota &gt;= 9?} --&gt;|Sí| B["'Excelente'"]
+    A --&gt;|No| C{nota &gt;= 6?}
+    C --&gt;|Sí| D["'Aprobado'"]
+    C --&gt;|No| E["'Desaprobado'"]
+    B &amp; D &amp; E --&gt; F([continúa el programa])</code></pre>
+<p>👉 Cada rombo es una condición. Cada camino, una rama del <code>if</code>/<code>elif</code>/<code>else</code>.</p>
 <hr />
 <h2 id="ejercicios">🧪 Ejercicios</h2>
 <ol>

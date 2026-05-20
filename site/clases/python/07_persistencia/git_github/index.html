@@ -849,6 +849,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../02_variables_y_tipos/formato_strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📐 Formato de strings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../02_variables_y_tipos/funcion_input/" class="md-nav__link">
         
   
@@ -2526,10 +2554,9 @@ git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"
 </code></pre></div>
 <hr />
 <h3 id="el-flujo-de-trabajo-de-git">🗺️ El flujo de trabajo de Git</h3>
-<div class="highlight"><pre><span></span><code>Tu código                 Área de preparación           Repositorio
-(Working Directory)  →   (Staging Area / Index)  →    (Repository)
-                  git add archivo.py          git commit -m &quot;mensaje&quot;
-</code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    A["📁 Working Directory\ntu carpeta"] --&gt;|"git add"| B["📋 Staging Area\nsala de espera"]
+    B --&gt;|"git commit"| C["🗄️ Repository\nhistorial en .git/"]</code></pre>
 <p>Pensalo en tres zonas:</p>
 <ul>
 <li><strong>Working Directory</strong>: tu carpeta, donde editás los archivos.</li>
@@ -2537,14 +2564,14 @@ git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"
 <li><strong>Repository</strong>: el historial oficial de versiones (la base de datos de Git, en la carpeta <code>.git/</code>).</li>
 </ul>
 <hr />
-<h3 id="git-init-iniciar-un-repositorio"><code>git init</code> — Iniciar un repositorio</h3>
+<h3 id="git-init-iniciar-un-repositorio">git init — Iniciar un repositorio</h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>mi_proyecto<span class="w">          </span><span class="c1"># entramos a la carpeta del proyecto</span>
 git<span class="w"> </span>init<span class="w">                </span><span class="c1"># inicializamos Git</span>
 <span class="c1"># Initialized empty Git repository in .../mi_proyecto/.git/</span>
 </code></pre></div>
 <p>Esto crea una carpeta oculta <code>.git/</code> que contiene toda la historia del proyecto. <strong>No la toques ni la borres.</strong></p>
 <hr />
-<h3 id="git-status-ver-el-estado-actual"><code>git status</code> — Ver el estado actual</h3>
+<h3 id="git-status-ver-el-estado-actual">git status — Ver el estado actual</h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>status
 </code></pre></div>
 <p>Es el comando que más vas a usar. Te dice:</p>
@@ -2554,7 +2581,7 @@ git<span class="w"> </span>init<span class="w">                </span><span clas
 <li>Qué archivos no están siendo rastreados por Git.</li>
 </ul>
 <hr />
-<h3 id="git-add-preparar-cambios-para-el-commit"><code>git add</code> — Preparar cambios para el commit</h3>
+<h3 id="git-add-preparar-cambios-para-el-commit">git add — Preparar cambios para el commit</h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>programa.py<span class="w">          </span><span class="c1"># agregar un archivo específico</span>
 git<span class="w"> </span>add<span class="w"> </span>.<span class="w">                    </span><span class="c1"># agregar TODOS los cambios del directorio actual</span>
 </code></pre></div>
@@ -2563,7 +2590,7 @@ git<span class="w"> </span>add<span class="w"> </span>.<span class="w">         
 <p><code>git add .</code> agrega todo lo que cambió. Es conveniente pero hay que usarlo con cuidado para no incluir archivos que no querés versionar (contraseñas, archivos temporales, etc.).</p>
 </div>
 <hr />
-<h3 id="git-commit-guardar-una-version"><code>git commit</code> — Guardar una versión</h3>
+<h3 id="git-commit-guardar-una-version">git commit — Guardar una versión</h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Agrego función para calcular promedio&quot;</span>
 </code></pre></div>
 <p>Un commit es una <strong>foto del estado del proyecto</strong> con un mensaje que explica qué hiciste.</p>
@@ -2582,7 +2609,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 </code></pre></div>
 </div>
 <hr />
-<h3 id="git-log-ver-el-historial"><code>git log</code> — Ver el historial</h3>
+<h3 id="git-log-ver-el-historial">git log — Ver el historial</h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>log
 <span class="c1"># commit a3f8b2c... (HEAD -&gt; main)</span>
 <span class="c1"># Author: Maxi &lt;maxi@email.com&gt;</span>
@@ -2613,7 +2640,7 @@ git<span class="w"> </span>log<span class="w"> </span>--oneline
 <p>No hay regla fija, pero un buen criterio es: <strong>cada vez que algo funciona</strong>. Así si rompés algo, podés volver al commit anterior.</p>
 </div>
 <hr />
-<h3 id="gitignore-ignorar-archivos"><code>.gitignore</code> — Ignorar archivos</h3>
+<h3 id="gitignore-ignorar-archivos">.gitignore — Ignorar archivos</h3>
 <p>Algunos archivos no queremos versionar: contraseñas, archivos temporales, caché, etc. Los listamos en un archivo especial <code>.gitignore</code>:</p>
 <div class="highlight"><pre><span></span><code># .gitignore
 __pycache__/
@@ -2653,19 +2680,19 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>push
 </code></pre></div>
 <hr />
-<h3 id="git-clone-descargar-un-repo"><code>git clone</code> — Descargar un repo</h3>
+<h3 id="git-clone-descargar-un-repo">git clone — Descargar un repo</h3>
 <p>Si querés trabajar desde <strong>otra computadora</strong>, o descargar el repo de un compañero:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/usuario/repositorio.git
 </code></pre></div>
 <p>Esto crea una carpeta con todo el proyecto y su historial.</p>
 <hr />
-<h3 id="git-pull-traer-cambios-del-remoto"><code>git pull</code> — Traer cambios del remoto</h3>
+<h3 id="git-pull-traer-cambios-del-remoto">git pull — Traer cambios del remoto</h3>
 <p>Si ya tenés el repo clonado y subiste cambios desde otra máquina:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull
 </code></pre></div>
 <p>Descarga y aplica los cambios más recientes.</p>
 <hr />
-<h3 id="el-readmemd">El <code>README.md</code></h3>
+<h3 id="el-readmemd">El README.md</h3>
 <p>El archivo <code>README.md</code> es la <strong>portada</strong> de tu repositorio en GitHub. Aparece automáticamente en la página del proyecto.</p>
 <div class="highlight"><pre><span></span><code><span class="gh"># Pensamiento Computacional 2026</span>
 
@@ -2689,21 +2716,17 @@ y Testing de Aplicaciones — CFP 401.
 </div>
 <hr />
 <h2 id="resumen-visual-del-workflow-completo">🗺️ Resumen visual del workflow completo</h2>
-<div class="highlight"><pre><span></span><code>Tu computadora                                   GitHub (nube)
-────────────────────────────────                 ──────────────
-
-  Editás archivos
-       │
-  git add .
-       │
-  git commit -m &quot;...&quot;
-       │
-  git push  ──────────────────────────────────►  tu repositorio en GitHub
-                                                        │
-  git pull  ◄─────────────────────────────────────────── (cambios desde otra máquina)
-
-  git clone ◄─────────────────────────────────────────── (primer download en nueva máquina)
-</code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    subgraph local["🖥️ Tu computadora"]
+        WD["📁 Working\nDirectory"] --&gt;|"git add"| SA["📋 Staging\nArea"]
+        SA --&gt;|"git commit"| R["🗄️ Repo\nlocal"]
+    end
+    subgraph nube["☁️ GitHub (nube)"]
+        GH["🐙 Repositorio\nremoto"]
+    end
+    R --&gt;|"git push"| GH
+    GH --&gt;|"git pull"| WD
+    GH -.-&gt;|"git clone\n(primera vez)"| WD</code></pre>
 <hr />
 <h2 id="buenas-practicas">✅ Buenas prácticas</h2>
 <div class="admonition success">
