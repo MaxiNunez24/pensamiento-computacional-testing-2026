@@ -89,8 +89,6 @@ for clase in range(10):
 
 ## CIERRE (~20 segundos)
 
-> Listo para la serie de Tuplas. Son simples pero poderosas: su inmutabilidad es una feature, no una limitación.
->
-> En la próxima serie vemos los **Sets**: colecciones sin orden y sin duplicados, perfectas para operaciones de conjuntos.
+> En el próximo video vemos `zip()`: la función que combina dos colecciones en pares de tuplas y nos permite recorrerlas en paralelo.
 >
 > ¡Nos vemos!

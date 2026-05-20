@@ -4,7 +4,7 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 
 ---
 
-## 01 — Variables y Tipos de Datos (4 videos)
+## 01 — Variables y Tipos de Datos (7 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
@@ -12,6 +12,9 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 | 2 | [02_tipos_de_datos.md](./01_variables_y_tipos/02_tipos_de_datos.md) | str, int, float, bool, None, conversión de tipos |
 | 3 | [03_operadores.md](./01_variables_y_tipos/03_operadores.md) | Aritméticos, comparación, lógicos, precedencia |
 | 4 | [04_operaciones_con_strings.md](./01_variables_y_tipos/04_operaciones_con_strings.md) | Concatenación, len, upper/lower, strip, replace, split, join, find, in |
+| 5 | [05_funcion_print.md](./01_variables_y_tipos/05_funcion_print.md) | print(), sep, end, f-strings básicas |
+| 6 | [06_funcion_input.md](./01_variables_y_tipos/06_funcion_input.md) | input(), siempre devuelve str, conversión de tipos |
+| 7 | [07_formato_strings.md](./01_variables_y_tipos/07_formato_strings.md) | Alineación (<, >, ^), decimales (.2f), ancho con variable |
 
 ---
 
@@ -41,17 +44,18 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 
 ---
 
-## 04 — Tuplas (3 videos)
+## 04 — Tuplas (4 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
 | 1 | [01_que_es_y_como_se_crea.md](./04_tuplas/01_que_es_y_como_se_crea.md) | Inmutabilidad, creación, trampa del elemento único |
 | 2 | [02_desempaquetado.md](./04_tuplas/02_desempaquetado.md) | Desempaquetado, intercambio de variables, for, funciones con múltiples retornos |
 | 3 | [03_metodos_y_usos.md](./04_tuplas/03_metodos_y_usos.md) | count(), index(), claves de diccionario, cuándo usar tupla |
+| 4 | [04_zip.md](./04_tuplas/04_zip.md) | zip(), iterar colecciones en paralelo, transponer matriz |
 
 ---
 
-## 05 — Sets (4 videos)
+## 05 — Sets (5 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
@@ -59,6 +63,7 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 | 2 | [02_agregar_y_eliminar.md](./05_sets/02_agregar_y_eliminar.md) | add(), update(), remove(), discard(), pop(), clear() |
 | 3 | [03_operaciones_de_conjuntos.md](./05_sets/03_operaciones_de_conjuntos.md) | Unión, intersección, diferencia, diferencia simétrica, issubset/issuperset |
 | 4 | [04_cuando_usar_sets.md](./05_sets/04_cuando_usar_sets.md) | Casos de uso, cuándo no usar, tabla resumen |
+| 5 | [05_set_comprehensions.md](./05_sets/05_set_comprehensions.md) | Set comprehensions, filtro con if, eliminar duplicados |
 
 ---
 
@@ -74,7 +79,7 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 
 ---
 
-## 07 — Funciones (6 videos)
+## 07 — Funciones (7 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
@@ -84,7 +89,8 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 | 4 | [04_scope.md](./07_funciones/04_scope.md) | Variables locales y globales, regla de oro del scope |
 | 5 | [05_args_kwargs.md](./07_funciones/05_args_kwargs.md) | *args (tupla), **kwargs (dict), orden de parámetros |
 | 6 | [06_buenas_practicas.md](./07_funciones/06_buenas_practicas.md) | Nombres, una responsabilidad, return vs print, tamaño |
+| 7 | [07_funciones_builtin.md](./07_funciones/07_funciones_builtin.md) | print/input, conversión de tipos, sum/min/max/sorted/enumerate/zip, any/all |
 
 ---
 
-**Total: 34 videos · ~166 minutos de contenido**
+**Total: 40 videos · ~196 minutos de contenido**

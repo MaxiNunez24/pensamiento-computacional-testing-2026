@@ -1,6 +1,6 @@
-﻿# 🔁 Estructura de control `for` en Python
+﻿# 🔁 Estructura de control for en Python
 
-## 🤔 ¿Qué es un bucle `for`?
+## 🤔 ¿Qué es un bucle for?
 
 La clase pasada vimos `while`, que repite un bloque **mientras** se cumpla una condición. El `for` es distinto: lo usamos cuando sabemos (o podemos calcular) **cuántas veces** queremos repetir algo, o cuando queremos **recorrer** una secuencia elemento por elemento.
 
@@ -22,7 +22,7 @@ for variable in secuencia:
 
 ---
 
-## 🔢 `range()`: el mejor amigo del `for`
+## 🔢 range(): el mejor amigo del for
 
 `range()` genera una secuencia de números. Es la forma más común de controlar cuántas veces se repite el bucle.
 
@@ -68,7 +68,7 @@ n
 
 ---
 
-## ⚔️ `for` vs `while`: comparación directa
+## ⚔️ for vs while: comparación directa
 
 Mismo problema, dos soluciones:
 
@@ -89,7 +89,7 @@ for i in range(1, 6):
 
 ---
 
-## ⏭️ `break` y `continue`
+## ⏭️ break y continue
 
 Funcionan igual que en `while`:
 

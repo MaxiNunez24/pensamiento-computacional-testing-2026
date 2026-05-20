@@ -6,7 +6,10 @@
       "Bash(Get-ChildItem -Recurse \"d:\\\\Dev\\\\pensamiento-computacional-testing-2026\\\\docs\\\\clases\\\\python\")",
       "Bash(Select-Object FullName)",
       "Bash(mkdocs --version)",
-      "Bash(pip show *)"
+      "Bash(pip show *)",
+      "PowerShell(Move-Item \"docs\\\\material_apoyo\\\\guiones_videos\" \"guiones\")",
+      "PowerShell(git add guiones/)",
+      "PowerShell(git add \"docs/material_apoyo/guiones_videos/\")"
     ]
   }
 }

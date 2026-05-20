@@ -1,4 +1,4 @@
-﻿# 🔀 Estructura de control: `if`, `else` y `elif`
+﻿# 🔀 Estructura de control: if, else y elif
 
 Hasta ahora nuestros programas ejecutaban todo en orden…
 
@@ -12,7 +12,7 @@ En programación hacemos lo mismo con **condicionales**
 
 ---
 
-## 🧠 ¿Qué es un `if`?
+## 🧠 ¿Qué es un if?
 
 La estructura `if` nos permite ejecutar código **solo si se cumple una condición**
 
@@ -84,7 +84,7 @@ if nota >= 6:
 
 ---
 
-## 🔁 Agregando `else`
+## 🔁 Agregando else
 
 ¿Qué pasa si la condición es falsa?
 
@@ -114,7 +114,7 @@ else:
 
 ---
 
-## 🔀 Múltiples caminos: `elif`
+## 🔀 Múltiples caminos: elif
 
 Cuando tenemos más de dos opciones usamos `elif`
 
@@ -167,7 +167,7 @@ print(not x)   # False si x es True o True si x es False (NEGACIÓN lógico)
 
 ## ⚠️ Errores comunes
 
-### ❌ Usar `=` en vez de `==`
+### ❌ Usar = en vez de ==
 
 ```python
 if edad = 18:  # ERROR
@@ -181,7 +181,7 @@ if edad == 18:
 
 ---
 
-### ❌ Olvidar los `:`
+### ❌ Olvidar los :
 
 ```python
 if edad >= 18   # ERROR
@@ -206,17 +206,18 @@ print("Hola")  # ERROR
 
 ## 🔄 Relación con diagramas de flujo
 
-Un `if` se representa como una decisión:
+Un `if` se representa como una decisión con caminos que se ramifican y vuelven a unirse:
 
-```
-        ¿edad >= 18?
-           /   \
-         Sí     No
-        /         \
-  "Mayor"     "Menor"
+```mermaid
+flowchart TD
+    A{nota >= 9?} -->|Sí| B["'Excelente'"]
+    A -->|No| C{nota >= 6?}
+    C -->|Sí| D["'Aprobado'"]
+    C -->|No| E["'Desaprobado'"]
+    B & D & E --> F([continúa el programa])
 ```
 
-👉 Cada camino representa una decisión del programa
+👉 Cada rombo es una condición. Cada camino, una rama del `if`/`elif`/`else`.
 
 ---
 

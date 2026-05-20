@@ -1,4 +1,4 @@
-﻿# 🖨️ La función `print()` (Salida de datos)
+﻿# 🖨️ La función print() (Salida de datos)
 
 La función más importante para empezar es:
 
@@ -49,7 +49,7 @@ print('Usamos "comillas dobles" dentro de simples')
 
 ---
 
-## 🔍 Profundizando en `print()`
+## 🔍 Profundizando en print()
 
 Hasta ahora usamos `print()` de forma básica…
 Pero esta función tiene **mucho más poder** del que parece 😏
@@ -66,7 +66,7 @@ print(valor1, valor2, valor3, ..., sep=" ", end="\n")
 
 ### 📌 Parámetros importantes
 
-#### 🔹 `sep` (separador)
+#### 🔹 sep (separador)
 
 Define **cómo se separan los valores** dentro del `print()`
 
@@ -100,7 +100,7 @@ Hola-Mundo
 
 ---
 
-#### 🔹 `end` (final)
+#### 🔹 end (final)
 
 Define **qué pasa al final del print**
 
@@ -153,7 +153,7 @@ Cargando...Listo!
 
 ---
 
-## 🧪 Ejercicios con `print()`
+## 🧪 Ejercicios con print()
 
 Antes de avanzar, practicamos bien esto 👇
 

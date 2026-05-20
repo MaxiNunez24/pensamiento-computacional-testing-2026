@@ -71,10 +71,10 @@ git config --list
 
 ### 🗺️ El flujo de trabajo de Git
 
-```
-Tu código                 Área de preparación           Repositorio
-(Working Directory)  →   (Staging Area / Index)  →    (Repository)
-                  git add archivo.py          git commit -m "mensaje"
+```mermaid
+flowchart LR
+    A["📁 Working Directory\ntu carpeta"] -->|"git add"| B["📋 Staging Area\nsala de espera"]
+    B -->|"git commit"| C["🗄️ Repository\nhistorial en .git/"]
 ```
 
 Pensalo en tres zonas:
@@ -85,7 +85,7 @@ Pensalo en tres zonas:
 
 ---
 
-### `git init` — Iniciar un repositorio
+### git init — Iniciar un repositorio
 
 ```bash
 cd mi_proyecto          # entramos a la carpeta del proyecto
@@ -97,7 +97,7 @@ Esto crea una carpeta oculta `.git/` que contiene toda la historia del proyecto.
 
 ---
 
-### `git status` — Ver el estado actual
+### git status — Ver el estado actual
 
 ```bash
 git status
@@ -111,7 +111,7 @@ Es el comando que más vas a usar. Te dice:
 
 ---
 
-### `git add` — Preparar cambios para el commit
+### git add — Preparar cambios para el commit
 
 ```bash
 git add programa.py          # agregar un archivo específico
@@ -123,7 +123,7 @@ git add .                    # agregar TODOS los cambios del directorio actual
 
 ---
 
-### `git commit` — Guardar una versión
+### git commit — Guardar una versión
 
 ```bash
 git commit -m "Agrego función para calcular promedio"
@@ -148,7 +148,7 @@ Un commit es una **foto del estado del proyecto** con un mensaje que explica qu�
 
 ---
 
-### `git log` — Ver el historial
+### git log — Ver el historial
 
 ```bash
 git log
@@ -186,7 +186,7 @@ git log --oneline
 
 ---
 
-### `.gitignore` — Ignorar archivos
+### .gitignore — Ignorar archivos
 
 Algunos archivos no queremos versionar: contraseñas, archivos temporales, caché, etc. Los listamos en un archivo especial `.gitignore`:
 
@@ -242,7 +242,7 @@ git push
 
 ---
 
-### `git clone` — Descargar un repo
+### git clone — Descargar un repo
 
 Si querés trabajar desde **otra computadora**, o descargar el repo de un compañero:
 
@@ -254,7 +254,7 @@ Esto crea una carpeta con todo el proyecto y su historial.
 
 ---
 
-### `git pull` — Traer cambios del remoto
+### git pull — Traer cambios del remoto
 
 Si ya tenés el repo clonado y subiste cambios desde otra máquina:
 
@@ -266,7 +266,7 @@ Descarga y aplica los cambios más recientes.
 
 ---
 
-### El `README.md`
+### El README.md
 
 El archivo `README.md` es la **portada** de tu repositorio en GitHub. Aparece automáticamente en la página del proyecto.
 
@@ -295,21 +295,18 @@ y Testing de Aplicaciones — CFP 401.
 
 ## 🗺️ Resumen visual del workflow completo
 
-```
-Tu computadora                                   GitHub (nube)
-────────────────────────────────                 ──────────────
-
-  Editás archivos
-       │
-  git add .
-       │
-  git commit -m "..."
-       │
-  git push  ──────────────────────────────────►  tu repositorio en GitHub
-                                                        │
-  git pull  ◄─────────────────────────────────────────── (cambios desde otra máquina)
-
-  git clone ◄─────────────────────────────────────────── (primer download en nueva máquina)
+```mermaid
+flowchart LR
+    subgraph local["🖥️ Tu computadora"]
+        WD["📁 Working\nDirectory"] -->|"git add"| SA["📋 Staging\nArea"]
+        SA -->|"git commit"| R["🗄️ Repo\nlocal"]
+    end
+    subgraph nube["☁️ GitHub (nube)"]
+        GH["🐙 Repositorio\nremoto"]
+    end
+    R -->|"git push"| GH
+    GH -->|"git pull"| WD
+    GH -.->|"git clone\n(primera vez)"| WD
 ```
 
 ---

@@ -545,7 +545,7 @@ Ya las conocés desde el principio del curso:
 | `enumerate(iterable)` | Pares (índice, valor) | `list(enumerate(["a", "b"]))` → `[(0, "a"), (1, "b")]` |
 | `zip(a, b)` | Combina dos iterables en pares | `list(zip([1, 2], ["a", "b"]))` → `[(1, "a"), (2, "b")]` |
 
-### ✅ Lógicas: `any()` y `all()`
+### ✅ Lógicas: any() y all()
 
 Estas dos son especialmente útiles combinadas con listas y generadores:
 

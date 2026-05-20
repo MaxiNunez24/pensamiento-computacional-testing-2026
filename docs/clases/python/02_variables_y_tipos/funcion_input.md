@@ -1,4 +1,4 @@
-﻿# ⌨️​ La función `input()` (Entrada de datos)
+﻿# ⌨️​ La función input() (Entrada de datos)
 
 ## 🤔​ ¿Qué es input?
 

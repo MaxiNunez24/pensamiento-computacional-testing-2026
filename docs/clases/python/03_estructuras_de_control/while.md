@@ -1,4 +1,4 @@
-﻿# 🔄 Bucle `while` en Python
+﻿# 🔄 Bucle while en Python
 
 ## 🤔 ¿Qué es un bucle?
 
@@ -11,14 +11,16 @@ Para eso existen los **bucles** (o *loops*): estructuras que repiten un bloque d
 
 ---
 
-## 📖 ¿Cómo funciona el `while`?
+## 📖 ¿Cómo funciona el while?
 
 `while` repite un bloque de código **mientras** una condición sea verdadera. Cuando la condición se vuelve falsa, el bucle termina y el programa continúa.
 
-```
-¿La condición es verdadera?
-    ├── SÍ → ejecuta el bloque → vuelve a verificar la condición
-    └── NO → sale del bucle
+```mermaid
+flowchart TD
+    A([inicio]) --> B{¿condición\nverdadera?}
+    B -->|Sí| C[ejecuta el bloque]
+    C --> B
+    B -->|No| D([sale del bucle])
 ```
 
 ---
@@ -72,7 +74,7 @@ print("¡Listo!")
     
 ---
 
-## 🧩 Partes de un bucle `while`
+## 🧩 Partes de un bucle while
 
 Todo bucle `while` bien construido tiene tres componentes:
 
@@ -84,7 +86,7 @@ Todo bucle `while` bien construido tiene tres componentes:
 
 ---
 
-## 📥 `while` con entrada del usuario
+## 📥 while con entrada del usuario
 
 Una de las aplicaciones más útiles: repetir hasta que el usuario ingrese algo válido.
 
@@ -122,7 +124,7 @@ print(f"La suma es: {suma}")
 
 ---
 
-## ⏭️ `break` y `continue`
+## ⏭️ break y continue
 
 A veces necesitamos más control sobre el flujo del bucle:
 

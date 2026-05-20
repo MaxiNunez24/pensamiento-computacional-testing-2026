@@ -44,7 +44,7 @@ Es el formato más usado en el mundo para intercambiar datos entre programas, AP
 
 ---
 
-## 📦 El módulo `json`
+## 📦 El módulo json
 
 Python incluye el módulo `json` en su biblioteca estándar — no hay que instalar nada.
 
@@ -61,13 +61,25 @@ Tiene cuatro funciones principales:
 | `json.dump(obj, f)` | Python → JSON | **archivo** |
 | `json.load(f)` | JSON → Python | **archivo** |
 
+```mermaid
+flowchart LR
+    subgraph py["🐍 Python"]
+        PO["dict / list / str\nint / bool / None"]
+    end
+    subgraph jn["📄 JSON"]
+        JS["texto JSON\n{ } [ ] ..."]
+    end
+    PO -->|"dumps(obj) → string\ndump(obj, f) → archivo"| JS
+    JS -->|"loads(texto) ← string\nload(f) ← archivo"| PO
+```
+
 !!! tip "Cómo recordarlo"
     - Las que terminan en **`s`** trabajan con **s**trings.
     - Las que no terminan en `s` trabajan con archivos.
 
 ---
 
-## 🔤 `json.dumps()` y `json.loads()` — trabajar con strings
+## 🔤 json.dumps() y json.loads() — trabajar con strings
 
 === "Python → JSON string"
 
@@ -115,7 +127,7 @@ Tiene cuatro funciones principales:
 
 ---
 
-## 💾 `json.dump()` y `json.load()` — trabajar con archivos
+## 💾 json.dump() y json.load() — trabajar con archivos
 
 Estas son las funciones que más vas a usar en el proyecto.
 

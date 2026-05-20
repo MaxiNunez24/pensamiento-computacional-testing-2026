@@ -28,7 +28,7 @@ nombres = ["Ana", "Beto", "Cami"]
 
 ---
 
-## 📂 Abrir un archivo con `open()`
+## 📂 Abrir un archivo con open()
 
 La función `open()` abre un archivo y devuelve un **objeto de archivo** (file object) con el que podemos leer o escribir.
 
@@ -53,7 +53,7 @@ archivo.close()                    # ¡siempre hay que cerrarlo!
 
 ---
 
-## 🛡️ El bloque `with` (la forma correcta)
+## 🛡️ El bloque with (la forma correcta)
 
 En lugar de acordarte siempre de hacer `.close()`, Python nos da el bloque `with`, que **cierra el archivo automáticamente** al terminar — incluso si ocurre un error.
 

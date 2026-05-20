@@ -29,7 +29,7 @@ edad = 22
 
 ---
 
-## 🖨️ Usando variables con `print()`
+## 🖨️ Usando variables con print()
 
 ```python
 nombre = "Maxi"

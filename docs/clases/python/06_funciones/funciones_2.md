@@ -1,4 +1,4 @@
-﻿# 📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`
+﻿# 📦 Funciones II — Scope, parámetros avanzados y *args/**kwargs
 
 !!! tip "🔍 Profundizando en las funciones"
     En la clase anterior aprendimos a definir funciones con parámetros y retorno. Hoy vamos a entender cómo las funciones "ven" las variables (scope), cómo hacer parámetros más flexibles con valores por defecto, y cómo manejar funciones que reciben una cantidad variable de argumentos.
@@ -134,7 +134,7 @@ u3 = crear_usuario("Beto", 25, ciudad="Mar del Plata", activo=False)
 
 ---
 
-## ✨ `*args`: cantidad variable de argumentos posicionales
+## ✨ *args: cantidad variable de argumentos posicionales
 
 ¿Qué pasa si no sabés de antemano cuántos argumentos va a recibir tu función?
 
@@ -163,7 +163,7 @@ describir_persona("Ana", "leer")
 
 ---
 
-## ✨ `**kwargs`: cantidad variable de argumentos nombrados
+## ✨ **kwargs: cantidad variable de argumentos nombrados
 
 `**kwargs` captura **argumentos keyword extra** en un **diccionario**:
 
@@ -262,7 +262,7 @@ Probala con distintas combinaciones de argumentos.
     print(saludar_formal("López", idioma="es", titulo="Ing."))
     ```
 
-### 🌿 Ejercicio 3 — `*args` en acción
+### 🌿 Ejercicio 3 — *args en acción
 
 Escribí las siguientes funciones usando `*args`:
 
@@ -294,7 +294,7 @@ Escribí las siguientes funciones usando `*args`:
     print(promedio())                                # 0
     ```
 
-### 🌿 Ejercicio 4 — Perfiles con `**kwargs`
+### 🌿 Ejercicio 4 — Perfiles con **kwargs
 
 Escribí `crear_perfil(nombre, **datos)` que construya y devuelva un diccionario con `nombre` como clave fija y el resto de los datos que lleguen por `**kwargs`.
 

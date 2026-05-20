@@ -60,6 +60,18 @@ print(numeros[2:])    # [30, 40, 50]  (hasta el final)
 print(numeros[::2])   # [10, 30, 50]  (de dos en dos)
 ```
 
+Los **índices negativos** también funcionan en slicing:
+
+```python
+letras = ["a", "b", "c", "d", "e"]
+
+print(letras[-3:])    # ['c', 'd', 'e']  — los últimos 3
+print(letras[:-2])    # ['a', 'b', 'c']  — todo menos los últimos 2
+```
+
+!!! tip "Truco útil"
+    `lista[-n:]` te da los últimos `n` elementos. `lista[:-n]` te da todo excepto los últimos `n`. Son combinaciones muy comunes en código real.
+
 ---
 
 ## ✏️ Modificar elementos
@@ -107,7 +119,7 @@ print(colores)  # ["rojo", "blanco", "azul"]
 
 ---
 
-## 🔁 Recorrer una lista con `for`
+## 🔁 Recorrer una lista con for
 
 🌱 *Nivel: básico*
 
@@ -156,7 +168,7 @@ print(numeros.count(1))   # 2        → ¿cuántas veces aparece el 1?
 
 🌿 *Nivel: intermedio*
 
-### Ordenar con `.sort()` y `sorted()`
+### Ordenar con .sort() y sorted()
 
 ```python
 numeros = [3, 1, 4, 1, 5, 9, 2]
@@ -176,7 +188,7 @@ print(nueva)                       # [1, 3, 4]
     - `sorted()` **devuelve una nueva lista** y deja la original intacta.
     Preferí `sorted()` cuando no querés perder el orden original.
 
-### Revertir con `.reverse()`
+### Revertir con .reverse()
 
 ```python
 letras = ["a", "b", "c", "d"]
