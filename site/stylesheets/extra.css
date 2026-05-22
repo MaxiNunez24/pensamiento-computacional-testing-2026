@@ -1,0 +1,9 @@
+html {
+  /* Material default: 125% (1rem = 20px). Subimos a 137.5% para escalar todo proporcionalmente. */
+  font-size: 137.5%;
+}
+
+.mermaid {
+  /* Los SVG de Mermaid no heredan el font-size del HTML, zoom escala todo el diagrama. */
+  zoom: 1.3;
+}

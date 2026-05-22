@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1614,6 +1616,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../06_funciones/bingo/" class="md-nav__link">
         
   
@@ -2139,6 +2169,10 @@
 <li>C) <code>str</code></li>
 <li>D) <code>bool</code></li>
 </ul>
+<details class="success">
+<summary>✅ Respuesta</summary>
+<p><strong>B) <code>float</code></strong> — En Python 3, el operador <code>/</code> siempre devuelve <code>float</code>, incluso cuando el resultado es un número entero. <code>10 / 2 = 5.0</code>.</p>
+</details>
 <hr />
 <h2 id="2-operador-modulo-opcion-multiple">2️⃣ Operador módulo — Opción múltiple</h2>
 <p><strong>Puntaje: 1 punto</strong></p>
@@ -2152,6 +2186,10 @@
 <li>C) <code>3.4</code></li>
 <li>D) <code>0</code></li>
 </ul>
+<details class="success">
+<summary>✅ Respuesta</summary>
+<p><strong>B) <code>2</code></strong> — El operador <code>%</code> devuelve el resto de la división. <code>17 = 3 × 5 + 2</code>, por lo tanto <code>17 % 5 = 2</code>.</p>
+</details>
 <hr />
 <h2 id="3-lectura-de-codigo-opcion-multiple">3️⃣ Lectura de código — Opción múltiple</h2>
 <p><strong>Puntaje: 1 punto</strong></p>
@@ -2167,6 +2205,10 @@
 <li>C) <code>2 4 6</code></li>
 <li>D) <code>1 2 3 4 5 6 7</code></li>
 </ul>
+<details class="success">
+<summary>✅ Respuesta</summary>
+<p><strong>C) <code>2 4 6</code></strong> — <code>range(1, 8)</code> genera del 1 al 7 inclusive. El <code>if i % 2 == 0</code> filtra solo los pares. El 8 no está porque <code>range(1, 8)</code> no incluye el 8.</p>
+</details>
 <hr />
 <h2 id="4-listas-opcion-multiple">4️⃣ Listas — Opción múltiple</h2>
 <p><strong>Puntaje: 1 punto</strong></p>
@@ -2182,13 +2224,17 @@
 <li>C) <code>"uva"</code></li>
 <li>D) Genera un error</li>
 </ul>
+<details class="success">
+<summary>✅ Respuesta</summary>
+<p><strong>B) <code>"naranja"</code></strong> — Los índices negativos cuentan desde el final: <code>-1</code> es <code>"uva"</code>, <code>-2</code> es <code>"naranja"</code>, <code>-3</code> es <code>"banana"</code>, <code>-4</code> es <code>"manzana"</code>.</p>
+</details>
 <hr />
 <h2 id="5-while-vs-for-pregunta-conceptual">5️⃣ While vs For — Pregunta conceptual</h2>
 <p><strong>Puntaje: 1 punto</strong></p>
 <p>Explicá con tus palabras <strong>cuándo usarías un <code>while</code> y cuándo usarías un <code>for</code></strong>.<br />
 Dá un ejemplo concreto de cada uno (no hace falta que funcionen, solo que ilustren la idea).</p>
-<details class="note">
-<summary>Pista</summary>
+<details class="tip">
+<summary>💡 Para pensar</summary>
 <p>Pensá en qué diferencia hay entre saber de antemano cuántas veces algo se repite, y no saberlo.</p>
 </details>
 <hr />
@@ -2267,10 +2313,37 @@ Mateo: 6.0
 
 🏆 Mejor promedio: Valentina (9.0)
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Pista</p>
-<p>Las notas de cada alumno están en <code>alumno[1:]</code> (slicing). El promedio es <code>sum(alumno[1:]) / len(alumno[1:])</code>.</p>
-</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Las notas de cada alumno están en <code>alumno[1:]</code> (slicing). El promedio es <code>sum(alumno[1:]) / len(alumno[1:])</code>. Para el mejor promedio, llevá un registro del nombre y promedio del mejor a medida que recorrés.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">curso</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s2">&quot;Lucía&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;Tomás&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;Valentina&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;Mateo&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;Sofía&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Alumnos aprobados ===&quot;</span><span class="p">)</span>
+<span class="n">mejor_nombre</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">mejor_prom</span>   <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">alumno</span> <span class="ow">in</span> <span class="n">curso</span><span class="p">:</span>
+    <span class="n">nombre</span> <span class="o">=</span> <span class="n">alumno</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">notas</span>  <span class="o">=</span> <span class="n">alumno</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">prom</span>   <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">notas</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">notas</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prom</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">prom</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prom</span> <span class="o">&gt;</span> <span class="n">mejor_prom</span><span class="p">:</span>
+        <span class="n">mejor_prom</span>   <span class="o">=</span> <span class="n">prom</span>
+        <span class="n">mejor_nombre</span> <span class="o">=</span> <span class="n">nombre</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🏆 Mejor promedio: </span><span class="si">{</span><span class="n">mejor_nombre</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">mejor_prom</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="tabla-de-puntaje">📊 Tabla de puntaje</h2>
 <table>

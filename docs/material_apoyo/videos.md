@@ -17,6 +17,14 @@ Videos cortos de hasta 10 minutos organizados por tema. En lugar de buscar dentr
 
 ---
 
+## 🔀 **Torti Code** - Las 8 Estructuras de Datos que TODO Programador Usa (Pero Nadie Explica Bien)
+En este video de Torti Code, se explican de manera clara y visual las 8 estructuras de datos fundamentales que todo programador debe conocer: Listas, Tuplas, Sets, Diccionarios, Pilas, Colas, Árboles y Grafos. Es un recurso excelente para complementar lo aprendido en clase sobre estructuras de datos y para entender cómo se utilizan en la práctica.
+
+### [🔗 Enlace al video de Youtube](https://www.youtube.com/watch?v=9ifwAPFxpu0)
+
+
+---
+
 ## 🖥️ **Midudev** - Curso completo de Python desde cero 2025
 En este curso completo de Python, el creador de contenido, educador y programador Midudev te guiará a través de los fundamentos de la programación en Python, desde lo más básico hasta temas más avanzados. Es un recurso ideal para complementar lo aprendido en clase y para practicar con ejemplos adicionales.
 

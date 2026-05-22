@@ -113,91 +113,105 @@ for i in range(6):
 
 ---
 
-## 🧪 Ejercicios de repaso
+## 🎮 Ejercicios
 
-### 🟢 Nivel 1 — Comprensión básica
+### 🌱 Ejercicio 1 — Del 1 al 10 con for
 
-!!! exercise "Ejercicio 1"
-    Escribí un programa que imprima los números del 1 al 10 usando `for`.
+Escribí un programa que imprima los números del 1 al 10 usando `for`.
 
-!!! exercise "Ejercicio 2"
-    Escribí un programa que imprima solo los números **pares** entre 1 y 20.  
-    *Pista: usá el tercer parámetro de `range()`.*
+```
+1
+2
+...
+10
+```
 
-!!! exercise "Ejercicio 3"
-    Pedile al usuario su nombre e imprimí cada letra en una línea distinta.
+??? tip "💡 Pista"
+    `range(1, 11)` genera los números del 1 al 10 inclusive. El último valor de `range` no se incluye.
 
----
-
-### 🟡 Nivel 2 — Lógica dentro del bucle
-
-!!! exercise "Ejercicio 4"
-    Escribí un programa que sume todos los números del 1 al 100 e imprima el resultado.  
-    *Resultado esperado: 5050*
-
-!!! exercise "Ejercicio 5"
-    Pedile al usuario un número `n` y calculá su factorial usando `for`.  
-    *Ejemplo: factorial de 5 = 5 × 4 × 3 × 2 × 1 = 120*
-
-!!! exercise "Ejercicio 6"
-    Mostrá la tabla de multiplicar de un número que ingrese el usuario (del 1 al 10).
-
----
-
-### 🔴 Nivel 3 — Desafío
-
-!!! exercise "Ejercicio 7 ⭐"
-    Pedile al usuario que ingrese 5 notas (una por vez, usando `for`) y al final mostrá el **promedio**.
-
-!!! exercise "Ejercicio 8 ⭐"
-    Imprimí un triángulo de asteriscos de `n` filas, donde `n` lo ingresa el usuario.  
-    ```
-    *
-    **
-    ***
-    ****
-    ```
-    *Pista: vas a necesitar un `for` dentro de otro `for`, o bien multiplicar strings.*
-
----
-
-
-
----
-
-## 💡 Soluciones de referencia
-
-??? note "Ver soluciones"
-
+??? success "✅ Solución"
     ```python
-    # Ejercicio 1
     for i in range(1, 11):
         print(i)
     ```
 
+### 🌱 Ejercicio 2 — Solo los pares
+
+Escribí un programa que imprima solo los números **pares** entre 1 y 20.
+
+```
+2
+4
+6
+...
+20
+```
+
+??? tip "💡 Pista"
+    `range()` acepta un tercer parámetro: el paso. ¿Qué paso te daría solo los pares si arrancás en 2?
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 2
     for i in range(2, 21, 2):
         print(i)
     ```
 
+### 🌱 Ejercicio 3 — Letra por letra
+
+Pedile al usuario su nombre e imprimí cada letra en una línea distinta.
+
+```
+Ingresá tu nombre: Ana
+A
+n
+a
+```
+
+??? tip "💡 Pista"
+    Un string es una secuencia de caracteres. El `for` puede recorrer cualquier secuencia directamente, no solo `range()`.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 3
     nombre = input("Ingresá tu nombre: ")
     for letra in nombre:
         print(letra)
     ```
 
+### 🌿 Ejercicio 4 — Suma del 1 al 100
+
+Escribí un programa que sume todos los números del 1 al 100 e imprima el resultado.
+
+```
+5050
+```
+
+??? tip "💡 Pista"
+    Necesitás un acumulador que empiece en 0 y en cada vuelta del `for` sume el valor actual de `i`.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 4
     suma = 0
     for i in range(1, 101):
         suma += i
     print(suma)
     ```
 
+### 🌿 Ejercicio 5 — Factorial
+
+Pedile al usuario un número `n` y calculá su factorial usando `for`.
+
+```
+Ingresá un número: 5
+El factorial de 5 es 120
+```
+
+*El factorial de 5 = 5 × 4 × 3 × 2 × 1 = 120*
+
+??? tip "💡 Pista"
+    El acumulador para el factorial arranca en 1 (no en 0), y en lugar de sumar, multiplica. ¿Qué rango de números necesitás multiplicar?
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 5
     n = int(input("Ingresá un número: "))
     factorial = 1
     for i in range(1, n + 1):
@@ -205,25 +219,70 @@ for i in range(6):
     print(f"El factorial de {n} es {factorial}")
     ```
 
+### 🌿 Ejercicio 6 — Tabla de multiplicar
+
+Mostrá la tabla de multiplicar de un número que ingrese el usuario (del 1 al 10).
+
+```
+¿De qué número querés la tabla? 7
+7 x 1 = 7
+7 x 2 = 14
+...
+7 x 10 = 70
+```
+
+??? tip "💡 Pista"
+    El número ingresado es fijo — lo que varía es el multiplicador, que va del 1 al 10.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 6
     n = int(input("¿De qué número querés la tabla? "))
     for i in range(1, 11):
         print(f"{n} x {i} = {n * i}")
     ```
 
+### 🌶️ Ejercicio 7 — Promedio de 5 notas ⭐
+
+Pedile al usuario que ingrese 5 notas (una por vez, usando `for`) y al final mostrá el **promedio**.
+
+```
+Nota 1: 8
+Nota 2: 7
+Nota 3: 9
+Nota 4: 6
+Nota 5: 10
+Promedio: 8.0
+```
+
+??? tip "💡 Pista"
+    Usá `range(5)` para pedir 5 notas. Para mostrar el número de nota en el mensaje usá `i + 1` (porque `range(5)` empieza en 0). Acumulá la suma y dividí al final.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 7
     suma = 0
     for i in range(5):
         nota = float(input(f"Nota {i + 1}: "))
         suma += nota
-    promedio = suma / 5
-    print(f"Promedio: {promedio}")
+    print(f"Promedio: {suma / 5}")
     ```
 
+### 🌶️ Ejercicio 8 — Triángulo de asteriscos ⭐
+
+Pedile al usuario un número `n` e imprimí un triángulo de asteriscos de `n` filas.
+
+```
+¿Cuántas filas? 4
+*
+**
+***
+****
+```
+
+??? tip "💡 Pista"
+    En cada iteración, la fila número `i` tiene `i` asteriscos. ¿Cómo multiplicás un string en Python para repetirlo? ¿Y cuántas veces repetís `"*"` en la fila `i`?
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 8
     n = int(input("¿Cuántas filas? "))
     for i in range(1, n + 1):
         print("*" * i)

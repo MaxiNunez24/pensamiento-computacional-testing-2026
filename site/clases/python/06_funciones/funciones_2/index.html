@@ -14,7 +14,7 @@
         <link rel="prev" href="../funciones_1/">
       
       
-        <link rel="next" href="../bingo/">
+        <link rel="next" href="../como_encarar_ejercicios/">
       
       
         
@@ -50,6 +50,8 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -1716,10 +1718,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#siguiente-ejercicio-bingo" class="md-nav__link">
+  <a href="#siguiente-como-encarar-un-ejercicio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ➡️ Siguiente: Ejercicio Bingo
+        ➡️ Siguiente: Cómo encarar un ejercicio
       
     </span>
   </a>
@@ -1730,6 +1732,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2339,10 +2369,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#siguiente-ejercicio-bingo" class="md-nav__link">
+  <a href="#siguiente-como-encarar-un-ejercicio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ➡️ Siguiente: Ejercicio Bingo
+        ➡️ Siguiente: Cómo encarar un ejercicio
       
     </span>
   </a>
@@ -2367,9 +2397,20 @@
 
 
 <h1 id="funciones-ii-scope-parametros-avanzados-y-argskwargs">📦 Funciones II — Scope, parámetros avanzados y <em>args/</em>*kwargs</h1>
-<div class="admonition tip">
-<p class="admonition-title">🔍 Profundizando en las funciones</p>
-<p>En la clase anterior aprendimos a definir funciones con parámetros y retorno. Hoy vamos a entender cómo las funciones "ven" las variables (scope), cómo hacer parámetros más flexibles con valores por defecto, y cómo manejar funciones que reciben una cantidad variable de argumentos.</p>
+<div class="admonition example">
+<p class="admonition-title">⚡ Un bug misterioso</p>
+<p>Alguien escribe este código para acumular el total de una venta:</p>
+<div class="highlight"><pre><span></span><code><span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">agregar_item</span><span class="p">(</span><span class="n">precio</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">+=</span> <span class="n">precio</span>   <span class="c1"># ← ¿por qué falla esto?</span>
+
+<span class="n">agregar_item</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">agregar_item</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
+</code></pre></div>
+<p>Al ejecutarlo: <code>UnboundLocalError: local variable 'total' referenced before assignment</code>.</p>
+<p>¿No declaramos <code>total</code> antes? ¿Por qué Python dice que no existe? La respuesta está en el <strong>scope</strong>.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">🎯 Objetivos de la clase</p>
@@ -2580,6 +2621,10 @@ Si una función produce un dato que necesita afuera → <strong>retornalo con <c
 <span class="n">cambiar</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>   <span class="c1"># ¿?</span>
 </code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Para cada bloque: ¿dónde fue definida la variable que se intenta imprimir? ¿Dentro de una función o fuera? ¿Puede una función "guardar" variables para que el código exterior las vea?</p>
+</details>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code>Bloque A: 20         ← lee la variable global x
@@ -2593,7 +2638,19 @@ Bloque C: &quot;global&quot;   ← la función crea su propia &#39;z&#39; local,
 <li>En español (<code>"es"</code>): <code>"Buenos días, {titulo} {nombre}."</code></li>
 <li>En inglés (<code>"en"</code>): <code>"Good morning, {titulo} {nombre}."</code></li>
 </ul>
-<p>Probala con distintas combinaciones de argumentos.</p>
+<div class="highlight"><pre><span></span><code>saludar_formal(&quot;García&quot;)
+→ &quot;Buenos días, Sr./Sra. García.&quot;
+
+saludar_formal(&quot;Smith&quot;, titulo=&quot;Dr.&quot;, idioma=&quot;en&quot;)
+→ &quot;Good morning, Dr. Smith.&quot;
+
+saludar_formal(&quot;López&quot;, idioma=&quot;es&quot;, titulo=&quot;Ing.&quot;)
+→ &quot;Buenos días, Ing. López.&quot;
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>¿Cuál es el parámetro que siempre vas a tener y cuáles son los opcionales? ¿Qué valor tienen por defecto? Escribí la firma de la función primero, luego el <code>if</code> dentro.</p>
+</details>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">saludar_formal</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">titulo</span><span class="o">=</span><span class="s2">&quot;Sr./Sra.&quot;</span><span class="p">,</span> <span class="n">idioma</span><span class="o">=</span><span class="s2">&quot;es&quot;</span><span class="p">):</span>
@@ -2613,6 +2670,12 @@ Bloque C: &quot;global&quot;   ← la función crea su propia &#39;z&#39; local,
 <li><code>concatenar(*palabras, separador=" ")</code> → une las palabras con el separador.</li>
 <li><code>promedio(*nums)</code> → calcula el promedio; si no recibe números, devuelve <code>0</code>.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Para <code>maximo</code>: ¿cómo harías a mano para encontrar el mayor de una lista? Arrancá asumiendo que el primero es el mayor y recorré el resto.</p>
+<p>Para <code>concatenar</code>: fijate en los métodos de strings — ¿cuál de ellos une elementos de un iterable con un separador?</p>
+<p>Para <code>promedio</code>: ¿qué pasa si <code>*nums</code> no recibe ningún argumento? ¿Qué longitud tendría la tupla resultante?</p>
+</details>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">maximo</span><span class="p">(</span><span class="o">*</span><span class="n">nums</span><span class="p">):</span>
@@ -2641,7 +2704,14 @@ Bloque C: &quot;global&quot;   ← la función crea su propia &#39;z&#39; local,
 <p>Escribí <code>crear_perfil(nombre, **datos)</code> que construya y devuelva un diccionario con <code>nombre</code> como clave fija y el resto de los datos que lleguen por <code>**kwargs</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="n">p</span> <span class="o">=</span> <span class="n">crear_perfil</span><span class="p">(</span><span class="s2">&quot;Maxi&quot;</span><span class="p">,</span> <span class="n">edad</span><span class="o">=</span><span class="mi">27</span><span class="p">,</span> <span class="n">ciudad</span><span class="o">=</span><span class="s2">&quot;Ensenada&quot;</span><span class="p">,</span> <span class="n">activo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># {&quot;nombre&quot;: &quot;Maxi&quot;, &quot;edad&quot;: 27, &quot;ciudad&quot;: &quot;Ensenada&quot;, &quot;activo&quot;: True}</span>
+
+<span class="n">p2</span> <span class="o">=</span> <span class="n">crear_perfil</span><span class="p">(</span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="n">materia</span><span class="o">=</span><span class="s2">&quot;Python&quot;</span><span class="p">,</span> <span class="n">nota</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="c1"># {&quot;nombre&quot;: &quot;Ana&quot;, &quot;materia&quot;: &quot;Python&quot;, &quot;nota&quot;: 9}</span>
 </code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p><code>**kwargs</code> ya es un diccionario. ¿Cómo creás un diccionario nuevo que incluya una clave fija más todo el contenido de otro diccionario existente?</p>
+</details>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">crear_perfil</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="o">**</span><span class="n">datos</span><span class="p">):</span>
@@ -2653,6 +2723,10 @@ Bloque C: &quot;global&quot;   ← la función crea su propia &#39;z&#39; local,
 </details>
 <h3 id="ejercicio-5-logger-flexible">🌶️ Ejercicio 5 — Logger flexible</h3>
 <p>Escribí <code>log(nivel, *mensajes, separador="\n", prefijo="")</code> que imprima cada mensaje precedido de <code>[{nivel}] {prefijo}</code>, uniendo los mensajes con <code>separador</code>.</p>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Primero armá cada línea como un string: <code>f"[{nivel}] {prefijo}{mensaje}"</code>. ¿Cómo juntás todas las líneas en un único string usando el separador? ¿Qué método de strings hace eso?</p>
+</details>
 <div class="highlight"><pre><span></span><code><span class="n">log</span><span class="p">(</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;Sistema iniciado&quot;</span><span class="p">,</span> <span class="s2">&quot;Conexión establecida&quot;</span><span class="p">)</span>
 <span class="c1"># [INFO] Sistema iniciado</span>
 <span class="c1"># [INFO] Conexión establecida</span>
@@ -2677,6 +2751,15 @@ Bloque C: &quot;global&quot;   ← la función crea su propia &#39;z&#39; local,
 <span class="n">log</span><span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;a=1&quot;</span><span class="p">,</span> <span class="s2">&quot;b=2&quot;</span><span class="p">,</span> <span class="s2">&quot;c=3&quot;</span><span class="p">,</span> <span class="n">separador</span><span class="o">=</span><span class="s2">&quot; | &quot;</span><span class="p">)</span>
 </code></pre></div>
 </details>
+<div class="admonition tip">
+<p class="admonition-title">🔧 <code>all()</code> — una función built-in útil</p>
+<p><code>all(iterable)</code> devuelve <code>True</code> si <strong>todos</strong> los elementos del iterable son verdaderos (o si está vacío).</p>
+<div class="highlight"><pre><span></span><code><span class="nb">all</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>    <span class="c1"># True</span>
+<span class="nb">all</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>   <span class="c1"># False</span>
+<span class="nb">all</span><span class="p">([])</span>                    <span class="c1"># True (vacío → todos cumplen)</span>
+</code></pre></div>
+<p>En la solución del próximo ejercicio vas a ver <code>all(fila.get(k) == v for k, v in criterios.items())</code>. Eso itera los criterios y verifica que todos coincidan con la fila. Si alguno falla, <code>all()</code> devuelve <code>False</code>.</p>
+</div>
 <h3 id="ejercicio-6-mini-framework-de-reportes">🌶️🌶️ Ejercicio 6 — Mini-framework de reportes 📊</h3>
 <p>Creá un sistema de reportes con las siguientes funciones:</p>
 <ol>
@@ -2695,6 +2778,10 @@ Bloque C: &quot;global&quot;   ← la función crea su propia &#39;z&#39; local,
 <span class="n">resumen</span>      <span class="o">=</span> <span class="n">proyectar</span><span class="p">(</span><span class="n">aprobados_lp</span><span class="p">,</span> <span class="s2">&quot;nombre&quot;</span><span class="p">,</span> <span class="s2">&quot;nota&quot;</span><span class="p">)</span>
 <span class="n">imprimir_tabla</span><span class="p">(</span><span class="n">resumen</span><span class="p">)</span>
 </code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Arrancá función por función. <code>agregar_fila</code> solo necesita hacer <code>.append()</code>. <code>filtrar</code> recorre la tabla y verifica que cada criterio coincida — <code>all()</code> (que acabás de ver) es tu aliado acá. <code>proyectar</code> construye un nuevo diccionario por cada fila, tomando solo las claves pedidas. <code>imprimir_tabla</code> necesita saber qué columnas mostrar — ¿dónde las sacás si la tabla puede tener cualquier estructura?</p>
+</details>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">agregar_fila</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="o">**</span><span class="n">campos</span><span class="p">):</span>
@@ -2789,7 +2876,7 @@ Bloque C: &quot;global&quot;   ← la función crea su propia &#39;z&#39; local,
 <hr />
 <h2 id="anterior-funciones-i"><a href="../funciones_1/">⬅️ Anterior: Funciones I</a></h2>
 <h2 id="indice"><a href="../../../clases/#colecciones">📚 Índice</a></h2>
-<h2 id="siguiente-ejercicio-bingo"><a href="../bingo/">➡️ Siguiente: Ejercicio Bingo</a></h2>
+<h2 id="siguiente-como-encarar-un-ejercicio"><a href="../como_encarar_ejercicios/">➡️ Siguiente: Cómo encarar un ejercicio</a></h2>
 
 
 

@@ -1,7 +1,22 @@
 ﻿# 📦 Funciones II — Scope, parámetros avanzados y *args/**kwargs
 
-!!! tip "🔍 Profundizando en las funciones"
-    En la clase anterior aprendimos a definir funciones con parámetros y retorno. Hoy vamos a entender cómo las funciones "ven" las variables (scope), cómo hacer parámetros más flexibles con valores por defecto, y cómo manejar funciones que reciben una cantidad variable de argumentos.
+!!! example "⚡ Un bug misterioso"
+    Alguien escribe este código para acumular el total de una venta:
+
+    ```python
+    total = 0
+
+    def agregar_item(precio):
+        total += precio   # ← ¿por qué falla esto?
+
+    agregar_item(100)
+    agregar_item(50)
+    print(total)
+    ```
+
+    Al ejecutarlo: `UnboundLocalError: local variable 'total' referenced before assignment`.
+
+    ¿No declaramos `total` antes? ¿Por qué Python dice que no existe? La respuesta está en el **scope**.
 
 !!! info "🎯 Objetivos de la clase"
     Al terminar la clase deberían poder:
@@ -234,6 +249,9 @@ cambiar()
 print(z)   # ¿?
 ```
 
+??? tip "💡 Pista"
+    Para cada bloque: ¿dónde fue definida la variable que se intenta imprimir? ¿Dentro de una función o fuera? ¿Puede una función "guardar" variables para que el código exterior las vea?
+
 ??? success "✅ Solución"
     ```
     Bloque A: 20         ← lee la variable global x
@@ -248,7 +266,19 @@ Escribí `saludar_formal(nombre, titulo="Sr./Sra.", idioma="es")` que devuelva:
 - En español (`"es"`): `"Buenos días, {titulo} {nombre}."`
 - En inglés (`"en"`): `"Good morning, {titulo} {nombre}."`
 
-Probala con distintas combinaciones de argumentos.
+```
+saludar_formal("García")
+→ "Buenos días, Sr./Sra. García."
+
+saludar_formal("Smith", titulo="Dr.", idioma="en")
+→ "Good morning, Dr. Smith."
+
+saludar_formal("López", idioma="es", titulo="Ing.")
+→ "Buenos días, Ing. López."
+```
+
+??? tip "💡 Pista"
+    ¿Cuál es el parámetro que siempre vas a tener y cuáles son los opcionales? ¿Qué valor tienen por defecto? Escribí la firma de la función primero, luego el `if` dentro.
 
 ??? success "✅ Solución"
     ```python
@@ -269,6 +299,13 @@ Escribí las siguientes funciones usando `*args`:
 1. `maximo(*nums)` → devuelve el mayor **sin usar `max()`**.
 2. `concatenar(*palabras, separador=" ")` → une las palabras con el separador.
 3. `promedio(*nums)` → calcula el promedio; si no recibe números, devuelve `0`.
+
+??? tip "💡 Pista"
+    Para `maximo`: ¿cómo harías a mano para encontrar el mayor de una lista? Arrancá asumiendo que el primero es el mayor y recorré el resto.
+
+    Para `concatenar`: fijate en los métodos de strings — ¿cuál de ellos une elementos de un iterable con un separador?
+
+    Para `promedio`: ¿qué pasa si `*nums` no recibe ningún argumento? ¿Qué longitud tendría la tupla resultante?
 
 ??? success "✅ Solución"
     ```python
@@ -301,7 +338,13 @@ Escribí `crear_perfil(nombre, **datos)` que construya y devuelva un diccionario
 ```python
 p = crear_perfil("Maxi", edad=27, ciudad="Ensenada", activo=True)
 # {"nombre": "Maxi", "edad": 27, "ciudad": "Ensenada", "activo": True}
+
+p2 = crear_perfil("Ana", materia="Python", nota=9)
+# {"nombre": "Ana", "materia": "Python", "nota": 9}
 ```
+
+??? tip "💡 Pista"
+    `**kwargs` ya es un diccionario. ¿Cómo creás un diccionario nuevo que incluya una clave fija más todo el contenido de otro diccionario existente?
 
 ??? success "✅ Solución"
     ```python
@@ -315,6 +358,9 @@ p = crear_perfil("Maxi", edad=27, ciudad="Ensenada", activo=True)
 ### 🌶️ Ejercicio 5 — Logger flexible
 
 Escribí `log(nivel, *mensajes, separador="\n", prefijo="")` que imprima cada mensaje precedido de `[{nivel}] {prefijo}`, uniendo los mensajes con `separador`.
+
+??? tip "💡 Pista"
+    Primero armá cada línea como un string: `f"[{nivel}] {prefijo}{mensaje}"`. ¿Cómo juntás todas las líneas en un único string usando el separador? ¿Qué método de strings hace eso?
 
 ```python
 log("INFO", "Sistema iniciado", "Conexión establecida")
@@ -342,6 +388,17 @@ log("DEBUG", "a=1", "b=2", "c=3", separador=" | ")
     log("DEBUG", "a=1", "b=2", "c=3", separador=" | ")
     ```
 
+!!! tip "🔧 `all()` — una función built-in útil"
+    `all(iterable)` devuelve `True` si **todos** los elementos del iterable son verdaderos (o si está vacío).
+
+    ```python
+    all([True, True, True])    # True
+    all([True, False, True])   # False
+    all([])                    # True (vacío → todos cumplen)
+    ```
+
+    En la solución del próximo ejercicio vas a ver `all(fila.get(k) == v for k, v in criterios.items())`. Eso itera los criterios y verifica que todos coincidan con la fila. Si alguno falla, `all()` devuelve `False`.
+
 ### 🌶️🌶️ Ejercicio 6 — Mini-framework de reportes 📊
 
 Creá un sistema de reportes con las siguientes funciones:
@@ -362,6 +419,9 @@ aprobados_lp = filtrar(tabla, ciudad="La Plata")
 resumen      = proyectar(aprobados_lp, "nombre", "nota")
 imprimir_tabla(resumen)
 ```
+
+??? tip "💡 Pista"
+    Arrancá función por función. `agregar_fila` solo necesita hacer `.append()`. `filtrar` recorre la tabla y verifica que cada criterio coincida — `all()` (que acabás de ver) es tu aliado acá. `proyectar` construye un nuevo diccionario por cada fila, tomando solo las claves pedidas. `imprimir_tabla` necesita saber qué columnas mostrar — ¿dónde las sacás si la tabla puede tener cualquier estructura?
 
 ??? success "✅ Solución"
     ```python
@@ -467,4 +527,4 @@ def todo(pos1, pos2, *args, kwonly=True, **kwargs):
 
 ## [⬅️ Anterior: Funciones I](./funciones_1.md)
 ## [📚 Índice](../../clases.md#colecciones)
-## [➡️ Siguiente: Ejercicio Bingo](./bingo.md)
+## [➡️ Siguiente: Cómo encarar un ejercicio](./como_encarar_ejercicios.md)

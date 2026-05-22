@@ -23,30 +23,30 @@
 
 | Bloque | Período | Foco |
 |--------|---------|------|
-| **🌱 Bloque 1 — Fundamentos** | Mar–Abr | Algoritmos, Python básico, control de flujo, listas |
-| **🌿 Bloque 2 — Colecciones y Modularización** | May | Tuplas, sets, diccionarios, funciones |
-| **🛠️ Bloque 3 — Persistencia y Versionado** | May | Archivos, JSON, Git/GitHub |
-| **🏗️ Bloque 4 — POO y Primer Proyecto** | May–Jul | POO + Sistema de Asistencias del CFP |
-| **❄️ Receso invernal** | Jul–Ago | — |
-| **🌐 Bloque 5 — Web y Segundo Proyecto** | Ago–Sep | Flask + Bolsa de Trabajo |
-| **🤖 Bloque 6 — IA y Proyecto Final** | Sep–Nov | IA, APIs, proyecto final, Nerdearla y Expo |
-| **🎓 Cierre** | Dic | Presentación y despedida |
+| [**🌱 Bloque 1 — Fundamentos**](#bloque-1) | Mar–Abr | Algoritmos, Python básico, control de flujo, listas |
+| [**🌿 Bloque 2 — Colecciones y Modularización**](#bloque-2) | May | Tuplas, sets, diccionarios, funciones |
+| [**🛠️ Bloque 3 — Persistencia y Versionado**](#bloque-3) | May | Archivos, JSON, Git/GitHub |
+| [**🏗️ Bloque 4 — POO y Primer Proyecto**](#bloque-4) | May–Jul | POO + Sistema de Asistencias del CFP |
+| [**❄️ Receso invernal**](#receso) | Jul–Ago | — |
+| [**🌐 Bloque 5 — Web y Segundo Proyecto**](#bloque-5) | Ago–Sep | Flask + Bolsa de Trabajo |
+| [**🤖 Bloque 6 — IA y Proyecto Final**](#bloque-6) | Sep–Nov | IA, APIs, proyecto final, Nerdearla y Expo |
+| [**🎓 Cierre**](#cierre) | Dic | Presentación y despedida |
 
 ### 🎯 Hitos del año
 
 | Fecha | Hito |
 |-------|------|
-| 🚀 **Mié 17/6** | Arranque del **Sistema de Asistencias** (primer proyecto) |
-| ✅ **Vie 17/7** | Cierre del primer proyecto en CLI |
-| 🌐 **Vie 28/8** | Segundo proyecto: bolsa de trabajo (web) |
-| 🎉 **21/9** | **Nerdearla** |
-| 🤖 **Mié 7/10** | Arranque del proyecto final con IA |
-| 🏆 **9/11** | **Expo CFP 2026** |
-| 🎓 **Vie 18/12** | Última clase y celebración de cierre |
+| 🚀 **Mié 17/6** | [Arranque del **Sistema de Asistencias** (primer proyecto)](#bloque-4) |
+| ✅ **Vie 17/7** | [Cierre del primer proyecto en CLI](#bloque-4) |
+| 🌐 **Vie 28/8** | [Segundo proyecto: bolsa de trabajo (web)](#bloque-5) |
+| 🎉 **21/9** | [**Nerdearla**](#nerdearla) |
+| 🤖 **Mié 7/10** | [Arranque del proyecto final con IA](#bloque-6) |
+| 🏆 **9/11** | [**Expo CFP 2026**](#bloque-6) |
+| 🎓 **Vie 18/12** | [Última clase y celebración de cierre](#cierre) |
 
 ---
 
-## 🌱 Bloque 1 — Fundamentos *(ya cursado)*
+## 🌱 Bloque 1 — Fundamentos *(ya cursado)* { #bloque-1 }
 
 !!! success "✅ Estado: completado al 8/5/2026 (Mini Parcial)"
     Este bloque cubrió desde la presentación del curso hasta listas. List comprehensions y listas de listas se reforzaron con el cuadernillo del finde largo (revisado en clase el 6/5) y evaluados en el Mini Parcial del 8/5.
@@ -63,7 +63,7 @@
 
 ---
 
-## 🌿 Bloque 2 — Colecciones y Modularización
+## 🌿 Bloque 2 — Colecciones y Modularización { #bloque-2 }
 
 !!! info "🎯 Objetivos del bloque"
     Que los alumnos:
@@ -84,7 +84,7 @@
 
 ---
 
-## 🛠️ Bloque 3 — Persistencia y Versionado
+## 🛠️ Bloque 3 — Persistencia y Versionado { #bloque-3 }
 
 !!! info "🎯 Objetivos del bloque"
     Que los alumnos:
@@ -96,14 +96,14 @@
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
 | 25/5 | [💾 **Manejo de archivos**: lectura, escritura, modos](./clases/python/07_persistencia/archivos.md) | [📋 **JSON**: serialización, deserialización, `json.dump`/`json.load`](./clases/python/07_persistencia/json.md) | Programa que persista datos en JSON |
-| 1/6 | [🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README](./clases/python/07_persistencia/git_github.md) | — | Subir todos los programas del curso al repo personal |
+| 1/6 | [🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README](./clases/python/07_persistencia/git_github.md) | [🧬 **POO I** *(arranque del [Bloque 4](#bloque-4))*](./clases/python/poo_1.md) | Subir todos los programas del curso al repo personal |
 
 !!! tip "🤐 Git + GitHub en una sola clase (3h20m)"
     Combinamos ambas en una única sesión aprovechando la duración: **primera mitad** Git local (init/add/commit/status/log), **break**, **segunda mitad** GitHub (remote/push/clone/pull/README). NO vamos a ver branches, merges, conflictos ni PRs. Solo el workflow mínimo para que puedan versionar el primer proyecto y continuar el código en sus casas.
 
 ---
 
-## 🏗️ Bloque 4 — POO y Primer Proyecto
+## 🏗️ Bloque 4 — POO y Primer Proyecto { #bloque-4 }
 
 !!! info "🎯 Objetivos del bloque"
     Que los alumnos:
@@ -117,7 +117,7 @@
 
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
-| 1/6 | *(Git + GitHub — ver Bloque 3)* | [🧬 **POO I**: clases, objetos, `__init__`, atributos y métodos](./clases/python/poo_1.md) | Modelar entidades del mundo real |
+| 1/6 | [🌳🐙 **Git + GitHub** *(cierre del [Bloque 3](#bloque-3))*](./clases/python/07_persistencia/git_github.md) | [🧬 **POO I**: clases, objetos, `__init__`, atributos y métodos](./clases/python/poo_1.md) | Modelar entidades del mundo real |
 | 8/6 | [🛡️ **POO II**: encapsulamiento, `__str__`, `__repr__`, métodos especiales](./clases/python/poo_2.md) | [🔗 **Herencia y polimorfismo**: subclases, `super()`, override de métodos](./clases/python/poo_herencia.md) | Diseñar jerarquías de clases |
 
 ### 🚀 Sub-bloque 4.2 — Proyecto: Sistema de Asistencias del CFP
@@ -148,7 +148,7 @@
 
 ---
 
-## ❄️ Receso invernal
+## ❄️ Receso invernal { #receso }
 
 | Semana | Miércoles | Viernes |
 |--------|-----------|---------|
@@ -160,7 +160,7 @@
 
 ---
 
-## 🌐 Bloque 5 — Web y Segundo Proyecto
+## 🌐 Bloque 5 — Web y Segundo Proyecto { #bloque-5 }
 
 !!! info "🎯 Objetivos del bloque"
     Que los alumnos:
@@ -181,7 +181,7 @@
 
 ---
 
-## 🎉 Nerdearla
+## 🎉 Nerdearla { #nerdearla }
 
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
@@ -191,7 +191,7 @@
 
 ---
 
-## 🤖 Bloque 6 — IA y Proyecto Final
+## 🤖 Bloque 6 — IA y Proyecto Final { #bloque-6 }
 
 !!! info "🎯 Objetivos del bloque"
     Que los alumnos:
@@ -227,7 +227,7 @@
 
 ---
 
-## 🎓 Cierre del año
+## 🎓 Cierre del año { #cierre }
 
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|

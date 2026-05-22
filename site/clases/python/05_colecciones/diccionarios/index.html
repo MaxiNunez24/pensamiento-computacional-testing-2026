@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1736,6 +1738,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../06_funciones/bingo/" class="md-nav__link">
         
   
@@ -2355,6 +2385,14 @@
 
 
 <h1 id="diccionarios">🗝️ Diccionarios</h1>
+<div class="admonition example">
+<p class="admonition-title">🤔 El problema con las listas cuando los datos tienen nombre</p>
+<p>Querés guardar los datos de un alumno: nombre, edad y promedio. Con lo que sabemos hasta ahora haríamos algo así:</p>
+<div class="highlight"><pre><span></span><code><span class="n">alumno</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">alumno</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>   <span class="c1"># ¿Qué es esto? ¿El promedio? ¿La edad?</span>
+</code></pre></div>
+<p>El número <code>2</code> no dice nada. Si alguien agrega un campo en el medio, todo el código que usa índices se rompe. Necesitamos acceder a los datos <strong>por nombre</strong>, no por posición.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">🧠 La colección más poderosa de Python</p>
 <p>Ya conocemos las listas (ordenadas, con índices), las tuplas (inmutables) y los sets (sin orden, sin duplicados). Ahora llegamos a la última — y probablemente <strong>más usada</strong> — colección de Python: el <strong>diccionario</strong>.</p>
@@ -2719,6 +2757,11 @@
 <li>Eliminá uno existente con <code>.pop()</code>.</li>
 <li>Imprimí todos los contactos con <code>for</code> y <code>.items()</code>.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Para el punto 2: ¿qué diferencia hay entre acceder con <code>[]</code> y con <code>.get()</code>? ¿Qué pasa con cada uno si la clave no existe?</p>
+<p>Para recorrer con <code>.items()</code>: ¿qué dos variables necesitás desempaquetar en el <code>for</code>?</p>
+</details>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code><span class="n">agenda</span> <span class="o">=</span> <span class="p">{</span>
@@ -2743,7 +2786,7 @@
 <p>Usá el patrón "contador con <code>.get()</code>" para construir un diccionario <code>conteo</code> con la cantidad de votos de cada lenguaje.</p>
 <details class="tip">
 <summary>💡 Pista</summary>
-<p><code>conteo[v] = conteo.get(v, 0) + 1</code> dentro de un <code>for</code>.</p>
+<p>Arrancá con un diccionario vacío. Para cada voto, ¿qué querés guardar como clave y qué como valor? Si el lenguaje ya está en el diccionario, ¿qué hacés? Si no está, ¿con qué valor arranca? <code>.get()</code> puede resolver ambos casos en una sola línea.</p>
 </details>
 <details class="success">
 <summary>✅ Solución</summary>
@@ -2809,6 +2852,16 @@
 <li>Dado <code>precios = {"manzana": 150, "banana": 80, "naranja": 120, "uva": 200}</code>, creá un dict con solo las frutas que cuestan <strong>menos de 130</strong>.</li>
 <li>Del mismo <code>precios</code>, creá un dict con los precios <strong>aumentados un 10%</strong>.</li>
 </ol>
+<div class="highlight"><pre><span></span><code># Resultado 2:
+{&#39;banana&#39;: 80, &#39;naranja&#39;: 120}
+
+# Resultado 3:
+{&#39;manzana&#39;: 165, &#39;banana&#39;: 88, &#39;naranja&#39;: 132, &#39;uva&#39;: 220}
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Una dict comprehension tiene la forma <code>{clave: valor for elemento in iterable}</code>. Para filtrar, agregá un <code>if</code> al final. Para el aumento del 10%, multiplicá el valor por <code>1.10</code>. ¿Qué método de diccionario te da los pares clave-valor para iterar?</p>
+</details>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code><span class="n">numeros</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
@@ -2839,8 +2892,9 @@
 <li>Encontrá el <strong>producto más caro</strong> disponible.</li>
 </ol>
 <details class="tip">
-<summary>💡 Pista (parte 3)</summary>
-<p>Usá el patrón contador: <code>categorias[cat] = categorias.get(cat, 0) + 1</code>.</p>
+<summary>💡 Pista</summary>
+<p>Para la parte 3 (productos por categoría): ¿qué dato de cada producto querés usar como clave del nuevo diccionario? ¿Cómo acumulás un contador para cada categoría?</p>
+<p>Para la parte 4 (más caro disponible): primero filtrá por stock, luego buscá el máximo. ¿Con qué criterio ordenás o comparás para encontrar el más caro?</p>
 </details>
 <details class="success">
 <summary>✅ Solución</summary>
@@ -2886,7 +2940,8 @@
 <p>Construí una <strong>tabla de posiciones</strong> (dict de dicts) con puntos, partidos jugados, goles a favor y en contra. Victoria = 3 pts, empate = 1 pt, derrota = 0 pts. Imprimí la tabla ordenada por puntos.</p>
 <details class="tip">
 <summary>💡 Pista</summary>
-<p>Usá <code>.setdefault()</code> para inicializar cada equipo. Podés ordenar con <code>sorted(tabla.items(), key=lambda x: x[1]["puntos"], reverse=True)</code>.</p>
+<p>Por cada partido hay dos equipos. Para cada uno: ¿cómo los inicializás en la tabla si no existen todavía? <code>.setdefault()</code> es ideal para eso.</p>
+<p>Una vez procesados todos los partidos, ¿cómo imprimís la tabla ordenada por puntos? ¿<code>sorted()</code> puede ordenar una lista de tuplas <code>(equipo, datos)</code> por un campo específico del diccionario de datos?</p>
 </details>
 <details class="success">
 <summary>✅ Solución</summary>

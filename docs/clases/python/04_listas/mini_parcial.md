@@ -30,6 +30,9 @@ resultado = 10 / 2
 - C) `str`
 - D) `bool`
 
+??? success "✅ Respuesta"
+    **B) `float`** — En Python 3, el operador `/` siempre devuelve `float`, incluso cuando el resultado es un número entero. `10 / 2 = 5.0`.
+
 ---
 
 ## 2️⃣ Operador módulo — Opción múltiple
@@ -48,6 +51,9 @@ x = 17 % 5
 - B) `2`
 - C) `3.4`
 - D) `0`
+
+??? success "✅ Respuesta"
+    **B) `2`** — El operador `%` devuelve el resto de la división. `17 = 3 × 5 + 2`, por lo tanto `17 % 5 = 2`.
 
 ---
 
@@ -69,6 +75,9 @@ for i in range(1, 8):
 - B) `2 4 6 8`
 - C) `2 4 6`
 - D) `1 2 3 4 5 6 7`
+
+??? success "✅ Respuesta"
+    **C) `2 4 6`** — `range(1, 8)` genera del 1 al 7 inclusive. El `if i % 2 == 0` filtra solo los pares. El 8 no está porque `range(1, 8)` no incluye el 8.
 
 ---
 
@@ -92,6 +101,9 @@ print(frutas[-2])
 - C) `"uva"`
 - D) Genera un error
 
+??? success "✅ Respuesta"
+    **B) `"naranja"`** — Los índices negativos cuentan desde el final: `-1` es `"uva"`, `-2` es `"naranja"`, `-3` es `"banana"`, `-4` es `"manzana"`.
+
 ---
 
 ## 5️⃣ While vs For — Pregunta conceptual
@@ -101,7 +113,7 @@ print(frutas[-2])
 Explicá con tus palabras **cuándo usarías un `while` y cuándo usarías un `for`**.  
 Dá un ejemplo concreto de cada uno (no hace falta que funcionen, solo que ilustren la idea).
 
-??? note "Pista"
+??? tip "💡 Para pensar"
     Pensá en qué diferencia hay entre saber de antemano cuántas veces algo se repite, y no saberlo.
 
 ---
@@ -185,8 +197,35 @@ Mateo: 6.0
 🏆 Mejor promedio: Valentina (9.0)
 ```
 
-!!! tip "Pista"
-    Las notas de cada alumno están en `alumno[1:]` (slicing). El promedio es `sum(alumno[1:]) / len(alumno[1:])`.
+??? tip "💡 Pista"
+    Las notas de cada alumno están en `alumno[1:]` (slicing). El promedio es `sum(alumno[1:]) / len(alumno[1:])`. Para el mejor promedio, llevá un registro del nombre y promedio del mejor a medida que recorrés.
+
+??? success "✅ Solución"
+    ```python
+    curso = [
+        ["Lucía", 7, 8, 9],
+        ["Tomás", 4, 3, 5],
+        ["Valentina", 10, 9, 8],
+        ["Mateo", 6, 5, 7],
+        ["Sofía", 2, 4, 3],
+    ]
+
+    print("=== Alumnos aprobados ===")
+    mejor_nombre = None
+    mejor_prom   = -1
+
+    for alumno in curso:
+        nombre = alumno[0]
+        notas  = alumno[1:]
+        prom   = sum(notas) / len(notas)
+        if prom >= 6:
+            print(f"{nombre}: {prom:.1f}")
+        if prom > mejor_prom:
+            mejor_prom   = prom
+            mejor_nombre = nombre
+
+    print(f"\n🏆 Mejor promedio: {mejor_nombre} ({mejor_prom:.1f})")
+    ```
 
 ---
 

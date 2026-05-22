@@ -191,12 +191,28 @@ with open("/home/maxi/datos.txt", "r") as f: ...              # Linux/Mac
 
 ---
 
-## 🧪 Ejercicios
+## 🎮 Ejercicios
 
 ### 🌱 Ejercicio 1 — Crear y leer
 
 1. Creá un archivo `frutas.txt` y escribí 5 frutas, una por línea.
 2. Luego leelo e imprimí cada fruta en mayúsculas.
+
+??? tip "💡 Pista"
+    Primero abrí el archivo en modo `"w"` para escribir, luego en modo `"r"` para leer. `for linea in archivo` te da cada línea incluyendo el `\n` al final — `.strip()` lo limpia.
+
+??? success "✅ Solución"
+    ```python
+    # Escribir
+    with open("frutas.txt", "w") as f:
+        for fruta in ["manzana", "banana", "naranja", "uva", "pera"]:
+            f.write(fruta + "\n")
+
+    # Leer
+    with open("frutas.txt", "r") as f:
+        for linea in f:
+            print(linea.strip().upper())
+    ```
 
 ### 🌿 Ejercicio 2 — Contar palabras
 
@@ -206,6 +222,27 @@ Creá un archivo `texto.txt` con al menos 3 párrafos. Luego escribí un program
 2. Cuente cuántas palabras tiene en total.
 3. Muestre la línea más larga.
 
+??? tip "💡 Pista"
+    Para las palabras: `.split()` sin argumento divide por cualquier espacio. Para la línea más larga: acumulá llevando registro de la más larga a medida que recorrés.
+
+??? success "✅ Solución"
+    ```python
+    with open("texto.txt", "r") as f:
+        lineas = f.readlines()
+
+    total_palabras = 0
+    linea_mas_larga = ""
+    for linea in lineas:
+        palabras = linea.split()
+        total_palabras += len(palabras)
+        if len(linea) > len(linea_mas_larga):
+            linea_mas_larga = linea
+
+    print(f"Líneas: {len(lineas)}")
+    print(f"Palabras: {total_palabras}")
+    print(f"Línea más larga: {linea_mas_larga.strip()}")
+    ```
+
 ### 🌿 Ejercicio 3 — Registro de notas
 
 Escribí un programa que:
@@ -214,9 +251,58 @@ Escribí un programa que:
 2. Guarde cada registro como `"Nombre,Nota\n"` en un archivo `notas.csv`.
 3. Al volver a ejecutar el programa, cargue el archivo y calcule el promedio de notas.
 
+??? tip "💡 Pista"
+    Para que los datos se acumulen entre ejecuciones, usá modo `"a"` (append) al escribir. Para leer, separás cada línea con `.split(",")`.
+
+??? success "✅ Solución"
+    ```python
+    # Parte 1 y 2: guardar notas
+    with open("notas.csv", "a") as f:
+        while True:
+            nombre = input("Nombre (o 'fin'): ")
+            if nombre.lower() == "fin":
+                break
+            nota = input("Nota: ")
+            f.write(f"{nombre},{nota}\n")
+
+    # Parte 3: calcular promedio
+    notas = []
+    with open("notas.csv", "r") as f:
+        for linea in f:
+            partes = linea.strip().split(",")
+            if len(partes) == 2:
+                notas.append(float(partes[1]))
+
+    if notas:
+        print(f"Promedio: {sum(notas) / len(notas):.2f}")
+    ```
+
 ### 🌶️ Ejercicio 4 — Log de ejecuciones
 
-Cada vez que el programa se ejecute, que agregue una línea al archivo `log.txt` con la fecha/hora y un mensaje. Investigá el módulo `datetime` para obtener la fecha y hora actual.
+Cada vez que el programa se ejecute, que agregue una línea al archivo `log.txt` con la fecha/hora y un mensaje.
+
+!!! info "📦 Módulo: datetime"
+    ```python
+    from datetime import datetime
+    ahora = datetime.now()
+    print(ahora.strftime("%Y-%m-%d %H:%M:%S"))  # "2026-05-22 11:30:00"
+    ```
+
+??? tip "💡 Pista"
+    Abrí el archivo en modo `"a"` para que cada ejecución agregue sin borrar lo anterior. `datetime.now()` te da la fecha y hora actual; `.strftime()` la formatea como texto.
+
+??? success "✅ Solución"
+    ```python
+    from datetime import datetime
+
+    mensaje = "Programa ejecutado correctamente"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    with open("log.txt", "a") as f:
+        f.write(f"[{timestamp}] {mensaje}\n")
+
+    print(f"Log actualizado: {timestamp}")
+    ```
 
 ---
 

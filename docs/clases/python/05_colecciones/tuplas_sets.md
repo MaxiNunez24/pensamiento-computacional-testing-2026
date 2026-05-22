@@ -2,7 +2,7 @@
 
 !!! tip "🧬 Bienvenidos al universo de las colecciones"
     Ya conocemos las **listas**: colecciones ordenadas y modificables que pueden contener cualquier cosa. Pero Python tiene más herramientas en el arsenal de colecciones, y cada una está optimizada para un propósito distinto. Hoy vamos a sumar dos primas hermanas de la lista al toolkit:
-sfhsashsshsfhsh shsshsfhshs< s sgsdghssssshsfhsfhhsh  sgsshsshsfhsfhshsfh>
+
     - 📦 **Tuplas**: como listas, pero **inmutables**. Sirven para datos que no deben cambiar.
     - 🧮 **Sets**: colecciones **sin orden** y **sin duplicados**. Sirven para verificar pertenencia y operaciones de conjuntos.
 

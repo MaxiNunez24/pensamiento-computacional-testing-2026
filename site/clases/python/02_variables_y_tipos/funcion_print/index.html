@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1031,7 +1033,7 @@
   <a href="#ejercicios-con-print" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios con print()
+        🎮 Ejercicios con print()
       
     </span>
   </a>
@@ -1721,6 +1723,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../06_funciones/bingo/" class="md-nav__link">
         
   
@@ -2245,7 +2275,7 @@
   <a href="#ejercicios-con-print" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios con print()
+        🎮 Ejercicios con print()
       
     </span>
   </a>
@@ -2407,21 +2437,53 @@ Pero esta función tiene <strong>mucho más poder</strong> del que parece 😏</
 <div class="highlight"><pre><span></span><code>Cargando...Listo!
 </code></pre></div>
 <hr />
-<h2 id="ejercicios-con-print">🧪 Ejercicios con print()</h2>
-<p>Antes de avanzar, practicamos bien esto 👇</p>
-<ol>
-<li>Mostrar tu nombre y apellido en una misma línea</li>
-<li>Mostrar tres palabras separadas por <code>-</code></li>
-<li>Mostrar tres números separados por <code>,</code></li>
-<li>Mostrar dos mensajes en la misma línea usando <code>end</code></li>
-<li>Mostrar un mensaje como:
-   <code>"Hola Juan, tenés 20 años"</code> (usando variables)</li>
-</ol>
+<h2 id="ejercicios-con-print">🎮 Ejercicios con print()</h2>
+<p><strong>Ejercicio 1 🌱</strong> — Mostrá tu nombre y apellido en una misma línea.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Maxi&quot;</span><span class="p">,</span> <span class="s2">&quot;Nuñez&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 2 🌱</strong> — Mostrá tres palabras separadas por <code>-</code>.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Python&quot;</span><span class="p">,</span> <span class="s2">&quot;es&quot;</span><span class="p">,</span> <span class="s2">&quot;genial&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+<span class="c1"># Python-es-genial</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 3 🌱</strong> — Mostrá tres números separados por <code>,</code>.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="c1"># 1,2,3</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 4 🌱</strong> — Mostrá dos mensajes en la misma línea usando <code>end</code>.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hola&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mundo&quot;</span><span class="p">)</span>
+<span class="c1"># Hola Mundo</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 5 🌱</strong> — Mostrá <code>"Hola Juan, tenés 20 años"</code> usando variables.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Juan&quot;</span>
+<span class="n">edad</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hola </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">, tenés </span><span class="si">{</span><span class="n">edad</span><span class="si">}</span><span class="s2"> años&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="desafio">🚀 Desafío</h2>
-<p>👉 Intentá generar esta salida:</p>
+<p>Intentá generar esta salida:</p>
 <div class="highlight"><pre><span></span><code>Python -&gt; Java -&gt; C++ -&gt; JavaScript
 </code></pre></div>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Python&quot;</span><span class="p">,</span> <span class="s2">&quot;Java&quot;</span><span class="p">,</span> <span class="s2">&quot;C++&quot;</span><span class="p">,</span> <span class="s2">&quot;JavaScript&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; -&gt; &quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="mini-cierre-conceptual">🧩 Mini cierre conceptual</h2>
 <ul>

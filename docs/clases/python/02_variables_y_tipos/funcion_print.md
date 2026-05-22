@@ -153,26 +153,63 @@ Cargando...Listo!
 
 ---
 
-## 🧪 Ejercicios con print()
+## 🎮 Ejercicios con print()
 
-Antes de avanzar, practicamos bien esto 👇
+**Ejercicio 1 🌱** — Mostrá tu nombre y apellido en una misma línea.
 
-1. Mostrar tu nombre y apellido en una misma línea
-2. Mostrar tres palabras separadas por `-`
-3. Mostrar tres números separados por `,`
-4. Mostrar dos mensajes en la misma línea usando `end`
-5. Mostrar un mensaje como:
-   `"Hola Juan, tenés 20 años"` (usando variables)
+??? success "✅ Solución"
+    ```python
+    print("Maxi", "Nuñez")
+    ```
+
+**Ejercicio 2 🌱** — Mostrá tres palabras separadas por `-`.
+
+??? success "✅ Solución"
+    ```python
+    print("Python", "es", "genial", sep="-")
+    # Python-es-genial
+    ```
+
+**Ejercicio 3 🌱** — Mostrá tres números separados por `,`.
+
+??? success "✅ Solución"
+    ```python
+    print(1, 2, 3, sep=",")
+    # 1,2,3
+    ```
+
+**Ejercicio 4 🌱** — Mostrá dos mensajes en la misma línea usando `end`.
+
+??? success "✅ Solución"
+    ```python
+    print("Hola", end=" ")
+    print("Mundo")
+    # Hola Mundo
+    ```
+
+**Ejercicio 5 🌱** — Mostrá `"Hola Juan, tenés 20 años"` usando variables.
+
+??? success "✅ Solución"
+    ```python
+    nombre = "Juan"
+    edad = 20
+    print(f"Hola {nombre}, tenés {edad} años")
+    ```
 
 ---
 
 ## 🚀 Desafío
 
-👉 Intentá generar esta salida:
+Intentá generar esta salida:
 
 ```
 Python -> Java -> C++ -> JavaScript
 ```
+
+??? success "✅ Solución"
+    ```python
+    print("Python", "Java", "C++", "JavaScript", sep=" -> ")
+    ```
 
 ---
 

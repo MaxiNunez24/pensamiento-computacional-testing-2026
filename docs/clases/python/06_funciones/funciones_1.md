@@ -268,6 +268,19 @@ Escribí las siguientes funciones y probá que funcionan:
 3. `celsius_a_fahrenheit(c)` → convierte temperatura (fórmula: `c * 9/5 + 32`).
 4. `valor_absoluto(n)` → devuelve el valor absoluto **sin usar `abs()`**.
 
+```
+saludar("Maxi")          → "Hola, Maxi!"
+es_par(4)                → True
+es_par(7)                → False
+celsius_a_fahrenheit(100) → 212.0
+valor_absoluto(-5)       → 5
+```
+
+??? tip "💡 Pista"
+    Para `es_par`: ¿qué operador te dice el resto de una división? Si el resto al dividir por 2 es 0, el número es par.
+
+    Para `valor_absoluto`: un número negativo tiene un `−` adelante. ¿Qué operación lo transforma en positivo?
+
 ??? success "✅ Solución"
     ```python
     def saludar(nombre):
@@ -292,6 +305,16 @@ Escribí las siguientes funciones y probá que funcionan:
 
 Escribí cuatro funciones: `sumar(a, b)`, `restar(a, b)`, `multiplicar(a, b)`, `dividir(a, b)`. Para `dividir`, retorná `None` si `b == 0`.
 
+```
+sumar(3, 4)        → 7
+multiplicar(4, 5)  → 20
+dividir(10, 2)     → 5.0
+dividir(10, 0)     → None
+```
+
+??? tip "💡 Pista"
+    Para `dividir`: primero verificá si `b == 0`. Si es así, ¿qué devolvés? Si no, hacés la división normalmente.
+
 ??? success "✅ Solución"
     ```python
     def sumar(a, b):       return a + b
@@ -306,13 +329,34 @@ Escribí cuatro funciones: `sumar(a, b)`, `restar(a, b)`, `multiplicar(a, b)`, `
 
 ### 🌿 Ejercicio 3 — Refactorizando el boletín
 
-Tomá el código del ejercicio 3 de diccionarios y **extraé las operaciones en funciones**:
+Tenés este diccionario de notas y querés procesarlo. Extraé las operaciones en funciones:
+
+```python
+notas = {
+    "Ana":   [8, 9, 10],
+    "Beto":  [5, 6, 4],
+    "Cami":  [7, 8, 9],
+    "Dante": [3, 4, 5],
+    "Eva":   [10, 10, 9]
+}
+```
 
 - `calcular_promedio(lista_notas)` → float.
-- `estado(promedio)` → `"Aprobado"` o `"Desaprobado"`.
+- `estado(promedio)` → `"Aprobado"` (>= 6) o `"Desaprobado"`.
 - `mejor_alumno(notas_dict)` → nombre del alumno con mejor promedio.
 
-Usá esas funciones para imprimir el boletín.
+```
+Ana: 9.00 — Aprobado
+Beto: 5.00 — Desaprobado
+Cami: 8.00 — Aprobado
+Dante: 4.00 — Desaprobado
+Eva: 9.67 — Aprobado
+
+🏆 Mejor: Eva
+```
+
+??? tip "💡 Pista"
+    Empezá por `calcular_promedio` — es la más simple. Luego `estado` solo necesita un `if`. Para `mejor_alumno`: ¿cómo llevás registro del mejor mientras recorrés el diccionario?
 
 ??? success "✅ Solución"
     ```python
@@ -349,13 +393,24 @@ Usá esas funciones para imprimir el boletín.
 
 Escribí `analizar(numeros)` que devuelva una **tupla** con `(minimo, maximo, promedio, cantidad_pares)`. Desempaquetala al llamarla.
 
+```
+analizar([3, 7, 2, 8, 5, 4, 9, 6])
+→ Min: 2, Max: 9, Promedio: 5.50, Pares: 4
+```
+
+??? tip "💡 Pista"
+    Calculá cada valor por separado y retornálos juntos: `return minimo, maximo, promedio, cant_pares`. Python los empaqueta en una tupla automáticamente. Para contar los pares, usá un `for` con un contador.
+
 ??? success "✅ Solución"
     ```python
     def analizar(numeros):
-        minimo      = min(numeros)
-        maximo      = max(numeros)
-        promedio    = sum(numeros) / len(numeros)
-        cant_pares  = sum(1 for n in numeros if n % 2 == 0)
+        minimo   = min(numeros)
+        maximo   = max(numeros)
+        promedio = sum(numeros) / len(numeros)
+        cant_pares = 0
+        for n in numeros:
+            if n % 2 == 0:
+                cant_pares += 1
         return minimo, maximo, promedio, cant_pares
 
     mn, mx, prom, pares = analizar([3, 7, 2, 8, 5, 4, 9, 6])
@@ -365,6 +420,9 @@ Escribí `analizar(numeros)` que devuelva una **tupla** con `(minimo, maximo, pr
 ### 🌿 Ejercicio 5 — Listas por referencia
 
 Dado el siguiente código, respondé **sin ejecutarlo**: ¿qué imprime cada `print`? Después verificalo.
+
+??? tip "💡 Pista"
+    ¿`limpiar` modifica la lista que recibe o trabaja sobre una copia? ¿`limpiar_seguro` modifica `datos2` o devuelve algo nuevo? Pensá en qué apunta cada variable.
 
 ```python
 def limpiar(lista):
@@ -417,7 +475,9 @@ Escribí `validar_password(password)` que devuelva `True` si la contraseña cump
 Después escribí `describir_password(password)` que devuelva una **lista de errores** (vacía si todo está bien).
 
 ??? tip "💡 Pista"
-    Usá `any(c.isupper() for c in password)` para verificar mayúsculas. Para la segunda función, construí la lista de errores con `.append()`.
+    Para verificar si hay al menos una mayúscula: ¿qué métodos tiene un carácter individual para saber si es mayúscula, minúscula o número? Recorré la contraseña letra por letra y usá un booleano acumulador.
+
+    Para `describir_password`: arrancá con una lista vacía de errores. Por cada regla que no se cumple, agregá un mensaje a esa lista.
 
 ??? success "✅ Solución"
     ```python
@@ -451,7 +511,14 @@ Después escribí `describir_password(password)` que devuelva una **lista de err
 
 ### 🌶️🌶️ Ejercicio 7 — El asistente de texto 📄
 
-Escribí las siguientes funciones y usálas para procesar el texto dado:
+Escribí las siguientes funciones y usálas para procesar el texto dado.
+
+??? tip "💡 Pista"
+    Arrancá con las funciones simples: `contar_palabras` es una línea. `palabras_unicas` convierte a minúsculas y usa una estructura que elimina duplicados.
+
+    Para `palabra_mas_frecuente`: usá un diccionario para contar cuántas veces aparece cada palabra. Después encontrá la clave con el valor más alto.
+
+    Para `palabras_largas`: filtrá las palabras que superen `min_largo` caracteres. ¿Cómo evitás duplicados en la lista resultado?
 
 1. `contar_palabras(texto)` → int: total de palabras.
 2. `palabras_unicas(texto)` → set: palabras únicas en minúsculas.

@@ -128,106 +128,157 @@ str()     # texto
 
 ---
 
-## 🧪 EJERCICIOS (INPUT + CASTING)
+## 🎮 Ejercicios
 
-👉 Importante: muchos de estos ya los vieron en diagramas/pseudocódigo → ahora los pasamos a Python
+### 🌱 1. Nombre
 
----
+Pedí el nombre del usuario y mostrá `"Hola Juan"`.
 
-### 🟢 1. Nombre
+??? success "✅ Solución"
+    ```python
+    nombre = input("Ingresá tu nombre: ")
+    print(f"Hola {nombre}")
+    ```
 
-Pedir el nombre del usuario y mostrar:
+### 🌱 2. Edad
 
-```
-Hola Juan
-```
+Pedí la edad y mostrá `"Tenés X años"`.
 
----
+??? success "✅ Solución"
+    ```python
+    edad = int(input("¿Cuántos años tenés? "))
+    print(f"Tenés {edad} años")
+    ```
 
-### 🟢 2. Edad
+### 🌱 3. Suma de dos números
 
-Pedir edad y mostrar:
-
-```
-Tenés X años
-```
-
----
-
-### 🟡 3. Suma de dos números
-
-Pedir dos números al usuario y mostrar la suma.
-
-👉 Usar `int()`
-
----
-
-### 🟡 4. Conversión de metros a centímetros
-
-Pedir una medida en metros y convertirla a centímetros.
-
-👉 Recordar:
+Pedí dos números al usuario y mostrá la suma.
 
 ```
-1 metro = 100 cm
+Primer número: 5
+Segundo número: 3
+Suma: 8
 ```
 
----
+??? tip "💡 Pista"
+    `input()` siempre devuelve un string. Para sumar números, necesitás convertirlos con `int()` o `float()`.
 
-### 🟡 5. Conversión de grados Celsius a Fahrenheit
+??? success "✅ Solución"
+    ```python
+    a = int(input("Primer número: "))
+    b = int(input("Segundo número: "))
+    print(f"Suma: {a + b}")
+    ```
 
-Pedir temperatura en Celsius y convertir a Fahrenheit.
+### 🌱 4. Metros a centímetros
 
-👉 Fórmula:
-
-```
-F = C * 9/5 + 32
-```
-
----
-
-### 🟡 6. Precio con IVA
-
-Pedir el precio de un producto y mostrar el precio final con 21% de IVA.
-
----
-
-### 🟡 7. Promedio de 3 números
-
-Pedir tres números y mostrar el promedio.
-
----
-
-### 🔵 8. Conversión de horas a minutos
-
-Pedir una cantidad de horas y convertirla a minutos.
-
----
-
-### 🔵 9. Sueldo mensual
-
-Pedir:
-
-* sueldo por hora
-* cantidad de horas trabajadas
-
-Mostrar sueldo total.
-
----
-
-### 🔵 10. Datos del usuario
-
-Pedir:
-
-* nombre
-* edad
-* altura
-
-Mostrar:
+Pedí una medida en metros y convertila a centímetros.
 
 ```
-Hola Juan, tenés 25 años y medís 1.75 metros
+Metros: 1.75
+175.0 cm
 ```
+
+??? success "✅ Solución"
+    ```python
+    metros = float(input("Metros: "))
+    print(f"{metros * 100} cm")
+    ```
+
+### 🌱 5. Celsius a Fahrenheit
+
+Pedí temperatura en Celsius y convertila a Fahrenheit (fórmula: `F = C * 9/5 + 32`).
+
+```
+Temperatura en Celsius: 100
+212.0°F
+```
+
+??? success "✅ Solución"
+    ```python
+    c = float(input("Temperatura en Celsius: "))
+    f = c * 9/5 + 32
+    print(f"{f}°F")
+    ```
+
+### 🌿 6. Precio con IVA
+
+Pedí el precio de un producto y mostrá el precio final con 21% de IVA.
+
+```
+Precio: 100
+Precio con IVA: $121.00
+```
+
+??? success "✅ Solución"
+    ```python
+    precio = float(input("Precio: "))
+    final  = precio * 1.21
+    print(f"Precio con IVA: ${final:.2f}")
+    ```
+
+### 🌿 7. Promedio de 3 números
+
+Pedí tres números y mostrá el promedio.
+
+```
+Número 1: 7
+Número 2: 9
+Número 3: 8
+Promedio: 8.0
+```
+
+??? success "✅ Solución"
+    ```python
+    a = float(input("Número 1: "))
+    b = float(input("Número 2: "))
+    c = float(input("Número 3: "))
+    print(f"Promedio: {(a + b + c) / 3}")
+    ```
+
+### 🌿 8. Horas a minutos
+
+Pedí una cantidad de horas y convertila a minutos.
+
+```
+Horas: 2
+120 minutos
+```
+
+??? success "✅ Solución"
+    ```python
+    horas = int(input("Horas: "))
+    print(f"{horas * 60} minutos")
+    ```
+
+### 🌿 9. Sueldo mensual
+
+Pedí el sueldo por hora y la cantidad de horas trabajadas. Mostrá el sueldo total.
+
+```
+Sueldo por hora: 500
+Horas trabajadas: 160
+Sueldo total: $80000.00
+```
+
+??? success "✅ Solución"
+    ```python
+    sueldo_hora = float(input("Sueldo por hora: "))
+    horas       = int(input("Horas trabajadas: "))
+    print(f"Sueldo total: ${sueldo_hora * horas:.2f}")
+    ```
+
+### 🌿 10. Datos del usuario
+
+Pedí nombre, edad y altura. Mostrá: `"Hola Juan, tenés 25 años y medís 1.75 metros"`.
+
+??? success "✅ Solución"
+    ```python
+    nombre = input("Nombre: ")
+    edad   = int(input("Edad: "))
+    altura = float(input("Altura (en metros): "))
+    print(f"Hola {nombre}, tenés {edad} años y medís {altura} metros")
+    ```
 
 ---
 

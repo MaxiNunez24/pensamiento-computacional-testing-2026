@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1218,10 +1220,49 @@
   <a href="#ejercicios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios
+        🎮 Ejercicios
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="🎮 Ejercicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variables-y-tipos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables y tipos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operadores_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operadores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1849,6 +1890,34 @@
     
   
     📦 Funciones II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
   
 
     
@@ -2552,10 +2621,49 @@
   <a href="#ejercicios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios
+        🎮 Ejercicios
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="🎮 Ejercicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variables-y-tipos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables y tipos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operadores_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operadores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2812,26 +2920,99 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">nombre</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># Pyt — desde índice 0 hasta 2</span>
 </code></pre></div>
 <hr />
-<h2 id="ejercicios">🧪 Ejercicios</h2>
-<p><strong>Variables y tipos</strong></p>
-<ol>
-<li>Crear variables <code>nombre</code>, <code>edad</code>, <code>altura</code> y <code>es_estudiante</code>. Mostrarlas todas en una sola línea usando f-string.</li>
-<li>Mostrar el tipo de dato de cada una de esas variables con <code>type()</code>.</li>
-</ol>
-<p><strong>Operadores</strong></p>
-<ol>
-<li>Crear dos números y mostrar el resultado de: suma, resta, multiplicación, división y resto.</li>
-<li>Verificar si un número es par usando el operador <code>%</code> y un operador de comparación.</li>
-<li>Escribir una condición que sea <code>True</code> solo si la edad es mayor a 17 <strong>y</strong> la persona es estudiante.</li>
-</ol>
-<p><strong>Strings</strong></p>
-<ol>
-<li>Crear una variable con tu nombre completo y mostrar: su longitud, en mayúsculas y en minúsculas.</li>
-<li>Dada la frase <code>"hola mundo maravilloso"</code>, contar cuántas veces aparece la letra <code>"o"</code>.</li>
-<li>Separar <code>"lunes,martes,miércoles,jueves,viernes"</code> en una lista usando <code>split()</code>.</li>
-<li>Dada la lista <code>["Python", "es", "genial"]</code>, unirla en un string con <code>join()</code> usando un espacio como separador.</li>
-<li>Verificar si la frase <code>"Python es genial"</code> empieza con <code>"Py"</code> y termina con <code>"al"</code>.</li>
-</ol>
+<h2 id="ejercicios">🎮 Ejercicios</h2>
+<h3 id="variables-y-tipos">Variables y tipos</h3>
+<p><strong>Ejercicio 1 🌱</strong> — Creá variables <code>nombre</code>, <code>edad</code>, <code>altura</code> y <code>es_estudiante</code>. Mostrálas todas en una sola línea usando f-string.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Maxi&quot;</span>
+<span class="n">edad</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="n">altura</span> <span class="o">=</span> <span class="mf">1.81</span>
+<span class="n">es_estudiante</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nombre: </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2"> | Edad: </span><span class="si">{</span><span class="n">edad</span><span class="si">}</span><span class="s2"> | Altura: </span><span class="si">{</span><span class="n">altura</span><span class="si">}</span><span class="s2"> | Estudiante: </span><span class="si">{</span><span class="n">es_estudiante</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 2 🌱</strong> — Mostrá el tipo de dato de cada una de esas variables con <code>type()</code>.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">nombre</span><span class="p">))</span>        <span class="c1"># &lt;class &#39;str&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">edad</span><span class="p">))</span>          <span class="c1"># &lt;class &#39;int&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">altura</span><span class="p">))</span>        <span class="c1"># &lt;class &#39;float&#39;&gt;</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">es_estudiante</span><span class="p">))</span> <span class="c1"># &lt;class &#39;bool&#39;&gt;</span>
+</code></pre></div>
+</details>
+<h3 id="operadores_1">Operadores</h3>
+<p><strong>Ejercicio 3 🌱</strong> — Creá dos números y mostrá el resultado de: suma, resta, multiplicación, división y resto.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Suma: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resta: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Multiplicación: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;División: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">b</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resto: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 4 🌱</strong> — Verificá si un número es par usando <code>%</code> y un operador de comparación.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">es_par</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> es par: </span><span class="si">{</span><span class="n">es_par</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 5 🌿</strong> — Escribí una condición que sea <code>True</code> solo si la edad es mayor a 17 <strong>y</strong> la persona es estudiante.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">edad</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">es_estudiante</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">puede_inscribirse</span> <span class="o">=</span> <span class="n">edad</span> <span class="o">&gt;</span> <span class="mi">17</span> <span class="ow">and</span> <span class="n">es_estudiante</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">puede_inscribirse</span><span class="p">)</span>  <span class="c1"># True</span>
+</code></pre></div>
+</details>
+<h3 id="strings">Strings</h3>
+<p><strong>Ejercicio 6 🌱</strong> — Creá una variable con tu nombre completo y mostrá: su longitud, en mayúsculas y en minúsculas.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Maximiliano Nuñez&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nombre</span><span class="p">))</span>       <span class="c1"># 17</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nombre</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>    <span class="c1"># MAXIMILIANO NUÑEZ</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nombre</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>    <span class="c1"># maximiliano nuñez</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 7 🌱</strong> — Dada la frase <code>"hola mundo maravilloso"</code>, contá cuántas veces aparece la letra <code>"o"</code>.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">frase</span> <span class="o">=</span> <span class="s2">&quot;hola mundo maravilloso&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frase</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;o&quot;</span><span class="p">))</span>  <span class="c1"># 4</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 8 🌱</strong> — Separá <code>"lunes,martes,miércoles,jueves,viernes"</code> en una lista usando <code>split()</code>.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">dias</span> <span class="o">=</span> <span class="s2">&quot;lunes,martes,miércoles,jueves,viernes&quot;</span>
+<span class="n">lista</span> <span class="o">=</span> <span class="n">dias</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lista</span><span class="p">)</span>  <span class="c1"># [&#39;lunes&#39;, &#39;martes&#39;, &#39;miércoles&#39;, &#39;jueves&#39;, &#39;viernes&#39;]</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 9 🌱</strong> — Dada la lista <code>["Python", "es", "genial"]</code>, uní los elementos en un string con un espacio como separador.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">palabras</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Python&quot;</span><span class="p">,</span> <span class="s2">&quot;es&quot;</span><span class="p">,</span> <span class="s2">&quot;genial&quot;</span><span class="p">]</span>
+<span class="n">frase</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">palabras</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frase</span><span class="p">)</span>  <span class="c1"># Python es genial</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 10 🌱</strong> — Verificá si la frase <code>"Python es genial"</code> empieza con <code>"Py"</code> y termina con <code>"al"</code>.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">frase</span> <span class="o">=</span> <span class="s2">&quot;Python es genial&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frase</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Py&quot;</span><span class="p">))</span>   <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frase</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;al&quot;</span><span class="p">))</span>     <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frase</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Py&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">frase</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;al&quot;</span><span class="p">))</span>  <span class="c1"># True</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="mini-cierre-conceptual">🧩 Mini cierre conceptual</h2>
 <ul>

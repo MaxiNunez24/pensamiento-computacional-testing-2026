@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1433,6 +1435,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../06_funciones/bingo/" class="md-nav__link">
         
   
@@ -2481,6 +2511,41 @@
 <li>Lo agregue a la lista y lo guarde.</li>
 <li>Al ejecutarlo varias veces, la lista crece.</li>
 </ol>
+<div class="highlight"><pre><span></span><code>Nombre nuevo: Dante
+Lista guardada (3 nombres): [&#39;Ana&#39;, &#39;Beto&#39;, &#39;Dante&#39;]
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<ul>
+<li>¿Cómo verificás si el archivo existe antes de intentar abrirlo?</li>
+<li>Si el archivo no existe todavía, ¿qué valor inicial devolvés?</li>
+<li>¿Cuál es la diferencia entre <code>json.load(f)</code> (archivo) y <code>json.loads(texto)</code> (string)?</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">ARCHIVO</span> <span class="o">=</span> <span class="s2">&quot;nombres.json&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cargar</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">guardar</span><span class="p">(</span><span class="n">nombres</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">nombres</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">nombres</span> <span class="o">=</span> <span class="n">cargar</span><span class="p">()</span>
+<span class="n">nuevo</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Nombre nuevo: &quot;</span><span class="p">)</span>
+<span class="n">nombres</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nuevo</span><span class="p">)</span>
+<span class="n">guardar</span><span class="p">(</span><span class="n">nombres</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Lista guardada (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">nombres</span><span class="p">)</span><span class="si">}</span><span class="s2"> nombres): </span><span class="si">{</span><span class="n">nombres</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <h3 id="ejercicio-2-agenda-persistente">🌿 Ejercicio 2 — Agenda persistente</h3>
 <p>Creá una agenda de contactos que persista entre ejecuciones. El programa debe ofrecer un menú:</p>
 <div class="highlight"><pre><span></span><code>1. Ver todos los contactos
@@ -2489,8 +2554,94 @@
 4. Salir
 </code></pre></div>
 <p>Los contactos se guardan en <code>agenda.json</code> como lista de dicts <code>{"nombre": ..., "telefono": ...}</code>.</p>
+<details class="tip">
+<summary>💡 Pista</summary>
+<ul>
+<li>¿Cuándo guardás en el archivo: después de cada cambio o solo al salir?</li>
+<li>Para buscar por nombre, ¿cómo recorrés la lista? ¿Cómo hacés que la búsqueda no distinga mayúsculas/minúsculas?</li>
+<li>Reutilizá las funciones <code>cargar()</code> y <code>guardar()</code> del patrón de la clase.</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">ARCHIVO</span> <span class="o">=</span> <span class="s2">&quot;agenda.json&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cargar</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">guardar</span><span class="p">(</span><span class="n">contactos</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">contactos</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">contactos</span> <span class="o">=</span> <span class="n">cargar</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">1. Ver todos  2. Agregar  3. Buscar  4. Salir&quot;</span><span class="p">)</span>
+    <span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Opción: &quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">contactos</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La agenda está vacía.&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contactos</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;telefono&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Nombre: &quot;</span><span class="p">)</span>
+        <span class="n">tel</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Teléfono: &quot;</span><span class="p">)</span>
+        <span class="n">contactos</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="n">nombre</span><span class="p">,</span> <span class="s2">&quot;telefono&quot;</span><span class="p">:</span> <span class="n">tel</span><span class="p">})</span>
+        <span class="n">guardar</span><span class="p">(</span><span class="n">contactos</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Contacto guardado.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+        <span class="n">buscar</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Nombre a buscar: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">encontrados</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contactos</span> <span class="k">if</span> <span class="n">buscar</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">encontrados</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">encontrados</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;telefono&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No encontrado.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span>
+        <span class="k">break</span>
+</code></pre></div>
+</details>
 <h3 id="ejercicio-3-config-de-usuario">🌿 Ejercicio 3 — Config de usuario</h3>
 <p>Creá un programa que la primera vez que se ejecuta le pida al usuario su nombre y color favorito, los guarde en <code>config.json</code>, y las veces siguientes los cargue y salude sin volver a preguntar.</p>
+<div class="highlight"><pre><span></span><code>¿Cómo te llamás? Maxi
+¿Cuál es tu color favorito? azul
+Configuración guardada. ¡Hola, Maxi!
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<ul>
+<li>¿Cómo sabés si es la primera ejecución o una posterior?</li>
+<li>¿Qué estructura guardás en el JSON: un <code>dict</code> o una <code>list</code>?</li>
+<li>El <code>if</code> tiene dos caminos: ¿en cuál pedís datos y en cuál los cargás?</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">ARCHIVO</span> <span class="o">=</span> <span class="s2">&quot;config.json&quot;</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;¡Hola de nuevo, </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">! Tu color favorito es </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">nombre</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Cómo te llamás? &quot;</span><span class="p">)</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Cuál es tu color favorito? &quot;</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="n">nombre</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuración guardada. ¡Hola, </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <h3 id="ejercicio-4-estadisticas-persistentes">🌶️ Ejercicio 4 — Estadísticas persistentes</h3>
 <p>Creá un programa de "estadísticas de sesión":</p>
 <ul>
@@ -2499,6 +2650,55 @@
 <li>Calcula el promedio de ejecuciones por día.</li>
 <li>Todo se guarda y carga desde <code>stats.json</code>.</li>
 </ul>
+<div class="highlight"><pre><span></span><code>Ejecución #3 — 2026-05-22 11:30:00
+Promedio: 1.5 ejecuciones/día
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">📦 Módulo: datetime (recordatorio)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="n">ahora</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ahora</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>  <span class="c1"># &quot;2026-05-22 11:30:00&quot;</span>
+</code></pre></div>
+</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<ul>
+<li>¿Qué estructura guardás en el JSON? Pensá en un <code>dict</code> con un contador y una lista de timestamps.</li>
+<li>Los timestamps tienen formato <code>"YYYY-MM-DD HH:MM:SS"</code> — ¿cómo extraés solo la parte de la fecha (los primeros 10 caracteres)?</li>
+<li>Para contar días únicos, ¿qué hace <code>set()</code> con una lista que puede tener repetidos?</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">ARCHIVO</span> <span class="o">=</span> <span class="s2">&quot;stats.json&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cargar_stats</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;ejecuciones&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;fechas&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+<span class="n">stats</span> <span class="o">=</span> <span class="n">cargar_stats</span><span class="p">()</span>
+<span class="n">ahora</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+<span class="n">stats</span><span class="p">[</span><span class="s2">&quot;ejecuciones&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">stats</span><span class="p">[</span><span class="s2">&quot;fechas&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ahora</span><span class="p">)</span>
+
+<span class="n">dias_unicos</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">fecha</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;fechas&quot;</span><span class="p">]:</span>
+    <span class="n">dias_unicos</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fecha</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">promedio</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;ejecuciones&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">dias_unicos</span><span class="p">)</span> <span class="k">if</span> <span class="n">dias_unicos</span> <span class="k">else</span> <span class="mi">0</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ARCHIVO</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ejecución #</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;ejecuciones&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> — </span><span class="si">{</span><span class="n">ahora</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Promedio: </span><span class="si">{</span><span class="n">promedio</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ejecuciones/día&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">Para cerrar</p>

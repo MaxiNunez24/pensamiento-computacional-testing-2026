@@ -1,5 +1,15 @@
 ﻿# 🗝️ Diccionarios
 
+!!! example "🤔 El problema con las listas cuando los datos tienen nombre"
+    Querés guardar los datos de un alumno: nombre, edad y promedio. Con lo que sabemos hasta ahora haríamos algo así:
+
+    ```python
+    alumno = ["Ana", 20, 9.5]
+    print(alumno[2])   # ¿Qué es esto? ¿El promedio? ¿La edad?
+    ```
+
+    El número `2` no dice nada. Si alguien agrega un campo en el medio, todo el código que usa índices se rompe. Necesitamos acceder a los datos **por nombre**, no por posición.
+
 !!! tip "🧠 La colección más poderosa de Python"
     Ya conocemos las listas (ordenadas, con índices), las tuplas (inmutables) y los sets (sin orden, sin duplicados). Ahora llegamos a la última — y probablemente **más usada** — colección de Python: el **diccionario**.
 
@@ -347,6 +357,11 @@ Creá un diccionario `agenda` con al menos 4 contactos (nombre → teléfono). L
 4. Eliminá uno existente con `.pop()`.
 5. Imprimí todos los contactos con `for` y `.items()`.
 
+??? tip "💡 Pista"
+    Para el punto 2: ¿qué diferencia hay entre acceder con `[]` y con `.get()`? ¿Qué pasa con cada uno si la clave no existe?
+
+    Para recorrer con `.items()`: ¿qué dos variables necesitás desempaquetar en el `for`?
+
 ??? success "✅ Solución"
     ```python
     agenda = {
@@ -375,7 +390,7 @@ votos = ["Python", "Java", "Python", "C++", "Python", "Java", "Go", "Python", "C
 Usá el patrón "contador con `.get()`" para construir un diccionario `conteo` con la cantidad de votos de cada lenguaje.
 
 ??? tip "💡 Pista"
-    `conteo[v] = conteo.get(v, 0) + 1` dentro de un `for`.
+    Arrancá con un diccionario vacío. Para cada voto, ¿qué querés guardar como clave y qué como valor? Si el lenguaje ya está en el diccionario, ¿qué hacés? Si no está, ¿con qué valor arranca? `.get()` puede resolver ambos casos en una sola línea.
 
 ??? success "✅ Solución"
     ```python
@@ -444,6 +459,17 @@ Usando dict comprehensions resolvé:
 2. Dado `precios = {"manzana": 150, "banana": 80, "naranja": 120, "uva": 200}`, creá un dict con solo las frutas que cuestan **menos de 130**.
 3. Del mismo `precios`, creá un dict con los precios **aumentados un 10%**.
 
+```
+# Resultado 2:
+{'banana': 80, 'naranja': 120}
+
+# Resultado 3:
+{'manzana': 165, 'banana': 88, 'naranja': 132, 'uva': 220}
+```
+
+??? tip "💡 Pista"
+    Una dict comprehension tiene la forma `{clave: valor for elemento in iterable}`. Para filtrar, agregá un `if` al final. Para el aumento del 10%, multiplicá el valor por `1.10`. ¿Qué método de diccionario te da los pares clave-valor para iterar?
+
 ??? success "✅ Solución"
     ```python
     numeros = list(range(1, 11))
@@ -475,8 +501,10 @@ inventario = {
 3. Imprimí cuántos productos hay por **categoría**.
 4. Encontrá el **producto más caro** disponible.
 
-??? tip "💡 Pista (parte 3)"
-    Usá el patrón contador: `categorias[cat] = categorias.get(cat, 0) + 1`.
+??? tip "💡 Pista"
+    Para la parte 3 (productos por categoría): ¿qué dato de cada producto querés usar como clave del nuevo diccionario? ¿Cómo acumulás un contador para cada categoría?
+
+    Para la parte 4 (más caro disponible): primero filtrá por stock, luego buscá el máximo. ¿Con qué criterio ordenás o comparás para encontrar el más caro?
 
 ??? success "✅ Solución"
     ```python
@@ -526,7 +554,9 @@ partidos = [
 Construí una **tabla de posiciones** (dict de dicts) con puntos, partidos jugados, goles a favor y en contra. Victoria = 3 pts, empate = 1 pt, derrota = 0 pts. Imprimí la tabla ordenada por puntos.
 
 ??? tip "💡 Pista"
-    Usá `.setdefault()` para inicializar cada equipo. Podés ordenar con `sorted(tabla.items(), key=lambda x: x[1]["puntos"], reverse=True)`.
+    Por cada partido hay dos equipos. Para cada uno: ¿cómo los inicializás en la tabla si no existen todavía? `.setdefault()` es ideal para eso.
+
+    Una vez procesados todos los partidos, ¿cómo imprimís la tabla ordenada por puntos? ¿`sorted()` puede ordenar una lista de tuplas `(equipo, datos)` por un campo específico del diccionario de datos?
 
 ??? success "✅ Solución"
     ```python

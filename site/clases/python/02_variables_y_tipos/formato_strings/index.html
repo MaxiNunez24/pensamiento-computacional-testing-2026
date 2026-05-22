@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -969,7 +971,7 @@
   <a href="#ejercicios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios
+        🎮 Ejercicios
       
     </span>
   </a>
@@ -1592,6 +1594,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../06_funciones/bingo/" class="md-nav__link">
         
   
@@ -1998,7 +2028,7 @@
   <a href="#ejercicios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios
+        🎮 Ejercicios
       
     </span>
   </a>
@@ -2149,12 +2179,33 @@ Beto              6.00
 Cami              8.75
 </code></pre></div>
 <hr />
-<h2 id="ejercicios">🧪 Ejercicios</h2>
-<ol>
-<li>Mostrá tu nombre centrado en un campo de 20 caracteres.</li>
-<li>Mostrá el número <code>1234.5678</code> con exactamente 2 decimales.</li>
-<li>Creá una "tabla" con 3 productos y sus precios, alineando el nombre a la izquierda y el precio a la derecha con 2 decimales.</li>
-</ol>
+<h2 id="ejercicios">🎮 Ejercicios</h2>
+<p><strong>Ejercicio 1 🌱</strong> — Mostrá tu nombre centrado en un campo de 20 caracteres.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">nombre</span> <span class="o">=</span> <span class="s2">&quot;Maxi&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">:</span><span class="s2">^20</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;        Maxi        &quot;</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 2 🌱</strong> — Mostrá el número <code>1234.5678</code> con exactamente 2 decimales.</p>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">n</span> <span class="o">=</span> <span class="mf">1234.5678</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 1234.57</span>
+</code></pre></div>
+</details>
+<p><strong>Ejercicio 3 🌿</strong> — Creá una "tabla" con 3 productos y sus precios, alineando el nombre a la izquierda y el precio a la derecha con 2 decimales.</p>
+<div class="highlight"><pre><span></span><code>Manzana           $   1.50
+Banana            $   0.80
+Naranja           $   1.20
+</code></pre></div>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">productos</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Manzana&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Banana&quot;</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Naranja&quot;</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">precio</span> <span class="ow">in</span> <span class="n">productos</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">:</span><span class="s2">&lt;18</span><span class="si">}</span><span class="s2">$ </span><span class="si">{</span><span class="n">precio</span><span class="si">:</span><span class="s2">&gt;6.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="mini-cierre-conceptual">🧩 Mini cierre conceptual</h2>
 <ul>

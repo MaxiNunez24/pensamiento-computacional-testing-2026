@@ -102,11 +102,38 @@ Cami              8.75
 
 ---
 
-## 🧪 Ejercicios
+## 🎮 Ejercicios
 
-1. Mostrá tu nombre centrado en un campo de 20 caracteres.
-2. Mostrá el número `1234.5678` con exactamente 2 decimales.
-3. Creá una "tabla" con 3 productos y sus precios, alineando el nombre a la izquierda y el precio a la derecha con 2 decimales.
+**Ejercicio 1 🌱** — Mostrá tu nombre centrado en un campo de 20 caracteres.
+
+??? success "✅ Solución"
+    ```python
+    nombre = "Maxi"
+    print(f"{nombre:^20}")  # "        Maxi        "
+    ```
+
+**Ejercicio 2 🌱** — Mostrá el número `1234.5678` con exactamente 2 decimales.
+
+??? success "✅ Solución"
+    ```python
+    n = 1234.5678
+    print(f"{n:.2f}")  # 1234.57
+    ```
+
+**Ejercicio 3 🌿** — Creá una "tabla" con 3 productos y sus precios, alineando el nombre a la izquierda y el precio a la derecha con 2 decimales.
+
+```
+Manzana           $   1.50
+Banana            $   0.80
+Naranja           $   1.20
+```
+
+??? success "✅ Solución"
+    ```python
+    productos = [("Manzana", 1.5), ("Banana", 0.8), ("Naranja", 1.2)]
+    for nombre, precio in productos:
+        print(f"{nombre:<18}$ {precio:>6.2f}")
+    ```
 
 ---
 

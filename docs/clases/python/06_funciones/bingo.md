@@ -1,9 +1,7 @@
-﻿# 🎰 Bingo — Ejercicio Integrador
+# 🎰 Bingo — Ejercicio Integrador
 
 !!! info "🎯 ¿Qué vamos a construir?"
-    Un **simulador de Bingo** completo, desde cero. Vamos a pasar por 5 etapas progresivas: empezamos con un cartón como set, y terminamos con un juego multijugador con estadísticas.
-
-    Este ejercicio integra todo lo que vimos en el Bloque 2:
+    Un **simulador de Bingo** completo, desde cero. Este ejercicio integra todo lo que vimos en el Bloque 2:
 
     | Concepto | ¿Dónde aparece? |
     |----------|----------------|
@@ -14,19 +12,72 @@
     | **Funciones** | Cada acción del juego encapsulada y reutilizable |
 
 !!! tip "🧠 Por qué Bingo"
-    El Bingo es un ejemplo perfecto de por qué los sets existen: un cartón tiene números **únicos**, verificar si "salió" un número es una **consulta de pertenencia** (`in`), y la condición de victoria es una **operación de subconjunto** (`issubset`). En una lista esto sería mucho más engorroso.
+    El Bingo es un ejemplo perfecto de por qué los sets existen:
+
+    - Un cartón tiene números **únicos** → `set`
+    - Verificar si "salió" un número → operación `in` en O(1)
+    - La condición de victoria → `issubset`: *¿están todos los del cartón en los sorteados?*
+
+    Con una lista, cada una de esas operaciones sería más lenta y más engorrosa. El Bingo no es una excusa para practicar — es el caso de uso natural de los sets.
+
+---
+
+## 📋 El programa completo
+
+Antes de arrancar, leé cómo se ve el programa terminado. Esto es lo que vas a construir:
+
+```
+¡Empieza el juego!
+Tu cartón: [3, 11, 18, 24, 33, 37, 45, 52, 58, 61, 67, 74, 80, 85, 90]
+
+Presioná Enter para empezar...
+
+Salió el 45.
+────────────────────────────────────────
+ 3    11   18   24   33   37  45✓  52   58   61   67   74   80   85   90
+────────────────────────────────────────
+Marcados: 1 / 15  |  Faltan: 14
+
+Salió el 7.
+Salió el 33.
+────────────────────────────────────────
+ 3    11   18   24  33✓  37  45✓  52   58   61   67   74   80   85   90
+────────────────────────────────────────
+Marcados: 2 / 15  |  Faltan: 13
+
+[... más turnos ...]
+
+Salió el 90.
+────────────────────────────────────────
+ 3✓  11✓  18✓  24✓  33✓  37✓  45✓  52✓  58✓  61✓  67✓  74✓  80✓  85✓  90✓
+────────────────────────────────────────
+Marcados: 15 / 15  |  Faltan: 0
+
+🎉 ¡BINGO! Ganaste en 62 turnos.
+```
+
+---
+
+## 🧠 Antes de arrancar
+
+!!! tip "Aplicá el protocolo"
+    Antes de leer las etapas, aplicá los [5 pasos para encarar ejercicios](./como_encarar_ejercicios.md) a este enunciado. Abrí tu cuaderno y respondé:
+
+    - ¿Cuántas acciones distintas tiene el juego?
+    - ¿Qué datos necesita cada una? ¿Qué devuelve?
+    - ¿Podés simular una partida chica (con 5 números) a mano?
+    - ¿Qué funciones vacías escribirías como esqueleto?
+
+    Recién después seguí leyendo.
 
 ---
 
 ## 🗺️ Hoja de ruta
 
-```
-Etapa 1 → Generar un cartón                   (set + random)
-Etapa 2 → Sortear y verificar                  (funciones + sets)
-Etapa 3 → Mostrar el estado del juego          (funciones + formateo)
-Etapa 4 → El juego completo (un jugador)       (bucle + integración)
-Etapa 5 → Múltiples jugadores                  (listas + dicts)
-🌶️ Extra → Estadísticas de partidas           (simulación)
+```mermaid
+%%{init: {'themeVariables': {'fontSize': '20px'}}}%%
+flowchart LR
+    E1["🌱 Etapa 1\nEl cartón"] --> E2["🌱🌿 Etapa 2\nFunciones"] --> E3["🌿 Etapa 3\nMostrar estado"] --> E4["🌿 Etapa 4\nJuego completo"] --> E5["🌶️ Etapa 5\nMultijugador"] --> EX["🌶️🌶️ Extra\nEstadísticas"]
 ```
 
 ---
@@ -35,21 +86,24 @@ Etapa 5 → Múltiples jugadores                  (listas + dicts)
 
 🌱 *Sets + random*
 
-Un cartón de Bingo tiene **15 números únicos** entre el 1 y el 90.
+!!! info "📦 Módulo: random"
+    El módulo `random` viene incluido en Python — no hay que instalarlo, solo importarlo.
 
-**Tu tarea:**
-
-1. Importá el módulo `random`.
-2. Generá un cartón usando `random.sample()` y convertilo a `set`.
-3. Imprimí el cartón ordenado para que sea legible.
-
-??? tip "💡 Pista"
     ```python
     import random
-
-    # Pista: random.sample(iterable, k) devuelve k elementos únicos al azar
-    # range(1, 91) genera los números del 1 al 90
     ```
+
+    Las funciones que vamos a usar en este ejercicio:
+
+    | Función | Qué hace | Ejemplo |
+    |---------|----------|---------|
+    | `random.sample(iterable, k)` | Devuelve `k` elementos **únicos** al azar (sin repetir) | `random.sample(range(1, 91), 15)` |
+    | `random.choice(secuencia)` | Devuelve un elemento al azar de una secuencia | `random.choice([10, 20, 30])` → `20` |
+    | `random.randint(a, b)` | Entero al azar entre `a` y `b` (ambos inclusive) | `random.randint(1, 6)` → como un dado |
+
+Un cartón de Bingo tiene **15 números únicos** entre el 1 y el 90.
+
+Escribí un script (sin funciones todavía) que genere un cartón e imprima los números ordenados. Vas a necesitar el módulo `random` y la función `random.sample(iterable, k)`, que devuelve `k` elementos únicos elegidos al azar de un iterable.
 
 ??? success "✅ Solución"
     ```python
@@ -65,52 +119,42 @@ Un cartón de Bingo tiene **15 números únicos** entre el 1 y el 90.
 
 ---
 
-## Etapa 2 — Sortear y verificar
+## Etapa 2 — Encapsular en funciones
 
 🌱🌿 *Funciones + sets*
 
-Ahora necesitamos dos cosas: una función para sortear números (sin repetir) y otra para saber si el jugador ganó.
+El script de la Etapa 1 funciona, pero si lo queremos usar en distintas partes del juego necesitamos funciones. Fijate la diferencia:
 
-**Tu tarea:** Escribí estas tres funciones.
+=== "❌ Sin funciones"
 
-```python
-def generar_carton(cantidad=15, maximo=90):
-    """Genera y devuelve un cartón como set."""
-    ...
+    ```python
+    # Para generar un cartón, copiamos el código cada vez
+    carton_ana  = set(random.sample(range(1, 91), 15))
+    carton_beto = set(random.sample(range(1, 91), 15))
+    carton_cami = set(random.sample(range(1, 91), 15))
+    # Si el día de mañana cambia la lógica, hay que cambiarlo en 3 lugares
+    ```
 
-def sortear_numero(bolillero):
-    """
-    Recibe el conjunto de números disponibles (bolillero).
-    Extrae uno al azar, lo elimina del bolillero y lo devuelve.
-    """
-    ...
+=== "✅ Con funciones"
 
-def verificar_ganador(carton, sorteados):
-    """
-    Devuelve True si todos los números del cartón ya fueron sorteados.
-    """
-    ...
-```
+    ```python
+    # Definimos la lógica una sola vez
+    def generar_carton():
+        return set(random.sample(range(1, 91), 15))
+
+    carton_ana  = generar_carton()
+    carton_beto = generar_carton()
+    carton_cami = generar_carton()
+    # Si cambia la lógica, solo cambia en un lugar
+    ```
+
+Pensá qué otras acciones del juego se van a repetir y encapsulalas. Para orientarte: ¿qué pasa en cada turno? ¿Al iniciar? ¿Para saber si alguien ganó? Cada respuesta es una función candidata.
 
 !!! info "🎱 El bolillero"
-    El bolillero es el conjunto de números que **todavía no salieron**. Empezamos con todos los números posibles y vamos sacando de ahí. Usar un set nos permite eliminar un número en O(1).
+    El bolillero es el conjunto de números que **todavía no salieron**. Empieza con todos los números posibles (1 al 90) y se va vaciando a medida que se sortean. Usarlo como `set` permite eliminar elementos en O(1).
 
-??? tip "💡 Pista — `verificar_ganador`"
-    Los sets tienen una operación perfecta para esto: `A.issubset(B)` devuelve `True` si todos los elementos de `A` están en `B`. También podés escribirlo como `A <= B`.
-
-    ```python
-    {1, 2, 3}.issubset({1, 2, 3, 4, 5})  # True
-    {1, 2, 9}.issubset({1, 2, 3, 4, 5})  # False
-    ```
-
-??? tip "💡 Pista — `sortear_numero`"
-    `random.choice()` elige un elemento al azar de una secuencia, pero los sets no son secuencias. Podés convertirlo:
-
-    ```python
-    numero = random.choice(list(bolillero))
-    bolillero.remove(numero)
-    return numero
-    ```
+??? tip "💡 Pista"
+    ¿`random.choice()` funciona directamente con un set? Probalo. Si no funciona, ¿cómo lo convertirías para poder usarlo?
 
 ??? success "✅ Solución"
     ```python
@@ -128,14 +172,13 @@ def verificar_ganador(carton, sorteados):
         return carton.issubset(sorteados)
 
     # Prueba rápida
-    carton   = generar_carton()
+    carton    = generar_carton()
     bolillero = set(range(1, 91))
     sorteados = set()
 
     print("Cartón:", sorted(carton))
     print("¿Ganó?", verificar_ganador(carton, sorteados))  # False
 
-    # Simulamos que "salieron" exactamente los números del cartón
     sorteados = carton.copy()
     print("¿Ganó?", verificar_ganador(carton, sorteados))  # True
     ```
@@ -146,53 +189,31 @@ def verificar_ganador(carton, sorteados):
 
 🌿 *Funciones + formateo*
 
-No alcanza con saber si ganó: queremos **ver** el cartón con los números marcados y cuántos faltan.
-
-**Tu tarea:** Escribí la función `mostrar_carton`.
-
-```python
-def mostrar_carton(carton, sorteados):
-    """
-    Imprime el cartón mostrando qué números ya salieron (marcados con ✓)
-    y cuáles faltan.
-    """
-    ...
-```
-
-La salida debería verse algo así:
+No alcanza con saber si ganó: queremos **ver** el cartón con los números marcados y cuántos faltan. La salida tiene que mostrar algo así:
 
 ```
-------------------------------
- 5✓  12   23✓  44   67
- 8   19✓  31   55✓  73✓
- 11   27   38✓  61   88
-------------------------------
-Marcados: 6 / 15  |  Faltan: 9
+────────────────────────────────────────
+ 3    11   18  24✓  33   37  45✓  52   58   61   67   74   80   85   90
+────────────────────────────────────────
+Marcados: 2 / 15  |  Faltan: 13
 ```
 
-!!! tip "💡 Sugerencia de diseño"
-    No te enrosques demasiado con el formato visual. Lo importante es que se vea **qué números salieron y cuáles no**. Una versión simple con una lista en una línea ya cumple el objetivo.
+Escribí una función que reciba el cartón y los números ya sorteados, y muestre ese estado.
 
-??? tip "💡 Pista — versión simple"
-    ```python
-    def mostrar_carton(carton, sorteados):
-        marcados = carton & sorteados       # intersección: salieron Y están en el cartón
-        pendientes = carton - sorteados     # diferencia: en el cartón pero no salieron
+!!! tip "💡 Sobre el formato visual"
+    No te enrosques con el alineado perfecto. Lo importante es que se distinga claramente qué números salieron y cuáles no. Una versión simple en una sola línea ya cumple el objetivo.
 
-        print("Marcados: ", sorted(marcados))
-        print("Pendientes:", sorted(pendientes))
-        print(f"{len(marcados)} / {len(carton)} — faltan {len(pendientes)}")
-    ```
+??? tip "💡 Pista"
+    ¿Qué operación de sets te da los números del cartón que ya salieron? ¿Y los que todavía faltan?
 
 ??? success "✅ Solución"
     ```python
     def mostrar_carton(carton, sorteados):
-        marcados  = carton & sorteados
+        marcados   = carton & sorteados
         pendientes = carton - sorteados
 
-        numeros_ordenados = sorted(carton)
         fila = ""
-        for num in numeros_ordenados:
+        for num in sorted(carton):
             marca = "✓" if num in sorteados else " "
             fila += f"{num:>2}{marca}  "
 
@@ -208,39 +229,12 @@ Marcados: 6 / 15  |  Faltan: 9
 
 🌿 *Bucle + integración*
 
-Ahora unimos todo en un juego real: sorteamos números uno a uno hasta que el jugador gane.
+Ahora unís todo en una función que corra una partida completa: genera el cartón, prepara el bolillero, sortea números uno a uno hasta que el jugador gane, y devuelve cuántos turnos tardó.
 
-**Tu tarea:** Escribí la función `jugar_solitario` que use las funciones anteriores.
-
-```python
-def jugar_solitario():
-    """
-    Simula una partida completa de un jugador.
-    Devuelve cuántos números se necesitaron para ganar.
-    """
-    carton    = generar_carton()
-    bolillero = set(range(1, 91))
-    sorteados = set()
-    turnos    = 0
-
-    print("¡Empieza el juego!")
-    mostrar_carton(carton, sorteados)
-
-    while not verificar_ganador(carton, sorteados):
-        ...  # ¿Qué va acá?
-
-    print(f"\n🎉 ¡BINGO! Ganaste en {turnos} turnos.")
-    return turnos
-```
+Usá las funciones que ya escribiste. No repitas lógica — si ya existe una función que hace algo, llamala.
 
 ??? tip "💡 Pista"
-    Dentro del `while`:
-
-    1. Sorteá un número con `sortear_numero(bolillero)`.
-    2. Agregalo a `sorteados`.
-    3. Incrementá `turnos`.
-    4. Mostrá el número que salió.
-    5. Mostrá el cartón actualizado (opcional: solo si el número estaba en el cartón).
+    ¿Qué condición hace que el juego *siga*? ¿Cuándo *para*? Eso define el `while`.
 
 ??? success "✅ Solución"
     ```python
@@ -277,38 +271,12 @@ def jugar_solitario():
 
 🌶️ *Listas + dicts*
 
-Un Bingo real tiene varios jugadores. Vamos a representar cada jugador como un diccionario y guardarlos en una lista.
+Un Bingo real tiene varios jugadores. Escribí una función que reciba una lista de nombres, genere un cartón para cada uno, y corra una partida hasta que alguien (o varios) ganen. Tiene que devolver el o los ganadores y cuántos turnos tardó.
 
-**Tu tarea:** Escribí `jugar_multijugador(nombres)`.
+Pensá cómo representar a cada jugador para tener su nombre y su cartón juntos.
 
-```python
-def jugar_multijugador(nombres):
-    """
-    Recibe una lista de nombres.
-    Simula una partida hasta que alguien gane.
-    Devuelve el nombre del ganador y cuántos turnos tomó.
-    """
-    # Creá la lista de jugadores como dicts: {"nombre": ..., "carton": ...}
-    jugadores = [...]
-
-    bolillero = set(range(1, 91))
-    sorteados = set()
-    turnos    = 0
-
-    while True:
-        numero = sortear_numero(bolillero)
-        sorteados.add(numero)
-        turnos += 1
-        print(f"Turno {turnos}: salió el {numero}")
-
-        for jugador in jugadores:
-            if verificar_ganador(jugador["carton"], sorteados):
-                print(f"\n🏆 ¡{jugador['nombre']} ganó en {turnos} turnos!")
-                return jugador["nombre"], turnos
-```
-
-!!! tip "🧠 Detalle importante"
-    ¿Qué pasa si dos jugadores ganan en el mismo turno? En el Bingo real, ambos ganan. ¿Cómo lo modelarías?
+!!! tip "🧠 Caso borde"
+    ¿Qué pasa si dos jugadores ganan en el mismo turno? En el Bingo real, ambos ganan. Contemplalo en tu solución.
 
 ??? success "✅ Solución"
     ```python
@@ -347,49 +315,14 @@ def jugar_multijugador(nombres):
 
 *Simulación + listas + dicts*
 
-Ahora que tenemos el juego funcionando, podemos responder preguntas interesantes:
+Ahora que tenés el juego funcionando, podés responder preguntas reales:
 
 **¿Cuántos turnos se necesitan en promedio para ganar al Bingo?**
 
-Escribí una función `simular(partidas)` que:
+Escribí una función que simule `n` partidas completas (sin imprimir nada durante el juego) y al final muestre el mínimo, máximo, promedio de turnos, y un histograma simple con `*`.
 
-1. Simule `partidas` partidas de un jugador (sin imprimir nada).
-2. Guarde cuántos turnos tardó cada partida en una lista.
-3. Al final imprima:
-    - El mínimo, máximo y promedio de turnos.
-    - Un histograma simple con `*` (cuántas partidas terminaron en cada rango).
-
-```python
-def simular(partidas=1000):
-    resultados = []
-
-    for _ in range(partidas):
-        ...  # jugar sin imprimir, guardar los turnos
-
-    print(f"Partidas simuladas: {partidas}")
-    print(f"Mínimo:  {min(resultados)} turnos")
-    print(f"Máximo:  {max(resultados)} turnos")
-    print(f"Promedio: {sum(resultados) / len(resultados):.1f} turnos")
-    # ¿Podés agregar el histograma?
-```
-
-??? tip "💡 Pista — versión sin `print` del juego"
-    Necesitás una versión "silenciosa" de `jugar_solitario`. Podés agregar un parámetro `silencioso=False` a la función original:
-
-    ```python
-    def jugar_solitario(silencioso=False):
-        ...
-        while not verificar_ganador(carton, sorteados):
-            numero = sortear_numero(bolillero)
-            sorteados.add(numero)
-            turnos += 1
-            if not silencioso:
-                print(f"Salió el {numero}")
-        ...
-        return turnos
-    ```
-
-    Luego en `simular`: `turnos = jugar_solitario(silencioso=True)`.
+??? tip "💡 Pista"
+    Para simular sin imprimir, ¿qué modificación mínima le harías a `jugar_solitario`? Pensá en parámetros opcionales.
 
 ??? success "✅ Solución"
     ```python
@@ -415,8 +348,8 @@ def simular(partidas=1000):
     def simular(partidas=1000):
         resultados = [jugar_solitario(silencioso=True) for _ in range(partidas)]
 
-        minimo  = min(resultados)
-        maximo  = max(resultados)
+        minimo   = min(resultados)
+        maximo   = max(resultados)
         promedio = sum(resultados) / len(resultados)
 
         print(f"\n📊 Estadísticas de {partidas} partidas simuladas")
@@ -424,30 +357,28 @@ def simular(partidas=1000):
         print(f"  Máximo:   {maximo} turnos")
         print(f"  Promedio: {promedio:.1f} turnos")
 
-        # Histograma por rangos de 10
         print("\n  Histograma:")
-        rangos = range(10, maximo + 10, 10)
-        for limite in rangos:
-            desde = limite - 9
+        for limite in range(10, maximo + 10, 10):
+            desde  = limite - 9
             cuenta = sum(1 for r in resultados if desde <= r <= limite)
-            barra = "*" * (cuenta * 40 // partidas)
+            barra  = "*" * (cuenta * 40 // partidas)
             print(f"  {desde:>3}–{limite:<3} │{barra} {cuenta}")
 
     simular(1000)
     ```
 
     ??? info "🤔 ¿Qué resultado esperás?"
-        El promedio suele caer entre **55 y 65 turnos**. El mínimo teórico es 15 (que salgan los 15 de tu cartón en los primeros 15). ¿Cuándo viste eso en tus simulaciones?
+        El promedio suele caer entre **55 y 65 turnos**. El mínimo teórico es 15. ¿Alguna vez lo viste en tus simulaciones?
 
 ---
 
 ## 📌 Cheatsheet de operaciones de sets usadas en este ejercicio
 
 ```python
-# Crear un cartón único
+# Cartón único de 15 números
 carton = set(random.sample(range(1, 91), 15))
 
-# Verificar si un número "cayó" en el cartón
+# ¿Un número cayó en el cartón?
 if numero in carton: ...
 
 # Números del cartón que ya salieron (intersección)
@@ -458,7 +389,7 @@ pendientes = carton - sorteados
 
 # ¿Ganó? (¿todos los del cartón están en sorteados?)
 gano = carton.issubset(sorteados)
-gano = carton <= sorteados          # equivalente, más corto
+gano = carton <= sorteados   # equivalente
 ```
 
 ---
@@ -473,8 +404,8 @@ gano = carton <= sorteados          # equivalente, más corto
     - **Abstracción**: `jugar_multijugador` no sabe cómo funciona `verificar_ganador` por dentro.
     - **Simulación**: podés correr mil partidas y sacar estadísticas reales.
 
-    Esto ya es el esqueleto de cómo se construyen sistemas más complejos. En el primer proyecto (Sistema de Asistencias) vamos a usar exactamente esta misma lógica: funciones bien definidas, datos persistidos, menú interactivo.
+    Esto ya es el esqueleto de cómo se construyen sistemas más complejos. En el primer proyecto vamos a usar exactamente esta misma lógica: funciones bien definidas, datos persistidos, menú interactivo.
 
-## [⬅️ Anterior: Funciones II](./funciones_2.md)
+## [⬅️ Anterior: Cómo encarar un ejercicio](./como_encarar_ejercicios.md)
 ## [📚 Índice](../../clases.md#colecciones)
 ## [➡️ Siguiente: Manejo de archivos](../07_persistencia/archivos.md)

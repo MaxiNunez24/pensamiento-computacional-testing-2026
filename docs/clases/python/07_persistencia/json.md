@@ -251,6 +251,40 @@ Escribí un programa que:
 3. Lo agregue a la lista y lo guarde.
 4. Al ejecutarlo varias veces, la lista crece.
 
+```
+Nombre nuevo: Dante
+Lista guardada (3 nombres): ['Ana', 'Beto', 'Dante']
+```
+
+??? tip "💡 Pista"
+    - ¿Cómo verificás si el archivo existe antes de intentar abrirlo?
+    - Si el archivo no existe todavía, ¿qué valor inicial devolvés?
+    - ¿Cuál es la diferencia entre `json.load(f)` (archivo) y `json.loads(texto)` (string)?
+
+??? success "✅ Solución"
+    ```python
+    import json
+    import os
+
+    ARCHIVO = "nombres.json"
+
+    def cargar():
+        if os.path.exists(ARCHIVO):
+            with open(ARCHIVO, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return []
+
+    def guardar(nombres):
+        with open(ARCHIVO, "w", encoding="utf-8") as f:
+            json.dump(nombres, f, indent=2, ensure_ascii=False)
+
+    nombres = cargar()
+    nuevo = input("Nombre nuevo: ")
+    nombres.append(nuevo)
+    guardar(nombres)
+    print(f"Lista guardada ({len(nombres)} nombres): {nombres}")
+    ```
+
 ### 🌿 Ejercicio 2 — Agenda persistente
 
 Creá una agenda de contactos que persista entre ejecuciones. El programa debe ofrecer un menú:
@@ -264,9 +298,91 @@ Creá una agenda de contactos que persista entre ejecuciones. El programa debe o
 
 Los contactos se guardan en `agenda.json` como lista de dicts `{"nombre": ..., "telefono": ...}`.
 
+??? tip "💡 Pista"
+    - ¿Cuándo guardás en el archivo: después de cada cambio o solo al salir?
+    - Para buscar por nombre, ¿cómo recorrés la lista? ¿Cómo hacés que la búsqueda no distinga mayúsculas/minúsculas?
+    - Reutilizá las funciones `cargar()` y `guardar()` del patrón de la clase.
+
+??? success "✅ Solución"
+    ```python
+    import json
+    import os
+
+    ARCHIVO = "agenda.json"
+
+    def cargar():
+        if os.path.exists(ARCHIVO):
+            with open(ARCHIVO, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return []
+
+    def guardar(contactos):
+        with open(ARCHIVO, "w", encoding="utf-8") as f:
+            json.dump(contactos, f, indent=2, ensure_ascii=False)
+
+    contactos = cargar()
+
+    while True:
+        print("\n1. Ver todos  2. Agregar  3. Buscar  4. Salir")
+        opcion = input("Opción: ")
+
+        if opcion == "1":
+            if not contactos:
+                print("La agenda está vacía.")
+            for c in contactos:
+                print(f"  {c['nombre']}: {c['telefono']}")
+        elif opcion == "2":
+            nombre = input("Nombre: ")
+            tel = input("Teléfono: ")
+            contactos.append({"nombre": nombre, "telefono": tel})
+            guardar(contactos)
+            print("Contacto guardado.")
+        elif opcion == "3":
+            buscar = input("Nombre a buscar: ").lower()
+            encontrados = [c for c in contactos if buscar in c["nombre"].lower()]
+            if encontrados:
+                for c in encontrados:
+                    print(f"  {c['nombre']}: {c['telefono']}")
+            else:
+                print("No encontrado.")
+        elif opcion == "4":
+            break
+    ```
+
 ### 🌿 Ejercicio 3 — Config de usuario
 
 Creá un programa que la primera vez que se ejecuta le pida al usuario su nombre y color favorito, los guarde en `config.json`, y las veces siguientes los cargue y salude sin volver a preguntar.
+
+```
+¿Cómo te llamás? Maxi
+¿Cuál es tu color favorito? azul
+Configuración guardada. ¡Hola, Maxi!
+```
+
+??? tip "💡 Pista"
+    - ¿Cómo sabés si es la primera ejecución o una posterior?
+    - ¿Qué estructura guardás en el JSON: un `dict` o una `list`?
+    - El `if` tiene dos caminos: ¿en cuál pedís datos y en cuál los cargás?
+
+??? success "✅ Solución"
+    ```python
+    import json
+    import os
+
+    ARCHIVO = "config.json"
+
+    if os.path.exists(ARCHIVO):
+        with open(ARCHIVO, "r", encoding="utf-8") as f:
+            config = json.load(f)
+        print(f"¡Hola de nuevo, {config['nombre']}! Tu color favorito es {config['color']}.")
+    else:
+        nombre = input("¿Cómo te llamás? ")
+        color = input("¿Cuál es tu color favorito? ")
+        config = {"nombre": nombre, "color": color}
+        with open(ARCHIVO, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
+        print(f"Configuración guardada. ¡Hola, {nombre}!")
+    ```
 
 ### 🌶️ Ejercicio 4 — Estadísticas persistentes
 
@@ -276,6 +392,54 @@ Creá un programa de "estadísticas de sesión":
 - Registra la fecha/hora de cada ejecución (módulo `datetime`).
 - Calcula el promedio de ejecuciones por día.
 - Todo se guarda y carga desde `stats.json`.
+
+```
+Ejecución #3 — 2026-05-22 11:30:00
+Promedio: 1.5 ejecuciones/día
+```
+
+!!! info "📦 Módulo: datetime (recordatorio)"
+    ```python
+    from datetime import datetime
+    ahora = datetime.now()
+    print(ahora.strftime("%Y-%m-%d %H:%M:%S"))  # "2026-05-22 11:30:00"
+    ```
+
+??? tip "💡 Pista"
+    - ¿Qué estructura guardás en el JSON? Pensá en un `dict` con un contador y una lista de timestamps.
+    - Los timestamps tienen formato `"YYYY-MM-DD HH:MM:SS"` — ¿cómo extraés solo la parte de la fecha (los primeros 10 caracteres)?
+    - Para contar días únicos, ¿qué hace `set()` con una lista que puede tener repetidos?
+
+??? success "✅ Solución"
+    ```python
+    import json
+    import os
+    from datetime import datetime
+
+    ARCHIVO = "stats.json"
+
+    def cargar_stats():
+        if os.path.exists(ARCHIVO):
+            with open(ARCHIVO, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return {"ejecuciones": 0, "fechas": []}
+
+    stats = cargar_stats()
+    ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    stats["ejecuciones"] += 1
+    stats["fechas"].append(ahora)
+
+    dias_unicos = set()
+    for fecha in stats["fechas"]:
+        dias_unicos.add(fecha[:10])
+    promedio = stats["ejecuciones"] / len(dias_unicos) if dias_unicos else 0
+
+    with open(ARCHIVO, "w", encoding="utf-8") as f:
+        json.dump(stats, f, indent=2, ensure_ascii=False)
+
+    print(f"Ejecución #{stats['ejecuciones']} — {ahora}")
+    print(f"Promedio: {promedio:.1f} ejecuciones/día")
+    ```
 
 ---
 

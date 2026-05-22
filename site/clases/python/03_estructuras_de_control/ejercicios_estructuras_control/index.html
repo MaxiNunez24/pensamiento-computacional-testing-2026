@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1814,6 +1816,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../06_funciones/bingo/" class="md-nav__link">
         
   
@@ -2560,10 +2590,28 @@
 </tbody>
 </table>
 <p>Si el número está fuera del rango 0–10, mostrá un mensaje de error.</p>
-<div class="admonition note">
-<p class="admonition-title">Pista</p>
+<details class="tip">
+<summary>💡 Pista</summary>
 <p>Vas a necesitar varios <code>elif</code>. ¿Qué pasa si el usuario escribe <code>11</code> o <code>-1</code>?</p>
-</div>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">nota</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá una nota entre 0 y 10: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">nota</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">nota</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Nota fuera de rango.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Insuficiente&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Regular&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">7</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Aprobado&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⭐ Bueno&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🏆 Excelente&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="2-puedo-entrar-al-boliche">2️⃣ ¿Puedo entrar al boliche?</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2574,10 +2622,23 @@
 <li><code>tiene_entrada</code> → el usuario escribe <code>"si"</code> o <code>"no"</code></li>
 </ul>
 <p>Mostrá si puede ingresar o no, y explicá el motivo si no puede.</p>
-<div class="admonition note">
-<p class="admonition-title">Pista</p>
+<details class="tip">
+<summary>💡 Pista</summary>
 <p>Combiná condiciones con <code>and</code>. Pensá también en los casos donde solo falla una de las dos condiciones.</p>
-</div>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">edad</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Cuántos años tenés? &quot;</span><span class="p">))</span>
+<span class="n">tiene_entrada</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Tenés entrada? (si/no): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span> <span class="ow">and</span> <span class="n">tiene_entrada</span> <span class="o">==</span> <span class="s2">&quot;si&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Podés ingresar.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">edad</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Sos menor de edad.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ No tenés entrada.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="3-calculadora-basica">3️⃣ Calculadora básica</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2593,6 +2654,31 @@ Ingresá el segundo número: 0
 Operación: /
 ⚠️ Error: no se puede dividir por cero.
 </code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Primero verificá si la operación es válida. Dentro de la rama <code>/</code>, verificá por separado si el divisor es cero antes de operar.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá el primer número: &quot;</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá el segundo número: &quot;</span><span class="p">))</span>
+<span class="n">op</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Operación (+, -, *, /): &quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;+&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Error: no se puede dividir por cero.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Operación no válida.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="4-categoria-de-imc">4️⃣ Categoría de IMC</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2630,6 +2716,30 @@ Operación: /
 <p class="admonition-title">Atención</p>
 <p>No validamos si los valores son médicamente correctos, pero sí que sean números mayores a 0.</p>
 </div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Primero calculá el IMC con la fórmula. Después usá <code>elif</code> para cada rango — ¿en qué orden conviene poner las condiciones?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">peso</span>   <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Peso en kg: &quot;</span><span class="p">))</span>
+<span class="n">altura</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Altura en metros: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">peso</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">altura</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Valores inválidos.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">imc</span> <span class="o">=</span> <span class="n">peso</span> <span class="o">/</span> <span class="p">(</span><span class="n">altura</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tu IMC es: </span><span class="si">{</span><span class="n">imc</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">imc</span> <span class="o">&lt;</span> <span class="mf">18.5</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔵 Bajo peso&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">imc</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🟢 Normal&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">imc</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🟡 Sobrepeso&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔴 Obesidad&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="5-ano-bisiesto">5️⃣ Año bisiesto</h3>
 <p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
@@ -2649,6 +2759,20 @@ Ingresá un año: 1900
 <p class="admonition-title">Desafío extra</p>
 <p>¿Podés hacerlo en una sola condición usando <code>and</code> y <code>or</code>?</p>
 </div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>La regla es: bisiesto si (<code>divisible por 4</code> Y <code>no divisible por 100</code>) O (<code>divisible por 400</code>). Escribila tal cual con <code>and</code> y <code>or</code>.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">año</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá un año: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">año</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">año</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">año</span> <span class="o">%</span> <span class="mi">400</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ </span><span class="si">{</span><span class="n">año</span><span class="si">}</span><span class="s2"> es bisiesto.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ </span><span class="si">{</span><span class="n">año</span><span class="si">}</span><span class="s2"> no es bisiesto.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="desafio">🚀 Desafío</h3>
 <p>Creá un programa que simule el acceso a un sistema. El usuario debe ingresar su <strong>nombre de usuario</strong> y su <strong>contraseña</strong>. Según lo que ingrese, mostrá:</p>
@@ -2657,10 +2781,27 @@ Ingresá un año: 1900
 <li><code>"❌ Contraseña incorrecta"</code> si el usuario existe pero la clave no coincide</li>
 <li><code>"❌ Usuario no encontrado"</code> si el usuario no existe</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Pista</p>
+<details class="tip">
+<summary>💡 Pista</summary>
 <p>Podés hardcodear un único usuario válido con su contraseña. No hace falta una lista.</p>
-</div>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">USUARIO_VALIDO</span>   <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+<span class="n">CONTRASENA_VALIDA</span> <span class="o">=</span> <span class="s2">&quot;1234&quot;</span>
+
+<span class="n">usuario</span>    <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Usuario: &quot;</span><span class="p">)</span>
+<span class="n">contrasena</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Contraseña: &quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">usuario</span> <span class="o">==</span> <span class="n">USUARIO_VALIDO</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">contrasena</span> <span class="o">==</span> <span class="n">CONTRASENA_VALIDA</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Bienvenido, </span><span class="si">{</span><span class="n">usuario</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Contraseña incorrecta&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Usuario no encontrado&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="while-repeticion-con-condicion">🔁 While — Repetición con condición</h2>
 <p>Estos ejercicios repiten una acción <strong>mientras se cumpla una condición</strong>. El número de repeticiones no se conoce de antemano.</p>
@@ -2675,6 +2816,35 @@ Ingresá un año: 1900
 <li>Si acierta → mostrá <code>"✅ Acceso concedido"</code>.</li>
 <li>Si se agotan los intentos → mostrá <code>"🚫 Cuenta bloqueada"</code>.</li>
 </ul>
+<div class="highlight"><pre><span></span><code>Contraseña: hola
+❌ Incorrecto. Te quedan 2 intentos.
+Contraseña: python2025
+✅ Acceso concedido.
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>¿Con qué variable llevás la cuenta de los intentos? ¿Cuándo tiene que terminar el <code>while</code>: cuando aciertan O cuando se agotan los intentos?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">CONTRASENA</span> <span class="o">=</span> <span class="s2">&quot;python2025&quot;</span>
+<span class="n">intentos</span>   <span class="o">=</span> <span class="mi">0</span>
+<span class="n">max_intentos</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">while</span> <span class="n">intentos</span> <span class="o">&lt;</span> <span class="n">max_intentos</span><span class="p">:</span>
+    <span class="n">ingresada</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Contraseña: &quot;</span><span class="p">)</span>
+    <span class="n">intentos</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">ingresada</span> <span class="o">==</span> <span class="n">CONTRASENA</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Acceso concedido.&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">restantes</span> <span class="o">=</span> <span class="n">max_intentos</span> <span class="o">-</span> <span class="n">intentos</span>
+        <span class="k">if</span> <span class="n">restantes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Incorrecto. Te quedan </span><span class="si">{</span><span class="n">restantes</span><span class="si">}</span><span class="s2"> intentos.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🚫 Cuenta bloqueada.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="2-menu-de-opciones">2️⃣ Menú de opciones 🌱</h3>
 <p><strong>Dificultad:</strong> 🌱 Básico</p>
@@ -2684,6 +2854,29 @@ Ingresá un año: 1900
 3 - Salir
 </code></pre></div>
 <p>El programa debe seguir mostrando el menú hasta que el usuario elija <strong>Salir</strong>. Si elige una opción que no existe, avisale con un mensaje de error y volvé a mostrar el menú.</p>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p><code>while True</code> es una buena base para un menú que se repite. ¿Cuándo usás <code>break</code> para salir del bucle?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">1 - Saludar&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Mostrar año actual&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Salir&quot;</span><span class="p">)</span>
+    <span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elegí una opción: &quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Hola!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Año actual: 2026&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Hasta luego!&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Opción no válida. Intentá de nuevo.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="3-contador-de-intentos">3️⃣ Contador de intentos 🌿</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2697,10 +2890,28 @@ Ingresá un año: 1900
 ¿Cuál es la capital de Australia? Canberra
 ✅ ¡Correcto! Lo lograste en 3 intentos.
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Pista</p>
-<p>Usá un contador de intentos que se incremente en cada vuelta del bucle. El bucle termina cuando el usuario acierta <strong>o</strong> cuando el contador llega a 5.</p>
-</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Necesitás un contador de intentos. ¿Cuándo termina el bucle: cuando el usuario acierta, o cuando llega al límite, o ambas cosas?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">RESPUESTA_CORRECTA</span> <span class="o">=</span> <span class="s2">&quot;Canberra&quot;</span>
+<span class="n">max_intentos</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">intento</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">while</span> <span class="n">intento</span> <span class="o">&lt;</span> <span class="n">max_intentos</span><span class="p">:</span>
+    <span class="n">intento</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">respuesta</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Cuál es la capital de Australia? &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">respuesta</span> <span class="o">==</span> <span class="n">RESPUESTA_CORRECTA</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ ¡Correcto! Lo lograste en </span><span class="si">{</span><span class="n">intento</span><span class="si">}</span><span class="s2"> intento(s).&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Incorrecto, intentá de nuevo. (Intento </span><span class="si">{</span><span class="n">intento</span><span class="si">}</span><span class="s2"> de </span><span class="si">{</span><span class="n">max_intentos</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🚫 Se agotaron los intentos. La respuesta era: </span><span class="si">{</span><span class="n">RESPUESTA_CORRECTA</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="4-mini-banco">4️⃣ Mini banco 🌶️</h3>
 <p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
@@ -2721,6 +2932,47 @@ Ingresá un año: 1900
 <p class="admonition-title">Desafío extra</p>
 <p>¿Podrías llevar un registro de todas las operaciones realizadas y mostrarlo al salir?</p>
 </div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Usá <code>while True</code> con <code>break</code> para salir. Dentro del menú, cada opción modifica el saldo. ¿Qué verificás antes de permitir un retiro?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">saldo</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saldo actual: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Depositar&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Retirar&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Ver saldo&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Salir&quot;</span><span class="p">)</span>
+    <span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elegí: &quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+        <span class="n">monto</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Monto a depositar: &quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">monto</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">saldo</span> <span class="o">+=</span> <span class="n">monto</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Depositaste $</span><span class="si">{</span><span class="n">monto</span><span class="si">}</span><span class="s2">. Saldo: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ El monto debe ser mayor a 0.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+        <span class="n">monto</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Monto a retirar: &quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">monto</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ El monto debe ser mayor a 0.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">monto</span> <span class="o">&gt;</span> <span class="n">saldo</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Saldo insuficiente.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">saldo</span> <span class="o">-=</span> <span class="n">monto</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Retiraste $</span><span class="si">{</span><span class="n">monto</span><span class="si">}</span><span class="s2">. Saldo: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tu saldo es: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Hasta luego!&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Opción no válida.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="for-repeticion-con-rango">🔂 For — Repetición con rango</h2>
 <p>Estos ejercicios repiten una acción una <strong>cantidad conocida de veces</strong>, usando <code>range()</code> o recorriendo una secuencia.</p>
@@ -2739,6 +2991,23 @@ Ingresá un año: 1900
 <p class="admonition-title">¡Ojo con el orden!</p>
 <p>El orden en que escribís los <code>if</code> importa. ¿Por cuál condición conviene chequear primero?</p>
 </div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Si un número es divisible por 15 (que es 3×5), es FizzBuzz. ¿Esa condición tiene que ir antes o después de las otras?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">15</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FizzBuzz&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fizz&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Buzz&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="2-detector-de-parimpar-en-rango">2️⃣ Detector de par/impar en rango 🌿</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2755,6 +3024,30 @@ Ingresá un año: 1900
 ...
 📊 Pares: 5 | Impares: 4
 </code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Verificá que <code>inicio &lt; fin</code> antes de arrancar el <code>for</code>. Usá dos contadores (uno para pares, otro para impares) que se incrementan dentro del bucle.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">inicio</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Inicio: &quot;</span><span class="p">))</span>
+<span class="n">fin</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Fin: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">inicio</span> <span class="o">&gt;=</span> <span class="n">fin</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ El inicio debe ser menor que el fin.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">pares</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">impares</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inicio</span><span class="p">,</span> <span class="n">fin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> → par&quot;</span><span class="p">)</span>
+            <span class="n">pares</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> → impar&quot;</span><span class="p">)</span>
+            <span class="n">impares</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Pares: </span><span class="si">{</span><span class="n">pares</span><span class="si">}</span><span class="s2"> | Impares: </span><span class="si">{</span><span class="n">impares</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="3-suma-de-digitos">3️⃣ Suma de dígitos 🌿</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2763,10 +3056,19 @@ Ingresá un año: 1900
 <div class="highlight"><pre><span></span><code>Ingresá un número: 1234
 Suma de dígitos: 10
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Pista</p>
-<p>Podés convertir el número a <code>str</code> para recorrer cada carácter, y luego convertir cada uno a <code>int</code>.</p>
-</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Podés convertir el número a <code>str</code> para recorrer cada carácter. ¿Cómo convertís cada carácter de vuelta a número para sumarlo?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">numero</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá un número: &quot;</span><span class="p">)</span>
+<span class="n">suma</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">digito</span> <span class="ow">in</span> <span class="n">numero</span><span class="p">:</span>
+    <span class="n">suma</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">digito</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Suma de dígitos: </span><span class="si">{</span><span class="n">suma</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="4-numeros-primos-en-un-rango">4️⃣ Números primos en un rango 🌶️</h3>
 <p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
@@ -2777,10 +3079,28 @@ Suma de dígitos: 10
 Fin: 20
 Primos: 2, 3, 5, 7, 11, 13, 17, 19
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Pista</p>
-<p>Vas a necesitar un <code>for</code> dentro de otro <code>for</code>: uno para recorrer el rango, y otro para chequear si el número es primo.</p>
-</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Para cada número del rango, necesitás saber si es primo. ¿Cómo chequeás eso? Un número es primo si ningún número entre 2 y él mismo lo divide exactamente.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">inicio</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Inicio: &quot;</span><span class="p">))</span>
+<span class="n">fin</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Fin: &quot;</span><span class="p">))</span>
+<span class="n">primos</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">inicio</span><span class="p">),</span> <span class="n">fin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">es_primo</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">divisor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">es_primo</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="n">es_primo</span><span class="p">:</span>
+        <span class="n">primos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Primos: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">primos</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h2 id="ejercicios-libres-elegi-la-estructura-vos">🆓 Ejercicios Libres — Elegí la estructura vos</h2>
 <div class="admonition info">
@@ -2796,6 +3116,29 @@ Primos: 2, 3, 5, 7, 11, 13, 17, 19
 °C = (°F - 32) × 5/9
 </code></pre></div>
 <p>Si la unidad ingresada no es válida, mostrá un mensaje de error.</p>
+<div class="highlight"><pre><span></span><code>Temperatura: 100
+Unidad (C/F): C
+→ 212.0°F
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>¿Qué estructura usás para elegir entre dos casos? ¿Qué pasa si la unidad no es ni <code>C</code> ni <code>F</code>?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">temp</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Temperatura: &quot;</span><span class="p">))</span>
+<span class="n">unidad</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Unidad (C/F): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">unidad</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">*</span> <span class="mi">9</span><span class="o">/</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;→ </span><span class="si">{</span><span class="n">resultado</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">°F&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">unidad</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="o">/</span><span class="mi">9</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;→ </span><span class="si">{</span><span class="n">resultado</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">°C&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Unidad no válida. Usá C o F.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="2-contador-de-vocales">2️⃣ Contador de vocales 🌿</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2804,10 +3147,21 @@ Primos: 2, 3, 5, 7, 11, 13, 17, 19
 <div class="highlight"><pre><span></span><code>Ingresá una frase: Hola Mundo
 Vocales encontradas: 4
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Pista</p>
+<details class="tip">
+<summary>💡 Pista</summary>
 <p>Podés definir una variable <code>vocales = "aeiouAEIOU"</code> y chequear si cada carácter está en ella.</p>
-</div>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">frase</span>  <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá una frase: &quot;</span><span class="p">)</span>
+<span class="n">vocales</span> <span class="o">=</span> <span class="s2">&quot;aeiouAEIOU&quot;</span>
+<span class="n">conteo</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">frase</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">vocales</span><span class="p">:</span>
+        <span class="n">conteo</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vocales encontradas: </span><span class="si">{</span><span class="n">conteo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="3-tabla-de-conversion">3️⃣ Tabla de conversión 🌿</h3>
 <p><strong>Dificultad:</strong> 🌿 Intermedio</p>
@@ -2821,6 +3175,19 @@ Vocales encontradas: 4
 20    | 12.43
 ...
 </code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p><code>range(0, 101, 10)</code> te da los valores de 0 a 100 de 10 en 10. ¿Cómo formateás el resultado para que los números queden alineados?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;km&#39;</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;millas&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">km</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">millas</span> <span class="o">=</span> <span class="n">km</span> <span class="o">*</span> <span class="mf">0.621371</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">km</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">millas</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <h3 id="4-piramide-invertida">4️⃣ Pirámide invertida 🌶️</h3>
 <p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
@@ -2836,6 +3203,17 @@ Vocales encontradas: 4
 <p class="admonition-title">Desafío extra</p>
 <p>¿Podés hacer que la pirámide esté <strong>centrada</strong>? Para eso vas a necesitar agregar espacios antes de cada fila.</p>
 </div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Si <code>n = 5</code>, la primera fila tiene 5 asteriscos, la segunda 4, la tercera 3... ¿Cómo expresás eso con <code>range(n, 0, -1)</code> y <code>"*" * cantidad</code>?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá el tamaño: &quot;</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <h2 id="anterior-for"><a href="../for/">⬅️ Anterior: For</a></h2>
 <h2 id="indice"><a href="../../../clases/#estructuras-de-control">📚 Índice</a></h2>
 <h2 id="siguiente-listas-en-python"><a href="../../04_listas/listas/">➡️ Siguiente: Listas en Python</a></h2>

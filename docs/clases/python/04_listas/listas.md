@@ -1,6 +1,26 @@
 ﻿# 📋 Listas en Python
 
-Las listas son una de las estructuras de datos más usadas en Python. Nos permiten agrupar varios valores en una sola variable, recorrerlos, modificarlos y organizarlos. En esta clase vamos a ir desde los conceptos básicos hasta herramientas más avanzadas.
+!!! example "🤔 El problema de las variables sueltas"
+    Querés guardar las notas de 5 alumnos. Con lo que sabemos hasta ahora:
+
+    ```python
+    nota1 = 8
+    nota2 = 5
+    nota3 = 9
+    nota4 = 7
+    nota5 = 6
+    ```
+
+    Ahora imaginá 30 alumnos. O 300. Las variables sueltas no escalan — necesitamos una forma de agrupar datos relacionados bajo un solo nombre.
+
+!!! info "🎯 Objetivos de la clase"
+    Al terminar la clase deberían poder:
+
+    - Crear, acceder y modificar **listas**.
+    - Agregar y eliminar elementos con `.append()`, `.insert()`, `.remove()`, `.pop()`.
+    - Recorrer listas con `for`, con y sin `enumerate()`.
+    - Copiar listas correctamente.
+    - Escribir **list comprehensions** simples.
 
 ---
 
@@ -131,6 +151,18 @@ frutas = ["manzana", "banana", "naranja"]
 for fruta in frutas:
     print(fruta)
 ```
+
+!!! tip "🔧 `enumerate()` — índice + valor a la vez"
+    `enumerate(iterable)` devuelve pares `(índice, valor)` en cada iteración. Evita tener que llevar un contador manual.
+
+    ```python
+    frutas = ["manzana", "banana", "naranja"]
+    for i, fruta in enumerate(frutas):
+        print(i, fruta)
+    # 0 manzana
+    # 1 banana
+    # 2 naranja
+    ```
 
 Si también necesitamos el **índice**, usamos `enumerate()`:
 
@@ -318,22 +350,130 @@ print(mayusculas)  # ["MANZANA", "BANANA", "NARANJA"]
 
 ---
 
-## 🧪 Ejercicios
+## 🎮 Ejercicios
 
-### 🌱 Ejercicio 1 — Básico
+### 🌱 Ejercicio 1 — Cinco números
+
 Pedile al usuario 5 números y guardalos en una lista. Luego mostrá el mayor, el menor y la suma.
 
-### 🌿 Ejercicio 2 — Intermedio
+```
+Número 1: 8
+Número 2: 3
+Número 3: 9
+Número 4: 1
+Número 5: 5
+Mayor: 9  |  Menor: 1  |  Suma: 26
+```
+
+??? tip "💡 Pista"
+    Arrancá con una lista vacía. Usá un `for` con `range(5)` para pedir los 5 números y agregarlos con `.append()`. Luego `max()`, `min()` y `sum()` hacen el trabajo.
+
+??? success "✅ Solución"
+    ```python
+    numeros = []
+    for i in range(5):
+        n = float(input(f"Número {i + 1}: "))
+        numeros.append(n)
+    print(f"Mayor: {max(numeros)}  |  Menor: {min(numeros)}  |  Suma: {sum(numeros)}")
+    ```
+
+### 🌿 Ejercicio 2 — Ordenar sin modificar
+
 Dada la lista `[5, 3, 8, 1, 9, 2, 7]`, mostrala ordenada de menor a mayor **sin modificar la original**.
 
-### 🌿 Ejercicio 3 — Intermedio
-Creá una lista de 10 números ingresados por el usuario. Luego mostrá solo los que sean mayores que el promedio.
+```
+Original:  [5, 3, 8, 1, 9, 2, 7]
+Ordenada:  [1, 2, 3, 5, 7, 8, 9]
+```
 
-### 🌶️ Ejercicio 4 — Avanzado
-Usando comprensión de listas, generá una lista con los cuadrados de todos los números impares del 1 al 20.
+??? tip "💡 Pista"
+    ¿Cuál de las dos formas de ordenar (`sort()` vs `sorted()`) devuelve una nueva lista sin tocar la original?
 
-### 🌶️ Ejercicio 5 — Avanzado
+??? success "✅ Solución"
+    ```python
+    numeros  = [5, 3, 8, 1, 9, 2, 7]
+    ordenada = sorted(numeros)
+    print(f"Original:  {numeros}")
+    print(f"Ordenada:  {ordenada}")
+    ```
+
+### 🌿 Ejercicio 3 — Mayores al promedio
+
+Pedile al usuario 10 números. Luego mostrá solo los que sean **mayores que el promedio**.
+
+```
+Número 1: 4
+...
+Número 10: 7
+Promedio: 5.8
+Mayores al promedio: [6, 9, 8, 7]
+```
+
+??? tip "💡 Pista"
+    Primero construí la lista completa. Calculá el promedio (suma / cantidad). Luego recorrela y filtrá los que superen el promedio. También podés usar una list comprehension con un `if`.
+
+??? success "✅ Solución"
+    ```python
+    numeros = []
+    for i in range(10):
+        n = float(input(f"Número {i + 1}: "))
+        numeros.append(n)
+
+    promedio = sum(numeros) / len(numeros)
+    mayores  = [n for n in numeros if n > promedio]
+    print(f"Promedio: {promedio:.1f}")
+    print(f"Mayores al promedio: {mayores}")
+    ```
+
+### 🌶️ Ejercicio 4 — Cuadrados de impares
+
+Usando comprensión de listas, generá una lista con los cuadrados de todos los números **impares** del 1 al 20.
+
+```
+[1, 9, 25, 49, 81, 121, 169, 225, 289, 361]
+```
+
+??? tip "💡 Pista"
+    Una list comprehension tiene la forma `[expresión for variable in rango if condición]`. ¿Cuál es la condición para que un número sea impar?
+
+??? success "✅ Solución"
+    ```python
+    cuadrados = [n ** 2 for n in range(1, 21) if n % 2 != 0]
+    print(cuadrados)
+    ```
+
+### 🌶️ Ejercicio 5 — Suma de filas de una matriz
+
 Representá una matriz 3×3 con una lista anidada. Calculá la suma de cada fila y mostrala.
+
+```python
+matriz = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+```
+
+```
+Fila 0: suma = 6
+Fila 1: suma = 15
+Fila 2: suma = 24
+```
+
+??? tip "💡 Pista"
+    Recorré la matriz con un `for` — cada iteración te da una fila (que es una lista). `sum()` puede calcular la suma de esa fila directamente. Usá `enumerate()` para tener el número de fila.
+
+??? success "✅ Solución"
+    ```python
+    matriz = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+
+    for i, fila in enumerate(matriz):
+        print(f"Fila {i}: suma = {sum(fila)}")
+    ```
 
 ---
 

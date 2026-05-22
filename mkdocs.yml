@@ -1,6 +1,9 @@
 site_name: Pensamiento Computacional y Testing de Aplicaciones 2026
 site_author: Maximiliano Nuñez
 
+extra_css:
+  - stylesheets/extra.css
+
 theme:
   name: material
   favicon: assets/images/favicon.ico
@@ -70,6 +73,7 @@ nav:
       - 📦 Funciones:
         - 📦 Funciones I: clases/python/06_funciones/funciones_1.md
         - 📦 Funciones II: clases/python/06_funciones/funciones_2.md
+        - 🧠 Cómo encarar un ejercicio: clases/python/06_funciones/como_encarar_ejercicios.md
         - 🎲 Bingo: clases/python/06_funciones/bingo.md
       - 💾 Persistencia:
         - 📁 Archivos: clases/python/07_persistencia/archivos.md

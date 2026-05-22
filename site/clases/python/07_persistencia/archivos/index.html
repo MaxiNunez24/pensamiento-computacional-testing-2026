@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
     <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -1433,6 +1435,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../06_funciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧠 Cómo encarar un ejercicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../06_funciones/bingo/" class="md-nav__link">
         
   
@@ -1675,12 +1705,12 @@
   <a href="#ejercicios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios
+        🎮 Ejercicios
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🧪 Ejercicios">
+    <nav class="md-nav" aria-label="🎮 Ejercicios">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2115,12 +2145,12 @@
   <a href="#ejercicios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🧪 Ejercicios
+        🎮 Ejercicios
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🧪 Ejercicios">
+    <nav class="md-nav" aria-label="🎮 Ejercicios">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2423,12 +2453,29 @@ Cami
 </ul>
 </div>
 <hr />
-<h2 id="ejercicios">🧪 Ejercicios</h2>
+<h2 id="ejercicios">🎮 Ejercicios</h2>
 <h3 id="ejercicio-1-crear-y-leer">🌱 Ejercicio 1 — Crear y leer</h3>
 <ol>
 <li>Creá un archivo <code>frutas.txt</code> y escribí 5 frutas, una por línea.</li>
 <li>Luego leelo e imprimí cada fruta en mayúsculas.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Primero abrí el archivo en modo <code>"w"</code> para escribir, luego en modo <code>"r"</code> para leer. <code>for linea in archivo</code> te da cada línea incluyendo el <code>\n</code> al final — <code>.strip()</code> lo limpia.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># Escribir</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;frutas.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">fruta</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;manzana&quot;</span><span class="p">,</span> <span class="s2">&quot;banana&quot;</span><span class="p">,</span> <span class="s2">&quot;naranja&quot;</span><span class="p">,</span> <span class="s2">&quot;uva&quot;</span><span class="p">,</span> <span class="s2">&quot;pera&quot;</span><span class="p">]:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fruta</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Leer</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;frutas.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">linea</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">linea</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+</code></pre></div>
+</details>
 <h3 id="ejercicio-2-contar-palabras">🌿 Ejercicio 2 — Contar palabras</h3>
 <p>Creá un archivo <code>texto.txt</code> con al menos 3 párrafos. Luego escribí un programa que:</p>
 <ol>
@@ -2436,6 +2483,28 @@ Cami
 <li>Cuente cuántas palabras tiene en total.</li>
 <li>Muestre la línea más larga.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Para las palabras: <code>.split()</code> sin argumento divide por cualquier espacio. Para la línea más larga: acumulá llevando registro de la más larga a medida que recorrés.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;texto.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lineas</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+<span class="n">total_palabras</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">linea_mas_larga</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="k">for</span> <span class="n">linea</span> <span class="ow">in</span> <span class="n">lineas</span><span class="p">:</span>
+    <span class="n">palabras</span> <span class="o">=</span> <span class="n">linea</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">total_palabras</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">palabras</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linea</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">linea_mas_larga</span><span class="p">):</span>
+        <span class="n">linea_mas_larga</span> <span class="o">=</span> <span class="n">linea</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Líneas: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lineas</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Palabras: </span><span class="si">{</span><span class="n">total_palabras</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Línea más larga: </span><span class="si">{</span><span class="n">linea_mas_larga</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <h3 id="ejercicio-3-registro-de-notas">🌿 Ejercicio 3 — Registro de notas</h3>
 <p>Escribí un programa que:</p>
 <ol>
@@ -2443,8 +2512,59 @@ Cami
 <li>Guarde cada registro como <code>"Nombre,Nota\n"</code> en un archivo <code>notas.csv</code>.</li>
 <li>Al volver a ejecutar el programa, cargue el archivo y calcule el promedio de notas.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Para que los datos se acumulen entre ejecuciones, usá modo <code>"a"</code> (append) al escribir. Para leer, separás cada línea con <code>.split(",")</code>.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># Parte 1 y 2: guardar notas</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;notas.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Nombre (o &#39;fin&#39;): &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nombre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;fin&quot;</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">nota</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Nota: &quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">nota</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Parte 3: calcular promedio</span>
+<span class="n">notas</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;notas.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">linea</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">partes</span> <span class="o">=</span> <span class="n">linea</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">partes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">notas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">partes</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="k">if</span> <span class="n">notas</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Promedio: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">notas</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">notas</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <h3 id="ejercicio-4-log-de-ejecuciones">🌶️ Ejercicio 4 — Log de ejecuciones</h3>
-<p>Cada vez que el programa se ejecute, que agregue una línea al archivo <code>log.txt</code> con la fecha/hora y un mensaje. Investigá el módulo <code>datetime</code> para obtener la fecha y hora actual.</p>
+<p>Cada vez que el programa se ejecute, que agregue una línea al archivo <code>log.txt</code> con la fecha/hora y un mensaje.</p>
+<div class="admonition info">
+<p class="admonition-title">📦 Módulo: datetime</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="n">ahora</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ahora</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>  <span class="c1"># &quot;2026-05-22 11:30:00&quot;</span>
+</code></pre></div>
+</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Abrí el archivo en modo <code>"a"</code> para que cada ejecución agregue sin borrar lo anterior. <code>datetime.now()</code> te da la fecha y hora actual; <code>.strftime()</code> la formatea como texto.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">mensaje</span> <span class="o">=</span> <span class="s2">&quot;Programa ejecutado correctamente&quot;</span>
+<span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;log.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">mensaje</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log actualizado: </span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">Para cerrar</p>

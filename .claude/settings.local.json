@@ -9,7 +9,8 @@
       "Bash(pip show *)",
       "PowerShell(Move-Item \"docs\\\\material_apoyo\\\\guiones_videos\" \"guiones\")",
       "PowerShell(git add guiones/)",
-      "PowerShell(git add \"docs/material_apoyo/guiones_videos/\")"
+      "PowerShell(git add \"docs/material_apoyo/guiones_videos/\")",
+      "Bash(Get-ChildItem -Path \"d:\\\\Dev\\\\pensamiento-computacional-testing-2026\\\\docs\\\\clases\\\\\" -Filter \"*.md\" -Recurse -File | Select-Object -ExpandProperty FullName)"
     ]
   }
 }

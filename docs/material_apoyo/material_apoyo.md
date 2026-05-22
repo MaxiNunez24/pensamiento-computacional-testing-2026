@@ -11,6 +11,11 @@ En esta sección encontrarás recursos adicionales para complementar tu aprendiz
 
 ---
 
+## [🔀 Python Tutor](https://pythontutor.com/visualize.html#mode=edit)
+Este sitio web te permite visualizar el código Python paso a paso, lo que es especialmente útil para entender cómo funcionan los algoritmos y las estructuras de datos. Puedes escribir tu propio código o usar ejemplos predefinidos para ver cómo se ejecuta y cómo se modifican las variables en cada paso.
+
+---
+
 ## [🐍 Python Ya](https://www.tutorialesprogramacionya.com/pythonya/)
 Este sitio web ofrece una gran cantidad de tutoriales y ejercicios prácticos para aprender Python desde cero. Es un recurso excelente para reforzar lo aprendido en clase y para practicar con ejemplos adicionales.
 

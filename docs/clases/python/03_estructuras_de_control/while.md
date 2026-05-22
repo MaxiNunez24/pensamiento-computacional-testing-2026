@@ -156,65 +156,47 @@ while numero < 6:
 
 ---
 
-## 🧪 Ejercicios de repaso
+## 🎮 Ejercicios
 
-### 🟢 Nivel 1 — Comprensión básica
+### 🌱 Ejercicio 1 — Del 1 al 10
 
-!!! exercise "Ejercicio 1"
-    Escribí un programa que imprima los números del 1 al 10 usando `while`.
+Escribí un programa que imprima los números del 1 al 10 usando `while`.
 
-!!! exercise "Ejercicio 2"
-    Escribí un programa que imprima la cuenta regresiva del 10 al 1 y al final imprima `"¡Despegue!"`.
+```
+1
+2
+...
+10
+```
 
-!!! exercise "Ejercicio 3"
-    Pedile al usuario un número y mostrá todos los números **pares** desde 0 hasta ese número.
+??? tip "💡 Pista"
+    Necesitás una variable que arranque en 1, una condición que la compare con 10, y una actualización que la incremente.
 
----
-
-### 🟡 Nivel 2 — Lógica dentro del bucle
-
-!!! exercise "Ejercicio 4"
-    Escribí un programa que sume todos los números del 1 al 100 e imprima el resultado.  
-    *Resultado esperado: 5050*
-
-!!! exercise "Ejercicio 5"
-    Pedile números al usuario **hasta que ingrese un 0**. Al final, mostrá cuántos números ingresó (sin contar el 0) y la suma de todos ellos.
-
-!!! exercise "Ejercicio 6"
-    Simulá un cajero automático simple: el usuario empieza con $1000 de saldo. En cada iteración le preguntás cuánto quiere retirar. El programa termina cuando el saldo llega a 0 o el usuario ingresa un monto mayor al saldo disponible.
-
----
-
-### 🔴 Nivel 3 — Desafío
-
-!!! exercise "Ejercicio 7 ⭐"
-    Implementá el juego **"Adiviná el número"**: el programa elige un número fijo entre 1 y 100 (podés hardcodearlo), y el usuario tiene que adivinarlo. En cada intento le decís si el número secreto es mayor o menor. Contá cuántos intentos necesitó.
-
-!!! exercise "Ejercicio 8 ⭐"
-    Pedile al usuario que ingrese notas (de 0 a 10) **hasta que ingrese -1**. Al final mostrá:
-    
-    - La cantidad de notas ingresadas
-    
-    - El promedio
-   
-    - La nota más alta y la más baja
-
----
-
-## 💡 Soluciones de referencia
-
-??? note "Ver soluciones"
-
+??? success "✅ Solución"
     ```python
-    # Ejercicio 1
     i = 1
     while i <= 10:
         print(i)
         i += 1
     ```
 
+### 🌱 Ejercicio 2 — Cuenta regresiva
+
+Escribí un programa que imprima la cuenta regresiva del 10 al 1 y al final imprima `"¡Despegue!"`.
+
+```
+10
+9
+...
+1
+¡Despegue!
+```
+
+??? tip "💡 Pista"
+    Esta vez la variable empieza alta y debe *decrementarse* con `-= 1`. ¿Cuál es la condición para seguir?
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 2
     i = 10
     while i >= 1:
         print(i)
@@ -222,8 +204,25 @@ while numero < 6:
     print("¡Despegue!")
     ```
 
+### 🌱 Ejercicio 3 — Pares hasta N
+
+Pedile al usuario un número y mostrá todos los números **pares** desde 0 hasta ese número.
+
+```
+Ingresá un número: 10
+0
+2
+4
+6
+8
+10
+```
+
+??? tip "💡 Pista"
+    Podés empezar en 0 e incrementar de 2 en 2. O empezar en 0 e incrementar de 1 en 1, con un `if` adentro.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 3
     n = int(input("Ingresá un número: "))
     i = 0
     while i <= n:
@@ -231,8 +230,19 @@ while numero < 6:
         i += 2
     ```
 
+### 🌿 Ejercicio 4 — Suma del 1 al 100
+
+Escribí un programa que sume todos los números del 1 al 100 e imprima el resultado.
+
+```
+5050
+```
+
+??? tip "💡 Pista"
+    Necesitás dos variables: un contador que va del 1 al 100, y un acumulador que empieza en 0 y suma el contador en cada vuelta.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 4
     suma = 0
     i = 1
     while i <= 100:
@@ -241,8 +251,23 @@ while numero < 6:
     print(suma)
     ```
 
+### 🌿 Ejercicio 5 — Suma hasta el cero
+
+Pedile números al usuario **hasta que ingrese un 0**. Al final, mostrá cuántos números ingresó (sin contar el 0) y la suma de todos ellos.
+
+```
+Ingresá un número (0 para terminar): 5
+Ingresá un número (0 para terminar): 3
+Ingresá un número (0 para terminar): 8
+Ingresá un número (0 para terminar): 0
+Ingresaste 3 números. Suma: 16
+```
+
+??? tip "💡 Pista"
+    Pedí el primer número antes del `while`. La condición del bucle es que el número sea distinto de 0. Al final del cuerpo del bucle, pedí el siguiente número.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 5
     suma = 0
     cantidad = 0
     numero = int(input("Ingresá un número (0 para terminar): "))
@@ -253,8 +278,25 @@ while numero < 6:
     print(f"Ingresaste {cantidad} números. Suma: {suma}")
     ```
 
+### 🌿 Ejercicio 6 — Cajero automático
+
+Simulá un cajero automático simple: el usuario empieza con $1000 de saldo. En cada iteración le preguntás cuánto quiere retirar. El programa termina cuando el saldo llega a 0 o el usuario ingresa un monto mayor al saldo disponible.
+
+```
+Saldo disponible: $1000
+¿Cuánto querés retirar? 400
+Retiro exitoso. Saldo restante: $600
+Saldo disponible: $600
+¿Cuánto querés retirar? 700
+Saldo insuficiente. Operación cancelada.
+Gracias por usar el cajero.
+```
+
+??? tip "💡 Pista"
+    La condición del `while` es que haya saldo. Dentro del bucle, si el retiro es mayor al saldo, usá `break` para salir. Si no, restá el monto.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 6
     saldo = 1000
     while saldo > 0:
         print(f"Saldo disponible: ${saldo}")
@@ -267,10 +309,26 @@ while numero < 6:
     print("Gracias por usar el cajero.")
     ```
 
+### 🌶️ Ejercicio 7 — Adiviná el número ⭐
+
+Implementá el juego **"Adiviná el número"**: el programa usa un número fijo entre 1 y 100 (hardcodealo), y el usuario tiene que adivinarlo. En cada intento le decís si el número secreto es mayor o menor. Contá cuántos intentos necesitó.
+
+```
+Adiviná el número (1-100): 50
+El número secreto es menor.
+Adiviná el número (1-100): 25
+El número secreto es mayor.
+Adiviná el número (1-100): 42
+¡Correcto! Lo adivinaste en 3 intentos.
+```
+
+??? tip "💡 Pista"
+    El bucle corre mientras no se adivine. Dentro, pedís el intento, incrementás el contador, y comparás con el secreto. Necesitás una variable booleana para saber si ya adivinaron.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 7
-    secreto = 42
-    intentos = 0
+    secreto   = 42
+    intentos  = 0
     adivinado = False
 
     while not adivinado:
@@ -286,21 +344,41 @@ while numero < 6:
     print(f"¡Correcto! Lo adivinaste en {intentos} intentos.")
     ```
 
+### 🌶️ Ejercicio 8 — Estadísticas de notas ⭐
+
+Pedile al usuario que ingrese notas (de 0 a 10) **hasta que ingrese -1**. Al final mostrá:
+
+- La cantidad de notas ingresadas
+- El promedio
+- La nota más alta y la más baja
+
+```
+Ingresá una nota (-1 para terminar): 8
+Ingresá una nota (-1 para terminar): 5
+Ingresá una nota (-1 para terminar): 9
+Ingresá una nota (-1 para terminar): -1
+Cantidad: 3
+Promedio: 7.33
+Nota más alta: 9.0
+Nota más baja: 5.0
+```
+
+??? tip "💡 Pista"
+    Además del acumulador para el promedio, necesitás dos variables para el máximo y el mínimo. ¿Con qué valor inicial las ponés para que la primera nota siempre las actualice? Acordate de manejar el caso donde no se ingresó ninguna nota.
+
+??? success "✅ Solución"
     ```python
-    # Ejercicio 8
     cantidad = 0
-    suma = 0
-    mayor = -1 # Cualquier nota va a ser mayor que -1
-    menor = 11 # Cualquier nota va a ser menor que 11
+    suma   = 0
+    mayor  = -1   # cualquier nota válida va a ser mayor
+    menor  = 11   # cualquier nota válida va a ser menor
 
     nota = float(input("Ingresá una nota (-1 para terminar): "))
     while nota != -1:
         cantidad += 1
-        suma += nota
-        if nota > mayor:
-            mayor = nota
-        if nota < menor:
-            menor = nota
+        suma     += nota
+        if nota > mayor: mayor = nota
+        if nota < menor: menor = nota
         nota = float(input("Ingresá una nota (-1 para terminar): "))
 
     if cantidad > 0:
