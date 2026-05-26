@@ -406,6 +406,39 @@ gano = carton <= sorteados   # equivalente
 
     Esto ya es el esqueleto de cómo se construyen sistemas más complejos. En el primer proyecto vamos a usar exactamente esta misma lógica: funciones bien definidas, datos persistidos, menú interactivo.
 
+---
+
+## 🔗 El problema que queda abierto
+
+Cerrás el programa... y todo desaparece.
+
+- ¿Cuántos turnos tardaste? Perdido.
+- ¿Quién ganó la partida anterior? Perdido.
+- ¿Tu récord personal? Perdido.
+
+Cada vez que ejecutás el Bingo, empieza desde cero. Si quisieras guardar un historial de partidas o las estadísticas del ejercicio extra, tendrías que inventar un formato propio para escribirlos a mano en un archivo de texto.
+
+**En la próxima clase aprendemos exactamente eso**: cómo hacer que los datos *sobrevivan* entre ejecuciones. Con lo que vamos a ver, guardar el historial del Bingo serían tres líneas de código.
+
+---
+
+## 🔄 Retrospectiva
+
+Antes de cerrar, tomamos 3 minutos. Cada uno responde en voz alta (o en papel):
+
+1. **¿Qué fue lo que más te costó?** (una respuesta concreta: "no entendía cuándo usar `return`", "me confundí con el `while`", etc.)
+2. **¿Quedó alguna parte que no terminaste de entender?**
+3. **¿Cómo salís de la clase?** Elegí uno:
+
+| | |
+|---|---|
+| 😊 | Entendí bien, me sentí cómodo/a |
+| 🤔 | Me costó pero llegué |
+| 😵 | Me perdí bastante, necesito repasar |
+
+!!! info ""
+    No hay respuesta incorrecta. El 😵 es igual de válido — y más útil para el profe que el 😊 de compromiso.
+
 ## [⬅️ Anterior: Cómo encarar un ejercicio](./como_encarar_ejercicios.md)
 ## [📚 Índice](../../clases.md#colecciones)
 ## [➡️ Siguiente: Manejo de archivos](../07_persistencia/archivos.md)
