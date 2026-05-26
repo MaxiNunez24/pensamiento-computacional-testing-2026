@@ -12,7 +12,7 @@
 
     1. **Leé el repaso relámpago** primero, especialmente las secciones de *list comprehensions* y *listas de listas* — son los temas que vimos por arriba en clase.
     2. **Hacé los ejercicios en orden**, de a poco. Si te trabás, abrí la pista (clic en el bloque "💡 Pista").
-    3. Si te trabás MUCHO, no pasa nada. **Anotá la duda** y consulta por el grupo de **Whatsapp** o la vemos juntos en clase.
+    3. Si te trabás MUCHO, no pasa nada. **Anotá la duda** y consultá por el grupo de **Whatsapp** o la vemos juntos en clase.
     4. Trabajá en un archivo `.py` por bloque (por ejemplo `bloque_1.py`, `bloque_2.py`...) para tener todo ordenado.
 
 ---
@@ -139,7 +139,8 @@ for fila in matriz:
 Dada la lista `numeros = [3, 7, 2, 9, 4, 11, 6]`, imprimí cada número multiplicado por 2 usando un `for`.
 
 ??? tip "💡 Pista"
-    Recorré la lista con `for n in numeros:` y dentro del loop usá `print(n * 2)`.
+    - ¿Cómo recorrés todos los elementos de una lista con un `for`?
+    - Dentro del loop, ¿cómo calculás el doble de cada número?
 
 ??? success "✅ Solución"
     ```python
@@ -329,6 +330,11 @@ Dada una frase: `frase = "El zorro marrón salta sobre el perro perezoso"`, hac�
 2. Una lista con las palabras que **empiezan con vocal** (usá `palabra[0].lower() in "aeiou"`).
 3. Una lista con la **primera letra** de cada palabra.
 
+??? tip "💡 Pista"
+    - Para el punto 1: ¿qué método divide un string en lista de palabras?
+    - Para el punto 2: ¿cómo accedés al primer carácter de una string? ¿Cómo verificás si una letra es vocal?
+    - Para el punto 3: dentro de la comprehension, ¿qué índice usás para tomar solo la primera letra?
+
 ??? success "✅ Solución"
     ```python
     frase = "El zorro marrón salta sobre el perro perezoso"
@@ -367,6 +373,10 @@ grilla = [
 ```
 
 Imprimí el **elemento del centro** (debería ser `50`), accediendo con doble índice.
+
+??? tip "💡 Pista"
+    - ¿Cuál es el índice de la fila del centro en una grilla 3x3?
+    - ¿Cómo accedés a un elemento dentro de una sublista usando `grilla[fila][columna]`?
 
 ??? success "✅ Solución"
     ```python
@@ -703,5 +713,4 @@ Hacé las siguientes consignas:
 
 ## [⬅️ Anterior: Listas en Python](./listas.md)
 ## [📚 Índice](../../clases.md#listas)
-## [➡️ Siguiente: Mini Parcial](./mini_parcial.md)
 ## [➡️ Siguiente: Mini Parcial](./mini_parcial.md)

@@ -2907,6 +2907,19 @@
 
 
 <h1 id="tuplas-y-sets">🎲 Tuplas y Sets</h1>
+<div class="admonition example">
+<p class="admonition-title">🤔 Dos problemas que las listas no resuelven bien</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Problema 1: coordenadas que NO deberían poder cambiar</span>
+<span class="n">ubicacion</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">34.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">58.4</span><span class="p">]</span>  <span class="c1"># Buenos Aires</span>
+<span class="n">ubicacion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">9999</span>          <span class="c1"># 😬 nadie lo previno...</span>
+
+<span class="c1"># Problema 2: lista de votos con repetidos — solo quiero los únicos</span>
+<span class="n">votos</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="s2">&quot;Beto&quot;</span><span class="p">,</span> <span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="s2">&quot;Cami&quot;</span><span class="p">,</span> <span class="s2">&quot;Ana&quot;</span><span class="p">]</span>
+<span class="c1"># Para saber cuántos votantes distintos hay, habría que filtrar manualmente</span>
+</code></pre></div>
+<p>Las <strong>tuplas</strong> resuelven el primero: datos que no deberían cambiar.
+Los <strong>sets</strong> resuelven el segundo: colecciones sin duplicados.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">🧬 Bienvenidos al universo de las colecciones</p>
 <p>Ya conocemos las <strong>listas</strong>: colecciones ordenadas y modificables que pueden contener cualquier cosa. Pero Python tiene más herramientas en el arsenal de colecciones, y cada una está optimizada para un propósito distinto. Hoy vamos a sumar dos primas hermanas de la lista al toolkit:</p>
@@ -3177,6 +3190,14 @@
 <p>Acá <code>estadisticas</code> devuelve una tupla de 3 elementos, y los desempaquetamos en 3 variables.</p>
 </div>
 </div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">📦 Función built-in: zip()</p>
+<p><code>zip(a, b)</code> combina dos iterables elemento a elemento en <strong>tuplas de pares</strong>. Se detiene cuando se agota el más corto.</p>
+<div class="highlight"><pre><span></span><code><span class="n">letras</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">]</span>
+<span class="n">nums</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">letras</span><span class="p">,</span> <span class="n">nums</span><span class="p">)))</span>  <span class="c1"># [(&#39;a&#39;, 1), (&#39;b&#39;, 2), (&#39;c&#39;, 3)]</span>
+</code></pre></div>
 </div>
 <h3 id="zip-iterar-dos-colecciones-en-paralelo">🤐 zip() — iterar dos colecciones en paralelo</h3>
 <p><code>zip()</code> combina dos (o más) iterables en tuplas de pares. Es la compañera natural del desempaquetado.</p>
@@ -3639,6 +3660,10 @@
 <li>Imprimí el año por separado usando un índice.</li>
 <li>Desempaquetala en tres variables (<code>dia</code>, <code>mes</code>, <code>anio</code>) e imprimí cada una.</li>
 </ol>
+<div class="highlight"><pre><span></span><code>(15, 3, 1998)
+1998
+Día: 15, Mes: 3, Año: 1998
+</code></pre></div>
 <details class="success">
 <summary>✅ Solución</summary>
 <div class="highlight"><pre><span></span><code><span class="n">cumpleanios</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1998</span><span class="p">)</span>
@@ -3678,9 +3703,14 @@
     <span class="s2">&quot;10.0.0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;192.168.0.1&quot;</span><span class="p">,</span> <span class="s2">&quot;8.8.8.8&quot;</span><span class="p">,</span> <span class="s2">&quot;172.16.0.2&quot;</span>
 <span class="p">]</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code>IPs distintas: 4
+</code></pre></div>
 <details class="tip">
 <summary>💡 Pista</summary>
-<p>Convertí la lista a set con <code>set(ips)</code> y usá <code>len()</code>.</p>
+<ul>
+<li>¿Qué hace <code>set()</code> cuando recibe una lista con elementos repetidos?</li>
+<li>¿Cómo contás cuántos elementos tiene un set?</li>
+</ul>
 </details>
 <details class="success">
 <summary>✅ Solución</summary>
@@ -3693,6 +3723,8 @@
 <h3 id="ejercicio-4-tupla-con-multiples-valores">🌿 Ejercicio 4 — Tupla con múltiples valores</h3>
 <p>Dado el siguiente listado de números, calculá el mínimo, máximo, promedio y cantidad de pares. Guardá los cuatro resultados en una <strong>tupla</strong> llamada <code>resultado</code>, desempaquetala en cuatro variables e imprimí cada una.</p>
 <div class="highlight"><pre><span></span><code><span class="n">numeros</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Min: 2, Max: 9, Promedio: 5.43, Pares: 3
 </code></pre></div>
 <details class="tip">
 <summary>💡 Pista</summary>
@@ -3733,10 +3765,10 @@
 <details class="tip">
 <summary>💡 Pista</summary>
 <ul>
-<li>Para "los tres": intersección triple <code>ana &amp; beto &amp; cami</code>.</li>
-<li>Para "al menos uno": unión <code>ana | beto | cami</code>.</li>
-<li>Para "solo Cami": <code>cami - ana - beto</code>.</li>
-<li>Para "Ana y Cami pero no Beto": <code>(ana &amp; cami) - beto</code>.</li>
+<li>¿Qué operación de conjuntos devuelve los elementos que están en <strong>todos</strong> los sets a la vez?</li>
+<li>¿Qué operación devuelve todo lo que aparece en <strong>al menos uno</strong> de los sets?</li>
+<li>Para "solo Cami": empezá con lo de Cami y sacale lo que ya saben los demás. ¿Qué operación "resta"?</li>
+<li>Para la cuarta pregunta: ¿primero intersectás o primero restás? ¿A qué dos sets les hacés intersección?</li>
 </ul>
 </details>
 <details class="success">
@@ -3813,7 +3845,11 @@
 </code></pre></div>
 <details class="tip">
 <summary>💡 Pista</summary>
-<p>Usá <code>.split()</code> para separar el texto en palabras. Convertí a set para "únicas" y "comunes" (intersección).</p>
+<ul>
+<li>¿Qué método de strings divide una frase en una lista de palabras?</li>
+<li>¿Qué estructura de datos elimina los duplicados automáticamente al construirla?</li>
+<li>Para las palabras en común entre ambos textos, ¿qué operación de conjuntos usarías?</li>
+</ul>
 </details>
 <details class="success">
 <summary>✅ Solución</summary>
@@ -3875,9 +3911,9 @@
 <details class="tip">
 <summary>💡 Pista</summary>
 <ul>
-<li>Convertí cada playlist en un set de tuplas. Las tuplas funcionan como elementos de set porque son inmutables.</li>
-<li>Para el punto 2 hacés intersecciones de a pares y unís los resultados, o pensás: una canción está en al menos 2 si está en <code>(maxi &amp; ana) | (maxi &amp; beto) | (ana &amp; beto)</code>.</li>
-<li>Para artistas, podés hacer un set por comprehension: <code>{artista for artista, cancion in maxi}</code>.</li>
+<li>¿Pueden las tuplas ser elementos de un set? ¿Por qué sí? ¿Qué propiedad necesitan los elementos de un set?</li>
+<li>Para "canciones en al menos dos playlists": ¿cuántos pares de usuarios hay? ¿Qué operación devuelve las canciones que <strong>dos usuarios tienen en común</strong>? ¿Cómo combinás los tres pares?</li>
+<li>Para los artistas de cada usuario: si cada elemento de la lista es <code>(artista, cancion)</code>, ¿qué tenés que extraer al recorrerla? ¿Dónde guardás eso sin repetidos?</li>
 </ul>
 </details>
 <details class="success">

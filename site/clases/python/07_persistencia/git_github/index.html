@@ -2787,6 +2787,35 @@ y Testing de Aplicaciones — CFP 401.
 <li>Modificá el mensaje en el print, hacé un segundo commit.</li>
 <li>Mirá el historial con <code>git log --oneline</code>.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<ul>
+<li>¿Cuál es el primer comando para que Git "empiece a vigilar" una carpeta?</li>
+<li>Antes de hacer <code>commit</code>, ¿qué paso intermedio tenés que hacer para "preparar" los archivos?</li>
+<li><code>git status</code> es tu mejor amigo — ¿qué te dice en cada momento?</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># Crear carpeta, entrar y crear hola.py con print(&quot;Hola, Git!&quot;)</span>
+mkdir<span class="w"> </span>hola_git
+<span class="nb">cd</span><span class="w"> </span>hola_git
+
+<span class="c1"># Inicializar Git</span>
+git<span class="w"> </span>init
+
+<span class="c1"># Preparar y primer commit</span>
+git<span class="w"> </span>add<span class="w"> </span>hola.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Primer commit: hola mundo&quot;</span>
+
+<span class="c1"># Modificar hola.py y segundo commit</span>
+git<span class="w"> </span>add<span class="w"> </span>hola.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Actualizo mensaje del print&quot;</span>
+
+<span class="c1"># Ver historial compacto</span>
+git<span class="w"> </span>log<span class="w"> </span>--oneline
+</code></pre></div>
+</details>
 <h3 id="ejercicio-2-subir-al-campus">🌿 Ejercicio 2 — Subir al campus</h3>
 <ol>
 <li>Creá un repositorio en GitHub llamado <code>pensamiento-computacional-2026</code>.</li>
@@ -2795,6 +2824,31 @@ y Testing de Aplicaciones — CFP 401.
 <li>Agregá un <code>README.md</code> con tu nombre y una breve descripción del curso.</li>
 <li>Compartí la URL del repo en el grupo.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<ul>
+<li>¿Tenés que crear el repo en GitHub primero o en tu compu primero?</li>
+<li>El comando para vincular un remoto se llama <code>git remote add</code>. ¿Qué dos cosas le pasás: un nombre y...?</li>
+<li>Para subir por primera vez, usás <code>-u origin main</code>. Las veces siguientes, ¿qué comando alcanza?</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># Después de crear el repo vacío en github.com:</span>
+
+<span class="c1"># Vincular el repo local con el remoto</span>
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>https://github.com/tu-usuario/pensamiento-computacional-2026.git
+
+<span class="c1"># Subir por primera vez (el -u guarda origin main como destino por defecto)</span>
+git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>main
+
+<span class="c1"># Verificar que quedó vinculado</span>
+git<span class="w"> </span>remote<span class="w"> </span>-v
+
+<span class="c1"># Las veces siguientes, solo:</span>
+git<span class="w"> </span>push
+</code></pre></div>
+</details>
 <h3 id="ejercicio-3-flujo-completo">🌶️ Ejercicio 3 — Flujo completo</h3>
 <ol>
 <li>Cloná el repo de un compañero.</li>
@@ -2802,6 +2856,37 @@ y Testing de Aplicaciones — CFP 401.
 <li>Desde tu propio repo, hacé 3 commits seguidos con cambios distintos.</li>
 <li>Subí los cambios y verificá que se vean en GitHub.</li>
 </ol>
+<details class="tip">
+<summary>💡 Pista</summary>
+<ul>
+<li>Para clonar un repo ajeno, ¿qué URL usás? ¿La podés encontrar en el botón verde "Code" en GitHub?</li>
+<li>Para los 3 commits, no necesitás 3 archivos distintos — podés modificar el mismo archivo 3 veces.</li>
+<li>¿Cuántos <code>git push</code> necesitás para subir los 3 commits?</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># Clonar repo de un compañero (en otra carpeta)</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/compañero/su-repo.git
+
+<span class="c1"># En tu propio repo: 3 commits con cambios distintos</span>
+<span class="c1"># (editá algún archivo entre cada commit)</span>
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Agrego ejercicio de funciones&quot;</span>
+
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Corrijo bug en cálculo de promedio&quot;</span>
+
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Agrego README con descripción del proyecto&quot;</span>
+
+<span class="c1"># Un solo push sube los 3 commits juntos</span>
+git<span class="w"> </span>push
+
+<span class="c1"># Verificar en GitHub que se ven los 3 commits nuevos</span>
+git<span class="w"> </span>log<span class="w"> </span>--oneline
+</code></pre></div>
+</details>
 <hr />
 <div class="admonition quote">
 <p class="admonition-title">Para cerrar</p>

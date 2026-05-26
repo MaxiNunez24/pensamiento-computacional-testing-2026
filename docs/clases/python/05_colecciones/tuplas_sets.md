@@ -1,5 +1,20 @@
 ﻿# 🎲 Tuplas y Sets
 
+!!! example "🤔 Dos problemas que las listas no resuelven bien"
+
+    ```python
+    # Problema 1: coordenadas que NO deberían poder cambiar
+    ubicacion = [-34.6, -58.4]  # Buenos Aires
+    ubicacion[0] = 9999          # 😬 nadie lo previno...
+
+    # Problema 2: lista de votos con repetidos — solo quiero los únicos
+    votos = ["Ana", "Beto", "Ana", "Cami", "Ana"]
+    # Para saber cuántos votantes distintos hay, habría que filtrar manualmente
+    ```
+
+    Las **tuplas** resuelven el primero: datos que no deberían cambiar.
+    Los **sets** resuelven el segundo: colecciones sin duplicados.
+
 !!! tip "🧬 Bienvenidos al universo de las colecciones"
     Ya conocemos las **listas**: colecciones ordenadas y modificables que pueden contener cualquier cosa. Pero Python tiene más herramientas en el arsenal de colecciones, y cada una está optimizada para un propósito distinto. Hoy vamos a sumar dos primas hermanas de la lista al toolkit:
 
@@ -262,6 +277,15 @@ Esto se usa **muchísimo** en Python real. Mirá los casos típicos:
     ```
 
     Acá `estadisticas` devuelve una tupla de 3 elementos, y los desempaquetamos en 3 variables.
+
+!!! info "📦 Función built-in: zip()"
+    `zip(a, b)` combina dos iterables elemento a elemento en **tuplas de pares**. Se detiene cuando se agota el más corto.
+
+    ```python
+    letras = ["a", "b", "c"]
+    nums   = [1, 2, 3]
+    print(list(zip(letras, nums)))  # [('a', 1), ('b', 2), ('c', 3)]
+    ```
 
 ### 🤐 zip() — iterar dos colecciones en paralelo
 
@@ -660,6 +684,12 @@ Creá una tupla llamada `cumpleanios` con tu día, mes y año de nacimiento. Des
 2. Imprimí el año por separado usando un índice.
 3. Desempaquetala en tres variables (`dia`, `mes`, `anio`) e imprimí cada una.
 
+```
+(15, 3, 1998)
+1998
+Día: 15, Mes: 3, Año: 1998
+```
+
 ??? success "✅ Solución"
     ```python
     cumpleanios = (15, 3, 1998)
@@ -708,8 +738,13 @@ ips = [
 ]
 ```
 
+```
+IPs distintas: 4
+```
+
 ??? tip "💡 Pista"
-    Convertí la lista a set con `set(ips)` y usá `len()`.
+    - ¿Qué hace `set()` cuando recibe una lista con elementos repetidos?
+    - ¿Cómo contás cuántos elementos tiene un set?
 
 ??? success "✅ Solución"
     ```python
@@ -725,6 +760,10 @@ Dado el siguiente listado de números, calculá el mínimo, máximo, promedio y 
 
 ```python
 numeros = [3, 7, 2, 8, 5, 4, 9]
+```
+
+```
+Min: 2, Max: 9, Promedio: 5.43, Pares: 3
 ```
 
 ??? tip "💡 Pista"
@@ -767,10 +806,10 @@ Resolvé:
 4. ¿Qué lenguajes saben Ana y Cami pero **no** Beto?
 
 ??? tip "💡 Pista"
-    - Para "los tres": intersección triple `ana & beto & cami`.
-    - Para "al menos uno": unión `ana | beto | cami`.
-    - Para "solo Cami": `cami - ana - beto`.
-    - Para "Ana y Cami pero no Beto": `(ana & cami) - beto`.
+    - ¿Qué operación de conjuntos devuelve los elementos que están en **todos** los sets a la vez?
+    - ¿Qué operación devuelve todo lo que aparece en **al menos uno** de los sets?
+    - Para "solo Cami": empezá con lo de Cami y sacale lo que ya saben los demás. ¿Qué operación "resta"?
+    - Para la cuarta pregunta: ¿primero intersectás o primero restás? ¿A qué dos sets les hacés intersección?
 
 ??? success "✅ Solución"
     ```python
@@ -851,7 +890,9 @@ texto2 = "el perro corre rapido sobre el cesped y el zorro escapa"
 ```
 
 ??? tip "💡 Pista"
-    Usá `.split()` para separar el texto en palabras. Convertí a set para "únicas" y "comunes" (intersección).
+    - ¿Qué método de strings divide una frase en una lista de palabras?
+    - ¿Qué estructura de datos elimina los duplicados automáticamente al construirla?
+    - Para las palabras en común entre ambos textos, ¿qué operación de conjuntos usarías?
 
 ??? success "✅ Solución"
     ```python
@@ -914,9 +955,9 @@ Resolvé:
 4. ¿Hay algún artista que **escuchen los tres**?
 
 ??? tip "💡 Pista"
-    - Convertí cada playlist en un set de tuplas. Las tuplas funcionan como elementos de set porque son inmutables.
-    - Para el punto 2 hacés intersecciones de a pares y unís los resultados, o pensás: una canción está en al menos 2 si está en `(maxi & ana) | (maxi & beto) | (ana & beto)`.
-    - Para artistas, podés hacer un set por comprehension: `{artista for artista, cancion in maxi}`.
+    - ¿Pueden las tuplas ser elementos de un set? ¿Por qué sí? ¿Qué propiedad necesitan los elementos de un set?
+    - Para "canciones en al menos dos playlists": ¿cuántos pares de usuarios hay? ¿Qué operación devuelve las canciones que **dos usuarios tienen en común**? ¿Cómo combinás los tres pares?
+    - Para los artistas de cada usuario: si cada elemento de la lista es `(artista, cancion)`, ¿qué tenés que extraer al recorrerla? ¿Dónde guardás eso sin repetidos?
 
 ??? success "✅ Solución"
     ```python

@@ -337,6 +337,32 @@ flowchart LR
 4. Modificá el mensaje en el print, hacé un segundo commit.
 5. Mirá el historial con `git log --oneline`.
 
+??? tip "💡 Pista"
+    - ¿Cuál es el primer comando para que Git "empiece a vigilar" una carpeta?
+    - Antes de hacer `commit`, ¿qué paso intermedio tenés que hacer para "preparar" los archivos?
+    - `git status` es tu mejor amigo — ¿qué te dice en cada momento?
+
+??? success "✅ Solución"
+    ```bash
+    # Crear carpeta, entrar y crear hola.py con print("Hola, Git!")
+    mkdir hola_git
+    cd hola_git
+
+    # Inicializar Git
+    git init
+
+    # Preparar y primer commit
+    git add hola.py
+    git commit -m "Primer commit: hola mundo"
+
+    # Modificar hola.py y segundo commit
+    git add hola.py
+    git commit -m "Actualizo mensaje del print"
+
+    # Ver historial compacto
+    git log --oneline
+    ```
+
 ### 🌿 Ejercicio 2 — Subir al campus
 
 1. Creá un repositorio en GitHub llamado `pensamiento-computacional-2026`.
@@ -345,12 +371,62 @@ flowchart LR
 4. Agregá un `README.md` con tu nombre y una breve descripción del curso.
 5. Compartí la URL del repo en el grupo.
 
+??? tip "💡 Pista"
+    - ¿Tenés que crear el repo en GitHub primero o en tu compu primero?
+    - El comando para vincular un remoto se llama `git remote add`. ¿Qué dos cosas le pasás: un nombre y...?
+    - Para subir por primera vez, usás `-u origin main`. Las veces siguientes, ¿qué comando alcanza?
+
+??? success "✅ Solución"
+    ```bash
+    # Después de crear el repo vacío en github.com:
+
+    # Vincular el repo local con el remoto
+    git remote add origin https://github.com/tu-usuario/pensamiento-computacional-2026.git
+
+    # Subir por primera vez (el -u guarda origin main como destino por defecto)
+    git push -u origin main
+
+    # Verificar que quedó vinculado
+    git remote -v
+
+    # Las veces siguientes, solo:
+    git push
+    ```
+
 ### 🌶️ Ejercicio 3 — Flujo completo
 
 1. Cloná el repo de un compañero.
 2. Explorá su código.
 3. Desde tu propio repo, hacé 3 commits seguidos con cambios distintos.
 4. Subí los cambios y verificá que se vean en GitHub.
+
+??? tip "💡 Pista"
+    - Para clonar un repo ajeno, ¿qué URL usás? ¿La podés encontrar en el botón verde "Code" en GitHub?
+    - Para los 3 commits, no necesitás 3 archivos distintos — podés modificar el mismo archivo 3 veces.
+    - ¿Cuántos `git push` necesitás para subir los 3 commits?
+
+??? success "✅ Solución"
+    ```bash
+    # Clonar repo de un compañero (en otra carpeta)
+    git clone https://github.com/compañero/su-repo.git
+
+    # En tu propio repo: 3 commits con cambios distintos
+    # (editá algún archivo entre cada commit)
+    git add .
+    git commit -m "Agrego ejercicio de funciones"
+
+    git add .
+    git commit -m "Corrijo bug en cálculo de promedio"
+
+    git add .
+    git commit -m "Agrego README con descripción del proyecto"
+
+    # Un solo push sube los 3 commits juntos
+    git push
+
+    # Verificar en GitHub que se ven los 3 commits nuevos
+    git log --oneline
+    ```
 
 ---
 
