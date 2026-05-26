@@ -1,0 +1,18 @@
+# MkDocs — sitio generado (gh-deploy lo maneja en gh-pages)
+site/
+
+# Claude Code — configuración local de esta máquina
+.claude/settings.local.json
+.claude/worktrees/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Editores
+.vscode/
+.idea/
+*.swp
