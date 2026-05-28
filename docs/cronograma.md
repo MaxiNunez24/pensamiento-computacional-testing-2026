@@ -15,6 +15,16 @@
     - 🧪 **Testing con `pytest`** entrelazado con el proyecto, no como bloque suelto.
     - 🌐 **Frameworks web pateados** para después del primer proyecto, como migración del Sistema de Asistencias a web.
 
+!!! info "📌 Segunda reorganización — 28/5/2026"
+    Ajustes por el ritmo real del grupo:
+
+    - 🧠 **El 22/5** el grupo no se sentía listo para el Bingo → se dio "Cómo encarar un ejercicio" + Python Tutor.
+    - 🎂 **El 27/5** festejamos el cumple del profe → clase de Repaso General en lugar de Archivos.
+    - 🔁 **Repaso general** (27/5) agregado como clase puente antes del ejercicio integrador.
+    - 🎰 **Bingo** se corre al 29/5 (viernes).
+    - 📐🏗️ **Análisis del problema + Modelado de clases** se fusionan en una sola sesión — recupera el slot extra del repaso.
+    - ⏩ Persistencia y POO se corren 1 semana. **El cierre del primer proyecto sigue siendo el 17/7** ✅
+
 ---
 
 ## 🗺️ Vista general del año
@@ -36,7 +46,7 @@
 
 | Fecha | Hito |
 |-------|------|
-| 🚀 **Mié 17/6** | [Arranque del **Sistema de Asistencias** (primer proyecto)](#bloque-4) |
+| 🚀 **Mié 24/6** | [Arranque del **Sistema de Asistencias** (primer proyecto)](#bloque-4) |
 | ✅ **Vie 17/7** | [Cierre del primer proyecto en CLI](#bloque-4) |
 | 🌐 **Vie 28/8** | [Segundo proyecto: bolsa de trabajo (web)](#bloque-5) |
 | 🎉 **21/9** | [**Nerdearla**](#nerdearla) |
@@ -77,10 +87,13 @@
 | 27/4 | ✅ Cierre de [Listas](./clases/python/04_listas/listas.md) — asignación del [cuadernillo](./clases/python/04_listas/cuadernillo_listas_finde.md) | 🚫 *Sin clases (1/5 — Día del Trabajador)* | 📒 [Cuadernillo de listas](./clases/python/04_listas/cuadernillo_listas_finde.md) durante el finde largo |
 | 4/5 | ✅ Repaso del [Cuadernillo de Listas](./clases/python/04_listas/cuadernillo_listas_finde.md) en clase | ✅ [Mini Parcial](./clases/python/04_listas/mini_parcial.md) | — |
 | 11/5 | 🎲 [**Tuplas, Sets**](./clases/python/05_colecciones/tuplas_sets.md) **y [Diccionarios](./clases/python/05_colecciones/diccionarios.md)** | 📦 [**Funciones I**: definición, parámetros, retorno](./clases/python/06_funciones/funciones_1.md) | Ejercicios de funciones |
-| 18/5 | 📦 [**Funciones II**: scope, valores por defecto, `*args`/`**kwargs`](./clases/python/06_funciones/funciones_2.md) | 🎰 [**Bingo** — Ejercicio integrador de colecciones y funciones](./clases/python/06_funciones/bingo.md) | Construir el juego completo por etapas |
+| 18/5 | ✅ 📦 [**Funciones II**: scope, valores por defecto, `*args`/`**kwargs`](./clases/python/06_funciones/funciones_2.md) | ✅ 🧠 [**Cómo encarar un ejercicio** + Python Tutor](./clases/python/06_funciones/como_encarar_ejercicios.md) *(era Bingo — el grupo no se sentía listo)* | Protocolo de resolución y debugging visual |
+| 25/5 | ✅ 🔁 [**Repaso general**](./clases/python/06_funciones/repaso.md) *(era Archivos — 🎂 cumple del profe)* | 🎰 [**Bingo** — Ejercicio integrador de colecciones y funciones](./clases/python/06_funciones/bingo.md) | Consolidar todo el bloque antes del integrador |
 
 !!! tip "🧪 Detalle pedagógico"
     En **Funciones II** se introduce `*args`/`**kwargs` *de manera suave* (solo concepto y un ejemplo), no se profundiza. El objetivo es que les suene cuando lo vean en código de terceros.
+
+    El **Repaso general** (27/5) cubre los 8 conceptos clave del bloque en ejercicios progresivos 🌱→🌶️, funcionando como clase puente antes del integrador. El **Bingo** (29/5) es el ejercicio de cierre del bloque: integra sets, listas, diccionarios y funciones en un programa completo.
 
 ---
 
@@ -95,8 +108,8 @@
 
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
-| 25/5 | [💾 **Manejo de archivos**: lectura, escritura, modos](./clases/python/07_persistencia/archivos.md) | [📋 **JSON**: serialización, deserialización, `json.dump`/`json.load`](./clases/python/07_persistencia/json.md) | Programa que persista datos en JSON |
-| 1/6 | [🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README](./clases/python/07_persistencia/git_github.md) | [🧬 **POO I** *(arranque del [Bloque 4](#bloque-4))*](./clases/python/poo_1.md) | Subir todos los programas del curso al repo personal |
+| 1/6 | [💾 **Manejo de archivos**: lectura, escritura, modos](./clases/python/07_persistencia/archivos.md) | [📋 **JSON**: serialización, deserialización, `json.dump`/`json.load`](./clases/python/07_persistencia/json.md) | Programa que persista datos en JSON |
+| 8/6 | [🌳🐙 **Git + GitHub** (clase combinada — 3h20m): workflow esencial, clone/pull, repositorios, README](./clases/python/07_persistencia/git_github.md) | [🧬 **POO I** *(arranque del [Bloque 4](#bloque-4))*](./clases/python/poo_1.md) | Subir todos los programas del curso al repo personal |
 
 !!! tip "🤐 Git + GitHub en una sola clase (3h20m)"
     Combinamos ambas en una única sesión aprovechando la duración: **primera mitad** Git local (init/add/commit/status/log), **break**, **segunda mitad** GitHub (remote/push/clone/pull/README). NO vamos a ver branches, merges, conflictos ni PRs. Solo el workflow mínimo para que puedan versionar el primer proyecto y continuar el código en sus casas.
@@ -117,8 +130,8 @@
 
 | Semana | Miércoles | Viernes | Práctica |
 |--------|-----------|---------|----------|
-| 1/6 | [🌳🐙 **Git + GitHub** *(cierre del [Bloque 3](#bloque-3))*](./clases/python/07_persistencia/git_github.md) | [🧬 **POO I**: clases, objetos, `__init__`, atributos y métodos](./clases/python/poo_1.md) | Modelar entidades del mundo real |
-| 8/6 | [🛡️ **POO II**: encapsulamiento, `__str__`, `__repr__`, métodos especiales](./clases/python/poo_2.md) | [🔗 **Herencia y polimorfismo**: subclases, `super()`, override de métodos](./clases/python/poo_herencia.md) | Diseñar jerarquías de clases |
+| 8/6 | [🌳🐙 **Git + GitHub** *(cierre del [Bloque 3](#bloque-3))*](./clases/python/07_persistencia/git_github.md) | [🧬 **POO I**: clases, objetos, `__init__`, atributos y métodos](./clases/python/poo_1.md) | Modelar entidades del mundo real |
+| 15/6 | [🛡️ **POO II**: encapsulamiento, `__str__`, `__repr__`, métodos especiales](./clases/python/poo_2.md) | [🔗 **Herencia y polimorfismo**: subclases, `super()`, override de métodos](./clases/python/poo_herencia.md) | Diseñar jerarquías de clases |
 
 ### 🚀 Sub-bloque 4.2 — Proyecto: Sistema de Asistencias del CFP
 
@@ -133,11 +146,13 @@
 
 | Semana | Miércoles | Viernes | Avance del proyecto |
 |--------|-----------|---------|---------------------|
-| 15/6 | [📐 **Análisis del problema**: requisitos, flujo, casos de uso](./clases/proyecto_asistencias/01_analisis.md) | [🏗️ **Modelado de clases**: `Alumno`, `Clase`, `Asistencia`, `RegistroAsistencias`](./clases/proyecto_asistencias/02_modelado.md) | Diagrama de clases y esqueleto |
-| 22/6 | [💾 **Persistencia con JSON**: guardar y cargar el estado](./clases/proyecto_asistencias/03_persistencia.md) | [🖥️ **CLI**: menú interactivo y validaciones](./clases/proyecto_asistencias/04_cli.md) | Versión funcional con persistencia |
-| 29/6 | [🔄 **Refactor** y mejoras de diseño](./clases/proyecto_asistencias/05_refactor.md) | [🧪 **Testing con `pytest`**: primeros tests sobre el proyecto](./clases/proyecto_asistencias/06_testing.md) | Tests cubriendo lógica de negocio |
-| 6/7 | [🧪 **Más testing**: edge cases, fixtures, parametrización](./clases/proyecto_asistencias/07_testing_avanzado.md) | 🚫 *Sin clases (10/7 — feriado turístico Independencia)* | Suite de tests sólida |
-| 13/7 | [🐛 **Debugging, excepciones y relaciones entre objetos**](./clases/python/excepciones.md) | [🎁 **Cierre del Sistema de Asistencias**: documentación, README, demo + Retrospectiva](./clases/proyecto_asistencias/08_cierre.md) | Proyecto completo en GitHub |
+| 22/6 | [📐🏗️ **Análisis + Modelado** *(clase combinada)*: requisitos, casos de uso, clases `Alumno`, `Clase`, `Asistencia`](./clases/proyecto_asistencias/01_analisis.md) | [💾 **Persistencia con JSON**: guardar y cargar el estado](./clases/proyecto_asistencias/03_persistencia.md) | Diagrama de clases, esqueleto y datos persistidos |
+| 29/6 | [🖥️ **CLI**: menú interactivo y validaciones](./clases/proyecto_asistencias/04_cli.md) | [🔄 **Refactor** y mejoras de diseño](./clases/proyecto_asistencias/05_refactor.md) | Versión funcional refinada |
+| 6/7 | [🧪 **Testing con `pytest`**: primeros tests y edge cases](./clases/proyecto_asistencias/06_testing.md) | 🚫 *Sin clases (10/7 — feriado turístico Independencia)* | Suite de tests sobre lógica de negocio |
+| 13/7 | [🐛 **Debugging, excepciones y más testing**](./clases/python/excepciones.md) | [🎁 **Cierre del Sistema de Asistencias**: documentación, README, demo + Retrospectiva](./clases/proyecto_asistencias/08_cierre.md) | Proyecto completo en GitHub |
+
+!!! tip "📐 Análisis + Modelado en una sola clase (3h20m)"
+    El flujo es natural: el análisis define qué necesita el sistema y el modelado lo traduce a clases Python. Primera mitad: requisitos, flujo de la app y casos de uso. Segunda mitad: diseño de las clases en papel → esqueleto de código. Fusionarlas recupera el slot que usamos para el Repaso del 27/5 y evita que el proyecto se corra más allá de julio.
 
 !!! tip "🧠 ¿Por qué testing DESPUÉS de tener algo funcionando?"
     Pedagógicamente, escribir tests sobre **código que ya existe y se entiende** es mucho más significativo que escribir tests sobre ejercicios artificiales. Acá ustedes ya saben qué hace su código → ahora aprenden a verificarlo automáticamente. Es el momento perfecto, aunque en la realidad primero se realizan los tests y después se desarrolla el código (Test Driven Development / TDD).
