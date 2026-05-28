@@ -160,4 +160,4 @@ Esa pregunta te lleva directo a la línea con el bug.
 
 ## [⬅️ Anterior: Funciones II](./funciones_2.md)
 ## [📚 Índice](../../clases.md#colecciones)
-## [➡️ Siguiente: Bingo — Ejercicio Integrador](./bingo.md)
+## [➡️ Siguiente: Repaso General](./repaso.md)

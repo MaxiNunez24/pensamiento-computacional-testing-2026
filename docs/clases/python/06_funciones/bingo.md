@@ -439,6 +439,6 @@ Antes de cerrar, tomamos 3 minutos. Cada uno responde en voz alta (o en papel):
 !!! info ""
     No hay respuesta incorrecta. El 😵 es igual de válido — y más útil para el profe que el 😊 de compromiso.
 
-## [⬅️ Anterior: Cómo encarar un ejercicio](./como_encarar_ejercicios.md)
+## [⬅️ Anterior: Repaso General](./repaso.md)
 ## [📚 Índice](../../clases.md#colecciones)
 ## [➡️ Siguiente: Manejo de archivos](../07_persistencia/archivos.md)
