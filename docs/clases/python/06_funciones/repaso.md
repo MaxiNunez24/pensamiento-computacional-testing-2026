@@ -32,8 +32,11 @@ Antes de arrancar, recordá qué tenés disponible:
 
 !!! tip "💡 La pregunta antes de codear"
     Antes de cada ejercicio, respondé en papel:
+
     1. ¿Qué recibo? ¿Qué tipo de dato es?
+    
     2. ¿Qué tengo que devolver o mostrar?
+    
     3. ¿Cómo lo resolvería con 3 datos de ejemplo, a mano?
 
 ---
@@ -158,12 +161,11 @@ No llegaste al objetivo. Ahorraste $1500 (te faltan $8500).
     total = 0
     depositos = 0
 
-    while total < OBJETIVO:
-        monto = float(input("Depósito (0 para parar): "))
-        if monto == 0:
-            break
+    monto = float(input("Depósito (0 para parar): "))
+    while total < OBJETIVO and monto != 0:
         total += monto
         depositos += 1
+        monto = float(input("Depósito (0 para parar): "))
 
     if total >= OBJETIVO:
         print(f"¡Llegaste al objetivo! Ahorraste ${total:.0f} en {depositos} depósitos.")

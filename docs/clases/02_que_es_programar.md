@@ -207,84 +207,83 @@ Esto permite visualizar el algoritmo de forma más clara.
 
 ### Símbolos básicos
 
-**Inicio / Fin**
+```mermaid
+flowchart TD
+    A(["Inicio / Fin\nÓvalo"]) -->|"Flujo · Flecha"| B["Proceso\nRectángulo"]
+    B --> C[/"Entrada · Salida\nParalelogramo"/]
+    C --> D{"Decisión\nRombo"}
+    D -->|"Sí / No"| E(["Fin"])
+```
 
-Óvalo
-
-![Óvalo](../assets/images/ddf_inicio_fin.png)
-
-Representa el comienzo o el final del algoritmo.
-
----
-
-**Proceso**
-
-Rectángulo
-
-![Rectángulo](../assets/images/ddf_proceso.png)
-
-Representa una operación o cálculo.
+| Símbolo | Forma | Uso |
+|---------|-------|-----|
+| Inicio / Fin | Óvalo | Marca dónde empieza y termina el algoritmo |
+| Proceso | Rectángulo | Representa una operación o cálculo |
+| Entrada / Salida | Paralelogramo | Leer un dato o mostrar un resultado |
+| Decisión | Rombo | Una pregunta con dos o más caminos posibles |
+| Flujo | Flecha | Indica la dirección entre pasos |
 
 ---
 
-**Flujo**
+### Ejemplo 1 — Algoritmo secuencial: calcular el doble de un número
 
-Flecha
+Este ejemplo usa todos los símbolos **excepto** el rombo de decisión: solo hay un camino posible.
 
-![Flecha](../assets/images/ddf_flujo.png)
+```mermaid
+flowchart TD
+    A([Inicio]) --> B[/Leer número/]
+    B --> C["doble = número × 2"]
+    C --> D[/Mostrar doble/]
+    D --> E([Fin])
+```
 
-Indica la dirección del flujo del algoritmo.
-
----
-
-**Entrada / Salida**
-
-Paralelogramo
-
-![Paralelogramo](../assets/images/ddf_entrada_salida.png)
-
-Se utiliza para leer o mostrar datos.
-
----
-
-**Decisión**
-
-Rombo
-
-![Rombo](../assets/images/ddf_decision.png)
-
-Representa una pregunta que puede tener diferentes caminos.
+??? "Otra forma de organizarlo (horizontal):"
+    ```mermaid
+    flowchart LR
+        A([Inicio]) --> B[/Leer número/]
+        B --> C["doble = número × 2"]
+        C --> D[/Mostrar doble/]
+        D --> E([Fin])
+    ```
 
 ---
 
-### Ejemplo de algoritmo en diagrama de flujo
+### Ejemplo 2 — Algoritmo secuencial: preparar un mate
 
-Problema: calcular el doble de un número.
+Otro algoritmo sin decisiones. Cada paso lleva directamente al siguiente.
 
-Pasos del algoritmo:
+```mermaid
+flowchart TD
+    A([Inicio]) --> B[Agarrar el mate]
+    B --> C[Colocar yerba hasta 3/4 del recipiente]
+    C --> D[Calentar agua]
+    D --> E[Insertar la bombilla]
+    E --> F[Verter agua caliente]
+    F --> G[Beber de la bombilla]
+    G --> H([Fin])
+```
 
-1. Inicio
-2. Leer número
-3. Calcular doble
-4. Mostrar resultado
-5. Fin
+---
 
-Este mismo proceso puede representarse gráficamente mediante un **diagrama de flujo** de esta manera:
+### Ejemplo 3 — Algoritmo con decisión: ¿es mayor de edad?
 
-![Ejemplo Diagrama de Flujo](../assets/images/ddf_ejemplo2.png)
+Acá aparece el **rombo**: el algoritmo toma caminos distintos según la respuesta.
 
-??? "Otra forma de organizarlo sería:"
-    ![Ejemplo Diagrama de Flujo](../assets/images/ddf_ejemplo1.png)
-
-??? "Otro ejemplo también válido sería:"
-    ![Ejemplo Diagrama de Flujo](../assets/images/ddf_ejemplo3.png)
+```mermaid
+flowchart TD
+    A([Inicio]) --> B[/Leer edad/]
+    B --> C{¿edad >= 18?}
+    C -->|Sí| D[/Mostrar: Mayor de edad/]
+    C -->|No| E[/Mostrar: Menor de edad/]
+    D --> F([Fin])
+    E --> F
+```
 
 ---
 
 ## ✍️ Ejercicio 3 — Crear diagramas de flujo
 
 Dibujá el diagrama de flujo para los siguientes problemas.
-!!! Info "[La aplicación utilizada para los ejemplos anteriores es Smartdraw](https://app.smartdraw.com/?nsu=1)"
 
 ---
 
