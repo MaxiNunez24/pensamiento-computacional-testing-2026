@@ -439,6 +439,6 @@ Antes de cerrar, tomamos 3 minutos. Cada uno responde en voz alta (o en papel):
 !!! info ""
     No hay respuesta incorrecta. El 😵 es igual de válido — y más útil para el profe que el 😊 de compromiso.
 
-## [⬅️ Anterior: Repaso General](./repaso.md)
+## [⬅️ Anterior: Lectura y corrección de código](./lectura_codigo.md)
 ## [📚 Índice](../../clases.md#colecciones)
 ## [➡️ Siguiente: Manejo de archivos](../07_persistencia/archivos.md)

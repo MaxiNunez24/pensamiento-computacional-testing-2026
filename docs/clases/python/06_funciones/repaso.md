@@ -455,4 +455,4 @@ Anotá también: **¿qué ejercicio fue el más difícil y por qué?** Esa respu
 
 ## [⬅️ Anterior: Cómo encarar un ejercicio](./como_encarar_ejercicios.md)
 ## [📚 Índice](../../clases.md#colecciones)
-## [➡️ Siguiente: Bingo — Ejercicio Integrador](./bingo.md)
+## [➡️ Siguiente: Lectura y corrección de código](./lectura_codigo.md)
