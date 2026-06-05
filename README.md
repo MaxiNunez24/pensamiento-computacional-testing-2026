@@ -60,19 +60,22 @@ Y repetir el proceso muchas veces.
 1. Fundamentos de computación
 2. Python básico
 3. Estructuras de datos
-4. Testing
-5. Proyecto organizador del centro
-6. Bolsa de trabajo para alumnos
-7. Proyecto de inteligencia artificial
+4. Persistencia (archivos, JSON) y Git/GitHub
+5. POO y Sistema de Asistencias del CFP
+6. Web (Flask) y Bot de carga en SiGes
+7. Testing de aplicaciones
+8. Inteligencia Artificial y proyecto final
 
 ---
-## 🎯 Proyectos propuestos
+## 🎯 Proyectos del curso
 
-Durante el curso construiremos:
+Durante el año construiremos proyectos **reales y útiles**:
 
-- Un **organizador del centro de formación**
-- Una **bolsa de trabajo para alumnos**
-- Un **juego controlado con gestos usando visión por computadora**
+- Un **Sistema de Asistencias del CFP** — reemplaza el flujo actual (formulario → planilla a mano)
+  respetando el formato oficial. Primero en consola (CLI) y después como aplicación **web (Flask)**.
+- Un **Bot que automatiza la carga de alumnos en SiGes** — toma los datos del Sistema de Asistencias
+  y los carga solo, mediante automatización de navegador (que además es testing de aplicaciones).
+- Un **proyecto final con Inteligencia Artificial**, a elección de cada alumno o equipo.
 
 ---
 

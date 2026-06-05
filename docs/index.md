@@ -6,8 +6,9 @@ Bienvenidos al curso donde aprenderemos a pensar como programadores y construir 
 
 ---
 
-!!! success "📍 Bloque actual — Bloque 2: Colecciones y Modularización"
-    Esta semana: **Tuplas, Sets y Diccionarios**. Continuá desde [📚 Clases → Bloque 2](./clases/clases.md#colecciones).
+!!! success "📍 ¿Dónde estamos?"
+    Mirá la [📒 bitácora del cronograma](./cronograma.md#bitacora) para ver qué dimos en la última
+    clase y qué sigue.
 
 ---
 
@@ -65,13 +66,15 @@ Y repetir el proceso muchas veces.
 
 ---
 
-## 🎯 Proyectos propuestos
+## 🎯 Proyectos del curso
 
-Durante el curso construiremos:
+Durante el año construiremos proyectos **reales y útiles**:
 
-- Un **organizador del centro de formación**
-- Una **bolsa de trabajo para alumnos**
-- Un **juego controlado con gestos usando visión por computadora**
+- Un **Sistema de Asistencias del CFP** — reemplaza el flujo actual (formulario → planilla a mano)
+  respetando el formato oficial. Primero en consola (CLI) y después como aplicación **web (Flask)**.
+- Un **Bot que automatiza la carga de alumnos en SiGes** — toma los datos del Sistema de Asistencias
+  y los carga solo, usando automatización de navegador (que además es testing de aplicaciones).
+- Un **proyecto final con Inteligencia Artificial**, a elección de cada alumno o equipo.
 
 ---
 
