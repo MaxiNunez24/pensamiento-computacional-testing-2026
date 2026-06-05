@@ -138,6 +138,14 @@ function initEjercicio(el: HTMLElement): void {
     view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: starter } });
     salida.hidden = true;
   });
+
+  // Atajo: Ctrl/Cmd + Enter = Verificar (estándar en editores de código).
+  editorEl.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      correr(true);
+    }
+  });
 }
 
 function boot(): void {
