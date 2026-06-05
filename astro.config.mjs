@@ -19,7 +19,8 @@ export default defineConfig({
         {
           label: '📚 Clases (demo)',
           items: [
-            { label: '📦 Funciones I — demo interactiva', link: '/clases/funciones-1/' },
+            { label: '📋 Listas — guardar y recorrer datos', link: '/clases/listas/' },
+            { label: '📦 Funciones I', link: '/clases/funciones-1/' },
           ],
         },
       ],
