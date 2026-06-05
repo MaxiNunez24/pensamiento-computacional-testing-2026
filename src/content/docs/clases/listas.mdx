@@ -52,55 +52,61 @@ El primer elemento es `lista[0]`, no `lista[1]`. Si una lista tiene 4 elementos,
 
 ## Manos a la obra
 
+:::note[Sobre estos ejercicios]
+Acá vas a escribir **código directo** (sin funciones todavía — eso viene más adelante). Partís de una
+lista que ya está dada y tenés que **crear una variable nueva** con el resultado. El verificador
+revisa esa variable. 😉
+:::
+
 <EjercicioPython
   titulo="Transformar una lista"
   dificultad="🌱"
-  starter={`def duplicar(numeros):\n    # Devolvé una lista NUEVA con cada número multiplicado por 2\n    pass`}
-  tests={`assert duplicar([1, 2, 3]) == [2, 4, 6], "duplicar([1,2,3]) debería dar [2,4,6]"\nassert duplicar([]) == [], "una lista vacía debería devolver una lista vacía"\nassert duplicar([0, -4]) == [0, -8]\nprint("Listas duplicadas OK")`}
+  starter={`numeros = [1, 2, 3]\n\n# Creá una lista 'dobles' con cada número multiplicado por 2\n`}
+  tests={`assert dobles == [2, 4, 6], "dobles debería ser [2, 4, 6]"\nprint("¡Lista duplicada!")`}
   pistas={[
-    "Empezá con una lista vacía: <code>resultado = []</code>.",
-    "Recorré con <code>for n in numeros:</code> y usá <code>resultado.append(...)</code>.",
+    "Empezá con una lista vacía: <code>dobles = []</code>.",
+    "Recorré con <code>for n in numeros:</code> y usá <code>dobles.append(n * 2)</code>.",
   ]}
-  solucion={`def duplicar(numeros):\n    resultado = []\n    for n in numeros:\n        resultado.append(n * 2)\n    return resultado`}
+  solucion={`numeros = [1, 2, 3]\n\ndobles = []\nfor n in numeros:\n    dobles.append(n * 2)`}
 >
-Escribí `duplicar(numeros)` que reciba una lista de números y **devuelva una lista nueva** con cada
-número multiplicado por 2.
+Tenés la lista `numeros = [1, 2, 3]`. Creá una lista llamada **`dobles`** con cada número
+multiplicado por 2.
 
-Ejemplo: `duplicar([1, 2, 3])` → `[2, 4, 6]`.
+Resultado esperado: `dobles` debería ser `[2, 4, 6]`.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Filtrar elementos"
   dificultad="🌿"
-  starter={`def solo_pares(numeros):\n    # Devolvé una lista solo con los números pares\n    pass`}
-  tests={`assert solo_pares([1, 2, 3, 4]) == [2, 4]\nassert solo_pares([1, 3, 5]) == []\nassert solo_pares([10, 7, 8]) == [10, 8]\nprint("Pares filtrados OK")`}
+  starter={`numeros = [1, 2, 3, 4, 5, 6]\n\n# Creá una lista 'pares' con solo los números pares de 'numeros'\n`}
+  tests={`assert pares == [2, 4, 6], "pares debería ser [2, 4, 6]"\nprint("¡Pares filtrados!")`}
   pistas={[
     "Un número es par si el resto de dividirlo por 2 es 0: <code>n % 2 == 0</code>.",
-    "Recorré la lista y agregá solo los que cumplen la condición.",
+    "Recorré la lista y agregá a <code>pares</code> solo los que cumplen la condición.",
   ]}
-  solucion={`def solo_pares(numeros):\n    resultado = []\n    for n in numeros:\n        if n % 2 == 0:\n            resultado.append(n)\n    return resultado`}
+  solucion={`numeros = [1, 2, 3, 4, 5, 6]\n\npares = []\nfor n in numeros:\n    if n % 2 == 0:\n        pares.append(n)`}
 >
-Escribí `solo_pares(numeros)` que **devuelva** una lista nueva con **solo los números pares** de la
-lista original (en el mismo orden).
+Tenés la lista `numeros = [1, 2, 3, 4, 5, 6]`. Creá una lista **`pares`** con **solo los números
+pares** (en el mismo orden).
 
-Ejemplo: `solo_pares([1, 2, 3, 4])` → `[2, 4]`.
+Resultado esperado: `pares` debería ser `[2, 4, 6]`.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Contar con una condición"
   dificultad="🌿"
-  starter={`def contar_mayores(numeros, limite):\n    # ¿Cuántos números son ESTRICTAMENTE mayores que 'limite'?\n    pass`}
-  tests={`assert contar_mayores([1, 5, 8, 3], 4) == 2\nassert contar_mayores([1, 2, 3], 10) == 0\nassert contar_mayores([7, 7, 7], 6) == 3\nprint("Conteos OK")`}
+  starter={`numeros = [1, 5, 8, 3, 9, 2]\nlimite = 4\n\n# Guardá en 'cantidad' cuántos números son MAYORES que 'limite'\n`}
+  tests={`assert cantidad == 3, "cantidad debería ser 3 (5, 8 y 9)"\nprint("¡Conteo correcto!")`}
   pistas={[
-    "Llevá un contador en una variable que arranque en 0.",
-    "Por cada número mayor que <code>limite</code>, sumale 1 al contador.",
+    "Arrancá con un contador en cero: <code>cantidad = 0</code>.",
+    "Por cada número mayor que <code>limite</code>, hacé <code>cantidad += 1</code>.",
   ]}
-  solucion={`def contar_mayores(numeros, limite):\n    cantidad = 0\n    for n in numeros:\n        if n > limite:\n            cantidad += 1\n    return cantidad`}
+  solucion={`numeros = [1, 5, 8, 3, 9, 2]\nlimite = 4\n\ncantidad = 0\nfor n in numeros:\n    if n > limite:\n        cantidad += 1`}
 >
-Escribí `contar_mayores(numeros, limite)` que **devuelva cuántos** números de la lista son
+Tenés `numeros = [1, 5, 8, 3, 9, 2]` y `limite = 4`. Guardá en **`cantidad`** cuántos números son
 **estrictamente mayores** que `limite`.
 
-Ejemplo: `contar_mayores([1, 5, 8, 3], 4)` → `2`.
+Resultado esperado: `cantidad` debería ser `3` (son el 5, el 8 y el 9).
 </EjercicioPython>
 
 ## Para llevar
