@@ -1,0 +1,125 @@
+/* Estilos del curso. Starlight ya trae tipografía, dark mode y layout;
+   acá solo agregamos lo propio: el componente de ejercicio interactivo. */
+
+:root {
+  /* Acento del curso (verde "Python-friendly"). Ajustable. */
+  --ej-radio: 0.7rem;
+}
+
+/* ---------- Ejercicio interactivo ---------- */
+
+.ejercicio {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: var(--ej-radio);
+  padding: 1rem 1.1rem 1.2rem;
+  margin: 1.75rem 0;
+  background: var(--sl-color-black);
+}
+
+.ejercicio__header {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.4rem;
+}
+
+.ejercicio__dif {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.ejercicio__titulo {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.ejercicio__consigna {
+  margin-bottom: 0.9rem;
+}
+.ejercicio__consigna > :first-child { margin-top: 0; }
+.ejercicio__consigna > :last-child { margin-bottom: 0; }
+
+.ejercicio__editor {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* CodeMirror (clases globales, no se pueden alcanzar con estilos scoped). */
+.ejercicio .cm-editor {
+  font-size: 0.95rem;
+  max-height: 22rem;
+}
+.ejercicio .cm-editor.cm-focused {
+  outline: 2px solid var(--sl-color-accent);
+}
+.ejercicio .cm-scroller {
+  font-family: var(--__sl-font-mono, ui-monospace, monospace);
+}
+
+.ejercicio__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.ejercicio__btn {
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+  transition: filter 0.15s ease;
+}
+.ejercicio__btn:hover:not(:disabled) { filter: brightness(1.15); }
+.ejercicio__btn:disabled { opacity: 0.55; cursor: progress; }
+
+.ejercicio__btn--verify {
+  background: var(--sl-color-accent);
+  border-color: var(--sl-color-accent);
+  color: var(--sl-color-accent-low);
+}
+
+.ejercicio__salida {
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.ejercicio__salida.is-ok {
+  border-color: #2e7d32;
+  background: color-mix(in srgb, #2e7d32 15%, transparent);
+}
+.ejercicio__salida.is-error {
+  border-color: #c62828;
+  background: color-mix(in srgb, #c62828 15%, transparent);
+}
+.ejercicio__salida.is-loading {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.ejercicio__pistas,
+.ejercicio__solucion {
+  margin-top: 0.9rem;
+  font-size: 0.95rem;
+}
+.ejercicio__pistas summary,
+.ejercicio__solucion summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.ejercicio__aviso {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 0.4rem 0;
+}

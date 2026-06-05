@@ -1,0 +1,115 @@
+---
+title: Funciones I — definición, parámetros y retorno
+description: Tu primera caja de herramientas reutilizable. Aprendé a definir funciones haciendo, con ejercicios que se verifican solos.
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+
+:::tip[Antes de empezar]
+Esta clase es **interactiva**. Escribí el código en cada recuadro, tocá **▶ Ejecutar** para verlo
+correr y **✓ Verificar** para que los tests te digan si está bien. La primera vez tarda unos segundos
+en cargar Python. 🐍
+:::
+
+## El problema
+
+Tenés que saludar a tres personas:
+
+```python
+print("¡Hola, Ana!")
+print("¡Hola, Beto!")
+print("¡Hola, Carla!")
+```
+
+Funciona... pero si mañana el saludo cambia a "¡Buenas, Ana!", tenés que tocar **las tres líneas**.
+Y si fueran 100 personas, 100 líneas. Estás **repitiendo** la misma idea una y otra vez.
+
+¿Y si pudieras guardar la idea de "saludar" en un solo lugar, ponerle nombre, y reusarla las veces
+que quieras? Para eso existen las **funciones**.
+
+## Qué es una función
+
+Una función es un **bloque de código con nombre** que podés ejecutar (llamar) cuando quieras. Recibe
+datos de entrada (**parámetros**) y puede devolver un resultado (**retorno**).
+
+```python
+def saludar(nombre):       # 'nombre' es el parámetro (la entrada)
+    return f"¡Hola, {nombre}!"   # 'return' devuelve el resultado
+
+mensaje = saludar("Ana")   # la llamamos con "Ana"
+print(mensaje)             # ¡Hola, Ana!
+```
+
+Tres piezas clave:
+
+- **`def`** + nombre + `(parámetros)` → así se **define**.
+- **`return`** → el valor que la función **devuelve** a quien la llamó.
+- **Llamarla**: `saludar("Ana")` ejecuta el bloque con `nombre = "Ana"`.
+
+:::caution[`return` no es `print`]
+`print` **muestra** algo en pantalla; `return` **devuelve** un valor para seguir usándolo. Una
+función que solo hace `print` no te sirve para guardar el resultado en una variable.
+:::
+
+## Manos a la obra
+
+<EjercicioPython
+  titulo="Tu primera función"
+  dificultad="🌱"
+  starter={`def saludar(nombre):\n    # Tiene que DEVOLVER el texto "¡Hola, <nombre>!"\n    pass`}
+  tests={`assert saludar("Ana") == "¡Hola, Ana!", 'saludar("Ana") debería devolver "¡Hola, Ana!"'\nassert saludar("Beto") == "¡Hola, Beto!"\nprint("Probado con Ana y Beto")`}
+  pistas={[
+    "Usá <code>return</code>, no <code>print</code>.",
+    "Una f-string arma el texto fácil: <code>f\"¡Hola, {nombre}!\"</code>.",
+  ]}
+  solucion={`def saludar(nombre):\n    return f"¡Hola, {nombre}!"`}
+>
+Escribí una función `saludar(nombre)` que **devuelva** el texto `¡Hola, <nombre>!`.
+
+Por ejemplo, `saludar("Ana")` tiene que devolver `"¡Hola, Ana!"`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Más de un parámetro"
+  dificultad="🌿"
+  starter={`def area_rectangulo(base, altura):\n    pass`}
+  tests={`assert area_rectangulo(3, 4) == 12\nassert area_rectangulo(5, 2) == 10\nassert area_rectangulo(0, 9) == 0\nprint("Áreas calculadas OK")`}
+  pistas={[
+    "Una función puede recibir varios parámetros separados por coma.",
+    "El área de un rectángulo es base × altura.",
+  ]}
+  solucion={`def area_rectangulo(base, altura):\n    return base * altura`}
+>
+Una función puede recibir **varios** parámetros. Escribí `area_rectangulo(base, altura)` que
+**devuelva** el área (base por altura).
+
+Ejemplo: `area_rectangulo(3, 4)` → `12`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Funciones + listas"
+  dificultad="🌿"
+  starter={`def promedio(notas):\n    # 'notas' es una lista de números, ej: [10, 8, 9]\n    pass`}
+  tests={`assert promedio([10, 8, 9]) == 9\nassert promedio([4, 6]) == 5\nassert round(promedio([7, 8, 10]), 2) == 8.33\nprint("Promedios verificados")`}
+  pistas={[
+    "Ya conocés <code>sum(lista)</code> y <code>len(lista)</code>.",
+    "El promedio es la suma dividida por la cantidad de elementos.",
+  ]}
+  solucion={`def promedio(notas):\n    return sum(notas) / len(notas)`}
+>
+Combinemos con lo que ya sabés de listas. Escribí `promedio(notas)`, que recibe una **lista de
+números** y **devuelve** su promedio.
+
+Ejemplo: `promedio([10, 8, 9])` → `9`.
+</EjercicioPython>
+
+## Para llevar
+
+- `def nombre(parametros):` define una función.
+- `return` devuelve un valor (distinto de `print`).
+- Definís una vez, la llamás todas las veces que quieras → **menos repetición, menos errores**.
+
+:::note[¿Qué sigue?]
+En **Funciones II** vamos a ver el *scope* (dónde "viven" las variables), los valores por defecto y
+cómo una función puede recibir una cantidad variable de argumentos.
+:::

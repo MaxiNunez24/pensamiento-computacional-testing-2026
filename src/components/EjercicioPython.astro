@@ -1,0 +1,76 @@
+---
+/**
+ * Ejercicio interactivo con intérprete de Python embebido y tests.
+ *
+ * La consigna va en el slot (podés escribir Markdown/MDX adentro).
+ * El código del alumno se ejecuta en el navegador (Pyodide) y se verifica
+ * contra `tests` (código Python con asserts) sin mostrarle la solución.
+ *
+ * Ejemplo de uso en una página .mdx:
+ *
+ *   <EjercicioPython
+ *     titulo="Sumar dos números"
+ *     dificultad="🌱"
+ *     starter={`def sumar(a, b):\n    # tu código acá\n    pass`}
+ *     tests={`assert sumar(2, 3) == 5, "sumar(2, 3) debería dar 5"\nassert sumar(-1, 1) == 0`}
+ *     pistas={["¿Qué operador suma dos números?", "Acordate de <code>return</code>."]}
+ *   >
+ *     Escribí una función `sumar(a, b)` que devuelva la suma de los dos.
+ *   </EjercicioPython>
+ */
+interface Props {
+  titulo: string;
+  dificultad?: string; // 🌱 / 🌿 / 🌶️
+  starter?: string;
+  tests: string;
+  pistas?: string[];
+  solucion?: string;
+}
+
+const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion } = Astro.props;
+
+const id = 'ej-' + Math.random().toString(36).slice(2, 9);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+---
+
+<section class="ejercicio" id={id} data-starter={enc(starter)} data-tests={enc(tests)}>
+  <header class="ejercicio__header">
+    {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+  </header>
+
+  <div class="ejercicio__consigna">
+    <slot />
+  </div>
+
+  <div class="ejercicio__editor" data-editor></div>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-verify>✓ Verificar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-salida hidden></pre>
+
+  {pistas.length > 0 && (
+    <details class="ejercicio__pistas">
+      <summary>💡 Pistas</summary>
+      <ol>
+        {pistas.map((p) => <li set:html={p} />)}
+      </ol>
+    </details>
+  )}
+
+  {solucion && (
+    <details class="ejercicio__solucion">
+      <summary>✅ Ver una solución posible</summary>
+      <p class="ejercicio__aviso">Intentá resolverlo vos primero — se aprende haciendo 😉</p>
+      <pre><code>{solucion}</code></pre>
+    </details>
+  )}
+</section>
+
+<script>
+  import '../scripts/ejercicio-python.ts';
+</script>
