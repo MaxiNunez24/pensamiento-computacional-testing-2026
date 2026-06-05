@@ -107,8 +107,8 @@ else:
 
     **Corrección** (dos opciones equivalentes):
     ```python
-    # Opción A — cambiar los mensajes
-    if numero % 2 == 1:
+    # Opción A — cambiar los mensajes (mejor práctica)
+    if numero % 2 != 0:
         print(f"{numero} es impar")
     else:
         print(f"{numero} es par")
