@@ -20,6 +20,7 @@ export default defineConfig({
           label: '📚 Clases (demo)',
           items: [
             { label: '📋 Listas — guardar y recorrer datos', link: '/clases/listas/' },
+            { label: '🗝️ Sets — el cartón de Bingo', link: '/clases/sets/' },
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
           ],
         },
