@@ -76,7 +76,7 @@
 - 🌐 Cómo funciona la web
 - 🍶 Flask I, II y III
 - 🚀 Migración del Sistema de Asistencias a web
-- 💼 Bolsa de Trabajo (segundo proyecto)
+- 🤖 Bot de carga en SiGes con Playwright (segundo proyecto)
 
 ---
 
