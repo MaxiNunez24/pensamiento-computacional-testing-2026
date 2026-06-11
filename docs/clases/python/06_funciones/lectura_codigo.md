@@ -354,6 +354,212 @@ print(palabra_mas_larga(lista))
 
 ---
 
+## 🎰 Ronda extra — Cazando bugs en el Bingo
+
+!!! example "🖍️ Esta ronda es al pizarrón"
+    Estos seis fragmentos son **pedazos del Bingo** que vamos a construir hoy mismo, pero con un bug
+    cada uno. Los vamos a proyectar y, de a uno, **pasan al pizarrón** a marcar dónde está el error y
+    a escribir la corrección, explicando en voz alta el porqué.
+
+    No es casualidad que sea código de Bingo: cuando después del recreo lo armemos entre todos, ya
+    vas a tener estas piezas (y estas trampas) frescas en la cabeza. 🧠
+
+Para cada uno, las mismas tres preguntas de siempre: ¿qué hace tal como está?, ¿qué tipo de error
+es?, ¿cómo lo arreglás?
+
+---
+
+### 🌱 Bingo 1 — El cartón al que nunca le sale el 90
+
+**Debería hacer:** Generar un cartón de 15 números únicos entre el 1 y el 90 (ambos incluidos).
+
+```python
+import random
+
+carton = set(random.sample(range(1, 90), 15))
+print(sorted(carton))
+```
+
+??? success "✅ Análisis"
+    **Lo que hace:** Genera un cartón válido de 15 números... pero el **90 nunca puede aparecer**.
+
+    **El error:** Error de **lógica / off-by-one** (el mismo del "Del 1 al 10"). `range(1, 90)` llega
+    hasta el 89. Para incluir el 90 hay que llegar a 91.
+
+    **Corrección:**
+    ```python
+    carton = set(random.sample(range(1, 91), 15))   # ← 91 para que el 90 entre
+    ```
+
+---
+
+### 🌱 Bingo 2 — Sacar una bolilla de la bolsa
+
+**Debería hacer:** Elegir un número al azar del bolillero (que es un `set`) y mostrarlo.
+
+```python
+import random
+
+bolillero = set(range(1, 91))
+numero = random.choice(bolillero)
+print(f"Salió el {numero}")
+```
+
+??? success "✅ Análisis"
+    **Lo que hace:** Lanza un `TypeError`.
+
+    **El error:** `random.choice` necesita algo **indexable** (que se pueda acceder por posición, como
+    una lista). Un `set` no tiene orden ni posiciones, así que no sirve directo.
+
+    ```
+    TypeError: 'set' object is not subscriptable
+    ```
+
+    **Corrección:** convertir el set a lista solo para elegir.
+    ```python
+    numero = random.choice(list(bolillero))
+    ```
+
+---
+
+### 🌿 Bingo 3 — El número que sale pero no se marca
+
+**Debería hacer:** Sortear un número, sacarlo del bolillero y registrarlo en los sorteados.
+
+```python
+import random
+
+carton    = {3, 11, 18}
+bolillero = {3, 11, 18, 50, 77}
+sorteados = set()
+
+numero = random.choice(list(bolillero))
+bolillero.remove(numero)
+if numero in carton:
+    print(f"¡Salió el {numero}, está en tu cartón!")
+
+print("¿Ganó?", carton.issubset(sorteados))
+```
+
+??? success "✅ Análisis"
+    **Lo que hace:** Sortea bien, pero `¿Ganó?` siempre da `False`, aunque salgan todos los números
+    del cartón. En el juego real, esto sería un **bucle infinito**: nadie gana nunca.
+
+    **El error:** Error de **lógica**. Nunca se agrega el número a `sorteados`, así que ese set queda
+    siempre vacío y `issubset` jamás se cumple.
+
+    **Corrección:** registrar el número sorteado.
+    ```python
+    numero = random.choice(list(bolillero))
+    bolillero.remove(numero)
+    sorteados.add(numero)        # ← sin esto, no se marca nada
+    ```
+
+---
+
+### 🌿 Bingo 4 — El juego que termina antes de empezar
+
+**Debería hacer:** Repetir turnos **mientras** el jugador todavía **no** ganó.
+
+```python
+sorteados = set()
+turnos = 0
+
+while verificar_ganador(carton, sorteados):
+    numero = sortear_numero(bolillero)
+    sorteados.add(numero)
+    turnos += 1
+
+print(f"Fin del juego en {turnos} turnos")
+```
+
+??? success "✅ Análisis"
+    **Lo que hace:** Imprime `Fin del juego en 0 turnos`. El juego **no arranca nunca**.
+
+    **El error:** Error de **lógica**. Al empezar nadie ganó, así que `verificar_ganador(...)` da
+    `False` y el `while` no entra ni una vez. Queremos seguir mientras **no** se haya ganado.
+
+    **Corrección:** agregar el `not`.
+    ```python
+    while not verificar_ganador(carton, sorteados):
+        ...
+    ```
+
+    !!! tip "🧠 Truco para no equivocarse"
+        Leé la condición del `while` en voz alta como una pregunta: *"¿sigo jugando?"*. La respuesta
+        es "sí, mientras **no** haya ganado". Si la frase necesita un "no", el código también.
+
+---
+
+### 🌿 Bingo 5 — ¿Ganó de verdad?
+
+**Debería hacer:** Cantar BINGO cuando **todos** los números del cartón ya salieron.
+
+```python
+carton    = {7, 22, 41}
+sorteados = {7, 22, 41, 5, 88, 90, 13}
+
+if carton == sorteados:
+    print("🎉 ¡BINGO!")
+else:
+    print("Todavía no...")
+```
+
+??? success "✅ Análisis"
+    **Lo que hace:** Imprime `Todavía no...`, ¡aunque los tres números del cartón (7, 22 y 41) ya
+    salieron!
+
+    **El error:** Error de **lógica**. `==` exige que los dos sets sean **idénticos**. Como
+    `sorteados` tiene además otros números (5, 88, 90, 13), nunca van a ser iguales. Lo que queremos
+    preguntar es *"¿están todos los del cartón dentro de los sorteados?"* → eso es `issubset`.
+
+    **Corrección:**
+    ```python
+    if carton.issubset(sorteados):   # ¿el cartón está contenido en lo sorteado?
+        print("🎉 ¡BINGO!")
+    ```
+    El `carton <= sorteados` hace exactamente lo mismo, más cortito.
+
+---
+
+### 🌶️ Bingo 6 — Marcados y faltantes, pero al revés
+
+**Debería hacer:** Contar cuántos números del cartón ya salieron (marcados) y cuántos faltan.
+
+```python
+carton    = {5, 12, 30, 44, 60}
+sorteados = {12, 44, 7, 88}
+
+marcados   = carton - sorteados
+pendientes = carton & sorteados
+
+print(f"Marcados: {len(marcados)}  |  Faltan: {len(pendientes)}")
+```
+
+??? success "✅ Análisis"
+    **Lo que hace:** Imprime `Marcados: 3  |  Faltan: 2`. Está **al revés**: en realidad salieron 2
+    (el 12 y el 44) y faltan 3 (el 5, el 30 y el 60).
+
+    **El error:** Error de **lógica de sets**. Las dos operaciones están cambiadas:
+
+    - Los **marcados** (los del cartón que **ya salieron**) son la **intersección**: `carton & sorteados`.
+    - Los **pendientes** (los que **faltan**) son la **diferencia**: `carton - sorteados`.
+
+    **Corrección:**
+    ```python
+    marcados   = carton & sorteados   # los que están en AMBOS
+    pendientes = carton - sorteados   # los del cartón que NO salieron
+    ```
+
+---
+
+!!! success "🍿 Y después del recreo…"
+    Ya cazaste los seis bugs más comunes del Bingo. Ahora sí: **armamos el juego completo entre
+    todos**, de cero a BINGO. Cada función que escribas hoy ya la viste pasar por acá — toca ponerlas
+    a jugar juntas. 🎰
+
+---
+
 ## 📌 Resumen: errores y sus causas
 
 | Error | Causa más común | Solución típica |

@@ -108,10 +108,11 @@
 | Vie 22/5 | Cómo encarar un ejercicio + Python Tutor | [📄](./clases/python/06_funciones/como_encarar_ejercicios.md) |
 | Mié 27/5 | Repaso general | [📄](./clases/python/06_funciones/repaso.md) |
 | Vie 29/5 | Lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
-| Mié 3/6 | **Bingo** — ejercicio integrador de colecciones y funciones | [📄](./clases/python/06_funciones/bingo.md) |
-| Vie 5/6 | 🚫 Sin clases (parcial del profe) | |
+| Vie 5/6 | 🚫 Sin clases — el profe rindió un examen de la facultad. ¡Mil disculpas y gracias por entender! 🙏 | |
+| Mié 11/6 | Cierre del repaso de lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
 
-<!-- Próxima clase: agregá la fila acá abajo a medida que las vayas dando -->
+<!-- Próxima — Vie 13/6: ronda de bugs del Bingo (al pizarrón) + armar el Bingo entre todos.
+     Profe: si hubo clase el 3/6 (entre el 29/5 y el 5/6), agregá su fila con el tema real. -->
 
 ---
 
