@@ -18,6 +18,7 @@ lección de muestra (`Funciones I`).
 | Colección de contenido | `src/content.config.ts` |
 | Estilos propios | `src/styles/custom.css` |
 | Motor de ejercicio (cliente) | `src/scripts/ejercicio-python.ts` |
+| Worker de Pyodide | `src/scripts/pyodide-worker.ts` |
 | Componente de ejercicio | `src/components/EjercicioPython.astro` |
 | Landing | `src/content/docs/index.mdx` |
 | Lección de muestra | `src/content/docs/clases/funciones-1.mdx` |
@@ -58,9 +59,12 @@ La **consigna en Markdown** va acá adentro, con ejemplo de entrada/salida.
 - **`solucion`**: opcional, detrás de un `<details>`. Mejor que el alumno llegue por los tests.
 - El nombre de la función/variable que piden los tests debe coincidir con el de la consigna.
 
-> El motor (`ejercicio-python.ts`) carga Pyodide **una sola vez por página** (perezosamente, en la
-> primera ejecución) y lo comparte entre todos los ejercicios. La primera corrida tarda unos segundos
-> (descarga ~10 MB del CDN de jsdelivr); después es instantáneo y queda cacheado.
+> El motor (`ejercicio-python.ts`) corre Pyodide en un **Web Worker** (`pyodide-worker.ts`): si un
+> alumno escribe un bucle infinito, la página NO se congela — a los 15 segundos se corta la
+> ejecución, se reinicia el intérprete solo y se le muestra un mensaje pedagógico ("¿habrá quedado
+> un bucle infinito?"). Python se **precarga en segundo plano** apenas el alumno toca un editor, así
+> el primer "Verificar" no espera la descarga (~10 MB del CDN, después queda cacheado). Un solo
+> intérprete compartido por página.
 
 ---
 
@@ -98,9 +102,9 @@ Cada clase que use tabs, asides con título, o ejercicios pasa a `.mdx` (no `.md
 
 ## Pendientes técnicos antes del lanzamiento
 
-- [ ] **Comando `generar-clase`**: actualizarlo para emitir el formato interactivo (asides +
-      `<EjercicioPython>`), sin soluciones spoiler. (Bloqueado en el POC por permisos de
-      auto-modificación del agente — pedir OK explícito.)
+- [x] **Comando `generar-clase`**: actualizado — emite el formato interactivo y respeta el orden de
+      prerequisitos (sin `def` antes de Funciones; todo elemento nuevo del starter se explica la
+      primera vez).
 - [ ] **`site` en `astro.config.mjs`**: setear la URL final (para sitemap y canonical).
 - [ ] **Deploy**: workflow de GitHub Actions que haga `npm run build` y publique `dist/` en GitHub
       Pages **solo desde `main`** (la rama `dev` se pushea pero NO se despliega).

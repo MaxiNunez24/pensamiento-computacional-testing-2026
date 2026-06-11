@@ -1,79 +1,101 @@
-// Motor de ejercicios interactivos: CodeMirror (editor) + Pyodide (Python real
-// en el navegador). Un solo Pyodide compartido por toda la página, cargado de
-// forma perezosa la primera vez que el alumno ejecuta algo.
+// Motor de ejercicios interactivos: CodeMirror (editor) + Pyodide (Python real)
+// corriendo en un WEB WORKER. Un solo intérprete compartido por toda la página,
+// cargado de forma perezosa (se precarga apenas el alumno toca un editor).
+//
+// El worker protege la página: si el código del alumno se cuelga (bucle
+// infinito), el hilo principal detecta el timeout, termina el worker y lo
+// recrea, mostrando un mensaje pedagógico en lugar de congelar la pestaña.
 
 import { EditorView, basicSetup } from 'codemirror';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
 
-const PYODIDE_VERSION = 'v0.29.4';
-const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/${PYODIDE_VERSION}/full/`;
-
-let pyodidePromise: Promise<any> | null = null;
-
-// Helper Python que ejecuta el código del alumno y, opcionalmente, los tests.
-// Devuelve un JSON con { ok, out, err } para evitar conversiones raras JS<->Py.
-const RUNNER = `
-import sys, io, traceback, json
-
-def _run_user(code, tests=""):
-    buf = io.StringIO()
-    old = sys.stdout
-    sys.stdout = buf
-    ns = {}
-    ok = True
-    err = ""
-    try:
-        exec(compile(code, "tu_codigo", "exec"), ns)
-        if tests:
-            exec(compile(tests, "los_tests", "exec"), ns)
-    except SyntaxError as e:
-        ok = False
-        donde = "tu código" if e.filename == "tu_codigo" else "los tests"
-        err = f"Error de sintaxis en {donde}, línea {e.lineno}: {e.msg}"
-    except Exception as e:
-        ok = False
-        tb = traceback.extract_tb(sys.exc_info()[2])
-        partes = []
-        for f in tb:
-            if f.filename in ("tu_codigo", "los_tests"):
-                donde = "tu código" if f.filename == "tu_codigo" else "los tests"
-                linea = (f.line or "").strip()
-                if linea:
-                    partes.append(f"En {donde}, línea {f.lineno}:  {linea}")
-                else:
-                    partes.append(f"En {donde}, línea {f.lineno}")
-        tipo = type(e).__name__
-        msg = str(e)
-        partes.append(f"{tipo}: {msg}" if msg else tipo)
-        err = "\\n".join(partes)
-    finally:
-        sys.stdout = old
-    return json.dumps({"ok": ok, "out": buf.getvalue(), "err": err})
-`;
-
-async function getPyodide(): Promise<any> {
-  if (!pyodidePromise) {
-    pyodidePromise = (async () => {
-      const mod = await import(/* @vite-ignore */ `${PYODIDE_URL}pyodide.mjs`);
-      const py = await mod.loadPyodide({ indexURL: PYODIDE_URL });
-      py.runPython(RUNNER);
-      return py;
-    })();
-  }
-  return pyodidePromise;
-}
-
-function b64decode(s: string): string {
-  if (!s) return '';
-  const bytes = Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
-}
+const RUN_TIMEOUT_MS = 15_000;
 
 interface RunResult {
   ok: boolean;
   out: string;
   err: string;
+}
+
+class TimeoutError extends Error {}
+
+// ---------- Manejo del worker (singleton) ----------
+
+let worker: Worker | null = null;
+let readyPromise: Promise<void> | null = null;
+let isReady = false;
+let nextId = 1;
+const pending = new Map<number, { resolve: (raw: string) => void; reject: (e: Error) => void }>();
+
+function resetWorker(reason: Error): void {
+  worker?.terminate();
+  worker = null;
+  readyPromise = null;
+  isReady = false;
+  pending.forEach((p) => p.reject(reason));
+  pending.clear();
+}
+
+function ensureWorker(): Promise<void> {
+  if (!readyPromise) {
+    const w = new Worker(new URL('./pyodide-worker.ts', import.meta.url), { type: 'module' });
+    worker = w;
+    readyPromise = new Promise<void>((resolve, reject) => {
+      w.onmessage = (ev: MessageEvent) => {
+        const d = ev.data;
+        if (d.type === 'ready') {
+          isReady = true;
+          resolve();
+        } else if (d.type === 'init-error') {
+          reject(new Error(d.error));
+          resetWorker(new Error(d.error));
+        } else if (d.type === 'result') {
+          const p = pending.get(d.id);
+          if (p) {
+            pending.delete(d.id);
+            p.resolve(d.raw);
+          }
+        }
+      };
+      w.onerror = (e) => reject(new Error(e.message || 'falló el worker de Python'));
+    });
+  }
+  return readyPromise;
+}
+
+async function runPython(code: string, tests: string): Promise<RunResult> {
+  await ensureWorker();
+  const id = nextId++;
+  const raw = await new Promise<string>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      pending.delete(id);
+      // El código del alumno sigue colgado dentro del worker: lo terminamos
+      // y dejamos todo listo para recrear el intérprete en la próxima corrida.
+      resetWorker(new TimeoutError());
+      reject(new TimeoutError());
+    }, RUN_TIMEOUT_MS);
+    pending.set(id, {
+      resolve: (r) => {
+        clearTimeout(timer);
+        resolve(r);
+      },
+      reject: (e) => {
+        clearTimeout(timer);
+        reject(e);
+      },
+    });
+    worker!.postMessage({ id, code, tests });
+  });
+  return JSON.parse(raw) as RunResult;
+}
+
+// ---------- Un ejercicio ----------
+
+function b64decode(s: string): string {
+  if (!s) return '';
+  const bytes = Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
 }
 
 function initEjercicio(el: HTMLElement): void {
@@ -110,11 +132,16 @@ function initEjercicio(el: HTMLElement): void {
 
   const correr = async (conTests: boolean) => {
     setBusy(true);
-    show(conTests ? '⏳ Ejecutando tests…' : '⏳ Cargando Python…', 'is-loading');
+    show(
+      isReady
+        ? conTests
+          ? '⏳ Ejecutando tests…'
+          : '⏳ Ejecutando…'
+        : '⏳ Cargando Python (la primera vez tarda unos segundos)…',
+      'is-loading',
+    );
     try {
-      const py = await getPyodide();
-      const raw: string = py.globals.get('_run_user')(getCode(), conTests ? tests : '');
-      const res: RunResult = JSON.parse(raw);
+      const res = await runPython(getCode(), conTests ? tests : '');
       const out = res.out.trimEnd();
       if (!conTests) {
         // Botón "Ejecutar": solo muestra lo que imprime el código.
@@ -126,7 +153,19 @@ function initEjercicio(el: HTMLElement): void {
         show((out ? out + '\n\n' : '') + '❌ Todavía no pasa:\n\n' + res.err, 'is-error');
       }
     } catch (e) {
-      show('⚠️ Error cargando el intérprete de Python:\n' + String(e), 'is-error');
+      if (e instanceof TimeoutError) {
+        show(
+          '⏱️ Tu código tardó más de ' +
+            RUN_TIMEOUT_MS / 1000 +
+            ' segundos y lo detuvimos.\n\n' +
+            '¿Habrá quedado un bucle infinito? Revisá la condición de tu while:\n' +
+            '¿en algún momento se vuelve falsa?\n\n' +
+            'Corregilo y volvé a intentar (el intérprete se reinicia solo).',
+          'is-error',
+        );
+      } else {
+        show('⚠️ Error cargando el intérprete de Python:\n' + String(e), 'is-error');
+      }
     } finally {
       setBusy(false);
     }
@@ -146,6 +185,12 @@ function initEjercicio(el: HTMLElement): void {
       correr(true);
     }
   });
+
+  // Precarga: apenas el alumno toca el editor, arrancamos la descarga de
+  // Python en segundo plano para que el primer "Verificar" sea rápido.
+  const precargar = () => void ensureWorker().catch(() => {});
+  editorEl.addEventListener('focusin', precargar, { once: true });
+  editorEl.addEventListener('pointerdown', precargar, { once: true });
 }
 
 function boot(): void {
