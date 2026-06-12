@@ -107,12 +107,13 @@
 | Mié 20/5 | Funciones II: scope, valores por defecto, `*args`/`**kwargs` | [📄](./clases/python/06_funciones/funciones_2.md) |
 | Vie 22/5 | Cómo encarar un ejercicio + Python Tutor | [📄](./clases/python/06_funciones/como_encarar_ejercicios.md) |
 | Mié 27/5 | Repaso general | [📄](./clases/python/06_funciones/repaso.md) |
-| Vie 29/5 | Lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
-| Vie 5/6 | 🚫 Sin clases — el profe rindió un examen de la facultad. ¡Mil disculpas y gracias por entender! 🙏 | |
-| Mié 11/6 | Cierre del repaso de lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
+| Vie 29/5 | Continuación del Repaso general | [📄](./clases/python/06_funciones/repaso.md) |
+| Mié 3/6 | Resolución de ejercicios variados de clases previas | |
+| Vie 5/6 | 🚫 Sin clases (el profe rindió un examen de la facultad — ¡mil disculpas!). ¡Gracias por comprender! 🙏 | |
+| Mié 10/6 | Lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
+| Vie 12/6 | Ronda de bugs + **Bingo** — ejercicio integrador de colecciones y funciones | [📄](./clases/python/06_funciones/bingo.md) |
 
-<!-- Próxima — Vie 13/6: ronda de bugs del Bingo (al pizarrón) + armar el Bingo entre todos.
-     Profe: si hubo clase el 3/6 (entre el 29/5 y el 5/6), agregá su fila con el tema real. -->
+<!-- Próxima clase: agregá la fila acá abajo a medida que las vayas dando -->
 
 ---
 

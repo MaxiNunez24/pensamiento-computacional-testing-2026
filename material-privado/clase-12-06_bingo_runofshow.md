@@ -1,4 +1,4 @@
-# 🎬 Run-of-show — Viernes 13/6 (Lectura de bugs + Bingo)
+# 🎬 Run-of-show — Viernes 12/6 (Lectura de bugs + Bingo)
 
 > Nota del profe (privada, no se publica). Clase de 3h20m, 14:00–17:20.
 > Objetivo: cerrar el Bloque 2 armando el Bingo entre todos. La primera hora caza los bugs más
