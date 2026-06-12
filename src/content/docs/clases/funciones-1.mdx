@@ -67,7 +67,6 @@ mientras todavía no lo escribiste. **Borralo y poné tu solución** en su lugar
     "Usá <code>return</code>, no <code>print</code>.",
     "Una f-string arma el texto fácil: <code>f\"¡Hola, {nombre}!\"</code>.",
   ]}
-  solucion={`def saludar(nombre):\n    return f"¡Hola, {nombre}!"`}
 >
 Escribí una función `saludar(nombre)` que **devuelva** el texto `¡Hola, <nombre>!`.
 
@@ -78,12 +77,11 @@ Por ejemplo, `saludar("Ana")` tiene que devolver `"¡Hola, Ana!"`.
   titulo="Más de un parámetro"
   dificultad="🌿"
   starter={`def area_rectangulo(base, altura):\n    pass`}
-  tests={`assert area_rectangulo(3, 4) == 12\nassert area_rectangulo(5, 2) == 10\nassert area_rectangulo(0, 9) == 0\nprint("Áreas calculadas OK")`}
+  tests={`assert area_rectangulo(3, 4) == 12, "el área de 3 x 4 debería ser 12"\nassert area_rectangulo(5, 2) == 10, "el área de 5 x 2 debería ser 10"\nassert area_rectangulo(0, 9) == 0, "el área de 0 x 9 debería ser 0"\nprint("Áreas calculadas OK")`}
   pistas={[
     "Una función puede recibir varios parámetros separados por coma.",
     "El área de un rectángulo es base × altura.",
   ]}
-  solucion={`def area_rectangulo(base, altura):\n    return base * altura`}
 >
 Una función puede recibir **varios** parámetros. Escribí `area_rectangulo(base, altura)` que
 **devuelva** el área (base por altura).
@@ -95,12 +93,11 @@ Ejemplo: `area_rectangulo(3, 4)` → `12`.
   titulo="Funciones + listas"
   dificultad="🌿"
   starter={`def promedio(notas):\n    # 'notas' es una lista de números, ej: [10, 8, 9]\n    pass`}
-  tests={`assert promedio([10, 8, 9]) == 9\nassert promedio([4, 6]) == 5\nassert round(promedio([7, 8, 10]), 2) == 8.33\nprint("Promedios verificados")`}
+  tests={`assert promedio([10, 8, 9]) == 9, "el promedio de [10, 8, 9] debería ser 9"\nassert promedio([4, 6]) == 5, "el promedio de [4, 6] debería ser 5"\nassert round(promedio([7, 8, 10]), 2) == 8.33, "el promedio de [7, 8, 10] debería ser 8.33"\nprint("Promedios verificados")`}
   pistas={[
     "Ya conocés <code>sum(lista)</code> y <code>len(lista)</code>.",
     "El promedio es la suma dividida por la cantidad de elementos.",
   ]}
-  solucion={`def promedio(notas):\n    return sum(notas) / len(notas)`}
 >
 Combinemos con lo que ya sabés de listas. Escribí `promedio(notas)`, que recibe una **lista de
 números** y **devuelve** su promedio.

@@ -7,10 +7,51 @@
 // recrea, mostrando un mensaje pedagógico en lugar de congelar la pestaña.
 
 import { EditorView, basicSetup } from 'codemirror';
+import { keymap } from '@codemirror/view';
+import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
 
 const RUN_TIMEOUT_MS = 15_000;
+
+// Casilla a la que el alumno manda su código (un solo lugar para cambiarla).
+const EMAIL_PROFE = 'maxinunez434@gmail.com';
+
+// Theme propio: fija tipografía e interlineado del editor con alta especificidad,
+// para que los estilos de Starlight no desfasen las líneas ni el cursor. El
+// line-height va en .cm-content/.cm-gutters (lo que CodeMirror mide por línea).
+const editorTheme = EditorView.theme({
+  '&': { fontSize: '0.95rem', maxHeight: '22rem' },
+  '.cm-scroller': {
+    fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
+  },
+  '.cm-content, .cm-gutters': {
+    lineHeight: '1.4',
+  },
+});
+
+// Nombre del alumno: se pide una vez y se guarda en el navegador.
+function obtenerNombreAlumno(): string | null {
+  let nombre = '';
+  try {
+    nombre = localStorage.getItem('pc_alumno') || '';
+  } catch {
+    /* localStorage puede no estar disponible */
+  }
+  if (!nombre) {
+    const ingresado = window.prompt(
+      '¿Cómo te llamás? (para que el profe sepa de quién es el código)',
+    );
+    nombre = (ingresado || '').trim();
+    if (!nombre) return null; // canceló o lo dejó vacío
+    try {
+      localStorage.setItem('pc_alumno', nombre);
+    } catch {
+      /* sin persistencia, pero igual mandamos este envío */
+    }
+  }
+  return nombre;
+}
 
 interface RunResult {
   ok: boolean;
@@ -107,16 +148,24 @@ function initEjercicio(el: HTMLElement): void {
   const btnRun = el.querySelector<HTMLButtonElement>('[data-run]');
   const btnVerify = el.querySelector<HTMLButtonElement>('[data-verify]');
   const btnReset = el.querySelector<HTMLButtonElement>('[data-reset]');
+  const btnEnviar = el.querySelector<HTMLButtonElement>('[data-enviar]');
   if (!editorEl || !salida) return;
 
   const view = new EditorView({
     doc: starter,
-    extensions: [basicSetup, python(), oneDark],
+    // keymap.of([indentWithTab]) hace que Tab indente en vez de saltar el foco.
+    extensions: [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab])],
     parent: editorEl,
   });
   // Handle del editor accesible desde el DOM (útil para tests y para setear
   // el código programáticamente).
   (el as unknown as { __cmView: EditorView }).__cmView = view;
+
+  // Re-medir cuando carga la fuente monoespaciada: si no, CodeMirror midió con
+  // la fuente de fallback y el caret queda corrido respecto de la línea.
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => view.requestMeasure()).catch(() => {});
+  }
 
   const getCode = () => view.state.doc.toString();
 
@@ -184,6 +233,27 @@ function initEjercicio(el: HTMLElement): void {
       e.preventDefault();
       correr(true);
     }
+  });
+
+  // Enviar el código al profe por email (mailto: 100% estático, sin terceros).
+  btnEnviar?.addEventListener('click', () => {
+    const nombre = obtenerNombreAlumno();
+    if (!nombre) return; // canceló el nombre
+    const titulo = el.dataset.titulo || 'Ejercicio';
+    const asunto = `${nombre} — ${titulo}`;
+    const cuerpo =
+      `¡Hola profe! Te mando mi intento. 🙂\n\n` +
+      `Lección: ${document.title}\n` +
+      `${location.href}\n` +
+      `Ejercicio: ${titulo}\n` +
+      `Alumno/a: ${nombre}\n\n` +
+      `--- mi código ---\n` +
+      `${getCode()}\n`;
+    const mailto =
+      `mailto:${EMAIL_PROFE}` +
+      `?subject=${encodeURIComponent(asunto)}` +
+      `&body=${encodeURIComponent(cuerpo)}`;
+    window.location.href = mailto;
   });
 
   // Precarga: apenas el alumno toca el editor, arrancamos la descarga de

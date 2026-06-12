@@ -11,9 +11,14 @@ const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/${PYODIDE_VERSION}/full/`;
 // Ejecuta el código del alumno y, opcionalmente, los tests, capturando stdout.
 // Devuelve JSON {ok, out, err} con errores traducidos a mensajes amigables.
 const RUNNER = `
-import sys, io, traceback, json
+import sys, io, traceback, json, linecache
 
 def _run_user(code, tests=""):
+    # Registramos el código en linecache para que el traceback pueda mostrar
+    # la línea EXACTA que falló (sin esto, al venir de un string, queda en blanco).
+    linecache.cache["tu_codigo"] = (len(code), None, code.splitlines(keepends=True), "tu_codigo")
+    linecache.cache["los_tests"] = (len(tests), None, tests.splitlines(keepends=True), "los_tests")
+
     buf = io.StringIO()
     old = sys.stdout
     sys.stdout = buf
@@ -40,9 +45,12 @@ def _run_user(code, tests=""):
                     partes.append(f"En {donde}, línea {f.lineno}:  {linea}")
                 else:
                     partes.append(f"En {donde}, línea {f.lineno}")
-        tipo = type(e).__name__
         msg = str(e)
-        partes.append(f"{tipo}: {msg}" if msg else tipo)
+        if isinstance(e, AssertionError):
+            partes.append(msg if msg else "Ese caso no dio el resultado esperado.")
+        else:
+            tipo = type(e).__name__
+            partes.append(f"{tipo}: {msg}" if msg else tipo)
         err = "\\n".join(partes)
     finally:
         sys.stdout = old

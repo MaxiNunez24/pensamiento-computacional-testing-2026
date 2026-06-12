@@ -33,7 +33,7 @@ const id = 'ej-' + Math.random().toString(36).slice(2, 9);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 ---
 
-<section class="ejercicio" id={id} data-starter={enc(starter)} data-tests={enc(tests)}>
+<section class="ejercicio" id={id} data-titulo={titulo} data-starter={enc(starter)} data-tests={enc(tests)}>
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
     <h3 class="ejercicio__titulo">{titulo}</h3>
@@ -49,6 +49,12 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
     <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
     <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-verify title="Verificar (Ctrl/Cmd + Enter)">✓ Verificar</button>
     <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--enviar"
+      data-enviar
+      title="Enviar tu código al profe por email"
+    >✉️ Enviar a mi profe</button>
   </div>
 
   <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>

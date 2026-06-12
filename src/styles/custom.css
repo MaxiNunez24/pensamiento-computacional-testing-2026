@@ -4,6 +4,8 @@
 :root {
   /* Acento del curso (verde "Python-friendly"). Ajustable. */
   --ej-radio: 0.7rem;
+  /* Sidebar más angosto para ganar espacio de lectura (default Starlight: 18.75rem). */
+  --sl-sidebar-width: 16rem;
 }
 
 /* ---------- Ejercicio interactivo ---------- */
@@ -45,16 +47,10 @@
   overflow: hidden;
 }
 
-/* CodeMirror (clases globales, no se pueden alcanzar con estilos scoped). */
-.ejercicio .cm-editor {
-  font-size: 0.95rem;
-  max-height: 22rem;
-}
+/* CodeMirror: la tipografía y el interlineado se fijan en el theme JS
+   (editorTheme) para ganarle a los estilos de Starlight. Acá solo el foco. */
 .ejercicio .cm-editor.cm-focused {
   outline: 2px solid var(--sl-color-accent);
-}
-.ejercicio .cm-scroller {
-  font-family: var(--__sl-font-mono, ui-monospace, monospace);
 }
 
 .ejercicio__acciones {
@@ -82,6 +78,17 @@
   background: var(--sl-color-accent);
   border-color: var(--sl-color-accent);
   color: var(--sl-color-accent-low);
+}
+
+/* Enviar al profe: discreto y separado a la derecha, para que no compita
+   con Ejecutar/Verificar. */
+.ejercicio__btn--enviar {
+  margin-left: auto;
+  background: transparent;
+  font-weight: 500;
+}
+@media (max-width: 30rem) {
+  .ejercicio__btn--enviar { margin-left: 0; }
 }
 
 .ejercicio__salida {

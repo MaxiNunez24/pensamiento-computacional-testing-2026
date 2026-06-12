@@ -92,7 +92,6 @@ import EjercicioPython from '../../../components/EjercicioPython.astro';
   starter={`def saludar(nombre):\n    pass`}
   tests={`assert saludar("Ana") == "¡Hola, Ana!", 'saludar("Ana") debería dar "¡Hola, Ana!"'`}
   pistas={["Usá <code>return</code>, no <code>print</code>.", "Probá una f-string."]}
-  solucion={`def saludar(nombre):\n    return f"¡Hola, {nombre}!"`}
 >
 La **consigna en Markdown** va acá adentro, con ejemplo de entrada/salida.
 </EjercicioPython>
@@ -105,7 +104,9 @@ Reglas para escribir buenos ejercicios interactivos:
   negativos).
 - `starter` da el esqueleto mínimo, no la solución.
 - `pistas` guían el pensamiento (preguntas/analogías), aceptan HTML simple. No des el código.
-- `solucion` es **opcional** y va detrás de fricción; preferí que el alumno llegue por los tests.
+- **Por defecto NO incluyas `solucion`.** Si los tests están bien hechos, mostrar la solución
+  pre-condiciona al alumno (la abre por ansiedad/frustración). El componente la soporta como prop
+  opcional, pero la decisión de agregar una a un ejercicio puntual es del profe (si se la piden mucho).
 - El nombre que piden los tests tiene que coincidir con el de la consigna.
 
 ### 🔑 Ordenar ejercicios con los prerequisitos (¡importante!)

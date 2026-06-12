@@ -18,9 +18,10 @@ export default defineConfig({
         { label: '🏠 Inicio', link: '/' },
         {
           label: '📚 Clases (demo)',
+          collapsed: true,
           items: [
-            { label: '📋 Listas — guardar y recorrer datos', link: '/clases/listas/' },
-            { label: '🗝️ Sets — el cartón de Bingo', link: '/clases/sets/' },
+            { label: '📋 Listas', link: '/clases/listas/' },
+            { label: '🗝️ Sets', link: '/clases/sets/' },
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
           ],
         },
