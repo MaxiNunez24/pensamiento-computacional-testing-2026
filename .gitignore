@@ -1,6 +1,13 @@
 # MkDocs — sitio generado (gh-deploy lo maneja en gh-pages)
 site/
 
+# Astro (migración a la plataforma interactiva — rama dev)
+node_modules/
+dist/
+.astro/
+.env
+.env.production
+
 # Claude Code — configuración local de esta máquina
 .claude/settings.local.json
 .claude/worktrees/
