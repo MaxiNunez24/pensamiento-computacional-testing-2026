@@ -28,6 +28,48 @@ nombres = ["Ana", "Beto", "Cami"]
 
 ---
 
+## 🧰 Preparación — copiá, pegá y ejecutá
+
+Antes de arrancar, vamos a dejar lista la "cancha" para los ejercicios de hoy. **Copiá este código,
+pegalo en un archivo `preparar.py` y ejecutalo una vez.** Te va a crear los archivos de práctica.
+
+```python
+from pathlib import Path
+
+# 1) Un archivo de texto con varios párrafos (lo usa el Ejercicio 2)
+texto = """La informática transformó el mundo en pocas décadas.
+Hoy programar es una habilidad tan útil como leer o escribir.
+Con Python, automatizar tareas aburridas es cuestión de minutos.
+Y esto recién empieza."""
+Path("texto.txt").write_text(texto, encoding="utf-8")
+
+# 2) Una carpeta con archivos de nombres "sucios" (los vas a ordenar en el último ejercicio)
+carpeta = Path("practica_archivos")
+carpeta.mkdir(exist_ok=True)
+
+nombres = [
+    "Apunte De Clase.txt", "Tarea Para El Lunes.txt", "Lista De Compras.txt",
+    "NOTAS Importantes.txt", "Mi Resumen Final.txt", "Fotos Del Viaje.txt",
+    "Presupuesto 2026.txt", "Ideas Locas.txt", "Pendientes De Hoy.txt",
+    "Receta De La Abuela.txt", "Cosas Por Comprar.txt", "Borrador Sin Titulo.txt",
+]
+for nombre in nombres:
+    (carpeta / nombre).write_text("archivo de práctica", encoding="utf-8")
+
+print(f"✅ Listo: creé 'texto.txt' y {len(nombres)} archivos en '{carpeta}/' en un parpadeo.")
+```
+
+!!! tip "🤯 Sentí la potencia"
+    Acabás de crear 13 archivos en una fracción de segundo. ¿Querés ver algo más loco? Cambiá la
+    lista por `for i in range(1000): (carpeta / f"archivo_{i}.txt").write_text("hola")` y vas a tener
+    **mil archivos** al instante. Eso a mano, en el explorador, te llevaría una tarde entera. 😎
+
+!!! note "🔮 No te preocupes si no entendés todo este código todavía"
+    Usa cosas que vamos a ver hoy mismo (`write_text`, `Path`, carpetas). La idea es justo esa:
+    **al terminar la clase, volvé a leer este código y lo vas a entender entero.** Es tu meta del día.
+
+---
+
 ## 📂 Abrir un archivo con open()
 
 La función `open()` abre un archivo y devuelve un **objeto de archivo** (file object) con el que podemos leer o escribir.
@@ -176,6 +218,53 @@ with open("/home/maxi/datos.txt", "r") as f: ...              # Linux/Mac
 
 ---
 
+## 📁 Trabajar con carpetas
+
+Hasta acá abrimos archivos **de a uno**, sabiendo su nombre. Pero, ¿y si querés recorrer **todos** los
+archivos de una carpeta (por ejemplo, para ordenarlos)? Para eso usamos el módulo `pathlib`.
+
+!!! info "📦 Módulo: pathlib"
+    `pathlib` viene incluido en Python. Representa rutas (archivos y carpetas) como **objetos**
+    cómodos de manejar.
+
+    ```python
+    from pathlib import Path
+    ```
+
+    Lo que vamos a usar:
+
+    | Esto | Qué hace | Ejemplo |
+    |------|----------|---------|
+    | `Path("carpeta")` | Crea un objeto que representa esa ruta | `Path("practica_archivos")` |
+    | `.iterdir()` | Recorre **todo** lo que hay adentro | `for f in carpeta.iterdir():` |
+    | `.glob("*.txt")` | Recorre solo lo que coincide con un patrón | `carpeta.glob("*.txt")` |
+    | `.name` | El nombre con extensión | `"foto.txt"` |
+    | `.stem` | El nombre **sin** extensión | `"foto"` |
+    | `.suffix` | Solo la extensión | `".txt"` |
+    | `.exists()` | ¿Existe ese archivo/carpeta? | `carpeta.exists()` |
+    | `.rename(nuevo)` | Lo **renombra** (o lo mueve) | `f.rename(carpeta / "nuevo.txt")` |
+
+Ejemplo — listar los `.txt` de una carpeta:
+
+```python
+from pathlib import Path
+
+carpeta = Path("practica_archivos")
+for archivo in carpeta.glob("*.txt"):
+    print(archivo.name)
+```
+
+!!! tip "💡 El operador `/` arma rutas"
+    Con `pathlib`, la barra `/` une carpeta y archivo de forma prolija y multiplataforma:
+    `carpeta / "datos.txt"` → la ruta a `practica_archivos/datos.txt`. Nada de pegar strings a mano.
+
+!!! note "👴 También lo vas a ver con `os.listdir()`"
+    Un montón de código y de tutoriales usan el módulo `os`: `os.listdir("carpeta")` devuelve una
+    **lista con los nombres** (como strings) de lo que hay adentro. `pathlib` es la forma más moderna
+    y cómoda, pero te conviene **reconocer `os.listdir()`** cuando lo cruces por ahí.
+
+---
+
 ## ✅ Buenas prácticas
 
 !!! success "Hacé esto ✅"
@@ -216,7 +305,8 @@ with open("/home/maxi/datos.txt", "r") as f: ...              # Linux/Mac
 
 ### 🌿 Ejercicio 2 — Contar palabras
 
-Creá un archivo `texto.txt` con al menos 3 párrafos. Luego escribí un programa que:
+Usá el `texto.txt` que creó el bloque de preparación (o creá uno con al menos 3 párrafos). Escribí un
+programa que:
 
 1. Cuente cuántas líneas tiene el archivo.
 2. Cuente cuántas palabras tiene en total.
@@ -303,6 +393,62 @@ Cada vez que el programa se ejecute, que agregue una línea al archivo `log.txt`
 
     print(f"Log actualizado: {timestamp}")
     ```
+
+### 🌶️ Ejercicio 5 — Renombrar archivos en masa
+
+Mirá la carpeta `practica_archivos/` que creaste en la preparación: nombres con mayúsculas y espacios,
+un desastre. Vamos a **ordenarlos todos de una**: pasarlos a **minúsculas** y reemplazar los
+**espacios por `_`** (guion bajo).
+
+> Por ejemplo: `Apunte De Clase.txt` → `apunte_de_clase.txt`
+
+Lo hacemos en **3 etapas** (así trabajan los profesionales 👇):
+
+- **Etapa A — Listar:** recorré la carpeta e imprimí el nombre de cada archivo `.txt`.
+- **Etapa B — Ensayo en seco:** imprimí `nombre viejo → nombre nuevo` **sin renombrar todavía**.
+  Mirá que la transformación esté bien **antes** de tocar nada.
+- **Etapa C — Aplicar:** ahora sí, renombrá cada archivo.
+
+!!! warning "🛟 ¿Por qué el ensayo en seco?"
+    Renombrar archivos es **difícil de deshacer**. Imprimir primero lo que **vas** a hacer (un *dry
+    run*) es un hábito que te salva de desastres: mirás, confirmás, y recién después aplicás. Los
+    programadores con experiencia lo hacen siempre.
+
+??? tip "💡 Pista"
+    - Para recorrer solo los `.txt`: `for archivo in carpeta.glob("*.txt"):`.
+    - El nombre está en `archivo.name`. Para transformarlo: `.lower()` lo pasa a minúsculas y
+      `.replace(" ", "_")` cambia los espacios. Se pueden encadenar.
+    - Para renombrar: `archivo.rename(archivo.parent / nombre_nuevo)` (`archivo.parent` es la carpeta
+      donde está).
+
+??? success "✅ Solución"
+    ```python
+    from pathlib import Path
+
+    carpeta = Path("practica_archivos")
+
+    # Etapa A — Listar
+    print("📋 Archivos actuales:")
+    for archivo in carpeta.glob("*.txt"):
+        print(" -", archivo.name)
+
+    # Etapa B — Ensayo en seco (no renombra nada todavía)
+    print("\n🔎 Ensayo en seco:")
+    for archivo in carpeta.glob("*.txt"):
+        nuevo = archivo.name.lower().replace(" ", "_")
+        print(f"  {archivo.name}  →  {nuevo}")
+
+    # Etapa C — Aplicar (¡ahora sí!)
+    for archivo in carpeta.glob("*.txt"):
+        nuevo = archivo.name.lower().replace(" ", "_")
+        archivo.rename(archivo.parent / nuevo)
+
+    print("\n✅ ¡Listo! Carpeta ordenada.")
+    ```
+
+    Volvé a abrir la carpeta en el explorador: todos los nombres prolijos, en un segundo. **Eso** es
+    automatizar una tarea aburrida — y es exactamente lo que vas a hacer un montón en la vida real
+    (ordenar fotos, descargas, documentos…).
 
 ---
 
