@@ -63,7 +63,14 @@
     datos ya cargados en Asistencias. Playwright sirve además para **testing E2E** — engancha con el
     módulo de Testing.
 
-!!! info "🤖 Bloque 6 — IA y Proyecto Final"
+!!! info "📊 Bloque 6 — Análisis de datos (pandas / numpy)"
+    Trabajar con **datos reales**: `numpy` para cálculo numérico y `pandas` para tablas (leer,
+    filtrar, agrupar, sacar estadísticas). Practicamos sobre datos que importan: la **propia planilla
+    de asistencia** que generamos en el proyecto (reportes, % de asistencia) y datasets externos
+    (precios de acciones, clima, etc.). Es el puente entre la persistencia que ya vimos y la IA que
+    viene.
+
+!!! info "🤖 Bloque 7 — IA y Proyecto Final"
     Qué es una **API de IA** y cómo consumirla desde Python; integrar modelos de lenguaje o visión.
     **Proyecto final original** a elección de cada alumno o equipo, presentado en la **Expo CFP**.
 
@@ -111,9 +118,10 @@
 | Mié 3/6 | Resolución de ejercicios variados de clases previas | |
 | Vie 5/6 | 🚫 Sin clases (el profe rindió un examen de la facultad — ¡mil disculpas!). ¡Gracias por comprender! 🙏 | |
 | Mié 10/6 | Lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
-| Vie 12/6 | Ronda de bugs + **Bingo** — ejercicio integrador de colecciones y funciones | [📄](./clases/python/06_funciones/bingo.md) |
+| Vie 12/6 | Continuación de Lectura y corrección — completamos los ejercicios + la ronda de bugs al pizarrón | [📄](./clases/python/06_funciones/lectura_codigo.md) |
 
-<!-- Próxima clase: agregá la fila acá abajo a medida que las vayas dando -->
+<!-- Próxima — Mié 17/6: Bingo (ejercicio integrador). Empezar con la entrada en calor de Funciones.
+     Agregá la fila a la bitácora cuando lo des. -->
 
 ---
 

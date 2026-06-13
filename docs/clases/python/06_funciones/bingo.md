@@ -121,6 +121,11 @@ Escribí un script (sin funciones todavía) que genere un cartón e imprima los 
 
 ## Etapa 2 — Encapsular en funciones
 
+!!! tip "🔥 ¿Inseguro con funciones? Entrá en calor primero"
+    Acá empezás a **escribir tus propias funciones y a usarlas**. Si todavía no te sentís firme con
+    eso, hacé primero la [🔥 Entrada en calor: Funciones como caja negra](./funciones_caja_negra.md)
+    — son 10 minutos y te va a hacer clic. Si ya te sentís cómodo, seguí de una. 💪
+
 🌱🌿 *Funciones + sets*
 
 El script de la Etapa 1 funciona, pero si lo queremos usar en distintas partes del juego necesitamos funciones. Fijate la diferencia:
