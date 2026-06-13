@@ -115,10 +115,19 @@ Cada clase que use tabs, asides con título, o ejercicios pasa a `.mdx` (no `.md
 
 ---
 
-## Ideas a futuro (Brilliant-style)
+## Ideas a futuro (Brilliant-style) — wishlist del profe (16/6/2026)
 
-- Más tipos de ejercicio: **opción múltiple**, **completar el código**, **ordenar líneas** y
-  **drag-and-drop**.
+- **Más tipos de ejercicio** (además del editor Python actual):
+  - **Opción múltiple** (quiz conceptual).
+  - **Completar el código** (huecos a rellenar dentro de un snippet).
+  - **Drag-and-drop** (ordenar líneas / armar bloques).
+- **Guardado del avance por usuario**: marcar ejercicios resueltos y persistirlo. Como el sitio es
+  estático, primera versión con `localStorage` (el nombre del alumno ya se guarda ahí, ver
+  `ejercicio-python.ts`). Si se quiere avance entre dispositivos, evaluar un backend liviano o
+  exportar/importar el progreso.
 - Barra de progreso por clase / "racha" de ejercicios resueltos.
-- Guardar el progreso del alumno en `localStorage`.
 - Tests por caso (mostrar ✅/❌ test por test, no solo el primer fallo).
+- **Clases de datos interactivas**: `pandas`/`numpy` corren en Pyodide → el Bloque 6 (Análisis de
+  datos) puede ser interactivo con ejecución real (analizar la planilla de asistencia + datasets).
+- **Candidatas a migrar** ya listas como lógica pura: la entrada en calor "Funciones como caja
+  negra" y la ronda de bugs de Lectura y corrección.
