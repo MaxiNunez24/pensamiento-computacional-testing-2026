@@ -296,6 +296,35 @@ print(ana.aprobado())   # True
 
 ---
 
+## 📐 Bonus: el diagrama de clases
+
+Cuando los programas crecen, dibujar las clases ayuda a pensarlas **antes** de escribirlas. Un
+**diagrama de clases** es una cajita con tres pisos: el **nombre**, los **atributos** y los
+**métodos**. Así se ve el `Alumno` del Ejercicio 3:
+
+```mermaid
+classDiagram
+    class Alumno {
+        +nombre
+        +notas
+        +agregar_nota(nota)
+        +promedio()
+        +aprobado()
+    }
+```
+
+- **Arriba**: el nombre de la clase.
+- **Al medio**: los atributos (los datos).
+- **Abajo**: los métodos (lo que sabe hacer).
+- El **`+`** quiere decir "público": accesible desde afuera. (En la próxima clase vas a ver el `-`,
+  que es "privado".)
+
+!!! tip "✏️ Dibujá antes de codear"
+    Para un proyecto, dibujar las clases en papel (o con un diagrama así) **antes** de programar te
+    ahorra un montón de idas y vueltas. Es el "plano" antes de construir.
+
+---
+
 ## 📌 Cheatsheet
 
 ```python
@@ -321,4 +350,4 @@ print(obj.un_metodo())           # llamar a un método
 
 ## [⬅️ Anterior: Git y GitHub](../07_persistencia/git_github.md)
 ## [📚 Índice](../../clases.md)
-## ➡️ Siguiente: POO II *(próximamente)*
+## [➡️ Siguiente: POO II](./poo_2.md)

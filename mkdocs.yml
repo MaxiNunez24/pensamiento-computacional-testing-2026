@@ -84,6 +84,7 @@ nav:
         - 🐙 Git y GitHub: clases/python/07_persistencia/git_github.md
       - 🏗️ POO:
         - 🧬 POO I — Clases y objetos: clases/python/08_poo/poo_1.md
+        - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/python/08_poo/poo_2.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
     - 📖 Glosario de Python: material_apoyo/glosario.md
