@@ -66,7 +66,7 @@
 
 - [🧬 POO I — Clases, objetos, atributos y métodos](./python/08_poo/poo_1.md)
 - [🛡️ POO II — Encapsulamiento y métodos especiales](./python/08_poo/poo_2.md)
-- 🔗 Herencia y polimorfismo
+- [🔗 Herencia y polimorfismo](./python/08_poo/poo_herencia.md)
 - 🚀 Sistema de Asistencias del CFP (CLI con persistencia JSON)
 
 ---

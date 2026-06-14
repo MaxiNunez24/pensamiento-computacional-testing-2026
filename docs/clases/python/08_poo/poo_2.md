@@ -319,4 +319,4 @@ c.cambiar(10)       # se modifica por la puerta, con control
 
 ## [⬅️ Anterior: POO I — Clases y objetos](./poo_1.md)
 ## [📚 Índice](../../clases.md)
-## ➡️ Siguiente: Herencia y polimorfismo *(próximamente)*
+## [➡️ Siguiente: Herencia y polimorfismo](./poo_herencia.md)
