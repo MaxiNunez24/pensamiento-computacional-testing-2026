@@ -224,6 +224,13 @@ Ejecutás esto dos veces:
 !!! tip "🏆 Las dos funciones de oro"
     En casi cualquier proyecto, vas a necesitar exactamente `cargar_datos()` y `guardar_datos()`. Estos nombres son una buena convención.
 
+!!! note "🔥 ¿Te marean las funciones de este patrón?"
+    Acá `cargar_datos()` y `guardar_datos()` son **cajas negras**: las usás por lo que hacen (traer
+    datos / guardarlos), sin pensar en el `with open(...)` de adentro cada vez. Si todavía no te
+    sentís firme con eso, date una vuelta por la [🔥 Entrada en calor: Funciones como caja
+    negra](../06_funciones/funciones_caja_negra.md). Además, en vez de `os.path.exists(ARCHIVO)` podés
+    usar el `pathlib` que vimos: `Path(ARCHIVO).exists()`.
+
 ---
 
 ## ✅ Buenas prácticas

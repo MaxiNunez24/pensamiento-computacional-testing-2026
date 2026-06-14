@@ -82,6 +82,8 @@ nav:
         - 📁 Archivos: clases/python/07_persistencia/archivos.md
         - 📄 JSON: clases/python/07_persistencia/json.md
         - 🐙 Git y GitHub: clases/python/07_persistencia/git_github.md
+      - 🏗️ POO:
+        - 🧬 POO I — Clases y objetos: clases/python/08_poo/poo_1.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
     - 📖 Glosario de Python: material_apoyo/glosario.md

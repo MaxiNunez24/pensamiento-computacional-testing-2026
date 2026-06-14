@@ -64,7 +64,7 @@
 
 ## 🏗️ Bloque 4 — POO y Primer Proyecto *(próximamente)*
 
-- 🧬 POO I — Clases, objetos, atributos y métodos
+- [🧬 POO I — Clases, objetos, atributos y métodos](./python/08_poo/poo_1.md)
 - 🛡️ POO II — Encapsulamiento y métodos especiales
 - 🔗 Herencia y polimorfismo
 - 🚀 Sistema de Asistencias del CFP (CLI con persistencia JSON)
