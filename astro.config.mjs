@@ -25,6 +25,14 @@ export default defineConfig({
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
           ],
         },
+        {
+          label: '🏗️ POO',
+          items: [
+            { label: '🧬 POO I — Clases y objetos', link: '/clases/poo-1/' },
+            { label: '🛡️ POO II — Encapsulamiento', link: '/clases/poo-2/' },
+            { label: '🔗 Herencia y polimorfismo', link: '/clases/poo-herencia/' },
+          ],
+        },
       ],
     }),
   ],

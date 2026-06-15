@@ -1,0 +1,146 @@
+---
+title: POO I — Clases y objetos
+description: "Tu primer salto a modelar cosas con datos y comportamiento. Interactivo: definís clases y las ejecutás al instante."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import Mermaid from '../../../components/Mermaid.astro';
+
+:::tip[Clase interactiva]
+Acá vas a **escribir clases y ejecutarlas en el momento**. Tocá **▶ Ejecutar** para probar y
+**✓ Verificar** (o `Ctrl/Cmd+Enter`) para que los tests te digan si está bien.
+:::
+
+## El problema
+
+Querés representar a un alumno: nombre, nota y materias. Con un diccionario:
+
+```python
+ana = {"nombre": "Ana", "nota": 9}
+```
+
+Funciona, pero (1) si escribís mal una clave nadie te avisa hasta que explota, y (2) lo que se
+**hace** con un alumno (¿aprobó?, saludar) queda suelto, lejos de los datos. Una **clase** junta los
+**datos** y lo que se **hace** con ellos en una sola cosa.
+
+## La idea: un molde y sus copias
+
+Una **clase** es un **molde** (un plano). Un **objeto** es algo construido con ese molde. Definís el
+molde una vez y creás todos los objetos que quieras, cada uno con sus propios datos.
+
+```python
+class Alumno:
+    def __init__(self, nombre, nota):   # constructor: corre al crear el objeto
+        self.nombre = nombre            # atributo (dato del objeto)
+        self.nota = nota
+
+ana  = Alumno("Ana", 9)    # crear un objeto
+print(ana.nombre)          # Ana   (acceso con punto, sin comillas)
+```
+
+- **`__init__`** es el **constructor**: Python lo ejecuta solo al crear el objeto.
+- **`self`** es "el objeto que se está usando ahora". Adentro de la clase, sus datos son `self.algo`.
+- Un **método** es una función adentro de la clase que opera sobre `self`.
+
+:::note[Es la caja negra otra vez]
+Cuando hacés `ana.aprobo()`, la usás confiando en lo que devuelve, sin pensar en su interior. Un
+objeto = **datos + sus propias funciones**. Si te marea, repasá la
+[entrada en calor de funciones](/clases/funciones-1/).
+:::
+
+## Manos a la obra
+
+<EjercicioPython
+  titulo="Tu primera clase"
+  dificultad="🌱"
+  starter={`class Perro:\n    # 1) __init__ con nombre y edad\n    # 2) método describir() que DEVUELVA "<nombre> tiene <edad> años"\n    pass`}
+  tests={`p = Perro("Fido", 3)\nassert p.describir() == "Fido tiene 3 años", 'describir() debería devolver "Fido tiene 3 años"'\nassert Perro("Laika", 5).describir() == "Laika tiene 5 años"\nprint("¡Perro OK!")`}
+  pistas={[
+    "El constructor recibe <code>self, nombre, edad</code> y guarda <code>self.nombre</code> y <code>self.edad</code>.",
+    "<code>describir()</code> usa <code>return</code> con una f-string: <code>f\"{self.nombre} tiene {self.edad} años\"</code>.",
+  ]}
+>
+Definí una clase `Perro` con atributos `nombre` y `edad`, y un método `describir()` que **devuelva**
+`"<nombre> tiene <edad> años"`.
+
+Ejemplo: `Perro("Fido", 3).describir()` → `"Fido tiene 3 años"`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Estado que cambia: la cuenta bancaria"
+  dificultad="🌿"
+  starter={`class CuentaBancaria:\n    def __init__(self, saldo=0):\n        self.saldo = saldo\n    # depositar(monto): suma al saldo\n    # extraer(monto): resta SOLO si alcanza\n    # ver_saldo(): devuelve el saldo`}
+  tests={`c = CuentaBancaria(100)\nc.depositar(50)\nassert c.ver_saldo() == 150, "tras depositar 50 sobre 100, el saldo debería ser 150"\nc.extraer(30)\nassert c.ver_saldo() == 120, "tras extraer 30, el saldo debería ser 120"\nc.extraer(9999)\nassert c.ver_saldo() == 120, "no debería poder extraer más de lo que hay"\nprint("¡Cuenta OK!")`}
+  pistas={[
+    "El saldo es un atributo que <strong>cambia con el tiempo</strong> (<code>self.saldo</code>).",
+    "En <code>extraer</code>, un <code>if monto &lt;= self.saldo:</code> decide si alcanza.",
+  ]}
+>
+Completá `CuentaBancaria` (ya tiene el constructor). Agregale `depositar(monto)` (suma),
+`extraer(monto)` (resta **solo si hay saldo suficiente**) y `ver_saldo()` (**devuelve** el saldo).
+</EjercicioPython>
+
+## 📐 El diagrama de clases
+
+Cuando los programas crecen, conviene dibujar las clases. Un **diagrama de clases** es una cajita con
+tres pisos: nombre, atributos y métodos. El `Alumno` que vas a armar abajo se ve así:
+
+<Mermaid code={`classDiagram
+    class Alumno {
+        +nombre
+        +notas
+        +agregar_nota(nota)
+        +promedio()
+    }`} />
+
+El `+` quiere decir "público" (accesible desde afuera). En POO II vas a ver el `-` (privado).
+
+## 🗂️ Una clase en su propio archivo
+
+En los programas de verdad, **cada clase suele vivir en su propio archivo** y otros la **importan**.
+Vamos a practicarlo: en el primer recuadro definís la clase en `alumno.py`, y en el segundo la
+**usás importándola**.
+
+<EjercicioPython
+  titulo="Definí la clase Alumno"
+  dificultad="🌿"
+  archivo="alumno.py"
+  starter={`class Alumno:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self.notas = []\n    # agregar_nota(nota): agrega una nota a la lista\n    # promedio(): devuelve el promedio (0 si no hay notas)`}
+  tests={`from alumno import Alumno\na = Alumno("Ana")\na.agregar_nota(8); a.agregar_nota(10)\nassert a.promedio() == 9, "el promedio de 8 y 10 debería ser 9"\nassert Alumno("Vacio").promedio() == 0, "sin notas, el promedio debería ser 0"\nprint("¡alumno.py guardado y OK!")`}
+  pistas={[
+    "<code>agregar_nota</code> hace <code>self.notas.append(nota)</code>.",
+    "En <code>promedio</code>, cuidado con la lista vacía (no dividas por cero): <code>if not self.notas: return 0</code>.",
+  ]}
+>
+Completá la clase `Alumno`. Al **Verificar**, este recuadro se **guarda como `alumno.py`** (fijate el
+📄 arriba) para que el próximo ejercicio la pueda importar.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Usá la clase desde otro archivo"
+  dificultad="🌱"
+  starter={`from alumno import Alumno\n\n# Creá un Alumno "Beto", agregale las notas 6 y 8,\n# y guardá su promedio en una variable 'prom'.\n`}
+  tests={`assert prom == 7, "el promedio de 6 y 8 debería ser 7"\nprint("¡Importaste y usaste tu clase! 🎉")`}
+  pistas={[
+    "Arriba ya está el <code>from alumno import Alumno</code>: la clase viene del otro archivo.",
+    "Si dice que no encuentra <code>alumno</code>, ejecutá primero el ejercicio de arriba.",
+  ]}
+>
+Ahora **usá** la clase `Alumno` que definiste en `alumno.py` (ya la importamos por vos). Creá un
+alumno, agregale las notas **6 y 8**, y guardá su promedio en `prom`.
+
+:::note[Importante]
+Para que esto funcione, primero **ejecutá el ejercicio de arriba** (el que guarda `alumno.py`).
+:::
+</EjercicioPython>
+
+## Para llevar
+
+- `class Nombre:` define el molde; `obj = Nombre(...)` crea un objeto.
+- `__init__` = constructor; `self.algo` = atributo; método = función del objeto.
+- Una clase puede vivir en su **propio archivo** y otros la **importan** (`from alumno import Alumno`).
+
+:::note[Lo que viene]
+En **POO II** hacemos que tus objetos se impriman lindo (`__str__`) y protejan sus datos
+(encapsulamiento).
+:::
