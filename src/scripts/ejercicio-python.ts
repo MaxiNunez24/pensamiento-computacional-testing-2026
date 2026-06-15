@@ -105,7 +105,7 @@ function ensureWorker(): Promise<void> {
   return readyPromise;
 }
 
-async function runPython(code: string, tests: string): Promise<RunResult> {
+async function runPython(code: string, tests: string, archivo = ''): Promise<RunResult> {
   await ensureWorker();
   const id = nextId++;
   const raw = await new Promise<string>((resolve, reject) => {
@@ -126,7 +126,7 @@ async function runPython(code: string, tests: string): Promise<RunResult> {
         reject(e);
       },
     });
-    worker!.postMessage({ id, code, tests });
+    worker!.postMessage({ id, code, tests, archivo });
   });
   return JSON.parse(raw) as RunResult;
 }
@@ -142,6 +142,7 @@ function b64decode(s: string): string {
 function initEjercicio(el: HTMLElement): void {
   const starter = b64decode(el.dataset.starter || '');
   const tests = b64decode(el.dataset.tests || '');
+  const archivo = el.dataset.archivo || '';
 
   const editorEl = el.querySelector<HTMLElement>('[data-editor]');
   const salida = el.querySelector<HTMLElement>('[data-salida]');
@@ -190,7 +191,7 @@ function initEjercicio(el: HTMLElement): void {
       'is-loading',
     );
     try {
-      const res = await runPython(getCode(), conTests ? tests : '');
+      const res = await runPython(getCode(), conTests ? tests : '', archivo);
       const out = res.out.trimEnd();
       if (!conTests) {
         // Botón "Ejecutar": solo muestra lo que imprime el código.

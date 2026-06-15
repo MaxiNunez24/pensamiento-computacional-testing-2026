@@ -1,0 +1,34 @@
+---
+/**
+ * Renderiza un diagrama Mermaid (de lectura). Para diagramas de clases, flujos, etc.
+ *
+ * Uso en .mdx:
+ *   import Mermaid from '../../../components/Mermaid.astro';
+ *   <Mermaid code={`classDiagram\n    Animal <|-- Perro`} />
+ *
+ * Mermaid se carga de forma perezosa (solo en páginas que tienen diagramas) y
+ * adapta el tema (claro/oscuro) al de Starlight.
+ */
+interface Props {
+  code: string;
+}
+const { code } = Astro.props;
+---
+
+<pre class="mermaid" aria-label="Diagrama">{code}</pre>
+
+<script>
+  // Solo cargamos Mermaid (que es pesado) si la página tiene algún diagrama.
+  async function renderMermaid() {
+    const nodos = document.querySelectorAll<HTMLElement>('pre.mermaid:not([data-rendered])');
+    if (nodos.length === 0) return;
+    const { default: mermaid } = await import('mermaid');
+    const oscuro = document.documentElement.dataset.theme === 'dark';
+    mermaid.initialize({ startOnLoad: false, theme: oscuro ? 'dark' : 'default' });
+    nodos.forEach((n) => n.setAttribute('data-rendered', ''));
+    await mermaid.run({ nodes: nodos });
+  }
+  if (document.readyState !== 'loading') renderMermaid();
+  else document.addEventListener('DOMContentLoaded', renderMermaid);
+  document.addEventListener('astro:page-load', renderMermaid);
+</script>

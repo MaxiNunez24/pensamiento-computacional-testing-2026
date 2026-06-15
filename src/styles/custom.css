@@ -35,6 +35,17 @@
   font-size: 1.1rem;
 }
 
+.ejercicio__archivo {
+  margin-left: auto;
+  font-family: var(--__sl-font-mono, ui-monospace, monospace);
+  font-size: 0.8rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-6);
+  white-space: nowrap;
+}
+
 .ejercicio__consigna {
   margin-bottom: 0.9rem;
 }
@@ -129,4 +140,116 @@
   font-size: 0.85rem;
   opacity: 0.8;
   margin: 0.4rem 0;
+}
+
+/* ---------- Diagrama de clases (drag & drop) ---------- */
+
+.diagrama {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: var(--ej-radio);
+  padding: 1rem 1.1rem 1.2rem;
+  margin: 1.75rem 0;
+  background: var(--sl-color-black);
+}
+
+.diagrama__board {
+  position: relative;
+  height: 360px;
+  margin: 0.5rem 0 1rem;
+  border: 1px dashed var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+}
+
+.diagrama__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.diagrama__svg line {
+  stroke: var(--sl-color-gray-3);
+  stroke-width: 0.4;
+}
+
+.dg-slot,
+.dg-conexion {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dg-slot {
+  width: 8.5rem;
+  min-height: 2.6rem;
+  padding: 0.3rem 0.5rem;
+  border: 2px solid var(--sl-color-gray-4);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-6);
+  font-weight: 600;
+}
+
+.dg-conexion {
+  min-width: 5rem;
+  padding: 0.15rem 0.45rem;
+  border: 1px dashed var(--sl-color-gray-4);
+  border-radius: 0.4rem;
+  background: var(--sl-color-black);
+  font-size: 0.85rem;
+}
+
+.dg-ph {
+  opacity: 0.5;
+  font-weight: 400;
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+.dg-lleno { border-style: solid; }
+.dg-ok {
+  border-color: #2e7d32 !important;
+  background: color-mix(in srgb, #2e7d32 22%, transparent) !important;
+}
+.dg-mal {
+  border-color: #c62828 !important;
+  background: color-mix(in srgb, #c62828 22%, transparent) !important;
+}
+
+.diagrama__paletas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+.diagrama__paleta-tit {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+.dg-chip {
+  font: inherit;
+  cursor: grab;
+  margin: 0 0.3rem 0.3rem 0;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.45rem;
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+}
+.dg-chip--clase { font-weight: 600; }
+.dg-chip.is-sel {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 1px;
+}
+
+.diagrama__ayuda {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 0.2rem 0 0.6rem;
 }

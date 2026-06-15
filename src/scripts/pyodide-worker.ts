@@ -11,13 +11,32 @@ const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/${PYODIDE_VERSION}/full/`;
 // Ejecuta el código del alumno y, opcionalmente, los tests, capturando stdout.
 // Devuelve JSON {ok, out, err} con errores traducidos a mensajes amigables.
 const RUNNER = `
-import sys, io, traceback, json, linecache
+import sys, io, traceback, json, linecache, importlib, os
 
-def _run_user(code, tests=""):
+# La carpeta actual en sys.path: así un ejercicio puede importar el módulo
+# (archivo .py) que escribió otro ejercicio antes. Es lo que permite "tener
+# clases en distintos archivos".
+if "." not in sys.path:
+    sys.path.insert(0, ".")
+
+def _run_user(code, tests="", archivo=""):
     # Registramos el código en linecache para que el traceback pueda mostrar
     # la línea EXACTA que falló (sin esto, al venir de un string, queda en blanco).
     linecache.cache["tu_codigo"] = (len(code), None, code.splitlines(keepends=True), "tu_codigo")
     linecache.cache["los_tests"] = (len(tests), None, tests.splitlines(keepends=True), "los_tests")
+
+    propios = {"tu_codigo", "los_tests"}
+    mod_name = ""
+    if archivo:
+        # Este ejercicio "es" un archivo .py: lo guardamos en el disco virtual
+        # para que otros ejercicios puedan importarlo.
+        with open(archivo, "w", encoding="utf-8") as fh:
+            fh.write(code)
+        linecache.cache[archivo] = (len(code), None, code.splitlines(keepends=True), archivo)
+        propios.add(archivo)
+        mod_name = archivo[:-3] if archivo.endswith(".py") else archivo
+        sys.modules.pop(mod_name, None)   # que un re-run tome la versión nueva
+        importlib.invalidate_caches()
 
     buf = io.StringIO()
     old = sys.stdout
@@ -26,20 +45,28 @@ def _run_user(code, tests=""):
     ok = True
     err = ""
     try:
-        exec(compile(code, "tu_codigo", "exec"), ns)
+        if archivo:
+            importlib.import_module(mod_name)   # valida que el archivo del alumno cargue bien
+        else:
+            exec(compile(code, "tu_codigo", "exec"), ns)
         if tests:
             exec(compile(tests, "los_tests", "exec"), ns)
     except SyntaxError as e:
         ok = False
-        donde = "tu código" if e.filename == "tu_codigo" else "los tests"
+        donde = "los tests" if e.filename == "los_tests" else "tu código"
         err = f"Error de sintaxis en {donde}, línea {e.lineno}: {e.msg}"
+    except ModuleNotFoundError as e:
+        ok = False
+        err = (f"No encontré el módulo '{e.name}'.\\n"
+               f"¿Ejecutaste primero el ejercicio donde se define ({e.name}.py)? "
+               f"Hacelo y volvé a intentar.")
     except Exception as e:
         ok = False
         tb = traceback.extract_tb(sys.exc_info()[2])
         partes = []
         for f in tb:
-            if f.filename in ("tu_codigo", "los_tests"):
-                donde = "tu código" if f.filename == "tu_codigo" else "los tests"
+            if f.filename in propios:
+                donde = "los tests" if f.filename == "los_tests" else "tu código"
                 linea = (f.line or "").strip()
                 if linea:
                     partes.append(f"En {donde}, línea {f.lineno}:  {linea}")
@@ -57,7 +84,7 @@ def _run_user(code, tests=""):
     return json.dumps({"ok": ok, "out": buf.getvalue(), "err": err})
 `;
 
-type RunUserFn = (code: string, tests: string) => string;
+type RunUserFn = (code: string, tests: string, archivo: string) => string;
 
 let runUser: RunUserFn | null = null;
 
@@ -74,13 +101,15 @@ const initPromise = init().catch((e) => {
   postMessage({ type: 'init-error', error: String(e) });
 });
 
-self.onmessage = async (ev: MessageEvent<{ id: number; code: string; tests: string }>) => {
-  const { id, code, tests } = ev.data;
+self.onmessage = async (
+  ev: MessageEvent<{ id: number; code: string; tests: string; archivo?: string }>,
+) => {
+  const { id, code, tests, archivo } = ev.data;
   await initPromise;
   if (!runUser) return; // ya se reportó init-error
   let raw: string;
   try {
-    raw = runUser(code, tests);
+    raw = runUser(code, tests, archivo || '');
   } catch (e) {
     raw = JSON.stringify({ ok: false, out: '', err: String(e) });
   }

@@ -25,18 +25,29 @@ interface Props {
   tests: string;
   pistas?: string[];
   solucion?: string;
+  archivo?: string; // si se setea (ej. "animales.py"), este ejercicio se guarda como ese módulo
 }
 
-const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion } = Astro.props;
+const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo } = Astro.props;
 
 const id = 'ej-' + Math.random().toString(36).slice(2, 9);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 ---
 
-<section class="ejercicio" id={id} data-titulo={titulo} data-starter={enc(starter)} data-tests={enc(tests)}>
+<section
+  class="ejercicio"
+  id={id}
+  data-titulo={titulo}
+  data-starter={enc(starter)}
+  data-tests={enc(tests)}
+  data-archivo={archivo || undefined}
+>
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {archivo && (
+      <span class="ejercicio__archivo" title="Este ejercicio se guarda como un archivo Python que otros ejercicios pueden importar">📄 {archivo}</span>
+    )}
   </header>
 
   <div class="ejercicio__consigna">
