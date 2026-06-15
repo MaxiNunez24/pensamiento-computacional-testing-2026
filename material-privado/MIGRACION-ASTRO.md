@@ -20,8 +20,14 @@ lección de muestra (`Funciones I`).
 | Motor de ejercicio (cliente) | `src/scripts/ejercicio-python.ts` |
 | Worker de Pyodide | `src/scripts/pyodide-worker.ts` |
 | Componente de ejercicio | `src/components/EjercicioPython.astro` |
+| Componente Mermaid (diagramas de lectura) | `src/components/Mermaid.astro` |
+| Componente D&D de diagramas de clases | `src/components/DiagramaClases.astro` + `src/scripts/diagrama-clases.ts` |
 | Landing | `src/content/docs/index.mdx` |
-| Lección de muestra | `src/content/docs/clases/funciones-1.mdx` |
+| Lecciones | `clases/listas`, `sets`, `funciones-1`, `poo-1`, `poo-2`, `poo-herencia` |
+
+**Feature "clases en archivos":** `<EjercicioPython archivo="alumno.py">` guarda el código del alumno
+como un módulo `.py` en el FS de Pyodide; otro ejercicio hace `from alumno import Alumno`. Si falta
+ejecutar el productor, el consumidor muestra un mensaje guía. Verificado en navegador.
 
 Comandos: `npm run dev` (desarrollo), `npm run build` (genera `dist/`), `npm run preview`.
 
@@ -108,8 +114,14 @@ Cada clase que use tabs, asides con título, o ejercicios pasa a `.mdx` (no `.md
 - [ ] **`site` en `astro.config.mjs`**: setear la URL final (para sitemap y canonical).
 - [ ] **Deploy**: workflow de GitHub Actions que haga `npm run build` y publique `dist/` en GitHub
       Pages **solo desde `main`** (la rama `dev` se pushea pero NO se despliega).
-- [ ] **Mermaid**: el curso usa diagramas; agregar una integración (`astro-mermaid` o `rehype-mermaid`)
-      cuando se migre una clase que los use. No se incluyó en el POC para mantenerlo enfocado.
+- [x] **Mermaid**: hecho — componente `src/components/Mermaid.astro` (carga perezosa, tema según
+      Starlight). Usado en poo-1 y poo-2.
+- [x] **Clases en distintos archivos**: hecho — prop `archivo` + módulos en el FS de Pyodide.
+- [x] **D&D de diagramas de clases (acotado)**: hecho — `<DiagramaClases>` (arrastrar/clic). Usado en
+      poo-herencia.
+- [ ] **`site` en `astro.config.mjs`**: setear la URL final (para sitemap y canonical).
+- [ ] **Deploy**: workflow de GitHub Actions que haga `npm run build` y publique `dist/` en GitHub
+      Pages **solo desde `main`** (la rama `dev` se pushea pero NO se despliega).
 - [ ] **Cutover**: cuando todo esté migrado, retirar `docs/` + `mkdocs.yml` (o archivarlos en
       `material-privado/`).
 
