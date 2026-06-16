@@ -45,6 +45,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
     {archivo && (
       <span class="ejercicio__archivo" title="Este ejercicio se guarda como un archivo Python que otros ejercicios pueden importar">📄 {archivo}</span>
     )}

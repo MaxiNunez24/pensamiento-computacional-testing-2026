@@ -11,6 +11,15 @@ import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
+import {
+  estaHecho,
+  marcarHecho,
+  guardarCodigo,
+  leerCodigo,
+  borrarCodigo,
+  pintarSello,
+  actualizarResumen,
+} from './progreso';
 
 const RUN_TIMEOUT_MS = 15_000;
 
@@ -145,6 +154,7 @@ function initEjercicio(el: HTMLElement): void {
   const starter = b64decode(el.dataset.starter || '');
   const tests = b64decode(el.dataset.tests || '');
   const archivo = el.dataset.archivo || '';
+  const titulo = el.dataset.titulo || '';
 
   const editorEl = el.querySelector<HTMLElement>('[data-editor]');
   const salida = el.querySelector<HTMLElement>('[data-salida]');
@@ -154,10 +164,22 @@ function initEjercicio(el: HTMLElement): void {
   const btnEnviar = el.querySelector<HTMLButtonElement>('[data-enviar]');
   if (!editorEl || !salida) return;
 
+  // Restaurar progreso: el código guardado (si lo hay) y el sello "✓ Resuelto".
+  const guardado = leerCodigo(titulo);
+  pintarSello(el, estaHecho(titulo));
+
+  // Autoguardado del código (con debounce) cada vez que el alumno edita.
+  let guardarTimer: ReturnType<typeof setTimeout> | undefined;
+  const autoguardar = EditorView.updateListener.of((u) => {
+    if (!u.docChanged) return;
+    clearTimeout(guardarTimer);
+    guardarTimer = setTimeout(() => guardarCodigo(titulo, view.state.doc.toString()), 600);
+  });
+
   const view = new EditorView({
-    doc: starter,
+    doc: guardado != null ? guardado : starter,
     // keymap.of([indentWithTab]) hace que Tab indente en vez de saltar el foco.
-    extensions: [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab])],
+    extensions: [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
     parent: editorEl,
   });
   // Handle del editor accesible desde el DOM (útil para tests y para setear
@@ -201,6 +223,8 @@ function initEjercicio(el: HTMLElement): void {
         else show((out ? out + '\n\n' : '') + res.err, 'is-error');
       } else if (res.ok) {
         show((out ? out + '\n\n' : '') + '✅ ¡Todos los tests pasaron! 🎉', 'is-ok');
+        marcarHecho(titulo);
+        pintarSello(el, true);
       } else {
         show((out ? out + '\n\n' : '') + '❌ Todavía no pasa:\n\n' + res.err, 'is-error');
       }
@@ -228,6 +252,7 @@ function initEjercicio(el: HTMLElement): void {
   btnReset?.addEventListener('click', () => {
     view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: starter } });
     salida.hidden = true;
+    borrarCodigo(titulo); // volver al starter "limpio" también en la próxima visita
   });
 
   // Atajo: Ctrl/Cmd + Enter = Verificar (estándar en editores de código).
@@ -272,6 +297,7 @@ function boot(): void {
     el.dataset.init = '1';
     initEjercicio(el);
   });
+  actualizarResumen(); // barra de progreso de la clase
 }
 
 if (document.readyState !== 'loading') boot();

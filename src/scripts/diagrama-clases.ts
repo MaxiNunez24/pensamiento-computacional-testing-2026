@@ -2,6 +2,8 @@
 // slots y tipos de flecha en conexiones, y verificar contra la solución.
 // Soporta drag-and-drop (escritorio) y click-para-colocar (touch/teclado).
 
+import { estaHecho, marcarHecho, pintarSello, actualizarResumen } from './progreso';
+
 interface Solucion {
   claseEnSlot: Record<string, string>;
   flechaEnConexion: Record<string, string>;
@@ -14,6 +16,8 @@ function b64decode(s: string): string {
 
 function initDiagrama(el: HTMLElement): void {
   const solucion = JSON.parse(b64decode(el.dataset.solucion || '')) as Solucion;
+  const titulo = el.dataset.titulo || '';
+  pintarSello(el, estaHecho(titulo));
   const salida = el.querySelector<HTMLElement>('[data-dg-salida]');
 
   // Ficha seleccionada por click (para el modo touch/teclado).
@@ -160,6 +164,8 @@ function initDiagrama(el: HTMLElement): void {
 
     if (ok === total) {
       mostrar('✅ ¡Diagrama correcto! Lo armaste perfecto. 🎉', 'is-ok');
+      marcarHecho(titulo);
+      pintarSello(el, true);
     } else {
       mostrar(
         `Vas ${ok}/${total}. Lo verde está bien; revisá lo marcado en rojo y volvé a intentar.`,
@@ -196,6 +202,7 @@ function bootDiagramas(): void {
     el.dataset.init = '1';
     initDiagrama(el);
   });
+  actualizarResumen();
 }
 
 if (document.readyState !== 'loading') bootDiagramas();

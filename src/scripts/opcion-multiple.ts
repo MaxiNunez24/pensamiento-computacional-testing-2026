@@ -1,6 +1,8 @@
 // Ejercicio de opción múltiple: seleccionar opción(es) y verificar contra la
 // solución, con explicaciones al revelar.
 
+import { estaHecho, marcarHecho, pintarSello, actualizarResumen } from './progreso';
+
 interface Solucion {
   correctas: number[];
   expl: Record<number, string>;
@@ -14,6 +16,8 @@ function b64decode(s: string): string {
 
 function initQuiz(el: HTMLElement): void {
   const sol = JSON.parse(b64decode(el.dataset.solucion || '')) as Solucion;
+  const titulo = el.dataset.titulo || '';
+  pintarSello(el, estaHecho(titulo));
   const correctas = new Set(sol.correctas);
   const opciones = el.querySelectorAll<HTMLButtonElement>('.quiz__opcion');
   const salida = el.querySelector<HTMLElement>('[data-q-salida]');
@@ -73,8 +77,13 @@ function initQuiz(el: HTMLElement): void {
       }
     });
     const detalle = explicaciones.length ? '\n\n' + explicaciones.join('\n') : '';
-    if (bien) mostrar('✅ ¡Correcto!' + detalle, 'is-ok');
-    else mostrar('❌ Todavía no. Mirá lo marcado:' + detalle, 'is-error');
+    if (bien) {
+      mostrar('✅ ¡Correcto!' + detalle, 'is-ok');
+      marcarHecho(titulo);
+      pintarSello(el, true);
+    } else {
+      mostrar('❌ Todavía no. Mirá lo marcado:' + detalle, 'is-error');
+    }
   });
 
   el.querySelector<HTMLButtonElement>('[data-q-reset]')?.addEventListener('click', () => {
@@ -93,6 +102,7 @@ function bootQuiz(): void {
     el.dataset.init = '1';
     initQuiz(el);
   });
+  actualizarResumen();
 }
 
 if (document.readyState !== 'loading') bootQuiz();

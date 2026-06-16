@@ -53,10 +53,11 @@ const conex = conexiones.map((c) => {
 });
 ---
 
-<section class="diagrama" id={id} data-solucion={enc({ claseEnSlot, flechaEnConexion })}>
+<section class="diagrama" id={id} data-titulo={titulo} data-solucion={enc({ claseEnSlot, flechaEnConexion })}>
   <header class="ejercicio__header">
     <span class="ejercicio__dif" aria-hidden="true">🧩</span>
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
   </header>
 
   <div class="ejercicio__consigna"><slot /></div>

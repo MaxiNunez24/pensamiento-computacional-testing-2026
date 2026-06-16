@@ -35,10 +35,11 @@ const id = 'q-' + Math.random().toString(36).slice(2, 9);
 const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
 ---
 
-<section class="quiz" id={id} data-solucion={enc({ correctas, expl, multiple })}>
+<section class="quiz" id={id} data-titulo={titulo} data-solucion={enc({ correctas, expl, multiple })}>
   <header class="ejercicio__header">
     <span class="ejercicio__dif" aria-hidden="true">❓</span>
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
   </header>
 
   <div class="quiz__pregunta"><slot /></div>
