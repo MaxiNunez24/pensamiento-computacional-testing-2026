@@ -5,6 +5,7 @@ description: Reutilizar código entre clases parecidas, y armar un diagrama de c
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
 import DiagramaClases from '../../../components/DiagramaClases.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 
 :::tip[Clase interactiva]
 Última de POO conceptual. Programás, ejecutás, y al final **armás un diagrama arrastrando**. 🧩
@@ -33,6 +34,14 @@ class Perro(Animal):           # Perro HEREDA de Animal
 pero los **tiene** (los heredó). Si la hija define un método que ya existía, el suyo **gana**: eso es
 **sobrescribir** (override). Y con **`super().__init__(...)`** reusás el constructor de la madre
 cuando la hija necesita un atributo más.
+
+<OpcionMultiple titulo="Chequeo rápido" opciones={[
+  { texto: "Cuando podés decir 'la Hija ES UNA Madre'.", correcta: true, explicacion: "Sí: perro es un animal, gerente es un empleado, círculo es una figura." },
+  { texto: "Siempre que dos clases tengan un método con el mismo nombre.", explicacion: "No alcanza: un nombre igual no implica herencia." },
+  { texto: "Cuando una clase usa o contiene a otra.", explicacion: "Eso es asociación/composición ('tiene un'), no herencia ('es un')." },
+]}>
+¿Cuándo conviene usar **herencia** (`class Hija(Madre)`)?
+</OpcionMultiple>
 
 <EjercicioPython
   titulo="Instrumentos que heredan"

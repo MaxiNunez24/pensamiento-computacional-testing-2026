@@ -23,7 +23,12 @@ const { code } = Astro.props;
     const nodos = document.querySelectorAll<HTMLElement>('pre.mermaid:not([data-rendered])');
     if (nodos.length === 0) return;
     const { default: mermaid } = await import('mermaid');
-    const oscuro = document.documentElement.dataset.theme === 'dark';
+    // Modo oscuro: Starlight setea data-theme cuando es explícito; en "Auto" no lo
+    // setea y sigue prefers-color-scheme. Cubrimos ambos casos.
+    const attr = document.documentElement.dataset.theme;
+    const oscuro = attr
+      ? attr === 'dark'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
     mermaid.initialize({ startOnLoad: false, theme: oscuro ? 'dark' : 'default' });
     nodos.forEach((n) => n.setAttribute('data-rendered', ''));
     await mermaid.run({ nodes: nodos });

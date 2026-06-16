@@ -23,6 +23,61 @@ function initDiagrama(el: HTMLElement): void {
   const slots = el.querySelectorAll<HTMLElement>('.dg-slot');
   const conexiones = el.querySelectorAll<HTMLElement>('.dg-conexion');
 
+  // --- Dibujo de las líneas (en px, sin distorsión) + marcador UML por tipo ---
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const board = el.querySelector<HTMLElement>('.diagrama__board');
+  const svg = el.querySelector<SVGSVGElement>('.diagrama__svg');
+
+  // Centro de un nodo relativo al tablero.
+  const centro = (node: HTMLElement, br: DOMRect) => {
+    const r = node.getBoundingClientRect();
+    return { x: r.left + r.width / 2 - br.left, y: r.top + r.height / 2 - br.top, w: r.width, h: r.height };
+  };
+  // Punto en el borde de la caja 'box' en dirección a (fromX, fromY): así la
+  // flecha toca el borde y no queda tapada por la caja.
+  const bordeHacia = (box: { x: number; y: number; w: number; h: number }, fromX: number, fromY: number) => {
+    const dx = fromX - box.x;
+    const dy = fromY - box.y;
+    if (dx === 0 && dy === 0) return { x: box.x, y: box.y };
+    const sx = dx !== 0 ? box.w / 2 / Math.abs(dx) : Infinity;
+    const sy = dy !== 0 ? box.h / 2 / Math.abs(dy) : Infinity;
+    const s = Math.min(sx, sy);
+    return { x: box.x + dx * s, y: box.y + dy * s };
+  };
+
+  const redraw = () => {
+    if (!board || !svg) return;
+    const br = board.getBoundingClientRect();
+    if (br.width < 5) return; // todavía no hay layout
+    svg.setAttribute('viewBox', `0 0 ${br.width} ${br.height}`);
+    conexiones.forEach((cz) => {
+      const idc = cz.dataset.conexion || '';
+      const sep = idc.indexOf('-');
+      const de = idc.slice(0, sep);
+      const a = idc.slice(sep + 1);
+      const sde = el.querySelector<HTMLElement>(`.dg-slot[data-slot="${de}"]`);
+      const sa = el.querySelector<HTMLElement>(`.dg-slot[data-slot="${a}"]`);
+      if (!sde || !sa) return;
+      const cde = centro(sde, br);
+      const ca = centro(sa, br);
+      const p1 = bordeHacia(cde, ca.x, ca.y); // borde del hijo
+      const p2 = bordeHacia(ca, cde.x, cde.y); // borde de la madre (ahí va la flecha)
+      let line = svg.querySelector<SVGLineElement>(`line[data-for="${idc}"]`);
+      if (!line) {
+        line = document.createElementNS(SVGNS, 'line');
+        line.setAttribute('data-for', idc);
+        svg.appendChild(line);
+      }
+      line.setAttribute('x1', String(p1.x));
+      line.setAttribute('y1', String(p1.y));
+      line.setAttribute('x2', String(p2.x));
+      line.setAttribute('y2', String(p2.y));
+      const tipo = cz.dataset.valor;
+      if (tipo) line.setAttribute('marker-end', `url(#${el.id}-${tipo})`);
+      else line.removeAttribute('marker-end');
+    });
+  };
+
   const chipInfo = (chip: HTMLElement) => {
     if (chip.dataset.clase) return { kind: 'clase' as const, valor: chip.dataset.clase, label: chip.dataset.clase };
     return { kind: 'flecha' as const, valor: chip.dataset.flecha || '', label: chip.dataset.label || '' };
@@ -41,6 +96,7 @@ function initDiagrama(el: HTMLElement): void {
     target.textContent = label;
     target.classList.add('dg-lleno');
     target.classList.remove('dg-ok', 'dg-mal');
+    redraw(); // actualiza la flecha de la línea si fue una conexión
     return true;
   };
 
@@ -122,7 +178,16 @@ function initDiagrama(el: HTMLElement): void {
     });
     limpiarSeleccion();
     if (salida) salida.hidden = true;
+    redraw(); // saca las flechas de las líneas
   });
+
+  // Dibujo inicial + redibujo ante cambios de tamaño (responsive).
+  redraw();
+  if (board && 'ResizeObserver' in window) new ResizeObserver(() => redraw()).observe(board);
+  window.addEventListener('resize', redraw);
+  // Las fuentes/HMR pueden cambiar el layout: redibujar un toque después.
+  setTimeout(redraw, 300);
+  if (document.fonts?.ready) document.fonts.ready.then(redraw).catch(() => {});
 }
 
 function bootDiagramas(): void {

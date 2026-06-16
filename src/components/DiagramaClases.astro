@@ -62,8 +62,23 @@ const conex = conexiones.map((c) => {
   <div class="ejercicio__consigna"><slot /></div>
 
   <div class="diagrama__board">
-    <svg class="diagrama__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      {conex.map((c) => <line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} />)}
+    {/* El script dibuja las líneas en px (sin distorsión) y les pone el marcador
+        UML según el tipo de flecha asignado. Los marcadores se definen acá. */}
+    <svg class="diagrama__svg" aria-hidden="true">
+      <defs>
+        <marker id={`${id}-herencia`} viewBox="0 0 14 14" refX="13" refY="7"
+          markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-hollow" d="M1,1 L13,7 L1,13 Z" />
+        </marker>
+        <marker id={`${id}-asociacion`} viewBox="0 0 14 14" refX="12" refY="7"
+          markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-open" d="M2,2 L12,7 L2,12" />
+        </marker>
+        <marker id={`${id}-composicion`} viewBox="0 0 16 14" refX="14" refY="7"
+          markerWidth="17" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-fill" d="M1,7 L7,2 L13,7 L7,12 Z" />
+        </marker>
+      </defs>
     </svg>
 
     {slots.map((s) => (
