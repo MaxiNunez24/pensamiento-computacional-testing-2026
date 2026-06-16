@@ -63,6 +63,11 @@
 .ejercicio .cm-editor.cm-focused {
   outline: 2px solid var(--sl-color-accent);
 }
+/* Ocultar el botón de plegado de código (la "v"): confunde a principiantes.
+   Va acá (no en el theme JS) para ganarle en especificidad al CSS base de CodeMirror. */
+.ejercicio .cm-foldGutter {
+  display: none !important;
+}
 
 .ejercicio__acciones {
   display: flex;

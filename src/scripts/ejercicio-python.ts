@@ -25,8 +25,10 @@ const editorTheme = EditorView.theme({
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
   },
+  // line-height: normal hace que el caret llene exactamente la línea (si la
+  // inflamos, el caret queda más corto y se ve "por debajo").
   '.cm-content, .cm-gutters': {
-    lineHeight: '1.4',
+    lineHeight: 'normal',
   },
 });
 
