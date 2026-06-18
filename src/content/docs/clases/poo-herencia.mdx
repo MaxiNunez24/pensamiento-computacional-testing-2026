@@ -5,6 +5,7 @@ description: Reutilizar código entre clases parecidas, y armar un diagrama de c
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
 import DiagramaClases from '../../../components/DiagramaClases.astro';
+import DiagramaLibre from '../../../components/DiagramaLibre.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 
 :::tip[Clase interactiva]
@@ -123,6 +124,35 @@ mouse por cada flecha para ver qué significa.)
 >
 `Perro` y `Gato` **son un** `Animal`. ¿Qué tipo de flecha conecta una hija con su madre?
 </DiagramaClases>
+
+## 🎨 Nivel 2: armalo desde cero
+
+Ahora sin ayuda: **arrastrá las clases** donde quieras y **dibujá vos las flechas** (elegí el tipo,
+después tocá la clase de origen y la de destino). La dirección: la flecha va **de la clase que
+hereda/usa hacia la otra**.
+
+<DiagramaLibre
+  titulo="El diagrama de una escuelita"
+  clases={[
+    { nombre: "Persona", x: 50, y: 16 },
+    { nombre: "Estudiante", x: 20, y: 60 },
+    { nombre: "Profesor", x: 52, y: 60 },
+    { nombre: "Curso", x: 84, y: 78 },
+  ]}
+  tiposFlecha={[
+    { id: "herencia", simbolo: "▷", nombre: "Herencia", significado: "'es un': la hija hereda de la madre" },
+    { id: "asociacion", simbolo: "→", nombre: "Asociación", significado: "'usa a' / 'tiene un' otro objeto" },
+    { id: "composicion", simbolo: "◆", nombre: "Composición", significado: "'está compuesto por'" },
+  ]}
+  relaciones={[
+    { de: "Estudiante", a: "Persona", tipo: "herencia" },
+    { de: "Profesor", a: "Persona", tipo: "herencia" },
+    { de: "Profesor", a: "Curso", tipo: "asociacion" },
+  ]}
+>
+Un **Estudiante** y un **Profesor** *son* una **Persona** (herencia). Y un **Profesor** *dicta* un
+**Curso** (asociación). Construí el diagrama con esas tres relaciones.
+</DiagramaLibre>
 
 ## Para llevar
 

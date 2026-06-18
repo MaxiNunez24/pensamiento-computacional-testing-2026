@@ -1,0 +1,102 @@
+---
+/**
+ * Diagrama de clases de "lienzo libre": el alumno MUEVE las clases donde quiera
+ * y DIBUJA las flechas él mismo (elige el tipo, clic en origen → clic en destino).
+ * Se valida por la estructura (qué relaciones de qué tipo), no por la posición.
+ *
+ * Uso (.mdx):
+ *   <DiagramaLibre
+ *     titulo="Armá el diagrama desde cero"
+ *     clases={[{nombre:"Persona", x:50, y:14}, {nombre:"Estudiante", x:22, y:74}, ...]}
+ *     tiposFlecha={[{id:"herencia", simbolo:"▷", nombre:"Herencia", significado:"'es un'"}, ...]}
+ *     relaciones={[{de:"Estudiante", a:"Persona", tipo:"herencia"}, ...]}
+ *   />
+ */
+interface Clase { nombre: string; x?: number; y?: number }
+interface TipoFlecha { id: string; simbolo: string; nombre: string; significado: string }
+interface Relacion { de: string; a: string; tipo: string }
+interface Props {
+  titulo?: string;
+  clases: Clase[];
+  tiposFlecha: TipoFlecha[];
+  relaciones: Relacion[];
+}
+
+const { titulo = 'Armá el diagrama desde cero', clases, tiposFlecha, relaciones } = Astro.props;
+
+const id = 'dl-' + Math.random().toString(36).slice(2, 9);
+const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
+
+// Posiciones por defecto (en %) si el autor no las dio: repartidas en grilla.
+const cols = Math.ceil(Math.sqrt(clases.length));
+const posicionadas = clases.map((c, i) => ({
+  nombre: c.nombre,
+  x: c.x ?? Math.round(((i % cols) + 1) * (100 / (cols + 1))),
+  y: c.y ?? Math.round((Math.floor(i / cols) + 1) * (100 / (Math.ceil(clases.length / cols) + 1))),
+}));
+---
+
+<section class="diagrama" id={id} data-titulo={titulo} data-solucion={enc({ relaciones })}>
+  <header class="ejercicio__header">
+    <span class="ejercicio__dif" aria-hidden="true">🎨</span>
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+  </header>
+
+  <div class="ejercicio__consigna"><slot /></div>
+
+  <div class="dl-board" data-board>
+    <svg class="diagrama__svg" aria-hidden="true">
+      <defs>
+        <marker id={`${id}-herencia`} viewBox="0 0 14 14" refX="13" refY="7"
+          markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-hollow" d="M1,1 L13,7 L1,13 Z" />
+        </marker>
+        <marker id={`${id}-asociacion`} viewBox="0 0 14 14" refX="12" refY="7"
+          markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-open" d="M2,2 L12,7 L2,12" />
+        </marker>
+        <marker id={`${id}-composicion`} viewBox="0 0 16 14" refX="14" refY="7"
+          markerWidth="17" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-fill" d="M1,7 L7,2 L13,7 L7,12 Z" />
+        </marker>
+      </defs>
+    </svg>
+
+    {posicionadas.map((c) => (
+      <div class="dl-clase" data-clase={c.nombre} style={`left:${c.x}%;top:${c.y}%`}>{c.nombre}</div>
+    ))}
+
+    <div class="dl-borradores" data-borradores></div>
+  </div>
+
+  <div class="diagrama__paletas">
+    <div class="diagrama__paleta">
+      <p class="diagrama__paleta-tit">➡️ Elegí un tipo y conectá (clic en origen → clic en destino)</p>
+      {tiposFlecha.map((t) => (
+        <button
+          type="button"
+          class="dg-chip dl-tipo"
+          data-tipo={t.id}
+          title={t.significado}
+          aria-label={`${t.nombre}: ${t.significado}`}
+        >{t.simbolo} {t.nombre}</button>
+      ))}
+    </div>
+  </div>
+
+  <p class="diagrama__ayuda" data-ayuda>💡 Para <strong>mover</strong> una clase, arrastrala. Para
+  <strong>conectar</strong>, tocá un tipo de flecha y después la clase de origen y la de destino.
+  Para <strong>borrar</strong> una flecha, tocá la ✕ del medio.</p>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-dl-verificar>✓ Verificar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-dl-reset>↺ Borrar flechas</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-dl-salida role="status" aria-live="polite" hidden></pre>
+</section>
+
+<script>
+  import '../scripts/diagrama-libre.ts';
+</script>

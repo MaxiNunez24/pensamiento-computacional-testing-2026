@@ -198,7 +198,8 @@ function initDiagrama(el: HTMLElement): void {
 
 function bootDiagramas(): void {
   document.querySelectorAll<HTMLElement>('.diagrama').forEach((el) => {
-    if (el.dataset.init) return;
+    // Los de "lienzo libre" (con [data-board]) los maneja diagrama-libre.ts.
+    if (el.dataset.init || el.querySelector('[data-board]')) return;
     el.dataset.init = '1';
     initDiagrama(el);
   });
