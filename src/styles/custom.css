@@ -135,10 +135,15 @@
    - en las capas absolutas .cm-layer (.cm-cursorLayer / .cm-selectionLayer) el
      margin-top desplaza 16px hacia abajo el caret y el fondo de selección,
      aunque el texto quede en su lugar.
-   Anulamos ese margen en todas las piezas internas del editor. */
+   Anulamos ese margen en todas las piezas internas del editor. OJO: hay que
+   incluir los HIJOS de las capas (.cm-layer > *): al seleccionar varias líneas,
+   CodeMirror dibuja varios .cm-selectionBackground y la regla "* + *" de
+   Starlight le mete margin-top al 2º y 3º → quedan líneas sin pintar en el
+   medio de la selección. */
 .ejercicio .cm-line,
 .ejercicio .cm-gutterElement,
-.ejercicio .cm-layer {
+.ejercicio .cm-layer,
+.ejercicio .cm-layer > * {
   margin: 0 !important;
 }
 
