@@ -127,14 +127,18 @@
 .ejercicio .cm-foldGutter {
   display: none !important;
 }
-/* CLAVE (caret una línea más abajo): Starlight le mete "margin-top" a cada
-   bloque hermano de su prosa (.sl-markdown-content), y eso se cuela en cada
-   .cm-line del editor (16px entre líneas). CodeMirror mide las líneas SIN ese
-   margen y arma su mapa de alturas como si fueran contiguas → al clickear, el
-   caret cae una línea más abajo (peor cuanto más abajo se clickea). Anulamos
-   ese margen para que el render coincida con el modelo de alturas de CM. */
+/* CLAVE (caret/selección "una línea más abajo"): Starlight le mete "margin-top"
+   a cada bloque hermano de su prosa (.sl-markdown-content), y eso se cuela en
+   las piezas internas de CodeMirror. Dos efectos:
+   - en cada .cm-line (16px entre líneas) descoloca el mapa de alturas (al
+     clickear, el caret cae una línea más abajo, peor cuanto más abajo);
+   - en las capas absolutas .cm-layer (.cm-cursorLayer / .cm-selectionLayer) el
+     margin-top desplaza 16px hacia abajo el caret y el fondo de selección,
+     aunque el texto quede en su lugar.
+   Anulamos ese margen en todas las piezas internas del editor. */
 .ejercicio .cm-line,
-.ejercicio .cm-gutterElement {
+.ejercicio .cm-gutterElement,
+.ejercicio .cm-layer {
   margin: 0 !important;
 }
 
