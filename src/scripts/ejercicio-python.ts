@@ -34,10 +34,13 @@ const editorTheme = EditorView.theme({
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
   },
-  // line-height: normal hace que el caret llene exactamente la línea (si la
-  // inflamos, el caret queda más corto y se ve "por debajo").
-  '.cm-content, .cm-gutters': {
-    lineHeight: 'normal',
+  // line-height EXPLÍCITO (no "normal"): con "normal" la altura de línea
+  // depende de la fuente, así que CodeMirror la mide chica con la fuente de
+  // respaldo y, cuando carga la monoespaciada, su mapa de alturas queda
+  // desfasado → el caret cae una línea más abajo (peor cuanto más abajo).
+  // Un valor fijo es independiente de la fuente: la 1ª medición ya coincide.
+  '.cm-content, .cm-line, .cm-gutters, .cm-gutterElement': {
+    lineHeight: '1.5',
   },
 });
 
