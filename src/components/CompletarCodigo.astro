@@ -1,0 +1,101 @@
+---
+/**
+ * Ejercicio "completar el código" (fill-in-the-blank). El alumno solo escribe
+ * las partes clave: el resto del código ya está. Los huecos se marcan en la
+ * `plantilla` con [[respuesta]] y se renderizan como <input> en línea. Al
+ * Verificar se ensambla el código completo y se corre contra `tests` con el
+ * mismo intérprete (Pyodide) que el resto de los ejercicios.
+ *
+ * Uso (.mdx):
+ *   import CompletarCodigo from '../../../components/CompletarCodigo.astro';
+ *   <CompletarCodigo
+ *     titulo="Completá el saludo"
+ *     dificultad="🌱"
+ *     plantilla={`def saludar(nombre):\n    return "Hola, " + [[nombre]]`}
+ *     tests={`assert saludar("Ana") == "Hola, Ana"`}
+ *     pistas={["El parámetro se llama <code>nombre</code>."]}
+ *   >
+ *     Completá el hueco para que la función devuelva el saludo.
+ *   </CompletarCodigo>
+ */
+interface Props {
+  titulo: string;
+  dificultad?: string; // 🌱 / 🌿 / 🌶️
+  plantilla: string;
+  tests: string;
+  pistas?: string[];
+}
+
+const { titulo, dificultad = '', plantilla, tests, pistas = [] } = Astro.props;
+
+// Partimos la plantilla por los huecos [[respuesta]]: quedan N+1 segmentos
+// estáticos y N respuestas. El render intercala segmento, input, segmento…
+// y el script reensambla = segmentos.join(valores).
+const RE = /\[\[([\s\S]*?)\]\]/g;
+const segmentos: string[] = [];
+const respuestas: string[] = [];
+let last = 0;
+let m: RegExpExecArray | null;
+while ((m = RE.exec(plantilla)) !== null) {
+  segmentos.push(plantilla.slice(last, m.index));
+  respuestas.push(m[1]);
+  last = m.index + m[0].length;
+}
+segmentos.push(plantilla.slice(last));
+
+// Lista PLANA de piezas (texto / hueco) para renderizar una por elemento, sin
+// que se cuele espacio en blanco entre nodos (ojo: estamos dentro de un <pre>).
+type Parte =
+  | { t: 'txt'; v: string }
+  | { t: 'hueco'; i: number; w: number };
+const partes: Parte[] = [];
+segmentos.forEach((seg, i) => {
+  partes.push({ t: 'txt', v: seg });
+  if (i < respuestas.length) partes.push({ t: 'hueco', i, w: Math.max(respuestas[i].length, 3) + 1 });
+});
+
+const id = 'cc-' + Math.random().toString(36).slice(2, 9);
+const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
+---
+
+<section
+  class="ejercicio completar"
+  id={id}
+  data-titulo={titulo}
+  data-segmentos={enc(segmentos)}
+  data-tests={Buffer.from(tests, 'utf-8').toString('base64')}
+>
+  <header class="ejercicio__header">
+    {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+    <span class="ejercicio__archivo" title="Completá los huecos en blanco">✏️ completar</span>
+  </header>
+
+  <div class="ejercicio__consigna">
+    <slot />
+  </div>
+
+  <pre class="completar__codigo"><code>{partes.map((p) => p.t === 'txt' ? <span class="completar__txt">{p.v}</span> : <input class="completar__hueco" type="text" data-blank={p.i} spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label={`hueco ${p.i + 1}`} style={`width: ${p.w}ch`} />)}</code></pre>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--run" data-cc-run>▶ Ejecutar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-cc-verify title="Verificar (Ctrl/Cmd + Enter)">✓ Verificar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-cc-reset>↺ Reiniciar</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-cc-salida role="status" aria-live="polite" hidden></pre>
+
+  {pistas.length > 0 && (
+    <details class="ejercicio__pistas">
+      <summary>💡 Pistas</summary>
+      <ol>
+        {pistas.map((p) => <li set:html={p} />)}
+      </ol>
+    </details>
+  )}
+</section>
+
+<script>
+  import '../scripts/completar-codigo.ts';
+</script>

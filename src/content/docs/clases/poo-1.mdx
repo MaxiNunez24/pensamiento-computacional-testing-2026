@@ -4,6 +4,7 @@ description: "Tu primer salto a modelar cosas con datos y comportamiento. Intera
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
+import CompletarCodigo from '../../../components/CompletarCodigo.astro';
 import Mermaid from '../../../components/Mermaid.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 
@@ -58,6 +59,23 @@ Antes de codear, ¿cuál es la diferencia entre una **clase** y un **objeto**?
 </OpcionMultiple>
 
 ## Manos a la obra
+
+Para entrar en confianza, primero **completá** una clase que ya está casi lista. Después la escribís
+desde cero.
+
+<CompletarCodigo
+  titulo="Completá la clase Gato"
+  dificultad="🌱"
+  plantilla={`class Gato:\n    def __init__(self, nombre, edad):\n        self.nombre = nombre\n        self.edad = [[edad]]\n    def describir(self):\n        return f"{self.nombre} tiene {[[self.edad]]} años"`}
+  tests={`g = Gato("Michi", 4)\nassert g.describir() == "Michi tiene 4 años", 'describir() debería dar "Michi tiene 4 años"'\nassert Gato("Tom", 2).describir() == "Tom tiene 2 años"\nprint("¡Gato OK!")`}
+  pistas={[
+    "El constructor recibe la edad en el parámetro <code>edad</code>: guardalo tal cual.",
+    "Para <strong>leer</strong> un atributo adentro de la clase, le ponés <code>self.</code> adelante: <code>self.edad</code>.",
+  ]}
+>
+  Esta clase ya está casi lista. Completá los **dos huecos en azul** para que el gato guarde su edad y
+  sepa describirse. (Tocá **✓ Verificar** cuando termines.)
+</CompletarCodigo>
 
 <EjercicioPython
   titulo="Tu primera clase"
