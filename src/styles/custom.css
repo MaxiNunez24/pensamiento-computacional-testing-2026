@@ -83,6 +83,38 @@
 .pc-resizer:focus-visible {
   outline: none;
 }
+/* Botón ↺ de reset (uno por manija). Oculto; aparece al pasar el cursor por la
+   manija o si ese sidebar fue modificado (.is-custom). */
+.pc-reset {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--sl-color-gray-4);
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-text);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.pc-resizer:hover .pc-reset,
+.pc-resizer:focus-within .pc-reset,
+.pc-resizer.is-custom .pc-reset {
+  opacity: 1;
+}
+.pc-reset:hover,
+.pc-reset:focus-visible {
+  color: var(--sl-color-accent);
+  border-color: var(--sl-color-accent);
+}
 /* Solo cuando Starlight muestra los sidebars como columnas fijas. */
 @media (min-width: 50rem) {
   .pc-resizer--left { display: block; }

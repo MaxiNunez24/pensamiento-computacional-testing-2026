@@ -72,11 +72,49 @@
     h.setAttribute('aria-orientation', 'vertical');
     h.tabIndex = 0;
     h.title = 'Arrastrá para ajustar el ancho · doble clic para ocultar/mostrar';
+    // Botón de reset: vuelve este sidebar a su ancho por defecto. Aparece al
+    // pasar el cursor y queda visible si el sidebar fue modificado.
+    var rb = document.createElement('button');
+    rb.type = 'button';
+    rb.className = 'pc-reset';
+    rb.textContent = '↺';
+    rb.title = 'Restablecer el ancho por defecto';
+    rb.setAttribute('aria-label', 'Restablecer el ancho del ' + (side === 'left' ? 'menú' : 'índice'));
+    rb.addEventListener('pointerdown', function (e) {
+      e.stopPropagation(); // que no arranque un arrastre
+    });
+    rb.addEventListener('click', function (e) {
+      e.stopPropagation();
+      resetSide(side);
+    });
+    h.appendChild(rb);
     document.body.appendChild(h);
     return h;
   }
   var hL = mkHandle('left');
   var hR = mkHandle('right');
+
+  // Marca cada manija como "modificada" (muestra el ↺ de forma persistente).
+  function flags() {
+    hL.classList.toggle('is-custom', typeof state.left === 'number');
+    hR.classList.toggle('is-custom', typeof state.right === 'number');
+  }
+
+  // Vuelve un sidebar a su ancho por defecto (el de custom.css).
+  function resetSide(side) {
+    if (side === 'left') {
+      root.style.removeProperty('--pc-left-w');
+      delete state.left;
+      delete state.leftPrev;
+    } else {
+      root.style.removeProperty('--pc-right-w');
+      delete state.right;
+      delete state.rightPrev;
+    }
+    save();
+    flags();
+    sync();
+  }
 
   function headerBottom() {
     var hd = document.querySelector('header.header') || document.querySelector('.header');
@@ -128,9 +166,12 @@
       document.removeEventListener('pointerup', up);
       handle.classList.remove('is-drag');
       document.body.classList.remove('pc-resizing');
-      state.left = curLeft();
-      state.right = curRight();
+      // Guardamos SOLO el lado que se movió (si no, marcaríamos el otro como
+      // "modificado" sin haberlo tocado).
+      if (side === 'left') state.left = curLeft();
+      else state.right = curRight();
       save();
+      flags();
       sync();
     }
     document.addEventListener('pointermove', move);
@@ -161,6 +202,7 @@
       }
     }
     save();
+    flags();
     sync();
   }
 
@@ -178,6 +220,7 @@
       setRight(state.right);
     }
     save();
+    flags();
     sync();
   }
 
@@ -202,6 +245,7 @@
 
   window.addEventListener('resize', sync);
   window.addEventListener('scroll', sync, { passive: true });
+  flags(); // marca el ↺ si ya había un ancho guardado
   if (document.readyState !== 'loading') sync();
   else document.addEventListener('DOMContentLoaded', sync);
   // Re-sincronizar tras asentarse el layout (fuentes, etc.).
