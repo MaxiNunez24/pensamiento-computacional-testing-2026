@@ -12,6 +12,13 @@ export default defineConfig({
         root: { label: 'Español', lang: 'es' },
       },
       customCss: ['./src/styles/custom.css'],
+      // Script propio: sidebars redimensionables (se sirve desde /public).
+      head: [
+        {
+          tag: 'script',
+          attrs: { src: '/sidebars-resizable.js', defer: true },
+        },
+      ],
       // El buscador (Pagefind), el dark mode y el botón de copiar código
       // vienen de fábrica con Starlight.
       sidebar: [

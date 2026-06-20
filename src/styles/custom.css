@@ -4,8 +4,80 @@
 :root {
   /* Acento del curso (verde "Python-friendly"). Ajustable. */
   --ej-radio: 0.7rem;
-  /* Sidebar más angosto para ganar espacio de lectura (default Starlight: 18.75rem). */
-  --sl-sidebar-width: 16rem;
+  /* Anchos ajustables de los sidebars (el alumno los arrastra; ver
+     sidebars-resizable.js). Empiezan en estos valores. */
+  --pc-left-w: 16rem; /* nav izquierdo (más angosto que el default 18.75rem) */
+  --pc-right-w: 22rem; /* índice derecho (igual al default de Starlight) */
+  /* El nav izquierdo de Starlight sigue el ancho ajustable. */
+  --sl-sidebar-width: var(--pc-left-w);
+}
+
+/* ---------- Sidebars redimensionables ---------- */
+
+/* El índice derecho sigue su ancho ajustable. flex-shrink:0 para que MANTENGA
+   el ancho que se le pide (si no, el flex lo encoge y el arrastre no engancha
+   1:1); el panel de contenido —que ya tiene min-width:0— es el que cede. */
+.right-sidebar-container {
+  width: var(--pc-right-w);
+  flex-shrink: 0;
+}
+
+/* Manija de arrastre (una por sidebar). Fija; el script la posiciona sobre el
+   borde interno de cada sidebar. Fina y discreta; se ilumina al pasar el mouse. */
+.pc-resizer {
+  position: fixed;
+  z-index: 50;
+  width: 11px;
+  display: none; /* en mobile no hay sidebars fijos: se muestran por media query */
+  cursor: col-resize;
+  touch-action: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.pc-resizer::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--sl-color-gray-5);
+  transition: background 0.15s ease, width 0.15s ease;
+}
+.pc-resizer:hover::before,
+.pc-resizer:focus-visible::before,
+.pc-resizer.is-drag::before {
+  width: 4px;
+  background: var(--sl-color-accent);
+}
+/* "agarradera" de puntos al pasar el cursor */
+.pc-resizer:hover::after,
+.pc-resizer:focus-visible::after,
+.pc-resizer.is-drag::after {
+  content: '⋮';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--sl-color-accent);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.pc-resizer:focus-visible {
+  outline: none;
+}
+/* Solo cuando Starlight muestra los sidebars como columnas fijas. */
+@media (min-width: 50rem) {
+  .pc-resizer--left { display: block; }
+}
+@media (min-width: 72rem) {
+  .pc-resizer--right { display: block; }
+}
+/* Mientras se arrastra: nada de selección y cursor de redimensionar global. */
+body.pc-resizing,
+body.pc-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
 }
 
 /* ---------- Progreso del alumno ---------- */
