@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Plataforma interactiva del curso Pensamiento Computacional y Testing de Aplicaciones (CFP 401)",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
     "dev": "astro dev --host",
     "build": "astro build",
