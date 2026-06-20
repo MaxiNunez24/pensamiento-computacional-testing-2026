@@ -21,6 +21,23 @@
   width: var(--pc-right-w);
   flex-shrink: 0;
 }
+/* Starlight REUSA --sl-sidebar-width para el ancho interno del TOC derecho
+   (asume que ambos sidebars miden igual). Eso rompía el TOC al achicar/ocultar
+   el nav izquierdo (width = 0 - 2*pad → texto de a una letra). Lo atamos a
+   NUESTRA variable del lado derecho. */
+.right-sidebar .sl-container {
+  width: calc(var(--pc-right-w) - 2 * var(--sl-sidebar-pad-x));
+  max-width: none;
+}
+/* El contenido CRECE para ocupar el espacio que liberan los sidebars (Starlight
+   lo deja fijo en --sl-content-width y sobraba lugar al achicarlos). El hijo
+   flex real es .main-pane (no .content-panel); ahí va el flex-grow. */
+.main-pane {
+  flex-grow: 1;
+}
+.content-panel .sl-container {
+  max-width: var(--pc-content-max, none);
+}
 
 /* Manija de arrastre (una por sidebar). Fija; el script la posiciona sobre el
    borde interno de cada sidebar. Fina y discreta; se ilumina al pasar el mouse. */

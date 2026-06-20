@@ -100,10 +100,10 @@
       hR.style.top = px(top);
       hR.style.height = px(h);
       hR.style.left = px(rr.left - 5);
-      hR.dataset.ok = '1';
+      hR.style.display = ''; // que mande la media query
     } else {
-      hR.dataset.ok = '';
-      hR.style.left = '-9999px';
+      // páginas sin índice derecho (ej. la home): no mostramos esa manija.
+      hR.style.display = 'none';
     }
   }
 
