@@ -455,6 +455,6 @@ Lo hacemos en **3 etapas** (así trabajan los profesionales 👇):
 !!! quote "Para cerrar"
     Leer y escribir archivos de texto es la base de la persistencia. En la próxima clase vamos a dar un salto enorme: en lugar de texto plano, vamos a guardar **datos estructurados en formato JSON**, lo que nos permite guardar listas y diccionarios directamente.
 
-## [⬅️ Anterior: Funciones II](../06_funciones/funciones_2.md)
+## [⬅️ Anterior: Importar módulos](../06_funciones/imports_y_modulos.md)
 ## [📚 Índice](../../clases.md#persistencia)
 ## [➡️ Siguiente: JSON](./json.md)

@@ -446,4 +446,4 @@ Antes de cerrar, tomamos 3 minutos. Cada uno responde en voz alta (o en papel):
 
 ## [⬅️ Anterior: Lectura y corrección de código](./lectura_codigo.md)
 ## [📚 Índice](../../clases.md#colecciones)
-## [➡️ Siguiente: Manejo de archivos](../07_persistencia/archivos.md)
+## [➡️ Siguiente: Importar módulos](./imports_y_modulos.md)
