@@ -28,10 +28,51 @@ nombres = ["Ana", "Beto", "Cami"]
 
 ---
 
+## 📍 ¿Dónde se guardan los archivos? (la carpeta de trabajo)
+
+Antes de crear un solo archivo, la pregunta más importante —y la que más confunde al principio—:
+**¿dónde van a quedar?**
+
+Cuando escribís `open("datos.txt", "w")`, Python crea `datos.txt` en la **carpeta de trabajo**: la
+carpeta **desde donde se está ejecutando el programa** (en la práctica, la carpeta que tenés abierta en
+el editor). Si solo ponés el nombre del archivo, sin carpetas, va **ahí**. Por eso, si no prestás
+atención, los `.txt` te aparecen desparramados donde menos lo esperás.
+
+!!! tip "🗂️ Regla de oro de la clase: una carpeta para todo"
+    Creá **una sola carpeta** para hoy —la vamos a llamar `clase_archivos`— y trabajá **adentro**:
+    guardá ahí tus scripts `.py` y ejecutalos desde ahí. Así **todos** los archivos que generes caen
+    **juntos** en esa carpeta y no se te pierden.
+
+    - En **VS Code**: `Archivo → Abrir carpeta…` y elegí `clase_archivos`. Con eso, la terminal y el
+      "Run" ya quedan parados adentro de esa carpeta.
+    - Si algún archivo se creó en otro lado (te puede pasar con el script de preparación de abajo),
+      **movelo** a mano dentro de `clase_archivos` y listo. 🙂
+
+### Rutas relativas vs. absolutas (en criollo)
+
+- **Relativa** → `"datos.txt"` o `"subcarpeta/datos.txt"`: se entiende **desde la carpeta de trabajo**.
+  Es la que vamos a usar siempre (funciona en cualquier computadora).
+- **Absoluta** → `"C:/Users/Maxi/Escritorio/datos.txt"`: la ruta completa desde la raíz del disco.
+  Funciona, pero queda **clavada a tu compu**: en la de otra persona esa carpeta no existe. Evitala.
+
+!!! note "🧭 ¿En qué carpeta estoy parado?"
+    Si dudás de dónde va a crear los archivos, preguntáselo a Python:
+
+    ```python
+    from pathlib import Path
+    print("Estoy trabajando en:", Path.cwd())   # cwd = current working directory
+    ```
+
+    Ejecutá eso primero y fijate que la ruta termine en `...\clase_archivos`. Si no, abrí esa carpeta
+    en el editor y volvé a probar.
+
+---
+
 ## 🧰 Preparación — copiá, pegá y ejecutá
 
-Antes de arrancar, vamos a dejar lista la "cancha" para los ejercicios de hoy. **Copiá este código,
-pegalo en un archivo `preparar.py` y ejecutalo una vez.** Te va a crear los archivos de práctica.
+Ya con tu carpeta `clase_archivos` abierta (ver arriba), vamos a dejar lista la "cancha" para los
+ejercicios de hoy. **Copiá este código, pegalo en un archivo `preparar.py` DENTRO de `clase_archivos`
+y ejecutalo una vez.** Te va a crear los archivos de práctica **en esa misma carpeta**.
 
 ```python
 from pathlib import Path
@@ -201,20 +242,24 @@ with open("datos.txt", "r") as archivo:
 
 ---
 
-## 📍 Rutas: relativas vs absolutas
+## 📍 Rutas: un repaso rápido
+
+Ya lo charlamos [al principio](#donde-se-guardan-los-archivos-la-carpeta-de-trabajo), pero para
+tenerlo a mano también acá:
 
 ```python
-# Ruta relativa — relativa al directorio desde donde ejecutás el script
+# Ruta relativa — se entiende desde la CARPETA DE TRABAJO (lo que usamos siempre)
 with open("datos.txt", "r") as f: ...           # mismo directorio
 with open("datos/alumnos.txt", "r") as f: ...   # subcarpeta "datos"
 
-# Ruta absoluta — funciona sin importar desde dónde ejecutés
-with open("C:/Users/Maxi/Desktop/datos.txt", "r") as f: ...  # Windows
-with open("/home/maxi/datos.txt", "r") as f: ...              # Linux/Mac
+# Ruta absoluta — la ruta completa desde la raíz del disco (evitala: está clavada a tu compu)
+with open("C:/Users/Maxi/Escritorio/datos.txt", "r") as f: ...  # Windows
+with open("/home/maxi/datos.txt", "r") as f: ...                # Linux/Mac
 ```
 
 !!! tip "💡 En proyectos reales"
-    Usá rutas relativas al proyecto. Las rutas absolutas "hardcodeadas" no funcionan en la computadora de otra persona. En el proyecto vamos a usar rutas relativas a la carpeta del proyecto.
+    Usá **rutas relativas** al proyecto. Las absolutas "hardcodeadas" no funcionan en la computadora de
+    otra persona. En el proyecto vamos a trabajar siempre con rutas relativas a la carpeta del proyecto.
 
 ---
 
@@ -262,6 +307,64 @@ for archivo in carpeta.glob("*.txt"):
     Un montón de código y de tutoriales usan el módulo `os`: `os.listdir("carpeta")` devuelve una
     **lista con los nombres** (como strings) de lo que hay adentro. `pathlib` es la forma más moderna
     y cómoda, pero te conviene **reconocer `os.listdir()`** cuando lo cruces por ahí.
+
+---
+
+## 📝 Tu apunte de la clase: `conceptos.py`
+
+Para que te quede **todo junto y a mano**, vamos a armar un archivo `conceptos.py` con **un ejemplo de
+cada cosa** que vimos, comentado. Crealo en tu carpeta `clase_archivos`, escribí esto (podés ir
+armándolo en vivo con el profe) y **ejecutalo**: cada bloque te muestra una idea funcionando. Guardalo
+—es tu chuleta para el proyecto—.
+
+```python
+# conceptos.py — apunte de la clase de Archivos 📁
+# Ejecutalo parado en la carpeta clase_archivos (mirá que Path.cwd() termine ahí).
+from pathlib import Path
+
+# 0) ¿Dónde estoy parado? Acá van a caer los archivos que cree.
+print("Carpeta de trabajo:", Path.cwd())
+
+# 1) ESCRIBIR con modo "w": CREA el archivo (o lo SOBREESCRIBE si ya existía).
+#    Ojo: write() NO agrega el salto de línea solo, se lo ponemos con "\n".
+with open("apunte.txt", "w", encoding="utf-8") as f:
+    f.write("primera línea\n")
+    f.write("segunda línea\n")
+
+# 2) AGREGAR con modo "a": suma AL FINAL, sin borrar lo que ya había.
+with open("apunte.txt", "a", encoding="utf-8") as f:
+    f.write("tercera línea (agregada después)\n")
+
+# 3) LEER todo de una vez con modo "r" (es el modo por defecto):
+with open("apunte.txt", "r", encoding="utf-8") as f:
+    print("\n--- todo el contenido ---")
+    print(f.read())
+
+# 4) LEER línea por línea (lo más común y lo más eficiente):
+print("--- línea por línea ---")
+with open("apunte.txt", "r", encoding="utf-8") as f:
+    for linea in f:
+        print("•", linea.strip())   # strip() saca el "\n" del final
+
+# 5) ¿Existe el archivo antes de intentar leerlo?
+if Path("apunte.txt").exists():
+    print("\napunte.txt existe ✅")
+
+# 6) Recorrer una CARPETA: todos los .txt que hay en la carpeta actual.
+print("\n--- .txt en esta carpeta ---")
+for archivo in Path(".").glob("*.txt"):   # "." = la carpeta actual
+    print(archivo.name)
+
+# 💡 Recordá:
+#   - SIEMPRE usar  with open(...) as f:  (cierra el archivo solo).
+#   - SIEMPRE poner  encoding="utf-8"  (para que anden tildes y ñ).
+#   - "w" borra, "a" agrega, "r" lee.
+```
+
+!!! tip "💡 Por qué te sirve este apunte"
+    `conceptos.py` es tu **resumen que se puede correr**. Cuando en el proyecto no te acuerdes cómo se
+    abría en modo "agregar" o cómo se leía línea por línea, abrís este archivo, lo mirás (o lo
+    ejecutás) y listo. Mejor que un apunte en papel, porque **funciona**.
 
 ---
 

@@ -122,15 +122,19 @@
 | Mié 17/6 | Entrada en calor: Funciones como caja negra (puente a la abstracción) | [📄](./clases/python/06_funciones/funciones_caja_negra.md) |
 | Vie 19/6 | Bingo — ejercicio integrador (parte 1) | [📄](./clases/python/06_funciones/bingo.md) |
 | Mié 24/6 | Bingo — ejercicio integrador (parte 2, cierre) | [📄](./clases/python/06_funciones/bingo.md) |
+| Mié 1/7 | Repaso general (puente antes de arrancar Persistencia) | [📄](./clases/python/06_funciones/repaso.md) |
 
 ### 🛠️ Bloque 3 — Persistencia y Versionado
 
 | Fecha | Tema | |
 |-------|------|--|
-| Vie 26/6 | Manejo de archivos (arranca el bloque de persistencia) | [📄](./clases/python/07_persistencia/archivos.md) |
+| Vie 3/7 | Manejo de archivos (arranca el bloque de persistencia) | [📄](./clases/python/07_persistencia/archivos.md) |
 
 <!-- Próxima clase: seguir con Persistencia (JSON, Git/GitHub). El anexo de Importar módulos quedó
      escrito como material; ubicá la fila acá si lo dictás en una clase. -->
+<!-- OJO: ¿hubo clase el Vie 26/6? Quedó sin registrar (antes decía "Archivos", que en realidad
+     arrancó el 3/7). Si el 26/6 se dio algo, agregá la fila entre 24/6 y 1/7. -->
+
 
 ---
 
