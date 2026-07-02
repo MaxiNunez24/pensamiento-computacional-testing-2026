@@ -274,9 +274,10 @@ Usá las funciones que ya escribiste. No repitas lógica — si ya existe una fu
         print("_"*50)
         print(f"Marcados: {len(marcados)}/15  |  Faltantes: {len(faltantes)}")
         
-    print("¡Empieza el juego!")
 
     def jugar_individual():
+        print("¡Empieza el juego!")
+        
         carton = generar_carton()
 
         print(f"Tu cartón: {sorted(carton)}")

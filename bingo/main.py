@@ -1,3 +1,4 @@
-import bingo
+from bingo import jugar_individual, jugar_multijugador
 
-bingo.jugar_multijugador(["Pedro", "Juan", "Carlos", "Ana"])
+
+jugar_multijugador(["Marisa", "Brandon", "Rodolfo", "Maxi"])
