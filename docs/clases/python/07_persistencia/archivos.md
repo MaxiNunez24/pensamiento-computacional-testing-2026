@@ -131,7 +131,7 @@ archivo.close()                    # ¡siempre hay que cerrarlo!
 | `"x"` | exclusive create | Crea el archivo. Error si ya existe. |
 | `"r+"` | read + write | Abre para leer **y** escribir. Error si no existe. |
 
-!!! warning "⚠️ El modo `\"w\"` borra el contenido existente"
+!!! warning "⚠️ El modo `w` borra el contenido existente"
     Si abrís un archivo existente con `"w"`, su contenido se **destruye** inmediatamente, antes incluso de que escribas nada. Si querés conservar lo que había, usá `"a"`.
 
 ---
@@ -209,7 +209,7 @@ with open("datos.txt", "r") as archivo:
 
 ## ✍️ Escribir archivos
 
-=== "📝 Modo `\"w\"` — crear / sobreescribir"
+=== "📝 Modo `w` — crear / sobreescribir"
 
     ```python
     nombres = ["Ana", "Beto", "Cami"]
@@ -226,7 +226,7 @@ with open("datos.txt", "r") as archivo:
     Cami
     ```
 
-=== "➕ Modo `\"a\"` — agregar al final"
+=== "➕ Modo `a` — agregar al final"
 
     ```python
     # El archivo ya existe con Ana, Beto y Cami
