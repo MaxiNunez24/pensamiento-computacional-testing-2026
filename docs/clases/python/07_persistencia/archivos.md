@@ -17,13 +17,11 @@ Los programas que hiciste hasta ahora "olvidan" todo cuando los cerrás. Aprende
 
     - **En clase (🔵):** la teoría con ejemplos, armamos juntos el apunte `conceptos.py`, y hacemos los
       **Ejercicios 1 y 3** (los más alineados al proyecto).
-    - **Práctica extra (⭐):** los Ejercicios 2, 4 y 5. Son **cortos y autocontenidos** (se hacen de
-      cero, no necesitás "tu repo"): hacelos si te sobra tiempo acá en el CFP, o en casa quien tenga
-      compu. Tienen la solución abajo.
-    - **Cierre (~30 min):** una **intro a JSON**, que arrancamos en serio la próxima clase.
+    - **Práctica extra (⭐):** los Ejercicios 2, 4 y 5, cortos y autocontenidos. Como **ya vimos Git y
+      GitHub**, podés **pushear tu carpeta y seguir practicándolos en casa** (o en cualquier máquina).
+      Tienen la solución abajo.
 
-    No hace falta llegar a todo hoy: el ritmo lo marca el grupo. Cuando veamos **Git y GitHub (10/7)**
-    van a poder llevarse su código a cualquier máquina y seguir en casa sin dramas. 🙂
+    No hace falta llegar a todo hoy: el ritmo lo marca el grupo. Lo que no entre, queda para practicar. 🙂
 
 ---
 
@@ -406,8 +404,8 @@ for archivo in Path(".").glob("*.txt"):   # "." = la carpeta actual
 
 !!! note "🔵 en clase · ⭐ práctica extra"
     En clase hacemos el **Ejercicio 1** y el **3**. Los marcados con **⭐** son **práctica extra**
-    (cortos y autocontenidos): hacelos si te queda tiempo en el CFP, o en casa si tenés compu — tienen
-    la solución abajo para que te autocorrijas. Todos usan tu carpeta `clase_archivos`.
+    (cortos y autocontenidos): como ya vieron Git, pueden **pushear su carpeta y seguirlos en casa** —
+    tienen la solución abajo para autocorregirse. Todos usan tu carpeta `clase_archivos`.
 
 ### 🌱 Ejercicio 1 — Crear y leer 🔵
 
@@ -582,6 +580,6 @@ Lo hacemos en **3 etapas** (así trabajan los profesionales 👇):
 !!! quote "Para cerrar"
     Leer y escribir archivos de texto es la base de la persistencia. En la próxima clase vamos a dar un salto enorme: en lugar de texto plano, vamos a guardar **datos estructurados en formato JSON**, lo que nos permite guardar listas y diccionarios directamente.
 
-## [⬅️ Anterior: Importar módulos](../06_funciones/imports_y_modulos.md)
+## [⬅️ Anterior: Git y GitHub](./git_github.md)
 ## [📚 Índice](../../clases.md#persistencia)
 ## [➡️ Siguiente: JSON](./json.md)

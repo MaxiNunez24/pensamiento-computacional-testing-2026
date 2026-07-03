@@ -455,6 +455,6 @@ flowchart LR
 !!! quote "Para cerrar"
     Git y GitHub son las herramientas de colaboración más usadas en el mundo del software. Que puedan decir "tengo mis proyectos en GitHub" es algo que ya diferencia a un programador de alguien que solo aprendió a programar. ¡Bienvenidos al ecosistema! 🌍
 
-## [⬅️ Anterior: JSON](./json.md)
+## [⬅️ Anterior: Importar módulos](../06_funciones/imports_y_modulos.md)
 ## [📚 Índice](../../clases.md#persistencia)
-## ➡️ Siguiente: POO I — Clases y objetos *(próximamente)*
+## [➡️ Siguiente: Manejo de archivos](./archivos.md)

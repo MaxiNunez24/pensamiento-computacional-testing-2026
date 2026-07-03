@@ -455,4 +455,4 @@ Promedio: 1.5 ejecuciones/día
 
 ## [⬅️ Anterior: Manejo de archivos](./archivos.md)
 ## [📚 Índice](../../clases.md#persistencia)
-## [➡️ Siguiente: Git y GitHub](./git_github.md)
+## ➡️ Siguiente: POO I — Clases y objetos *(próximamente)*

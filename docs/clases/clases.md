@@ -57,9 +57,9 @@
 
 ## 🛠️ Bloque 3 — Persistencia y Versionado *(próximamente)* { #persistencia }
 
+- [🌳 Git y GitHub](./python/07_persistencia/git_github.md)
 - [💾 Manejo de archivos](./python/07_persistencia/archivos.md)
 - [📋 JSON](./python/07_persistencia/json.md)
-- [🌳 Git y GitHub](./python/07_persistencia/git_github.md)
 
 ---
 

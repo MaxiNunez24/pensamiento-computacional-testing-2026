@@ -130,12 +130,14 @@
 
 | Fecha | Tema | |
 |-------|------|--|
-| Vie 3/7 | Manejo de archivos (completo) + intro a JSON | [📄](./clases/python/07_persistencia/archivos.md) |
-| Mié 8/7 | JSON (completo) | [📄](./clases/python/07_persistencia/json.md) |
-| Vie 10/7 | Git y GitHub (completo) | [📄](./clases/python/07_persistencia/git_github.md) |
+| Vie 3/7 | Git y GitHub (completo) — versionar y subir el código a GitHub | [📄](./clases/python/07_persistencia/git_github.md) |
+| Mié 8/7 | Manejo de archivos (completo) | [📄](./clases/python/07_persistencia/archivos.md) |
+| Vie 10/7 | JSON (completo) | [📄](./clases/python/07_persistencia/json.md) |
 
-<!-- Próximo: Bloque 4 POO (Mié 15/7 y Vie 17/7) antes del proyecto; tarea de POO en el receso;
-     el CLI de Asistencias arranca al volver (agosto). Filas 8/7 y 10/7 son plan; confirmar tras darlas. -->
+<!-- Se da Git PRIMERO (antes de Archivos/JSON) para que puedan versionar y seguir en casa desde ya, y
+     para dejar Archivos+JSON pegados (mié+vie). Próximo: Bloque 4 POO (Mié 15/7 y Vie 17/7) antes del
+     proyecto; tarea de POO en el receso; el CLI de Asistencias arranca al volver (agosto).
+     Filas 8/7 y 10/7 son plan; confirmar tras darlas. -->
 
 
 ---

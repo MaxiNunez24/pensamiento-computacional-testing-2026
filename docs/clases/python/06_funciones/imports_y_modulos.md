@@ -338,4 +338,4 @@ La meta: que `main.py` no tenga **nada** de la lógica del juego, solo el menú 
 
 ## [⬅️ Anterior: Bingo](./bingo.md)
 ## [📚 Índice](../../clases.md#colecciones)
-## [➡️ Siguiente: Manejo de archivos](../07_persistencia/archivos.md)
+## [➡️ Siguiente: Git y GitHub](../07_persistencia/git_github.md)

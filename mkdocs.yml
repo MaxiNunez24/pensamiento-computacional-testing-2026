@@ -80,9 +80,9 @@ nav:
         - 🎲 Bingo: clases/python/06_funciones/bingo.md
         - "📦 Anexo: Importar módulos": clases/python/06_funciones/imports_y_modulos.md
       - 💾 Persistencia:
+        - 🐙 Git y GitHub: clases/python/07_persistencia/git_github.md
         - 📁 Archivos: clases/python/07_persistencia/archivos.md
         - 📄 JSON: clases/python/07_persistencia/json.md
-        - 🐙 Git y GitHub: clases/python/07_persistencia/git_github.md
       - 🏗️ POO:
         - 🧬 POO I — Clases y objetos: clases/python/08_poo/poo_1.md
         - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/python/08_poo/poo_2.md
