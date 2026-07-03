@@ -18,12 +18,17 @@ Los programas que hiciste hasta ahora "olvidan" todo cuando los cerrás. Aprende
 Hasta ahora los datos viven en variables — y cuando el programa termina, desaparecen. Los archivos nos permiten **persistir** información entre ejecuciones.
 
 ```python
-# Sin archivos: todo se pierde al cerrar el programa
-nombres = ["Ana", "Beto", "Cami"]
-# Mañana, los nombres ya no están...
+# ❌ Sin archivos: lo que el usuario carga se pierde al cerrar
+nombres = []
+nombre = input("Nombre a guardar: ")
+nombres.append(nombre)
+print("Guardados:", nombres)
 
-# Con archivos: los datos sobreviven entre ejecuciones
-# (y así funciona cualquier app real)
+# Cerrás el programa, lo volvés a abrir... y la lista arranca VACÍA de nuevo.
+# Todo lo que escribiste, perdido. 😢
+
+# ✅ Con archivos: lo que el usuario carga SIGUE ahí la próxima vez
+# (así funcionan las notas del celu, los contactos, las partidas guardadas...)
 ```
 
 ---
