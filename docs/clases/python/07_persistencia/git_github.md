@@ -45,7 +45,28 @@ Con Git, tenés un solo archivo y Git guarda el historial por vos.
 
 ### Instalación
 
-Instalá Git desde [git-scm.com](https://git-scm.com/). En Windows usá el instalador. Para verificar que quedó instalado:
+=== "🪟 Windows"
+
+    Descargá **Git for Windows** desde [git-scm.com/download/win](https://git-scm.com/download/win) y
+    ejecutá el instalador (podés dejar todo por defecto — "Siguiente" hasta el final). Viene con el
+    **Git Credential Manager**, que usamos más abajo para autenticarnos con GitHub.
+
+=== "🐧 Linux (Debian/Ubuntu)"
+
+    ```bash
+    sudo apt update && sudo apt install git
+    ```
+
+=== "🍎 macOS"
+
+    ```bash
+    brew install git      # si tenés Homebrew
+    ```
+
+    Si no tenés Homebrew, al correr `git --version` por primera vez macOS te ofrece instalar las
+    *Command Line Tools*: aceptá y listo.
+
+Para verificar que quedó instalado (en cualquiera de los tres):
 
 ```bash
 git --version
