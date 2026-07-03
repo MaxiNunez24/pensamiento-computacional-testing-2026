@@ -17,11 +17,13 @@ Los programas que hiciste hasta ahora "olvidan" todo cuando los cerrás. Aprende
 
     - **En clase (🔵):** la teoría con ejemplos, armamos juntos el apunte `conceptos.py`, y hacemos los
       **Ejercicios 1 y 3** (los más alineados al proyecto).
-    - **Para practicar en casa (🏠):** los Ejercicios 2, 4 y 5 — quedan resueltos abajo para que te
-      autocorrijas.
+    - **Práctica extra (⭐):** los Ejercicios 2, 4 y 5. Son **cortos y autocontenidos** (se hacen de
+      cero, no necesitás "tu repo"): hacelos si te sobra tiempo acá en el CFP, o en casa quien tenga
+      compu. Tienen la solución abajo.
     - **Cierre (~30 min):** una **intro a JSON**, que arrancamos en serio la próxima clase.
 
-    No hace falta llegar a todo hoy: el ritmo lo marca el grupo. Lo que no entre, queda de tarea. 🙂
+    No hace falta llegar a todo hoy: el ritmo lo marca el grupo. Cuando veamos **Git y GitHub (10/7)**
+    van a poder llevarse su código a cualquier máquina y seguir en casa sin dramas. 🙂
 
 ---
 
@@ -402,9 +404,10 @@ for archivo in Path(".").glob("*.txt"):   # "." = la carpeta actual
 
 ## 🎮 Ejercicios
 
-!!! note "🔵 en clase · 🏠 en casa"
-    En clase hacemos el **Ejercicio 1** y el **3**. Los marcados con **🏠** son para practicar en casa
-    —tienen la solución abajo para que te autocorrijas—. Todos usan tu carpeta `clase_archivos`.
+!!! note "🔵 en clase · ⭐ práctica extra"
+    En clase hacemos el **Ejercicio 1** y el **3**. Los marcados con **⭐** son **práctica extra**
+    (cortos y autocontenidos): hacelos si te queda tiempo en el CFP, o en casa si tenés compu — tienen
+    la solución abajo para que te autocorrijas. Todos usan tu carpeta `clase_archivos`.
 
 ### 🌱 Ejercicio 1 — Crear y leer 🔵
 
@@ -427,7 +430,7 @@ for archivo in Path(".").glob("*.txt"):   # "." = la carpeta actual
             print(linea.strip().upper())
     ```
 
-### 🌿 Ejercicio 2 — Contar palabras 🏠
+### 🌿 Ejercicio 2 — Contar palabras ⭐
 
 Usá el `texto.txt` que creó el bloque de preparación (o creá uno con al menos 3 párrafos). Escribí un
 programa que:
@@ -491,7 +494,7 @@ Escribí un programa que:
         print(f"Promedio: {sum(notas) / len(notas):.2f}")
     ```
 
-### 🌶️ Ejercicio 4 — Log de ejecuciones 🏠
+### 🌶️ Ejercicio 4 — Log de ejecuciones ⭐
 
 Cada vez que el programa se ejecute, que agregue una línea al archivo `log.txt` con la fecha/hora y un mensaje.
 
@@ -518,7 +521,7 @@ Cada vez que el programa se ejecute, que agregue una línea al archivo `log.txt`
     print(f"Log actualizado: {timestamp}")
     ```
 
-### 🌶️ Ejercicio 5 — Renombrar archivos en masa 🏠
+### 🌶️ Ejercicio 5 — Renombrar archivos en masa ⭐
 
 Mirá la carpeta `practica_archivos/` que creaste en la preparación: nombres con mayúsculas y espacios,
 un desastre. Vamos a **ordenarlos todos de una**: pasarlos a **minúsculas** y reemplazar los

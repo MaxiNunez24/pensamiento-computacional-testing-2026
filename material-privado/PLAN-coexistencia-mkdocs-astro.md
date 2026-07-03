@@ -22,6 +22,14 @@ los ejercicios/pistas/soluciones inline de MkDocs** y se reemplazan por links. A
 conjunto (una sola fuente de verdad para cada ejercicio). Y evita el trabajo enorme de re-escribir
 toda la prosa en Astro.
 
+**Motivación concreta (del profe, 3/7):** los alumnos trabajan en las **máquinas del CFP** (salvo unos
+pocos con notebook) y **todavía no vieron Git** (recién el 10/7). Hoy, si les dejás práctica "para
+casa", **no pueden continuar desde su mismo proyecto/repo** — como mucho rehacen el ejercicio de cero.
+Los ejercicios interactivos de **Astro corren en el navegador, sin instalar nada, desde cualquier
+máquina**, y guardan el progreso local: es **la solución natural** a "practicar en cualquier lado sin
+setup ni Git". Fuerte argumento para priorizar el catálogo Astro. (Mientras tanto, en MkDocs, la
+práctica extra se plantea como opcional y autocontenida, no como "seguí tu repo".)
+
 ## 2. Deploy de Astro — DECIDIDO: repo público aparte + GitHub Pages gratis
 
 El bloqueante era que **GitHub Pages sirve un solo sitio por repo** (hoy ese sitio es MkDocs). Solución
