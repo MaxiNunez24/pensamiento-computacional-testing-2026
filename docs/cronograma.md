@@ -21,10 +21,11 @@
 
 | Fecha | Hito |
 |-------|------|
-| 🚀 **Mié 1/7** | Arranque del **Sistema de Asistencias** (primer proyecto, CLI) |
-| ✅ **Vie 17/7** | Primer hito del proyecto: versión CLI funcionando |
+| 🏗️ **15 – 17/7** | **POO** (clases y objetos) antes del proyecto + **tarea para el receso** |
 | ❄️ **22/7 – 1/8** | Receso invernal |
-| 🌐 **Agosto** | Migración de Asistencias a **web (Flask)** + arranque del **Bot SiGes** (segundo proyecto) |
+| 🚀 **Agosto (post-receso)** | Arranque del **Sistema de Asistencias** (primer proyecto, CLI) — necesita POO |
+| ✅ **Agosto** | Primer hito del proyecto: versión CLI funcionando |
+| 🌐 **Ago – Sep** | Migración de Asistencias a **web (Flask)** + arranque del **Bot SiGes** (segundo proyecto) |
 | 🎉 **21/9** | **Nerdearla** |
 | 🤖 **Mié 7/10** | Arranque del **proyecto final con IA** |
 | 🏆 **9/11** | **Expo CFP 2026** |
@@ -129,9 +130,12 @@
 
 | Fecha | Tema | |
 |-------|------|--|
-| Vie 3/7 | Manejo de archivos (arranca el bloque de persistencia) | [📄](./clases/python/07_persistencia/archivos.md) |
+| Vie 3/7 | Manejo de archivos (completo) + intro a JSON | [📄](./clases/python/07_persistencia/archivos.md) |
+| Mié 8/7 | JSON (completo) | [📄](./clases/python/07_persistencia/json.md) |
+| Vie 10/7 | Git y GitHub (completo) | [📄](./clases/python/07_persistencia/git_github.md) |
 
-<!-- Próxima clase: seguir con Persistencia (JSON, Git/GitHub). -->
+<!-- Próximo: Bloque 4 POO (Mié 15/7 y Vie 17/7) antes del proyecto; tarea de POO en el receso;
+     el CLI de Asistencias arranca al volver (agosto). Filas 8/7 y 10/7 son plan; confirmar tras darlas. -->
 
 
 ---

@@ -59,6 +59,7 @@ Antes de usar Git, le decimos quiénes somos. Esta info aparece en cada commit q
 ```bash
 git config --global user.name "Tu Nombre"
 git config --global user.email "tu@email.com"
+git config --global init.defaultBranch main   # los repos nuevos arrancan en la rama "main"
 ```
 
 Podés verificarla con:
@@ -66,6 +67,11 @@ Podés verificarla con:
 ```bash
 git config --list
 ```
+
+!!! note "🌿 ¿Por qué `init.defaultBranch main`?"
+    Históricamente la rama principal se llamaba `master`; hoy el estándar (y lo que espera GitHub) es
+    `main`. Con esa línea, cada `git init` arranca en `main` y los comandos de más abajo
+    (`git push -u origin main`) coinciden sin sorpresas.
 
 ---
 
@@ -233,6 +239,22 @@ git remote add origin https://github.com/tu-usuario/tu-repo.git
 # Subir el código por primera vez
 git push -u origin main
 ```
+
+!!! warning "🔑 La primera vez te va a pedir autenticación (¡y NO es tu contraseña!)"
+    Al hacer el primer `git push`, GitHub te pide identificarte. **Desde 2021 la contraseña de tu
+    cuenta ya NO sirve** para esto — hay que usar un **token**. Es el tropiezo más común, así que
+    prestá atención:
+
+    - **Lo más fácil (Windows):** el instalador de Git incluye el **Git Credential Manager**. La
+      primera vez que hagas `push`, se abre una **ventana del navegador** para iniciar sesión en
+      GitHub. Aceptás, y listo — te queda guardado y no lo pide más.
+    - **Si te pide usuario y contraseña en la terminal:** en "Username" va tu usuario de GitHub y en
+      "Password" va un **Personal Access Token (PAT)**, no tu contraseña. Se crea en
+      **GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate
+      new token**, tildando el permiso **`repo`**. Copiá el token (se ve una sola vez) y pegalo como
+      contraseña.
+
+    Guardá el token en un lugar seguro. Si lo perdés, no pasa nada: generás uno nuevo.
 
 Después de eso, cada vez que quieras subir nuevos commits:
 

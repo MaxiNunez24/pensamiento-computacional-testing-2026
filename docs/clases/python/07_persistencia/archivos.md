@@ -11,6 +11,18 @@ Los programas que hiciste hasta ahora "olvidan" todo cuando los cerrás. Aprende
     - Usar el bloque `with` para trabajar con archivos **de forma segura**.
     - Especificar codificación `utf-8` correctamente.
 
+!!! tip "🗺️ Cómo aprovechamos la clase de hoy (200 min)"
+    Es una clase con mucha herramienta nueva. Para que rinda y **la entiendan con práctica**, la damos
+    así:
+
+    - **En clase (🔵):** la teoría con ejemplos, armamos juntos el apunte `conceptos.py`, y hacemos los
+      **Ejercicios 1 y 3** (los más alineados al proyecto).
+    - **Para practicar en casa (🏠):** los Ejercicios 2, 4 y 5 — quedan resueltos abajo para que te
+      autocorrijas.
+    - **Cierre (~30 min):** una **intro a JSON**, que arrancamos en serio la próxima clase.
+
+    No hace falta llegar a todo hoy: el ritmo lo marca el grupo. Lo que no entre, queda de tarea. 🙂
+
 ---
 
 ## 🧠 ¿Por qué guardar en archivos?
@@ -384,13 +396,17 @@ for archivo in Path(".").glob("*.txt"):   # "." = la carpeta actual
 !!! failure "Evitá esto ❌"
     - No abras archivos sin `with` si podés evitarlo.
     - No uses modo `"w"` si querés conservar el contenido existente.
-    - No asumas que el archivo existe: si puede no existir, manejá el caso con `if os.path.exists(...)`.
+    - No asumas que el archivo existe: si puede no existir, manejá el caso con `if Path(...).exists()`.
 
 ---
 
 ## 🎮 Ejercicios
 
-### 🌱 Ejercicio 1 — Crear y leer
+!!! note "🔵 en clase · 🏠 en casa"
+    En clase hacemos el **Ejercicio 1** y el **3**. Los marcados con **🏠** son para practicar en casa
+    —tienen la solución abajo para que te autocorrijas—. Todos usan tu carpeta `clase_archivos`.
+
+### 🌱 Ejercicio 1 — Crear y leer 🔵
 
 1. Creá un archivo `frutas.txt` y escribí 5 frutas, una por línea.
 2. Luego leelo e imprimí cada fruta en mayúsculas.
@@ -411,7 +427,7 @@ for archivo in Path(".").glob("*.txt"):   # "." = la carpeta actual
             print(linea.strip().upper())
     ```
 
-### 🌿 Ejercicio 2 — Contar palabras
+### 🌿 Ejercicio 2 — Contar palabras 🏠
 
 Usá el `texto.txt` que creó el bloque de preparación (o creá uno con al menos 3 párrafos). Escribí un
 programa que:
@@ -441,7 +457,7 @@ programa que:
     print(f"Línea más larga: {linea_mas_larga.strip()}")
     ```
 
-### 🌿 Ejercicio 3 — Registro de notas
+### 🌿 Ejercicio 3 — Registro de notas 🔵
 
 Escribí un programa que:
 
@@ -475,7 +491,7 @@ Escribí un programa que:
         print(f"Promedio: {sum(notas) / len(notas):.2f}")
     ```
 
-### 🌶️ Ejercicio 4 — Log de ejecuciones
+### 🌶️ Ejercicio 4 — Log de ejecuciones 🏠
 
 Cada vez que el programa se ejecute, que agregue una línea al archivo `log.txt` con la fecha/hora y un mensaje.
 
@@ -502,7 +518,7 @@ Cada vez que el programa se ejecute, que agregue una línea al archivo `log.txt`
     print(f"Log actualizado: {timestamp}")
     ```
 
-### 🌶️ Ejercicio 5 — Renombrar archivos en masa
+### 🌶️ Ejercicio 5 — Renombrar archivos en masa 🏠
 
 Mirá la carpeta `practica_archivos/` que creaste en la preparación: nombres con mayúsculas y espacios,
 un desastre. Vamos a **ordenarlos todos de una**: pasarlos a **minúsculas** y reemplazar los
