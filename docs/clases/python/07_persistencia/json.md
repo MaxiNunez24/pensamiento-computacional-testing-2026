@@ -83,7 +83,7 @@ flowchart LR
 
 === "Python → JSON string"
 
-    `json.dumps()` convierte un objeto Python en un **string JSON**.
+    `json.dumps()` convierte un diccionario Python en un **string JSON**.
 
     ```python
     import json
@@ -112,7 +112,7 @@ flowchart LR
 
 === "JSON string → Python"
 
-    `json.loads()` convierte un string JSON en un objeto Python.
+    `json.loads()` convierte un string JSON en un diccionario Python.
 
     ```python
     import json
