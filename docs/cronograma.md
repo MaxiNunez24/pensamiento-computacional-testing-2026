@@ -130,14 +130,12 @@
 
 | Fecha | Tema | |
 |-------|------|--|
-| Vie 3/7 | Git y GitHub (completo) — versionar y subir el código a GitHub | [📄](./clases/python/07_persistencia/git_github.md) |
-| Mié 8/7 | Manejo de archivos (completo) | [📄](./clases/python/07_persistencia/archivos.md) |
-| Vie 10/7 | JSON (completo) | [📄](./clases/python/07_persistencia/json.md) |
+| Vie 3/7 | Git y GitHub — llegamos a **Git local** (`init`/`add`/`commit`/`status`/`log`); GitHub quedó pendiente | [📄](./clases/python/07_persistencia/git_github.md) |
+| Mié 8/7 | Repaso de Git + **terminar GitHub** (remoto, `push`/`clone`/`pull`, autenticación) | [📄](./clases/python/07_persistencia/git_github.md) |
 
-<!-- Se da Git PRIMERO (antes de Archivos/JSON) para que puedan versionar y seguir en casa desde ya, y
-     para dejar Archivos+JSON pegados (mié+vie). Próximo: Bloque 4 POO (Mié 15/7 y Vie 17/7) antes del
-     proyecto; tarea de POO en el receso; el CLI de Asistencias arranca al volver (agosto).
-     Filas 8/7 y 10/7 son plan; confirmar tras darlas. -->
+<!-- Reshuffle (3/7): Git se llevó toda la clase (solo Git local). El 8/7 = repaso + terminar GitHub
+     (una alumna había faltado). Archivos y JSON se corren y hay que re-encajarlas con POO (15-17/7)
+     antes del receso (22/7). RE-PLANEAR las fechas con el profe. -->
 
 
 ---
