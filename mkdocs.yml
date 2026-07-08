@@ -18,8 +18,9 @@ theme:
         icon: material/toggle-switch
         name: Switch to light mode
 
-  features: content.code.copy
-  
+  features:
+    - content.code.copy
+
 markdown_extensions:
   - admonition
   - attr_list
