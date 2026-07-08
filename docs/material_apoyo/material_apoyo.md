@@ -7,7 +7,7 @@ En esta sección encontrarás recursos adicionales para complementar tu aprendiz
 
 ¿Trabado con un ejercicio o con un concepto? El **asistente del curso** te **explica y te guía paso a paso** para que lo entiendas — **no te da la respuesta hecha**, te ayuda a llegar vos. 💪
 
-[🤖 Abrir el asistente](https://claude.ai/share/8f379610-f018-4d39-9ecf-0bd58d140d85){ .md-button .md-button--primary target=_blank rel=noopener }
+[🤖 Abrir el asistente](https://claude.ai/share/9cdd9f70-56b9-45c1-be51-187e159e663c){ .md-button .md-button--primary target=_blank rel=noopener }
 
 !!! tip "Cómo aprovecharlo"
     - Contale **qué estás intentando** y **qué probaste** hasta ahora.
