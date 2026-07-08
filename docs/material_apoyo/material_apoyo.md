@@ -3,6 +3,22 @@ En esta sección encontrarás recursos adicionales para complementar tu aprendiz
 
 ---
 
+## 🤖 Asistente del curso
+
+¿Trabado con un ejercicio o con un concepto? El **asistente del curso** te **explica y te guía paso a paso** para que lo entiendas — **no te da la respuesta hecha**, te ayuda a llegar vos. 💪
+
+[🤖 Abrir el asistente](PEGAR_LINK_ACA){ .md-button .md-button--primary target=_blank rel=noopener }
+
+!!! tip "Cómo aprovecharlo"
+    - Contale **qué estás intentando** y **qué probaste** hasta ahora.
+    - Si algo falla, **pegá el mensaje de error tal cual**.
+    - Pedile que te **explique un concepto** o que te dé una **pista** — no la solución.
+
+<!-- PROFE: reemplazá PEGAR_LINK_ACA (en el botón de arriba) por el link de tu conversación
+     compartida de Claude, ya configurada con el prompt del asistente. -->
+
+---
+
 ## [📚 Libros](./libros.md)
 
 ---
