@@ -4,6 +4,9 @@ site_author: Maximiliano Nuñez
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - javascripts/clases-restantes.js
+
 theme:
   name: material
   favicon: assets/images/favicon.ico

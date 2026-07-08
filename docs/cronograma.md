@@ -1,5 +1,7 @@
 # 📅 Cronograma del Curso
 
+<div id="clases-restantes"></div>
+
 !!! tip "Pensamiento Computacional y Testing de Aplicaciones — CFP 401"
     Curso anual para aprender a programar con buenas prácticas y desarrollar **proyectos reales**.
     Clases los **miércoles de 13:20 a 16:40** y los **viernes de 14:00 a 17:20**.
@@ -131,11 +133,12 @@
 | Fecha | Tema | |
 |-------|------|--|
 | Vie 3/7 | Git y GitHub — llegamos a **Git local** (`init`/`add`/`commit`/`status`/`log`); GitHub quedó pendiente | [📄](./clases/python/07_persistencia/git_github.md) |
-| Mié 8/7 | Repaso de Git + **terminar GitHub** (remoto, `push`/`clone`/`pull`, autenticación) | [📄](./clases/python/07_persistencia/git_github.md) |
+| Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/python/07_persistencia/archivos.md) |
+| Vie 10/7 | 🚫 Sin clases (feriado) | |
 
-<!-- Reshuffle (3/7): Git se llevó toda la clase (solo Git local). El 8/7 = repaso + terminar GitHub
-     (una alumna había faltado). Archivos y JSON se corren y hay que re-encajarlas con POO (15-17/7)
-     antes del receso (22/7). RE-PLANEAR las fechas con el profe. -->
+<!-- Estado al 8/7: dado Archivos (con ausentes). Falta JSON, y después POO antes del proyecto.
+     Vie 10/7 feriado → próxima clase Mié 15/7. Receso 22/7-1/8. RE-PLANEAR JSON + POO con el profe
+     (la ventana antes del receso quedó ajustada). -->
 
 
 ---
