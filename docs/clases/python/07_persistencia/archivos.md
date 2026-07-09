@@ -45,6 +45,29 @@ print("Guardados:", nombres)
 
 ---
 
+## 🧠 ¿Dónde viven los datos? La jerarquía de memoria
+
+Una computadora guarda datos en **varios niveles**, con un trade-off clave: cuanto **más rápido** es un
+nivel, **más chico y caro** es (y arriba de todo, **más volátil**: se borra al apagar). Cuanto **más
+abajo**, **más lento pero más grande y permanente**.
+
+<div class="mem-piramide">
+<div class="mem-fila"><div class="mem-tec"></div><div class="mem-barra-wrap"><div class="mem-barra" style="width:22%">registros</div></div><div class="mem-tam">&lt; 1 kB</div></div>
+<div class="mem-fila"><div class="mem-tec">SRAM</div><div class="mem-barra-wrap"><div class="mem-barra" style="width:34%">L1 caché</div></div><div class="mem-tam">32 – 64 kB</div></div>
+<div class="mem-fila"><div class="mem-tec">SRAM</div><div class="mem-barra-wrap"><div class="mem-barra" style="width:46%">L2 caché</div></div><div class="mem-tam">256 KB – 8 MB</div></div>
+<div class="mem-fila"><div class="mem-tec">SRAM</div><div class="mem-barra-wrap"><div class="mem-barra" style="width:58%">L3 caché</div></div><div class="mem-tam">10 – 100 MB</div></div>
+<div class="mem-fila"><div class="mem-tec">DRAM</div><div class="mem-barra-wrap"><div class="mem-barra" style="width:72%">memoria principal (RAM)</div></div><div class="mem-tam">&gt; 1 GB</div></div>
+<div class="mem-fila"><div class="mem-tec">SSD / HD</div><div class="mem-barra-wrap"><div class="mem-barra" style="width:86%">almacenamiento secundario</div></div><div class="mem-tam">&gt; 256 GB</div></div>
+<div class="mem-fila"><div class="mem-tec">nube / offline</div><div class="mem-barra-wrap"><div class="mem-barra" style="width:100%">almacenamiento externo</div></div><div class="mem-tam">TB</div></div>
+</div>
+<p class="mem-cap">⬆️ rápido, chico y volátil · ⬇️ lento, grande y permanente</p>
+
+Tus **variables** viven arriba, en la **RAM** (memoria principal): rapidísima, pero **se borra al
+cerrar el programa**. Para que los datos **sobrevivan**, hay que bajarlos al **almacenamiento
+secundario** (el SSD o disco) — y eso es, justamente, **escribir un archivo**. 💾
+
+---
+
 ## 📍 ¿Dónde se guardan los archivos? (la carpeta de trabajo)
 
 Antes de crear un solo archivo, la pregunta más importante —y la que más confunde al principio—:

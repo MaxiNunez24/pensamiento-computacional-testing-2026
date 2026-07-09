@@ -23,7 +23,8 @@
 
 | Fecha | Hito |
 |-------|------|
-| 🏗️ **15 – 17/7** | **POO** (clases y objetos) antes del proyecto + **tarea para el receso** |
+| 🔁 **15 – 17/7** | Repaso y **práctica** de Persistencia (Git, GitHub, Archivos, JSON) antes del receso |
+| 🏗️ **Post-receso (agosto)** | **POO** (clases y objetos), antes de arrancar el proyecto |
 | ❄️ **22/7 – 1/8** | Receso invernal |
 | 🚀 **Agosto (post-receso)** | Arranque del **Sistema de Asistencias** (primer proyecto, CLI) — necesita POO |
 | ✅ **Agosto** | Primer hito del proyecto: versión CLI funcionando |
@@ -136,9 +137,10 @@
 | Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/python/07_persistencia/archivos.md) |
 | Vie 10/7 | 🚫 Sin clases (feriado) | |
 
-<!-- Estado al 8/7: dado Archivos (con ausentes). Falta JSON, y después POO antes del proyecto.
-     Vie 10/7 feriado → próxima clase Mié 15/7. Receso 22/7-1/8. RE-PLANEAR JSON + POO con el profe
-     (la ventana antes del receso quedó ajustada). -->
+<!-- Plan (8/7): faltaron varios el 8/7 → el Mié 15/7 se repasa y se TERMINA Git/GitHub (los alumnos
+     ven los videos + instalan/crean en casa de tarea, y el 15/7 sincronizan desde la compu del CFP),
+     y se sigue con JSON. Mié 15/7 y Vie 17/7 = repaso + PRÁCTICA de Persistencia (Git/GitHub/Archivos/
+     JSON). POO queda para DESPUÉS del receso (22/7-1/8): quedaba solo esa semana y es poco. -->
 
 
 ---
