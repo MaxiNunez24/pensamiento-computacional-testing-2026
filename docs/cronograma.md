@@ -136,7 +136,7 @@
 | Vie 3/7 | Git y GitHub — llegamos a **Git local** (`init`/`add`/`commit`/`status`/`log`); GitHub quedó pendiente | [📄](./clases/python/07_persistencia/git_github.md) |
 | Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/python/07_persistencia/archivos.md) |
 | Vie 10/7 | 🚫 Sin clases (feriado) | |
-| Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/python/06_funciones/como_encarar_ejercicios.md) |
+| Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/python/06_funciones/del_enunciado_al_programa.md) |
 
 <!-- Plan: el 15/7 fue virtual y acortada (mundial) → se usó para cerrar Git/GitHub desde las compus
      de casa (donde hicieron la tarea de instalar) + práctica de comprensión de problemas. JSON pasa al

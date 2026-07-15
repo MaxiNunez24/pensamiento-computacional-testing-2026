@@ -52,6 +52,7 @@
 - [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./python/06_funciones/funciones_2.md)
 - [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/06_funciones/bingo.md)
 - [📦 Anexo: Importar módulos](./python/06_funciones/imports_y_modulos.md)
+- [🧠 Del enunciado al programa — comprensión de problemas](./python/06_funciones/del_enunciado_al_programa.md)
 
 ---
 
