@@ -136,11 +136,12 @@
 | Vie 3/7 | Git y GitHub — llegamos a **Git local** (`init`/`add`/`commit`/`status`/`log`); GitHub quedó pendiente | [📄](./clases/python/07_persistencia/git_github.md) |
 | Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/python/07_persistencia/archivos.md) |
 | Vie 10/7 | 🚫 Sin clases (feriado) | |
+| Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/python/06_funciones/como_encarar_ejercicios.md) |
 
-<!-- Plan (8/7): faltaron varios el 8/7 → el Mié 15/7 se repasa y se TERMINA Git/GitHub (los alumnos
-     ven los videos + instalan/crean en casa de tarea, y el 15/7 sincronizan desde la compu del CFP),
-     y se sigue con JSON. Mié 15/7 y Vie 17/7 = repaso + PRÁCTICA de Persistencia (Git/GitHub/Archivos/
-     JSON). POO queda para DESPUÉS del receso (22/7-1/8): quedaba solo esa semana y es poco. -->
+<!-- Plan: el 15/7 fue virtual y acortada (mundial) → se usó para cerrar Git/GitHub desde las compus
+     de casa (donde hicieron la tarea de instalar) + práctica de comprensión de problemas. JSON pasa al
+     Vie 17/7 (presencial, mejor para contenido nuevo), junto con práctica de Persistencia.
+     POO queda para DESPUÉS del receso (22/7-1/8). -->
 
 
 ---
