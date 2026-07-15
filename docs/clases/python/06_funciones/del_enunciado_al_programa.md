@@ -122,11 +122,30 @@ vinieron  = ["Ana", "Cami", "Eli"]
 *El plato fuerte del día.*
 
 **Enunciado.** Te dan la lista de **partidos jugados**. Cada partido es una tupla:
-`(equipo_A, goles_A, equipo_B, goles_B)`. Armá la **tabla de posiciones**, ordenada de mejor a peor,
-con: **PJ** (partidos jugados), **GF** (goles a favor), **GC** (goles en contra), **DG** (diferencia de
-gol) y **Pts** (puntos).
+`(equipo_A, goles_A, equipo_B, goles_B)`. Armá la **tabla de posiciones**, ordenada de mejor a peor.
 
-Los puntos son los de siempre: **ganar = 3**, **empatar = 1**, **perder = 0**.
+Una tabla de posiciones tiene **una fila por equipo** y estas columnas (son las siglas que ves en
+cualquier tabla del Mundial):
+
+| Sigla | Qué es | Cómo se calcula |
+|-------|--------|-----------------|
+| **PJ** | **P**artidos **J**ugados | cuántos partidos jugó ese equipo |
+| **GF** | **G**oles a **F**avor | los goles que **hizo** (sumando todos sus partidos) |
+| **GC** | **G**oles en **C**ontra | los goles que le **hicieron** |
+| **DG** | **D**iferencia de **G**ol | **GF − GC** (puede ser negativa) |
+| **Pts** | Puntos | **ganar = 3**, **empatar = 1**, **perder = 0** |
+
+!!! example "🧮 Veamos una fila a mano: Argentina"
+    Argentina jugó **2** partidos: le ganó **3 a 0** a México y empató **1 a 1** con Francia.
+
+    - **PJ** = 2 → jugó dos
+    - **GF** = 3 + 1 = **4** → los goles que hizo en total
+    - **GC** = 0 + 1 = **1** → los que le hicieron en total
+    - **DG** = 4 − 1 = **+3**
+    - **Pts** = 3 (ganó) + 1 (empató) = **4**
+
+    Y esa es, justamente, la primera fila de la tabla de abajo. **Hacé lo mismo con Francia y México
+    en tu cuaderno** antes de seguir: eso es el **paso 3** del protocolo. ✍️
 
 ```python
 partidos = [
