@@ -309,6 +309,49 @@ Descarga y aplica los cambios más recientes.
 
 ---
 
+---
+
+## 🔄 Tu flujo real: la compu del CFP y la de tu casa
+
+Este es **el momento en que Git te cambia la vida**. Hasta ahora tu código vivía en **una** máquina: si
+no estabas ahí, no lo tenías. Con GitHub, tu código vive **en la nube**, y cualquier computadora se lo
+baja.
+
+```mermaid
+flowchart LR
+    C["🏫 PC del CFP"] -- "git push" --> G["☁️ GitHub"]
+    G -- "git pull" --> C
+    G -- "git clone (1ª vez)\ngit pull (después)" --> H["🏠 Tu compu"]
+    H -- "git push" --> G
+```
+
+**La primera vez** en la computadora nueva (por ejemplo, la de tu casa):
+
+```bash
+git clone https://github.com/tu-usuario/tu-repo.git
+```
+
+**De ahí en adelante**, siempre el mismo ciclo:
+
+```bash
+git pull                       # 1. Al EMPEZAR: traés lo último que subiste desde la otra compu
+# ... trabajás, hacés tus ejercicios ...
+git add .                      # 2. Al TERMINAR: preparás
+git commit -m "Ejercicios de la clase de hoy"
+git push                       # 3. ...y lo subís, así lo tenés en la otra compu
+```
+
+!!! success "🏆 La regla de oro de las dos computadoras"
+    **`pull` cuando llegás, `push` antes de irte.** Si te acostumbrás a eso, tu código te sigue a
+    todos lados y **nunca más** te pasa el "uh, quedó en la otra máquina". 🎒
+
+!!! warning "😬 Si te olvidás del `pull`"
+    Si trabajás en casa sin haber traído lo último del CFP, después vas a tener dos versiones distintas
+    y Git te va a pedir que las unifiques. Nada grave, pero es una molestia evitable: **`pull` primero,
+    siempre.**
+
+---
+
 ### El README.md
 
 El archivo `README.md` es la **portada** de tu repositorio en GitHub. Aparece automáticamente en la página del proyecto.
