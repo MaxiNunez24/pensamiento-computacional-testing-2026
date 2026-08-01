@@ -7,3 +7,10 @@
 mkdocs==1.6.1
 mkdocs-material==9.6.4
 pymdown-extensions==10.19.1
+
+# Pygments va fijado a propósito: la 2.20.0 rompe con pymdown-extensions
+# 10.19.1. El HtmlFormatter nuevo hace html.escape(options.get('filename', ''))
+# y pymdownx le pasa filename=None explícito, así que el default no se aplica y
+# el build muere con "'NoneType' object has no attribute 'replace'".
+# Antes de subir esta versión, probar `mkdocs build --strict` en un venv limpio.
+Pygments==2.19.2
