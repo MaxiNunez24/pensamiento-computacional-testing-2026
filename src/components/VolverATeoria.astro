@@ -1,0 +1,48 @@
+---
+// Link de vuelta a la clase teórica en MkDocs.
+//
+// Las dos partes del curso conviven en el MISMO GitHub Pages:
+//   /pensamiento-computacional-testing-2026/            → MkDocs (teoría)
+//   /pensamiento-computacional-testing-2026/ejercicios/ → Astro  (esto)
+//
+// Por eso la raíz de MkDocs se saca del propio `base` de Astro: se le quita el
+// segmento final "ejercicios/". Así la ruta sale bien tanto en el sitio
+// publicado como en `pnpm dev` (donde BASE_URL es "/"), sin hardcodear nada.
+
+interface Props {
+  /** Ruta de la clase dentro de MkDocs, sin barra inicial.
+   *  Ej: "clases/python/08_poo/poo_1/" */
+  ruta: string;
+  /** Título que se muestra en el link. Por defecto, algo genérico. */
+  titulo?: string;
+}
+
+const { ruta, titulo = 'Volver a la teoría de esta clase' } = Astro.props;
+
+const raizMkdocs = import.meta.env.BASE_URL.replace(/ejercicios\/?$/, '');
+const href = raizMkdocs + ruta.replace(/^\//, '');
+---
+
+<a class="volver-teoria" href={href}>
+  <span aria-hidden="true">←</span>
+  <span>{titulo}</span>
+</a>
+
+<style>
+  .volver-teoria {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.2rem;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--sl-color-text);
+  }
+  .volver-teoria:hover {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-white);
+  }
+</style>

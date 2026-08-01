@@ -4,7 +4,7 @@
 
 import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
-import { indentWithTab } from '@codemirror/commands';
+import { indentWithTab, indentMore, indentLess } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
 import {
@@ -25,7 +25,9 @@ const EMAIL_PROFE = 'maxinunez434@gmail.com';
 // para que los estilos de Starlight no desfasen las líneas ni el cursor. El
 // line-height va en .cm-content/.cm-gutters (lo que CodeMirror mide por línea).
 const editorTheme = EditorView.theme({
-  '&': { fontSize: '0.95rem', maxHeight: '22rem' },
+  // 1rem (16px) y no menos: Safari en iOS hace zoom automático al enfocar un
+  // campo con tipografía menor a 16px, y la página queda corrida.
+  '&': { fontSize: '1rem', maxHeight: '22rem' },
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
   },
@@ -61,6 +63,87 @@ function obtenerNombreAlumno(): string | null {
     }
   }
   return nombre;
+}
+
+// Aviso de descarga de Python: se muestra UNA vez por navegador, la primera vez
+// que el alumno toca un editor (que es cuando arranca la bajada). Se marca como
+// visto al mostrarlo, no al cerrarlo: si no, vuelve a aparecer en cada recarga.
+const LS_AVISO_DATOS = 'pc_aviso_descarga';
+
+function avisarDescargaUnaVez(el: HTMLElement): void {
+  try {
+    if (localStorage.getItem(LS_AVISO_DATOS)) return;
+    localStorage.setItem(LS_AVISO_DATOS, '1');
+  } catch {
+    return; // sin localStorage no podemos saber si ya lo vio: mejor no molestar
+  }
+  const aviso = el.querySelector<HTMLElement>('[data-aviso-datos]');
+  if (!aviso) return;
+  aviso.hidden = false;
+  aviso
+    .querySelector<HTMLButtonElement>('[data-aviso-cerrar]')
+    ?.addEventListener('click', () => { aviso.hidden = true; }, { once: true });
+}
+
+// Preferencia de mostrar la barra de símbolos también en escritorio. Se guarda
+// como una clase en <html> para que el CSS la aplique a TODOS los ejercicios de
+// la página de una, sin recorrerlos uno por uno.
+const LS_TECLAS = 'pc_teclas_escritorio';
+
+function teclasActivas(): boolean {
+  try {
+    return localStorage.getItem(LS_TECLAS) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function aplicarPreferenciaTeclas(activas: boolean): void {
+  document.documentElement.classList.toggle('pc-teclas', activas);
+  document
+    .querySelectorAll<HTMLButtonElement>('[data-toggle-teclas]')
+    .forEach((b) => b.setAttribute('aria-pressed', String(activas)));
+}
+
+function conectarToggleTeclas(el: HTMLElement): void {
+  el.querySelector<HTMLButtonElement>('[data-toggle-teclas]')?.addEventListener('click', () => {
+    const activas = !teclasActivas();
+    try {
+      localStorage.setItem(LS_TECLAS, activas ? '1' : '0');
+    } catch {
+      /* sin persistencia: vale para esta sesión igual */
+    }
+    aplicarPreferenciaTeclas(activas);
+  });
+}
+
+// Barra de símbolos (celular): inserta el caracter donde está el cursor sin
+// robarle el foco al editor, para que no se cierre el teclado del teléfono.
+function conectarTeclas(el: HTMLElement, view: EditorView): void {
+  const barra = el.querySelector<HTMLElement>('[data-teclas]');
+  if (!barra) return;
+
+  // Clave: sin este preventDefault el botón toma el foco, el editor lo pierde y
+  // el teclado del celular se cierra en cada símbolo.
+  barra.addEventListener('pointerdown', (e) => e.preventDefault());
+
+  barra.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button');
+    if (!btn) return;
+    const indent = btn.dataset.indent;
+    if (indent) {
+      (indent === 'mas' ? indentMore : indentLess)(view);
+    } else if (btn.dataset.ins != null) {
+      const texto = btn.dataset.ins;
+      const { from, to } = view.state.selection.main;
+      view.dispatch({
+        changes: { from, to, insert: texto },
+        selection: { anchor: from + texto.length },
+        scrollIntoView: true,
+      });
+    }
+    view.focus();
+  });
 }
 
 // ---------- Un ejercicio ----------
@@ -185,10 +268,21 @@ function initEjercicio(el: HTMLElement): void {
   });
 
   // Enviar el código al profe por email (mailto: 100% estático, sin terceros).
+  // Guardamos el último mensaje armado para el botón de copiar (plan B cuando
+  // la máquina no tiene app de correo y el mailto: no hace nada visible).
+  const cajaEnvio = el.querySelector<HTMLElement>('[data-envio]');
+  let ultimoMensaje = '';
+
   btnEnviar?.addEventListener('click', () => {
     const nombre = obtenerNombreAlumno();
     if (!nombre) return; // canceló el nombre
     const titulo = el.dataset.titulo || 'Ejercicio';
+    const consulta = (
+      window.prompt(
+        '¿Querés contarle algo al profe? (podés dejarlo vacío)\n\n' +
+          'Por ejemplo: qué no te sale, o qué error te aparece.',
+      ) || ''
+    ).trim();
     const asunto = `${nombre} — ${titulo}`;
     const cuerpo =
       `¡Hola profe! Te mando mi intento. 🙂\n\n` +
@@ -196,23 +290,49 @@ function initEjercicio(el: HTMLElement): void {
       `${location.href}\n` +
       `Ejercicio: ${titulo}\n` +
       `Alumno/a: ${nombre}\n\n` +
+      (consulta ? `--- mi consulta ---\n${consulta}\n\n` : '') +
       `--- mi código ---\n` +
       `${getCode()}\n`;
+    ultimoMensaje = `Para: ${EMAIL_PROFE}\nAsunto: ${asunto}\n\n${cuerpo}`;
     const mailto =
       `mailto:${EMAIL_PROFE}` +
       `?subject=${encodeURIComponent(asunto)}` +
       `&body=${encodeURIComponent(cuerpo)}`;
     window.location.href = mailto;
+    if (cajaEnvio) cajaEnvio.hidden = false;
   });
 
+  const btnCopiar = el.querySelector<HTMLButtonElement>('[data-copiar-envio]');
+  btnCopiar?.addEventListener('click', async () => {
+    if (!ultimoMensaje) return;
+    const original = btnCopiar.textContent;
+    try {
+      await navigator.clipboard.writeText(ultimoMensaje);
+      btnCopiar.textContent = '✓ ¡Copiado! Pegalo en Discord';
+    } catch {
+      btnCopiar.textContent = '✗ No se pudo copiar — seleccioná el código a mano';
+    }
+    setTimeout(() => { btnCopiar.textContent = original; }, 4000);
+  });
+
+  // Barra de símbolos: siempre en pantallas angostas, opcional en escritorio.
+  conectarTeclas(el, view);
+  conectarToggleTeclas(el);
+
   // Precarga: apenas el alumno toca el editor, arrancamos la descarga de
-  // Python en segundo plano para que el primer "Verificar" sea rápido.
-  const precargar = () => void ensureWorker().catch(() => {});
+  // Python en segundo plano para que el primer "Verificar" sea rápido. Es el
+  // momento exacto en que corresponde avisar del peso de la descarga.
+  const precargar = () => {
+    avisarDescargaUnaVez(el);
+    void ensureWorker().catch(() => {});
+  };
   editorEl.addEventListener('focusin', precargar, { once: true });
   editorEl.addEventListener('pointerdown', precargar, { once: true });
 }
 
 function boot(): void {
+  // Antes de inicializar: dejar la barra como la eligió el alumno la última vez.
+  aplicarPreferenciaTeclas(teclasActivas());
   document.querySelectorAll<HTMLElement>('.ejercicio').forEach((el) => {
     if (el.dataset.init) return;
     el.dataset.init = '1';

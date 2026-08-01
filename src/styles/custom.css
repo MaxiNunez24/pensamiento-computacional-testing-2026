@@ -613,3 +613,87 @@ body.pc-resizing * {
   border-style: dashed;
   border-color: #2e7d32;
 }
+
+/* ---------- Soporte móvil del ejercicio ---------- */
+
+/* Barra de símbolos: oculta en escritorio (ahí está el teclado completo) y
+   visible en pantallas angostas, que es donde ':' o '_' cuestan de encontrar. */
+.ejercicio__teclas {
+  display: none;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.ejercicio__teclas::-webkit-scrollbar { display: none; }
+
+/* En pantallas angostas va siempre: ahí el teclado del celular la necesita. */
+@media (max-width: 50rem) {
+  .ejercicio__teclas { display: flex; }
+  /* El toggle no tiene sentido acá, la barra ya está puesta. */
+  .ejercicio__btn--teclado { display: none; }
+}
+
+/* En escritorio es opcional: la clase la pone el toggle (se recuerda en
+   localStorage) y vale para todos los ejercicios de la página a la vez. */
+:root.pc-teclas .ejercicio__teclas { display: flex; }
+
+.ejercicio__btn--teclado[aria-pressed='true'] {
+  border-color: var(--sl-color-accent);
+  color: var(--sl-color-white);
+}
+
+.ejercicio__tecla {
+  flex: 0 0 auto;
+  /* 2.75rem ≈ 44px: el mínimo recomendado para tocar con el dedo sin errarle. */
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.45rem;
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+  font-family: var(--__sl-font-mono, ui-monospace, monospace);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.ejercicio__tecla:active {
+  background: var(--sl-color-accent);
+}
+
+/* Aviso del peso de la descarga (una vez por navegador). */
+.ejercicio__aviso-datos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.9rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-6);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+.ejercicio__aviso-datos > span { flex: 1 1 14rem; }
+.ejercicio__aviso-cerrar {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* Plan B del envío: aparece recién después de tocar "Enviar a mi profe". */
+.ejercicio__envio {
+  margin-top: 0.7rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px dashed var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+}
+.ejercicio__envio p { margin: 0 0 0.55rem; }
