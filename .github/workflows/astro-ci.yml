@@ -1,0 +1,57 @@
+# CI de la plataforma Astro/Starlight (rama `dev`).
+#
+# SOLO build-check: compila el sitio y falla si algo se rompe. NO publica nada
+# (el sitio MkDocs en gh-pages queda intacto). Cuando se decida el corte a
+# producción, se agrega acá un job de deploy.
+name: Astro CI (build check)
+
+on:
+  push:
+    branches: [dev]
+    paths: # solo cuando cambian archivos de la plataforma Astro
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'tsconfig.json'
+      - '.github/workflows/astro-ci.yml'
+  pull_request:
+    branches: [dev, main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'tsconfig.json'
+      - '.github/workflows/astro-ci.yml'
+  workflow_dispatch: # permite correrlo a mano desde la pestaña Actions
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compilar el sitio
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (astro build)
+        run: pnpm run build

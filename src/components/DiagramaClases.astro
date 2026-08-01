@@ -1,0 +1,133 @@
+---
+/**
+ * Ejercicio de "armar un diagrama de clases" arrastrando (o tocando):
+ *  - cajas de CLASES a sus SLOTS (posiciones),
+ *  - chips de TIPO DE FLECHA a cada CONEXIÓN entre slots (con su significado en alt-text).
+ *
+ * Funciona con drag-and-drop (escritorio) y con click-para-colocar (touch/teclado).
+ *
+ * Ejemplo (.mdx):
+ *   <DiagramaClases
+ *     titulo="Armá la jerarquía de Animal"
+ *     clases={["Animal", "Perro", "Gato"]}
+ *     slots={[{id:"top", x:50, y:18}, {id:"izq", x:25, y:78}, {id:"der", x:75, y:78}]}
+ *     conexiones={[{de:"izq", a:"top"}, {de:"der", a:"top"}]}
+ *     tiposFlecha={[
+ *       {id:"herencia", simbolo:"▷", nombre:"Herencia", significado:"'es un': la hija hereda de la madre"},
+ *       {id:"asociacion", simbolo:"→", nombre:"Asociación", significado:"'usa a' / 'tiene un'"},
+ *     ]}
+ *     claseEnSlot={{top:"Animal", izq:"Perro", der:"Gato"}}
+ *     flechaEnConexion={{"izq-top":"herencia", "der-top":"herencia"}}
+ *   />
+ */
+interface Slot { id: string; x: number; y: number; }
+interface Conexion { de: string; a: string; }
+interface TipoFlecha { id: string; simbolo: string; nombre: string; significado: string; }
+interface Props {
+  titulo?: string;
+  clases: string[];
+  slots: Slot[];
+  conexiones: Conexion[];
+  tiposFlecha: TipoFlecha[];
+  claseEnSlot: Record<string, string>;
+  flechaEnConexion: Record<string, string>;
+}
+
+const {
+  titulo = 'Armá el diagrama de clases',
+  clases,
+  slots,
+  conexiones,
+  tiposFlecha,
+  claseEnSlot,
+  flechaEnConexion,
+} = Astro.props;
+
+const id = 'dg-' + Math.random().toString(36).slice(2, 9);
+const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
+const slotById: Record<string, Slot> = Object.fromEntries(slots.map((s) => [s.id, s]));
+const conex = conexiones.map((c) => {
+  const a = slotById[c.de];
+  const b = slotById[c.a];
+  return { id: `${c.de}-${c.a}`, x1: a.x, y1: a.y, x2: b.x, y2: b.y, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+});
+---
+
+<section class="diagrama" id={id} data-titulo={titulo} data-solucion={enc({ claseEnSlot, flechaEnConexion })}>
+  <header class="ejercicio__header">
+    <span class="ejercicio__dif" aria-hidden="true">🧩</span>
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+  </header>
+
+  <div class="ejercicio__consigna"><slot /></div>
+
+  <div class="diagrama__board">
+    {/* El script dibuja las líneas en px (sin distorsión) y les pone el marcador
+        UML según el tipo de flecha asignado. Los marcadores se definen acá. */}
+    <svg class="diagrama__svg" aria-hidden="true">
+      <defs>
+        <marker id={`${id}-herencia`} viewBox="0 0 14 14" refX="13" refY="7"
+          markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-hollow" d="M1,1 L13,7 L1,13 Z" />
+        </marker>
+        <marker id={`${id}-asociacion`} viewBox="0 0 14 14" refX="12" refY="7"
+          markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-open" d="M2,2 L12,7 L2,12" />
+        </marker>
+        <marker id={`${id}-composicion`} viewBox="0 0 16 14" refX="14" refY="7"
+          markerWidth="17" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto">
+          <path class="dg-mk-fill" d="M1,7 L7,2 L13,7 L7,12 Z" />
+        </marker>
+      </defs>
+    </svg>
+
+    {slots.map((s) => (
+      <div class="dg-slot" data-slot={s.id} style={`left:${s.x}%;top:${s.y}%`} tabindex="0" role="button" aria-label="Slot para una clase">
+        <span class="dg-ph">arrastrá una clase</span>
+      </div>
+    ))}
+
+    {conex.map((c) => (
+      <div class="dg-conexion" data-conexion={c.id} style={`left:${c.mx}%;top:${c.my}%`} tabindex="0" role="button" aria-label="Tipo de flecha">
+        <span class="dg-ph">flecha</span>
+      </div>
+    ))}
+  </div>
+
+  <div class="diagrama__paletas">
+    <div class="diagrama__paleta">
+      <p class="diagrama__paleta-tit">📦 Clases</p>
+      {clases.map((c) => (
+        <button type="button" class="dg-chip dg-chip--clase" draggable="true" data-clase={c}>{c}</button>
+      ))}
+    </div>
+    <div class="diagrama__paleta">
+      <p class="diagrama__paleta-tit">➡️ Flechas</p>
+      {tiposFlecha.map((t) => (
+        <button
+          type="button"
+          class="dg-chip dg-chip--flecha"
+          draggable="true"
+          data-flecha={t.id}
+          data-label={`${t.simbolo} ${t.nombre}`}
+          title={t.significado}
+          aria-label={`${t.nombre}: ${t.significado}`}
+        >{t.simbolo} {t.nombre}</button>
+      ))}
+    </div>
+  </div>
+
+  <p class="diagrama__ayuda">💡 Arrastrá (o tocá una ficha y después el casillero). Pasá el mouse por una flecha para ver qué significa.</p>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-dg-verificar>✓ Verificar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-dg-reset>↺ Reiniciar</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-dg-salida role="status" aria-live="polite" hidden></pre>
+</section>
+
+<script>
+  import '../scripts/diagrama-clases.ts';
+</script>

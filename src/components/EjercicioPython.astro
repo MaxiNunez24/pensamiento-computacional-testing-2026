@@ -1,0 +1,140 @@
+---
+/**
+ * Ejercicio interactivo con intérprete de Python embebido y tests.
+ *
+ * La consigna va en el slot (podés escribir Markdown/MDX adentro).
+ * El código del alumno se ejecuta en el navegador (Pyodide) y se verifica
+ * contra `tests` (código Python con asserts) sin mostrarle la solución.
+ *
+ * Ejemplo de uso en una página .mdx:
+ *
+ *   <EjercicioPython
+ *     titulo="Sumar dos números"
+ *     dificultad="🌱"
+ *     starter={`def sumar(a, b):\n    # tu código acá\n    pass`}
+ *     tests={`assert sumar(2, 3) == 5, "sumar(2, 3) debería dar 5"\nassert sumar(-1, 1) == 0`}
+ *     pistas={["¿Qué operador suma dos números?", "Acordate de <code>return</code>."]}
+ *   >
+ *     Escribí una función `sumar(a, b)` que devuelva la suma de los dos.
+ *   </EjercicioPython>
+ */
+interface Props {
+  titulo: string;
+  dificultad?: string; // 🌱 / 🌿 / 🌶️
+  starter?: string;
+  tests: string;
+  pistas?: string[];
+  solucion?: string;
+  archivo?: string; // si se setea (ej. "animales.py"), este ejercicio se guarda como ese módulo
+}
+
+const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo } = Astro.props;
+
+const id = 'ej-' + Math.random().toString(36).slice(2, 9);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+---
+
+<section
+  class="ejercicio"
+  id={id}
+  data-titulo={titulo}
+  data-starter={enc(starter)}
+  data-tests={enc(tests)}
+  data-archivo={archivo || undefined}
+>
+  <header class="ejercicio__header">
+    {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+    {archivo && (
+      <span class="ejercicio__archivo" title="Este ejercicio se guarda como un archivo Python que otros ejercicios pueden importar">📄 {archivo}</span>
+    )}
+  </header>
+
+  <div class="ejercicio__consigna">
+    <slot />
+  </div>
+
+  {/* Aviso de descarga: aparece UNA sola vez por navegador, la primera vez que
+      el alumno toca un editor (es cuando arranca la bajada de Python). */}
+  <p class="ejercicio__aviso-datos" data-aviso-datos hidden>
+    <span>📶 La primera vez se descarga Python (unos 10&nbsp;MB). Si estás con datos del celular, mejor esperá a tener WiFi. Después queda guardado y ya no se baja más.</span>
+    <button type="button" class="ejercicio__aviso-cerrar" data-aviso-cerrar aria-label="Entendido">Entendido</button>
+  </p>
+
+  <div class="ejercicio__editor" data-editor></div>
+
+  {/* Barra de símbolos para celular: en el teclado del teléfono los caracteres
+      de Python viven en la capa secundaria y encontrarlos corta el hilo. Se
+      muestra sola en pantallas angostas (ver custom.css). */}
+  <div class="ejercicio__teclas" data-teclas aria-label="Símbolos de Python">
+    <button type="button" class="ejercicio__tecla" data-indent="mas" title="Indentar">⇥</button>
+    <button type="button" class="ejercicio__tecla" data-indent="menos" title="Quitar indentación">⇤</button>
+    <button type="button" class="ejercicio__tecla" data-ins=":">:</button>
+    <button type="button" class="ejercicio__tecla" data-ins="_">_</button>
+    <button type="button" class="ejercicio__tecla" data-ins="(">(</button>
+    <button type="button" class="ejercicio__tecla" data-ins=")">)</button>
+    <button type="button" class="ejercicio__tecla" data-ins="[">[</button>
+    <button type="button" class="ejercicio__tecla" data-ins="]">]</button>
+    <button type="button" class="ejercicio__tecla" data-ins="&quot;">"</button>
+    <button type="button" class="ejercicio__tecla" data-ins="=">=</button>
+    <button type="button" class="ejercicio__tecla" data-ins="&lt;">&lt;</button>
+    <button type="button" class="ejercicio__tecla" data-ins="&gt;">&gt;</button>
+  </div>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-verify title="Verificar (Ctrl/Cmd + Enter)">✓ Verificar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
+    {/* Toggle de la barra de símbolos en escritorio: útil para quien pelea con
+        la distribución del teclado. Se recuerda entre visitas y aplica a todos
+        los ejercicios a la vez. En celular no aparece (ahí la barra va siempre). */}
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--teclado"
+      data-toggle-teclas
+      aria-pressed="false"
+      title="Mostrar u ocultar la barra de símbolos"
+    >⌨️ Símbolos</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--enviar"
+      data-enviar
+      title="Enviar tu código al profe por email"
+    >✉️ Enviar a mi profe</button>
+  </div>
+
+  {/* Plan B del envío: si el celular o la PC no tienen app de correo, el mailto:
+      no hace nada visible. Este cartel aparece recién después de intentar el
+      envío y ofrece copiar el mensaje para pegarlo en Discord. */}
+  <div class="ejercicio__envio" data-envio hidden>
+    <p>
+      Abrimos tu app de correo con el mensaje listo. <strong>¿No se abrió nada?</strong>
+      Copiá el mensaje y pegámelo por Discord.
+    </p>
+    <button type="button" class="ejercicio__btn" data-copiar-envio>📋 Copiar el mensaje</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
+
+  {pistas.length > 0 && (
+    <details class="ejercicio__pistas">
+      <summary>💡 Pistas</summary>
+      <ol>
+        {pistas.map((p) => <li set:html={p} />)}
+      </ol>
+    </details>
+  )}
+
+  {solucion && (
+    <details class="ejercicio__solucion">
+      <summary>✅ Ver una solución posible</summary>
+      <p class="ejercicio__aviso">Intentá resolverlo vos primero — se aprende haciendo 😉</p>
+      <pre><code>{solucion}</code></pre>
+    </details>
+  )}
+</section>
+
+<script>
+  import '../scripts/ejercicio-python.ts';
+</script>

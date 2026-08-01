@@ -1,0 +1,113 @@
+---
+title: POO II — Métodos especiales y encapsulamiento
+description: Que tus objetos se impriman lindo y protejan sus datos. Interactivo, con tests al instante.
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import Mermaid from '../../../components/Mermaid.astro';
+
+:::tip[Clase interactiva]
+Seguimos con clases, pero ahora ejecutando todo. **▶ Ejecutar** prueba, **✓ Verificar** corre los tests.
+:::
+
+## Dos molestias que vamos a resolver
+
+1. **Los objetos se imprimen feo:** `print(ana)` muestra `<__main__.Alumno object at 0x...>` 😵.
+2. **Cualquiera rompe los datos:** `cuenta.saldo = -9999` saltea toda tu lógica de `extraer()` 😱.
+
+## `__str__`: que el objeto se imprima lindo
+
+`__str__` es un **método especial** (*dunder*): Python lo llama solo cuando hacés `print(obj)` o
+`str(obj)`. Vos definís qué texto devuelve.
+
+```python
+class Alumno:
+    def __init__(self, nombre, nota):
+        self.nombre = nombre
+        self.nota = nota
+    def __str__(self):
+        return f"Alumno: {self.nombre} (nota {self.nota})"
+
+print(Alumno("Ana", 9))   # Alumno: Ana (nota 9)
+```
+
+<EjercicioPython
+  titulo="Que se imprima lindo"
+  dificultad="🌱"
+  starter={`class Producto:\n    def __init__(self, nombre, precio):\n        self.nombre = nombre\n        self.precio = precio\n    # agregá __str__ para que print(producto) muestre  🛒 <nombre> — $<precio>`}
+  tests={`p = Producto("Yerba", 1500)\nassert str(p) == "🛒 Yerba — $1500", 'print(p) debería mostrar  🛒 Yerba — $1500'\nprint("¡Producto OK!")`}
+  pistas={[
+    "<code>__str__</code> recibe <code>self</code> y <strong>devuelve un string</strong> (con <code>return</code>).",
+    "Usá una f-string: <code>f\"🛒 {self.nombre} — ${self.precio}\"</code>.",
+  ]}
+>
+Agregale `__str__` a `Producto` para que `print(producto)` muestre `🛒 <nombre> — $<precio>`.
+
+Ejemplo: `print(Producto("Yerba", 1500))` → `🛒 Yerba — $1500`.
+</EjercicioPython>
+
+## Encapsulamiento: proteger los datos
+
+**Encapsular** es esconder los datos internos y obligar a tocarlos **solo por métodos controlados**
+(como un cajero: usás los botones, no metés la mano en la caja fuerte). En Python, un atributo que
+arranca con **`_`** señala *"esto es interno, no lo toques de afuera"*.
+
+```python
+class CuentaBancaria:
+    def __init__(self, saldo=0):
+        self._saldo = saldo            # interno
+    def depositar(self, monto):
+        if monto > 0:
+            self._saldo += monto
+    def ver_saldo(self):
+        return self._saldo
+```
+
+En un diagrama, `-` es privado y `+` es público:
+
+<Mermaid code={`classDiagram
+    class CuentaBancaria {
+        -saldo
+        +depositar(monto)
+        +extraer(monto)
+        +ver_saldo()
+    }`} />
+
+<EjercicioPython
+  titulo="El termostato protegido"
+  dificultad="🌿"
+  starter={`class Termostato:\n    def __init__(self):\n        self._temperatura = 20\n    # ajustar(grados): cambia la temperatura, pero SIEMPRE entre 16 y 30\n    # __str__: devuelve  🌡️ <temperatura>°C`}
+  tests={`t = Termostato()\nt.ajustar(50)\nassert str(t) == "🌡️ 30°C", "no debería pasar de 30"\nt.ajustar(10)\nassert str(t) == "🌡️ 16°C", "no debería bajar de 16"\nt.ajustar(22)\nassert str(t) == "🌡️ 22°C"\nprint("¡Termostato OK!")`}
+  pistas={[
+    "En <code>ajustar</code>, recortá con dos <code>if</code> (o con <code>min</code> y <code>max</code>).",
+    "El dato vive en <code>self._temperatura</code>; nadie debería tocarlo de afuera, solo <code>ajustar</code>.",
+  ]}
+>
+Completá `Termostato` (arranca en 20). `ajustar(grados)` cambia la temperatura **manteniéndola entre
+16 y 30** (si te pasás, queda en el límite). Y `__str__` devuelve `🌡️ <temperatura>°C`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Alumno a prueba de errores"
+  dificultad="🌿"
+  starter={`class Alumno:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self._notas = []\n    # agregar_nota(nota): SOLO agrega si la nota está entre 0 y 10\n    # promedio(): devuelve el promedio (0 si no hay notas)\n    # __str__: devuelve  <nombre> — promedio <promedio>`}
+  tests={`a = Alumno("Ana")\na.agregar_nota(8)\na.agregar_nota(15)   # inválida: se ignora\na.agregar_nota(10)\nassert str(a) == "Ana — promedio 9.0", 'esperaba "Ana — promedio 9.0" (15 no cuenta)'\nprint("¡Alumno OK!")`}
+  pistas={[
+    "Un <code>if 0 &lt;= nota &lt;= 10:</code> decide si la agregás.",
+    "En <code>promedio</code>, evitá dividir por cero si la lista está vacía.",
+  ]}
+>
+Mejorá `Alumno`: `agregar_nota(nota)` **solo agrega si la nota está entre 0 y 10** (si no, la
+ignora), `promedio()` devuelve el promedio, y `__str__` devuelve `<nombre> — promedio <promedio>`.
+</EjercicioPython>
+
+## Para llevar
+
+- `__str__` define cómo se imprime tu objeto (hay más *dunder*: `__repr__`, `__len__`, `__eq__`…).
+- Encapsular = datos internos con `_` + métodos que controlan el acceso (la "puerta").
+- En el diagrama: `-` privado, `+` público.
+
+:::note[Lo que viene]
+En **Herencia y polimorfismo** vas a hacer que una clase reutilice a otra, y vas a **armar un
+diagrama de clases arrastrando** las piezas. 🧩
+:::

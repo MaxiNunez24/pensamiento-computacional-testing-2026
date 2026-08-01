@@ -1,0 +1,104 @@
+---
+title: Sets — el cartón de Bingo
+description: Conjuntos en Python con el Bingo como excusa perfecta. Membresía rápida, sin duplicados y álgebra de conjuntos, practicando con ejercicios que se verifican solos.
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+
+:::tip[Antes de empezar]
+Clase **interactiva**: escribí, tocá **▶ Ejecutar** para probar y **✓ Verificar** (o `Ctrl/Cmd+Enter`)
+para que los tests te digan si está bien.
+:::
+
+## El problema
+
+Un cartón de Bingo tiene **15 números que no se repiten**. En cada turno sale un número y querés
+saber dos cosas rápido: *¿ese número está en mi cartón?* y *¿ya salieron todos los míos (gané)?*
+
+Con una lista podrías... pero `numero in lista` recorre uno por uno, y nada te impide meter un
+número repetido sin querer. Hay una estructura hecha justo para esto: el **set** (conjunto).
+
+## El concepto
+
+Un set es una colección de elementos **únicos** y **sin orden**, entre llaves:
+
+```python
+carton = {3, 11, 18, 24, 33}
+
+print(18 in carton)     # True  → preguntar "¿está?" es instantáneo
+carton.add(11)          # 11 ya estaba: no pasa nada, no se duplica
+print(len(carton))      # 5
+```
+
+Lo poderoso son las **operaciones entre conjuntos**, que con listas serían un bucle entero:
+
+| Operación | Qué te da | En el Bingo |
+|-----------|-----------|-------------|
+| `a & b` | **intersección**: lo que está en **ambos** | números del cartón que **ya salieron** |
+| `a - b` | **diferencia**: lo de `a` que **no** está en `b` | números del cartón que **faltan** |
+| `a.issubset(b)` | `True` si **todo** `a` está dentro de `b` | ¿gané? (¿están todos los míos en los sorteados?) |
+
+:::note[Sin `def` por ahora]
+Igual que en la clase de listas, acá escribís **código directo** sobre datos ya dados y creás una
+variable nueva con el resultado. El verificador revisa esa variable.
+:::
+
+## Manos a la obra
+
+<EjercicioPython
+  titulo="¿Cuáles ya salieron?"
+  dificultad="🌱"
+  starter={`carton    = {3, 11, 18, 24}\nsorteados = {11, 24, 50, 7}\n\n# Guardá en 'marcados' los números del cartón que YA salieron\n`}
+  tests={`assert marcados == {11, 24}, "marcados debería ser {11, 24}"\nprint("¡Marcados!")`}
+  pistas={[
+    "Los que están en el cartón <strong>y</strong> en los sorteados → intersección.",
+    "El operador de intersección es <code>&</code>.",
+  ]}
+>
+Tenés tu `carton` y el set de números `sorteados`. Guardá en **`marcados`** los números de tu cartón
+que **ya salieron**.
+
+Resultado esperado: `marcados` debería ser `{11, 24}`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="¿Cuáles faltan?"
+  dificultad="🌿"
+  starter={`carton    = {3, 11, 18, 24}\nsorteados = {11, 24, 50, 7}\n\n# Guardá en 'pendientes' los números del cartón que TODAVÍA no salieron\n`}
+  tests={`assert pendientes == {3, 18}, "pendientes debería ser {3, 18}"\nprint("¡Pendientes!")`}
+  pistas={[
+    "Lo que está en el cartón pero <strong>no</strong> en los sorteados → diferencia.",
+    "El operador de diferencia es <code>-</code>. ¿Cuál va primero, el cartón o los sorteados?",
+  ]}
+>
+Con los mismos datos, guardá en **`pendientes`** los números de tu cartón que **todavía faltan**.
+
+Resultado esperado: `pendientes` debería ser `{3, 18}`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="¿Gané?"
+  dificultad="🌿"
+  starter={`carton    = {5, 12, 30}\nsorteados = {5, 12, 30, 7, 88, 90}\n\n# Guardá en 'gano' (True o False) si YA salieron todos los del cartón\n`}
+  tests={`assert gano == True, "con estos datos, gano debería ser True"\nprint("¡Verificado!")`}
+  pistas={[
+    "Ganás cuando <strong>todos</strong> los del cartón están entre los sorteados.",
+    "Eso es exactamente <code>carton.issubset(sorteados)</code> (o <code>carton &lt;= sorteados</code>).",
+  ]}
+>
+Tu `carton` tiene 3 números y `sorteados` tiene varios más. Guardá en **`gano`** (`True`/`False`) si
+**ya salieron todos** los de tu cartón.
+
+Resultado esperado: `gano` debería ser `True` (los tres están entre los sorteados).
+</EjercicioPython>
+
+## Para llevar
+
+- Set: `{a, b, c}` — elementos **únicos**, **sin orden**, con `in` instantáneo.
+- `a & b` intersección · `a - b` diferencia · `a.issubset(b)` (o `a <= b`) ¿está contenido?
+- Es la estructura natural del Bingo: cartón, sorteados y la condición de victoria.
+
+:::note[Esto es justo lo del viernes]
+Estas tres operaciones son el corazón del Bingo que vamos a armar. Si las tenés acá, el integrador
+te va a salir solo. 🎰
+:::

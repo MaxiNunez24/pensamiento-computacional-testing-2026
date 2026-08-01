@@ -1,0 +1,168 @@
+---
+title: Herencia y polimorfismo
+description: Reutilizar código entre clases parecidas, y armar un diagrama de clases arrastrando las piezas.
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import DiagramaClases from '../../../components/DiagramaClases.astro';
+import DiagramaLibre from '../../../components/DiagramaLibre.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+:::tip[Clase interactiva]
+Última de POO conceptual. Programás, ejecutás, y al final **armás un diagrama arrastrando**. 🧩
+:::
+
+## El problema: código repetido
+
+`Perro` y `Gato` comparten nombre, edad y `comer()`, y solo cambian el sonido. Escribir todo dos
+veces es un desperdicio. La **herencia** te deja escribir lo común **una sola vez**.
+
+## Herencia: heredar para no repetir
+
+```python
+class Animal:                  # clase MADRE (lo común)
+    def __init__(self, nombre):
+        self.nombre = nombre
+    def comer(self):
+        return f"{self.nombre} está comiendo"
+
+class Perro(Animal):           # Perro HEREDA de Animal
+    def hacer_sonido(self):
+        return f"{self.nombre} dice: ¡Guau!"
+```
+
+`class Perro(Animal)` se lee *"Perro **es un** Animal"*. Perro no escribió `__init__` ni `comer()`,
+pero los **tiene** (los heredó). Si la hija define un método que ya existía, el suyo **gana**: eso es
+**sobrescribir** (override). Y con **`super().__init__(...)`** reusás el constructor de la madre
+cuando la hija necesita un atributo más.
+
+<OpcionMultiple titulo="Chequeo rápido" opciones={[
+  { texto: "Cuando podés decir 'la Hija ES UNA Madre'.", correcta: true, explicacion: "Sí: perro es un animal, gerente es un empleado, círculo es una figura." },
+  { texto: "Siempre que dos clases tengan un método con el mismo nombre.", explicacion: "No alcanza: un nombre igual no implica herencia." },
+  { texto: "Cuando una clase usa o contiene a otra.", explicacion: "Eso es asociación/composición ('tiene un'), no herencia ('es un')." },
+]}>
+¿Cuándo conviene usar **herencia** (`class Hija(Madre)`)?
+</OpcionMultiple>
+
+<EjercicioPython
+  titulo="Instrumentos que heredan"
+  dificultad="🌱"
+  starter={`class Instrumento:\n    def __init__(self, nombre):\n        self.nombre = nombre\n    def tocar(self):\n        return f"{self.nombre} hace un sonido"\n\n# Creá Guitarra(Instrumento) y Bateria(Instrumento)\n# que SOBRESCRIBAN tocar() con su propio sonido (ver tests).`}
+  tests={`assert Guitarra("Gibson").tocar() == "Gibson hace: ¡Riiiff!", 'Guitarra debería sonar "<nombre> hace: ¡Riiiff!"'\nassert Bateria("Pearl").tocar() == "Pearl hace: ¡Pum pum tss!", 'Bateria debería sonar "<nombre> hace: ¡Pum pum tss!"'\nassert Instrumento("X").tocar() == "X hace un sonido"\nprint("¡Instrumentos OK!")`}
+  pistas={[
+    "<code>class Guitarra(Instrumento):</code> ya te da el constructor gratis (heredado). Solo redefiní <code>tocar()</code>.",
+    "Cada hija devuelve su propio texto usando <code>self.nombre</code>.",
+  ]}
+>
+A partir de `Instrumento` (ya está), creá `Guitarra` y `Bateria` que **hereden** y **sobrescriban**
+`tocar()`: la guitarra devuelve `"<nombre> hace: ¡Riiiff!"` y la batería `"<nombre> hace: ¡Pum pum tss!"`.
+</EjercicioPython>
+
+## Polimorfismo: misma orden, distinta respuesta
+
+Objetos distintos que responden a la **misma orden**, cada uno a su manera. Como comparten la
+interfaz, podés tratarlos a todos por igual:
+
+```python
+for animal in [Perro("Fido"), Gato("Michi")]:
+    print(animal.hacer_sonido())   # no preguntamos de qué tipo es: cada uno sabe
+```
+
+Vamos a verlo **entre archivos**: definís las figuras en `formas.py` y en otro recuadro las importás
+y sumás sus áreas con un solo `for`.
+
+<EjercicioPython
+  titulo="Definí las figuras"
+  dificultad="🌿"
+  archivo="formas.py"
+  starter={`class Figura:\n    def area(self):\n        return 0\n\n# Creá Circulo(radio) y Rectangulo(base, altura), que hereden de Figura\n# y sobrescriban area().  (Para el círculo usá 3.1416 * radio ** 2)`}
+  tests={`from formas import Figura, Circulo, Rectangulo\nassert round(Circulo(10).area(), 2) == 314.16, "el área del círculo de radio 10 debería ser 314.16"\nassert Rectangulo(4, 5).area() == 20, "el área del rectángulo 4x5 debería ser 20"\nassert Figura().area() == 0\nprint("¡formas.py guardado y OK!")`}
+  pistas={[
+    "<code>class Circulo(Figura):</code> con su <code>__init__(self, radio)</code> y <code>area()</code>.",
+    "Círculo: <code>3.1416 * self.radio ** 2</code>. Rectángulo: <code>self.base * self.altura</code>.",
+  ]}
+>
+Completá `formas.py`: `Circulo(radio)` y `Rectangulo(base, altura)` que **heredan** de `Figura` y
+**sobrescriben** `area()`. Al Verificar se guarda como 📄 `formas.py`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Sumá áreas (polimorfismo entre archivos)"
+  dificultad="🌿"
+  starter={`from formas import Circulo, Rectangulo\n\nfiguras = [Circulo(10), Rectangulo(4, 5), Circulo(1)]\n\n# Recorré la lista con UN for y guardá la suma de todas las áreas en 'total'.\n`}
+  tests={`assert round(total, 2) == 337.30, "la suma de las áreas debería ser 337.30"\nprint("¡Polimorfismo entre archivos! 🎉")`}
+  pistas={[
+    "Todas las figuras tienen <code>area()</code>: por eso podés hacer <code>total += f.area()</code> sin preguntar el tipo.",
+    "Si no encuentra <code>formas</code>, ejecutá primero el ejercicio de arriba.",
+  ]}
+>
+Usá las figuras de `formas.py` (ya importadas). Recorré la lista `figuras` con **un solo `for`** y
+guardá la suma de todas las áreas en `total`. ¡El mismo `for` sirve para cualquier figura!
+
+:::note[Primero el de arriba]
+Ejecutá antes el ejercicio que guarda `formas.py`.
+:::
+</EjercicioPython>
+
+## 🧩 Armá el diagrama de clases
+
+Arrastrá cada **clase** a su lugar y poné el **tipo de flecha** correcto en cada conexión. (Pasá el
+mouse por cada flecha para ver qué significa.)
+
+<DiagramaClases
+  titulo="La jerarquía Animal → Perro / Gato"
+  clases={["Animal", "Perro", "Gato"]}
+  slots={[{ id: "top", x: 50, y: 16 }, { id: "izq", x: 26, y: 76 }, { id: "der", x: 74, y: 76 }]}
+  conexiones={[{ de: "izq", a: "top" }, { de: "der", a: "top" }]}
+  tiposFlecha={[
+    { id: "herencia", simbolo: "▷", nombre: "Herencia", significado: "'es un': la hija hereda de la madre" },
+    { id: "asociacion", simbolo: "→", nombre: "Asociación", significado: "'usa a' o 'tiene un' otro objeto" },
+    { id: "composicion", simbolo: "◆", nombre: "Composición", significado: "'está compuesto por': la parte no vive sin el todo" },
+  ]}
+  claseEnSlot={{ top: "Animal", izq: "Perro", der: "Gato" }}
+  flechaEnConexion={{ "izq-top": "herencia", "der-top": "herencia" }}
+>
+`Perro` y `Gato` **son un** `Animal`. ¿Qué tipo de flecha conecta una hija con su madre?
+</DiagramaClases>
+
+## 🎨 Nivel 2: armalo desde cero
+
+Ahora sin ayuda: **arrastrá las clases** donde quieras y **dibujá vos las flechas** (elegí el tipo,
+después tocá la clase de origen y la de destino). La dirección: la flecha va **de la clase que
+hereda/usa hacia la otra**.
+
+<DiagramaLibre
+  titulo="El diagrama de una escuelita"
+  clases={[
+    { nombre: "Persona", x: 50, y: 16 },
+    { nombre: "Estudiante", x: 20, y: 60 },
+    { nombre: "Profesor", x: 52, y: 60 },
+    { nombre: "Curso", x: 84, y: 78 },
+  ]}
+  tiposFlecha={[
+    { id: "herencia", simbolo: "▷", nombre: "Herencia", significado: "'es un': la hija hereda de la madre" },
+    { id: "asociacion", simbolo: "→", nombre: "Asociación", significado: "'usa a' / 'tiene un' otro objeto" },
+    { id: "composicion", simbolo: "◆", nombre: "Composición", significado: "'está compuesto por'" },
+  ]}
+  relaciones={[
+    { de: "Estudiante", a: "Persona", tipo: "herencia" },
+    { de: "Profesor", a: "Persona", tipo: "herencia" },
+    { de: "Profesor", a: "Curso", tipo: "asociacion" },
+  ]}
+>
+Un **Estudiante** y un **Profesor** *son* una **Persona** (herencia). Y un **Profesor** *dicta* un
+**Curso** (asociación). Construí el diagrama con esas tres relaciones.
+</DiagramaLibre>
+
+## Para llevar
+
+- `class Hija(Madre):` hereda todo; sobrescribís lo que cambia; `super().__init__(...)` reusa el
+  constructor de la madre.
+- **Polimorfismo**: misma interfaz, distinta respuesta → un `for` sirve para objetos de tipos
+  distintos.
+- En UML, la herencia es la flecha `▷` ("es un").
+
+:::note[¡Cerraste POO!]
+Ya sabés modelar, mostrar, proteger y reutilizar clases. Lo que viene es **construir el primer
+proyecto** de verdad: el Sistema de Asistencias. 🚀
+:::

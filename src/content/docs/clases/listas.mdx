@@ -1,0 +1,118 @@
+---
+title: Listas — guardar y recorrer muchos datos
+description: La estructura que más vas a usar. Crear, recorrer y transformar listas, practicando con ejercicios que se verifican solos.
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+
+:::tip[Antes de empezar]
+Clase **interactiva**: escribí, tocá **▶ Ejecutar** para probar y **✓ Verificar** (o `Ctrl/Cmd+Enter`)
+para que los tests te digan si está bien.
+:::
+
+## El problema
+
+Querés guardar las notas de un curso. Con variables sueltas sería:
+
+```python
+nota1 = 8
+nota2 = 10
+nota3 = 6
+# ...¿y si son 30 alumnos? ¿nota30?
+```
+
+Imposible de manejar. Necesitás **una sola variable que guarde muchos valores** y los puedas recorrer
+de a uno. Para eso están las **listas**.
+
+## El concepto
+
+Una lista es una **colección ordenada** de valores, entre corchetes y separados por coma:
+
+```python
+notas = [8, 10, 6, 9]
+
+print(notas[0])      # 8   (el primero: la posición arranca en 0)
+print(len(notas))    # 4   (cuántos elementos tiene)
+notas.append(7)      # agrega 7 al final  -> [8, 10, 6, 9, 7]
+
+for n in notas:      # recorrer de a uno
+    print(n)
+```
+
+Tres cosas que vas a usar todo el tiempo:
+
+- **Índice**: `notas[0]` es el primero, `notas[-1]` el último.
+- **`len(lista)`**: la cantidad de elementos.
+- **`for x in lista:`**: recorrerla elemento por elemento.
+
+:::caution[La posición arranca en 0]
+El primer elemento es `lista[0]`, no `lista[1]`. Si una lista tiene 4 elementos, el último es
+`lista[3]` (o `lista[-1]`).
+:::
+
+## Manos a la obra
+
+:::note[Sobre estos ejercicios]
+Acá vas a escribir **código directo** (sin funciones todavía — eso viene más adelante). Partís de una
+lista que ya está dada y tenés que **crear una variable nueva** con el resultado. El verificador
+revisa esa variable. 😉
+:::
+
+<EjercicioPython
+  titulo="Transformar una lista"
+  dificultad="🌱"
+  starter={`numeros = [1, 2, 3]\n\n# Creá una lista 'dobles' con cada número multiplicado por 2\n`}
+  tests={`assert dobles == [2, 4, 6], "dobles debería ser [2, 4, 6]"\nprint("¡Lista duplicada!")`}
+  pistas={[
+    "Empezá con una lista vacía: <code>dobles = []</code>.",
+    "Recorré con <code>for n in numeros:</code> y usá <code>dobles.append(n * 2)</code>.",
+  ]}
+>
+Tenés la lista `numeros = [1, 2, 3]`. Creá una lista llamada **`dobles`** con cada número
+multiplicado por 2.
+
+Resultado esperado: `dobles` debería ser `[2, 4, 6]`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Filtrar elementos"
+  dificultad="🌿"
+  starter={`numeros = [1, 2, 3, 4, 5, 6]\n\n# Creá una lista 'pares' con solo los números pares de 'numeros'\n`}
+  tests={`assert pares == [2, 4, 6], "pares debería ser [2, 4, 6]"\nprint("¡Pares filtrados!")`}
+  pistas={[
+    "Un número es par si el resto de dividirlo por 2 es 0: <code>n % 2 == 0</code>.",
+    "Recorré la lista y agregá a <code>pares</code> solo los que cumplen la condición.",
+  ]}
+>
+Tenés la lista `numeros = [1, 2, 3, 4, 5, 6]`. Creá una lista **`pares`** con **solo los números
+pares** (en el mismo orden).
+
+Resultado esperado: `pares` debería ser `[2, 4, 6]`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Contar con una condición"
+  dificultad="🌿"
+  starter={`numeros = [1, 5, 8, 3, 9, 2]\nlimite = 4\n\n# Guardá en 'cantidad' cuántos números son MAYORES que 'limite'\n`}
+  tests={`assert cantidad == 3, "cantidad debería ser 3 (5, 8 y 9)"\nprint("¡Conteo correcto!")`}
+  pistas={[
+    "Arrancá con un contador en cero: <code>cantidad = 0</code>.",
+    "Por cada número mayor que <code>limite</code>, hacé <code>cantidad += 1</code>.",
+  ]}
+>
+Tenés `numeros = [1, 5, 8, 3, 9, 2]` y `limite = 4`. Guardá en **`cantidad`** cuántos números son
+**estrictamente mayores** que `limite`.
+
+Resultado esperado: `cantidad` debería ser `3` (son el 5, el 8 y el 9).
+</EjercicioPython>
+
+## Para llevar
+
+- Lista: `[a, b, c]` — colección ordenada, índice desde `0`.
+- `lista[i]`, `lista[-1]`, `len(lista)`, `lista.append(x)`.
+- Patrón estrella: **lista vacía → recorrer con `for` → `append` si cumple → `return`**.
+
+:::note[¿Qué sigue?]
+Más adelante: *list comprehensions* (hacer lo de arriba en una sola línea) y listas de listas
+(matrices).
+:::

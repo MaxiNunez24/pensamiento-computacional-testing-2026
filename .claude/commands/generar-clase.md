@@ -61,6 +61,105 @@ Al revisar una clase existente, evaluá cada punto y reportá: ✅ cumple / ⚠�
 
 ---
 
+## ⚠️ Dos plataformas en transición (leé esto primero)
+
+El curso se está migrando de **MkDocs** a una **plataforma interactiva en Astro/Starlight** (rama
+`dev`). Según para qué plataforma se genere la clase, cambia el formato de salida:
+
+- **MkDocs (sitio actual, rama `main`):** seguí usando `!!! tipo`, `??? tip/success`, `=== "tab"`
+  como hasta ahora.
+- **Plataforma interactiva (Astro, rama `dev`) — formato preferido para clases nuevas:** el alumno
+  **resuelve ejercicios ejecutando Python en la página**, con tests que se verifican solos. Esto
+  **reemplaza** las soluciones ocultas `??? success` y los tabs comparativos `❌/✅`.
+
+Si no se aclara la plataforma, preguntá. En el formato interactivo aplican estos cambios:
+
+- Admonitions → **asides de Starlight**: `:::note`, `:::tip`, `:::caution`, `:::danger`. Con título:
+  `:::tip[Mi título]`.
+- Pistas y soluciones → **dejan de ser bloques ocultos de texto**: se cargan como props del
+  ejercicio (`pistas`, `solucion`) para que el feedback sea por ejecución, no por spoiler.
+- Cada práctica → un componente **`<EjercicioPython>`** (ver abajo).
+- La navegación anterior/índice/siguiente al pie **ya no se escribe a mano** (Starlight la genera).
+
+### Componente `<EjercicioPython>` (formato interactivo)
+
+```mdx
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+
+<EjercicioPython
+  titulo="Tu primera función"
+  dificultad="🌱"
+  starter={`def saludar(nombre):\n    pass`}
+  tests={`assert saludar("Ana") == "¡Hola, Ana!", 'saludar("Ana") debería dar "¡Hola, Ana!"'`}
+  pistas={["Usá <code>return</code>, no <code>print</code>.", "Probá una f-string."]}
+>
+La **consigna en Markdown** va acá adentro, con ejemplo de entrada/salida.
+</EjercicioPython>
+```
+
+Reglas para escribir buenos ejercicios interactivos:
+
+- `tests` son `assert` en Python. **Poné un mensaje** en el assert (`assert ..., "qué esperaba"`)
+  porque es lo que ve el alumno cuando falla. Cubrí varios casos (incluí bordes: 0, listas vacías,
+  negativos).
+- `starter` da el esqueleto mínimo, no la solución.
+- `pistas` guían el pensamiento (preguntas/analogías), aceptan HTML simple. No des el código.
+- **Por defecto NO incluyas `solucion`.** Si los tests están bien hechos, mostrar la solución
+  pre-condiciona al alumno (la abre por ansiedad/frustración). El componente la soporta como prop
+  opcional, pero la decisión de agregar una a un ejercicio puntual es del profe (si se la piden mucho).
+- El nombre que piden los tests tiene que coincidir con el de la consigna.
+
+### 🔑 Ordenar ejercicios con los prerequisitos (¡importante!)
+
+El motor verifica con `assert`, pero **eso no obliga a usar funciones**. Respetá el orden del curso:
+
+- **Clases ANTERIORES a Funciones** (variables, control de flujo, listas, etc.): **NO uses `def`** en
+  los ejercicios. El alumno escribe código **a nivel principal** sobre datos ya dados, y los tests
+  verifican **variables**. Ejemplo:
+  ```mdx
+  <EjercicioPython
+    titulo="Duplicar una lista"
+    dificultad="🌱"
+    starter={`numeros = [1, 2, 3]\n# Creá una lista 'dobles' con cada número multiplicado por 2\n`}
+    tests={`assert dobles == [2, 4, 6], "dobles debería ser [2, 4, 6]"`}
+  >...</EjercicioPython>
+  ```
+- **Desde Funciones en adelante**: ahí sí pedí `def` (es el tema).
+- **Introducción justo a tiempo también para el código del `starter`**: si en el esqueleto aparece
+  algo que el alumno todavía no vio (`def`, `pass`, `return`, etc.), explicalo brevemente **la
+  primera vez que aparece** (un `:::note` corto), igual que con los módulos. Ej.: `pass` = "marcador
+  de lugar: no hace nada, lo vas a reemplazar por tu código".
+
+### Estructura de una clase interactiva
+
+```
+---
+title: ...
+description: ...
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+
+:::tip[Antes de empezar]
+(recordatorio de que es interactiva)
+:::
+
+## El problema
+(situación concreta que motiva)
+
+## El concepto
+(teoría mínima + ejemplo; ciclo concepto → ejercicio bien corto)
+
+## Manos a la obra
+<EjercicioPython .../>
+<EjercicioPython .../>
+
+## Para llevar
+(cheatsheet breve)
+```
+
+---
+
 ## Principios pedagógicos (obligatorios)
 
 ### Entrá con el problema, no con la teoría
