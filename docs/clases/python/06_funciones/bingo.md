@@ -243,31 +243,61 @@ Usá las funciones que ya escribiste. No repitas lógica — si ya existe una fu
 
 ??? success "✅ Solución"
     ```python
-    def jugar_solitario():
-        carton    = generar_carton()
-        bolillero = set(range(1, 91))
-        sorteados = set()
-        turnos    = 0
+    import random
+    import os
+    os.system("clear")
 
-        print("¡Empieza el juego!")
-        mostrar_carton(carton, sorteados)
-        input("\nPresioná Enter para empezar...")
+    def generar_carton():
+        return set(random.sample(range(1,91),15))
 
-        while not verificar_ganador(carton, sorteados):
-            numero = sortear_numero(bolillero)
-            sorteados.add(numero)
-            turnos += 1
+    def verificar_ganador(carton, salientes):
+        return carton.issubset(salientes)
 
-            if numero in carton:
-                print(f"\n🎱 Salió el {numero} — ¡está en tu cartón!")
-                mostrar_carton(carton, sorteados)
+    def sacar_numero(bolillero, salientes):
+        num = random.choice(list(bolillero))
+        bolillero.remove(num)
+        print(f"Salió el {num}.")
+        salientes.add(num)
+        return num
+
+    def estado_del_carton(carton, salientes):
+        faltantes = carton - salientes
+        marcados = carton & salientes
+        print("_"*50)
+
+        for num in carton:
+            if num in salientes:
+                print(num, "✓", sep="", end=" ")
             else:
-                print(f"Salió el {numero}.")
+                print(num, end= "  ") 
+        print()
+        print("_"*50)
+        print(f"Marcados: {len(marcados)}/15  |  Faltantes: {len(faltantes)}")
+        
 
-        print(f"\n🎉 ¡BINGO! Ganaste en {turnos} turnos.")
-        return turnos
+    def jugar_individual():
+        print("¡Empieza el juego!")
+        
+        carton = generar_carton()
 
-    jugar_solitario()
+        print(f"Tu cartón: {sorted(carton)}")
+
+        input("Presioná Enter para empezar...")
+
+        bolillero = set(range(1,91))
+        salientes = set()
+
+        cont = 0
+        while not verificar_ganador(carton, salientes):
+            num = sacar_numero(bolillero, salientes)
+            cont += 1
+
+            if num in carton:
+                estado_del_carton(carton, salientes)
+
+            input("Presioná Enter para continuar...")
+
+        print(f"🎉 ¡BINGO! Ganaste en {cont} turnos.")
     ```
 
 ---
@@ -446,4 +476,4 @@ Antes de cerrar, tomamos 3 minutos. Cada uno responde en voz alta (o en papel):
 
 ## [⬅️ Anterior: Lectura y corrección de código](./lectura_codigo.md)
 ## [📚 Índice](../../clases.md#colecciones)
-## [➡️ Siguiente: Manejo de archivos](../07_persistencia/archivos.md)
+## [➡️ Siguiente: Importar módulos](./imports_y_modulos.md)

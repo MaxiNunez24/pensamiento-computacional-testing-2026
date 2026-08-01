@@ -1,0 +1,4 @@
+La informática transformó el mundo en pocas décadas.
+Hoy programar es una habilidad tan útil como leer o escribir.
+Con Python, automatizar tareas aburridas es cuestión de minutos.
+Y esto recién empieza.

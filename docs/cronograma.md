@@ -1,5 +1,7 @@
 # 📅 Cronograma del Curso
 
+<div id="clases-restantes"></div>
+
 !!! tip "Pensamiento Computacional y Testing de Aplicaciones — CFP 401"
     Curso anual para aprender a programar con buenas prácticas y desarrollar **proyectos reales**.
     Clases los **miércoles de 13:20 a 16:40** y los **viernes de 14:00 a 17:20**.
@@ -21,10 +23,12 @@
 
 | Fecha | Hito |
 |-------|------|
-| 🚀 **Mié 1/7** | Arranque del **Sistema de Asistencias** (primer proyecto, CLI) |
-| ✅ **Vie 17/7** | Primer hito del proyecto: versión CLI funcionando |
+| 🔁 **15 – 17/7** | Repaso y **práctica** de Persistencia (Git, GitHub, Archivos, JSON) antes del receso |
+| 🏗️ **Post-receso (agosto)** | **POO** (clases y objetos), antes de arrancar el proyecto |
 | ❄️ **22/7 – 1/8** | Receso invernal |
-| 🌐 **Agosto** | Migración de Asistencias a **web (Flask)** + arranque del **Bot SiGes** (segundo proyecto) |
+| 🚀 **Agosto (post-receso)** | Arranque del **Sistema de Asistencias** (primer proyecto, CLI) — necesita POO |
+| ✅ **Agosto** | Primer hito del proyecto: versión CLI funcionando |
+| 🌐 **Ago – Sep** | Migración de Asistencias a **web (Flask)** + arranque del **Bot SiGes** (segundo proyecto) |
 | 🎉 **21/9** | **Nerdearla** |
 | 🤖 **Mié 7/10** | Arranque del **proyecto final con IA** |
 | 🏆 **9/11** | **Expo CFP 2026** |
@@ -119,9 +123,26 @@
 | Vie 5/6 | 🚫 Sin clases (el profe rindió un examen de la facultad — ¡mil disculpas!). ¡Gracias por comprender! 🙏 | |
 | Mié 10/6 | Lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
 | Vie 12/6 | Continuación de Lectura y corrección — completamos los ejercicios + la ronda de bugs al pizarrón | [📄](./clases/python/06_funciones/lectura_codigo.md) |
+| Mié 17/6 | Entrada en calor: Funciones como caja negra (puente a la abstracción) | [📄](./clases/python/06_funciones/funciones_caja_negra.md) |
+| Vie 19/6 | Bingo — ejercicio integrador (parte 1) | [📄](./clases/python/06_funciones/bingo.md) |
+| Mié 24/6 | Bingo — ejercicio integrador (parte 2, cierre) | [📄](./clases/python/06_funciones/bingo.md) |
+| Vie 26/6 | Anexo: Importar módulos (organizar el código en varios archivos) | [📄](./clases/python/06_funciones/imports_y_modulos.md) |
+| Mié 1/7 | Repaso general (puente antes de arrancar Persistencia) | [📄](./clases/python/06_funciones/repaso.md) |
 
-<!-- Próxima — Mié 17/6: Bingo (ejercicio integrador). Empezar con la entrada en calor de Funciones.
-     Agregá la fila a la bitácora cuando lo des. -->
+### 🛠️ Bloque 3 — Persistencia y Versionado
+
+| Fecha | Tema | |
+|-------|------|--|
+| Vie 3/7 | Git y GitHub — llegamos a **Git local** (`init`/`add`/`commit`/`status`/`log`); GitHub quedó pendiente | [📄](./clases/python/07_persistencia/git_github.md) |
+| Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/python/07_persistencia/archivos.md) |
+| Vie 10/7 | 🚫 Sin clases (feriado) | |
+| Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/python/06_funciones/del_enunciado_al_programa.md) |
+
+<!-- Plan: el 15/7 fue virtual y acortada (mundial) → se usó para cerrar Git/GitHub desde las compus
+     de casa (donde hicieron la tarea de instalar) + práctica de comprensión de problemas. JSON pasa al
+     Vie 17/7 (presencial, mejor para contenido nuevo), junto con práctica de Persistencia.
+     POO queda para DESPUÉS del receso (22/7-1/8). -->
+
 
 ---
 

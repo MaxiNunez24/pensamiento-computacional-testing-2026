@@ -51,14 +51,16 @@
 - [📦 Funciones I — Definición, parámetros y retorno](./python/06_funciones/funciones_1.md)
 - [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./python/06_funciones/funciones_2.md)
 - [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/06_funciones/bingo.md)
+- [📦 Anexo: Importar módulos](./python/06_funciones/imports_y_modulos.md)
+- [🧠 Del enunciado al programa — comprensión de problemas](./python/06_funciones/del_enunciado_al_programa.md)
 
 ---
 
 ## 🛠️ Bloque 3 — Persistencia y Versionado *(próximamente)* { #persistencia }
 
+- [🌳 Git y GitHub](./python/07_persistencia/git_github.md)
 - [💾 Manejo de archivos](./python/07_persistencia/archivos.md)
 - [📋 JSON](./python/07_persistencia/json.md)
-- [🌳 Git y GitHub](./python/07_persistencia/git_github.md)
 
 ---
 

@@ -45,7 +45,28 @@ Con Git, tenés un solo archivo y Git guarda el historial por vos.
 
 ### Instalación
 
-Instalá Git desde [git-scm.com](https://git-scm.com/). En Windows usá el instalador. Para verificar que quedó instalado:
+=== "🪟 Windows"
+
+    Descargá **Git for Windows** desde [git-scm.com/download/win](https://git-scm.com/download/win) y
+    ejecutá el instalador (podés dejar todo por defecto — "Siguiente" hasta el final). Viene con el
+    **Git Credential Manager**, que usamos más abajo para autenticarnos con GitHub.
+
+=== "🐧 Linux (Debian/Ubuntu)"
+
+    ```bash
+    sudo apt update && sudo apt install git
+    ```
+
+=== "🍎 macOS"
+
+    ```bash
+    brew install git      # si tenés Homebrew
+    ```
+
+    Si no tenés Homebrew, al correr `git --version` por primera vez macOS te ofrece instalar las
+    *Command Line Tools*: aceptá y listo.
+
+Para verificar que quedó instalado (en cualquiera de los tres):
 
 ```bash
 git --version
@@ -59,6 +80,7 @@ Antes de usar Git, le decimos quiénes somos. Esta info aparece en cada commit q
 ```bash
 git config --global user.name "Tu Nombre"
 git config --global user.email "tu@email.com"
+git config --global init.defaultBranch main   # los repos nuevos arrancan en la rama "main"
 ```
 
 Podés verificarla con:
@@ -66,6 +88,11 @@ Podés verificarla con:
 ```bash
 git config --list
 ```
+
+!!! note "🌿 ¿Por qué `init.defaultBranch main`?"
+    Históricamente la rama principal se llamaba `master`; hoy el estándar (y lo que espera GitHub) es
+    `main`. Con esa línea, cada `git init` arranca en `main` y los comandos de más abajo
+    (`git push -u origin main`) coinciden sin sorpresas.
 
 ---
 
@@ -234,6 +261,22 @@ git remote add origin https://github.com/tu-usuario/tu-repo.git
 git push -u origin main
 ```
 
+!!! warning "🔑 La primera vez te va a pedir autenticación (¡y NO es tu contraseña!)"
+    Al hacer el primer `git push`, GitHub te pide identificarte. **Desde 2021 la contraseña de tu
+    cuenta ya NO sirve** para esto — hay que usar un **token**. Es el tropiezo más común, así que
+    prestá atención:
+
+    - **Lo más fácil (Windows):** el instalador de Git incluye el **Git Credential Manager**. La
+      primera vez que hagas `push`, se abre una **ventana del navegador** para iniciar sesión en
+      GitHub. Aceptás, y listo — te queda guardado y no lo pide más.
+    - **Si te pide usuario y contraseña en la terminal:** en "Username" va tu usuario de GitHub y en
+      "Password" va un **Personal Access Token (PAT)**, no tu contraseña. Se crea en
+      **GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate
+      new token**, tildando el permiso **`repo`**. Copiá el token (se ve una sola vez) y pegalo como
+      contraseña.
+
+    Guardá el token en un lugar seguro. Si lo perdés, no pasa nada: generás uno nuevo.
+
 Después de eso, cada vez que quieras subir nuevos commits:
 
 ```bash
@@ -263,6 +306,49 @@ git pull
 ```
 
 Descarga y aplica los cambios más recientes.
+
+---
+
+---
+
+## 🔄 Tu flujo real: la compu del CFP y la de tu casa
+
+Este es **el momento en que Git te cambia la vida**. Hasta ahora tu código vivía en **una** máquina: si
+no estabas ahí, no lo tenías. Con GitHub, tu código vive **en la nube**, y cualquier computadora se lo
+baja.
+
+```mermaid
+flowchart LR
+    C["🏫 PC del CFP"] -- "git push" --> G["☁️ GitHub"]
+    G -- "git pull" --> C
+    G -- "git clone (1ª vez)\ngit pull (después)" --> H["🏠 Tu compu"]
+    H -- "git push" --> G
+```
+
+**La primera vez** en la computadora nueva (por ejemplo, la de tu casa):
+
+```bash
+git clone https://github.com/tu-usuario/tu-repo.git
+```
+
+**De ahí en adelante**, siempre el mismo ciclo:
+
+```bash
+git pull                       # 1. Al EMPEZAR: traés lo último que subiste desde la otra compu
+# ... trabajás, hacés tus ejercicios ...
+git add .                      # 2. Al TERMINAR: preparás
+git commit -m "Ejercicios de la clase de hoy"
+git push                       # 3. ...y lo subís, así lo tenés en la otra compu
+```
+
+!!! success "🏆 La regla de oro de las dos computadoras"
+    **`pull` cuando llegás, `push` antes de irte.** Si te acostumbrás a eso, tu código te sigue a
+    todos lados y **nunca más** te pasa el "uh, quedó en la otra máquina". 🎒
+
+!!! warning "😬 Si te olvidás del `pull`"
+    Si trabajás en casa sin haber traído lo último del CFP, después vas a tener dos versiones distintas
+    y Git te va a pedir que las unifiques. Nada grave, pero es una molestia evitable: **`pull` primero,
+    siempre.**
 
 ---
 
@@ -433,6 +519,6 @@ flowchart LR
 !!! quote "Para cerrar"
     Git y GitHub son las herramientas de colaboración más usadas en el mundo del software. Que puedan decir "tengo mis proyectos en GitHub" es algo que ya diferencia a un programador de alguien que solo aprendió a programar. ¡Bienvenidos al ecosistema! 🌍
 
-## [⬅️ Anterior: JSON](./json.md)
+## [⬅️ Anterior: Importar módulos](../06_funciones/imports_y_modulos.md)
 ## [📚 Índice](../../clases.md#persistencia)
-## ➡️ Siguiente: POO I — Clases y objetos *(próximamente)*
+## [➡️ Siguiente: Manejo de archivos](./archivos.md)
