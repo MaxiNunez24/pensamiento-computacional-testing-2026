@@ -715,3 +715,27 @@ body.pc-resizing * {
   font-size: 0.85rem;
 }
 .ejercicio__envio p { margin: 0 0 0.55rem; }
+
+/* ---------- Altura pareja de los botones (fix del margin de Starlight) ----------
+
+   Starlight le mete margin-top a todo elemento que tenga un hermano antes:
+
+     .sl-markdown-content :not(a,strong,em,del,span,input,code,br)
+                        + :not(a,strong,em,del,span,input,code,br,...)
+       { margin-top: var(--sl-content-gap-y) }
+
+   `button` no está entre las excepciones, así que en nuestras filas de botones
+   TODOS menos el primero se llevan ese margen. Y como las filas son flex con
+   align-items: stretch, el margen se come parte de la altura de la línea: el
+   primero queda a la altura completa y el resto más bajos. Se veía como que
+   ⇥ y ▶ Ejecutar eran más altos, cuando en realidad eran sus vecinos los
+   achatados.
+
+   Va con dos clases para ganarle en especificidad a la regla de arriba (0,2,0
+   contra 0,1,2). */
+.ejercicio .ejercicio__acciones > *,
+.ejercicio .ejercicio__teclas > *,
+.ejercicio .ejercicio__envio > *,
+.ejercicio .ejercicio__aviso-datos > * {
+  margin-top: 0;
+}
