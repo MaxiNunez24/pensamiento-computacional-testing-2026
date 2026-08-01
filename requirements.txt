@@ -1,0 +1,9 @@
+# Dependencias del sitio MkDocs (teoría del curso).
+# Se usan en el deploy automático (.github/workflows/deploy.yml) y para
+# previsualizar en local con `mkdocs serve`.
+#
+# Versiones fijadas a las que se venían usando, para que el sitio publicado
+# salga igual que el que ves en tu máquina.
+mkdocs==1.6.1
+mkdocs-material==9.6.4
+pymdown-extensions==10.19.1

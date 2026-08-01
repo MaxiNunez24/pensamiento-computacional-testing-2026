@@ -30,25 +30,46 @@ máquina**, y guardan el progreso local: es **la solución natural** a "practica
 setup ni Git". Fuerte argumento para priorizar el catálogo Astro. (Mientras tanto, en MkDocs, la
 práctica extra se plantea como opcional y autocontenida, no como "seguí tu repo".)
 
-## 2. Deploy de Astro — DECIDIDO: repo público aparte + GitHub Pages gratis
+## 2. Deploy de Astro — DECIDIDO (1/8): un solo repo, Astro en `/ejercicios/`
 
-El bloqueante era que **GitHub Pages sirve un solo sitio por repo** (hoy ese sitio es MkDocs). Solución
-elegida (viable y gratis): **un segundo repositorio público** solo para Astro, con **su propio GitHub
-Pages**.
+> ⚠️ **Esto reemplaza la decisión del 3/7**, que proponía un segundo repositorio público aparte.
 
-- URL resultante: `https://maxinunez24.github.io/<repo-astro>/` (falta elegir el **nombre** del repo,
-  p. ej. `pc-ejercicios` o `pensamiento-computacional-ejercicios`).
-- `astro.config.mjs`: setear **`site: 'https://maxinunez24.github.io'`** y **`base: '/<repo-astro>/'`**
-  (Starlight respeta el `base` en todos los links internos y assets).
-- **GitHub Action** en el repo nuevo: build (`pnpm build`) + publicar a Pages (usar `actions/deploy-pages`
-  o push a `gh-pages`). Ya tenemos de base el `astro-ci.yml` (hoy solo build-check).
-- Repo **público** (Pages gratis lo exige; es material del curso, sin problema).
-- **Migrar el código Astro** que hoy vive en la **rama `dev` de este repo** al repo nuevo (mover
-  `src/`, `astro.config.mjs`, `public/`, `package.json`, `pnpm-*`, etc.). Decidir si el repo actual
-  conserva `dev` o si se limpia.
+Es cierto que **GitHub Pages sirve un solo sitio por repo** — eso no cambió. Lo que sí: **ese sitio
+puede tener subcarpetas construidas por herramientas distintas**. No hace falta un segundo repo; alcanza
+con que un mismo workflow arme las dos partes y publique el conjunto.
 
-> Alternativa descartada: submodule dentro del repo actual → más fricción, no aporta. Repo separado es
-> más simple.
+- **Estructura publicada:**
+
+  ```
+  https://maxinunez24.github.io/pensamiento-computacional-testing-2026/
+  ├── (MkDocs: teoría, cronograma, bitácora)
+  └── /ejercicios/          ← Astro + Pyodide
+  ```
+
+- **Un solo workflow** de GitHub Actions: `mkdocs build -d site/` + `pnpm build` con salida a
+  `site/ejercicios/`, y un único `actions/deploy-pages` del `site/` completo.
+- `astro.config.mjs`: setear **`site: 'https://maxinunez24.github.io'`** y
+  **`base: '/pensamiento-computacional-testing-2026/ejercicios/'`** (Starlight respeta el `base` en
+  todos los links internos y assets).
+- **El código Astro sube de `dev` a `main`** (no se muda a otro repo). `dev` sigue siendo la rama de
+  trabajo; sólo `main` despliega.
+
+**Por qué conviene sobre dos repos:** un solo dominio (los links entre teoría y ejercicios son
+relativos, no absolutos), un solo `git push`, un solo lugar donde mirar cuando algo se rompe, y cero
+riesgo de que los dos repos se desincronicen.
+
+### Ida y vuelta entre las dos partes
+
+Es el único requisito de UX que pide el flujo:
+
+- **MkDocs → Astro:** en cada clase, un callout al final con el link a los ejercicios de ese tema
+  (`../ejercicios/clases/<tema>/`).
+- **Astro → MkDocs:** cada lección de ejercicios abre con un link de vuelta a la teoría
+  (`../../../` + la ruta de la clase). Conviene resolverlo en un componente `<VolverATeoria>` para no
+  escribir la ruta a mano en cada `.mdx`.
+
+> Alternativas descartadas: submodule (más fricción, no aporta) y repo separado (dos deploys, dos
+> URLs, riesgo de desincronización).
 
 ## 3. Catálogo de ejercicios en Astro (con deep-links estables)
 
@@ -107,11 +128,40 @@ Cuando el patrón esté probado, actualizar `.claude/commands/generar-clase.md` 
 
 ## 8. Checklist para arrancar (receso)
 
-- [ ] Elegir nombre del repo Astro y crearlo (público).
-- [ ] Mover el código Astro de `dev` al repo nuevo; setear `site` + `base`.
-- [ ] GitHub Action de deploy a Pages; verificar la URL en vivo.
+- [x] **Decidir el deploy** → un solo repo, Astro en `/ejercicios/` (1/8, ver §2).
+- [x] **Poner `dev` al día** con `main` (merge sin conflictos) y verificar que compila
+      (`pnpm install && pnpm build` → 8 páginas OK, 1/8).
+- [x] **Soporte móvil del ejercicio** (1/8): barra de símbolos en pantallas angostas, fuente del
+      editor a 16px (evita el zoom de iOS), aviso único del peso de la descarga, y botón de copiar
+      como plan B del `mailto:`.
+- [x] **Envío al profe**: `mailto:` con nombre + consulta + código (1/8).
+- [ ] Setear `site` + `base` en `astro.config.mjs`.
+- [ ] Workflow único: MkDocs a `site/` + Astro a `site/ejercicios/` + un solo `deploy-pages`.
+- [ ] Componente `<VolverATeoria>` y callouts de ida desde MkDocs (ver §2).
 - [ ] Definir convención de slugs + página índice/catálogo.
 - [ ] Migrar POO como piloto (links desde MkDocs).
 - [ ] Decidir política de soluciones.
 - [ ] Actualizar `generar-clase`.
+- [ ] Tutorial/video para los alumnos sobre el botón de envío (ver §9).
 - [ ] Ir migrando el resto de las clases, sin apuro.
+
+---
+
+## 9. El botón "Enviar a mi profe" — qué necesita el alumno
+
+El `mailto:` **abre el cliente de correo del alumno** con un mensaje ya escrito dirigido a la casilla
+del profe. O sea: **el requisito cae del lado del alumno**, no del profe.
+
+| Dónde | Qué pasa |
+|-------|----------|
+| Android con Gmail | Funciona solo (ya están logueados) |
+| iPhone con Mail configurado | Funciona solo |
+| PC del CFP sin cliente de correo | **No pasa nada visible** ← el caso problemático |
+| PC con webmail en el navegador | Depende de si registraron Gmail como handler de `mailto:` |
+
+Por eso el componente muestra, **después** de tocar el botón, un cartel con **"📋 Copiar el mensaje"**:
+si no se abrió nada, el alumno copia y lo pega en Discord. Resuelve el caso de la PC del CFP sin
+depender de configurar nada.
+
+Pendiente: un **video corto** mostrando el flujo (tocar Enviar → escribir la consulta → mandar, o
+copiar y pegar en Discord). Va junto con los videos de setup de Git/GitHub.

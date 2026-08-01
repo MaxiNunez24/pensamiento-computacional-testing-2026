@@ -44,7 +44,7 @@
 
 ---
 
-## 🌿 Bloque 2 — Colecciones y Modularización *(en curso)* { #colecciones }
+## 🌿 Bloque 2 — Colecciones y Modularización ✅ { #colecciones }
 
 - [🎲 Tuplas y Sets](./python/05_colecciones/tuplas_sets.md)
 - [🗝️ Diccionarios](./python/05_colecciones/diccionarios.md)
@@ -56,7 +56,7 @@
 
 ---
 
-## 🛠️ Bloque 3 — Persistencia y Versionado *(próximamente)* { #persistencia }
+## 🛠️ Bloque 3 — Persistencia y Versionado *(en curso)* { #persistencia }
 
 - [🌳 Git y GitHub](./python/07_persistencia/git_github.md)
 - [💾 Manejo de archivos](./python/07_persistencia/archivos.md)

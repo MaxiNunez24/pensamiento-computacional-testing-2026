@@ -137,11 +137,16 @@
 | Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/python/07_persistencia/archivos.md) |
 | Vie 10/7 | 🚫 Sin clases (feriado) | |
 | Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/python/06_funciones/del_enunciado_al_programa.md) |
+| Vie 17/7 | 🧺 **Picnic de cierre antes del receso** + cerramos **Git y GitHub** de una vez por todas (`push`/`clone`/`pull`, el flujo CFP ↔ casa) | [📄](./clases/python/07_persistencia/git_github.md) |
+| 22/7 – 1/8 | ❄️ **Receso invernal** | |
 
-<!-- Plan: el 15/7 fue virtual y acortada (mundial) → se usó para cerrar Git/GitHub desde las compus
-     de casa (donde hicieron la tarea de instalar) + práctica de comprensión de problemas. JSON pasa al
-     Vie 17/7 (presencial, mejor para contenido nuevo), junto con práctica de Persistencia.
-     POO queda para DESPUÉS del receso (22/7-1/8). -->
+<!-- Plan post-receso (definido 1/8):
+     El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.
+     ARCHIVOS quedó flojo: se dio el 8/7 con varios alumnos ausentes y el grupo se perdió bastante.
+     Por eso al volver NO arrancamos con tema nuevo:
+       1. Mié 5/8  → retomar ARCHIVOS (repaso + práctica, que es lo que faltó)
+       2. luego    → JSON, y con eso cierra el Bloque 3
+       3. después  → POO a full, entrelazado con el Sistema de Asistencias (Bloque 4) -->
 
 
 ---

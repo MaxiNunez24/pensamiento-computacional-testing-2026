@@ -1,0 +1,83 @@
+# Deploy del sitio del curso: las DOS mitades en un solo GitHub Pages.
+#
+#   https://maxinunez24.github.io/pensamiento-computacional-testing-2026/
+#   ├── (MkDocs: teoría, cronograma, bitácora)
+#   └── /ejercicios/   ← Astro + Pyodide (plataforma interactiva)
+#
+# ⚠️ IMPORTANTE: desde que existe este workflow, NO usar más `mkdocs gh-deploy`
+# a mano. Ese comando reemplaza el contenido completo de la rama gh-pages y
+# borraría /ejercicios/. El deploy ahora sale solo con cada push a `main`.
+name: Deploy (MkDocs + Astro)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # para republicar a mano desde la pestaña Actions
+
+# Necesario para que el job pueda pushear la rama gh-pages.
+permissions:
+  contents: write
+
+# Si se pushea dos veces seguidas, que la segunda espere en vez de pisarse.
+concurrency:
+  group: deploy-gh-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Construir y publicar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---------- Mitad 1: la teoría (MkDocs) ----------
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar MkDocs
+        run: pip install -r requirements.txt
+
+      - name: Build de MkDocs → site/
+        run: mkdocs build --strict --site-dir site
+
+      # ---------- Mitad 2: los ejercicios (Astro) ----------
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Instalar dependencias de Astro
+        run: pnpm install --frozen-lockfile
+
+      - name: Build de Astro → site/ejercicios/
+        run: |
+          pnpm run build
+          mv dist site/ejercicios
+
+      # ---------- Publicar ----------
+
+      - name: Publicar en gh-pages
+        run: |
+          cd site
+          # Sin .nojekyll, GitHub Pages pasa el sitio por Jekyll, que IGNORA las
+          # carpetas que empiezan con guión bajo. Astro emite todo su JS en
+          # _astro/ → sin este archivo, los ejercicios dan 404 en silencio.
+          touch .nojekyll
+          git init -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy ${GITHUB_SHA::7} (MkDocs + Astro)"
+          git push --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            gh-pages
