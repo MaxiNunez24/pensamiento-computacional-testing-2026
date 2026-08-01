@@ -1,0 +1,170 @@
+---
+title: Condicionales — if / elif / else
+description: "Que el programa decida: comparaciones, ramas y el orden en que se evalúan."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/03_estructuras_de_control/if_else/" />
+
+## El problema
+
+Hasta ahora tus programas hacían siempre lo mismo, en el mismo orden. Pero la mayoría de las cosas
+útiles necesitan **decidir**:
+
+- Si la nota es 4 o más → aprobó. Si no → desaprobó.
+- Si el carrito supera los $50.000 → envío gratis.
+- Si la contraseña coincide → entra.
+
+Para eso está el `if`.
+
+## La forma básica
+
+```python
+edad = 20
+
+if edad >= 18:
+    print("Puede votar")
+else:
+    print("Todavía no")
+```
+
+Tres cosas que importan:
+
+- Después de la **condición** van **dos puntos** `:`.
+- Lo que está **indentado** (corrido a la derecha) es lo que pasa si la condición se cumple.
+- El `else` es **opcional**: si no hay nada que hacer cuando no se cumple, no lo pongas.
+
+:::caution[La indentación no es decoración]
+En Python, los espacios de la izquierda **son parte del código**. Le dicen qué líneas están adentro
+del `if` y cuáles afuera.
+
+```python
+if edad >= 18:
+    print("Puede votar")     # adentro: solo si es mayor
+print("Fin del programa")    # afuera: siempre
+```
+Si movés esa última línea cuatro espacios a la derecha, cambia lo que hace el programa.
+:::
+
+## Comparaciones
+
+| Operador | Significa |
+|---|---|
+| `==` | ¿son iguales? |
+| `!=` | ¿son distintos? |
+| `>` `<` | mayor / menor |
+| `>=` `<=` | mayor o igual / menor o igual |
+
+:::caution[`=` y `==` no son lo mismo]
+`=` **guarda** un valor (`edad = 18`). `==` **pregunta** si dos cosas son iguales (`edad == 18`).
+Confundirlos es un clásico, y Python te lo marca como error de sintaxis.
+:::
+
+<EjercicioPython
+  titulo="¿Aprobó?"
+  dificultad="🌱"
+  starter={`def aprobo(nota):\n    pass`}
+  tests={`assert aprobo(7) == True, "con 7 debería aprobar"\nassert aprobo(4) == True, "4 es el mínimo para aprobar: tiene que dar True"\nassert aprobo(3) == False, "con 3 no aprueba"\nassert aprobo(10) == True, "con 10 aprueba"`}
+  pistas={[
+    "Fijate en el test del 4. ¿El 4 tiene que aprobar o no? ¿Qué operador de comparación incluye al número que estás comparando y cuál lo deja afuera?",
+  ]}
+>
+Completá `aprobo` para que devuelva `True` si la nota es **4 o más**, y `False` si no.
+</EjercicioPython>
+
+## Más de dos caminos: `elif`
+
+Cuando hay varias opciones, se encadenan con `elif` (*else if*):
+
+```python
+if nota >= 9:
+    print("Excelente")
+elif nota >= 7:
+    print("Muy bien")
+elif nota >= 4:
+    print("Aprobado")
+else:
+    print("Desaprobado")
+```
+
+**El orden importa muchísimo.** Python prueba las condiciones de arriba hacia abajo y se queda con
+**la primera que se cumple**; el resto ni las mira.
+
+:::note[Por qué este orden y no otro]
+Si pusieras `nota >= 4` primero, un 10 entraría por ahí y diría "Aprobado", porque 10 también es
+mayor o igual a 4. Nunca llegaría a "Excelente". Con `elif` conviene ir **de lo más exigente a lo
+menos exigente**.
+:::
+
+<EjercicioPython
+  titulo="La categoría de la nota"
+  dificultad="🌿"
+  starter={`def categoria(nota):\n    pass`}
+  tests={`assert categoria(10) == "Excelente", f'con 10 devolviste {categoria(10)!r}'\nassert categoria(9) == "Excelente", "9 ya es Excelente"\nassert categoria(8) == "Muy bien", f'con 8 devolviste {categoria(8)!r}'\nassert categoria(7) == "Muy bien", "7 ya es Muy bien"\nassert categoria(5) == "Aprobado", f'con 5 devolviste {categoria(5)!r}'\nassert categoria(4) == "Aprobado", "4 aprueba"\nassert categoria(1) == "Desaprobado", f'con 1 devolviste {categoria(1)!r}'`}
+  pistas={[
+    "Probá tu solución con un 10 y mirá qué devuelve. Si te dice \"Aprobado\", ¿por cuál de las condiciones entró primero?",
+    "Python se queda con la PRIMERA condición que se cumple. ¿En qué orden conviene preguntarlas para que un 10 no entre por la puerta del 4?",
+  ]}
+>
+Completá `categoria` para que devuelva:
+
+- `"Excelente"` con 9 o 10
+- `"Muy bien"` con 7 u 8
+- `"Aprobado"` con 4, 5 o 6
+- `"Desaprobado"` con menos de 4
+</EjercicioPython>
+
+## Combinar condiciones: `and`, `or`, `not`
+
+```python
+if edad >= 18 and tiene_dni:      # las DOS cosas
+if es_finde or es_feriado:        # al menos UNA
+if not esta_lleno:                # al revés
+```
+
+| | Da `True` cuando... |
+|---|---|
+| `A and B` | **las dos** son verdaderas |
+| `A or B` | **al menos una** es verdadera |
+| `not A` | A es falsa |
+
+<EjercicioPython
+  titulo="¿Puede entrar?"
+  dificultad="🌿"
+  starter={`def puede_entrar(edad, tiene_entrada):\n    pass`}
+  tests={`assert puede_entrar(20, True) == True, "mayor y con entrada: entra"\nassert puede_entrar(20, False) == False, "sin entrada no entra, aunque sea mayor"\nassert puede_entrar(15, True) == False, "menor no entra, aunque tenga entrada"\nassert puede_entrar(18, True) == True, "18 ya es mayor de edad"\nassert puede_entrar(15, False) == False, "ni una ni la otra"`}
+  pistas={[
+    "Mirá los cinco casos de los tests. ¿En cuántos de ellos entra? ¿Qué tienen en común solo esos?",
+    "¿Alcanza con que se cumpla una de las dos condiciones, o hacen falta las dos a la vez?",
+  ]}
+>
+Para entrar al recital hay que ser **mayor de edad** (18 o más) **y** tener entrada.
+
+Completá `puede_entrar` para que devuelva `True` o `False`.
+</EjercicioPython>
+
+## Un detalle que te va a ahorrar líneas
+
+Cuando una condición ya es verdadera o falsa por sí misma, no hace falta el `if`:
+
+```python
+# En vez de esto...
+def es_mayor(edad):
+    if edad >= 18:
+        return True
+    else:
+        return False
+
+# ...esto dice exactamente lo mismo
+def es_mayor(edad):
+    return edad >= 18
+```
+
+`edad >= 18` **ya es** un `True` o un `False`. Envolverlo en un `if` para devolver `True` o `False`
+es dar una vuelta de más. Las dos versiones funcionan; la segunda se lee mejor.
+
+---
+
+Siguiente: [Bucles — while y for](../bucles/) — repetir sin copiar y pegar.

@@ -1,0 +1,191 @@
+---
+title: Bucles — while y for
+description: "Repetir sin copiar y pegar: cuándo usar cada uno, acumuladores y cómo no colgar el programa."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/03_estructuras_de_control/while/" />
+
+## El problema
+
+Contar del 1 al 5 se puede hacer así:
+
+```python
+print(1)
+print(2)
+print(3)
+print(4)
+print(5)
+```
+
+¿Y del 1 al 1000? No vas a escribir mil líneas. Y peor: si mañana hay que cambiar algo, hay que
+cambiarlo mil veces.
+
+Un **bucle** te deja escribir la instrucción **una vez** y decirle a Python cuántas veces repetirla.
+
+## `while`: repetir mientras se cumpla algo
+
+```python
+numero = 1
+
+while numero <= 5:
+    print(numero)
+    numero = numero + 1
+```
+
+Se lee literal: *"mientras `numero` sea menor o igual a 5, mostralo y sumale 1"*.
+
+Un `while` tiene siempre tres partes, y si te falta alguna se rompe:
+
+1. **Antes**: preparar la variable (`numero = 1`).
+2. **La condición**: hasta cuándo seguir (`numero <= 5`).
+3. **Adentro**: hacer algo **y acercarse al final** (`numero = numero + 1`).
+
+:::caution[El bucle infinito]
+Si te olvidás el paso 3, la condición nunca se vuelve falsa y el programa **no termina nunca**:
+
+```python
+numero = 1
+while numero <= 5:
+    print(numero)      # 💥 imprime 1 para siempre
+```
+
+Acá no pasa nada grave: a los 15 segundos la página corta la ejecución sola y te avisa. En tu compu
+tendrías que frenarlo con `Ctrl + C`.
+:::
+
+<EjercicioPython
+  titulo="La cuenta regresiva"
+  dificultad="🌿"
+  starter={`def cuenta_regresiva(desde):\n    resultado = []\n    # tu código acá\n    return resultado`}
+  tests={`assert cuenta_regresiva(5) == [5, 4, 3, 2, 1], f'con 5 devolviste {cuenta_regresiva(5)!r}'\nassert cuenta_regresiva(1) == [1], "desde 1, la lista es solo [1]"\nassert cuenta_regresiva(0) == [], "desde 0 no hay nada que contar"`}
+  pistas={[
+    "Contá en voz alta desde 5 hasta 1. ¿En qué momento dejás de contar? Esa es tu condición.",
+    "Para agregar un número a la lista se usa <code>resultado.append(numero)</code>. Lo que falta pensar es cómo va cambiando el número en cada vuelta: ¿crece o decrece?",
+    "Mirá el test de <code>cuenta_regresiva(0)</code>: tiene que devolver una lista vacía. ¿Tu condición llega a entrar al bucle aunque sea una vez, o directamente no entra?",
+  ]}
+>
+Completá `cuenta_regresiva` para que devuelva una lista con los números desde `desde` hasta 1, de
+mayor a menor.
+
+`cuenta_regresiva(5)` → `[5, 4, 3, 2, 1]`
+</EjercicioPython>
+
+## `for`: repetir una vez por cada elemento
+
+Cuando ya sabés **sobre qué** querés repetir (una lista, un texto, un rango de números), el `for` es
+más corto y no se puede colgar:
+
+```python
+for fruta in ["manzana", "pera", "uva"]:
+    print(fruta)
+```
+
+Se lee: *"para cada fruta en esa lista, mostrala"*. No hay contador que actualizar ni condición que
+se te olvide: se termina solo cuando no quedan elementos.
+
+### `range()`: para contar
+
+```python
+for i in range(5):        # 0, 1, 2, 3, 4
+    print(i)
+
+for i in range(1, 6):     # 1, 2, 3, 4, 5
+    print(i)
+
+for i in range(0, 10, 2): # 0, 2, 4, 6, 8
+    print(i)
+```
+
+`range` **arranca en 0** si no le decís otra cosa, y **nunca llega al número final**. Eso último
+sorprende al principio, pero es lo que hace que `range(len(lista))` dé exactamente las posiciones
+válidas.
+
+:::tip[¿Cuál uso?]
+- ¿Sabés de antemano cuántas vueltas son, o tenés una lista? → **`for`**
+- ¿Depende de algo que pasa adentro y no sabés cuándo va a terminar? → **`while`**
+
+En la práctica el `for` cubre la gran mayoría de los casos.
+:::
+
+## Acumuladores: el patrón que más vas a usar
+
+Sumar todos los números de una lista es siempre la misma receta:
+
+```python
+total = 0                  # 1. arrancar en un valor neutro
+for numero in [10, 20, 30]:
+    total = total + numero # 2. actualizar en cada vuelta
+print(total)               # 3. usar el resultado al final  → 60
+```
+
+Ese `total` se llama **acumulador**. La misma idea sirve para contar cosas (arrancás en 0 y sumás 1),
+o para armar un texto (arrancás en `""` y vas pegando).
+
+<EjercicioPython
+  titulo="El promedio"
+  dificultad="🌿"
+  starter={`def promedio(notas):\n    pass`}
+  tests={`assert promedio([10, 8, 6]) == 8, f'con [10, 8, 6] devolviste {promedio([10, 8, 6])!r}'\nassert promedio([5]) == 5, "el promedio de una sola nota es esa nota"\nassert promedio([4, 5]) == 4.5, "el promedio puede tener decimales"\nassert promedio([]) == 0, "con la lista vacía devolvé 0, no rompas"`}
+  pistas={[
+    "¿Cómo sacás un promedio a mano? Nombrá los dos números que necesitás antes de poder dividir.",
+    "Mirá el test de la lista vacía. Si intentás dividir por la cantidad de notas y no hay ninguna, ¿qué pasa? ¿Cómo evitás llegar a esa división?",
+  ]}
+>
+Completá `promedio` para que devuelva el promedio de la lista de notas.
+
+Si la lista está **vacía**, devolvé `0` (no queremos que el programa se rompa).
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Contar los aprobados"
+  dificultad="🌿"
+  starter={`def cuantos_aprobaron(notas):\n    pass`}
+  tests={`assert cuantos_aprobaron([10, 3, 7, 2, 4]) == 3, f'con [10, 3, 7, 2, 4] devolviste {cuantos_aprobaron([10, 3, 7, 2, 4])!r}'\nassert cuantos_aprobaron([1, 2, 3]) == 0, "ninguna llega a 4"\nassert cuantos_aprobaron([]) == 0, "sin notas, ningún aprobado"\nassert cuantos_aprobaron([4, 4, 4]) == 3, "el 4 aprueba"`}
+  pistas={[
+    "Acá se juntan dos cosas que ya viste: recorrer todas las notas, y decidir por cada una si cuenta o no. ¿Cuál de las dos va adentro de la otra?",
+    "Si contaras a mano con el dedo, ¿en qué número arrancás antes de mirar la primera nota?",
+  ]}
+>
+Completá `cuantos_aprobaron` para que devuelva **cuántas** notas de la lista son 4 o más.
+</EjercicioPython>
+
+## `break` y `continue`
+
+Dos atajos para cuando el bucle tiene que cortarse antes:
+
+```python
+for numero in [1, 5, 8, 3]:
+    if numero == 8:
+        break        # corta el bucle acá, no sigue
+    print(numero)    # 1, 5
+
+for numero in [1, 2, 3, 4]:
+    if numero % 2 == 0:
+        continue     # saltea esta vuelta, sigue con la próxima
+    print(numero)    # 1, 3
+```
+
+- **`break`** → me voy del bucle.
+- **`continue`** → esta vuelta no me interesa, seguí con la siguiente.
+
+<EjercicioPython
+  titulo="El primero que aparece"
+  dificultad="🌳"
+  starter={`def primer_negativo(numeros):\n    pass`}
+  tests={`assert primer_negativo([3, 8, -2, 5, -9]) == -2, f'esperaba -2 (el primero), devolviste {primer_negativo([3, 8, -2, 5, -9])!r}'\nassert primer_negativo([1, 2, 3]) is None, "si no hay negativos, devolvé None"\nassert primer_negativo([-1]) == -1, "el único elemento es negativo"\nassert primer_negativo([]) is None, "lista vacía: None"`}
+  pistas={[
+    "El test espera -2 y no -9, aunque los dos son negativos. ¿Qué tiene que hacer tu bucle apenas encuentra el primero?",
+    "Si recorrés la lista entera y nunca encontraste ninguno, ¿qué querés que devuelva la función? ¿Dónde tendría que estar escrito ese caso?",
+  ]}
+>
+Completá `primer_negativo` para que devuelva **el primer** número negativo de la lista.
+
+Si no hay ninguno, devolvé `None`.
+</EjercicioPython>
+
+---
+
+Siguiente: [Listas](../listas/) — la colección que ya venías usando sin darte cuenta.
