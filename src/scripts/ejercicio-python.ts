@@ -24,7 +24,7 @@ const EMAIL_PROFE = 'maxinunez434@gmail.com';
 // Worker de Cloudflare que publica la consulta en #Consultas de Discord.
 // Vacío = todavía no está montado, y el botón usa el mailto: de siempre.
 // Pasos para levantarlo: worker/README.md
-const WORKER_CONSULTAS = '';
+const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.workers.dev/';
 
 // Theme propio: fija tipografía e interlineado del editor con alta especificidad,
 // para que los estilos de Starlight no desfasen las líneas ni el cursor. El
@@ -333,7 +333,13 @@ function initEjercicio(el: HTMLElement): void {
             url: location.href,
           }),
         });
+        // No alcanza con que responda 200: un Worker a medio configurar (el
+        // "Hello World!" del template, por ejemplo) también responde 200 y el
+        // alumno se quedaría con un "✓ Enviado" que nunca llegó a ningún lado.
+        // Exigimos la respuesta que solo da NUESTRO Worker.
         if (!r.ok) throw new Error(String(r.status));
+        const respuesta = await r.json().catch(() => null);
+        if (!respuesta?.ok) throw new Error('respuesta inesperada');
         btnEnviar.textContent = '✓ ¡Enviado! El profe lo ve en Discord';
       } catch {
         // Si el Worker está caído o sin internet, el alumno no queda a pie:
