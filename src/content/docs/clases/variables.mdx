@@ -1,0 +1,181 @@
+---
+title: Variables y tipos de datos
+description: 'Guardar valores para reusarlos, los cuatro tipos básicos de Python y por qué "10" no es lo mismo que 10.'
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/02_variables_y_tipos/variables/" />
+
+## El problema
+
+Mirá este precio repetido por todos lados:
+
+```python
+print("El café sale 1500")
+print("Dos cafés salen", 1500 * 2)
+print("Con 10% de descuento:", 1500 * 0.9)
+```
+
+Si mañana el café aumenta, tenés que cazar **cada** `1500` y cambiarlo. Si te olvidás uno, el programa
+queda mintiendo y no te avisa.
+
+Una **variable** es un nombre para un valor. Lo escribís una vez y lo usás donde quieras:
+
+```python
+precio_cafe = 1500
+
+print("El café sale", precio_cafe)
+print("Dos cafés salen", precio_cafe * 2)
+print("Con 10% de descuento:", precio_cafe * 0.9)
+```
+
+Ahora el precio vive en **un solo lugar**. Eso es lo que ganás: no repetir, y tener un lugar único
+donde cambiar las cosas.
+
+## Cómo se crea
+
+```python
+nombre_de_la_variable = valor
+```
+
+El `=` **no** es "igual" como en matemática: es **"guardá esto acá"**. Se lee de derecha a izquierda.
+
+```python
+edad = 30        # guardá 30 en edad
+edad = edad + 1  # tomá lo que hay en edad, sumale 1, y guardalo de nuevo en edad
+```
+
+Esa segunda línea en matemática sería absurda. En programación es de lo más común.
+
+<EjercicioPython
+  titulo="Un solo lugar para cambiar"
+  dificultad="🌱"
+  starter={`def total_cafes(precio, cantidad):\n    pass`}
+  tests={`assert total_cafes(1500, 2) == 3000, f'con (1500, 2) devolviste {total_cafes(1500, 2)!r}'\nassert total_cafes(800, 5) == 4000, f'con (800, 5) devolviste {total_cafes(800, 5)!r}'\nassert total_cafes(1000, 0) == 0, "cero cafés deberían costar 0"`}
+  pistas={[
+    "Si te preguntan cuánto salen 3 cafés de $500, ¿qué cuenta hacés? Escribí esa cuenta con los nombres de los parámetros en lugar de los números.",
+  ]}
+>
+Completá `total_cafes` para que devuelva cuánto salen `cantidad` cafés a `precio` cada uno.
+</EjercicioPython>
+
+## Los cuatro tipos básicos
+
+Todo valor en Python es de algún **tipo**. Al principio te alcanza con cuatro:
+
+| Tipo | Qué guarda | Ejemplos |
+|------|-----------|----------|
+| `int` | Números enteros | `30`, `-5`, `0` |
+| `float` | Números con decimales | `1.5`, `-0.75`, `3.0` |
+| `str` | Texto (*string*) | `"hola"`, `"30"`, `""` |
+| `bool` | Verdadero o falso | `True`, `False` |
+
+Podés preguntarle a Python de qué tipo es algo con `type()`:
+
+```python
+print(type(30))        # <class 'int'>
+print(type("30"))      # <class 'str'>
+print(type(1.5))       # <class 'float'>
+print(type(True))      # <class 'bool'>
+```
+
+## `"30"` no es `30`
+
+Esta distinción causa la mitad de los errores del primer mes, así que vale la pena frenar acá.
+
+```python
+30 + 30       # 60      → dos números: los suma
+"30" + "30"   # "3030"  → dos textos: los pega uno atrás del otro
+"30" + 30     # 💥 TypeError
+```
+
+El `30` con comillas es el **dibujo** del número: sirve para mostrarlo, no para hacer cuentas.
+
+Para pasar de uno a otro, se **convierte**:
+
+```python
+int("30")     # 30      texto → entero
+str(30)       # "30"    entero → texto
+float("1.5")  # 1.5     texto → decimal
+```
+
+:::caution[Convertir puede fallar]
+```python
+int("hola")   # 💥 ValueError: no hay ningún número ahí adentro
+int("3.5")    # 💥 ValueError: eso es un decimal, no un entero
+float("3.5")  # ✅ 3.5
+```
+:::
+
+<EjercicioPython
+  titulo="Sumar lo que vino como texto"
+  dificultad="🌿"
+  starter={`def sumar_textos(a, b):\n    pass`}
+  tests={`assert sumar_textos("30", "12") == 42, f'con ("30", "12") devolviste {sumar_textos("30", "12")!r}'\nassert sumar_textos("0", "0") == 0, "cero más cero es 0"\nassert sumar_textos("-5", "5") == 0, "los negativos también tienen que andar"\nassert isinstance(sumar_textos("1", "2"), int), "tiene que devolver un número, no un texto"`}
+  pistas={[
+    "Probá <code>\"30\" + \"12\"</code> en el editor y mirá qué sale. ¿Por qué da eso y no 42?",
+    "Antes de poder sumarlos como números, ¿qué les tendría que pasar a esos dos valores?",
+  ]}
+>
+`sumar_textos` recibe dos números **escritos como texto** y tiene que devolver la **suma** como número.
+
+`sumar_textos("30", "12")` tiene que dar `42` (no `"3012"`).
+</EjercicioPython>
+
+## Cómo nombrar variables
+
+Las reglas que Python te obliga:
+
+- Empiezan con letra o `_`, nunca con número.
+- Sin espacios ni acentos ni guiones: `precio_cafe`, no `precio café` ni `precio-cafe`.
+- Distingue mayúsculas: `edad` y `Edad` son **dos variables distintas**.
+
+Y la regla que no te obliga pero importa más:
+
+:::tip[El nombre es para la persona que lee]
+```python
+x = 1500        # ¿1500 qué?
+precio_cafe = 1500   # ah, listo
+```
+En Python se estila `snake_case`: todo en minúscula, palabras separadas por `_`. El código se lee
+muchas más veces de las que se escribe, y casi siempre lo lee tu yo de dentro de dos semanas.
+:::
+
+## Operadores
+
+```python
+7 + 2    # 9    suma
+7 - 2    # 5    resta
+7 * 2    # 14   multiplicación
+7 / 2    # 3.5  división (siempre da float)
+7 // 2   # 3    división entera (se queda con la parte entera)
+7 % 2    # 1    resto de la división
+7 ** 2   # 49   potencia
+```
+
+Los dos raros, `//` y `%`, son mucho más útiles de lo que parecen: `%` te dice si un número es
+múltiplo de otro (si el resto es 0), y juntos sirven para partir cantidades.
+
+<EjercicioPython
+  titulo="Repartir sin romper nada"
+  dificultad="🌿"
+  starter={`def repartir(caramelos, chicos):\n    pass`}
+  tests={`assert repartir(10, 3) == (3, 1), f'con (10, 3) devolviste {repartir(10, 3)!r} y esperaba (3, 1)'\nassert repartir(9, 3) == (3, 0), "9 entre 3 reparte justo"\nassert repartir(2, 5) == (0, 2), "si no alcanza para uno cada uno, sobran todos"`}
+  pistas={[
+    "Repartí 10 caramelos entre 3 chicos en la cabeza. ¿Cuántos le tocan a cada uno y cuántos te quedan en la mano?",
+    "La división normal de 10 entre 3 da 3.5, pero no podés dar medio caramelo. ¿Cuál de los operadores te da solo la parte entera, y cuál te da lo que sobra?",
+  ]}
+>
+`repartir` reparte `caramelos` en partes iguales entre `chicos`, y devuelve una tupla con **cuántos le
+tocan a cada uno** y **cuántos sobran**.
+
+`repartir(10, 3)` → `(3, 1)`: tres para cada uno, sobra uno.
+</EjercicioPython>
+
+---
+
+Siguiente: `input()` y la entrada de datos — ojo que esa clase se practica en VS Code, porque acá el
+navegador no tiene teclado para el programa. Mientras tanto, en estos ejercicios los datos entran
+**por parámetro**, que es la forma que vas a usar el resto del curso.

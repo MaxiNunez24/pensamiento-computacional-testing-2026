@@ -1,0 +1,154 @@
+---
+title: La función print()
+description: "Lo primero que hace todo programa: mostrar algo. Comillas, comas, saltos de línea y los errores clásicos."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/02_variables_y_tipos/funcion_print/" />
+
+## El problema
+
+Una computadora puede hacer millones de cuentas por segundo. Pero si no te **muestra** el resultado,
+es como si no hubiera hecho nada: el número queda adentro de la máquina y se pierde.
+
+`print()` es la forma de decirle *"esto, mostrámelo"*.
+
+```python
+print("Hola mundo")
+```
+
+## Comillas: texto vs. otra cosa
+
+Esta es la primera trampa del lenguaje.
+
+```python
+print("Hola")    # muestra: Hola
+print(Hola)      # 💥 error: NameError
+```
+
+Con comillas, `"Hola"` es un **texto** (un *string*). Sin comillas, Python cree que `Hola` es el
+**nombre de algo** que vos definiste antes — y como no existe, se queja.
+
+Sirven las comillas dobles `"` o simples `'`, mientras abras y cierres con la misma.
+
+<EjercicioPython
+  titulo="Tu primer mensaje"
+  dificultad="🌱"
+  starter={`def saludo():\n    return "Hola"`}
+  tests={`assert saludo() == "Hola mundo", f'esperaba "Hola mundo" y devolviste {saludo()!r}'`}
+>
+Cambiá el texto para que `saludo()` devuelva exactamente `Hola mundo`.
+
+Ojo con las mayúsculas y el espacio: el test compara **caracter por caracter**.
+</EjercicioPython>
+
+## Mostrar varias cosas juntas
+
+`print()` acepta varias cosas separadas por **comas**, y las muestra con un espacio en el medio:
+
+```python
+print("Tengo", 30, "años")   # Tengo 30 años
+```
+
+Fijate que `30` va **sin comillas**: es un número, no un texto. `print()` se banca ambos.
+
+:::caution[La coma no es lo mismo que el `+`]
+```python
+print("Tengo", 30)     # ✅ Tengo 30
+print("Tengo" + 30)    # 💥 TypeError: no podés sumar texto con número
+```
+La coma **junta cosas para mostrarlas**. El `+` intenta **sumarlas**, y sumar un texto con un número
+no significa nada.
+:::
+
+<EjercicioPython
+  titulo="Una ficha de datos"
+  dificultad="🌱"
+  starter={`def ficha(nombre, edad):\n    pass`}
+  tests={`assert ficha("Ana", 30) == "Ana tiene 30 años", f'con ("Ana", 30) devolviste {ficha("Ana", 30)!r}'\nassert ficha("Beto", 7) == "Beto tiene 7 años", f'con ("Beto", 7) devolviste {ficha("Beto", 7)!r}'`}
+  pistas={[
+    "Escribí a mano el resultado para Ana: <code>Ana tiene 30 años</code>. ¿Qué partes cambian según quién sea, y qué partes son siempre iguales?",
+    "¿Cómo meterías el valor de una variable <em>adentro</em> de un texto que ya escribiste, sin cortarlo en pedazos?",
+  ]}
+>
+Completá `ficha` para que devuelva una frase como `Ana tiene 30 años`.
+
+`ficha("Beto", 7)` tiene que dar `Beto tiene 7 años`.
+</EjercicioPython>
+
+## f-strings: meter valores adentro del texto
+
+Cuando el texto y los datos se mezclan mucho, las comas se vuelven incómodas. Para eso están las
+**f-strings**: una `f` antes de la comilla, y las variables entre llaves `{}`.
+
+```python
+nombre = "Ana"
+edad = 30
+
+print(f"{nombre} tiene {edad} años")   # Ana tiene 30 años
+```
+
+Se lee de corrido, que es justamente la gracia.
+
+:::note[Si te olvidás la `f`]
+```python
+print("{nombre} tiene {edad} años")   # {nombre} tiene {edad} años
+```
+Sin la `f`, las llaves son texto común y salen tal cual. Es un error silencioso: no rompe, solo
+muestra cualquier cosa. Si ves llaves en tu salida, fijate la `f`.
+:::
+
+## Saltos de línea
+
+Cada `print()` termina con un salto de línea. Si querés uno en el medio, usás `\n`:
+
+```python
+print("Primera línea\nSegunda línea")
+```
+
+Y si NO querés el salto al final, `end=""`:
+
+```python
+print("Hola, ", end="")
+print("mundo")            # Hola, mundo  (en una sola línea)
+```
+
+<EjercicioPython
+  titulo="Un cartel de tres líneas"
+  dificultad="🌿"
+  starter={`def cartel(titulo):\n    pass`}
+  tests={`esperado = "===\\nOFERTA\\n==="\nassert cartel("OFERTA") == esperado, f'con "OFERTA" devolviste {cartel("OFERTA")!r} y esperaba {esperado!r}'\nassert cartel("HOLA") == "===\\nHOLA\\n===", f'con "HOLA" devolviste {cartel("HOLA")!r}'`}
+  pistas={[
+    "Escribí en papel las tres líneas que tienen que salir. ¿Qué caracter separa una línea de la siguiente cuando todo va en un solo texto?",
+    "Las líneas de arriba y abajo son siempre iguales sin importar el título. ¿Qué parte del texto depende del parámetro y cuál no?",
+  ]}
+>
+Completá `cartel` para que devuelva el título entre dos líneas de `===`.
+
+`cartel("OFERTA")` tiene que devolver un texto que, al imprimirlo, se vea así:
+
+```
+===
+OFERTA
+===
+```
+</EjercicioPython>
+
+## Los tres errores que vas a cometer
+
+| Error | Qué pasó |
+|-------|----------|
+| `NameError: name 'Hola' is not defined` | Te faltaron las comillas: Python creyó que era el nombre de algo. |
+| `SyntaxError: unterminated string literal` | Abriste una comilla y no la cerraste. |
+| `TypeError: can only concatenate str` | Usaste `+` entre texto y número. Probá con coma o f-string. |
+
+:::tip[Leé el error de abajo para arriba]
+Python te dice **el tipo de error** en la última línea y **en qué línea** de tu código pasó. Con esas
+dos cosas ya sabés dónde mirar. No hace falta entender todo el bloque.
+:::
+
+---
+
+Siguiente: [Variables y tipos de datos](../variables/) — dónde guardar los valores para no repetirlos.

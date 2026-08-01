@@ -21,6 +21,11 @@ import { runPython, ensureWorker, pythonReady, TimeoutError, RUN_TIMEOUT_MS } fr
 // Casilla a la que el alumno manda su código (un solo lugar para cambiarla).
 const EMAIL_PROFE = 'maxinunez434@gmail.com';
 
+// Worker de Cloudflare que publica la consulta en #Consultas de Discord.
+// Vacío = todavía no está montado, y el botón usa el mailto: de siempre.
+// Pasos para levantarlo: worker/README.md
+const WORKER_CONSULTAS = '';
+
 // Theme propio: fija tipografía e interlineado del editor con alta especificidad,
 // para que los estilos de Starlight no desfasen las líneas ni el cursor. El
 // line-height va en .cm-content/.cm-gutters (lo que CodeMirror mide por línea).
@@ -294,12 +299,52 @@ function initEjercicio(el: HTMLElement): void {
       `--- mi código ---\n` +
       `${getCode()}\n`;
     ultimoMensaje = `Para: ${EMAIL_PROFE}\nAsunto: ${asunto}\n\n${cuerpo}`;
-    const mailto =
-      `mailto:${EMAIL_PROFE}` +
-      `?subject=${encodeURIComponent(asunto)}` +
-      `&body=${encodeURIComponent(cuerpo)}`;
-    window.location.href = mailto;
-    if (cajaEnvio) cajaEnvio.hidden = false;
+
+    const porMail = () => {
+      const mailto =
+        `mailto:${EMAIL_PROFE}` +
+        `?subject=${encodeURIComponent(asunto)}` +
+        `&body=${encodeURIComponent(cuerpo)}`;
+      window.location.href = mailto;
+      if (cajaEnvio) cajaEnvio.hidden = false;
+    };
+
+    // Camino preferido: un click y la consulta aparece en #Consultas. No exige
+    // que el alumno tenga cliente de correo ni que entre a Discord a pegar nada.
+    if (!WORKER_CONSULTAS) {
+      porMail();
+      return;
+    }
+
+    const original = btnEnviar.textContent;
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = '⏳ Enviando…';
+    void (async () => {
+      try {
+        const r = await fetch(WORKER_CONSULTAS, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre,
+            consulta,
+            codigo: getCode(),
+            ejercicio: titulo,
+            leccion: document.title,
+            url: location.href,
+          }),
+        });
+        if (!r.ok) throw new Error(String(r.status));
+        btnEnviar.textContent = '✓ ¡Enviado! El profe lo ve en Discord';
+      } catch {
+        // Si el Worker está caído o sin internet, el alumno no queda a pie:
+        // cae al mail de siempre, con el botón de copiar como última red.
+        btnEnviar.textContent = '✉️ Enviar a mi profe';
+        porMail();
+      } finally {
+        btnEnviar.disabled = false;
+        setTimeout(() => { btnEnviar.textContent = original; }, 5000);
+      }
+    })();
   });
 
   const btnCopiar = el.querySelector<HTMLButtonElement>('[data-copiar-envio]');
