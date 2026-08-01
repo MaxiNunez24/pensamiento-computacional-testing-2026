@@ -325,6 +325,18 @@ body.pc-resizing * {
   background: var(--sl-color-gray-6);
   color: var(--sl-color-white);
   transition: filter 0.15s ease;
+  /* Altura pareja entre todos los botones. Sin esto, los que arrancan con un
+     símbolo (▶ Ejecutar, ↺ Reiniciar, ✉️ Enviar) lo resuelven con la fuente de
+     emojis, que tiene métricas más altas que la del texto e infla la caja de
+     línea: quedan más altos que el resto de la fila. Fijando line-height y
+     alineando el contenido, la altura la manda el padding y no la tipografía
+     que le toque a cada glifo. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  line-height: 1.3;
+  min-height: 2.25rem;
 }
 .ejercicio__btn:hover:not(:disabled) { filter: brightness(1.15); }
 .ejercicio__btn:disabled { opacity: 0.55; cursor: progress; }
@@ -645,7 +657,13 @@ body.pc-resizing * {
 }
 
 .ejercicio__tecla {
+  /* Mismo criterio que los botones de acción: los glifos de indentar (⇥ ⇤) no
+     salen de la misma fuente que ':' o '(', así que sin line-height fijo y sin
+     centrar el contenido quedaban más altos que las otras teclas. */
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   /* 2.75rem ≈ 44px: el mínimo recomendado para tocar con el dedo sin errarle. */
   min-width: 2.75rem;
   min-height: 2.75rem;

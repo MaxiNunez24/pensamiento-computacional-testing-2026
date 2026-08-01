@@ -34,11 +34,18 @@ export default defineConfig({
       // vienen de fábrica con Starlight.
       sidebar: [
         { label: '🏠 Inicio', link: '/' },
+        { label: '👋 Cómo usar esta plataforma', link: '/clases/como-usar-esto/' },
         {
-          label: '📚 Clases (demo)',
-          collapsed: true,
+          label: '🌱 Bloque 1 — Fundamentos',
           items: [
+            { label: '🖨️ La función print()', link: '/clases/print/' },
+            { label: '📊 Variables y tipos', link: '/clases/variables/' },
             { label: '📋 Listas', link: '/clases/listas/' },
+          ],
+        },
+        {
+          label: '🌿 Bloque 2 — Colecciones y funciones',
+          items: [
             { label: '🗝️ Sets', link: '/clases/sets/' },
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
           ],

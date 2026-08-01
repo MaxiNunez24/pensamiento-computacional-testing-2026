@@ -1,0 +1,114 @@
+---
+title: Cómo usar esta plataforma
+description: Guía de dos minutos para resolver tu primer ejercicio. Sin instalar nada, desde la compu o el celular.
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+
+Acá vas a poder **escribir y ejecutar Python de verdad**, sin instalar nada. Funciona en la compu del
+CFP, en la tuya y en el celular. Esta página te enseña a usarla; te toma dos minutos y después no la
+necesitás más.
+
+:::tip[¿Por qué existe esto?]
+Para que puedas practicar **en cualquier lado**. Hasta ahora, si querías seguir un ejercicio en casa,
+tenías que tener Python instalado y el archivo a mano. Acá abrís el link y seguís donde ibas: **tu
+código se guarda solo** en el navegador.
+:::
+
+## 1. El recuadro negro es tu editor
+
+Escribís ahí adentro como en cualquier editor de código. Abajo tenés los botones.
+
+## 2. Dos botones distintos: ▶ Ejecutar y ✓ Verificar
+
+Esta es **la** cosa importante de esta página:
+
+| Botón | Qué hace |
+|-------|----------|
+| **▶ Ejecutar** | Corre tu código y te muestra lo que imprime. Sirve para **probar y mirar**. |
+| **✓ Verificar** | Corre tu código contra los **tests** del ejercicio y te dice si está bien. |
+
+Podés tocar **▶ Ejecutar** las veces que quieras para ir viendo qué pasa. Cuando creas que está listo,
+tocás **✓ Verificar**.
+
+:::note[La primera vez tarda]
+Python se descarga la primera vez (unos 10 MB) y después queda guardado. Si estás con datos del
+celular, mejor esperá a tener WiFi. De ahí en más arranca al instante.
+:::
+
+## 3. Probalo
+
+Nada que resolver todavía: el código ya está escrito. **Tocá ▶ Ejecutar** y mirá qué aparece abajo.
+Después cambiá el nombre por el tuyo y ejecutá otra vez.
+
+<EjercicioPython
+  titulo="Tu primer Ejecutar"
+  dificultad="🌱"
+  starter={`print("Hola, me llamo Ana")`}
+  tests={`assert True`}
+>
+Tocá **▶ Ejecutar**. Después cambiá `Ana` por tu nombre y ejecutá de nuevo.
+
+Este ejercicio no tiene tests de verdad: es solo para que veas cómo se siente.
+</EjercicioPython>
+
+## 4. Ahora uno que se corrige solo
+
+Este sí tiene tests. Tenés que completar el código para que la función devuelva el doble del número
+que recibe.
+
+Fijate en dos cosas del recuadro:
+
+- **`pass`** es un marcador de lugar: una línea que no hace nada, puesta para que el código sea válido
+  mientras todavía no lo escribiste. **Borrala** y poné tu solución.
+- Si tocás **✓ Verificar** sin hacer nada, el test falla y te dice qué esperaba. **Eso está bien**:
+  el mensaje de error es información, no un reto.
+
+<EjercicioPython
+  titulo="El doble"
+  dificultad="🌱"
+  starter={`def doble(numero):\n    pass`}
+  tests={`assert doble(2) == 4, "doble(2) debería dar 4"\nassert doble(10) == 20, "doble(10) debería dar 20"\nassert doble(0) == 0, "doble(0) debería dar 0"`}
+  pistas={[
+    "Si tenés que devolver el doble de 5, ¿qué cuenta hacés en la cabeza? Escribí esa misma cuenta.",
+    "¿La función tiene que <em>mostrar</em> el resultado en pantalla, o <em>devolverlo</em> para que el test lo pueda comparar?",
+  ]}
+>
+Completá `doble` para que devuelva el doble del número que recibe.
+
+Por ejemplo: `doble(2)` tiene que dar `4`.
+</EjercicioPython>
+
+## 5. Si te trabás: las pistas
+
+Cada ejercicio tiene un desplegable **💡 Pistas**. No te van a dar el código: son **preguntas** para
+que puedas destrabarte solo. Si contestás la pregunta, casi siempre sale el ejercicio.
+
+Usalas sin culpa. Trabarse es parte de programar; quedarse trabado media hora en silencio, no.
+
+## 6. Los botones de símbolos ⌨️
+
+En el celular (y en la compu si tocás **⌨️ Símbolos**) aparece una barra con `: _ ( ) [ ] " = < >` y
+las flechas de indentar. Están ahí porque esos caracteres son un dolor de encontrar en el teclado del
+teléfono, o si te tocó un teclado con distribución rara.
+
+## 7. ↺ Reiniciar y el guardado
+
+- Tu código **se guarda solo**. Si cerrás la página y volvés mañana, sigue ahí.
+- **↺ Reiniciar** vuelve el ejercicio a como estaba al principio. Sirve si quedaste enredado y querés
+  empezar de cero.
+- Cuando un ejercicio pasa los tests, le queda un sello **✓ Resuelto**.
+
+## 8. ✉️ Enviar a mi profe
+
+Si un ejercicio no te sale y querés preguntar, tocá **✉️ Enviar a mi profe**. Te va a pedir tu nombre
+(una sola vez) y te deja escribir **qué no te sale o qué error te aparece**. Manda eso junto con tu
+código.
+
+:::tip[Escribí la consulta, aunque sea corta]
+"No me sale" me obliga a adivinar. "Me tira `NameError` y no entiendo qué es" me deja ayudarte de una.
+:::
+
+---
+
+Listo, eso es todo. 🎉 Arrancá por la primera clase en el menú de la izquierda.

@@ -61,7 +61,19 @@ La **consigna en Markdown** va acá adentro, con ejemplo de entrada/salida.
 - **`tests`**: son `assert` de Python. Ponéles **mensaje** (`assert ..., "qué esperaba"`) porque es
   lo que ve el alumno al fallar. Cubrí varios casos, incluyendo bordes (0, listas vacías, negativos).
 - **`starter`**: el esqueleto mínimo (firma + comentario), nunca la solución.
-- **`pistas`**: guían el pensamiento (preguntas/analogías). Aceptan HTML simple. No des el código.
+- **`pistas`**: **REGLA (1/8/2026): una pista es siempre una PREGUNTA.** No una indicación, no un
+  recordatorio de sintaxis, no media solución. Una pregunta que el alumno pueda contestarse y que, al
+  contestarla, lo deje más cerca de entender el problema o de armar la lógica. Aceptan HTML simple.
+
+  | ❌ No | ✅ Sí |
+  |------|------|
+  | Usá `return`, no `print`. | ¿Qué necesitás: **ver** el resultado en pantalla, o **usarlo** en otra cuenta después? |
+  | Recorré la lista con un `for`. | ¿Cuántas veces vas a tener que mirar la lista para saber el total? |
+  | Acordate de inicializar el acumulador en 0. | Antes de sumar el primer número, ¿cuánto llevás sumado? |
+  | Probá una f-string. | ¿Cómo harías para meter el nombre **adentro** del texto que ya escribiste? |
+
+  El criterio para revisar una pista: si contestarla no le enseña nada y solo le ahorra tipear, es una
+  indicación disfrazada de pregunta. Reescribila apuntando al **por qué**, no al **qué**.
 - **`solucion`**: opcional, detrás de un `<details>`. Mejor que el alumno llegue por los tests.
 - El nombre de la función/variable que piden los tests debe coincidir con el de la consigna.
 
