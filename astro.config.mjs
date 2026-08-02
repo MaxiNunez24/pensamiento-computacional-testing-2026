@@ -25,6 +25,9 @@ export default defineConfig({
       locales: {
         root: { label: 'Español', lang: 'es' },
       },
+      // El mismo favicon que el sitio de teoría: son dos mitades de un curso,
+      // no dos sitios. Sin esto Starlight busca /favicon.svg y da 404.
+      favicon: '/favicon.ico',
       customCss: ['./src/styles/custom.css'],
       // Script propio: sidebars redimensionables (se sirve desde /public).
       // Ojo: la ruta lleva el `base` adelante. Si se deja "/sidebars-resizable.js"
