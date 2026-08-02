@@ -54,29 +54,28 @@ Este ejercicio no tiene tests de verdad: es solo para que veas cómo se siente.
 
 ## 4. Ahora uno que se corrige solo
 
-Este sí tiene tests. Tenés que completar el código para que la función devuelva el doble del número
-que recibe.
+Este sí tiene tests. Tenés que escribir un programa que muestre el doble de un número.
 
-Fijate en dos cosas del recuadro:
+Una cosa importante del recuadro: **la variable `numero` ya existe**, te la da el ejercicio. Vos no
+la definís, solo la usás.
 
-- **`pass`** es un marcador de lugar: una línea que no hace nada, puesta para que el código sea válido
-  mientras todavía no lo escribiste. **Borrala** y poné tu solución.
-- Si tocás **✓ Verificar** sin hacer nada, el test falla y te dice qué esperaba. **Eso está bien**:
-  el mensaje de error es información, no un reto.
+Y si tocás **✓ Verificar** sin hacer nada, el test falla y te dice qué esperaba. **Eso está bien**: el
+mensaje de error es información, no un reto.
 
 <EjercicioPython
   titulo="El doble"
   dificultad="🌱"
-  starter={`def doble(numero):\n    pass`}
-  tests={`assert doble(2) == 4, "doble(2) debería dar 4"\nassert doble(10) == 20, "doble(10) debería dar 20"\nassert doble(0) == 0, "doble(0) debería dar 0"`}
+  datos={`numero = 5`}
+  starter={`# La variable 'numero' ya tiene un valor.\n# Mostrá su doble con print().\n`}
+  tests={`assert correr(numero=5).strip() == "10", f"con numero = 5 imprimiste {correr(numero=5).strip()!r}, esperaba 10"\nassert correr(numero=2).strip() == "4", "con numero = 2 tendría que salir 4"\nassert correr(numero=0).strip() == "0", "con numero = 0 tendría que salir 0"`}
   pistas={[
-    "Si tenés que devolver el doble de 5, ¿qué cuenta hacés en la cabeza? Escribí esa misma cuenta.",
-    "¿La función tiene que <em>mostrar</em> el resultado en pantalla, o <em>devolverlo</em> para que el test lo pueda comparar?",
+    "Si te dicen que el número es 5 y te piden el doble, ¿qué cuenta hacés en la cabeza? Escribí esa misma cuenta usando <code>numero</code> en lugar del 5.",
+    "El test mira lo que tu programa <em>imprime</em>. ¿Con qué instrucción se muestra algo en pantalla?",
   ]}
 >
-Completá `doble` para que devuelva el doble del número que recibe.
+Mostrá con `print()` el **doble** de `numero`.
 
-Por ejemplo: `doble(2)` tiene que dar `4`.
+Si `numero` vale 5, tiene que aparecer `10`.
 </EjercicioPython>
 
 ## 5. Si te trabás: las pistas

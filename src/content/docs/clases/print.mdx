@@ -36,10 +36,10 @@ Sirven las comillas dobles `"` o simples `'`, mientras abras y cierres con la mi
 <EjercicioPython
   titulo="Tu primer mensaje"
   dificultad="🌱"
-  starter={`def saludo():\n    return "Hola"`}
-  tests={`assert saludo() == "Hola mundo", f'esperaba "Hola mundo" y devolviste {saludo()!r}'`}
+  starter={`print("Hola")`}
+  tests={`assert salida.strip() == "Hola mundo", f'tu programa imprimió {salida.strip()!r} y esperaba "Hola mundo"'`}
 >
-Cambiá el texto para que `saludo()` devuelva exactamente `Hola mundo`.
+Cambiá el texto para que el programa imprima exactamente `Hola mundo`.
 
 Ojo con las mayúsculas y el espacio: el test compara **caracter por caracter**.
 </EjercicioPython>
@@ -66,16 +66,18 @@ no significa nada.
 <EjercicioPython
   titulo="Una ficha de datos"
   dificultad="🌱"
-  starter={`def ficha(nombre, edad):\n    pass`}
-  tests={`assert ficha("Ana", 30) == "Ana tiene 30 años", f'con ("Ana", 30) devolviste {ficha("Ana", 30)!r}'\nassert ficha("Beto", 7) == "Beto tiene 7 años", f'con ("Beto", 7) devolviste {ficha("Beto", 7)!r}'`}
+  datos={`nombre = "Ana"\nedad = 30`}
+  starter={`# 'nombre' y 'edad' ya tienen valor. Mostrá la frase con print().\n`}
+  tests={`assert correr(nombre="Ana", edad=30).strip() == "Ana tiene 30 años", f'imprimiste {correr(nombre="Ana", edad=30).strip()!r}'\nassert correr(nombre="Beto", edad=7).strip() == "Beto tiene 7 años", "probá cambiando los valores: la frase tiene que acompañar"`}
   pistas={[
     "Escribí a mano el resultado para Ana: <code>Ana tiene 30 años</code>. ¿Qué partes cambian según quién sea, y qué partes son siempre iguales?",
     "¿Cómo meterías el valor de una variable <em>adentro</em> de un texto que ya escribiste, sin cortarlo en pedazos?",
   ]}
 >
-Completá `ficha` para que devuelva una frase como `Ana tiene 30 años`.
+Mostrá una frase como `Ana tiene 30 años`, usando las variables `nombre` y `edad`.
 
-`ficha("Beto", 7)` tiene que dar `Beto tiene 7 años`.
+El test también prueba con `Beto` y `7`, así que la frase tiene que armarse **a partir de las
+variables**, no estar escrita a mano.
 </EjercicioPython>
 
 ## f-strings: meter valores adentro del texto
@@ -118,16 +120,17 @@ print("mundo")            # Hola, mundo  (en una sola línea)
 <EjercicioPython
   titulo="Un cartel de tres líneas"
   dificultad="🌿"
-  starter={`def cartel(titulo):\n    pass`}
-  tests={`esperado = "===\\nOFERTA\\n==="\nassert cartel("OFERTA") == esperado, f'con "OFERTA" devolviste {cartel("OFERTA")!r} y esperaba {esperado!r}'\nassert cartel("HOLA") == "===\\nHOLA\\n===", f'con "HOLA" devolviste {cartel("HOLA")!r}'`}
+  datos={`titulo = "OFERTA"`}
+  starter={`# 'titulo' ya tiene valor. Mostrá el cartel de tres líneas.\n`}
+  tests={`assert correr(titulo="OFERTA").strip() == "===\\nOFERTA\\n===", f'imprimiste {correr(titulo="OFERTA").strip()!r}'\nassert correr(titulo="HOLA").strip() == "===\\nHOLA\\n===", "con otro título el cartel tiene que acompañar"`}
   pistas={[
     "Escribí en papel las tres líneas que tienen que salir. ¿Qué caracter separa una línea de la siguiente cuando todo va en un solo texto?",
     "Las líneas de arriba y abajo son siempre iguales sin importar el título. ¿Qué parte del texto depende del parámetro y cuál no?",
   ]}
 >
-Completá `cartel` para que devuelva el título entre dos líneas de `===`.
+Mostrá el `titulo` entre dos líneas de `===`.
 
-`cartel("OFERTA")` tiene que devolver un texto que, al imprimirlo, se vea así:
+Con `titulo = "OFERTA"` tiene que verse así:
 
 ```
 ===

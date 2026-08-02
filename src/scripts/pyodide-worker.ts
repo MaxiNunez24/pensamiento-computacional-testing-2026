@@ -19,7 +19,7 @@ import sys, io, traceback, json, linecache, importlib, os
 if "." not in sys.path:
     sys.path.insert(0, ".")
 
-def _run_user(code, tests="", archivo=""):
+def _run_user(code, tests="", archivo="", datos=""):
     # Registramos el código en linecache para que el traceback pueda mostrar
     # la línea EXACTA que falló (sin esto, al venir de un string, queda en blanco).
     linecache.cache["tu_codigo"] = (len(code), None, code.splitlines(keepends=True), "tu_codigo")
@@ -45,11 +45,44 @@ def _run_user(code, tests="", archivo=""):
     ok = True
     err = ""
     try:
+        # 'datos' son las variables que el ejercicio le REGALA al alumno (por
+        # ejemplo, una edad ya cargada). Se ejecutan antes que su código, así el
+        # botón Ejecutar funciona sin que él tenga que definirlas.
+        if datos:
+            exec(compile(datos, "los_datos", "exec"), ns)
         if archivo:
             importlib.import_module(mod_name)   # valida que el archivo del alumno cargue bien
         else:
             exec(compile(code, "tu_codigo", "exec"), ns)
         if tests:
+            # --- Modo "programa" (sin funciones) -------------------------------
+            # Hasta que el curso llegue a Funciones, los ejercicios no pueden
+            # pedir 'def'. Para poder verificarlos igual, los tests reciben:
+            #
+            #   salida            -> lo que el programa imprimió (string)
+            #   correr(**vars)    -> vuelve a correr el código del alumno con
+            #                        otras variables ya definidas, y devuelve
+            #                        lo que imprimió esta vez
+            #
+            # Con 'correr' un mismo programa se puede probar con varias entradas
+            # sin que el alumno tenga que escribir una función.
+            ns["salida"] = buf.getvalue()
+
+            def _correr(**variables):
+                _ns = {}
+                if datos:
+                    exec(compile(datos, "los_datos", "exec"), _ns)
+                _ns.update(variables)   # lo que pide el test pisa al valor regalado
+                _buf = io.StringIO()
+                _old = sys.stdout
+                sys.stdout = _buf
+                try:
+                    exec(compile(code, "tu_codigo", "exec"), _ns)
+                finally:
+                    sys.stdout = _old
+                return _buf.getvalue()
+
+            ns["correr"] = _correr
             exec(compile(tests, "los_tests", "exec"), ns)
     except SyntaxError as e:
         ok = False
@@ -84,7 +117,7 @@ def _run_user(code, tests="", archivo=""):
     return json.dumps({"ok": ok, "out": buf.getvalue(), "err": err})
 `;
 
-type RunUserFn = (code: string, tests: string, archivo: string) => string;
+type RunUserFn = (code: string, tests: string, archivo: string, datos: string) => string;
 
 let runUser: RunUserFn | null = null;
 
@@ -102,14 +135,14 @@ const initPromise = init().catch((e) => {
 });
 
 self.onmessage = async (
-  ev: MessageEvent<{ id: number; code: string; tests: string; archivo?: string }>,
+  ev: MessageEvent<{ id: number; code: string; tests: string; archivo?: string; datos?: string }>,
 ) => {
-  const { id, code, tests, archivo } = ev.data;
+  const { id, code, tests, archivo, datos } = ev.data;
   await initPromise;
   if (!runUser) return; // ya se reportó init-error
   let raw: string;
   try {
-    raw = runUser(code, tests, archivo || '');
+    raw = runUser(code, tests, archivo || '', datos || '');
   } catch (e) {
     raw = JSON.stringify({ ok: false, out: '', err: String(e) });
   }

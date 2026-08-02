@@ -62,7 +62,12 @@ export function ensureWorker(): Promise<void> {
   return readyPromise;
 }
 
-export async function runPython(code: string, tests: string, archivo = ''): Promise<RunResult> {
+export async function runPython(
+  code: string,
+  tests: string,
+  archivo = '',
+  datos = '',
+): Promise<RunResult> {
   await ensureWorker();
   const id = nextId++;
   const raw = await new Promise<string>((resolve, reject) => {
@@ -83,7 +88,7 @@ export async function runPython(code: string, tests: string, archivo = ''): Prom
         reject(e);
       },
     });
-    worker!.postMessage({ id, code, tests, archivo });
+    worker!.postMessage({ id, code, tests, archivo, datos });
   });
   return JSON.parse(raw) as RunResult;
 }

@@ -163,6 +163,7 @@ function initEjercicio(el: HTMLElement): void {
   const starter = b64decode(el.dataset.starter || '');
   const tests = b64decode(el.dataset.tests || '');
   const archivo = el.dataset.archivo || '';
+  const datos = b64decode(el.dataset.datos || '');
   const titulo = el.dataset.titulo || '';
 
   const editorEl = el.querySelector<HTMLElement>('[data-editor]');
@@ -224,7 +225,7 @@ function initEjercicio(el: HTMLElement): void {
       'is-loading',
     );
     try {
-      const res = await runPython(getCode(), conTests ? tests : '', archivo);
+      const res = await runPython(getCode(), conTests ? tests : '', archivo, datos);
       const out = res.out.trimEnd();
       if (!conTests) {
         // Botón "Ejecutar": solo muestra lo que imprime el código.
