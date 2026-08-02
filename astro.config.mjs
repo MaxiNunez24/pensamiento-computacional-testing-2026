@@ -13,6 +13,11 @@ const base = '/pensamiento-computacional-testing-2026/ejercicios';
 export default defineConfig({
   site: 'https://maxinunez24.github.io',
   base,
+  // gfm explícito: Astro 6.4 lo dejó como `undefined` al deprecarlo, y
+  // @astrojs/mdx 5.0 hace {...defaults, ...markdownConfig} — ese undefined pisa
+  // el default y GFM queda APAGADO solo para .mdx. Como todo el contenido es
+  // .mdx, sin esta línea ninguna tabla se renderiza (salen los pipes crudos).
+  markdown: { gfm: true },
   integrations: [
     starlight({
       title: 'Pensamiento Computacional 2026',
