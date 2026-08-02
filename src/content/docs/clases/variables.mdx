@@ -178,6 +178,193 @@ Repartí `caramelos` en partes iguales entre `chicos` y mostrá el resultado con
 ```
 </EjercicioPython>
 
+## Operaciones con textos
+
+Los strings traen un montón de herramientas incorporadas. Estas son las que más vas a usar:
+
+```python
+frase = "  Hola Mundo  "
+
+len(frase)              # 14   cuántos caracteres tiene (los espacios cuentan)
+frase.strip()           # "Hola Mundo"     saca los espacios de los bordes
+frase.upper()           # "  HOLA MUNDO  " todo en mayúsculas
+frase.lower()           # "  hola mundo  " todo en minúsculas
+frase.count("o")        # 2    cuántas veces aparece
+frase.replace("o", "0") # "  H0la Mund0  "
+```
+
+:::caution[Los métodos NO modifican el original]
+```python
+nombre = "ana"
+nombre.upper()
+print(nombre)      # ana  ← ¡sigue igual!
+
+nombre = nombre.upper()
+print(nombre)      # ANA  ← ahora sí
+```
+Los strings son **inmutables**: `upper()` no cambia el texto, **devuelve uno nuevo**. Si no lo
+guardás, se pierde. Es de los errores más comunes al empezar.
+:::
+
+### Partir y juntar
+
+```python
+dias = "lunes,martes,miércoles"
+dias.split(",")            # ['lunes', 'martes', 'miércoles']   texto → lista
+
+palabras = ["Python", "es", "genial"]
+" ".join(palabras)         # "Python es genial"                 lista → texto
+```
+
+`split` y `join` son opuestos, y van a aparecer todo el tiempo cuando leamos archivos.
+
+:::note[El `join` se lee al revés de lo que parece]
+Se escribe `separador.join(lista)`, no `lista.join(separador)`. El separador va adelante porque es
+**él** el que se mete entre los elementos.
+:::
+
+### Preguntarle cosas a un texto
+
+```python
+frase = "Python es genial"
+
+frase.startswith("Py")     # True    ¿empieza con...?
+frase.endswith("al")       # True    ¿termina con...?
+"es" in frase              # True    ¿está adentro?
+```
+
+
+
+## Más práctica
+
+<EjercicioPython
+  titulo="El tipo de cada dato"
+  dificultad="🌱"
+  datos={`nombre = "Maxi"\nedad = 22\naltura = 1.81\nes_estudiante = True`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr().strip().splitlines()[-4:]\nassert r == ["str", "int", "float", "bool"], f"esperaba str/int/float/bool y salió {r!r}"\nr2 = correr(edad=1.5).strip().splitlines()[-3:-2]\nassert r2 == ["float"], "si edad cambia a 1.5, el tipo tiene que decir float: no lo escribas a mano"`}
+  pistas={[
+    "Probá <code>print(type(nombre))</code> tal cual y mirá qué imprime. ¿Es exactamente lo que pide el test?",
+    "<code>type()</code> devuelve algo como <code>&lt;class 'str'&gt;</code>. ¿Cómo sacás de ahí solamente el nombre? Probá con <code>.__name__</code>.",
+  ]}
+>
+Mostrá el **tipo** de cada variable, uno por línea y en este orden: `nombre`, `edad`, `altura`,
+`es_estudiante`.
+
+Tiene que salir así:
+
+```
+str
+int
+float
+bool
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Todas las operaciones"
+  dificultad="🌱"
+  datos={`a = 10\nb = 3`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr(a=10, b=3).strip().splitlines()[-5:]\nassert r == ["13", "7", "30", "3.3333333333333335", "1"], f"salió {r!r}"\nr2 = correr(a=8, b=2).strip().splitlines()[-5:]\nassert r2 == ["10", "6", "16", "4.0", "0"], "con otros números tiene que acompañar"`}
+  pistas={[
+    "Son cinco cuentas distintas sobre los mismos dos números. ¿Cuál de los operadores da el resto?",
+    "Fijate que la división da un número con decimales aunque los dos sean enteros. ¿Qué operador estás usando?",
+  ]}
+>
+Mostrá, una por línea, la **suma**, la **resta**, la **multiplicación**, la **división** y el
+**resto** entre `a` y `b`, en ese orden.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="¿Es par?"
+  dificultad="🌱"
+  datos={`n = 8`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(n=8).strip().splitlines()[-1] == "True", f"con 8 salió {correr(n=8).strip().splitlines()[-1]!r}"\nassert correr(n=7).strip().splitlines()[-1] == "False", "7 no es par"\nassert correr(n=0).strip().splitlines()[-1] == "True", "el 0 es par"\nassert correr(n=-4).strip().splitlines()[-1] == "True", "los negativos también pueden ser pares"`}
+  pistas={[
+    "¿Qué tiene que dar el resto de dividir por 2 para que el número sea par?",
+    "Acá no hace falta ningún <code>if</code>: la comparación <em>ya es</em> True o False. ¿Qué pasa si la imprimís directamente?",
+  ]}
+>
+Mostrá `True` o `False` según si `n` es par. **Sin usar `if`**: la comparación ya vale por sí sola.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Una condición compuesta"
+  dificultad="🌱"
+  datos={`edad = 20\nes_estudiante = True`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(edad=20, es_estudiante=True).strip().splitlines()[-1] == "True", "20 años y estudiante"\nassert correr(edad=20, es_estudiante=False).strip().splitlines()[-1] == "False", "no es estudiante"\nassert correr(edad=17, es_estudiante=True).strip().splitlines()[-1] == "False", "17 no es mayor a 17"\nassert correr(edad=18, es_estudiante=True).strip().splitlines()[-1] == "True", "18 sí es mayor a 17"`}
+  pistas={[
+    "Mirá el test del 17: tiene que dar False. ¿<em>Mayor a 17</em> incluye al 17 o no?",
+    "¿Alcanza con que se cumpla una de las dos condiciones, o hacen falta las dos?",
+  ]}
+>
+Mostrá `True` solo si la edad es **mayor a 17** **y** además es estudiante.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Medir y transformar"
+  dificultad="🌱"
+  datos={`nombre = "Ana Lopez"`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr(nombre="Ana Lopez").strip().splitlines()[-3:]\nassert r == ["9", "ANA LOPEZ", "ana lopez"], f"salió {r!r}"\nr2 = correr(nombre="Tux").strip().splitlines()[-3:]\nassert r2 == ["3", "TUX", "tux"], "con otro nombre tiene que acompañar"`}
+  pistas={[
+    "Los espacios también son caracteres. ¿Los estás contando?",
+    "¿Los métodos que pasan a mayúsculas modifican la variable original, o devuelven un texto nuevo?",
+  ]}
+>
+Mostrá, una por línea: la **cantidad de caracteres** de `nombre`, el nombre en **mayúsculas** y en
+**minúsculas**.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Contar una letra"
+  dificultad="🌱"
+  datos={`frase = "hola mundo maravilloso"\nletra = "o"`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(frase="hola mundo maravilloso", letra="o").strip().splitlines()[-1] == "4", "la o aparece 4 veces"\nassert correr(frase="hola mundo maravilloso", letra="a").strip().splitlines()[-1] == "3", "hay 3 letras a"\nassert correr(frase="abc", letra="z").strip().splitlines()[-1] == "0", "si no aparece, es 0"`}
+  pistas={[
+    "Los strings tienen un método que hace justo esto. ¿Cuál de los que viste cuenta apariciones?",
+  ]}
+>
+Mostrá **cuántas veces** aparece `letra` dentro de `frase`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Separar y unir"
+  dificultad="🌿"
+  datos={`dias = "lunes,martes,miércoles"`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr().strip().splitlines()[-1] == "lunes | martes | miércoles", f"salió {correr().strip().splitlines()[-1]!r}"\nassert correr(dias="a,b").strip().splitlines()[-1] == "a | b", "con otra lista tiene que acompañar"\nassert correr(dias="solo").strip().splitlines()[-1] == "solo", "con un solo día no hay separador"`}
+  pistas={[
+    "Son dos pasos: primero partir el texto por las comas, después volver a unirlo con otro separador.",
+    "El separador va adelante del <code>join</code>, no la lista. ¿Cuál sería el separador exacto acá, contando los espacios?",
+  ]}
+>
+`dias` es un texto con días separados por comas. Mostralo con ` | ` (espacio, barra, espacio) en
+lugar de las comas:
+
+```
+lunes | martes | miércoles
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Empieza y termina"
+  dificultad="🌿"
+  datos={`frase = "Python es genial"`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(frase="Python es genial").strip().splitlines()[-1] == "True", "empieza con Py y termina con al"\nassert correr(frase="Java es genial").strip().splitlines()[-1] == "False", "no empieza con Py"\nassert correr(frase="Python es lindo").strip().splitlines()[-1] == "False", "no termina con al"\nassert correr(frase="Pyal").strip().splitlines()[-1] == "True", "empieza con Py y termina con al"`}
+  pistas={[
+    "Son dos preguntas distintas sobre el mismo texto. ¿Qué método usás para cada punta?",
+    "Los dos tienen que cumplirse a la vez para que dé True. ¿Con qué los unís?",
+  ]}
+>
+Mostrá `True` solo si `frase` **empieza** con `Py` **y** **termina** con `al`.
+</EjercicioPython>
+
 ---
 
 Siguiente: `input()` y la entrada de datos — ojo que esa clase se practica en VS Code, porque acá el
