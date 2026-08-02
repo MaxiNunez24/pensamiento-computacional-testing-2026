@@ -164,6 +164,13 @@ function initEjercicio(el: HTMLElement): void {
   const tests = b64decode(el.dataset.tests || '');
   const archivo = el.dataset.archivo || '';
   const datos = b64decode(el.dataset.datos || '');
+  const cajaEntradas = el.querySelector<HTMLTextAreaElement>('[data-entradas-input]');
+  // Las entradas se leen en cada corrida: si el alumno las edita, la próxima
+  // ejecución ya usa las nuevas.
+  const leerEntradas = (): string[] => {
+    const txt = cajaEntradas ? cajaEntradas.value : b64decode(el.dataset.entradas || '');
+    return txt === '' ? [] : txt.replace(/\n$/, '').split('\n');
+  };
   const titulo = el.dataset.titulo || '';
 
   const editorEl = el.querySelector<HTMLElement>('[data-editor]');
@@ -225,7 +232,7 @@ function initEjercicio(el: HTMLElement): void {
       'is-loading',
     );
     try {
-      const res = await runPython(getCode(), conTests ? tests : '', archivo, datos);
+      const res = await runPython(getCode(), conTests ? tests : '', archivo, datos, leerEntradas());
       const out = res.out.trimEnd();
       if (!conTests) {
         // Botón "Ejecutar": solo muestra lo que imprime el código.

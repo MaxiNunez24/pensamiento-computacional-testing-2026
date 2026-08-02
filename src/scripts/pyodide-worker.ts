@@ -19,7 +19,30 @@ import sys, io, traceback, json, linecache, importlib, os
 if "." not in sys.path:
     sys.path.insert(0, ".")
 
-def _run_user(code, tests="", archivo="", datos=""):
+def _mk_input(cola):
+    """Devuelve un input() que consume respuestas ya cargadas.
+
+    Pyodide corre en un Web Worker y no puede frenarse a esperar que el alumno
+    teclee (haría falta SharedArrayBuffer, que necesita cabeceras que GitHub
+    Pages no deja poner). Así que las respuestas vienen de antemano y este
+    input() las va sacando de la cola.
+
+    El detalle que hace que se sienta real: imprime el prompt SEGUIDO del valor,
+    que es exactamente lo que se ve en una terminal cuando alguien escribe y
+    aprieta Enter.
+    """
+    def _input(prompt=""):
+        if not cola:
+            raise EOFError(
+                "Tu programa pidió más datos de los que hay cargados en 'Entradas'. "
+                "Agregá una línea más ahí abajo, o revisá si te quedó un input() de más."
+            )
+        valor = cola.pop(0)
+        print(str(prompt) + valor)
+        return valor
+    return _input
+
+def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
     # Registramos el código en linecache para que el traceback pueda mostrar
     # la línea EXACTA que falló (sin esto, al venir de un string, queda en blanco).
     linecache.cache["tu_codigo"] = (len(code), None, code.splitlines(keepends=True), "tu_codigo")
@@ -38,6 +61,8 @@ def _run_user(code, tests="", archivo="", datos=""):
         sys.modules.pop(mod_name, None)   # que un re-run tome la versión nueva
         importlib.invalidate_caches()
 
+    _entradas = json.loads(entradas_json) if entradas_json else []
+
     buf = io.StringIO()
     old = sys.stdout
     sys.stdout = buf
@@ -50,6 +75,7 @@ def _run_user(code, tests="", archivo="", datos=""):
         # botón Ejecutar funciona sin que él tenga que definirlas.
         if datos:
             exec(compile(datos, "los_datos", "exec"), ns)
+        ns["input"] = _mk_input(list(_entradas))
         if archivo:
             importlib.import_module(mod_name)   # valida que el archivo del alumno cargue bien
         else:
@@ -68,11 +94,13 @@ def _run_user(code, tests="", archivo="", datos=""):
             # sin que el alumno tenga que escribir una función.
             ns["salida"] = buf.getvalue()
 
-            def _correr(**variables):
+            def _correr(entradas=None, **variables):
                 _ns = {}
                 if datos:
                     exec(compile(datos, "los_datos", "exec"), _ns)
                 _ns.update(variables)   # lo que pide el test pisa al valor regalado
+                # 'entradas' es lo que el alumno "tecleará" en esta corrida.
+                _ns["input"] = _mk_input(list(_entradas if entradas is None else entradas))
                 _buf = io.StringIO()
                 _old = sys.stdout
                 sys.stdout = _buf
@@ -117,7 +145,13 @@ def _run_user(code, tests="", archivo="", datos=""):
     return json.dumps({"ok": ok, "out": buf.getvalue(), "err": err})
 `;
 
-type RunUserFn = (code: string, tests: string, archivo: string, datos: string) => string;
+type RunUserFn = (
+  code: string,
+  tests: string,
+  archivo: string,
+  datos: string,
+  entradasJson: string,
+) => string;
 
 let runUser: RunUserFn | null = null;
 
@@ -135,14 +169,21 @@ const initPromise = init().catch((e) => {
 });
 
 self.onmessage = async (
-  ev: MessageEvent<{ id: number; code: string; tests: string; archivo?: string; datos?: string }>,
+  ev: MessageEvent<{
+    id: number;
+    code: string;
+    tests: string;
+    archivo?: string;
+    datos?: string;
+    entradas?: string[];
+  }>,
 ) => {
-  const { id, code, tests, archivo, datos } = ev.data;
+  const { id, code, tests, archivo, datos, entradas } = ev.data;
   await initPromise;
   if (!runUser) return; // ya se reportó init-error
   let raw: string;
   try {
-    raw = runUser(code, tests, archivo || '', datos || '');
+    raw = runUser(code, tests, archivo || '', datos || '', JSON.stringify(entradas || []));
   } catch (e) {
     raw = JSON.stringify({ ok: false, out: '', err: String(e) });
   }

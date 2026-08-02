@@ -31,9 +31,12 @@ interface Props {
    *  sin funciones: el alumno escribe un programa que usa esas variables, y los
    *  tests lo vuelven a correr con otros valores usando `correr(edad=15)`. */
   datos?: string;
+  /** Respuestas que va a ir devolviendo `input()`, una por línea. Si se setea,
+   *  el ejercicio muestra una caja de "Entradas" que el alumno puede editar. */
+  entradas?: string;
 }
 
-const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '' } = Astro.props;
+const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '' } = Astro.props;
 
 const id = 'ej-' + Math.random().toString(36).slice(2, 9);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
@@ -47,6 +50,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   data-tests={enc(tests)}
   data-archivo={archivo || undefined}
   data-datos={datos ? enc(datos) : undefined}
+  data-entradas={entradas ? enc(entradas) : undefined}
 >
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
@@ -69,6 +73,19 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   </p>
 
   <div class="ejercicio__editor" data-editor></div>
+
+  {entradas && (
+    <div class="ejercicio__entradas">
+      <label>
+        <span>⌨️ Entradas — lo que “escribe” el usuario, una por línea</span>
+        <textarea data-entradas-input rows={Math.min(4, entradas.split('\n').length)}>{entradas}</textarea>
+      </label>
+      <p class="ejercicio__entradas-nota">
+        Tu programa las va tomando con <code>input()</code>, en orden. Podés cambiarlas y volver a
+        ejecutar para probar otros casos.
+      </p>
+    </div>
+  )}
 
   {/* Barra de símbolos para celular: en el teclado del teléfono los caracteres
       de Python viven en la capa secundaria y encontrarlos corta el hilo. Se

@@ -739,3 +739,33 @@ body.pc-resizing * {
 .ejercicio .ejercicio__aviso-datos > * {
   margin-top: 0;
 }
+
+
+/* ---------- Caja de entradas (para los ejercicios con input()) ---------- */
+.ejercicio__entradas {
+  margin-top: 0.6rem;
+}
+.ejercicio__entradas label {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+.ejercicio__entradas textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.45rem;
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+  color: var(--sl-color-white);
+  font-family: var(--__sl-font-mono, ui-monospace, monospace);
+  /* 16px: menos que esto y Safari en iOS zoomea al enfocar (mismo motivo que el editor). */
+  font-size: 1rem;
+  resize: vertical;
+}
+.ejercicio__entradas-nota {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  opacity: 0.7;
+}

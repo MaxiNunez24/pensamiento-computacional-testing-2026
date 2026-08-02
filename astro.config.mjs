@@ -40,6 +40,7 @@ export default defineConfig({
           items: [
             { label: '🖨️ La función print()', link: '/clases/print/' },
             { label: '📊 Variables y tipos', link: '/clases/variables/' },
+            { label: '⌨️ La función input()', link: '/clases/input/' },
             { label: '🔀 Condicionales', link: '/clases/condicionales/' },
             { label: '🔁 Bucles — while y for', link: '/clases/bucles/' },
             { label: '📋 Listas', link: '/clases/listas/' },

@@ -1,0 +1,194 @@
+---
+title: La función input()
+description: "Pedirle datos al usuario: el prompt, por qué todo llega como texto y cuándo convertir."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/02_variables_y_tipos/funcion_input/" />
+
+## El problema
+
+Hasta ahora tus programas hacían siempre lo mismo, porque los datos estaban escritos en el código:
+
+```python
+nombre = "Ana"
+print(f"¡Hola, {nombre}!")
+```
+
+Siempre saluda a Ana. Para que salude a quien lo use, hay que **preguntárselo**.
+
+```python
+nombre = input("¿Cómo te llamás? ")
+print(f"¡Hola, {nombre}!")
+```
+
+`input()` frena el programa, muestra el mensaje, espera a que la persona escriba y apriete Enter, y
+**devuelve lo que escribió**.
+
+:::note[Cómo funciona acá adentro]
+En tu compu, `input()` espera a que teclees. En esta página no hay teclado para el programa, así que
+las respuestas se cargan de antemano en la caja **⌨️ Entradas** que vas a ver abajo del editor: el
+programa las va tomando en orden, una por cada `input()`.
+
+Lo que ves en la salida es idéntico a una terminal de verdad. Y podés **editar esas entradas** para
+probar otros casos, que es justamente lo que hacés cuando ejecutás un programa varias veces.
+:::
+
+## El prompt
+
+El texto que le pasás a `input()` es el **prompt**: lo que la persona lee antes de escribir.
+
+```python
+edad = input("¿Cuántos años tenés? ")
+```
+
+:::tip[Dejá un espacio al final]
+`input("¿Cuántos años tenés? ")` con el espacio se ve así:
+
+```
+¿Cuántos años tenés? 20
+```
+
+Y sin el espacio, así:
+
+```
+¿Cuántos años tenés?20
+```
+
+Es un detalle mínimo que hace que el programa se sienta prolijo.
+:::
+
+<EjercicioPython
+  titulo="Saludar a quien sea"
+  dificultad="🌱"
+  entradas={`Ana`}
+  starter={`# Pedí el nombre y saludá.\n`}
+  tests={`assert correr(entradas=["Ana"]).strip().endswith("¡Hola, Ana!"), f'con Ana la última línea fue {correr(entradas=["Ana"]).strip().splitlines()[-1]!r}'\nassert correr(entradas=["Brandon"]).strip().endswith("¡Hola, Brandon!"), "con otro nombre el saludo tiene que acompañar"`}
+  pistas={[
+    "Son dos pasos: primero conseguir el nombre, después mostrarlo. ¿Dónde guardás lo que devuelve <code>input()</code> para poder usarlo en la línea siguiente?",
+    "El test compara la última línea con <code>¡Hola, Ana!</code> exacto. ¿Estás metiendo el nombre adentro del texto, o lo escribiste a mano?",
+  ]}
+>
+Pedí el nombre con `input()` y mostrá `¡Hola, Ana!` (con el nombre que hayan escrito).
+
+Probá cambiando la caja de **Entradas** por tu nombre y ejecutá de nuevo.
+</EjercicioPython>
+
+## Todo lo que entra, entra como texto
+
+Esta es **la** trampa de `input()`, y te va a morder al menos una vez:
+
+```python
+edad = input("¿Cuántos años tenés? ")   # escribe 20
+print(edad + 1)                          # 💥 TypeError
+```
+
+Aunque la persona escriba `20`, `input()` devuelve **el texto** `"20"`, no el número `20`. Y ya viste
+que texto y número no se mezclan.
+
+Peor todavía, a veces **no falla** y hace algo raro:
+
+```python
+edad = input("Edad: ")     # escribe 20
+print(edad * 3)            # 202020   ← repitió el texto tres veces
+```
+
+No dio error, pero tampoco hizo lo que querías. De esos bugs son los que cuestan encontrar.
+
+La solución es **convertir**:
+
+```python
+edad = int(input("¿Cuántos años tenés? "))     # texto → entero
+precio = float(input("Precio: "))              # texto → decimal
+```
+
+:::caution[¿Dónde va el `int()`?]
+```python
+edad = int(input("Edad: "))     # ✅ convierte lo que devolvió input
+edad = int(input)               # ❌ eso intenta convertir la función misma
+```
+Se lee de adentro hacia afuera: primero corre `input(...)`, y lo que devuelve se lo pasás a `int()`.
+:::
+
+<EjercicioPython
+  titulo="El año que viene"
+  dificultad="🌱"
+  entradas={`20`}
+  starter={`# Pedí la edad y mostrá cuántos años va a cumplir.\n`}
+  tests={`assert correr(entradas=["20"]).strip().endswith("21"), f'con 20 la última línea fue {correr(entradas=["20"]).strip().splitlines()[-1]!r}'\nassert correr(entradas=["7"]).strip().endswith("8"), "con 7 tendría que mostrar 8"\nassert correr(entradas=["0"]).strip().endswith("1"), "con 0 tendría que mostrar 1"`}
+  pistas={[
+    "Probá sumarle 1 a lo que devuelve <code>input()</code> tal cual y mirá qué pasa. ¿Es el error que esperabas?",
+    "<code>input()</code> siempre devuelve texto, aunque la persona escriba un número. ¿Qué le tenés que hacer antes de poder sumarle 1?",
+  ]}
+>
+Pedí la edad y mostrá **cuántos años va a cumplir** (la edad más 1).
+
+Con `20` tiene que terminar mostrando `21`.
+</EjercicioPython>
+
+## Varios datos
+
+Un `input()` por cada dato que necesites:
+
+```python
+nombre = input("Nombre: ")
+edad = int(input("Edad: "))
+print(f"{nombre} tiene {edad} años")
+```
+
+Se ejecutan **en orden**, así que las respuestas se consumen en ese mismo orden.
+
+<EjercicioPython
+  titulo="La ficha completa"
+  dificultad="🌿"
+  entradas={`Guada\n25`}
+  starter={`# Pedí el nombre y la edad, y mostrá la ficha.\n`}
+  tests={`r = correr(entradas=["Guada", "25"]).strip()\nassert r.endswith("Guada tiene 25 años"), f'la última línea fue {r.splitlines()[-1]!r}'\nassert correr(entradas=["Tux", "3"]).strip().endswith("Tux tiene 3 años"), "con otros datos la ficha tiene que acompañar"`}
+  pistas={[
+    "El orden en que pedís los datos tiene que coincidir con el orden de las entradas. ¿Cuál viene primero según la caja de abajo?",
+    "¿La edad la necesitás como número para algo acá, o te alcanza con mostrarla tal como vino?",
+  ]}
+>
+Pedí el nombre y la edad, y mostrá una línea como `Guada tiene 25 años`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="La calculadora de propinas"
+  dificultad="🌳"
+  entradas={`1000\n10`}
+  starter={`# Pedí el monto y el porcentaje de propina.\n# Mostrá el total a pagar.\n`}
+  tests={`assert correr(entradas=["1000", "10"]).strip().endswith("1100.0"), f'con 1000 y 10% la última línea fue {correr(entradas=["1000", "10"]).strip().splitlines()[-1]!r}'\nassert correr(entradas=["500", "20"]).strip().endswith("600.0"), "500 con 20% de propina son 600"\nassert correr(entradas=["800", "0"]).strip().endswith("800.0"), "sin propina se paga lo mismo"`}
+  pistas={[
+    "Si te dicen que la cuenta es $1000 y la propina 10%, ¿cómo sacás cuánto es la propina? ¿Y cómo llegás al total?",
+    "Los dos datos llegan como texto. ¿Los dos necesitan convertirse? ¿A entero o a decimal?",
+    "El test espera <code>1100.0</code> con punto y decimal. ¿Qué tipo de número te queda al multiplicar por un porcentaje?",
+  ]}
+>
+Pedí el **monto** de la cuenta y el **porcentaje** de propina, y mostrá el **total a pagar**.
+
+Con `1000` y `10` tiene que terminar mostrando `1100.0`.
+</EjercicioPython>
+
+## Cuándo NO usar `input()`
+
+Un detalle que vale para el resto del curso: `input()` sirve para programas que conversan con una
+persona. Pero cuando quieras **reutilizar** un pedazo de lógica, conviene que los datos entren **por
+parámetro**, no preguntando.
+
+```python
+# Difícil de reutilizar y de probar: siempre pregunta
+edad = int(input("Edad: "))
+
+# Fácil de reutilizar: le pasás la edad de donde sea
+def es_mayor(edad):
+    return edad >= 18
+```
+
+Cuando lleguemos a **funciones** vas a ver por qué: un pedazo de código que pregunta por su cuenta no
+se puede usar desde otro lado ni verificar automáticamente.
+
+---
+
+Siguiente: [Condicionales](../condicionales/) — que el programa decida qué hacer con esos datos.

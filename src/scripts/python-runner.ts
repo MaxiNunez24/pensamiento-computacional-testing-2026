@@ -67,6 +67,7 @@ export async function runPython(
   tests: string,
   archivo = '',
   datos = '',
+  entradas: string[] = [],
 ): Promise<RunResult> {
   await ensureWorker();
   const id = nextId++;
@@ -88,7 +89,7 @@ export async function runPython(
         reject(e);
       },
     });
-    worker!.postMessage({ id, code, tests, archivo, datos });
+    worker!.postMessage({ id, code, tests, archivo, datos, entradas });
   });
   return JSON.parse(raw) as RunResult;
 }
