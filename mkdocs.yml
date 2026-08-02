@@ -45,6 +45,9 @@ markdown_extensions:
 nav:
   - 🏠​ Inicio: index.md
   - 📅 Cronograma del curso: cronograma.md
+  # Sitio hermano: la plataforma interactiva (Astro), publicada en /ejercicios/
+  # del mismo GitHub Pages. Va como link absoluto porque no es una página de MkDocs.
+  - 🧪 Ejercicios interactivos: https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/
   - 📚 Clases: 
     - 📝 Índice: clases/clases.md
     - 🧑‍🏫 Introducción: clases/01_introduccion.md

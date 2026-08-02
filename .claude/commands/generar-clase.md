@@ -61,27 +61,45 @@ Al revisar una clase existente, evaluá cada punto y reportá: ✅ cumple / ⚠�
 
 ---
 
-## ⚠️ Dos plataformas en transición (leé esto primero)
+## ⚠️ Las dos mitades del curso (leé esto primero)
 
-El curso se está migrando de **MkDocs** a una **plataforma interactiva en Astro/Starlight** (rama
-`dev`). Según para qué plataforma se genere la clase, cambia el formato de salida:
+El curso vive en **dos sitios que conviven**, publicados en el mismo GitHub Pages y linkeados entre
+sí. Ya no es una transición: es el estado final.
 
-- **MkDocs (sitio actual, rama `main`):** seguí usando `!!! tipo`, `??? tip/success`, `=== "tab"`
-  como hasta ahora.
-- **Plataforma interactiva (Astro, rama `dev`) — formato preferido para clases nuevas:** el alumno
-  **resuelve ejercicios ejecutando Python en la página**, con tests que se verifican solos. Esto
-  **reemplaza** las soluciones ocultas `??? success` y los tabs comparativos `❌/✅`.
+| | Qué va acá |
+|---|---|
+| **MkDocs** — `/` | La **explicación**: teoría, ejemplos, diagramas de lectura, cheatsheets |
+| **Astro** — `/ejercicios/` | La **práctica**: ejercicios con Python real y tests que corrigen solos |
 
-Si no se aclara la plataforma, preguntá. En el formato interactivo aplican estos cambios:
+**Regla firme: los ejercicios NO se escriben inline en MkDocs.** Una clase de MkDocs termina con un
+callout que linkea a sus ejercicios interactivos:
+
+```markdown
+## 🎮 Ejercicios
+
+!!! tip "🧪 Los ejercicios ahora son interactivos"
+    Escribís el código, lo ejecutás con **Python de verdad en el navegador** y los tests te dicen al
+    instante si está bien. Sin instalar nada. Tu avance **se guarda solo**.
+
+    [🚀 Ir a los ejercicios de X](/pensamiento-computacional-testing-2026/ejercicios/clases/SLUG/){ .md-button .md-button--primary }
+```
+
+El link va **absoluto**: con `use_directory_urls` la profundidad cambia entre clases y un relativo
+mal contado da 404 recién en producción; además `mkdocs --strict` rechaza los relativos que no
+apuntan a un `.md` propio.
+
+Del otro lado, cada lección de Astro abre con `<VolverATeoria ruta="clases/python/.../tema/" />`.
+
+Excepción: las clases que **son** práctica en sí (repaso, integradores, cuadernillos, parciales,
+lectura de código) conservan su contenido en MkDocs mientras no tengan contraparte interactiva.
+
+En el formato interactivo, además:
 
 - Admonitions → **asides de Starlight**: `:::note`, `:::tip`, `:::caution`, `:::danger`. Con título:
   `:::tip[Mi título]`.
-- Pistas y soluciones → **dejan de ser bloques ocultos de texto**: se cargan como props del
-  ejercicio (`pistas`, `solucion`) para que el feedback sea por ejecución, no por spoiler.
-- Cada práctica → un componente **`<EjercicioPython>`** (ver abajo).
-- La navegación anterior/índice/siguiente al pie **ya no se escribe a mano** (Starlight la genera).
+- La navegación anterior/índice/siguiente al pie **no se escribe a mano** (Starlight la genera).
 
-### Componente `<EjercicioPython>` (formato interactivo)
+### Componente `<EjercicioPython>`
 
 ```mdx
 import EjercicioPython from '../../../components/EjercicioPython.astro';
@@ -90,45 +108,97 @@ import EjercicioPython from '../../../components/EjercicioPython.astro';
   titulo="Tu primera función"
   dificultad="🌱"
   starter={`def saludar(nombre):\n    pass`}
-  tests={`assert saludar("Ana") == "¡Hola, Ana!", 'saludar("Ana") debería dar "¡Hola, Ana!"'`}
-  pistas={["Usá <code>return</code>, no <code>print</code>.", "Probá una f-string."]}
+  tests={`assert saludar("Ana") == "¡Hola, Ana!", 'esperaba "¡Hola, Ana!"'`}
+  pistas={["¿Necesitás <em>mostrar</em> el saludo o <em>entregarlo</em> para poder compararlo?"]}
 >
 La **consigna en Markdown** va acá adentro, con ejemplo de entrada/salida.
 </EjercicioPython>
 ```
 
-Reglas para escribir buenos ejercicios interactivos:
+Props disponibles: `titulo`, `dificultad`, `starter`, `tests`, `pistas`, `solucion`, `archivo`,
+**`datos`** y **`entradas`** (estos dos, explicados abajo).
 
-- `tests` son `assert` en Python. **Poné un mensaje** en el assert (`assert ..., "qué esperaba"`)
-  porque es lo que ve el alumno cuando falla. Cubrí varios casos (incluí bordes: 0, listas vacías,
-  negativos).
-- `starter` da el esqueleto mínimo, no la solución.
-- `pistas` guían el pensamiento (preguntas/analogías), aceptan HTML simple. No des el código.
-- **Por defecto NO incluyas `solucion`.** Si los tests están bien hechos, mostrar la solución
-  pre-condiciona al alumno (la abre por ansiedad/frustración). El componente la soporta como prop
-  opcional, pero la decisión de agregar una a un ejercicio puntual es del profe (si se la piden mucho).
+Reglas para escribir buenos ejercicios:
+
+- `tests` son `assert` en Python. **Poné mensaje** (`assert ..., "qué esperaba"`): es lo que ve el
+  alumno al fallar. Cubrí bordes (0, listas vacías, negativos, el límite exacto de un rango).
+- `starter` da el esqueleto mínimo, nunca la solución.
+- **`pistas` son SIEMPRE preguntas.** Ver la sección dedicada más abajo — es una regla, no un estilo.
+- **Por defecto NO incluyas `solucion`.** Si los tests están bien, mostrarla pre-condiciona: el
+  alumno la abre por ansiedad. Es decisión del profe agregarla a un ejercicio puntual.
 - El nombre que piden los tests tiene que coincidir con el de la consigna.
+- **Verificá los tests antes de publicar**: escribí una solución de referencia y corré los asserts.
+  Un test imposible o con un `splitlines()[-1]` sobre una salida vacía le muestra al alumno un error
+  del test, no de su código.
+
+### 💡 Las pistas son preguntas (regla firme, 1/8/2026)
+
+Una pista **nunca indica**: pregunta. Tiene que servir para que el alumno **comprenda el problema** o
+**arme la lógica**, no para ahorrarle tipeo.
+
+| ❌ No | ✅ Sí |
+|------|------|
+| Usá `return`, no `print`. | ¿Necesitás **ver** el resultado, o **usarlo** en otra cuenta después? |
+| Recorré la lista con un `for`. | ¿Cuántas veces vas a tener que mirar la lista para saber el total? |
+| Acordate de inicializar el acumulador en 0. | Antes de sumar el primer número, ¿cuánto llevás sumado? |
+| Eso es `carton.issubset(sorteados)`. | ¿Cuándo cantás bingo? Decilo empezando con "cuando todos...". |
+
+Criterio para revisar: si contestar la pregunta no le enseña nada y solo le ahorra escribir, es una
+indicación disfrazada. Reescribila apuntando al **por qué**, no al **qué**.
 
 ### 🔑 Ordenar ejercicios con los prerequisitos (¡importante!)
 
-El motor verifica con `assert`, pero **eso no obliga a usar funciones**. Respetá el orden del curso:
+El motor verifica con `assert`, pero **eso no obliga a usar funciones**. Respetá el orden del curso.
 
-- **Clases ANTERIORES a Funciones** (variables, control de flujo, listas, etc.): **NO uses `def`** en
-  los ejercicios. El alumno escribe código **a nivel principal** sobre datos ya dados, y los tests
-  verifican **variables**. Ejemplo:
-  ```mdx
-  <EjercicioPython
-    titulo="Duplicar una lista"
-    dificultad="🌱"
-    starter={`numeros = [1, 2, 3]\n# Creá una lista 'dobles' con cada número multiplicado por 2\n`}
-    tests={`assert dobles == [2, 4, 6], "dobles debería ser [2, 4, 6]"`}
-  >...</EjercicioPython>
-  ```
-- **Desde Funciones en adelante**: ahí sí pedí `def` (es el tema).
-- **Introducción justo a tiempo también para el código del `starter`**: si en el esqueleto aparece
-  algo que el alumno todavía no vio (`def`, `pass`, `return`, etc.), explicalo brevemente **la
-  primera vez que aparece** (un `:::note` corto), igual que con los módulos. Ej.: `pass` = "marcador
-  de lugar: no hace nada, lo vas a reemplazar por tu código".
+**Clases ANTERIORES a Funciones I** (print, variables, input, condicionales, bucles, listas, tuplas,
+sets, diccionarios): **NO uses `def`**. El alumno escribe un **programa**, y para eso el motor da:
+
+- **`datos`** — código que corre ANTES del código del alumno y le regala variables ya cargadas. Sin
+  esto, el botón *Ejecutar* tiraría `NameError` sobre una variable que el ejercicio da por puesta.
+- **`salida`** — en los tests, lo que el programa imprimió.
+- **`correr(**variables)`** — vuelve a ejecutar el código del alumno con otros valores y devuelve lo
+  que imprimió esa vez. **Usalo siempre que puedas**: sin él, el alumno pasa el test imprimiendo la
+  respuesta a mano.
+
+```mdx
+<EjercicioPython
+  titulo="¿Es par?"
+  dificultad="🌱"
+  datos={`n = 8`}
+  starter={`# 'n' ya tiene valor. Mostrá True o False.\n`}
+  tests={`assert correr(n=8).strip() == "True", "8 es par"\nassert correr(n=7).strip() == "False", "7 no"\nassert correr(n=0).strip() == "True", "el 0 es par"`}
+>...</EjercicioPython>
+```
+
+**Desde Funciones I en adelante**: ahí sí pedí `def` (es el tema).
+
+### ⌨️ Ejercicios con `input()`
+
+`input()` **funciona**, con una limitación: el alumno no teclea en vivo (Pyodide corre en un Web
+Worker y frenarlo requiere `SharedArrayBuffer`, que necesita cabeceras que GitHub Pages no permite).
+Las respuestas se cargan de antemano con la prop **`entradas`** (una por línea) y el ejercicio muestra
+una caja editable. `input()` las consume en orden y **hace eco del prompt seguido del valor**, así la
+salida se ve igual que una terminal.
+
+```mdx
+<EjercicioPython
+  titulo="El año que viene"
+  entradas={`20`}
+  starter={`# Pedí la edad y mostrá cuántos años va a cumplir.\n`}
+  tests={`assert correr(entradas=["20"]).strip().endswith("21"), "con 20 va a cumplir 21"\nassert correr(entradas=["7"]).strip().endswith("8"), "con 7, 8"`}
+>...</EjercicioPython>
+```
+
+**Los tests miran las ÚLTIMAS líneas** (`.splitlines()[-N:]` o `.endswith(...)`), nunca la salida
+completa: el eco del prompt ocupa una línea por dato y su texto depende de cómo el alumno redacte el
+mensaje.
+
+### Otros componentes disponibles
+
+Además de `<EjercicioPython>`, existen `<CompletarCodigo>` (huecos a rellenar), `<OpcionMultiple>`
+(quiz conceptual), `<DiagramaClases>` y `<DiagramaLibre>` (armar diagramas UML arrastrando), y
+`<Mermaid>` (diagramas de lectura). Elegí el tipo según lo que querés que el alumno **piense**, no
+por variar.
 
 ### Estructura de una clase interactiva
 
