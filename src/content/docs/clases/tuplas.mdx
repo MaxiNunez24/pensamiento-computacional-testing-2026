@@ -202,6 +202,27 @@ distancias = {("Buenos Aires", "Córdoba"): 700}
 ```
 :::
 
+
+## Más práctica
+
+<EjercicioPython
+  titulo="Iteración con desempaquetado"
+  dificultad="🌿"
+  datos={`alumnos = [("Ana", 10), ("Beto", 7), ("Cami", 9)]`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr().strip().splitlines()[-3:]\nassert r == ["Ana sacó 10", "Beto sacó 7", "Cami sacó 9"], f"salió {r!r}"\nr2 = correr(alumnos=[("Tux", 5)]).strip().splitlines()[-1:]\nassert r2 == ["Tux sacó 5"], "con un solo alumno"`}
+  pistas={[
+    "Cada elemento de la lista es una tupla de dos. ¿Podés pedirle al <code>for</code> que te dé las dos partes por separado en cada vuelta?",
+    "Si te sale algo como <code>('Ana', 10) sacó</code>, es que estás recibiendo la tupla entera en una sola variable.",
+  ]}
+>
+`alumnos` es una lista de tuplas `(nombre, nota)`. Mostrá una línea por alumno:
+
+```
+Ana sacó 10
+```
+</EjercicioPython>
+
 ---
 
 Siguiente: [Funciones II](../funciones-2/) — scope, valores por defecto y `*args` / `**kwargs`.

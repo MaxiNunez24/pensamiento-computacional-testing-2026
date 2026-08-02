@@ -163,6 +163,40 @@ teléfono.
 
 Regla práctica: si lo que guardás **no es una lista de líneas sueltas**, es JSON.
 
+
+## Más práctica
+
+<EjercicioPython
+  titulo="Config con valores por defecto"
+  dificultad="🌿"
+  starter={`import json\n\ndef cargar_config(ruta):\n    pass`}
+  tests={`import json, os\nif os.path.exists("cfg.json"):\n    os.remove("cfg.json")\nassert cargar_config("cfg.json") == {"tema": "claro", "idioma": "es"}, "si el archivo no existe, devolvé los valores por defecto"\nwith open("cfg.json", "w", encoding="utf-8") as f:\n    json.dump({"tema": "oscuro"}, f)\nassert cargar_config("cfg.json") == {"tema": "oscuro", "idioma": "es"}, "lo guardado pisa al default, pero el resto se conserva"\nwith open("cfg.json", "w", encoding="utf-8") as f:\n    json.dump({"tema": "oscuro", "idioma": "en", "extra": 1}, f)\nassert cargar_config("cfg.json") == {"tema": "oscuro", "idioma": "en", "extra": 1}, "las claves de más se conservan"\nprint("¡Config OK!")`}
+  pistas={[
+    "Arrancás con los valores por defecto y después le encimás lo que haya guardado. ¿Qué método de los diccionarios hace exactamente eso?",
+    "Mirá el primer test: el archivo no existe. ¿Qué pasa si lo abrís en modo lectura? ¿Cómo lo evitás antes de intentarlo?",
+  ]}
+>
+Completá `cargar_config` para que devuelva la config guardada, **completada** con los valores por
+defecto `{"tema": "claro", "idioma": "es"}`.
+
+Si el archivo no existe, devolvé los defaults tal cual.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Estadísticas persistentes"
+  dificultad="🌳"
+  starter={`import json\n\ndef sumar_visita(ruta, pagina):\n    pass`}
+  tests={`import json, os\nif os.path.exists("stats.json"):\n    os.remove("stats.json")\nsumar_visita("stats.json", "inicio")\nsumar_visita("stats.json", "inicio")\nsumar_visita("stats.json", "contacto")\nwith open("stats.json", encoding="utf-8") as f:\n    d = json.load(f)\nassert d == {"inicio": 2, "contacto": 1}, f"quedó {d!r}"\nsumar_visita("stats.json", "contacto")\nwith open("stats.json", encoding="utf-8") as f:\n    assert json.load(f)["contacto"] == 2, "tiene que seguir contando entre ejecuciones"\nprint("¡Estadísticas OK!")`}
+  pistas={[
+    "Es el patrón de contar que ya usaste con diccionarios, pero el contador vive en un archivo. ¿Qué tenés que hacer antes de poder sumarle uno?",
+    "La primera vez no hay archivo y la página nunca fue visitada. Son dos casos distintos: ¿cómo resolvés cada uno sin que rompa?",
+  ]}
+>
+Completá `sumar_visita` para que lleve la cuenta de visitas por página en un archivo JSON.
+
+Cada llamada suma 1 a esa página, **conservando** lo que ya había.
+</EjercicioPython>
+
 ---
 
 Con esto cierra el Bloque 3: ya sabés versionar el código (Git), guardar texto (archivos) y guardar

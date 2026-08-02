@@ -102,6 +102,24 @@ Resultado esperado: `gano` debería ser `True` (los tres están entre los sortea
 - `a & b` intersección · `a - b` diferencia · `a.issubset(b)` (o `a <= b`) ¿está contenido?
 - Es la estructura natural del Bingo: cartón, sorteados y la condición de victoria.
 
+## Más práctica
+
+<EjercicioPython
+  titulo="Eliminando duplicados"
+  dificultad="🌿"
+  datos={`numeros = [3, 1, 2, 3, 1, 4]`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [1, 2, 3, 4], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(numeros=[5, 5, 5]).strip().splitlines()[-1]) == [5], "todos repetidos: queda uno"\nassert ast.literal_eval(correr(numeros=[]).strip().splitlines()[-1]) == [], "la lista vacía queda vacía"`}
+  pistas={[
+    "¿Qué estructura de las que viste no admite elementos repetidos? Convertir a esa y volver puede resolver casi todo.",
+    "El resultado tiene que salir ordenado de menor a mayor. Los sets no garantizan orden: ¿qué le hacés antes de mostrarlo?",
+  ]}
+>
+Mostrá una **lista ordenada y sin duplicados** a partir de `numeros`.
+
+Con `[3, 1, 2, 3, 1, 4]` tiene que dar `[1, 2, 3, 4]`.
+</EjercicioPython>
+
 :::note[Esto es justo lo del viernes]
 Estas tres operaciones son el corazón del Bingo que vamos a armar. Si las tenés acá, el integrador
 te va a salir solo. 🎰

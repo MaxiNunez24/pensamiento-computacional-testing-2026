@@ -239,6 +239,56 @@ crear_alumno(**datos)      # equivale a crear_alumno(nombre="Guada", edad=25)
 
 Regla para acordarse: **en la definición, el `*` junta; en la llamada, el `*` reparte.**
 
+
+## Más práctica
+
+<EjercicioPython
+  titulo="Valores por defecto"
+  dificultad="🌱"
+  starter={`def saludar(nombre, saludo="Hola", signo="!"):\n    pass`}
+  tests={`assert saludar("Ana") == "Hola, Ana!", f'devolviste {saludar("Ana")!r}'\nassert saludar("Ana", "Buenas") == "Buenas, Ana!", "cambiando solo el saludo"\nassert saludar("Ana", signo="?") == "Hola, Ana?", "salteando el del medio, por nombre"\nassert saludar("Ana", "Che", "...") == "Che, Ana...", "cambiando los tres"`}
+  pistas={[
+    "Los tres valores llegan ya listos si no los pasan. ¿Hace falta que la función revise si vinieron o no?",
+    "Mirá el tercer test: pasa el signo sin pasar el saludo. ¿Cómo sabe Python a cuál corresponde ese valor?",
+  ]}
+>
+Completá `saludar` para que arme el saludo con las tres partes.
+
+`saludar("Ana")` → `"Hola, Ana!"`
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="*args en acción"
+  dificultad="🌿"
+  starter={`def sumar(*numeros):\n    pass`}
+  tests={`assert sumar(1, 2) == 3, "1 + 2"\nassert sumar(1, 2, 3, 4, 5) == 15, "cinco números"\nassert sumar() == 0, "sin argumentos, la suma es 0"\nassert sumar(10) == 10, "uno solo"\nassert sumar(-5, 5) == 0, "con negativos"`}
+  pistas={[
+    "El asterisco junta todo lo que llegue en una sola estructura. ¿De qué tipo es, y cómo la recorrés?",
+    "Mirá el test que llama sin ningún argumento: tiene que dar 0. ¿Con qué valor arranca tu acumulador?",
+  ]}
+>
+Completá `sumar` para que acepte **cualquier cantidad** de números sueltos y devuelva su suma.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Logger flexible"
+  dificultad="🌳"
+  starter={`def log(mensaje, **extras):\n    pass`}
+  tests={`assert log("Guardado") == "Guardado", "sin extras, solo el mensaje"\nassert log("Error", codigo=500) == "Error | codigo=500", f'devolviste {log("Error", codigo=500)!r}'\nassert log("Error", codigo=500, ruta="/api") == "Error | codigo=500 | ruta=/api", "dos extras"\nassert log("Ok", usuario="ana") == "Ok | usuario=ana", "un extra de texto"`}
+  pistas={[
+    "Los extras llegan en un diccionario. ¿Qué método te da la clave y el valor de cada uno a la vez?",
+    "Cuando no hay extras, el resultado es solo el mensaje: sin barra ni espacios sobrantes. ¿Tu solución agrega el separador aunque no haya nada que separar?",
+  ]}
+>
+Completá `log` para que devuelva el mensaje seguido de los datos extra, separados por ` | `:
+
+```
+log("Error", codigo=500)  →  "Error | codigo=500"
+```
+
+Si no hay extras, devuelve **solo** el mensaje.
+</EjercicioPython>
+
 ---
 
 Con esto cerrás el Bloque 2. Lo que sigue es **POO**, donde estas mismas ideas (datos que viajan

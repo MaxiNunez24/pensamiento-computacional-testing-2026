@@ -175,6 +175,61 @@ programas por internet. Cuando veamos **JSON** vas a descubrir que ya sabías le
 | son todos lo mismo (notas, precios) | cada dato significa algo distinto |
 | recorrés todo de punta a punta | necesitás encontrar uno puntual, rápido |
 
+
+## Más práctica
+
+<EjercicioPython
+  titulo="Inventario de una tienda"
+  dificultad="🌿"
+  datos={`stock = {"café": 12, "yerba": 0, "azúcar": 3, "fideos": 0}`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr().strip().splitlines()[-1] == "yerba, fideos", f"salió {correr().strip().splitlines()[-1]!r}"\nassert correr(stock={"a": 1, "b": 0}).strip().splitlines()[-1] == "b", "solo el que está en 0"\nassert correr(stock={"a": 5}).strip() == "", "si no falta nada, no tiene que salir ningún nombre"`}
+  pistas={[
+    "Necesitás mirar la clave y el valor de cada producto a la vez. ¿Qué método del diccionario te da los dos?",
+    "El resultado es un solo texto con los nombres separados por coma y espacio. ¿Qué te conviene ir armando mientras recorrés: un texto o una lista?",
+  ]}
+>
+Mostrá los productos **sin stock** (los que están en 0), separados por `, ` en una sola línea:
+
+```
+yerba, fideos
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Tabla de posiciones"
+  dificultad="🌳"
+  datos={`puntos = {"Boca": 15, "River": 18, "Racing": 12}`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr().strip().splitlines()[-1] == "River: 18", f"salió {correr().strip().splitlines()[-1]!r}"\nassert correr(puntos={"A": 3, "B": 9}).strip().splitlines()[-1] == "B: 9", "gana el de más puntos"\nassert correr(puntos={"Solo": 1}).strip().splitlines()[-1] == "Solo: 1", "con un solo equipo"`}
+  pistas={[
+    "No alcanza con saber cuál es el puntaje más alto: también necesitás de quién es. ¿Qué te conviene ir guardando mientras recorrés?",
+    "Antes de mirar el primer equipo, ¿con qué valor arranca tu líder para que el primero siempre lo supere?",
+  ]}
+>
+Mostrá el equipo con **más puntos**, con este formato:
+
+```
+River: 18
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Invertir el diccionario"
+  dificultad="🌳"
+  datos={`precios = {"café": 1500, "medialuna": 800}`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == {1500: "café", 800: "medialuna"}, f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(precios={"x": 1}).strip().splitlines()[-1]) == {1: "x"}, "con un solo par"\nassert ast.literal_eval(correr(precios={}).strip().splitlines()[-1]) == {}, "el diccionario vacío queda vacío"`}
+  pistas={[
+    "Cada par tiene que darse vuelta: lo que era clave pasa a ser valor y viceversa. ¿Cómo recorrés los dos a la vez?",
+    "¿Con qué arrancás antes de meter el primer par dado vuelta?",
+  ]}
+>
+Mostrá un diccionario **con las claves y los valores intercambiados**.
+
+De `{'café': 1500}` tiene que salir `{1500: 'café'}`.
+</EjercicioPython>
+
 ---
 
 Siguiente: JSON — guardar estas estructuras en un archivo y volver a leerlas.

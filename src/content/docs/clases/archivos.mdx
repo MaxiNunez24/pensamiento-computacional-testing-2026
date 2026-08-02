@@ -188,6 +188,43 @@ creás existen de verdad para el programa, pero viven en la pestaña y desaparec
 toca nada de tu compu. En VS Code, el mismo código escribe archivos posta.
 :::
 
+
+## Más práctica
+
+<EjercicioPython
+  titulo="Contar palabras de un archivo"
+  dificultad="🌿"
+  starter={`def contar_palabras(ruta):\n    pass`}
+  tests={`with open("p1.txt", "w", encoding="utf-8") as f:\n    f.write("hola mundo\\nchau mundo\\n")\nassert contar_palabras("p1.txt") == 4, f'esperaba 4 y devolviste {contar_palabras("p1.txt")!r}'\nwith open("p1.txt", "w", encoding="utf-8") as f:\n    f.write("una\\n")\nassert contar_palabras("p1.txt") == 1, "una sola palabra"\nwith open("p1.txt", "w", encoding="utf-8") as f:\n    f.write("")\nassert contar_palabras("p1.txt") == 0, "un archivo vacío tiene 0 palabras"\nprint("¡Contadas!")`}
+  pistas={[
+    "Las palabras están repartidas en varias líneas. ¿Te conviene leer línea por línea, o todo de una y después partir?",
+    "¿Qué método parte un texto en palabras? ¿Qué usa como separador si no le decís nada?",
+  ]}
+>
+Completá `contar_palabras` para que devuelva **cuántas palabras** tiene el archivo en total,
+contando todas las líneas.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Log de ejecuciones"
+  dificultad="🌳"
+  starter={`def registrar(ruta, evento):\n    pass`}
+  tests={`import os\nif os.path.exists("log.txt"):\n    os.remove("log.txt")\nregistrar("log.txt", "inicio")\nregistrar("log.txt", "fin")\nwith open("log.txt", encoding="utf-8") as f:\n    lineas = f.read().strip().splitlines()\nassert lineas == ["1. inicio", "2. fin"], f"el log quedó con {lineas!r}"\nregistrar("log.txt", "otra")\nwith open("log.txt", encoding="utf-8") as f:\n    assert f.read().strip().splitlines()[-1] == "3. otra", "el número tiene que seguir la cuenta"\nprint("¡Log OK!")`}
+  pistas={[
+    "Cada evento se numera según cuántos había antes. ¿Cómo te enterás de eso si el archivo ya existe de una corrida anterior?",
+    "La primera vez el archivo todavía no existe. ¿Qué pasa si intentás leerlo en modo lectura? ¿Con qué número arrancás en ese caso?",
+  ]}
+>
+Completá `registrar` para que agregue una línea numerada al final del archivo, **sin borrar** lo
+anterior:
+
+```
+1. inicio
+2. fin
+3. otra
+```
+</EjercicioPython>
+
 ---
 
 Siguiente: JSON — guardar estructuras enteras (listas, diccionarios) y no solamente texto plano.

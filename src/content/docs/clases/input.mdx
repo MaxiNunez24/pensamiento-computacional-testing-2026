@@ -171,6 +171,23 @@ Pedí el **monto** de la cuenta y el **porcentaje** de propina, y mostrá el **t
 Con `1000` y `10` tiene que terminar mostrando `1100.0`.
 </EjercicioPython>
 
+<EjercicioPython
+  titulo="El promedio de tres notas"
+  dificultad="🌿"
+  entradas={`8\n6\n10`}
+  starter={`# Pedí tres notas y mostrá el promedio.\n`}
+  tests={`assert correr(entradas=["8","6","10"]).strip().endswith("8.0"), f'con 8, 6 y 10 la última línea fue {correr(entradas=["8","6","10"]).strip().splitlines()[-1]!r}'\nassert correr(entradas=["10","10","10"]).strip().endswith("10.0"), "tres dieces dan 10.0"\nassert correr(entradas=["7","8","8"]).strip().endswith("7.666666666666667"), "el promedio puede tener muchos decimales"`}
+  pistas={[
+    "Son tres <code>input()</code> seguidos. ¿Cada uno tiene que ir a su propia variable, o se pueden acumular a medida que llegan?",
+    "El test espera <code>8.0</code> con decimal, no <code>8</code>. ¿Qué operador de división estás usando?",
+    "Si te sale algo como <code>8610</code>, no estás promediando: estás pegando textos. ¿Qué les falta a los valores que devuelve <code>input()</code>?",
+  ]}
+>
+Pedí **tres notas** y mostrá su **promedio**.
+
+Con `8`, `6` y `10` tiene que terminar mostrando `8.0`.
+</EjercicioPython>
+
 ## Cuándo NO usar `input()`
 
 Un detalle que vale para el resto del curso: `input()` sirve para programas que conversan con una

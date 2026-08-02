@@ -116,6 +116,43 @@ Resultado esperado: `cantidad` debería ser `3` (son el 5, el 8 y el 9).
 - `lista[i]`, `lista[-1]`, `len(lista)`, `lista.append(x)`.
 - Patrón estrella: **lista vacía → recorrer con `for` → `append` si cumple → `return`**.
 
+## Más práctica
+
+<EjercicioPython
+  titulo="Ordenar sin modificar"
+  dificultad="🌿"
+  datos={`numeros = [5, 3, 8, 1]`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr().strip().splitlines()[-2:]\nassert r == ["[1, 3, 5, 8]", "[5, 3, 8, 1]"], f"salió {r!r}"\nr2 = correr(numeros=[2, 1]).strip().splitlines()[-2:]\nassert r2 == ["[1, 2]", "[2, 1]"], "con otra lista tiene que acompañar"`}
+  pistas={[
+    "Hay dos formas de ordenar: una cambia la lista original y la otra devuelve una nueva. ¿Cuál necesitás acá?",
+    "Si la segunda línea te sale ordenada, es que usaste la que modifica. ¿Cuál es la otra?",
+  ]}
+>
+Mostrá primero la lista **ordenada** y después la **original sin tocar**:
+
+```
+[1, 3, 5, 8]
+[5, 3, 8, 1]
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Mayores al promedio"
+  dificultad="🌳"
+  datos={`notas = [4, 8, 6, 10]`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [8, 10], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(notas=[5, 5, 5]).strip().splitlines()[-1]) == [], "si son todas iguales, ninguna supera el promedio"\nassert ast.literal_eval(correr(notas=[1, 9]).strip().splitlines()[-1]) == [9], "solo el 9 supera el promedio de 5"`}
+  pistas={[
+    "Necesitás el promedio ANTES de poder comparar. ¿Se puede calcular mientras recorrés, o hay que sacarlo primero?",
+    "Fijate en el test donde todas las notas son iguales: ninguna tiene que aparecer. ¿Estás usando mayor, o mayor o igual?",
+  ]}
+>
+Mostrá una lista con las notas que están **por encima del promedio**.
+
+Con `[4, 8, 6, 10]` (promedio 7) tiene que dar `[8, 10]`.
+</EjercicioPython>
+
 :::note[¿Qué sigue?]
 Más adelante: *list comprehensions* (hacer lo de arriba en una sola línea) y listas de listas
 (matrices).
