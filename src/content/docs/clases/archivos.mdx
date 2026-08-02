@@ -1,0 +1,193 @@
+---
+title: Manejo de archivos
+description: "Guardar datos que sobrevivan al programa: abrir, leer, escribir y por qué siempre se usa with."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/07_persistencia/archivos/" />
+
+## El problema
+
+Todo lo que hiciste hasta ahora vive en la **memoria RAM**: existe mientras el programa corre y
+desaparece cuando se cierra.
+
+```python
+alumnos = ["Guada", "Brandon", "Yoda"]
+print(alumnos)
+```
+
+Cerrás el programa, lo volvés a abrir... y la lista no está más. Si tuvieras que cargar cien alumnos
+a mano cada vez que arrancás, el programa sería inútil.
+
+Para que los datos **sobrevivan**, hay que sacarlos de la RAM y ponerlos en el **disco**: un archivo.
+
+:::note[La jerarquía en una frase]
+La **RAM** es rápida pero se borra al apagar. El **disco** es más lento pero recuerda. Cuando querés
+que algo dure entre ejecuciones, va al disco.
+:::
+
+## Abrir un archivo
+
+```python
+archivo = open("datos.txt", "w")
+archivo.write("Hola")
+archivo.close()
+```
+
+`open()` recibe **dónde** está el archivo y **para qué** lo abrís (el *modo*):
+
+| Modo | Qué hace | Si el archivo no existe |
+|---|---|---|
+| `"r"` | Leer (es el que se usa por defecto) | 💥 Error |
+| `"w"` | Escribir **borrando todo** lo anterior | Lo crea |
+| `"a"` | Escribir **agregando al final** | Lo crea |
+| `"x"` | Crear, y fallar si ya existe | Lo crea |
+
+:::caution[`"w"` borra sin preguntar]
+Abrir con `"w"` un archivo que ya tiene contenido lo **vacía en el acto**, antes incluso de que
+escribas nada. Si querés sumar sin perder lo que había, el modo es `"a"`.
+:::
+
+## Siempre `with`
+
+Ese `archivo.close()` del ejemplo es un problema esperando: si el programa falla entre el `open` y el
+`close`, el archivo queda abierto y podés perder lo que escribiste.
+
+Por eso en Python **siempre** se usa `with`:
+
+```python
+with open("datos.txt", "w", encoding="utf-8") as archivo:
+    archivo.write("Hola")
+# acá afuera ya está cerrado, incluso si algo falló adentro
+```
+
+El `with` se encarga de cerrarlo pase lo que pase. No es una preferencia de estilo: es la forma
+correcta.
+
+:::tip[¿Por qué `encoding="utf-8"`?]
+Porque nuestros textos tienen tildes y ñ. Sin especificar el encoding, Python usa el del sistema
+operativo, que cambia entre Windows y Linux — y el mismo programa que anda en tu casa te muestra
+`Ã±` en la máquina del CFP. Ponelo siempre.
+:::
+
+## Leer
+
+Tres formas, según lo que necesites:
+
+```python
+with open("datos.txt", "r", encoding="utf-8") as archivo:
+    todo = archivo.read()          # un solo string con TODO
+
+with open("datos.txt", "r", encoding="utf-8") as archivo:
+    lineas = archivo.readlines()   # una lista, un elemento por línea
+
+with open("datos.txt", "r", encoding="utf-8") as archivo:
+    for linea in archivo:          # de a una, sin cargar todo en memoria
+        print(linea, end="")
+```
+
+La tercera es la mejor para archivos grandes: no necesita meter el archivo entero en la RAM.
+
+:::note[El `end=""` del `print`]
+Cada línea que leés **ya trae su salto de línea** al final. Si además `print` agrega el suyo, te
+quedan renglones vacíos en el medio. Por eso el `end=""`.
+:::
+
+<EjercicioPython
+  titulo="Guardar una lista"
+  dificultad="🌿"
+  starter={`def guardar(ruta, items):\n    pass`}
+  tests={`guardar("t1.txt", ["Guada", "Brandon", "Yoda"])\nwith open("t1.txt", encoding="utf-8") as f:\n    contenido = f.read()\nassert contenido == "Guada\\nBrandon\\nYoda\\n", f"el archivo quedó con {contenido!r}"\nguardar("t1.txt", ["Tux"])\nwith open("t1.txt", encoding="utf-8") as f:\n    assert f.read() == "Tux\\n", "al guardar de nuevo tiene que reemplazar, no agregar"\nprint("¡Archivo escrito!")`}
+  pistas={[
+    "Mirá el segundo tramo del test: guarda una lista nueva sobre el mismo archivo y espera que la anterior ya no esté. ¿Cuál de los modos hace eso, y cuál haría lo contrario?",
+    "El test espera un salto de línea después del último nombre también. ¿<code>write</code> agrega ese salto por su cuenta o se lo tenés que poner vos?",
+  ]}
+>
+Completá `guardar` para que escriba cada elemento de `items` en una línea del archivo `ruta`.
+
+Si el archivo ya existía, el contenido viejo **se reemplaza**.
+</EjercicioPython>
+
+## Escribir: `write` y `print`
+
+```python
+archivo.write("Hola\n")           # NO agrega salto de línea: se lo ponés vos
+print("Hola", file=archivo)       # sí lo agrega, como cualquier print
+```
+
+Las dos sirven. `print(..., file=archivo)` suele ser más cómoda justamente porque se encarga del
+salto de línea.
+
+<EjercicioPython
+  titulo="Contar las líneas"
+  dificultad="🌿"
+  starter={`def contar_lineas(ruta):\n    pass`}
+  tests={`with open("t2.txt", "w", encoding="utf-8") as f:\n    f.write("uno\\ndos\\ntres\\n")\nassert contar_lineas("t2.txt") == 3, f'esperaba 3 y devolviste {contar_lineas("t2.txt")!r}'\nwith open("t2.txt", "w", encoding="utf-8") as f:\n    f.write("")\nassert contar_lineas("t2.txt") == 0, "un archivo vacío tiene 0 líneas"\nprint("¡Contadas!")`}
+  pistas={[
+    "Si tuvieras el contenido como una lista donde cada elemento es una línea, ¿qué te faltaría hacer para saber cuántas son?",
+    "Fijate en el test del archivo vacío. ¿Tu solución entra al bucle aunque sea una vez, o directamente no entra?",
+  ]}
+>
+Completá `contar_lineas` para que devuelva **cuántas líneas** tiene el archivo.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Sumar sin borrar"
+  dificultad="🌳"
+  starter={`def agregar(ruta, linea):\n    pass`}
+  tests={`with open("t3.txt", "w", encoding="utf-8") as f:\n    f.write("Guada\\n")\nagregar("t3.txt", "Brandon")\nagregar("t3.txt", "Yoda")\nwith open("t3.txt", encoding="utf-8") as f:\n    contenido = f.read()\nassert contenido == "Guada\\nBrandon\\nYoda\\n", f"el archivo quedó con {contenido!r}"\nprint("¡Agregados sin perder nada!")`}
+  pistas={[
+    "El test empieza con Guada ya escrito y espera que siga estando al final. ¿Qué le pasaría a Guada si abrieras el archivo en modo escritura común?",
+    "Se llama a <code>agregar</code> dos veces seguidas y las dos tienen que quedar. ¿Desde qué posición del archivo empieza a escribir cada modo?",
+  ]}
+>
+Completá `agregar` para que sume `linea` al final del archivo **sin borrar** lo que ya había.
+</EjercicioPython>
+
+## Rutas: dónde busca Python
+
+Cuando escribís `open("datos.txt")`, Python lo busca **desde la carpeta donde estás parado**, no
+desde donde está el archivo `.py`. Es la causa número uno del `FileNotFoundError`.
+
+```python
+open("datos.txt")                    # ruta relativa: al lado de donde ejecutás
+open("clase_archivos/datos.txt")     # relativa, bajando una carpeta
+open("/home/maxi/datos.txt")         # absoluta: siempre el mismo lugar
+```
+
+:::tip[Si te tira `FileNotFoundError`]
+No es que el archivo no exista: es que **no está donde Python está mirando**. Antes de pelearte con
+la ruta, preguntale dónde está parado:
+
+```python
+from pathlib import Path
+print(Path.cwd())      # la carpeta actual
+```
+:::
+
+## Trabajar con carpetas: `pathlib`
+
+```python
+from pathlib import Path
+
+carpeta = Path("practica_archivos")
+
+for archivo in carpeta.iterdir():    # recorre lo que hay adentro
+    print(archivo.name)
+
+Path("datos.txt").exists()           # ¿existe?
+```
+
+`Path` arma las rutas correctamente en Windows, Linux y macOS sin que tengas que pensar en las barras.
+
+:::note[Los archivos de esta página son de mentira]
+Python corre acá adentro del navegador, con un sistema de archivos **virtual**: los archivos que
+creás existen de verdad para el programa, pero viven en la pestaña y desaparecen al recargar. No
+toca nada de tu compu. En VS Code, el mismo código escribe archivos posta.
+:::
+
+---
+
+Siguiente: JSON — guardar estructuras enteras (listas, diccionarios) y no solamente texto plano.

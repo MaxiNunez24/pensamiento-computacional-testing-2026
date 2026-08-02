@@ -53,6 +53,12 @@ export default defineConfig({
           ],
         },
         {
+          label: '🛠️ Bloque 3 — Persistencia',
+          items: [
+            { label: '💾 Manejo de archivos', link: '/clases/archivos/' },
+          ],
+        },
+        {
           label: '🏗️ POO',
           items: [
             { label: '🧬 POO I — Clases y objetos', link: '/clases/poo-1/' },
