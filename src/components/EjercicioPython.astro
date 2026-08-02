@@ -109,9 +109,10 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
       envío y ofrece copiar el mensaje para pegarlo en Discord. */}
   <div class="ejercicio__envio" data-envio hidden>
     <p>
-      Tu consulta ya quedó publicada en <strong>#Consultas</strong> de Discord, así que el profe la
-      recibe igual. Además abrimos tu app de correo con el mensaje listo, por las dudas —
-      <strong>si no se abrió nada, no pasa nada</strong>: ya está enviada.
+      Tu consulta se publica en <strong>#Consultas</strong> de Discord (fijate el cartelito del
+      botón) y además abrimos tu correo en otra pestaña, para que le llegue por las dos vías.
+      <strong>Si el correo no se abrió, no pasa nada.</strong> Y si querés mandarlo por tu cuenta,
+      acá tenés el mensaje:
     </p>
     <button type="button" class="ejercicio__btn" data-copiar-envio>📋 Copiar el mensaje</button>
   </div>

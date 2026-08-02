@@ -300,12 +300,15 @@ function initEjercicio(el: HTMLElement): void {
       `${getCode()}\n`;
     ultimoMensaje = `Para: ${EMAIL_PROFE}\nAsunto: ${asunto}\n\n${cuerpo}`;
 
+    // Abre el correo en una pestaña aparte, para no sacar al alumno de la
+    // lección: si navegáramos en la misma, al volver perdería el scroll y la
+    // sensación es la de que "se fue" del ejercicio.
     const porMail = () => {
       const mailto =
         `mailto:${EMAIL_PROFE}` +
         `?subject=${encodeURIComponent(asunto)}` +
         `&body=${encodeURIComponent(cuerpo)}`;
-      window.location.href = mailto;
+      window.open(mailto, '_blank', 'noopener');
       if (cajaEnvio) cajaEnvio.hidden = false;
     };
 
@@ -316,6 +319,13 @@ function initEjercicio(el: HTMLElement): void {
       porMail();
       return;
     }
+
+    // El mail se abre ACÁ, en el mismo tick del click. Los navegadores solo
+    // dejan abrir pestañas mientras dura la "activación por gesto del usuario";
+    // si esperáramos a que responda el Worker, el window.open caería fuera de
+    // esa ventana y el bloqueador de pop-ups se lo comería. Y como ahora abre en
+    // una pestaña aparte, la página no navega: el fetch de abajo sigue vivo.
+    porMail();
 
     const original = btnEnviar.textContent;
     btnEnviar.disabled = true;
@@ -348,13 +358,9 @@ function initEjercicio(el: HTMLElement): void {
       }
 
       btnEnviar.textContent = aDiscord
-        ? '✓ Publicado en Discord — abrimos el mail'
-        : '✉️ Abrimos tu mail';
+        ? '✓ Publicado en Discord'
+        : '⚠️ Discord no respondió — mandalo por mail';
       btnEnviar.disabled = false;
-
-      // El mailto: va DESPUÉS de esperar al Worker, nunca antes ni en paralelo:
-      // abrirlo navega fuera de la página y cancelaría el fetch en vuelo.
-      porMail();
       setTimeout(() => { btnEnviar.textContent = original; }, 6000);
     })();
   });
