@@ -1,0 +1,169 @@
+---
+title: JSON
+description: "Guardar listas y diccionarios enteros en un archivo, y volver a leerlos tal como estaban."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/07_persistencia/json/" />
+
+## El problema
+
+Con archivos de texto ya sabés guardar cosas. Probemos con un diccionario:
+
+```python
+alumno = {"nombre": "Guada", "edad": 25}
+
+with open("alumno.txt", "w", encoding="utf-8") as f:
+    f.write(str(alumno))
+```
+
+El archivo queda con `{'nombre': 'Guada', 'edad': 25}`. Parece que funcionó... hasta que lo querés
+leer de vuelta:
+
+```python
+with open("alumno.txt", encoding="utf-8") as f:
+    recuperado = f.read()
+
+recuperado["nombre"]   # 💥 TypeError
+```
+
+Lo que recuperaste es **un texto que se parece a un diccionario**, no un diccionario. Perdiste la
+estructura: los números son texto, no podés acceder por clave, nada.
+
+**JSON** resuelve exactamente eso: guardar estructuras enteras y recuperarlas tal como estaban.
+
+## Qué es JSON
+
+Un formato de texto para representar datos, que **todos los lenguajes entienden**. Un programa en
+Python guarda un JSON y otro en JavaScript lo lee sin problema. Por eso es la forma en que viaja
+casi toda la información por internet.
+
+```json
+{
+  "nombre": "Guada",
+  "edad": 25,
+  "notas": [10, 8, 9],
+  "activo": true
+}
+```
+
+Se parece muchísimo a un diccionario de Python, y no es casualidad.
+
+| Python | JSON |
+|---|---|
+| `dict` | objeto `{}` |
+| `list` | arreglo `[]` |
+| `str` | string (**siempre comillas dobles**) |
+| `int` / `float` | number |
+| `True` / `False` | `true` / `false` |
+| `None` | `null` |
+
+:::caution[Las diferencias que te van a morder]
+- En JSON las comillas son **siempre dobles**: `"nombre"`, nunca `'nombre'`.
+- Se escribe `true` / `false` / `null` en minúscula, no `True` / `False` / `None`.
+- **No se permite coma al final** del último elemento.
+
+Por eso no alcanza con copiar un diccionario de Python y decir que es JSON: hay que convertirlo.
+:::
+
+## Las cuatro funciones
+
+El módulo `json` tiene cuatro, y la diferencia está en si trabajan con **archivos** o con **textos**:
+
+| | De Python a JSON | De JSON a Python |
+|---|---|---|
+| **con un archivo** | `json.dump(datos, archivo)` | `json.load(archivo)` |
+| **con un string** | `json.dumps(datos)` | `json.loads(texto)` |
+
+La `s` final significa *string*. Las que más vas a usar son `dump` y `load`, las de archivo.
+
+```python
+import json
+
+datos = {"nombre": "Guada", "notas": [10, 8]}
+
+# Guardar
+with open("datos.json", "w", encoding="utf-8") as f:
+    json.dump(datos, f, ensure_ascii=False, indent=2)
+
+# Leer
+with open("datos.json", encoding="utf-8") as f:
+    recuperado = json.load(f)
+
+recuperado["notas"][0]   # 10  ← ahora sí, es un diccionario de verdad
+```
+
+:::tip[Los dos parámetros que conviene poner siempre]
+- **`ensure_ascii=False`** → si no, las tildes y la ñ se guardan como `\u00f1` y el archivo queda
+  ilegible para un humano. Los datos están bien igual, pero no podés abrirlo y entenderlo.
+- **`indent=2`** → guarda el JSON con saltos de línea y sangría, en vez de todo apretado en un
+  renglón. Sin esto, un archivo de 50 alumnos es una sola línea infinita.
+:::
+
+<EjercicioPython
+  titulo="Guardar y recuperar"
+  dificultad="🌿"
+  starter={`import json\n\ndef guardar(ruta, datos):\n    pass\n\ndef cargar(ruta):\n    pass`}
+  tests={`original = {"nombre": "Guada", "edad": 25, "notas": [10, 8]}\nguardar("a.json", original)\nvuelta = cargar("a.json")\nassert vuelta == original, f"lo que volvió es {vuelta!r}"\nassert vuelta["notas"][0] == 10, "las notas tienen que seguir siendo una lista de números"\nassert isinstance(vuelta["edad"], int), "la edad tiene que volver como número, no como texto"\nguardar("a.json", {"x": 1})\nassert cargar("a.json") == {"x": 1}, "guardar de nuevo tiene que reemplazar el archivo"\nprint("¡Ida y vuelta OK!")`}
+  pistas={[
+    "Fijate en el test que revisa que la edad vuelva como número. Si guardaras el diccionario con <code>write</code> y un <code>str()</code>, ¿qué tipo tendría al volver?",
+    "De las cuatro funciones del módulo, ¿cuáles son las dos que trabajan directamente con un archivo abierto en vez de con un texto?",
+  ]}
+>
+Completá las dos funciones: `guardar` escribe `datos` como JSON en `ruta`, y `cargar` lo lee y
+devuelve la estructura de Python.
+
+Tiene que valer que lo que entra sea **idéntico** a lo que sale.
+</EjercicioPython>
+
+## Un caso real: la agenda
+
+Con esto ya podés hacer un programa que recuerde cosas entre ejecuciones:
+
+```python
+import json
+from pathlib import Path
+
+def cargar_agenda(ruta):
+    if not Path(ruta).exists():      # la primera vez todavía no hay archivo
+        return {}
+    with open(ruta, encoding="utf-8") as f:
+        return json.load(f)
+```
+
+Ese `if` de la primera vez es importante: si el archivo no existe, `open` en modo lectura revienta.
+Devolver una estructura vacía es lo que hace que el programa arranque bien la primera vez.
+
+<EjercicioPython
+  titulo="La agenda que no se pierde"
+  dificultad="🌳"
+  starter={`import json\nfrom pathlib import Path\n\ndef agregar_contacto(ruta, nombre, telefono):\n    pass`}
+  tests={`import os\nif os.path.exists("agenda.json"):\n    os.remove("agenda.json")\nagregar_contacto("agenda.json", "Guada", "1122334455")\nwith open("agenda.json", encoding="utf-8") as f:\n    assert json.load(f) == {"Guada": "1122334455"}, "el primer contacto tiene que crear la agenda"\nagregar_contacto("agenda.json", "Brandon", "1199887766")\nwith open("agenda.json", encoding="utf-8") as f:\n    a = json.load(f)\nassert a == {"Guada": "1122334455", "Brandon": "1199887766"}, f"la agenda quedó como {a!r}"\nagregar_contacto("agenda.json", "Guada", "1100000000")\nwith open("agenda.json", encoding="utf-8") as f:\n    a = json.load(f)\nassert a["Guada"] == "1100000000", "un nombre repetido actualiza el teléfono"\nassert len(a) == 2, "y no crea un contacto nuevo"\nprint("¡Agenda OK!")`}
+  pistas={[
+    "El segundo contacto tiene que convivir con el primero. Antes de escribir, ¿no habría que enterarse de lo que ya había guardado?",
+    "El primer test borra el archivo antes de empezar. Si tu función intenta leerlo y no existe todavía, ¿qué pasa? ¿Con qué te conviene arrancar en ese caso?",
+    "El último test guarda un nombre que ya estaba y espera que se actualice sin duplicarse. ¿Qué hace un diccionario cuando le asignás una clave que ya tenía?",
+  ]}
+>
+Completá `agregar_contacto` para que sume un contacto a la agenda guardada en `ruta`, **sin perder
+los que ya estaban**.
+
+Si el archivo todavía no existe, la agenda arranca vacía. Si el nombre ya estaba, se actualiza el
+teléfono.
+</EjercicioPython>
+
+## Cuándo JSON y cuándo texto plano
+
+| | |
+|---|---|
+| **Texto plano** (`.txt`) | Un log, una lista simple de líneas, algo que va a leer una persona |
+| **JSON** (`.json`) | Estructuras: diccionarios, listas anidadas, datos que otro programa va a volver a cargar |
+
+Regla práctica: si lo que guardás **no es una lista de líneas sueltas**, es JSON.
+
+---
+
+Con esto cierra el Bloque 3: ya sabés versionar el código (Git), guardar texto (archivos) y guardar
+estructuras (JSON). Lo que sigue es **POO**, y con eso arranca el Sistema de Asistencias.

@@ -1,0 +1,180 @@
+---
+title: Diccionarios
+description: "Guardar datos por nombre en vez de por posición: claves, valores y el patrón de contar."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/05_colecciones/diccionarios/" />
+
+## El problema
+
+Guardemos los datos de un alumno en una lista:
+
+```python
+alumno = ["Guada", 25, "guada@mail.com"]
+print(alumno[1])   # 25 ... ¿pero 25 qué? ¿la edad? ¿la nota?
+```
+
+Funciona, pero tenés que **acordarte** de que la posición 1 es la edad. Si mañana alguien mete el DNI
+en el medio, todos los números se corren y el programa empieza a mentir sin fallar.
+
+Un **diccionario** guarda cada dato con un **nombre** en lugar de una posición:
+
+```python
+alumno = {"nombre": "Guada", "edad": 25, "mail": "guada@mail.com"}
+print(alumno["edad"])   # 25 — y no hay dudas de qué es
+```
+
+Ahora el orden no importa y el código se lee solo.
+
+## Cómo se arma
+
+```python
+mi_dict = {clave: valor, otra_clave: otro_valor}
+```
+
+- Las **claves** suelen ser textos (pueden ser números o tuplas, nunca listas).
+- Los **valores** pueden ser cualquier cosa: números, textos, listas, incluso otros diccionarios.
+- **No hay claves repetidas**: si ponés la misma dos veces, gana la última.
+
+```python
+precios = {"café": 1500, "medialuna": 800}
+
+precios["café"]              # 1500          leer
+precios["té"] = 1200         # agregar una nueva
+precios["café"] = 1600       # pisar la que ya estaba
+del precios["medialuna"]     # borrar
+"café" in precios            # True          ¿existe esa clave?
+len(precios)                 # cuántos pares hay
+```
+
+## El error más común: la clave que no está
+
+```python
+precios["submarino"]   # 💥 KeyError: 'submarino'
+```
+
+Pedir una clave que no existe **rompe el programa**. Para evitarlo, `get()`:
+
+```python
+precios.get("submarino")        # None  (no rompe)
+precios.get("submarino", 0)     # 0     (el valor que vos elijas si no está)
+```
+
+:::tip[Cuándo usar cada uno]
+Si la clave **tiene** que estar y que falte es un error de verdad, usá `precios["café"]`: que reviente
+te avisa del problema. Si es normal que no esté, usá `get()` con un valor por defecto.
+:::
+
+<EjercicioPython
+  titulo="El precio de la lista"
+  dificultad="🌱"
+  starter={`def precio_de(precios, producto):\n    pass`}
+  tests={`p = {"café": 1500, "medialuna": 800}\nassert precio_de(p, "café") == 1500, "el café está en la lista"\nassert precio_de(p, "medialuna") == 800, "la medialuna también"\nassert precio_de(p, "submarino") == 0, "lo que no está en la lista vale 0, no rompe"\nassert precio_de({}, "café") == 0, "con el diccionario vacío tampoco tiene que romper"\nprint("¡Precios OK!")`}
+  pistas={[
+    "Fijate en el test del submarino: no está en el diccionario y aun así la función tiene que devolver algo. ¿Qué pasaría si lo pidieras con los corchetes?",
+    "¿Hay alguna forma de pedir una clave diciendo de antemano qué querés recibir si no aparece?",
+  ]}
+>
+Completá `precio_de` para que devuelva el precio del producto.
+
+Si el producto **no está** en el diccionario, devolvé `0` (sin romper).
+</EjercicioPython>
+
+## Recorrer un diccionario
+
+```python
+for clave in precios:                      # solo las claves
+    print(clave)
+
+for valor in precios.values():             # solo los valores
+    print(valor)
+
+for clave, valor in precios.items():       # las dos cosas a la vez
+    print(f"{clave} sale ${valor}")
+```
+
+`.items()` es la que más vas a usar: te da el par completo en cada vuelta.
+
+<EjercicioPython
+  titulo="El total del carrito"
+  dificultad="🌿"
+  starter={`def total(carrito):\n    pass`}
+  tests={`assert total({"café": 1500, "medialuna": 800}) == 2300, "1500 + 800"\nassert total({"café": 1500}) == 1500, "un solo producto"\nassert total({}) == 0, "el carrito vacío suma 0"\nprint("¡Total OK!")`}
+  pistas={[
+    "De cada par del diccionario, ¿cuál de las dos partes te sirve para sumar: el nombre del producto o el precio?",
+    "Es el mismo patrón acumulador que usaste con listas. ¿En qué valor arrancás antes de mirar el primer producto?",
+  ]}
+>
+Completá `total` para que devuelva la suma de todos los precios del carrito.
+</EjercicioPython>
+
+## El patrón que más se usa: contar
+
+Contar cuántas veces aparece cada cosa es *el* caso clásico de diccionario:
+
+```python
+votos = ["Ana", "Beto", "Ana", "Ana", "Beto"]
+conteo = {}
+
+for nombre in votos:
+    conteo[nombre] = conteo.get(nombre, 0) + 1
+
+print(conteo)   # {'Ana': 3, 'Beto': 2}
+```
+
+La línea clave es `conteo.get(nombre, 0) + 1`: *"traeme lo que llevaba contado de este nombre — o 0 si
+es la primera vez que lo veo — y sumale uno"*. Sin el `get`, la primera aparición de cada nombre daría
+`KeyError`.
+
+<EjercicioPython
+  titulo="Contar apariciones"
+  dificultad="🌳"
+  starter={`def contar(items):\n    pass`}
+  tests={`assert contar(["a", "b", "a"]) == {"a": 2, "b": 1}, f'con ["a","b","a"] devolviste {contar(["a","b","a"])!r}'\nassert contar([]) == {}, "sin elementos, diccionario vacío"\nassert contar(["x"]) == {"x": 1}, "un solo elemento aparece una vez"\nassert contar(["a","a","a"]) == {"a": 3}, "tres veces el mismo"\nprint("¡Contado!")`}
+  pistas={[
+    "La primera vez que ves un elemento todavía no tiene cuenta empezada. ¿Qué querés que valga en ese momento, y cómo lo pedís sin que rompa?",
+    "¿Con qué tiene que arrancar la función antes de mirar el primer elemento: un diccionario ya armado o uno vacío?",
+  ]}
+>
+Completá `contar` para que devuelva un diccionario con **cuántas veces aparece cada elemento** de la
+lista.
+
+`contar(["a", "b", "a"])` → `{"a": 2, "b": 1}`
+</EjercicioPython>
+
+## Diccionarios adentro de diccionarios
+
+Los valores pueden ser cualquier cosa, así que se pueden anidar. Así se representa casi toda la
+información del mundo real:
+
+```python
+alumnos = {
+    "guada": {"edad": 25, "notas": [10, 8]},
+    "brandon": {"edad": 22, "notas": [7, 9]},
+}
+
+alumnos["guada"]["notas"][0]   # 10
+```
+
+Se lee de izquierda a derecha: *del diccionario de alumnos, agarrá a guada, de ahí sus notas, y de
+ahí la primera*.
+
+:::note[Esto es exactamente JSON]
+Esa estructura de diccionarios y listas anidados es la forma en que viaja la información entre
+programas por internet. Cuando veamos **JSON** vas a descubrir que ya sabías leerlo.
+:::
+
+## ¿Lista o diccionario?
+
+| Usá **lista** cuando... | Usá **diccionario** cuando... |
+|---|---|
+| el orden importa | buscás por un nombre o identificador |
+| son todos lo mismo (notas, precios) | cada dato significa algo distinto |
+| recorrés todo de punta a punta | necesitás encontrar uno puntual, rápido |
+
+---
+
+Siguiente: JSON — guardar estas estructuras en un archivo y volver a leerlas.

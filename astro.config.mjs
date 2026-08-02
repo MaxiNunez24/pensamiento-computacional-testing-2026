@@ -49,6 +49,7 @@ export default defineConfig({
           label: '🌿 Bloque 2 — Colecciones y funciones',
           items: [
             { label: '🗝️ Sets', link: '/clases/sets/' },
+            { label: '📔 Diccionarios', link: '/clases/diccionarios/' },
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
           ],
         },
@@ -56,6 +57,7 @@ export default defineConfig({
           label: '🛠️ Bloque 3 — Persistencia',
           items: [
             { label: '💾 Manejo de archivos', link: '/clases/archivos/' },
+            { label: '📋 JSON', link: '/clases/json/' },
           ],
         },
         {
