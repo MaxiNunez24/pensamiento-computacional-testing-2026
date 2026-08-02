@@ -309,8 +309,9 @@ function initEjercicio(el: HTMLElement): void {
       if (cajaEnvio) cajaEnvio.hidden = false;
     };
 
-    // Camino preferido: un click y la consulta aparece en #Consultas. No exige
-    // que el alumno tenga cliente de correo ni que entre a Discord a pegar nada.
+    // Se manda por los DOS canales siempre: Discord para que quede registro
+    // público (y que a otro alumno con la misma duda le sirva), y el mail para
+    // que al profe le entre la notificación sí o sí aunque el Worker esté caído.
     if (!WORKER_CONSULTAS) {
       porMail();
       return;
@@ -320,6 +321,7 @@ function initEjercicio(el: HTMLElement): void {
     btnEnviar.disabled = true;
     btnEnviar.textContent = '⏳ Enviando…';
     void (async () => {
+      let aDiscord = false;
       try {
         const r = await fetch(WORKER_CONSULTAS, {
           method: 'POST',
@@ -340,16 +342,20 @@ function initEjercicio(el: HTMLElement): void {
         if (!r.ok) throw new Error(String(r.status));
         const respuesta = await r.json().catch(() => null);
         if (!respuesta?.ok) throw new Error('respuesta inesperada');
-        btnEnviar.textContent = '✓ ¡Enviado! El profe lo ve en Discord';
+        aDiscord = true;
       } catch {
-        // Si el Worker está caído o sin internet, el alumno no queda a pie:
-        // cae al mail de siempre, con el botón de copiar como última red.
-        btnEnviar.textContent = '✉️ Enviar a mi profe';
-        porMail();
-      } finally {
-        btnEnviar.disabled = false;
-        setTimeout(() => { btnEnviar.textContent = original; }, 5000);
+        aDiscord = false;
       }
+
+      btnEnviar.textContent = aDiscord
+        ? '✓ Publicado en Discord — abrimos el mail'
+        : '✉️ Abrimos tu mail';
+      btnEnviar.disabled = false;
+
+      // El mailto: va DESPUÉS de esperar al Worker, nunca antes ni en paralelo:
+      // abrirlo navega fuera de la página y cancelaría el fetch en vuelo.
+      porMail();
+      setTimeout(() => { btnEnviar.textContent = original; }, 6000);
     })();
   });
 
