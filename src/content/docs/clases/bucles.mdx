@@ -183,6 +183,211 @@ for numero in [1, 2, 3, 4]:
 Mostrá **el primer** número negativo de `numeros`. Si no hay ninguno, mostrá `ninguno`.
 </EjercicioPython>
 
+
+## Más práctica
+
+<EjercicioPython
+  titulo="Del 1 al 10"
+  dificultad="🌱"
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert salida.split() == [str(n) for n in range(1, 11)], f"imprimiste {salida.split()!r}"`}
+  pistas={[
+    "¿Con qué número arrancás y hasta cuál seguís? Esos dos son la preparación y la condición.",
+    "Si tu programa no termina nunca, ¿qué le falta a la variable dentro del bucle?",
+  ]}
+>
+Mostrá los números del **1 al 10**, uno por línea, usando `while`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Solo los pares"
+  dificultad="🌱"
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert salida.split() == [str(n) for n in range(2, 21, 2)], f"imprimiste {salida.split()!r}"`}
+  pistas={[
+    "Hay dos caminos: recorrer todos y filtrar los pares, o saltar directamente de dos en dos. ¿Cuál te ahorra el <code>if</code>?",
+  ]}
+>
+Mostrá los números **pares** del 2 al 20, uno por línea.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Suma del 1 al 100"
+  dificultad="🌱"
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert salida.strip() == "5050", f"imprimiste {salida.strip()!r}"`}
+  pistas={[
+    "Es el patrón acumulador. ¿En qué valor arranca el total antes de sumar el primer número?",
+    "¿El <code>print</code> va adentro del bucle o después? Fijate que el test espera un solo número.",
+  ]}
+>
+Sumá todos los números del 1 al 100 y mostrá **solo el resultado**.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Pares hasta N"
+  dificultad="🌿"
+  entradas={`10`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(entradas=["10"]).strip().splitlines()[-6:] == ["0","2","4","6","8","10"], f'con 10 terminaste con {correr(entradas=["10"]).strip().splitlines()[-6:]!r}'\nassert correr(entradas=["5"]).strip().splitlines()[-3:] == ["0","2","4"], "con 5 el último par es el 4"\nassert correr(entradas=["0"]).strip().splitlines()[-1] == "0", "con 0 el único par es el 0"`}
+  pistas={[
+    "El 0 también es par y tiene que aparecer. ¿Desde qué número arrancás?",
+    "Con N = 5 el último par es el 4, no el 5. ¿Tu condición deja pasar números mayores que N?",
+  ]}
+>
+Pedí un número con `input()` y mostrá todos los **pares desde 0 hasta ese número** (incluido si es par).
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Suma hasta el cero"
+  dificultad="🌳"
+  entradas={`5\n3\n0`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(entradas=["5","3","0"]).strip().splitlines()[-1] == "Ingresaste 2 números y suman 8", f'terminaste con {correr(entradas=["5","3","0"]).strip().splitlines()[-1]!r}'\nassert correr(entradas=["0"]).strip().splitlines()[-1] == "Ingresaste 0 números y suman 0", "si el primero es 0, no se cuenta nada"\nassert correr(entradas=["10","-4","0"]).strip().splitlines()[-1] == "Ingresaste 2 números y suman 6", "los negativos también cuentan"`}
+  pistas={[
+    "El 0 marca el final y NO se cuenta. ¿Cómo hacés para leer un número, revisarlo, y recién ahí decidir si seguís?",
+    "Fijate en el test donde el primer número ya es 0: no tiene que contar nada. ¿Tu bucle llega a ejecutarse una vez de más?",
+  ]}
+>
+Pedí números hasta que ingresen un **0**. Al final mostrá una línea con este formato exacto:
+
+```
+Ingresaste 2 números y suman 8
+```
+
+El 0 marca el final y **no se cuenta**.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="El cajero automático"
+  dificultad="🌳"
+  datos={`saldo = 1000`}
+  entradas={`300\n800\n200\n0`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr(entradas=["300","800","200","0"])\nassert r.strip().splitlines()[-1] == "Saldo final: 500", f'terminaste con {r.strip().splitlines()[-1]!r}'\nassert "insuficiente" in r.lower(), "cuando el retiro supera el saldo tenés que avisar que es insuficiente"\nassert correr(entradas=["0"]).strip().splitlines()[-1] == "Saldo final: 1000", "si no retira nada, el saldo queda igual"\nassert correr(entradas=["1000","0"]).strip().splitlines()[-1] == "Saldo final: 0", "puede retirar todo"`}
+  pistas={[
+    "Son dos decisiones distintas por vuelta: si el retiro es válido, y si hay que seguir. ¿Cuál corta el bucle y cuál solo evita descontar?",
+    "En el caso del retiro que no alcanza, ¿el saldo tiene que cambiar en algo?",
+  ]}
+>
+El saldo arranca en `$1000`. Pedí cuánto quieren retirar, una y otra vez, hasta que ingresen `0`.
+
+- Si el retiro **supera el saldo**, avisá que es *insuficiente* y no descuentes nada.
+- Al terminar, mostrá `Saldo final: 500` (con el saldo que haya quedado).
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Adiviná el número"
+  dificultad="🌳"
+  datos={`secreto = 42`}
+  entradas={`50\n30\n42`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr(entradas=["50","30","42"])\nassert r.strip().splitlines()[-1] == "Adivinaste en 3 intentos", f'terminaste con {r.strip().splitlines()[-1]!r}'\nassert correr(entradas=["42"]).strip().splitlines()[-1] == "Adivinaste en 1 intentos", "si acierta de una, es 1 intento"\nr2 = correr(entradas=["10","42"]).lower()\nassert "alto" in r2 or "mayor" in r2, "si el intento es menor al secreto, hay que decirle que apunte más alto"`}
+  pistas={[
+    "El bucle no sabe de antemano cuántas vueltas son: depende de cuándo acierten. ¿Qué tipo de bucle sirve para eso?",
+    "Cada vuelta tenés que hacer dos cosas además de comparar: llevar la cuenta, y decidir si seguís. ¿Dónde va cada una?",
+  ]}
+>
+El número secreto es **42**. Pedí intentos hasta que lo adivinen.
+
+- Si el intento es **menor**, decile que apunte más **alto**.
+- Si es **mayor**, que apunte más **bajo**.
+- Al acertar, mostrá `Adivinaste en 3 intentos`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Estadísticas de notas"
+  dificultad="🌳"
+  entradas={`8\n6\n10\n-1`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr(entradas=["8","6","10","-1"]).strip().splitlines()[-4:]\nassert r == ["Cantidad: 3", "Promedio: 8.0", "Mayor: 10", "Menor: 6"], f"terminaste con {r!r}"\nr2 = correr(entradas=["7","-1"]).strip().splitlines()[-4:]\nassert r2 == ["Cantidad: 1", "Promedio: 7.0", "Mayor: 7", "Menor: 7"], f"con una sola nota: {r2!r}"`}
+  pistas={[
+    "Necesitás cuatro cosas al final. ¿Cuáles se pueden ir calculando en cada vuelta y cuál se saca recién al terminar?",
+    "Para saber cuál fue la mayor, ¿con qué valor te conviene arrancar la comparación para que la primera nota siempre gane?",
+  ]}
+>
+Pedí notas hasta que ingresen **-1**. Al final mostrá exactamente estas cuatro líneas:
+
+```
+Cantidad: 3
+Promedio: 8.0
+Mayor: 10
+Menor: 6
+```
+
+El -1 marca el final y no cuenta como nota.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Letra por letra"
+  dificultad="🌱"
+  entradas={`Tux`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(entradas=["Tux"]).strip().splitlines()[-3:] == ["T","u","x"], f'con Tux terminaste con {correr(entradas=["Tux"]).strip().splitlines()[-3:]!r}'\nassert correr(entradas=["a"]).strip().splitlines()[-1] == "a", "con una sola letra"`}
+  pistas={[
+    "Un <code>for</code> recorre los elementos de una colección. ¿Un texto se puede recorrer igual que una lista? Probá y fijate.",
+  ]}
+>
+Pedí un nombre y mostrá **cada letra en una línea distinta**.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Factorial"
+  dificultad="🌿"
+  entradas={`5`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(entradas=["5"]).strip().splitlines()[-1] == "120", f'el factorial de 5 es 120, imprimiste {correr(entradas=["5"]).strip().splitlines()[-1]!r}'\nassert correr(entradas=["1"]).strip().splitlines()[-1] == "1", "el factorial de 1 es 1"\nassert correr(entradas=["0"]).strip().splitlines()[-1] == "1", "el factorial de 0 es 1 por definición"`}
+  pistas={[
+    "El factorial de 5 es 5 × 4 × 3 × 2 × 1. Es un acumulador, pero no de sumas. ¿Con qué valor tiene que arrancar para no arruinar la cuenta?",
+    "Mirá el test del 0: tiene que dar 1. ¿Tu bucle llega a entrar en ese caso? ¿Y qué queda en el acumulador si no entra?",
+  ]}
+>
+Pedí un número y mostrá su **factorial**.
+
+El factorial de 5 es `5 × 4 × 3 × 2 × 1 = 120`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Tabla de multiplicar"
+  dificultad="🌿"
+  entradas={`3`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr(entradas=["3"]).strip().splitlines()[-10:]\nassert r == [f"3 x {i} = {3*i}" for i in range(1, 11)], f"terminaste con {r!r}"\nr2 = correr(entradas=["7"]).strip().splitlines()[-10:]\nassert r2 == [f"7 x {i} = {7*i}" for i in range(1, 11)], "con otro número la tabla tiene que acompañar"`}
+  pistas={[
+    "El formato es exacto: <code>3 x 1 = 3</code>, con espacios alrededor de la x y del igual. ¿Cómo armás un texto que mezcle números y símbolos?",
+    "La tabla va del 1 al 10. ¿Tu <code>range</code> llega hasta el 10 inclusive?",
+  ]}
+>
+Pedí un número y mostrá su **tabla de multiplicar** del 1 al 10, con este formato exacto:
+
+```
+3 x 1 = 3
+3 x 2 = 6
+...
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Triángulo de asteriscos"
+  dificultad="🌳"
+  entradas={`4`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(entradas=["4"]).strip().splitlines()[-4:] == ["*","**","***","****"], f'con 4 terminaste con {correr(entradas=["4"]).strip().splitlines()[-4:]!r}'\nassert correr(entradas=["1"]).strip().splitlines()[-1] == "*", "con 1 fila es un solo asterisco"`}
+  pistas={[
+    "La fila 1 tiene 1 asterisco, la fila 2 tiene 2… ¿qué relación hay entre el número de vuelta y la cantidad?",
+    "¿Hace falta un segundo bucle adentro para repetir el asterisco, o hay una forma más corta de repetir un texto?",
+  ]}
+>
+Pedí un número `n` y mostrá un triángulo de `n` filas:
+
+```
+*
+**
+***
+****
+```
+</EjercicioPython>
+
 ---
 
 Siguiente: [Listas](../listas/) — la colección que ya venías usando sin darte cuenta.
