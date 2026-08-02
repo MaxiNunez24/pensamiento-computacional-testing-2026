@@ -59,18 +59,16 @@ tendrías que frenarlo con `Ctrl + C`.
 <EjercicioPython
   titulo="La cuenta regresiva"
   dificultad="🌿"
-  starter={`def cuenta_regresiva(desde):\n    resultado = []\n    # tu código acá\n    return resultado`}
-  tests={`assert cuenta_regresiva(5) == [5, 4, 3, 2, 1], f'con 5 devolviste {cuenta_regresiva(5)!r}'\nassert cuenta_regresiva(1) == [1], "desde 1, la lista es solo [1]"\nassert cuenta_regresiva(0) == [], "desde 0 no hay nada que contar"`}
+  datos={`desde = 5`}
+  starter={`# Mostrá la cuenta regresiva desde 'desde' hasta 1,\n# un número por línea.\n`}
+  tests={`assert correr(desde=5).split() == ["5","4","3","2","1"], f'con 5 imprimiste {correr(desde=5).split()!r}'\nassert correr(desde=1).split() == ["1"], "desde 1, solo el 1"\nassert correr(desde=0).strip() == "", "desde 0 no hay nada que contar: no imprimas nada"`}
   pistas={[
     "Contá en voz alta desde 5 hasta 1. ¿En qué momento dejás de contar? Esa es tu condición.",
-    "Para agregar un número a la lista se usa <code>resultado.append(numero)</code>. Lo que falta pensar es cómo va cambiando el número en cada vuelta: ¿crece o decrece?",
-    "Mirá el test de <code>cuenta_regresiva(0)</code>: tiene que devolver una lista vacía. ¿Tu condición llega a entrar al bucle aunque sea una vez, o directamente no entra?",
+    "¿El número de cada vuelta crece o decrece? ¿Qué línea de tu bucle se encarga de eso?",
+    "Mirá el test de <code>desde = 0</code>: no tiene que imprimir nada. ¿Tu bucle llega a entrar aunque sea una vez, o directamente no entra?",
   ]}
 >
-Completá `cuenta_regresiva` para que devuelva una lista con los números desde `desde` hasta 1, de
-mayor a menor.
-
-`cuenta_regresiva(5)` → `[5, 4, 3, 2, 1]`
+Mostrá los números desde `desde` hasta 1, de mayor a menor, **uno por línea**.
 </EjercicioPython>
 
 ## `for`: repetir una vez por cada elemento
@@ -127,29 +125,29 @@ o para armar un texto (arrancás en `""` y vas pegando).
 <EjercicioPython
   titulo="El promedio"
   dificultad="🌿"
-  starter={`def promedio(notas):\n    pass`}
-  tests={`assert promedio([10, 8, 6]) == 8, f'con [10, 8, 6] devolviste {promedio([10, 8, 6])!r}'\nassert promedio([5]) == 5, "el promedio de una sola nota es esa nota"\nassert promedio([4, 5]) == 4.5, "el promedio puede tener decimales"\nassert promedio([]) == 0, "con la lista vacía devolvé 0, no rompas"`}
+  datos={`notas = [10, 8, 6]`}
+  starter={`# Mostrá el promedio de 'notas'.\n`}
+  tests={`assert correr(notas=[10, 8, 6]).strip() == "8.0", f'con [10, 8, 6] imprimiste {correr(notas=[10, 8, 6]).strip()!r}'\nassert correr(notas=[5]).strip() == "5.0", "el promedio de una sola nota es esa nota"\nassert correr(notas=[4, 5]).strip() == "4.5", "el promedio puede tener decimales"\nassert correr(notas=[]).strip() == "0", "con la lista vacía mostrá 0, no rompas"`}
   pistas={[
     "¿Cómo sacás un promedio a mano? Nombrá los dos números que necesitás antes de poder dividir.",
     "Mirá el test de la lista vacía. Si intentás dividir por la cantidad de notas y no hay ninguna, ¿qué pasa? ¿Cómo evitás llegar a esa división?",
   ]}
 >
-Completá `promedio` para que devuelva el promedio de la lista de notas.
-
-Si la lista está **vacía**, devolvé `0` (no queremos que el programa se rompa).
+Mostrá el promedio de `notas`. Si la lista está **vacía**, mostrá `0`.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Contar los aprobados"
   dificultad="🌿"
-  starter={`def cuantos_aprobaron(notas):\n    pass`}
-  tests={`assert cuantos_aprobaron([10, 3, 7, 2, 6]) == 3, f'con [10, 3, 7, 2, 6] devolviste {cuantos_aprobaron([10, 3, 7, 2, 6])!r}'\nassert cuantos_aprobaron([1, 2, 3]) == 0, "ninguna llega a 6"\nassert cuantos_aprobaron([]) == 0, "sin notas, ningún aprobado"\nassert cuantos_aprobaron([6, 6, 6]) == 3, "el 6 aprueba"`}
+  datos={`notas = [10, 3, 7, 2, 6]`}
+  starter={`# Mostrá cuántas notas son 6 o más.\n`}
+  tests={`assert correr(notas=[10, 3, 7, 2, 6]).strip() == "3", f'imprimiste {correr(notas=[10, 3, 7, 2, 6]).strip()!r}'\nassert correr(notas=[1, 2, 3]).strip() == "0", "ninguna llega a 6"\nassert correr(notas=[]).strip() == "0", "sin notas, ningún aprobado"\nassert correr(notas=[6, 6, 6]).strip() == "3", "el 6 aprueba"`}
   pistas={[
     "Acá se juntan dos cosas que ya viste: recorrer todas las notas, y decidir por cada una si cuenta o no. ¿Cuál de las dos va adentro de la otra?",
     "Si contaras a mano con el dedo, ¿en qué número arrancás antes de mirar la primera nota?",
   ]}
 >
-Completá `cuantos_aprobaron` para que devuelva **cuántas** notas de la lista son 6 o más.
+Mostrá **cuántas** notas de la lista son 6 o más.
 </EjercicioPython>
 
 ## `break` y `continue`
@@ -174,16 +172,15 @@ for numero in [1, 2, 3, 4]:
 <EjercicioPython
   titulo="El primero que aparece"
   dificultad="🌳"
-  starter={`def primer_negativo(numeros):\n    pass`}
-  tests={`assert primer_negativo([3, 8, -2, 5, -9]) == -2, f'esperaba -2 (el primero), devolviste {primer_negativo([3, 8, -2, 5, -9])!r}'\nassert primer_negativo([1, 2, 3]) is None, "si no hay negativos, devolvé None"\nassert primer_negativo([-1]) == -1, "el único elemento es negativo"\nassert primer_negativo([]) is None, "lista vacía: None"`}
+  datos={`numeros = [3, 8, -2, 5, -9]`}
+  starter={`# Mostrá el primer número negativo.\n# Si no hay ninguno, mostrá 'ninguno'.\n`}
+  tests={`assert correr(numeros=[3, 8, -2, 5, -9]).strip() == "-2", f'esperaba -2 (el primero), imprimiste {correr(numeros=[3, 8, -2, 5, -9]).strip()!r}'\nassert correr(numeros=[1, 2, 3]).strip() == "ninguno", "si no hay negativos, mostrá ninguno"\nassert correr(numeros=[-1]).strip() == "-1", "el único elemento es negativo"\nassert correr(numeros=[]).strip() == "ninguno", "lista vacía"`}
   pistas={[
     "El test espera -2 y no -9, aunque los dos son negativos. ¿Qué tiene que hacer tu bucle apenas encuentra el primero?",
-    "Si recorrés la lista entera y nunca encontraste ninguno, ¿qué querés que devuelva la función? ¿Dónde tendría que estar escrito ese caso?",
+    "Si recorrés la lista entera y nunca encontraste ninguno, ¿cómo te enterás al final de que no hubo? ¿Qué te convendría anotar antes de empezar?",
   ]}
 >
-Completá `primer_negativo` para que devuelva **el primer** número negativo de la lista.
-
-Si no hay ninguno, devolvé `None`.
+Mostrá **el primer** número negativo de `numeros`. Si no hay ninguno, mostrá `ninguno`.
 </EjercicioPython>
 
 ---

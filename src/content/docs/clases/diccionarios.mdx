@@ -71,16 +71,15 @@ te avisa del problema. Si es normal que no esté, usá `get()` con un valor por 
 <EjercicioPython
   titulo="El precio de la lista"
   dificultad="🌱"
-  starter={`def precio_de(precios, producto):\n    pass`}
-  tests={`p = {"café": 1500, "medialuna": 800}\nassert precio_de(p, "café") == 1500, "el café está en la lista"\nassert precio_de(p, "medialuna") == 800, "la medialuna también"\nassert precio_de(p, "submarino") == 0, "lo que no está en la lista vale 0, no rompe"\nassert precio_de({}, "café") == 0, "con el diccionario vacío tampoco tiene que romper"\nprint("¡Precios OK!")`}
+  datos={`precios = {"café": 1500, "medialuna": 800}\nproducto = "café"`}
+  starter={`# Mostrá el precio de 'producto'.\n# Si no está en la lista, mostrá 0.\n`}
+  tests={`assert correr(producto="café").strip() == "1500", "el café está en la lista"\nassert correr(producto="medialuna").strip() == "800", "la medialuna también"\nassert correr(producto="submarino").strip() == "0", "lo que no está en la lista vale 0, no rompas"\nassert correr(precios={}, producto="café").strip() == "0", "con el diccionario vacío tampoco tiene que romper"`}
   pistas={[
-    "Fijate en el test del submarino: no está en el diccionario y aun así la función tiene que devolver algo. ¿Qué pasaría si lo pidieras con los corchetes?",
+    "Fijate en el test del submarino: no está en el diccionario y aun así tenés que mostrar algo. ¿Qué pasaría si lo pidieras con los corchetes?",
     "¿Hay alguna forma de pedir una clave diciendo de antemano qué querés recibir si no aparece?",
   ]}
 >
-Completá `precio_de` para que devuelva el precio del producto.
-
-Si el producto **no está** en el diccionario, devolvé `0` (sin romper).
+Mostrá el precio de `producto`. Si **no está** en `precios`, mostrá `0` (sin romper).
 </EjercicioPython>
 
 ## Recorrer un diccionario
@@ -101,14 +100,15 @@ for clave, valor in precios.items():       # las dos cosas a la vez
 <EjercicioPython
   titulo="El total del carrito"
   dificultad="🌿"
-  starter={`def total(carrito):\n    pass`}
-  tests={`assert total({"café": 1500, "medialuna": 800}) == 2300, "1500 + 800"\nassert total({"café": 1500}) == 1500, "un solo producto"\nassert total({}) == 0, "el carrito vacío suma 0"\nprint("¡Total OK!")`}
+  datos={`carrito = {"café": 1500, "medialuna": 800}`}
+  starter={`# Mostrá la suma de todos los precios.\n`}
+  tests={`assert correr(carrito={"café": 1500, "medialuna": 800}).strip() == "2300", "1500 + 800"\nassert correr(carrito={"café": 1500}).strip() == "1500", "un solo producto"\nassert correr(carrito={}).strip() == "0", "el carrito vacío suma 0"`}
   pistas={[
     "De cada par del diccionario, ¿cuál de las dos partes te sirve para sumar: el nombre del producto o el precio?",
     "Es el mismo patrón acumulador que usaste con listas. ¿En qué valor arrancás antes de mirar el primer producto?",
   ]}
 >
-Completá `total` para que devuelva la suma de todos los precios del carrito.
+Mostrá la suma de todos los precios del carrito.
 </EjercicioPython>
 
 ## El patrón que más se usa: contar
@@ -132,17 +132,17 @@ es la primera vez que lo veo — y sumale uno"*. Sin el `get`, la primera aparic
 <EjercicioPython
   titulo="Contar apariciones"
   dificultad="🌳"
-  starter={`def contar(items):\n    pass`}
-  tests={`assert contar(["a", "b", "a"]) == {"a": 2, "b": 1}, f'con ["a","b","a"] devolviste {contar(["a","b","a"])!r}'\nassert contar([]) == {}, "sin elementos, diccionario vacío"\nassert contar(["x"]) == {"x": 1}, "un solo elemento aparece una vez"\nassert contar(["a","a","a"]) == {"a": 3}, "tres veces el mismo"\nprint("¡Contado!")`}
+  datos={`items = ["a", "b", "a"]`}
+  starter={`# Mostrá un diccionario con cuántas veces aparece cada elemento.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr(items=["a", "b", "a"]).strip()) == {"a": 2, "b": 1}, f'imprimiste {correr(items=["a", "b", "a"]).strip()!r}'\nassert ast.literal_eval(correr(items=[]).strip()) == {}, "sin elementos, diccionario vacío"\nassert ast.literal_eval(correr(items=["x"]).strip()) == {"x": 1}, "un solo elemento aparece una vez"\nassert ast.literal_eval(correr(items=["a","a","a"]).strip()) == {"a": 3}, "tres veces el mismo"`}
   pistas={[
     "La primera vez que ves un elemento todavía no tiene cuenta empezada. ¿Qué querés que valga en ese momento, y cómo lo pedís sin que rompa?",
-    "¿Con qué tiene que arrancar la función antes de mirar el primer elemento: un diccionario ya armado o uno vacío?",
+    "¿Con qué tiene que arrancar tu programa antes de mirar el primer elemento: un diccionario ya armado o uno vacío?",
   ]}
 >
-Completá `contar` para que devuelva un diccionario con **cuántas veces aparece cada elemento** de la
-lista.
+Mostrá un diccionario con **cuántas veces aparece cada elemento** de `items`.
 
-`contar(["a", "b", "a"])` → `{"a": 2, "b": 1}`
+Con `["a", "b", "a"]` tiene que dar `{'a': 2, 'b': 1}`.
 </EjercicioPython>
 
 ## Diccionarios adentro de diccionarios

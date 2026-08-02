@@ -52,13 +52,14 @@ Esa segunda línea en matemática sería absurda. En programación es de lo más
 <EjercicioPython
   titulo="Un solo lugar para cambiar"
   dificultad="🌱"
-  starter={`def total_cafes(precio, cantidad):\n    pass`}
-  tests={`assert total_cafes(1500, 2) == 3000, f'con (1500, 2) devolviste {total_cafes(1500, 2)!r}'\nassert total_cafes(800, 5) == 4000, f'con (800, 5) devolviste {total_cafes(800, 5)!r}'\nassert total_cafes(1000, 0) == 0, "cero cafés deberían costar 0"`}
+  datos={`precio = 1500\ncantidad = 2`}
+  starter={`# 'precio' y 'cantidad' ya tienen valor.\n# Mostrá cuánto sale el total.\n`}
+  tests={`assert correr(precio=1500, cantidad=2).strip() == "3000", f'con 1500 x 2 imprimiste {correr(precio=1500, cantidad=2).strip()!r}'\nassert correr(precio=800, cantidad=5).strip() == "4000", "con 800 x 5 tendría que dar 4000"\nassert correr(precio=1000, cantidad=0).strip() == "0", "cero cafés cuestan 0"`}
   pistas={[
-    "Si te preguntan cuánto salen 3 cafés de $500, ¿qué cuenta hacés? Escribí esa cuenta con los nombres de los parámetros en lugar de los números.",
+    "Si te preguntan cuánto salen 3 cafés de $500, ¿qué cuenta hacés? Escribí esa misma cuenta con los nombres de las variables en lugar de los números.",
   ]}
 >
-Completá `total_cafes` para que devuelva cuánto salen `cantidad` cafés a `precio` cada uno.
+Mostrá con `print()` cuánto salen `cantidad` cafés a `precio` cada uno.
 </EjercicioPython>
 
 ## Los cuatro tipos básicos
@@ -112,16 +113,17 @@ float("3.5")  # ✅ 3.5
 <EjercicioPython
   titulo="Sumar lo que vino como texto"
   dificultad="🌿"
-  starter={`def sumar_textos(a, b):\n    pass`}
-  tests={`assert sumar_textos("30", "12") == 42, f'con ("30", "12") devolviste {sumar_textos("30", "12")!r}'\nassert sumar_textos("0", "0") == 0, "cero más cero es 0"\nassert sumar_textos("-5", "5") == 0, "los negativos también tienen que andar"\nassert isinstance(sumar_textos("1", "2"), int), "tiene que devolver un número, no un texto"`}
+  datos={`a = "30"\nb = "12"`}
+  starter={`# 'a' y 'b' son NÚMEROS ESCRITOS COMO TEXTO.\n# Mostrá su suma.\n`}
+  tests={`assert correr(a="30", b="12").strip() == "42", f'imprimiste {correr(a="30", b="12").strip()!r} — ojo, "30" + "12" no da 42'\nassert correr(a="0", b="0").strip() == "0", "cero más cero es 0"\nassert correr(a="-5", b="5").strip() == "0", "los negativos también tienen que andar"`}
   pistas={[
-    "Probá <code>“30” + “12”</code> en el editor y mirá qué sale. ¿Por qué da eso y no 42?",
+    "Probá <code>print(a + b)</code> tal cual y mirá qué sale. ¿Por qué da eso y no 42?",
     "Antes de poder sumarlos como números, ¿qué les tendría que pasar a esos dos valores?",
   ]}
 >
-`sumar_textos` recibe dos números **escritos como texto** y tiene que devolver la **suma** como número.
+`a` y `b` son dos números **escritos como texto**. Mostrá su **suma** como número.
 
-`sumar_textos("30", "12")` tiene que dar `42` (no `"3012"`).
+Con `a = "30"` y `b = "12"` tiene que aparecer `42`, no `3012`.
 </EjercicioPython>
 
 ## Cómo nombrar variables
@@ -161,17 +163,19 @@ múltiplo de otro (si el resto es 0), y juntos sirven para partir cantidades.
 <EjercicioPython
   titulo="Repartir sin romper nada"
   dificultad="🌿"
-  starter={`def repartir(caramelos, chicos):\n    pass`}
-  tests={`assert repartir(10, 3) == (3, 1), f'con (10, 3) devolviste {repartir(10, 3)!r} y esperaba (3, 1)'\nassert repartir(9, 3) == (3, 0), "9 entre 3 reparte justo"\nassert repartir(2, 5) == (0, 2), "si no alcanza para uno cada uno, sobran todos"`}
+  datos={`caramelos = 10\nchicos = 3`}
+  starter={`# Repartí los caramelos entre los chicos.\n# Mostrá: "3 para cada uno, sobran 1"\n`}
+  tests={`assert correr(caramelos=10, chicos=3).strip() == "3 para cada uno, sobran 1", f'imprimiste {correr(caramelos=10, chicos=3).strip()!r}'\nassert correr(caramelos=9, chicos=3).strip() == "3 para cada uno, sobran 0", "9 entre 3 reparte justo"\nassert correr(caramelos=2, chicos=5).strip() == "0 para cada uno, sobran 2", "si no alcanza para uno cada uno, sobran todos"`}
   pistas={[
     "Repartí 10 caramelos entre 3 chicos en la cabeza. ¿Cuántos le tocan a cada uno y cuántos te quedan en la mano?",
-    "La división normal de 10 entre 3 da 3.5, pero no podés dar medio caramelo. ¿Cuál de los operadores te da solo la parte entera, y cuál te da lo que sobra?",
+    "La división normal de 10 entre 3 da 3.33, pero no podés dar un tercio de caramelo. ¿Cuál de los operadores te da solo la parte entera, y cuál te da lo que sobra?",
   ]}
 >
-`repartir` reparte `caramelos` en partes iguales entre `chicos`, y devuelve una tupla con **cuántos le
-tocan a cada uno** y **cuántos sobran**.
+Repartí `caramelos` en partes iguales entre `chicos` y mostrá el resultado con este formato exacto:
 
-`repartir(10, 3)` → `(3, 1)`: tres para cada uno, sobra uno.
+```
+3 para cada uno, sobran 1
+```
 </EjercicioPython>
 
 ---

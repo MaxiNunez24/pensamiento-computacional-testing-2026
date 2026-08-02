@@ -65,13 +65,14 @@ Confundirlos es un clásico, y Python te lo marca como error de sintaxis.
 <EjercicioPython
   titulo="¿Aprobó?"
   dificultad="🌱"
-  starter={`def aprobo(nota):\n    pass`}
-  tests={`assert aprobo(7) == True, "con 7 debería aprobar"\nassert aprobo(6) == True, "6 es el mínimo para aprobar: tiene que dar True"\nassert aprobo(5) == False, "con 5 no aprueba"\nassert aprobo(10) == True, "con 10 aprueba"`}
+  datos={`nota = 7`}
+  starter={`# 'nota' ya tiene valor. Mostrá 'aprobado' o 'desaprobado'.\n`}
+  tests={`assert correr(nota=7).strip() == "aprobado", f'con 7 imprimiste {correr(nota=7).strip()!r}'\nassert correr(nota=6).strip() == "aprobado", "6 es el mínimo para aprobar"\nassert correr(nota=5).strip() == "desaprobado", "con 5 no aprueba"\nassert correr(nota=10).strip() == "aprobado", "con 10 aprueba"`}
   pistas={[
     "Fijate en el test del 6. ¿El 6 tiene que aprobar o no? ¿Qué operador de comparación incluye al número que estás comparando y cuál lo deja afuera?",
   ]}
 >
-Completá `aprobo` para que devuelva `True` si la nota es **6 o más**, y `False` si no.
+Mostrá `aprobado` si la nota es **6 o más**, y `desaprobado` si no.
 </EjercicioPython>
 
 ## Más de dos caminos: `elif`
@@ -101,19 +102,20 @@ menos exigente**.
 <EjercicioPython
   titulo="La categoría de la nota"
   dificultad="🌿"
-  starter={`def categoria(nota):\n    pass`}
-  tests={`assert categoria(10) == "Excelente", f'con 10 devolviste {categoria(10)!r}'\nassert categoria(9) == "Excelente", "9 ya es Excelente"\nassert categoria(8) == "Muy bien", f'con 8 devolviste {categoria(8)!r}'\nassert categoria(7) == "Muy bien", "7 ya es Muy bien"\nassert categoria(6) == "Aprobado", f'con 6 devolviste {categoria(6)!r}'\nassert categoria(5) == "Desaprobado", "con 5 ya no alcanza"\nassert categoria(1) == "Desaprobado", f'con 1 devolviste {categoria(1)!r}'`}
+  datos={`nota = 8`}
+  starter={`# Mostrá la categoría que le corresponde a 'nota'.\n`}
+  tests={`assert correr(nota=10).strip() == "Excelente", f'con 10 imprimiste {correr(nota=10).strip()!r}'\nassert correr(nota=9).strip() == "Excelente", "9 ya es Excelente"\nassert correr(nota=8).strip() == "Muy bien", f'con 8 imprimiste {correr(nota=8).strip()!r}'\nassert correr(nota=7).strip() == "Muy bien", "7 ya es Muy bien"\nassert correr(nota=6).strip() == "Aprobado", f'con 6 imprimiste {correr(nota=6).strip()!r}'\nassert correr(nota=5).strip() == "Desaprobado", "con 5 ya no alcanza"\nassert correr(nota=1).strip() == "Desaprobado", "con 1 tampoco"`}
   pistas={[
-    "Probá tu solución con un 10 y mirá qué devuelve. Si te dice “Aprobado”, ¿por cuál de las condiciones entró primero?",
+    "Probá tu solución con un 10 y mirá qué imprime. Si te dice “Aprobado”, ¿por cuál de las condiciones entró primero?",
     "Python se queda con la PRIMERA condición que se cumple. ¿En qué orden conviene preguntarlas para que un 10 no entre por la puerta del 6?",
   ]}
 >
-Completá `categoria` para que devuelva:
+Mostrá la categoría de `nota`:
 
-- `"Excelente"` con 9 o 10
-- `"Muy bien"` con 7 u 8
-- `"Aprobado"` con 6
-- `"Desaprobado"` con menos de 6
+- `Excelente` con 9 o 10
+- `Muy bien` con 7 u 8
+- `Aprobado` con 6
+- `Desaprobado` con menos de 6
 </EjercicioPython>
 
 ## Combinar condiciones: `and`, `or`, `not`
@@ -133,8 +135,9 @@ if not esta_lleno:                # al revés
 <EjercicioPython
   titulo="¿Puede entrar?"
   dificultad="🌿"
-  starter={`def puede_entrar(edad, tiene_entrada):\n    pass`}
-  tests={`assert puede_entrar(20, True) == True, "mayor y con entrada: entra"\nassert puede_entrar(20, False) == False, "sin entrada no entra, aunque sea mayor"\nassert puede_entrar(15, True) == False, "menor no entra, aunque tenga entrada"\nassert puede_entrar(18, True) == True, "18 ya es mayor de edad"\nassert puede_entrar(15, False) == False, "ni una ni la otra"`}
+  datos={`edad = 20\ntiene_entrada = True`}
+  starter={`# Mostrá 'pasá' o 'no pasás'.\n`}
+  tests={`assert correr(edad=20, tiene_entrada=True).strip() == "pasá", "mayor y con entrada"\nassert correr(edad=20, tiene_entrada=False).strip() == "no pasás", "sin entrada no entra, aunque sea mayor"\nassert correr(edad=15, tiene_entrada=True).strip() == "no pasás", "menor no entra, aunque tenga entrada"\nassert correr(edad=18, tiene_entrada=True).strip() == "pasá", "18 ya es mayor de edad"\nassert correr(edad=15, tiene_entrada=False).strip() == "no pasás", "ni una ni la otra"`}
   pistas={[
     "Mirá los cinco casos de los tests. ¿En cuántos de ellos entra? ¿Qué tienen en común solo esos?",
     "¿Alcanza con que se cumpla una de las dos condiciones, o hacen falta las dos a la vez?",
@@ -142,7 +145,7 @@ if not esta_lleno:                # al revés
 >
 Para entrar al recital hay que ser **mayor de edad** (18 o más) **y** tener entrada.
 
-Completá `puede_entrar` para que devuelva `True` o `False`.
+Mostrá `pasá` o `no pasás`.
 </EjercicioPython>
 
 ## Más práctica
@@ -150,117 +153,122 @@ Completá `puede_entrar` para que devuelva `True` o `False`.
 <EjercicioPython
   titulo="Mayor de edad"
   dificultad="🌱"
-  starter={`def es_mayor(edad):\n    pass`}
-  tests={`assert es_mayor(20) == True, "20 es mayor de edad"\nassert es_mayor(18) == True, "18 ya cuenta"\nassert es_mayor(17) == False, "17 todavía no"\nassert es_mayor(0) == False, "recién nacido"`}
+  datos={`edad = 20`}
+  starter={`# Mostrá 'mayor' o 'menor'.\n`}
+  tests={`assert correr(edad=20).strip() == "mayor", "20 es mayor de edad"\nassert correr(edad=18).strip() == "mayor", "18 ya cuenta"\nassert correr(edad=17).strip() == "menor", "17 todavía no"\nassert correr(edad=0).strip() == "menor", "recién nacido"`}
   pistas={[
     "¿A partir de qué edad exactamente? ¿Ese número entra o queda afuera?",
   ]}
 >
-Completá `es_mayor` para que devuelva `True` si la edad es 18 o más.
+Mostrá `mayor` si la edad es 18 o más, y `menor` si no.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Positivo, negativo o cero"
   dificultad="🌱"
-  starter={`def signo(numero):\n    pass`}
-  tests={`assert signo(5) == "positivo", f'con 5 devolviste {signo(5)!r}'\nassert signo(-5) == "negativo", f'con -5 devolviste {signo(-5)!r}'\nassert signo(0) == "cero", "el 0 no es ni positivo ni negativo"\nassert signo(0.1) == "positivo", "un decimal chiquito sigue siendo positivo"`}
+  datos={`numero = 5`}
+  starter={`# Mostrá 'positivo', 'negativo' o 'cero'.\n`}
+  tests={`assert correr(numero=5).strip() == "positivo", f'con 5 imprimiste {correr(numero=5).strip()!r}'\nassert correr(numero=-5).strip() == "negativo", f'con -5 imprimiste {correr(numero=-5).strip()!r}'\nassert correr(numero=0).strip() == "cero", "el 0 no es ni positivo ni negativo"\nassert correr(numero=0.1).strip() == "positivo", "un decimal chiquito sigue siendo positivo"`}
   pistas={[
     "Son tres resultados posibles, no dos. ¿El cero entra en alguno de los otros dos casos?",
   ]}
 >
-Completá `signo` para que devuelva `"positivo"`, `"negativo"` o `"cero"`.
+Mostrá `positivo`, `negativo` o `cero` según lo que valga `numero`.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="El mayor de dos"
   dificultad="🌱"
-  starter={`def mayor_de(a, b):\n    pass`}
-  tests={`assert mayor_de(8, 3) == 8, "8 es mayor que 3"\nassert mayor_de(3, 8) == 8, "el orden no debería importar"\nassert mayor_de(5, 5) == 5, "si son iguales, devolvé ese mismo número"\nassert mayor_de(-2, -9) == -2, "con negativos también"`}
+  datos={`a = 8\nb = 3`}
+  starter={`# Mostrá el mayor de los dos.\n`}
+  tests={`assert correr(a=8, b=3).strip() == "8", "8 es mayor que 3"\nassert correr(a=3, b=8).strip() == "8", "el orden no debería importar"\nassert correr(a=5, b=5).strip() == "5", "si son iguales, mostrá ese mismo número"\nassert correr(a=-2, b=-9).strip() == "-2", "con negativos también"`}
   pistas={[
-    "Fijate en el test donde los dos son iguales: ¿tu solución devuelve algo en ese caso, o se te escapa sin devolver nada?",
+    "Fijate en el test donde los dos son iguales: ¿tu programa llega a imprimir algo en ese caso, o se queda sin mostrar nada?",
   ]}
 >
-Completá `mayor_de` para que devuelva el mayor de los dos números. Si son iguales, devolvé ese
-número.
+Mostrá el mayor entre `a` y `b`. Si son iguales, mostrá ese número.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Par o impar"
   dificultad="🌱"
-  starter={`def par_o_impar(numero):\n    pass`}
-  tests={`assert par_o_impar(4) == "par", "4 es par"\nassert par_o_impar(7) == "impar", "7 es impar"\nassert par_o_impar(0) == "par", "el 0 es par"\nassert par_o_impar(-3) == "impar", "los negativos también son pares o impares"`}
+  datos={`numero = 4`}
+  starter={`# Mostrá 'par' o 'impar'.\n`}
+  tests={`assert correr(numero=4).strip() == "par", "4 es par"\nassert correr(numero=7).strip() == "impar", "7 es impar"\nassert correr(numero=0).strip() == "par", "el 0 es par"\nassert correr(numero=-3).strip() == "impar", "los negativos también son pares o impares"`}
   pistas={[
     "¿Cómo te das cuenta a ojo de que un número es par? ¿Qué tiene que dar al dividirlo por 2?",
   ]}
 >
-Completá `par_o_impar` para que devuelva `"par"` o `"impar"`.
+Mostrá `par` o `impar` según lo que valga `numero`.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Frío o calor"
   dificultad="🌿"
-  starter={`def clima(temperatura):\n    pass`}
-  tests={`assert clima(10) == "frío", "10 grados es frío"\nassert clima(14.9) == "frío", "justo abajo de 15 sigue siendo frío"\nassert clima(15) == "templado", "15 ya es templado"\nassert clima(25) == "templado", "25 todavía es templado"\nassert clima(25.1) == "calor", "pasando 25 es calor"\nassert clima(30) == "calor", "30 es calor"`}
+  datos={`temperatura = 20`}
+  starter={`# Mostrá 'frío', 'templado' o 'calor'.\n`}
+  tests={`assert correr(temperatura=10).strip() == "frío", "10 grados es frío"\nassert correr(temperatura=14.9).strip() == "frío", "justo abajo de 15 sigue siendo frío"\nassert correr(temperatura=15).strip() == "templado", "15 ya es templado"\nassert correr(temperatura=25).strip() == "templado", "25 todavía es templado"\nassert correr(temperatura=25.1).strip() == "calor", "pasando 25 es calor"\nassert correr(temperatura=30).strip() == "calor", "30 es calor"`}
   pistas={[
     "Los tests prueban 14.9, 15, 25 y 25.1 a propósito. ¿En cuál de los tres grupos cae exactamente el 15? ¿Y el 25?",
     "Si preguntás primero por el rango del medio, ¿qué pasa con un valor de 10?",
   ]}
 >
-Completá `clima` para que devuelva `"frío"` (menos de 15), `"templado"` (de 15 a 25 inclusive) o
-`"calor"` (más de 25).
+Mostrá `frío` (menos de 15), `templado` (de 15 a 25 inclusive) o `calor` (más de 25).
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Verificar contraseña"
   dificultad="🌿"
-  starter={`def verificar(ingresada):\n    CONTRASENA = "python123"\n    pass`}
-  tests={`assert verificar("python123") == "acceso concedido", "la contraseña correcta entra"\nassert verificar("Python123") == "acceso denegado", "las mayúsculas importan"\nassert verificar("") == "acceso denegado", "vacía no entra"\nassert verificar("python1234") == "acceso denegado", "parecida no alcanza"`}
+  datos={`CONTRASENA = "python123"\ningresada = "python123"`}
+  starter={`# Compará 'ingresada' con 'CONTRASENA'.\n`}
+  tests={`assert correr(ingresada="python123").strip() == "acceso concedido", "la contraseña correcta entra"\nassert correr(ingresada="Python123").strip() == "acceso denegado", "las mayúsculas importan"\nassert correr(ingresada="").strip() == "acceso denegado", "vacía no entra"\nassert correr(ingresada="python1234").strip() == "acceso denegado", "parecida no alcanza"`}
   pistas={[
     "Mirá el test de <code>Python123</code> con mayúscula: se espera que NO entre. ¿El operador que estás usando distingue mayúsculas de minúsculas?",
   ]}
 >
-Completá `verificar` para que devuelva `"acceso concedido"` si coincide con la contraseña guardada,
-o `"acceso denegado"` si no.
+Mostrá `acceso concedido` si `ingresada` coincide con `CONTRASENA`, o `acceso denegado` si no.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Comparar con 10"
   dificultad="🌿"
-  starter={`def comparar(numero):\n    pass`}
-  tests={`assert comparar(15) == "mayor", "15 es mayor que 10"\nassert comparar(10) == "igual", "10 es exactamente 10"\nassert comparar(3) == "menor", "3 es menor"\nassert comparar(10.0) == "igual", "10.0 también es igual a 10"`}
+  datos={`numero = 15`}
+  starter={`# Mostrá 'mayor', 'igual' o 'menor' respecto de 10.\n`}
+  tests={`assert correr(numero=15).strip() == "mayor", "15 es mayor que 10"\nassert correr(numero=10).strip() == "igual", "10 es exactamente 10"\nassert correr(numero=3).strip() == "menor", "3 es menor"\nassert correr(numero=10.0).strip() == "igual", "10.0 también es igual a 10"`}
   pistas={[
     "Hay un caso que se escapa fácil si solo preguntás por mayor y menor. ¿Cuál es?",
   ]}
 >
-Completá `comparar` para que devuelva `"mayor"`, `"igual"` o `"menor"` respecto de 10.
+Mostrá `mayor`, `igual` o `menor` comparando `numero` con 10.
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Boletín con promedio"
   dificultad="🌳"
-  starter={`def boletin(n1, n2, n3):\n    pass`}
-  tests={`assert boletin(9, 9, 9) == "promociona", "promedio 9"\nassert boletin(8, 8, 8) == "promociona", "8 justo promociona"\nassert boletin(7, 7, 7) == "aprueba", "promedio 7"\nassert boletin(6, 6, 6) == "aprueba", "6 justo aprueba"\nassert boletin(5, 5, 5) == "recupera", "promedio 5"\nassert boletin(10, 8, 6) == "promociona", "el promedio es 8, no mires las notas sueltas"`}
+  datos={`n1 = 9\nn2 = 8\nn3 = 7`}
+  starter={`# Calculá el promedio de las tres notas y mostrá la condición.\n`}
+  tests={`assert correr(n1=9, n2=9, n3=9).strip() == "promociona", "promedio 9"\nassert correr(n1=8, n2=8, n3=8).strip() == "promociona", "8 justo promociona"\nassert correr(n1=7, n2=7, n3=7).strip() == "aprueba", "promedio 7"\nassert correr(n1=6, n2=6, n3=6).strip() == "aprueba", "6 justo aprueba"\nassert correr(n1=5, n2=5, n3=5).strip() == "recupera", "promedio 5"\nassert correr(n1=10, n2=8, n3=6).strip() == "promociona", "el promedio es 8, no mires las notas sueltas"`}
   pistas={[
     "El último test tiene notas muy distintas entre sí. ¿Estás mirando cada nota por separado o la cuenta que las junta?",
     "¿En qué orden conviene preguntar por los cortes de 8 y 6 para que un promedio de 9 no caiga en el lugar equivocado?",
   ]}
 >
-Completá `boletin` para que calcule el promedio de las tres notas y devuelva `"promociona"` (8 o
-más), `"aprueba"` (6 o más) o `"recupera"` (menos de 6).
+Calculá el promedio de `n1`, `n2` y `n3`, y mostrá `promociona` (8 o más), `aprueba` (6 o más) o
+`recupera` (menos de 6).
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Entre 1 y 100"
   dificultad="🌿"
-  starter={`def en_rango(numero):\n    pass`}
-  tests={`assert en_rango(50) == True, "50 está en el rango"\nassert en_rango(1) == True, "el 1 está incluido"\nassert en_rango(100) == True, "el 100 está incluido"\nassert en_rango(0) == False, "el 0 queda afuera"\nassert en_rango(101) == False, "el 101 queda afuera"`}
+  datos={`numero = 50`}
+  starter={`# Mostrá 'dentro' o 'fuera'.\n`}
+  tests={`assert correr(numero=50).strip() == "dentro", "50 está en el rango"\nassert correr(numero=1).strip() == "dentro", "el 1 está incluido"\nassert correr(numero=100).strip() == "dentro", "el 100 está incluido"\nassert correr(numero=0).strip() == "fuera", "el 0 queda afuera"\nassert correr(numero=101).strip() == "fuera", "el 101 queda afuera"`}
   pistas={[
-    "Los tests prueban justo el 1 y el 100: los dos tienen que dar True. ¿Los operadores que elegiste incluyen los extremos?",
+    "Los tests prueban justo el 1 y el 100: los dos tienen que dar dentro. ¿Los operadores que elegiste incluyen los extremos?",
     "Son dos condiciones que se tienen que cumplir a la vez. ¿Con qué las unís? (En Python también se puede escribir todo junto, como en matemática.)",
   ]}
 >
-Completá `en_rango` para que devuelva `True` si el número está entre 1 y 100, **incluidos** los dos
-extremos.
+Mostrá `dentro` si `numero` está entre 1 y 100 **incluidos**, o `fuera` si no.
 </EjercicioPython>
 
 ## Un detalle que te va a ahorrar líneas
@@ -269,19 +277,17 @@ Cuando una condición ya es verdadera o falsa por sí misma, no hace falta el `i
 
 ```python
 # En vez de esto...
-def es_mayor(edad):
-    if edad >= 18:
-        return True
-    else:
-        return False
+if edad >= 18:
+    es_mayor = True
+else:
+    es_mayor = False
 
 # ...esto dice exactamente lo mismo
-def es_mayor(edad):
-    return edad >= 18
+es_mayor = edad >= 18
 ```
 
-`edad >= 18` **ya es** un `True` o un `False`. Envolverlo en un `if` para devolver `True` o `False`
-es dar una vuelta de más. Las dos versiones funcionan; la segunda se lee mejor.
+`edad >= 18` **ya es** un `True` o un `False`. Envolverlo en un `if` para después guardar `True` o
+`False` es dar una vuelta de más. Las dos versiones funcionan; la segunda se lee mejor.
 
 ---
 
