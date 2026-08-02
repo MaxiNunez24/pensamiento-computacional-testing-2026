@@ -13,7 +13,7 @@ import VolverATeoria from '../../../components/VolverATeoria.astro';
 Hasta ahora tus programas hacían siempre lo mismo, en el mismo orden. Pero la mayoría de las cosas
 útiles necesitan **decidir**:
 
-- Si la nota es 4 o más → aprobó. Si no → desaprobó.
+- Si la nota es 6 o más → aprobó. Si no → desaprobó.
 - Si el carrito supera los $50.000 → envío gratis.
 - Si la contraseña coincide → entra.
 
@@ -66,12 +66,12 @@ Confundirlos es un clásico, y Python te lo marca como error de sintaxis.
   titulo="¿Aprobó?"
   dificultad="🌱"
   starter={`def aprobo(nota):\n    pass`}
-  tests={`assert aprobo(7) == True, "con 7 debería aprobar"\nassert aprobo(4) == True, "4 es el mínimo para aprobar: tiene que dar True"\nassert aprobo(3) == False, "con 3 no aprueba"\nassert aprobo(10) == True, "con 10 aprueba"`}
+  tests={`assert aprobo(7) == True, "con 7 debería aprobar"\nassert aprobo(6) == True, "6 es el mínimo para aprobar: tiene que dar True"\nassert aprobo(5) == False, "con 5 no aprueba"\nassert aprobo(10) == True, "con 10 aprueba"`}
   pistas={[
-    "Fijate en el test del 4. ¿El 4 tiene que aprobar o no? ¿Qué operador de comparación incluye al número que estás comparando y cuál lo deja afuera?",
+    "Fijate en el test del 6. ¿El 6 tiene que aprobar o no? ¿Qué operador de comparación incluye al número que estás comparando y cuál lo deja afuera?",
   ]}
 >
-Completá `aprobo` para que devuelva `True` si la nota es **4 o más**, y `False` si no.
+Completá `aprobo` para que devuelva `True` si la nota es **6 o más**, y `False` si no.
 </EjercicioPython>
 
 ## Más de dos caminos: `elif`
@@ -83,7 +83,7 @@ if nota >= 9:
     print("Excelente")
 elif nota >= 7:
     print("Muy bien")
-elif nota >= 4:
+elif nota >= 6:
     print("Aprobado")
 else:
     print("Desaprobado")
@@ -93,8 +93,8 @@ else:
 **la primera que se cumple**; el resto ni las mira.
 
 :::note[Por qué este orden y no otro]
-Si pusieras `nota >= 4` primero, un 10 entraría por ahí y diría "Aprobado", porque 10 también es
-mayor o igual a 4. Nunca llegaría a "Excelente". Con `elif` conviene ir **de lo más exigente a lo
+Si pusieras `nota >= 6` primero, un 10 entraría por ahí y diría "Aprobado", porque 10 también es
+mayor o igual a 6. Nunca llegaría a "Excelente". Con `elif` conviene ir **de lo más exigente a lo
 menos exigente**.
 :::
 
@@ -102,18 +102,18 @@ menos exigente**.
   titulo="La categoría de la nota"
   dificultad="🌿"
   starter={`def categoria(nota):\n    pass`}
-  tests={`assert categoria(10) == "Excelente", f'con 10 devolviste {categoria(10)!r}'\nassert categoria(9) == "Excelente", "9 ya es Excelente"\nassert categoria(8) == "Muy bien", f'con 8 devolviste {categoria(8)!r}'\nassert categoria(7) == "Muy bien", "7 ya es Muy bien"\nassert categoria(5) == "Aprobado", f'con 5 devolviste {categoria(5)!r}'\nassert categoria(4) == "Aprobado", "4 aprueba"\nassert categoria(1) == "Desaprobado", f'con 1 devolviste {categoria(1)!r}'`}
+  tests={`assert categoria(10) == "Excelente", f'con 10 devolviste {categoria(10)!r}'\nassert categoria(9) == "Excelente", "9 ya es Excelente"\nassert categoria(8) == "Muy bien", f'con 8 devolviste {categoria(8)!r}'\nassert categoria(7) == "Muy bien", "7 ya es Muy bien"\nassert categoria(6) == "Aprobado", f'con 6 devolviste {categoria(6)!r}'\nassert categoria(5) == "Desaprobado", "con 5 ya no alcanza"\nassert categoria(1) == "Desaprobado", f'con 1 devolviste {categoria(1)!r}'`}
   pistas={[
     "Probá tu solución con un 10 y mirá qué devuelve. Si te dice “Aprobado”, ¿por cuál de las condiciones entró primero?",
-    "Python se queda con la PRIMERA condición que se cumple. ¿En qué orden conviene preguntarlas para que un 10 no entre por la puerta del 4?",
+    "Python se queda con la PRIMERA condición que se cumple. ¿En qué orden conviene preguntarlas para que un 10 no entre por la puerta del 6?",
   ]}
 >
 Completá `categoria` para que devuelva:
 
 - `"Excelente"` con 9 o 10
 - `"Muy bien"` con 7 u 8
-- `"Aprobado"` con 4, 5 o 6
-- `"Desaprobado"` con menos de 4
+- `"Aprobado"` con 6
+- `"Desaprobado"` con menos de 6
 </EjercicioPython>
 
 ## Combinar condiciones: `and`, `or`, `not`

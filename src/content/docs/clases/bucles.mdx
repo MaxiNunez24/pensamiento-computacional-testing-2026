@@ -143,13 +143,13 @@ Si la lista está **vacía**, devolvé `0` (no queremos que el programa se rompa
   titulo="Contar los aprobados"
   dificultad="🌿"
   starter={`def cuantos_aprobaron(notas):\n    pass`}
-  tests={`assert cuantos_aprobaron([10, 3, 7, 2, 4]) == 3, f'con [10, 3, 7, 2, 4] devolviste {cuantos_aprobaron([10, 3, 7, 2, 4])!r}'\nassert cuantos_aprobaron([1, 2, 3]) == 0, "ninguna llega a 4"\nassert cuantos_aprobaron([]) == 0, "sin notas, ningún aprobado"\nassert cuantos_aprobaron([4, 4, 4]) == 3, "el 4 aprueba"`}
+  tests={`assert cuantos_aprobaron([10, 3, 7, 2, 6]) == 3, f'con [10, 3, 7, 2, 6] devolviste {cuantos_aprobaron([10, 3, 7, 2, 6])!r}'\nassert cuantos_aprobaron([1, 2, 3]) == 0, "ninguna llega a 6"\nassert cuantos_aprobaron([]) == 0, "sin notas, ningún aprobado"\nassert cuantos_aprobaron([6, 6, 6]) == 3, "el 6 aprueba"`}
   pistas={[
     "Acá se juntan dos cosas que ya viste: recorrer todas las notas, y decidir por cada una si cuenta o no. ¿Cuál de las dos va adentro de la otra?",
     "Si contaras a mano con el dedo, ¿en qué número arrancás antes de mirar la primera nota?",
   ]}
 >
-Completá `cuantos_aprobaron` para que devuelva **cuántas** notas de la lista son 4 o más.
+Completá `cuantos_aprobaron` para que devuelva **cuántas** notas de la lista son 6 o más.
 </EjercicioPython>
 
 ## `break` y `continue`
