@@ -102,6 +102,20 @@ Sin la `f`, las llaves son texto común y salen tal cual. Es un error silencioso
 muestra cualquier cosa. Si ves llaves en tu salida, fijate la `f`.
 :::
 
+### Cambiar el separador: `sep`
+
+Por defecto `print()` separa con un espacio, pero podés elegir con qué:
+
+```python
+print("Python", "es", "genial")             # Python es genial
+print("Python", "es", "genial", sep="-")    # Python-es-genial
+print(1, 2, 3, sep=",")                     # 1,2,3
+print("2026", "08", "05", sep="/")          # 2026/08/05
+```
+
+`sep` va **al final**, después de todo lo que querés mostrar, y se aplica entre cada par de valores
+(no al principio ni al final).
+
 ## Saltos de línea
 
 Cada `print()` termina con un salto de línea. Si querés uno en el medio, usás `\n`:
@@ -151,6 +165,59 @@ OFERTA
 Python te dice **el tipo de error** en la última línea y **en qué línea** de tu código pasó. Con esas
 dos cosas ya sabés dónde mirar. No hace falta entender todo el bloque.
 :::
+
+
+## Más práctica
+
+<EjercicioPython
+  titulo="Nombre y apellido"
+  dificultad="🌱"
+  datos={`nombre = "Maxi"\napellido = "Nuñez"`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr(nombre="Maxi", apellido="Nuñez").strip() == "Maxi Nuñez", f'imprimiste {correr(nombre="Maxi", apellido="Nuñez").strip()!r}'\nassert correr(nombre="Ada", apellido="Lovelace").strip() == "Ada Lovelace", "con otros datos tiene que acompañar"\nassert len(correr(nombre="Maxi", apellido="Nuñez").strip().splitlines()) == 1, "tiene que salir todo en UNA sola línea"`}
+  pistas={[
+    "Los dos valores tienen que salir en la misma línea, separados por un espacio. ¿Qué pasa si se los pasás a un mismo <code>print</code> separados por coma?",
+  ]}
+>
+Mostrá el nombre y el apellido **en una sola línea**, separados por un espacio.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Separados por guion"
+  dificultad="🌱"
+  datos={`a = "Python"\nb = "es"\nc = "genial"`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`assert correr().strip() == "Python-es-genial", f"imprimiste {correr().strip()!r}"\nassert correr(a="uno", b="dos", c="tres").strip() == "uno-dos-tres", "con otras palabras tiene que acompañar"`}
+  pistas={[
+    "No queremos el espacio que <code>print</code> pone por defecto entre los valores. ¿Con qué parámetro se cambia ese separador?",
+    "El separador va entre los valores, no al principio ni al final. Si te sale <code>-Python-es-genial</code>, revisá cómo lo estás armando.",
+  ]}
+>
+Mostrá las tres palabras separadas por guiones, sin espacios:
+
+```
+Python-es-genial
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Dos prints, una línea"
+  dificultad="🌱"
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`r = correr()\nassert r.strip() == "Hola Mundo", f"imprimiste {r.strip()!r}"\nassert len(r.strip().splitlines()) == 1, "tiene que quedar todo en una sola línea"`}
+  pistas={[
+    "Cada <code>print</code> termina con un salto de línea. ¿Con qué parámetro se cambia lo que va al final?",
+    "Si te queda <code>HolaMundo</code> todo pegado, ¿qué le falta a lo que pusiste como final del primer print?",
+  ]}
+>
+Usando **dos `print()` separados**, hacé que en pantalla se lea:
+
+```
+Hola Mundo
+```
+
+La gracia es que quede en **una sola línea**, aunque sean dos instrucciones.
+</EjercicioPython>
 
 ---
 

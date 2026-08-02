@@ -115,6 +115,77 @@ Ejemplo: `promedio([10, 8, 9])` → `9`.
 - `return` devuelve un valor (distinto de `print`).
 - Definís una vez, la llamás todas las veces que quieras → **menos repetición, menos errores**.
 
+## Más práctica
+
+<EjercicioPython
+  titulo="La calculadora"
+  dificultad="🌿"
+  starter={`def sumar(a, b):\n    pass\n\ndef restar(a, b):\n    pass\n\ndef multiplicar(a, b):\n    pass\n\ndef dividir(a, b):\n    pass`}
+  tests={`assert sumar(2, 3) == 5, "2 + 3"\nassert restar(10, 4) == 6, "10 - 4"\nassert multiplicar(3, 4) == 12, "3 x 4"\nassert dividir(10, 2) == 5, "10 / 2"\nassert dividir(7, 2) == 3.5, "la división puede dar decimales"\nassert dividir(5, 0) is None, "dividir por cero tiene que devolver None, no romper"\nassert dividir(0, 5) == 0, "0 dividido cualquier cosa es 0 — ojo con confundir los casos"`}
+  pistas={[
+    "Tres de las cuatro son de una línea. La cuarta tiene un caso especial: ¿qué pasa en matemática si dividís por cero?",
+    "Mirá los dos últimos tests: uno divide POR cero y el otro divide AL cero. ¿Cuál de los dos es el problemático?",
+  ]}
+>
+Completá las cuatro funciones.
+
+En `dividir`, si el divisor es `0`, devolvé `None` en lugar de romper.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Conversiones y chequeos"
+  dificultad="🌱"
+  starter={`def celsius_a_fahrenheit(c):\n    pass\n\ndef es_par(n):\n    pass\n\ndef valor_absoluto(n):\n    pass`}
+  tests={`assert celsius_a_fahrenheit(0) == 32, "0 °C son 32 °F"\nassert celsius_a_fahrenheit(100) == 212, "100 °C son 212 °F"\nassert celsius_a_fahrenheit(-40) == -40, "-40 es el punto donde las dos escalas coinciden"\nassert es_par(4) is True, "4 es par"\nassert es_par(7) is False, "7 no es par"\nassert es_par(0) is True, "el 0 es par"\nassert valor_absoluto(5) == 5, "el absoluto de un positivo es él mismo"\nassert valor_absoluto(-5) == 5, "el absoluto de -5 es 5"\nassert valor_absoluto(0) == 0, "el absoluto de 0 es 0"`}
+  pistas={[
+    "La fórmula de Celsius a Fahrenheit es <code>c × 9/5 + 32</code>. ¿En qué orden se resuelven esas operaciones?",
+    "En <code>es_par</code> los tests usan <code>is True</code>, no <code>== True</code>: tenés que devolver el booleano en sí. ¿Hace falta un <code>if</code> para eso?",
+    "El valor absoluto solo cambia algo cuando el número es negativo. ¿Qué le hacés a un negativo para volverlo positivo?",
+  ]}
+>
+Completá las tres funciones:
+
+- `celsius_a_fahrenheit(c)` → convierte grados
+- `es_par(n)` → `True` o `False`
+- `valor_absoluto(n)` → el número sin signo
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Analizar una lista"
+  dificultad="🌳"
+  starter={`def analizar(numeros):\n    pass`}
+  tests={`assert analizar([1, 2, 3, 4]) == (1, 4, 2.5, 2), f"con [1,2,3,4] devolviste {analizar([1, 2, 3, 4])!r}"\nassert analizar([5]) == (5, 5, 5.0, 0), "un solo número impar"\nassert analizar([2]) == (2, 2, 2.0, 1), "un solo número par"\nassert analizar([-3, -1]) == (-3, -1, -2.0, 0), "con negativos también"\nminimo, maximo, promedio, pares = analizar([1, 2, 3, 4])\nassert (minimo, maximo, promedio, pares) == (1, 4, 2.5, 2), "tiene que poder desempaquetarse en cuatro"`}
+  pistas={[
+    "Son cuatro valores en un orden fijo. Antes de escribir nada, nombralos y fijate cuál de ellos necesita recorrer la lista.",
+    "Tres de los cuatro salen de funciones que ya conocés. ¿Cuál es el que sí o sí tenés que contar vos?",
+  ]}
+>
+Completá `analizar(numeros)` para que devuelva una **tupla** con el mínimo, el máximo, el promedio
+y la **cantidad de números pares**, en ese orden.
+
+`analizar([1, 2, 3, 4])` → `(1, 4, 2.5, 2)`
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Validador de contraseñas"
+  dificultad="🌳"
+  starter={`def validar_password(password):\n    pass`}
+  tests={`assert validar_password("Python123") is True, "cumple todas las reglas"\nassert validar_password("python123") is False, "le falta la mayúscula"\nassert validar_password("Python") is False, "le falta el número"\nassert validar_password("Py1") is False, "es muy corta"\nassert validar_password("Python 123") is False, "tiene un espacio"\nassert validar_password("ABCDEFG1") is True, "8 caracteres justos, con mayúscula y número"`}
+  pistas={[
+    "Son cuatro condiciones que se tienen que cumplir TODAS. ¿Con qué las unís?",
+    "Para saber si hay <em>al menos una</em> mayúscula tenés que mirar carácter por carácter. ¿Qué método te dice si un carácter suelto es mayúscula?",
+    "El test de <code>ABCDEFG1</code> tiene exactamente 8 caracteres y tiene que pasar. ¿Tu condición de largo incluye al 8 o lo deja afuera?",
+  ]}
+>
+Completá `validar_password` para que devuelva `True` solo si la contraseña cumple **todas** estas
+reglas:
+
+- Al menos **8 caracteres**
+- Al menos **una mayúscula**
+- Al menos **un número**
+- **Sin espacios**
+</EjercicioPython>
+
 :::note[¿Qué sigue?]
 En **Funciones II** vamos a ver el *scope* (dónde "viven" las variables), los valores por defecto y
 cómo una función puede recibir una cantidad variable de argumentos.
