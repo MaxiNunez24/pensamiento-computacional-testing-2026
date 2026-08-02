@@ -145,6 +145,124 @@ Para entrar al recital hay que ser **mayor de edad** (18 o más) **y** tener ent
 Completá `puede_entrar` para que devuelva `True` o `False`.
 </EjercicioPython>
 
+## Más práctica
+
+<EjercicioPython
+  titulo="Mayor de edad"
+  dificultad="🌱"
+  starter={`def es_mayor(edad):\n    pass`}
+  tests={`assert es_mayor(20) == True, "20 es mayor de edad"\nassert es_mayor(18) == True, "18 ya cuenta"\nassert es_mayor(17) == False, "17 todavía no"\nassert es_mayor(0) == False, "recién nacido"`}
+  pistas={[
+    "¿A partir de qué edad exactamente? ¿Ese número entra o queda afuera?",
+  ]}
+>
+Completá `es_mayor` para que devuelva `True` si la edad es 18 o más.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Positivo, negativo o cero"
+  dificultad="🌱"
+  starter={`def signo(numero):\n    pass`}
+  tests={`assert signo(5) == "positivo", f'con 5 devolviste {signo(5)!r}'\nassert signo(-5) == "negativo", f'con -5 devolviste {signo(-5)!r}'\nassert signo(0) == "cero", "el 0 no es ni positivo ni negativo"\nassert signo(0.1) == "positivo", "un decimal chiquito sigue siendo positivo"`}
+  pistas={[
+    "Son tres resultados posibles, no dos. ¿El cero entra en alguno de los otros dos casos?",
+  ]}
+>
+Completá `signo` para que devuelva `"positivo"`, `"negativo"` o `"cero"`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="El mayor de dos"
+  dificultad="🌱"
+  starter={`def mayor_de(a, b):\n    pass`}
+  tests={`assert mayor_de(8, 3) == 8, "8 es mayor que 3"\nassert mayor_de(3, 8) == 8, "el orden no debería importar"\nassert mayor_de(5, 5) == 5, "si son iguales, devolvé ese mismo número"\nassert mayor_de(-2, -9) == -2, "con negativos también"`}
+  pistas={[
+    "Fijate en el test donde los dos son iguales: ¿tu solución devuelve algo en ese caso, o se te escapa sin devolver nada?",
+  ]}
+>
+Completá `mayor_de` para que devuelva el mayor de los dos números. Si son iguales, devolvé ese
+número.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Par o impar"
+  dificultad="🌱"
+  starter={`def par_o_impar(numero):\n    pass`}
+  tests={`assert par_o_impar(4) == "par", "4 es par"\nassert par_o_impar(7) == "impar", "7 es impar"\nassert par_o_impar(0) == "par", "el 0 es par"\nassert par_o_impar(-3) == "impar", "los negativos también son pares o impares"`}
+  pistas={[
+    "¿Cómo te das cuenta a ojo de que un número es par? ¿Qué tiene que dar al dividirlo por 2?",
+  ]}
+>
+Completá `par_o_impar` para que devuelva `"par"` o `"impar"`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Frío o calor"
+  dificultad="🌿"
+  starter={`def clima(temperatura):\n    pass`}
+  tests={`assert clima(10) == "frío", "10 grados es frío"\nassert clima(14.9) == "frío", "justo abajo de 15 sigue siendo frío"\nassert clima(15) == "templado", "15 ya es templado"\nassert clima(25) == "templado", "25 todavía es templado"\nassert clima(25.1) == "calor", "pasando 25 es calor"\nassert clima(30) == "calor", "30 es calor"`}
+  pistas={[
+    "Los tests prueban 14.9, 15, 25 y 25.1 a propósito. ¿En cuál de los tres grupos cae exactamente el 15? ¿Y el 25?",
+    "Si preguntás primero por el rango del medio, ¿qué pasa con un valor de 10?",
+  ]}
+>
+Completá `clima` para que devuelva `"frío"` (menos de 15), `"templado"` (de 15 a 25 inclusive) o
+`"calor"` (más de 25).
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Verificar contraseña"
+  dificultad="🌿"
+  starter={`def verificar(ingresada):\n    CONTRASENA = "python123"\n    pass`}
+  tests={`assert verificar("python123") == "acceso concedido", "la contraseña correcta entra"\nassert verificar("Python123") == "acceso denegado", "las mayúsculas importan"\nassert verificar("") == "acceso denegado", "vacía no entra"\nassert verificar("python1234") == "acceso denegado", "parecida no alcanza"`}
+  pistas={[
+    "Mirá el test de <code>Python123</code> con mayúscula: se espera que NO entre. ¿El operador que estás usando distingue mayúsculas de minúsculas?",
+  ]}
+>
+Completá `verificar` para que devuelva `"acceso concedido"` si coincide con la contraseña guardada,
+o `"acceso denegado"` si no.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Comparar con 10"
+  dificultad="🌿"
+  starter={`def comparar(numero):\n    pass`}
+  tests={`assert comparar(15) == "mayor", "15 es mayor que 10"\nassert comparar(10) == "igual", "10 es exactamente 10"\nassert comparar(3) == "menor", "3 es menor"\nassert comparar(10.0) == "igual", "10.0 también es igual a 10"`}
+  pistas={[
+    "Hay un caso que se escapa fácil si solo preguntás por mayor y menor. ¿Cuál es?",
+  ]}
+>
+Completá `comparar` para que devuelva `"mayor"`, `"igual"` o `"menor"` respecto de 10.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Boletín con promedio"
+  dificultad="🌳"
+  starter={`def boletin(n1, n2, n3):\n    pass`}
+  tests={`assert boletin(9, 9, 9) == "promociona", "promedio 9"\nassert boletin(8, 8, 8) == "promociona", "8 justo promociona"\nassert boletin(7, 7, 7) == "aprueba", "promedio 7"\nassert boletin(6, 6, 6) == "aprueba", "6 justo aprueba"\nassert boletin(5, 5, 5) == "recupera", "promedio 5"\nassert boletin(10, 8, 6) == "promociona", "el promedio es 8, no mires las notas sueltas"`}
+  pistas={[
+    "El último test tiene notas muy distintas entre sí. ¿Estás mirando cada nota por separado o la cuenta que las junta?",
+    "¿En qué orden conviene preguntar por los cortes de 8 y 6 para que un promedio de 9 no caiga en el lugar equivocado?",
+  ]}
+>
+Completá `boletin` para que calcule el promedio de las tres notas y devuelva `"promociona"` (8 o
+más), `"aprueba"` (6 o más) o `"recupera"` (menos de 6).
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Entre 1 y 100"
+  dificultad="🌿"
+  starter={`def en_rango(numero):\n    pass`}
+  tests={`assert en_rango(50) == True, "50 está en el rango"\nassert en_rango(1) == True, "el 1 está incluido"\nassert en_rango(100) == True, "el 100 está incluido"\nassert en_rango(0) == False, "el 0 queda afuera"\nassert en_rango(101) == False, "el 101 queda afuera"`}
+  pistas={[
+    "Los tests prueban justo el 1 y el 100: los dos tienen que dar True. ¿Los operadores que elegiste incluyen los extremos?",
+    "Son dos condiciones que se tienen que cumplir a la vez. ¿Con qué las unís? (En Python también se puede escribir todo junto, como en matemática.)",
+  ]}
+>
+Completá `en_rango` para que devuelva `True` si el número está entre 1 y 100, **incluidos** los dos
+extremos.
+</EjercicioPython>
+
 ## Un detalle que te va a ahorrar líneas
 
 Cuando una condición ya es verdadera o falsa por sí misma, no hace falta el `if`:
