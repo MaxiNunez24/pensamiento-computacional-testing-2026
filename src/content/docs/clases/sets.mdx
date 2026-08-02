@@ -4,6 +4,10 @@ description: Conjuntos en Python con el Bingo como excusa perfecta. Membresía r
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/05_colecciones/tuplas_sets/" />
+
 
 :::tip[Antes de empezar]
 Clase **interactiva**: escribí, tocá **▶ Ejecutar** para probar y **✓ Verificar** (o `Ctrl/Cmd+Enter`)
@@ -51,8 +55,8 @@ variable nueva con el resultado. El verificador revisa esa variable.
   starter={`carton    = {3, 11, 18, 24}\nsorteados = {11, 24, 50, 7}\n\n# Guardá en 'marcados' los números del cartón que YA salieron\n`}
   tests={`assert marcados == {11, 24}, "marcados debería ser {11, 24}"\nprint("¡Marcados!")`}
   pistas={[
-    "Los que están en el cartón <strong>y</strong> en los sorteados → intersección.",
-    "El operador de intersección es <code>&</code>.",
+    "Agarrá tu cartón y la lista de sorteados. ¿Qué números estás buscando: los que aparecen en los dos lados, o los que están en uno solo?",
+    "De las operaciones de conjuntos que viste, ¿cuál se queda con lo que dos conjuntos tienen en común?",
   ]}
 >
 Tenés tu `carton` y el set de números `sorteados`. Guardá en **`marcados`** los números de tu cartón
@@ -67,8 +71,8 @@ Resultado esperado: `marcados` debería ser `{11, 24}`.
   starter={`carton    = {3, 11, 18, 24}\nsorteados = {11, 24, 50, 7}\n\n# Guardá en 'pendientes' los números del cartón que TODAVÍA no salieron\n`}
   tests={`assert pendientes == {3, 18}, "pendientes debería ser {3, 18}"\nprint("¡Pendientes!")`}
   pistas={[
-    "Lo que está en el cartón pero <strong>no</strong> en los sorteados → diferencia.",
-    "El operador de diferencia es <code>-</code>. ¿Cuál va primero, el cartón o los sorteados?",
+    "Ahora buscás los que están en tu cartón pero todavía NO salieron. ¿Eso es lo que los dos tienen en común, o lo contrario?",
+    "En una resta de conjuntos el orden cambia el resultado. ¿De cuál de los dos querés sacar elementos: del cartón o de los sorteados?",
   ]}
 >
 Con los mismos datos, guardá en **`pendientes`** los números de tu cartón que **todavía faltan**.
@@ -82,8 +86,8 @@ Resultado esperado: `pendientes` debería ser `{3, 18}`.
   starter={`carton    = {5, 12, 30}\nsorteados = {5, 12, 30, 7, 88, 90}\n\n# Guardá en 'gano' (True o False) si YA salieron todos los del cartón\n`}
   tests={`assert gano == True, "con estos datos, gano debería ser True"\nprint("¡Verificado!")`}
   pistas={[
-    "Ganás cuando <strong>todos</strong> los del cartón están entre los sorteados.",
-    "Eso es exactamente <code>carton.issubset(sorteados)</code> (o <code>carton &lt;= sorteados</code>).",
+    "¿Cuándo cantás bingo exactamente? Decilo en una frase que empiece con “cuando todos...”.",
+    "No necesitás contar cuántos coinciden. ¿Existe alguna forma de preguntar de una si un conjunto está enteramente contenido en otro?",
   ]}
 >
 Tu `carton` tiene 3 números y `sorteados` tiene varios más. Guardá en **`gano`** (`True`/`False`) si

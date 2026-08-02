@@ -4,6 +4,10 @@ description: La estructura que más vas a usar. Crear, recorrer y transformar li
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/04_listas/listas/" />
+
 
 :::tip[Antes de empezar]
 Clase **interactiva**: escribí, tocá **▶ Ejecutar** para probar y **✓ Verificar** (o `Ctrl/Cmd+Enter`)
@@ -64,8 +68,8 @@ revisa esa variable. 😉
   starter={`numeros = [1, 2, 3]\n\n# Creá una lista 'dobles' con cada número multiplicado por 2\n`}
   tests={`assert dobles == [2, 4, 6], "dobles debería ser [2, 4, 6]"\nprint("¡Lista duplicada!")`}
   pistas={[
-    "Empezá con una lista vacía: <code>dobles = []</code>.",
-    "Recorré con <code>for n in numeros:</code> y usá <code>dobles.append(n * 2)</code>.",
+    "Si tuvieras que hacerlo a mano con lápiz: ¿arrancás con una hoja en blanco o ya escribiste algo? ¿Qué representa esa hoja en tu código?",
+    "Por cada número de la lista original vas a producir uno nuevo. ¿Dónde lo vas guardando para no perderlo?",
   ]}
 >
 Tenés la lista `numeros = [1, 2, 3]`. Creá una lista llamada **`dobles`** con cada número
@@ -80,8 +84,8 @@ Resultado esperado: `dobles` debería ser `[2, 4, 6]`.
   starter={`numeros = [1, 2, 3, 4, 5, 6]\n\n# Creá una lista 'pares' con solo los números pares de 'numeros'\n`}
   tests={`assert pares == [2, 4, 6], "pares debería ser [2, 4, 6]"\nprint("¡Pares filtrados!")`}
   pistas={[
-    "Un número es par si el resto de dividirlo por 2 es 0: <code>n % 2 == 0</code>.",
-    "Recorré la lista y agregá a <code>pares</code> solo los que cumplen la condición.",
+    "¿Cómo te das cuenta de que un número es par sin usar la calculadora? ¿Qué te tiene que dar la división por 2?",
+    "Esta vez no todos los elementos pasan a la lista nueva. ¿En qué momento del recorrido decidís si este entra o no?",
   ]}
 >
 Tenés la lista `numeros = [1, 2, 3, 4, 5, 6]`. Creá una lista **`pares`** con **solo los números
@@ -96,8 +100,8 @@ Resultado esperado: `pares` debería ser `[2, 4, 6]`.
   starter={`numeros = [1, 5, 8, 3, 9, 2]\nlimite = 4\n\n# Guardá en 'cantidad' cuántos números son MAYORES que 'limite'\n`}
   tests={`assert cantidad == 3, "cantidad debería ser 3 (5, 8 y 9)"\nprint("¡Conteo correcto!")`}
   pistas={[
-    "Arrancá con un contador en cero: <code>cantidad = 0</code>.",
-    "Por cada número mayor que <code>limite</code>, hacé <code>cantidad += 1</code>.",
+    "Si contaras a mano con el dedo, ¿en qué número arrancás antes de mirar el primer elemento?",
+    "¿Qué querés que quede al final: la lista de los que cumplen, o solamente cuántos son?",
   ]}
 >
 Tenés `numeros = [1, 5, 8, 3, 9, 2]` y `limite = 4`. Guardá en **`cantidad`** cuántos números son

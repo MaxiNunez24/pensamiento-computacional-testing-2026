@@ -4,6 +4,10 @@ description: Tu primera caja de herramientas reutilizable. Aprendé a definir fu
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/06_funciones/funciones_1/" />
+
 
 :::tip[Antes de empezar]
 Esta clase es **interactiva**. Escribí el código en cada recuadro, tocá **▶ Ejecutar** para verlo
@@ -64,8 +68,8 @@ mientras todavía no lo escribiste. **Borralo y poné tu solución** en su lugar
   starter={`def saludar(nombre):\n    # Tiene que DEVOLVER el texto "¡Hola, <nombre>!"\n    pass`}
   tests={`assert saludar("Ana") == "¡Hola, Ana!", 'saludar("Ana") debería devolver "¡Hola, Ana!"'\nassert saludar("Beto") == "¡Hola, Beto!"\nprint("Probado con Ana y Beto")`}
   pistas={[
-    "Usá <code>return</code>, no <code>print</code>.",
-    "Una f-string arma el texto fácil: <code>f\"¡Hola, {nombre}!\"</code>.",
+    "Escribí a mano el saludo para Ana y para Beto. ¿Qué parte del texto es siempre igual y cuál cambia según quién sea?",
+    "El test compara el valor que sale de la función. ¿Alcanza con <em>mostrar</em> el saludo en pantalla, o hace falta <em>entregarlo</em> para que puedan compararlo?",
   ]}
 >
 Escribí una función `saludar(nombre)` que **devuelva** el texto `¡Hola, <nombre>!`.
@@ -79,8 +83,8 @@ Por ejemplo, `saludar("Ana")` tiene que devolver `"¡Hola, Ana!"`.
   starter={`def area_rectangulo(base, altura):\n    pass`}
   tests={`assert area_rectangulo(3, 4) == 12, "el área de 3 x 4 debería ser 12"\nassert area_rectangulo(5, 2) == 10, "el área de 5 x 2 debería ser 10"\nassert area_rectangulo(0, 9) == 0, "el área de 0 x 9 debería ser 0"\nprint("Áreas calculadas OK")`}
   pistas={[
-    "Una función puede recibir varios parámetros separados por coma.",
-    "El área de un rectángulo es base × altura.",
+    "Si te dan la base y la altura de un rectángulo, ¿qué cuenta hacés para el área? Escribí esa misma cuenta con los nombres de los parámetros.",
+    "¿En qué orden llegan los valores cuando alguien escribe <code>area(3, 4)</code>? ¿Cómo sabe la función cuál es la base?",
   ]}
 >
 Una función puede recibir **varios** parámetros. Escribí `area_rectangulo(base, altura)` que
@@ -95,8 +99,8 @@ Ejemplo: `area_rectangulo(3, 4)` → `12`.
   starter={`def promedio(notas):\n    # 'notas' es una lista de números, ej: [10, 8, 9]\n    pass`}
   tests={`assert promedio([10, 8, 9]) == 9, "el promedio de [10, 8, 9] debería ser 9"\nassert promedio([4, 6]) == 5, "el promedio de [4, 6] debería ser 5"\nassert round(promedio([7, 8, 10]), 2) == 8.33, "el promedio de [7, 8, 10] debería ser 8.33"\nprint("Promedios verificados")`}
   pistas={[
-    "Ya conocés <code>sum(lista)</code> y <code>len(lista)</code>.",
-    "El promedio es la suma dividida por la cantidad de elementos.",
+    "¿Cómo sacás un promedio a mano? Nombrá las dos cosas que necesitás saber sobre la lista antes de poder dividir.",
+    "¿Qué pasaría si la lista viniera vacía? ¿Qué número estarías usando como divisor?",
   ]}
 >
 Combinemos con lo que ya sabés de listas. Escribí `promedio(notas)`, que recibe una **lista de

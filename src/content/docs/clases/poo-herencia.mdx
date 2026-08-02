@@ -7,6 +7,10 @@ import EjercicioPython from '../../../components/EjercicioPython.astro';
 import DiagramaClases from '../../../components/DiagramaClases.astro';
 import DiagramaLibre from '../../../components/DiagramaLibre.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/08_poo/poo_herencia/" />
+
 
 :::tip[Clase interactiva]
 Última de POO conceptual. Programás, ejecutás, y al final **armás un diagrama arrastrando**. 🧩
@@ -50,8 +54,8 @@ cuando la hija necesita un atributo más.
   starter={`class Instrumento:\n    def __init__(self, nombre):\n        self.nombre = nombre\n    def tocar(self):\n        return f"{self.nombre} hace un sonido"\n\n# Creá Guitarra(Instrumento) y Bateria(Instrumento)\n# que SOBRESCRIBAN tocar() con su propio sonido (ver tests).`}
   tests={`assert Guitarra("Gibson").tocar() == "Gibson hace: ¡Riiiff!", 'Guitarra debería sonar "<nombre> hace: ¡Riiiff!"'\nassert Bateria("Pearl").tocar() == "Pearl hace: ¡Pum pum tss!", 'Bateria debería sonar "<nombre> hace: ¡Pum pum tss!"'\nassert Instrumento("X").tocar() == "X hace un sonido"\nprint("¡Instrumentos OK!")`}
   pistas={[
-    "<code>class Guitarra(Instrumento):</code> ya te da el constructor gratis (heredado). Solo redefiní <code>tocar()</code>.",
-    "Cada hija devuelve su propio texto usando <code>self.nombre</code>.",
+    "Las tres clases comparten el nombre y la forma de construirse. ¿Hace falta volver a escribir el constructor en cada hija, o ya lo tienen de algún lado?",
+    "Si lo único distinto entre una guitarra y un piano es cómo suenan, ¿qué es lo único que tendrías que escribir en cada hija?",
   ]}
 >
 A partir de `Instrumento` (ya está), creá `Guitarra` y `Bateria` que **hereden** y **sobrescriban**
@@ -78,8 +82,8 @@ y sumás sus áreas con un solo `for`.
   starter={`class Figura:\n    def area(self):\n        return 0\n\n# Creá Circulo(radio) y Rectangulo(base, altura), que hereden de Figura\n# y sobrescriban area().  (Para el círculo usá 3.1416 * radio ** 2)`}
   tests={`from formas import Figura, Circulo, Rectangulo\nassert round(Circulo(10).area(), 2) == 314.16, "el área del círculo de radio 10 debería ser 314.16"\nassert Rectangulo(4, 5).area() == 20, "el área del rectángulo 4x5 debería ser 20"\nassert Figura().area() == 0\nprint("¡formas.py guardado y OK!")`}
   pistas={[
-    "<code>class Circulo(Figura):</code> con su <code>__init__(self, radio)</code> y <code>area()</code>.",
-    "Círculo: <code>3.1416 * self.radio ** 2</code>. Rectángulo: <code>self.base * self.altura</code>.",
+    "Un círculo se define con el radio y un rectángulo con base y altura: no comparten los datos. ¿Qué es lo único que SÍ comparten las dos figuras?",
+    "Las dos van a tener un método con el mismo nombre pero con cuentas distintas adentro. ¿Por qué conviene que se llamen igual?",
   ]}
 >
 Completá `formas.py`: `Circulo(radio)` y `Rectangulo(base, altura)` que **heredan** de `Figura` y
@@ -92,8 +96,8 @@ Completá `formas.py`: `Circulo(radio)` y `Rectangulo(base, altura)` que **hered
   starter={`from formas import Circulo, Rectangulo\n\nfiguras = [Circulo(10), Rectangulo(4, 5), Circulo(1)]\n\n# Recorré la lista con UN for y guardá la suma de todas las áreas en 'total'.\n`}
   tests={`assert round(total, 2) == 337.30, "la suma de las áreas debería ser 337.30"\nprint("¡Polimorfismo entre archivos! 🎉")`}
   pistas={[
-    "Todas las figuras tienen <code>area()</code>: por eso podés hacer <code>total += f.area()</code> sin preguntar el tipo.",
-    "Si no encuentra <code>formas</code>, ejecutá primero el ejercicio de arriba.",
+    "Mirá el bucle: ¿en algún momento pregunta si la figura es un círculo o un rectángulo?",
+    "Si mañana agregaras un triángulo, ¿habría que tocar esta función? ¿Qué es lo único que le tendrías que garantizar a la figura nueva?",
   ]}
 >
 Usá las figuras de `formas.py` (ya importadas). Recorré la lista `figuras` con **un solo `for`** y
