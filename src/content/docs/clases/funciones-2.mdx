@@ -1,0 +1,245 @@
+---
+title: Funciones II — scope, valores por defecto y *args / **kwargs
+description: "Dónde viven las variables, cómo hacer parámetros opcionales y funciones que reciben una cantidad variable de datos."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/06_funciones/funciones_2/" />
+
+## Scope: dónde vive cada variable
+
+Probá adivinar qué imprime esto:
+
+```python
+def saludar():
+    mensaje = "Hola"
+
+saludar()
+print(mensaje)      # 💥 NameError: name 'mensaje' is not defined
+```
+
+`mensaje` **nació y murió adentro de la función**. Cuando la función termina, sus variables
+desaparecen. A eso se le dice **scope local**.
+
+Al revés sí funciona: desde adentro podés **leer** lo de afuera.
+
+```python
+titulo = "Curso 2026"           # variable global
+
+def mostrar():
+    print(titulo)               # ✅ puede leerla
+
+mostrar()
+```
+
+Pero **asignarle** algo no la modifica: crea una nueva, local, que tapa a la de afuera.
+
+```python
+contador = 0
+
+def sumar():
+    contador = contador + 1     # 💥 UnboundLocalError
+
+sumar()
+```
+
+:::caution[Por qué ese error es tan raro]
+Python ve que en algún lugar de la función le asignás a `contador`, así que decide que es **local**.
+Y cuando llega a leer `contador + 1`, esa variable local todavía no tiene valor. De ahí el
+"UnboundLocalError": no es que no exista la global, es que decidió no mirarla.
+:::
+
+### La solución no es `global`
+
+Existe la palabra `global`, pero **casi nunca es la respuesta**. Una función que modifica variables
+de afuera es difícil de entender y de probar: para saber qué hace tenés que leer todo el programa.
+
+La forma sana es **recibir y devolver**:
+
+```python
+def sumar(contador):
+    return contador + 1
+
+contador = 0
+contador = sumar(contador)      # queda claro qué entra y qué sale
+```
+
+Esta es la idea de fondo de todo el curso: una función que solo depende de sus parámetros y solo
+comunica su resultado con `return` se puede leer, probar y reusar sola.
+
+<EjercicioPython
+  titulo="Sin tocar nada de afuera"
+  dificultad="🌱"
+  starter={`def agregar_item(lista, item):\n    pass`}
+  tests={`original = ["pan"]\nnueva = agregar_item(original, "leche")\nassert nueva == ["pan", "leche"], f"devolviste {nueva!r}"\nassert original == ["pan"], "la lista original NO tiene que cambiar: devolvé una nueva"\nassert agregar_item([], "x") == ["x"], "sobre una lista vacía también"\nprint("¡Sin efectos secundarios!")`}
+  pistas={[
+    "Fijate en el segundo test: revisa que la lista que entró siga igual después de llamar a la función. Si le hicieras <code>append</code> directamente, ¿qué pasaría con ella?",
+    "¿Cómo harías para trabajar sobre una copia en vez de sobre la original? Pensá en el operador que ya usaste para juntar dos listas.",
+  ]}
+>
+Completá `agregar_item` para que devuelva **una lista nueva** con el item agregado, **sin modificar**
+la que recibió.
+</EjercicioPython>
+
+## Valores por defecto
+
+Un parámetro puede tener un valor que se usa si quien llama no lo pasa:
+
+```python
+def saludar(nombre, saludo="Hola"):
+    return f"{saludo}, {nombre}!"
+
+saludar("Ana")                  # "Hola, Ana!"
+saludar("Ana", "Buenas")        # "Buenas, Ana!"
+```
+
+Los que tienen valor por defecto van **siempre al final**, después de los obligatorios. Si no, Python
+no sabría a cuál corresponde cada valor.
+
+:::caution[La trampa clásica: nunca uses una lista como valor por defecto]
+```python
+def agregar(item, lista=[]):        # ⚠️ mal
+    lista.append(item)
+    return lista
+
+agregar("a")    # ['a']
+agregar("b")    # ['a', 'b']  ← ¿¿y la 'a'??
+```
+
+El valor por defecto **se crea una sola vez**, cuando se define la función — no en cada llamada. Así
+que todas las llamadas comparten la misma lista. La forma correcta:
+
+```python
+def agregar(item, lista=None):
+    if lista is None:
+        lista = []
+    lista.append(item)
+    return lista
+```
+:::
+
+## Argumentos por nombre
+
+Al llamar, podés nombrar los parámetros y el orden deja de importar:
+
+```python
+def crear_alumno(nombre, edad, activo=True):
+    ...
+
+crear_alumno("Guada", 25)
+crear_alumno(edad=25, nombre="Guada")        # el orden no importa
+crear_alumno("Guada", 25, activo=False)
+```
+
+:::tip[Cuándo conviene nombrarlos]
+Cuando el valor solo no se explica:
+
+```python
+configurar(True, False, True)                       # ...¿qué es cada uno?
+configurar(debug=True, cache=False, logs=True)      # ah, listo
+```
+:::
+
+<EjercicioPython
+  titulo="Formatear un precio"
+  dificultad="🌿"
+  starter={`def formatear(monto, moneda="$", decimales=2):\n    pass`}
+  tests={`assert formatear(1500) == "$1500.00", f'devolviste {formatear(1500)!r}'\nassert formatear(1500, "US$") == "US$1500.00", "con otra moneda"\nassert formatear(1500, decimales=0) == "$1500", "sin decimales"\nassert formatear(10.5, "€", 1) == "€10.5", "todo cambiado"\nprint("¡Formato OK!")`}
+  pistas={[
+    "Los dos últimos parámetros ya vienen con un valor puesto. Cuando el test llama con un solo dato, ¿de dónde salen los otros dos?",
+    "Para redondear a una cantidad de decimales que es <em>variable</em>, las f-strings permiten meter esa cantidad adentro del formato. ¿Cómo pondrías ahí un valor que no conocés de antemano?",
+  ]}
+>
+Completá `formatear` para que devuelva el monto con su símbolo de moneda y la cantidad de decimales
+indicada.
+
+`formatear(1500)` → `"$1500.00"` · `formatear(1500, decimales=0)` → `"$1500"`
+</EjercicioPython>
+
+## `*args`: una cantidad indefinida de valores
+
+¿Y si no sabés cuántos argumentos te van a pasar?
+
+```python
+def sumar(*numeros):
+    total = 0
+    for n in numeros:
+        total += n
+    return total
+
+sumar(1, 2)           # 3
+sumar(1, 2, 3, 4, 5)  # 15
+sumar()               # 0
+```
+
+El `*` junta todo lo que venga en una **tupla**. El nombre `args` es solo una convención: lo que
+importa es el asterisco.
+
+## `**kwargs`: lo mismo, pero con nombre
+
+```python
+def describir(**datos):
+    for clave, valor in datos.items():
+        print(f"{clave}: {valor}")
+
+describir(nombre="Guada", edad=25)
+# nombre: Guada
+# edad: 25
+```
+
+El `**` junta los argumentos con nombre en un **diccionario**.
+
+Todo junto, el orden es siempre este:
+
+```python
+def funcion(obligatorio, con_defecto="x", *args, **kwargs):
+    ...
+```
+
+:::note[Dónde ya los viste sin saberlo]
+`print("a", "b", "c", sep=" - ", end="")` es exactamente esto: `"a", "b", "c"` entran por `*args` y
+`sep` / `end` por `**kwargs`. Por eso `print` acepta cualquier cantidad de cosas.
+:::
+
+<EjercicioPython
+  titulo="El promedio de lo que venga"
+  dificultad="🌳"
+  starter={`def promedio(*notas):\n    pass`}
+  tests={`assert promedio(10, 8, 6) == 8, f'con (10, 8, 6) devolviste {promedio(10, 8, 6)!r}'\nassert promedio(5) == 5, "una sola nota"\nassert promedio() == 0, "sin notas devolvé 0, no rompas"\nassert promedio(4, 5) == 4.5, "el promedio puede tener decimales"\nprint("¡Promedio flexible!")`}
+  pistas={[
+    "El asterisco junta todo lo que llegue en una sola estructura. ¿De qué tipo es esa estructura, y qué le podés preguntar para saber cuántos elementos tiene?",
+    "Mirá el test que llama a la función sin ningún argumento. ¿Por cuánto estarías dividiendo en ese caso?",
+  ]}
+>
+Completá `promedio` para que acepte **cualquier cantidad** de notas sueltas y devuelva su promedio.
+
+Si no le pasan ninguna, devolvé `0`.
+</EjercicioPython>
+
+## Desempaquetar al llamar
+
+El mismo `*` sirve al revés: para **abrir** una colección y pasar sus elementos como argumentos
+sueltos.
+
+```python
+numeros = [1, 2, 3]
+
+sumar(numeros)      # ❌ le pasás UNA lista
+sumar(*numeros)     # ✅ le pasás 1, 2 y 3
+```
+
+Y con diccionarios:
+
+```python
+datos = {"nombre": "Guada", "edad": 25}
+crear_alumno(**datos)      # equivale a crear_alumno(nombre="Guada", edad=25)
+```
+
+Regla para acordarse: **en la definición, el `*` junta; en la llamada, el `*` reparte.**
+
+---
+
+Con esto cerrás el Bloque 2. Lo que sigue es **POO**, donde estas mismas ideas (datos que viajan
+juntos, funciones que operan sobre ellos) se agrupan en clases.

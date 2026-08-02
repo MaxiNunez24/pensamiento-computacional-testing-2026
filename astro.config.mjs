@@ -48,9 +48,11 @@ export default defineConfig({
         {
           label: '🌿 Bloque 2 — Colecciones y funciones',
           items: [
+            { label: '🎲 Tuplas', link: '/clases/tuplas/' },
             { label: '🗝️ Sets', link: '/clases/sets/' },
             { label: '📔 Diccionarios', link: '/clases/diccionarios/' },
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
+            { label: '🎛️ Funciones II', link: '/clases/funciones-2/' },
           ],
         },
         {
