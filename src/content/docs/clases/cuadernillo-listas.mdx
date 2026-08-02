@@ -1,0 +1,349 @@
+---
+title: Cuadernillo de listas
+description: "Práctica intensiva: recorrer y filtrar, list comprehensions y listas de listas (matrices)."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/04_listas/cuadernillo_listas_finde/" />
+
+Tres bloques de dificultad creciente. El primero repasa lo que ya hacés con bucles; el segundo
+introduce una forma más corta de escribirlo; el tercero, listas adentro de listas.
+
+## 🌱 Bloque 1 — Calentamiento
+
+Nada nuevo acá: recorrer, filtrar y acumular, que es lo que ya venís haciendo.
+
+<EjercicioPython
+  titulo="1.1 · Doble parada"
+  dificultad="🌱"
+  datos={`numeros = [3, 7, 2, 9, 4, 11, 6]`}
+  starter={`# Mostrá cada número multiplicado por 2, uno por línea.\n`}
+  tests={`assert correr().strip().splitlines()[-7:] == ["6","14","4","18","8","22","12"], f"salió {correr().strip().splitlines()[-7:]!r}"\nassert correr(numeros=[1]).strip().splitlines()[-1] == "2", "con un solo número"`}
+  pistas={[
+    "¿Qué necesitás hacer con cada elemento, uno por uno? ¿Qué herramienta recorre una lista entera?",
+  ]}
+>
+Mostrá cada número de `numeros` **multiplicado por 2**, uno por línea.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="1.2 · El podio"
+  dificultad="🌱"
+  datos={`puntajes = [85, 42, 91, 77, 33, 60, 99, 12]`}
+  starter={`# Mostrá el mayor y el menor, sin usar max() ni min().\n`}
+  tests={`r = correr().strip().splitlines()[-2:]\nassert r == ["Mayor: 99", "Menor: 12"], f"salió {r!r}"\nr2 = correr(puntajes=[5]).strip().splitlines()[-2:]\nassert r2 == ["Mayor: 5", "Menor: 5"], "con un solo puntaje, es los dos"\nr3 = correr(puntajes=[-3, -9]).strip().splitlines()[-2:]\nassert r3 == ["Mayor: -3", "Menor: -9"], "con negativos también"`}
+  pistas={[
+    "Antes de mirar el primer puntaje necesitás algo con qué comparar. ¿Con qué valor conviene arrancar para que el primero siempre gane?",
+    "Fijate en el test de los negativos: si arrancaras en 0, ¿qué pasaría con el mayor?",
+  ]}
+>
+Encontrá el **mayor** y el **menor** recorriendo la lista, **sin usar `max()` ni `min()`**.
+
+```
+Mayor: 99
+Menor: 12
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="1.3 · Filtro de palabras largas"
+  dificultad="🌱"
+  datos={`palabras = ["sol", "luna", "estrella", "mar", "cometa", "nube"]`}
+  starter={`# Mostrá una lista con las palabras de más de 4 letras.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == ["estrella", "cometa"], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(palabras=["luna"]).strip().splitlines()[-1]) == [], "luna tiene 4, no MÁS de 4"\nassert ast.literal_eval(correr(palabras=[]).strip().splitlines()[-1]) == [], "lista vacía"`}
+  pistas={[
+    "Fijate en el test de <code>luna</code>: tiene 4 letras y NO entra. ¿Tu comparación usa mayor, o mayor o igual?",
+    "¿Dónde vas guardando las que sí cumplen, y con qué arrancás antes de mirar la primera?",
+  ]}
+>
+Mostrá una lista con las palabras de **más de 4** letras.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="1.4 · Suma manual"
+  dificultad="🌱"
+  datos={`nums = [12, 5, 8, 21, 3, 17]`}
+  starter={`# Mostrá la suma total, sin usar sum().\n`}
+  tests={`assert correr().strip().splitlines()[-1] == "66", f"salió {correr().strip().splitlines()[-1]!r}"\nassert correr(nums=[]).strip().splitlines()[-1] == "0", "la lista vacía suma 0"\nassert correr(nums=[5]).strip().splitlines()[-1] == "5", "un solo número"`}
+  pistas={[
+    "Es el patrón acumulador. ¿En qué valor arranca el total antes de sumar el primer número?",
+    "Mirá el test de la lista vacía: tiene que dar 0. ¿Tu programa imprime algo si el bucle no llega a entrar?",
+  ]}
+>
+Calculá la **suma total** recorriendo la lista, **sin usar `sum()`**.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="1.5 · Limpieza de duplicados"
+  dificultad="🌿"
+  datos={`con_repetidos = [1, 2, 2, 3, 4, 4, 4, 5, 1, 6]`}
+  starter={`# Mostrá una lista sin repetidos, conservando el orden de aparición.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [1, 2, 3, 4, 5, 6], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(con_repetidos=[9, 1, 9]).strip().splitlines()[-1]) == [9, 1], "tiene que quedar el ORDEN de aparición, no ordenado"\nassert ast.literal_eval(correr(con_repetidos=[]).strip().splitlines()[-1]) == [], "lista vacía"`}
+  pistas={[
+    "El segundo test empieza con 9 y espera que el 9 quede primero. ¿Convertir a set te conserva ese orden?",
+    "Antes de agregar cada número, ¿cómo te fijás si ya lo habías puesto?",
+  ]}
+>
+Mostrá una lista **sin repetidos**, conservando el **orden de aparición**.
+
+Con `[1, 2, 2, 3, 4, 4, 4, 5, 1, 6]` tiene que dar `[1, 2, 3, 4, 5, 6]`.
+</EjercicioPython>
+
+## 🌿 Bloque 2 — List comprehensions
+
+Un bucle que arma una lista se puede escribir en **una sola línea**:
+
+```python
+# Lo que venís haciendo
+dobles = []
+for n in numeros:
+    dobles.append(n * 2)
+
+# Lo mismo, en una línea
+dobles = [n * 2 for n in numeros]
+```
+
+Se lee: *"`n * 2`, para cada `n` en `numeros`"*. La estructura es siempre:
+
+```python
+[  qué_pongo   for  elemento  in  coleccion  ]
+```
+
+Y se le puede sumar un filtro al final:
+
+```python
+pares = [n for n in numeros if n % 2 == 0]
+```
+
+:::tip[No es solo escribir menos]
+Una comprehension dice *"esta lista sale de transformar aquella"* de un vistazo. El `for` de tres
+líneas te obliga a leerlas todas para darte cuenta de lo mismo.
+
+Pero **no la uses siempre**: si adentro necesitás un `if/else` largo o dos operaciones, el bucle
+común se lee mejor. La comprehension es para transformaciones simples.
+:::
+
+<EjercicioPython
+  titulo="2.1 · Tu primera traducción"
+  dificultad="🌱"
+  datos={`numeros = [1, 2, 3, 4, 5, 6, 7, 8]`}
+  starter={`# Mostrá una lista con cada número multiplicado por 3.\n# Usá una comprehension.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [3, 6, 9, 12, 15, 18, 21, 24], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(numeros=[10]).strip().splitlines()[-1]) == [30], "con un solo número"`}
+  pistas={[
+    "Escribí primero el <code>for</code> de tres líneas como lo venías haciendo. Después mirá qué parte va antes del <code>for</code> en la versión corta.",
+  ]}
+>
+Mostrá una lista con cada número **multiplicado por 3**, usando una list comprehension.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="2.2 · Solo los pares"
+  dificultad="🌱"
+  datos={`numeros = list(range(1, 21))`}
+  starter={`# Mostrá solo los pares, con una comprehension.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [2,4,6,8,10,12,14,16,18,20], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(numeros=[1,3]).strip().splitlines()[-1]) == [], "si no hay pares, lista vacía"`}
+  pistas={[
+    "Acá no transformás nada: solo elegís cuáles pasan. ¿Qué ponés antes del <code>for</code> si el elemento va tal cual?",
+  ]}
+>
+Mostrá solo los números **pares** del 1 al 20, usando una comprehension con filtro.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="2.3 · Transformar Y filtrar"
+  dificultad="🌿"
+  starter={`# Mostrá los cuadrados de los pares del 1 al 15.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [4, 16, 36, 64, 100, 144, 196], f"salió {correr().strip().splitlines()[-1]!r}"`}
+  pistas={[
+    "Son las dos cosas a la vez: quedarte con algunos Y transformarlos. ¿En qué parte de la comprehension va cada una?",
+    "El rango llega hasta el 15 inclusive. ¿Hasta qué número le pedís a <code>range</code>?",
+  ]}
+>
+Mostrá una lista con los **cuadrados de los números pares** del 1 al 15.
+
+Tiene que dar `[4, 16, 36, 64, 100, 144, 196]`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="2.4 · Anatomía de palabras"
+  dificultad="🌿"
+  datos={`palabras = ["python", "es", "un", "lenguaje", "increíble"]`}
+  starter={`# 1) Los largos de cada palabra.\n# 2) Las palabras en mayúsculas.\n`}
+  tests={`import ast\nr = correr().strip().splitlines()[-2:]\nassert ast.literal_eval(r[0]) == [6, 2, 2, 8, 9], f"los largos salieron {r[0]!r}"\nassert ast.literal_eval(r[1]) == ["PYTHON","ES","UN","LENGUAJE","INCREÍBLE"], f"las mayúsculas salieron {r[1]!r}"\nr2 = correr(palabras=["ab"]).strip().splitlines()[-2:]\nassert ast.literal_eval(r2[0]) == [2] and ast.literal_eval(r2[1]) == ["AB"], "con una sola palabra"`}
+  pistas={[
+    "Son dos listas distintas, cada una con su comprehension. ¿Qué cambia entre una y otra: lo que recorren o lo que producen?",
+  ]}
+>
+Mostrá **dos listas**, una por línea:
+
+1. Los **largos** de cada palabra
+2. Las palabras en **mayúsculas**
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="2.5 · El boletín exprés"
+  dificultad="🌿"
+  datos={`notas = [4, 7, 9, 2, 6, 8, 5, 10, 3]`}
+  starter={`# Mostrá una lista con "Aprobado" o "Desaprobado" según cada nota.\n`}
+  tests={`import ast\nesperado = ["Desaprobado","Aprobado","Aprobado","Desaprobado","Aprobado","Aprobado","Desaprobado","Aprobado","Desaprobado"]\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == esperado, f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(notas=[6]).strip().splitlines()[-1]) == ["Aprobado"], "el 6 aprueba"\nassert ast.literal_eval(correr(notas=[5]).strip().splitlines()[-1]) == ["Desaprobado"], "el 5 no"`}
+  pistas={[
+    "Acá el filtro no sirve: no querés descartar notas, querés que cada una produzca una palabra distinta. ¿Dónde iría ese <code>if/else</code> dentro de la comprehension?",
+    "Ojo con la nota de corte: el 6 aprueba y el 5 no.",
+  ]}
+>
+Mostrá una lista donde cada nota se convierta en `"Aprobado"` (6 o más) o `"Desaprobado"`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="2.6 · Comprehension con strings"
+  dificultad="🌳"
+  datos={`frase = "El zorro marrón salta sobre el perro perezoso"`}
+  starter={`# 1) La lista de palabras.\n# 2) Las que tienen más de 5 letras, en mayúsculas.\n`}
+  tests={`import ast\nr = correr().strip().splitlines()[-2:]\nassert ast.literal_eval(r[0]) == ["El","zorro","marrón","salta","sobre","el","perro","perezoso"], f"las palabras salieron {r[0]!r}"\nassert ast.literal_eval(r[1]) == ["MARRÓN","PEREZOSO"], f"las largas salieron {r[1]!r}"`}
+  pistas={[
+    "Para el primer punto, ¿qué método parte un texto en palabras usando los espacios?",
+    "En el segundo hacés las dos cosas: filtrar por largo y transformar a mayúsculas. ¿Cuál va antes del <code>for</code> y cuál después?",
+  ]}
+>
+Mostrá **dos listas**, una por línea:
+
+1. Las **palabras** de la frase
+2. Las que tienen **más de 5 letras**, en **mayúsculas**
+</EjercicioPython>
+
+## 🌳 Bloque 3 — Listas de listas (matrices)
+
+Una lista puede tener listas adentro. Así se representa una grilla, una tabla o un tablero:
+
+```python
+grilla = [
+    [10, 20, 30],
+    [40, 50, 60],
+    [70, 80, 90],
+]
+
+grilla[1]        # [40, 50, 60]   ← la fila del medio
+grilla[1][1]     # 50             ← de esa fila, el del medio
+```
+
+Se lee de izquierda a derecha: **primero la fila, después la columna**.
+
+Para recorrerla entera hacen falta **dos bucles, uno adentro del otro**:
+
+```python
+for fila in grilla:
+    for valor in fila:
+        print(valor, end=" ")
+    print()          # salto de línea al terminar cada fila
+```
+
+:::note[El `print()` vacío del final]
+El `end=" "` hace que los valores de una fila salgan pegados en la misma línea. Sin el `print()`
+suelto después del bucle interno, **toda la matriz saldría en un solo renglón**.
+:::
+
+<EjercicioPython
+  titulo="3.1 · El centro de la grilla"
+  dificultad="🌱"
+  datos={`grilla = [\n    [10, 20, 30],\n    [40, 50, 60],\n    [70, 80, 90],\n]`}
+  starter={`# Mostrá el valor del centro.\n`}
+  tests={`assert correr().strip().splitlines()[-1] == "50", f"salió {correr().strip().splitlines()[-1]!r}"\nassert correr(grilla=[[1,2,3],[4,5,6],[7,8,9]]).strip().splitlines()[-1] == "5", "con otra grilla tiene que acompañar"`}
+  pistas={[
+    "Son dos pasos: primero elegís la fila, después el elemento dentro de esa fila. ¿Qué número le corresponde a cada uno, contando desde 0?",
+  ]}
+>
+Mostrá el valor que está **en el centro** de la grilla.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="3.2 · Imprimir como tabla"
+  dificultad="🌿"
+  datos={`grilla = [\n    [10, 20, 30],\n    [40, 50, 60],\n    [70, 80, 90],\n]`}
+  starter={`# Mostrá la grilla como tabla, una fila por línea.\n`}
+  tests={`r = [l.split() for l in correr().strip().splitlines()[-3:]]\nassert r == [["10","20","30"],["40","50","60"],["70","80","90"]], f"salió {correr().strip().splitlines()[-3:]!r}"\nr2 = correr(grilla=[[1,2]]).strip().splitlines()[-1].split()\nassert r2 == ["1","2"], "con una sola fila"`}
+  pistas={[
+    "Necesitás dos bucles: uno que recorra las filas y otro que recorra los valores de cada fila. ¿Cuál va adentro?",
+    "Si te sale todo en un solo renglón, ¿qué le falta al final de cada fila?",
+  ]}
+>
+Mostrá la grilla como tabla: **una fila por línea**, con los valores separados por espacios.
+
+```
+10 20 30
+40 50 60
+70 80 90
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="3.3 · Suma por filas"
+  dificultad="🌿"
+  datos={`matriz = [\n    [1, 2, 3, 4],\n    [5, 6, 7, 8],\n    [9, 10, 11, 12],\n]`}
+  starter={`# Mostrá la suma de cada fila.\n`}
+  tests={`r = correr().strip().splitlines()[-3:]\nassert r == ["Fila 0: 10", "Fila 1: 26", "Fila 2: 42"], f"salió {r!r}"\nr2 = correr(matriz=[[5, 5]]).strip().splitlines()[-1:]\nassert r2 == ["Fila 0: 10"], "con una sola fila"`}
+  pistas={[
+    "Cada fila es una lista común. ¿Qué le podés preguntar directamente para saber cuánto suma?",
+    "Además del contenido de la fila necesitás su número. ¿Cómo llevás la cuenta de en qué vuelta vas?",
+  ]}
+>
+Mostrá la suma de cada fila, numeradas desde 0:
+
+```
+Fila 0: 10
+Fila 1: 26
+Fila 2: 42
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="3.4 · Suma por columnas"
+  dificultad="🌳"
+  datos={`matriz = [\n    [1, 2, 3, 4],\n    [5, 6, 7, 8],\n    [9, 10, 11, 12],\n]`}
+  starter={`# Mostrá la suma de cada columna.\n`}
+  tests={`r = correr().strip().splitlines()[-4:]\nassert r == ["Columna 0: 15", "Columna 1: 18", "Columna 2: 21", "Columna 3: 24"], f"salió {r!r}"\nr2 = correr(matriz=[[1, 2], [3, 4]]).strip().splitlines()[-2:]\nassert r2 == ["Columna 0: 4", "Columna 1: 6"], "con una matriz de 2x2"`}
+  pistas={[
+    "Una columna no está guardada en ningún lado: hay que armarla juntando un elemento de cada fila. ¿Cuál de los dos bucles va por afuera ahora?",
+    "¿Cuántas columnas hay? No está escrito en ningún lugar: ¿de dónde lo podés deducir?",
+  ]}
+>
+Mostrá la suma de cada **columna**, numeradas desde 0:
+
+```
+Columna 0: 15
+Columna 1: 18
+Columna 2: 21
+Columna 3: 24
+```
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="3.5 · Boletín de asistencias 📋"
+  dificultad="🌳"
+  datos={`alumnos = ["Ana", "Beto", "Cami", "Dante"]\nasistencias = [\n    [1, 1, 0, 1, 1],\n    [0, 1, 1, 1, 0],\n    [1, 1, 1, 1, 1],\n    [1, 0, 0, 1, 0],\n]`}
+  starter={`# Mostrá una línea por alumno con su porcentaje de asistencia.\n`}
+  tests={`r = correr().strip().splitlines()[-4:]\nassert r == ["Ana: 80.0%", "Beto: 60.0%", "Cami: 100.0%", "Dante: 40.0%"], f"salió {r!r}"\nr2 = correr(alumnos=["Solo"], asistencias=[[1, 0]]).strip().splitlines()[-1:]\nassert r2 == ["Solo: 50.0%"], "con un solo alumno"`}
+  pistas={[
+    "Cada fila de asistencias es de un alumno, en el mismo orden que la lista de nombres. ¿Qué función viste que empareja dos listas posición por posición?",
+    "Los 1 y 0 no son solo marcas: sumarlos te da directamente la cantidad de presentes. ¿Y el total de clases de dónde sale?",
+  ]}
+>
+Cada fila de `asistencias` corresponde a un alumno (`1` = presente, `0` = ausente).
+
+Mostrá una línea por alumno con su **porcentaje de asistencia**:
+
+```
+Ana: 80.0%
+```
+
+:::note[Un guiño al futuro]
+Esta es, en chiquito, la estructura del **Sistema de Asistencias** que vamos a construir como
+proyecto. Si te sale este ejercicio, ya entendiste el corazón del problema.
+:::
+</EjercicioPython>
+
+---
+
+Estos 16 son la práctica que más rinde antes de entrar a Colecciones. Si te salieron los del bloque
+3, las matrices ya no te van a asustar en el proyecto.

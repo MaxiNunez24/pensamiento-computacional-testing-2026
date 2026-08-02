@@ -1,0 +1,208 @@
+---
+title: Repaso general
+description: "Ocho ejercicios que mezclan todo: condicionales, bucles, listas, sets, diccionarios y funciones."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/06_funciones/repaso/" />
+
+Hasta acá viste las herramientas de a una. Estos ejercicios las mezclan, que es como aparecen en los
+problemas de verdad: ninguno te dice qué usar.
+
+:::tip[Cómo encarar cada uno]
+Antes de escribir la primera línea, contestate tres preguntas:
+
+1. **¿Qué me dan y qué me piden?** Escribilo con tus palabras.
+2. **¿Hay que repetir algo?** → bucle. **¿Hay que decidir?** → condicional.
+3. **¿Los datos son una fila, un conjunto sin repetidos, o pares nombre-valor?** → lista, set o
+   diccionario.
+
+Si te trabás más de 20 minutos en uno, usá las pistas o mandame la consulta. Trabarse es parte;
+quedarse trabado en silencio, no.
+:::
+
+## 1 · La fotocopiadora
+
+<EjercicioPython
+  titulo="La fotocopiadora"
+  dificultad="🌱"
+  entradas={`50`}
+  starter={`# Pedí la cantidad de hojas y mostrá el total a pagar.\n`}
+  tests={`assert correr(entradas=["50"]).strip().splitlines()[-1] == "Total: $750.00", f'con 50 hojas terminaste con {correr(entradas=["50"]).strip().splitlines()[-1]!r}'\nassert correr(entradas=["100"]).strip().splitlines()[-1] == "Total: $1500.00", "100 hojas todavía no llega al descuento"\nassert correr(entradas=["200"]).strip().splitlines()[-1] == "Total: $2400.00", "200 hojas: 3000 menos el 20%"\nassert correr(entradas=["101"]).strip().splitlines()[-1] == "Total: $1212.00", "con 101 ya aplica el descuento"`}
+  pistas={[
+    "Fijate en los tests de 100 y 101: uno tiene descuento y el otro no. ¿El descuento aplica <em>desde</em> las 100 o <em>pasadas</em> las 100?",
+    "El total sale con dos decimales siempre, incluso cuando es redondo. ¿Cómo se le pide eso a una f-string?",
+  ]}
+>
+Una fotocopiadora cobra **$15 por hoja**. Si la cantidad **supera** las 100 hojas, aplica un
+**descuento del 20%** sobre el total.
+
+Pedí la cantidad y mostrá como última línea:
+
+```
+Total: $750.00
+```
+</EjercicioPython>
+
+## 2 · El clasificador de entradas
+
+<EjercicioPython
+  titulo="El clasificador de entradas"
+  dificultad="🌱"
+  starter={`def clasificar_entrada(edad):\n    pass`}
+  tests={`assert clasificar_entrada(15) == "No puede ingresar", "menor de 18"\nassert clasificar_entrada(17) == "No puede ingresar", "17 todavía no"\nassert clasificar_entrada(18) == "Entrada joven: $2000", "18 ya es joven"\nassert clasificar_entrada(25) == "Entrada joven: $2000", "25 es el último joven"\nassert clasificar_entrada(26) == "Entrada general: $3000", "26 pasa a general"\nassert clasificar_entrada(59) == "Entrada general: $3000", "59 sigue siendo general"\nassert clasificar_entrada(60) == "Entrada libre", "60 ya es libre"`}
+  pistas={[
+    "Los tests prueban justo 17/18, 25/26 y 59/60. ¿De qué lado del corte cae cada uno?",
+    "Si preguntás primero por los rangos de arriba, ¿qué pasa con alguien de 15 años?",
+  ]}
+>
+Completá `clasificar_entrada` según la edad:
+
+| Edad | Devuelve |
+|------|----------|
+| Menor de 18 | `"No puede ingresar"` |
+| 18 a 25 | `"Entrada joven: $2000"` |
+| 26 a 59 | `"Entrada general: $3000"` |
+| 60 o más | `"Entrada libre"` |
+</EjercicioPython>
+
+## 3 · La alcancía digital
+
+<EjercicioPython
+  titulo="La alcancía digital"
+  dificultad="🌿"
+  entradas={`4000\n3000\n5000`}
+  starter={`OBJETIVO = 10000\n# Pedí depósitos hasta llegar al objetivo o hasta que ingresen 0.\n`}
+  tests={`r = correr(entradas=["4000","3000","5000"]).strip().splitlines()[-1]\nassert r == "¡Objetivo alcanzado! Juntaste $12000.0 en 3 depósitos", f"terminaste con {r!r}"\nr2 = correr(entradas=["1000","0"]).strip().splitlines()[-1]\nassert r2 == "Te faltaron $9000.0 para el objetivo", f"al cortar con 0: {r2!r}"\nr3 = correr(entradas=["10000"]).strip().splitlines()[-1]\nassert r3 == "¡Objetivo alcanzado! Juntaste $10000.0 en 1 depósitos", "llegar justo también cuenta"`}
+  pistas={[
+    "El bucle tiene que cortar por DOS motivos distintos. ¿Los dos van en la condición, o uno adentro?",
+    "Fijate en el test que llega justo a 10000: tiene que contar como alcanzado. ¿Tu condición usa mayor, o mayor o igual?",
+    "Al terminar tenés que saber por cuál de los dos motivos saliste. ¿Qué podés preguntarle al total para distinguirlos?",
+  ]}
+>
+Alguien quiere ahorrar **$10.000**. Pedí depósitos hasta que se llegue al objetivo **o** hasta que
+ingresen `0` para parar.
+
+Al final mostrá una de estas dos líneas:
+
+```
+¡Objetivo alcanzado! Juntaste $12000.0 en 3 depósitos
+Te faltaron $9000.0 para el objetivo
+```
+</EjercicioPython>
+
+## 4 · Estadísticas de ventas
+
+<EjercicioPython
+  titulo="Estadísticas de ventas"
+  dificultad="🌿"
+  starter={`def analizar_ventas(ventas):\n    pass`}
+  tests={`r = analizar_ventas([100, 200, 300])\nassert r["total"] == 600, f'total mal: {r["total"]!r}'\nassert r["promedio"] == 200, "el promedio de 100, 200 y 300 es 200"\nassert r["mayor"] == 300, "la mayor es 300"\nassert r["menor"] == 100, "la menor es 100"\nassert r["sobre_promedio"] == 1, "solo 300 supera el promedio de 200"\nr2 = analizar_ventas([50])\nassert r2 == {"total": 50, "promedio": 50.0, "mayor": 50, "menor": 50, "sobre_promedio": 0}, f"con una sola venta: {r2!r}"`}
+  pistas={[
+    "Cuatro de los cinco datos salen de funciones que ya conocés. ¿Cuál es el único que necesita recorrer la lista?",
+    "Para contar las que superan el promedio necesitás el promedio ANTES de empezar a comparar. ¿En qué orden calculás las cosas?",
+    "Mirá el test de una sola venta: <code>sobre_promedio</code> da 0, porque una venta no puede superarse a sí misma. ¿Usás mayor o mayor o igual?",
+  ]}
+>
+Completá `analizar_ventas` para que devuelva un **diccionario** con estas claves:
+
+- `"total"` — la suma
+- `"promedio"`
+- `"mayor"` y `"menor"`
+- `"sobre_promedio"` — cuántas ventas **superan** el promedio
+</EjercicioPython>
+
+## 5 · Validador de contraseñas
+
+<EjercicioPython
+  titulo="¿Es segura?"
+  dificultad="🌿"
+  starter={`def es_segura(password):\n    pass`}
+  tests={`assert es_segura("Python123") is True, "cumple las tres"\nassert es_segura("python123") is False, "sin mayúscula"\nassert es_segura("PythonAbc") is False, "sin número"\nassert es_segura("Py1") is False, "muy corta"\nassert es_segura("ABCDEFG1") is True, "8 justos, con mayúscula y número"\nassert es_segura("") is False, "vacía no pasa"`}
+  pistas={[
+    "Para saber si hay <em>al menos una</em> mayúscula tenés que mirar carácter por carácter. ¿Qué método te dice si un carácter suelto es mayúscula?",
+    "El test de <code>ABCDEFG1</code> tiene exactamente 8 caracteres y tiene que pasar. ¿Tu condición de largo incluye al 8?",
+  ]}
+>
+Completá `es_segura` para que devuelva `True` solo si la contraseña cumple **las tres**:
+
+- Al menos **8 caracteres**
+- Al menos **una mayúscula**
+- Al menos **un número**
+</EjercicioPython>
+
+## 6 · Control de accesos
+
+<EjercicioPython
+  titulo="Control de accesos"
+  dificultad="🌳"
+  datos={`accesos_lunes  = [12345678, 87654321, 12345678, 55555555, 87654321, 11111111]\naccesos_martes = [87654321, 33333333, 55555555, 87654321, 44444444]`}
+  starter={`# Mostrá las tres líneas del informe.\n`}
+  tests={`r = correr().strip().splitlines()[-3:]\nassert r == ["Distintas el lunes: 4", "Distintas el martes: 4", "Los dos días: 2"], f"salió {r!r}"\nr2 = correr(accesos_lunes=[1, 1], accesos_martes=[2]).strip().splitlines()[-3:]\nassert r2 == ["Distintas el lunes: 1", "Distintas el martes: 1", "Los dos días: 0"], "sin coincidencias"`}
+  pistas={[
+    "El mismo DNI puede repetirse porque una persona entró varias veces. ¿Qué estructura descarta repetidos sola?",
+    "Para los que vinieron los dos días: ¿estás buscando lo que los dos conjuntos tienen en común, o lo que le falta a uno?",
+  ]}
+>
+Un edificio registra el DNI de cada persona que entra, y el mismo DNI aparece varias veces si entró
+más de una vez.
+
+Mostrá el informe en tres líneas:
+
+```
+Distintas el lunes: 4
+Distintas el martes: 4
+Los dos días: 2
+```
+</EjercicioPython>
+
+## 7 · Agenda de contactos
+
+<EjercicioPython
+  titulo="Agenda de contactos"
+  dificultad="🌳"
+  starter={`def buscar(agenda, nombre):\n    pass\n\ndef agregar(agenda, nombre, telefono, ciudad):\n    pass\n\ndef por_ciudad(agenda, ciudad):\n    pass`}
+  tests={`agenda = {"Ana": {"telefono": "111", "ciudad": "CABA"}}\nassert buscar(agenda, "Ana") == {"telefono": "111", "ciudad": "CABA"}, "buscar a alguien que está"\nassert buscar(agenda, "Zoe") == "No encontrado", "y a alguien que no está"\nagregar(agenda, "Beto", "222", "CABA")\nassert agenda["Beto"] == {"telefono": "222", "ciudad": "CABA"}, "agregar tiene que modificar la agenda que recibió"\nagregar(agenda, "Cami", "333", "Rosario")\nassert sorted(por_ciudad(agenda, "CABA")) == ["Ana", "Beto"], f'en CABA esperaba Ana y Beto, salió {sorted(por_ciudad(agenda, "CABA"))!r}'\nassert por_ciudad(agenda, "Córdoba") == [], "si no hay nadie de esa ciudad, lista vacía"\nprint("¡Agenda OK!")`}
+  pistas={[
+    "Cada contacto es un diccionario adentro de otro diccionario. Para llegar al teléfono de Ana, ¿cuántos pasos hacés?",
+    "En <code>agregar</code>, el test revisa la agenda ORIGINAL después de llamar. ¿Hace falta devolver algo, o alcanza con modificar la que llegó?",
+    "En <code>por_ciudad</code> te piden los nombres, no los datos. ¿Cuál de las dos partes de cada par estás juntando?",
+  ]}
+>
+Completá las tres funciones sobre una agenda con esta forma:
+
+```python
+{"Ana": {"telefono": "111", "ciudad": "CABA"}}
+```
+
+- `buscar(agenda, nombre)` → los datos, o `"No encontrado"`
+- `agregar(agenda, nombre, telefono, ciudad)` → suma el contacto
+- `por_ciudad(agenda, ciudad)` → **lista de nombres** de esa ciudad
+</EjercicioPython>
+
+## 8 · El analizador de texto
+
+<EjercicioPython
+  titulo="El analizador de texto"
+  dificultad="🌳"
+  starter={`def analizar(texto):\n    pass`}
+  tests={`r = analizar("hola mundo hola")\nassert r["palabras"] == 3, f'palabras mal: {r["palabras"]!r}'\nassert r["unicas"] == 2, "hola y mundo son 2 distintas"\nassert r["mas_frecuente"] == "hola", "hola aparece dos veces"\nr2 = analizar("Hola HOLA hola")\nassert r2["unicas"] == 1, "no importan las mayúsculas: es la misma palabra"\nassert r2["mas_frecuente"] == "hola", "y se informa en minúscula"\nr3 = analizar("una")\nassert r3 == {"palabras": 1, "unicas": 1, "mas_frecuente": "una"}, f"con una sola palabra: {r3!r}"`}
+  pistas={[
+    "El segundo test dice que <code>Hola</code> y <code>HOLA</code> son la misma palabra. ¿Qué le tenés que hacer al texto antes de empezar a contar?",
+    "Para las únicas, ¿hace falta contarlas a mano o hay una estructura que ya descarta repetidos?",
+    "Para la más frecuente necesitás saber cuántas veces aparece cada una. ¿Qué patrón usaste para contar apariciones?",
+  ]}
+>
+Completá `analizar(texto)` para que devuelva un diccionario con:
+
+- `"palabras"` — cuántas hay en total
+- `"unicas"` — cuántas **distintas**, sin importar mayúsculas
+- `"mas_frecuente"` — la que más se repite, en minúscula
+</EjercicioPython>
+
+---
+
+Si estos ocho te salieron, tenés el Bloque 1 y 2 sólidos. Lo que sigue es **POO**, donde los datos y
+las funciones que los usan se empiezan a guardar juntos.

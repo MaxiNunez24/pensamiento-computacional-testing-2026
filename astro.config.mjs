@@ -44,6 +44,7 @@ export default defineConfig({
             { label: '🔀 Condicionales', link: '/clases/condicionales/' },
             { label: '🔁 Bucles — while y for', link: '/clases/bucles/' },
             { label: '📋 Listas', link: '/clases/listas/' },
+            { label: '📒 Cuadernillo de listas', link: '/clases/cuadernillo-listas/' },
           ],
         },
         {
@@ -54,6 +55,8 @@ export default defineConfig({
             { label: '📔 Diccionarios', link: '/clases/diccionarios/' },
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
             { label: '🎛️ Funciones II', link: '/clases/funciones-2/' },
+            { label: '🔁 Repaso general', link: '/clases/repaso/' },
+            { label: '🎰 Bingo — integrador', link: '/clases/bingo/' },
           ],
         },
         {

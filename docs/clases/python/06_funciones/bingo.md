@@ -477,3 +477,11 @@ Antes de cerrar, tomamos 3 minutos. Cada uno responde en voz alta (o en papel):
 ## [⬅️ Anterior: Lectura y corrección de código](./lectura_codigo.md)
 ## [📚 Índice](../../clases.md#colecciones)
 ## [➡️ Siguiente: Importar módulos](./imports_y_modulos.md)
+
+---
+
+!!! tip "🧪 Hacelo paso a paso en la plataforma"
+    Las etapas de este integrador están como **ejercicios interactivos**, cada una con tests que
+    verifican esa pieza antes de pasar a la siguiente.
+
+    [🚀 Ir al Bingo interactivo](/pensamiento-computacional-testing-2026/ejercicios/clases/bingo/){ .md-button .md-button--primary }
