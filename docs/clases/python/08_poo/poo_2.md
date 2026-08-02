@@ -161,135 +161,14 @@ métodos **públicos** (`+`). Esa es la foto de una clase bien encapsulada.
 
 ## 🎮 Ejercicios
 
-### 🌱 Ejercicio 1 — Que se imprima lindo
+!!! tip "🧪 Los ejercicios ahora son interactivos"
+    Escribís el código, lo ejecutás con **Python de verdad en el navegador** y los tests te dicen al
+    instante si está bien. Sin instalar nada: funciona desde la máquina del CFP, desde tu casa y
+    desde el celular. Tu avance **se guarda solo**.
 
-Tenés una clase `Producto` con `nombre` y `precio`. Agregale `__str__` para que `print(producto)`
-muestre algo como `🛒 Yerba — $1500`.
+    Si te trabás, cada ejercicio tiene pistas — y un botón para mandarme tu código y tu consulta.
 
-```python
-p = Producto("Yerba", 1500)
-print(p)        # 🛒 Yerba — $1500
-```
-
-??? tip "💡 Pista"
-    `__str__` recibe `self` y **devuelve un string** (con `return`, no `print`). Usá una f-string con
-    `self.nombre` y `self.precio`.
-
-??? success "✅ Solución"
-    ```python
-    class Producto:
-        def __init__(self, nombre, precio):
-            self.nombre = nombre
-            self.precio = precio
-
-        def __str__(self):
-            return f"🛒 {self.nombre} — ${self.precio}"
-
-    p = Producto("Yerba", 1500)
-    print(p)        # 🛒 Yerba — $1500
-    ```
-
-### 🌿 Ejercicio 2 — El termostato protegido
-
-Creá una clase `Termostato` que guarde una temperatura **interna** (`_temperatura`, arranca en 20).
-Encapsulala:
-
-- `ajustar(grados)` → cambia la temperatura, **pero la mantiene siempre entre 16 y 30** (si te pasás,
-  la deja en el límite).
-- `__str__` → muestra `🌡️ 22°C`.
-
-```python
-t = Termostato()
-t.ajustar(50)
-print(t)          # 🌡️ 30°C   (no deja pasar de 30)
-t.ajustar(10)
-print(t)          # 🌡️ 16°C   (no deja bajar de 16)
-```
-
-??? tip "💡 Pista"
-    En `ajustar`, primero asigná, después "recortá" con dos `if` (o pensá en `min` y `max`). El dato
-    vive en `self._temperatura`; nadie debería tocarlo de afuera, solo `ajustar`.
-
-??? success "✅ Solución"
-    ```python
-    class Termostato:
-        def __init__(self):
-            self._temperatura = 20
-
-        def ajustar(self, grados):
-            if grados > 30:
-                grados = 30
-            elif grados < 16:
-                grados = 16
-            self._temperatura = grados
-
-        def __str__(self):
-            return f"🌡️ {self._temperatura}°C"
-
-    t = Termostato()
-    t.ajustar(50)
-    print(t)          # 🌡️ 30°C
-    t.ajustar(10)
-    print(t)          # 🌡️ 16°C
-    ```
-
-    El método `ajustar` es la **puerta controlada**: pase lo que pase, la temperatura nunca queda
-    fuera de rango. Eso es encapsular.
-
-### 🌿 Ejercicio 3 — Alumno, ahora a prueba de errores
-
-Retomá el `Alumno` con lista de notas (de POO I) y mejoralo:
-
-- Las notas se guardan en `_notas` (interno).
-- `agregar_nota(nota)` → solo agrega si la nota está **entre 0 y 10**; si no, imprime
-  `"Nota inválida: <nota>"`.
-- `__str__` → muestra `Ana — promedio 8.0`.
-
-```python
-ana = Alumno("Ana")
-ana.agregar_nota(8)
-ana.agregar_nota(15)    # Nota inválida: 15
-ana.agregar_nota(10)
-print(ana)              # Ana — promedio 9.0
-```
-
-??? tip "💡 Pista"
-    En `agregar_nota`, un `if 0 <= nota <= 10:` decide si la agregás o la rechazás. Para el promedio
-    en `__str__`, cuidado con la lista vacía (dividir por cero). Reutilizá la idea del promedio de
-    POO I.
-
-??? success "✅ Solución"
-    ```python
-    class Alumno:
-        def __init__(self, nombre):
-            self.nombre = nombre
-            self._notas = []
-
-        def agregar_nota(self, nota):
-            if 0 <= nota <= 10:
-                self._notas.append(nota)
-            else:
-                print(f"Nota inválida: {nota}")
-
-        def promedio(self):
-            if not self._notas:
-                return 0
-            return sum(self._notas) / len(self._notas)
-
-        def __str__(self):
-            return f"{self.nombre} — promedio {self.promedio()}"
-
-    ana = Alumno("Ana")
-    ana.agregar_nota(8)
-    ana.agregar_nota(15)    # Nota inválida: 15
-    ana.agregar_nota(10)
-    print(ana)              # Ana — promedio 9.0
-    ```
-
-    Esto es **exactamente** lo que vas a necesitar en el proyecto: datos protegidos + validación al
-    cargarlos. Un `Alumno` que no acepta notas imposibles es un `Alumno` confiable.
-
----
+    [🚀 Ir a los ejercicios de POO II](/pensamiento-computacional-testing-2026/ejercicios/clases/poo-2/){ .md-button .md-button--primary }
 
 ## 📌 Cheatsheet
 

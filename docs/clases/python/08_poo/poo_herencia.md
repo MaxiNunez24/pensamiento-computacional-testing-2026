@@ -157,131 +157,14 @@ sin tocar una coma.
 
 ## 🎮 Ejercicios
 
-### 🌱 Ejercicio 1 — Instrumentos
+!!! tip "🧪 Los ejercicios ahora son interactivos"
+    Escribís el código, lo ejecutás con **Python de verdad en el navegador** y los tests te dicen al
+    instante si está bien. Sin instalar nada: funciona desde la máquina del CFP, desde tu casa y
+    desde el celular. Tu avance **se guarda solo**.
 
-Creá una clase madre `Instrumento` con un atributo `nombre` y un método `tocar()` que imprima
-`"<nombre> hace un sonido"`. Después creá `Guitarra` y `Bateria` que hereden de `Instrumento` y
-**sobrescriban** `tocar()` con su propio sonido.
+    Si te trabás, cada ejercicio tiene pistas — y un botón para mandarme tu código y tu consulta.
 
-```python
-Guitarra("Gibson").tocar()   # Gibson hace: ¡Riiiff!
-Bateria("Pearl").tocar()     # Pearl hace: ¡Pum pum tss!
-```
-
-??? tip "💡 Pista"
-    `class Guitarra(Instrumento):` ya te da el `__init__` con `nombre` gratis (heredado). Solo
-    necesitás redefinir `tocar()` en cada hija. No hace falta escribir el constructor de nuevo.
-
-??? success "✅ Solución"
-    ```python
-    class Instrumento:
-        def __init__(self, nombre):
-            self.nombre = nombre
-        def tocar(self):
-            print(f"{self.nombre} hace un sonido")
-
-    class Guitarra(Instrumento):
-        def tocar(self):
-            print(f"{self.nombre} hace: ¡Riiiff!")
-
-    class Bateria(Instrumento):
-        def tocar(self):
-            print(f"{self.nombre} hace: ¡Pum pum tss!")
-
-    Guitarra("Gibson").tocar()
-    Bateria("Pearl").tocar()
-    ```
-
-### 🌿 Ejercicio 2 — Cuenta premium (con `super()`)
-
-Retomá la `CuentaBancaria` (con `_saldo`, `depositar`, `extraer`). Creá una `CuentaPremium` que
-**herede** de ella y agregue un `nombre` de titular en el constructor (usando `super()`), más un
-método `__str__` que muestre `"Cuenta de <nombre>: $<saldo>"`.
-
-```python
-c = CuentaPremium("Ana", 1000)
-c.depositar(500)          # heredado de CuentaBancaria
-print(c)                  # Cuenta de Ana: $1500
-```
-
-??? tip "💡 Pista"
-    El `__init__` de `CuentaPremium` recibe `nombre` y `saldo`. Primero `super().__init__(saldo)` (para
-    que la madre prepare `_saldo`), después `self.nombre = nombre`. `depositar` y `extraer` los heredás
-    sin escribir nada.
-
-??? success "✅ Solución"
-    ```python
-    class CuentaBancaria:
-        def __init__(self, saldo=0):
-            self._saldo = saldo
-        def depositar(self, monto):
-            if monto > 0:
-                self._saldo += monto
-        def extraer(self, monto):
-            if 0 < monto <= self._saldo:
-                self._saldo -= monto
-
-    class CuentaPremium(CuentaBancaria):
-        def __init__(self, nombre, saldo=0):
-            super().__init__(saldo)      # la madre prepara _saldo
-            self.nombre = nombre
-
-        def __str__(self):
-            return f"Cuenta de {self.nombre}: ${self._saldo}"
-
-    c = CuentaPremium("Ana", 1000)
-    c.depositar(500)
-    print(c)                  # Cuenta de Ana: $1500
-    ```
-
-### 🌿 Ejercicio 3 — Figuras (el poder del polimorfismo)
-
-Creá una clase madre `Figura` con un método `area()` que devuelva `0`. Después creá `Circulo` (recibe
-`radio`) y `Rectangulo` (recibe `base` y `altura`), cada una sobrescribiendo `area()`. Finalmente,
-poné varias figuras en una lista y **sumá todas las áreas con un solo `for`**.
-
-```python
-figuras = [Circulo(10), Rectangulo(4, 5), Circulo(1)]
-# Área total: 337.30
-```
-
-??? tip "💡 Pista"
-    Para el círculo: `3.1416 * self.radio ** 2`. Para el rectángulo: `self.base * self.altura`. El
-    truco está en el `for`: como **todas** las figuras tienen `area()`, podés hacer `total += f.area()`
-    sin preguntar de qué tipo es cada una. Ese es el regalo del polimorfismo.
-
-??? success "✅ Solución"
-    ```python
-    class Figura:
-        def area(self):
-            return 0
-
-    class Circulo(Figura):
-        def __init__(self, radio):
-            self.radio = radio
-        def area(self):
-            return 3.1416 * self.radio ** 2
-
-    class Rectangulo(Figura):
-        def __init__(self, base, altura):
-            self.base = base
-            self.altura = altura
-        def area(self):
-            return self.base * self.altura
-
-    figuras = [Circulo(10), Rectangulo(4, 5), Circulo(1)]
-
-    total = 0
-    for f in figuras:
-        total += f.area()      # cada figura calcula la suya
-    print(f"Área total: {total:.2f}")   # Área total: 337.30
-    ```
-
-    Fijate que el `for` es **idéntico** sin importar cuántos tipos de figura haya. Si mañana agregás
-    `Triangulo(Figura)`, lo metés en la lista y el `for` no cambia. Eso es escribir código que crece
-    sin romperse. 🚀
-
----
+    [🚀 Ir a los ejercicios de Herencia y polimorfismo](/pensamiento-computacional-testing-2026/ejercicios/clases/poo-herencia/){ .md-button .md-button--primary }
 
 ## 📌 Cheatsheet
 

@@ -313,112 +313,14 @@ print(nombre[0:3])  # Pyt — desde índice 0 hasta 2
 
 ## 🎮 Ejercicios
 
-### Variables y tipos
+!!! tip "🧪 Los ejercicios ahora son interactivos"
+    Escribís el código, lo ejecutás con **Python de verdad en el navegador** y los tests te dicen al
+    instante si está bien. Sin instalar nada: funciona desde la máquina del CFP, desde tu casa y
+    desde el celular. Tu avance **se guarda solo**.
 
-**Ejercicio 1 🌱** — Creá variables `nombre`, `edad`, `altura` y `es_estudiante`. Mostrálas todas en una sola línea usando f-string.
+    Si te trabás, cada ejercicio tiene pistas — y un botón para mandarme tu código y tu consulta.
 
-??? success "✅ Solución"
-    ```python
-    nombre = "Maxi"
-    edad = 22
-    altura = 1.81
-    es_estudiante = True
-    print(f"Nombre: {nombre} | Edad: {edad} | Altura: {altura} | Estudiante: {es_estudiante}")
-    ```
-
-**Ejercicio 2 🌱** — Mostrá el tipo de dato de cada una de esas variables con `type()`.
-
-??? success "✅ Solución"
-    ```python
-    print(type(nombre))        # <class 'str'>
-    print(type(edad))          # <class 'int'>
-    print(type(altura))        # <class 'float'>
-    print(type(es_estudiante)) # <class 'bool'>
-    ```
-
-### Operadores
-
-**Ejercicio 3 🌱** — Creá dos números y mostrá el resultado de: suma, resta, multiplicación, división y resto.
-
-??? success "✅ Solución"
-    ```python
-    a = 10
-    b = 3
-    print(f"Suma: {a + b}")
-    print(f"Resta: {a - b}")
-    print(f"Multiplicación: {a * b}")
-    print(f"División: {a / b:.2f}")
-    print(f"Resto: {a % b}")
-    ```
-
-**Ejercicio 4 🌱** — Verificá si un número es par usando `%` y un operador de comparación.
-
-??? success "✅ Solución"
-    ```python
-    n = 8
-    es_par = n % 2 == 0
-    print(f"{n} es par: {es_par}")
-    ```
-
-**Ejercicio 5 🌿** — Escribí una condición que sea `True` solo si la edad es mayor a 17 **y** la persona es estudiante.
-
-??? success "✅ Solución"
-    ```python
-    edad = 20
-    es_estudiante = True
-    puede_inscribirse = edad > 17 and es_estudiante
-    print(puede_inscribirse)  # True
-    ```
-
-### Strings
-
-**Ejercicio 6 🌱** — Creá una variable con tu nombre completo y mostrá: su longitud, en mayúsculas y en minúsculas.
-
-??? success "✅ Solución"
-    ```python
-    nombre = "Maximiliano Nuñez"
-    print(len(nombre))       # 17
-    print(nombre.upper())    # MAXIMILIANO NUÑEZ
-    print(nombre.lower())    # maximiliano nuñez
-    ```
-
-**Ejercicio 7 🌱** — Dada la frase `"hola mundo maravilloso"`, contá cuántas veces aparece la letra `"o"`.
-
-??? success "✅ Solución"
-    ```python
-    frase = "hola mundo maravilloso"
-    print(frase.count("o"))  # 4
-    ```
-
-**Ejercicio 8 🌱** — Separá `"lunes,martes,miércoles,jueves,viernes"` en una lista usando `split()`.
-
-??? success "✅ Solución"
-    ```python
-    dias = "lunes,martes,miércoles,jueves,viernes"
-    lista = dias.split(",")
-    print(lista)  # ['lunes', 'martes', 'miércoles', 'jueves', 'viernes']
-    ```
-
-**Ejercicio 9 🌱** — Dada la lista `["Python", "es", "genial"]`, uní los elementos en un string con un espacio como separador.
-
-??? success "✅ Solución"
-    ```python
-    palabras = ["Python", "es", "genial"]
-    frase = " ".join(palabras)
-    print(frase)  # Python es genial
-    ```
-
-**Ejercicio 10 🌱** — Verificá si la frase `"Python es genial"` empieza con `"Py"` y termina con `"al"`.
-
-??? success "✅ Solución"
-    ```python
-    frase = "Python es genial"
-    print(frase.startswith("Py"))   # True
-    print(frase.endswith("al"))     # True
-    print(frase.startswith("Py") and frase.endswith("al"))  # True
-    ```
-
----
+    [🚀 Ir a los ejercicios de Variables y tipos](/pensamiento-computacional-testing-2026/ejercicios/clases/variables/){ .md-button .md-button--primary }
 
 ## 🧩 Mini cierre conceptual
 

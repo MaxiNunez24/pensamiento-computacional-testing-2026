@@ -153,6 +153,26 @@ OFERTA
 ```
 </EjercicioPython>
 
+<EjercicioPython
+  titulo="Desafío: la cadena de lenguajes"
+  dificultad="🌳"
+  datos={`lenguajes = ["Python", "Java", "C++", "JavaScript"]`}
+  starter={`# Mostrá los lenguajes separados por flechas.\n`}
+  tests={`assert correr().strip() == "Python -> Java -> C++ -> JavaScript", f"imprimiste {correr().strip()!r}"\nassert correr(lenguajes=["a", "b"]).strip() == "a -> b", "con dos elementos"\nassert correr(lenguajes=["solo"]).strip() == "solo", "con uno solo no hay flecha"`}
+  pistas={[
+    "La lista puede tener cualquier cantidad de elementos. ¿Podés pasársela a <code>print</code> de forma que los trate como valores sueltos?",
+    "El separador tiene espacios de los dos lados de la flecha. ¿Cuál es exactamente el texto que va entre cada par?",
+  ]}
+>
+Mostrá los lenguajes separados por flechas:
+
+```
+Python -> Java -> C++ -> JavaScript
+```
+
+Ojo: tiene que funcionar con **cualquier** cantidad de lenguajes, no solo con estos cuatro.
+</EjercicioPython>
+
 ## Los tres errores que vas a cometer
 
 | Error | Qué pasó |
