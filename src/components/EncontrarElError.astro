@@ -35,6 +35,11 @@ interface Props {
   explicacion?: string;
   /** Opcional: asserts para verificar el arreglo. Sin esto, el ejercicio termina al ubicar el error. */
   tests?: string;
+  /** Cómo se arregla, una vez ubicado el error:
+   *  - 'linea' (por defecto): solo las líneas marcadas se vuelven editables.
+   *  - 'completo': se abre un editor con todo el código. Necesario cuando el
+   *    arreglo NO es cambiar esa línea sino moverla o reestructurar el bloque. */
+  arreglo?: 'linea' | 'completo';
   pistas?: string[];
 }
 
@@ -45,6 +50,7 @@ const {
   errores = [],
   explicacion = '',
   tests = '',
+  arreglo = 'linea',
   pistas = [],
 } = Astro.props;
 
@@ -60,6 +66,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   data-errores={enc(JSON.stringify(errores))}
   data-explicacion={explicacion ? enc(explicacion) : undefined}
   data-tests={tests ? enc(tests) : undefined}
+  data-arreglo={arreglo}
   data-codigo={enc(codigo)}
 >
   <header class="ejercicio__header">
@@ -93,6 +100,9 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
     <button type="button" class="ejercicio__btn" data-sin-error>🤔 No hay ningún error</button>
     <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reiniciar>↺ Reiniciar</button>
   </div>
+
+  {/* Editor completo: aparece solo en modo 'completo', después de ubicar el error. */}
+  <div class="encontrar__editor" data-editor-completo hidden></div>
 
   <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
 

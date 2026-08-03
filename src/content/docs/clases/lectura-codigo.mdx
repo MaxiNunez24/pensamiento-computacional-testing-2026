@@ -86,13 +86,20 @@ Debería mostrar `Total: 19`, pero lanza un `TypeError`.
   dificultad="🌿"
   codigo={`numeros = [5, 15, 3, 20, 8, 12]\nsuma = 0\nfor n in numeros:\n    if n > 10:\n        suma = 0\n        suma += n\nprint(f"Suma de mayores a 10: {suma}")`}
   errores={[5]}
-  explicacion="Esa línea pone el acumulador en cero cada vez que encuentra un número grande, así que al final solo queda el último. Fijate que arriba ya se inicializa en 0: esta línea directamente sobra."
+  explicacion="Esa línea pone el acumulador en cero cada vez que encuentra un número grande, así que al final solo queda el último. Arriba ya se inicializa en 0: esta directamente sobra."
+  tests={`assert salida.strip() == "Suma de mayores a 10: 47", f"imprimió {salida.strip()!r}"`}
+  arreglo="completo"
   pistas={[
     "Seguí el valor de <code>suma</code> vuelta por vuelta: 15… 20… 12. ¿Se van sumando o se pisan?",
     "Hay una línea que se ejecuta muchas veces cuando debería ejecutarse una sola. ¿Cuál?",
   ]}
 >
 Debería dar `47` (15 + 20 + 12) pero imprime `12`.
+
+:::note[Acá el arreglo no es cambiar esa línea]
+Una vez que la ubiques se abre el código completo, porque este bug se resuelve **moviendo** cosas,
+no reescribiendo un renglón.
+:::
 </EncontrarElError>
 
 <EncontrarElError
@@ -102,6 +109,7 @@ Debería dar `47` (15 + 20 + 12) pero imprime `12`.
   errores={[4]}
   explicacion="El contador crece en vez de decrecer, así que nunca llega a 0 y la condición no se vuelve falsa nunca."
   tests={`assert salida.split() == ["5","4","3","2","1"], f"imprimió {salida.split()!r}"`}
+  arreglo="completo"
   pistas={[
     "Se llama cuenta <em>regresiva</em>. ¿Para dónde va el contador con esa línea?",
     "¿En algún momento la condición del <code>while</code> se vuelve falsa?",

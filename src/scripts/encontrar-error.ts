@@ -5,6 +5,11 @@
 // hasta que los tests pasan sin haber leído el código, que es justo lo que este
 // ejercicio quiere entrenar.
 
+import { EditorView, basicSetup } from 'codemirror';
+import { keymap } from '@codemirror/view';
+import { indentWithTab } from '@codemirror/commands';
+import { python } from '@codemirror/lang-python';
+import { oneDark } from '@codemirror/theme-one-dark';
 import { estaHecho, marcarHecho, pintarSello, actualizarResumen } from './progreso';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
 
@@ -18,6 +23,7 @@ function initEncontrar(el: HTMLElement): void {
   const errores: number[] = JSON.parse(b64decode(el.dataset.errores || '[]'));
   const explicacion = b64decode(el.dataset.explicacion || '');
   const tests = b64decode(el.dataset.tests || '');
+  const modoArreglo = el.dataset.arreglo === 'completo' ? 'completo' : 'linea';
   const codigo = b64decode(el.dataset.codigo || '');
   const titulo = el.dataset.titulo || '';
 
@@ -29,6 +35,8 @@ function initEncontrar(el: HTMLElement): void {
   const btnSinError = el.querySelector<HTMLButtonElement>('[data-sin-error]');
   const btnReiniciar = el.querySelector<HTMLButtonElement>('[data-reiniciar]');
   const botonesLinea = Array.from(el.querySelectorAll<HTMLButtonElement>('.encontrar__linea'));
+  const cajaEditor = el.querySelector<HTMLElement>('[data-editor-completo]');
+  let editor: EditorView | null = null;
   if (!salida) return;
 
   pintarSello(el, estaHecho(titulo));
@@ -74,7 +82,29 @@ function initEncontrar(el: HTMLElement): void {
 
   // Convierte cada línea acertada en un campo editable, con el texto con bug
   // adentro. Solo esas: el resto del programa queda como estaba.
+  // Modo 'completo': se abre un editor con TODO el código. Es para los bugs que
+  // no se arreglan cambiando la línea sino moviéndola o reacomodando el bloque.
+  // La fase de señalar ya pasó, así que no se puede tantear sin haber leído.
+  function habilitarArregloCompleto(): void {
+    fase = 'arreglar';
+    if (ayuda) ayuda.textContent = '✏️ Ahora arreglalo. Podés reacomodar el código como haga falta.';
+    const lista = el.querySelector<HTMLElement>('[data-lineas]');
+    if (lista) lista.hidden = true;
+    if (cajaEditor) {
+      cajaEditor.hidden = false;
+      editor = new EditorView({
+        doc: codigo.replace(/\n$/, ''),
+        extensions: [basicSetup, python(), oneDark, keymap.of([indentWithTab])],
+        parent: cajaEditor,
+      });
+      editor.focus();
+    }
+    if (btnConfirmar) btnConfirmar.textContent = '✓ Verificar el arreglo';
+    if (btnSinError) btnSinError.hidden = true;
+  }
+
   function habilitarArreglo(): void {
+    if (modoArreglo === 'completo') return habilitarArregloCompleto();
     fase = 'arreglar';
     if (ayuda) ayuda.textContent = '✏️ Ahora arreglá esa línea (las demás quedan como están).';
     botonesLinea.forEach((btn) => {
@@ -96,6 +126,7 @@ function initEncontrar(el: HTMLElement): void {
   }
 
   function codigoArreglado(): string {
+    if (editor) return editor.state.doc.toString();
     const lineas = [...lineasOriginales];
     el.querySelectorAll<HTMLInputElement>('.encontrar__input').forEach((input) => {
       const btn = input.closest<HTMLButtonElement>('.encontrar__linea');
@@ -205,6 +236,16 @@ function initEncontrar(el: HTMLElement): void {
       code.textContent = lineasOriginales[n - 1] || ' ';
       input.replaceWith(code);
     });
+    if (editor) {
+      editor.destroy();
+      editor = null;
+    }
+    if (cajaEditor) {
+      cajaEditor.hidden = true;
+      cajaEditor.innerHTML = '';
+    }
+    const lista = el.querySelector<HTMLElement>('[data-lineas]');
+    if (lista) lista.hidden = false;
     marcadas.clear();
     limpiarPintado();
     fase = 'marcar';

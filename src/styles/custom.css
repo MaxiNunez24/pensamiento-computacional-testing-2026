@@ -866,3 +866,16 @@ body.pc-resizing * {
 .encontrar .encontrar__codigo > * {
   margin-top: 0;
 }
+
+/* Editor del modo "arreglo completo" de EncontrarElError. */
+.encontrar__editor {
+  margin-top: 0.6rem;
+  border: 1px solid var(--sl-color-accent);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.encontrar__editor .cm-editor { font-size: 1rem; }
+.encontrar__editor .cm-content,
+.encontrar__editor .cm-line,
+.encontrar__editor .cm-gutters,
+.encontrar__editor .cm-gutterElement { line-height: normal; }
