@@ -64,6 +64,7 @@ export default defineConfig({
             { label: '📦 Funciones I', link: '/clases/funciones-1/' },
             { label: '🎛️ Funciones II', link: '/clases/funciones-2/' },
             { label: '🔁 Repaso general', link: '/clases/repaso/' },
+            { label: '🔍 Lectura y corrección', link: '/clases/lectura-codigo/' },
             { label: '🎰 Bingo — integrador', link: '/clases/bingo/' },
           ],
         },

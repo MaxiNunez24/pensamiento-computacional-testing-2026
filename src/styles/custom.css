@@ -769,3 +769,100 @@ body.pc-resizing * {
   font-size: 0.78rem;
   opacity: 0.7;
 }
+
+/* ---------- "Encontrar el error" ---------- */
+
+.encontrar {
+  margin: 1.5rem 0;
+  padding: 1rem 1.1rem 1.2rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.6rem;
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+}
+
+.encontrar__ayuda {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.encontrar__codigo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.encontrar__codigo > li { margin: 0; }
+
+/* Cada línea es un botón de ancho completo: se puede tocar con el dedo y se
+   navega con Tab, no solo con el mouse. */
+.encontrar__linea {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.25rem 0.6rem;
+  border: 0;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: inherit;
+  font-family: var(--__sl-font-mono, ui-monospace, monospace);
+  /* 16px: menos que esto y Safari en iOS zoomea al enfocar el input del arreglo. */
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+.encontrar__linea:hover { background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent); }
+
+.encontrar__num {
+  flex: 0 0 1.6rem;
+  text-align: right;
+  opacity: 0.45;
+  font-size: 0.85rem;
+  user-select: none;
+}
+.encontrar__texto { white-space: pre; background: none; padding: 0; border: 0; }
+.encontrar__marca { margin-left: auto; font-size: 0.9rem; }
+
+.encontrar__linea.is-marcada {
+  border-left-color: var(--sl-color-accent);
+  background: color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+}
+.encontrar__linea.is-marcada .encontrar__marca::after { content: "👈"; }
+
+.encontrar__linea.is-acierto {
+  border-left-color: #2e7d32;
+  background: color-mix(in srgb, #2e7d32 20%, transparent);
+}
+.encontrar__linea.is-acierto .encontrar__marca::after { content: "✓"; }
+
+.encontrar__linea.is-fallo {
+  border-left-color: #c62828;
+  background: color-mix(in srgb, #c62828 15%, transparent);
+}
+.encontrar__linea.is-fallo .encontrar__marca::after { content: "✗"; }
+
+.encontrar__linea.is-faltante { border-left-color: #f9a825; }
+
+/* El campo donde se arregla la línea: ocupa el lugar del texto original. */
+.encontrar__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--sl-color-accent);
+  border-radius: 0.3rem;
+  background: var(--sl-color-black);
+  color: var(--sl-color-white);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Mismo fix que en los ejercicios: Starlight le mete margin-top a todo elemento
+   con un hermano antes, y en una fila flex eso descuadra las alturas. */
+.encontrar .ejercicio__acciones > *,
+.encontrar .encontrar__codigo > * {
+  margin-top: 0;
+}

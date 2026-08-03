@@ -1,0 +1,193 @@
+---
+title: Lectura y corrección de código
+description: "Leer código ajeno, encontrar el error y recién después arreglarlo. Diez casos, y uno sin trampa."
+---
+
+import EncontrarElError from '../../../components/EncontrarElError.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/python/06_funciones/lectura_codigo/" />
+
+Programar es, en buena medida, **leer** código que no escribiste vos — a veces de otra persona, a
+veces tuyo de hace dos semanas, que es casi lo mismo.
+
+Acá los ejercicios funcionan distinto: **primero señalás la línea** donde creés que está el
+problema, y recién si acertás se habilita el arreglo. Es a propósito. Si te dejáramos editar desde el
+principio, la tentación es tocar cosas hasta que funcione — y así no se aprende a leer.
+
+:::caution[Uno de los diez no tiene ningún error]
+No sabés cuál. Así que no alcanza con encontrar *algo raro*: tenés que entender qué hace el programa
+antes de decidir. Ese es todo el ejercicio.
+:::
+
+## Cómo leer código ajeno
+
+Antes de buscar el error, tres preguntas:
+
+1. **¿Qué debería hacer?** Leé el enunciado, no el código.
+2. **¿Qué hace en realidad?** Seguilo línea por línea, anotando cuánto vale cada variable.
+3. **¿Dónde se separan esas dos historias?** Ahí está el bug.
+
+| Tipo de error | Cómo se manifiesta |
+|---|---|
+| **Sintaxis** | No arranca. Python te marca la línea. |
+| **Ejecución** | Arranca y explota a mitad de camino (`TypeError`, `KeyError`, `IndexError`). |
+| **Lógica** | Anda perfecto… y da mal el resultado. **El más peligroso**, porque no avisa. |
+
+---
+
+<EncontrarElError
+  titulo="1 · Calculadora de años"
+  dificultad="🌱"
+  codigo={`edad = "20"\nprint(f"En 10 años vas a tener {edad + 10} años")`}
+  errores={[2]}
+  explicacion="input() siempre devuelve texto, y un texto no se puede sumar con un número."
+  tests={`assert salida.strip() == "En 10 años vas a tener 30 años", f"imprimió {salida.strip()!r}"`}
+  pistas={[
+    "¿De qué tipo es <code>edad</code>? Fijate cómo está escrito su valor.",
+    "¿Qué significa el <code>+</code> entre un texto y un número? ¿Está definido en Python?",
+  ]}
+>
+Debería decir `En 10 años vas a tener 30 años`. El `"20"` es lo que devolvió un `input()`.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="2 · ¿Par o impar?"
+  dificultad="🌱"
+  codigo={`numero = 4\nif numero % 2 == 1:\n    print(f"{numero} es par")\nelse:\n    print(f"{numero} es impar")`}
+  errores={[2]}
+  explicacion="Cuando el resto de dividir por 2 da 1, el número es IMPAR. La condición dice lo contrario de lo que quiso decir quien lo escribió."
+  tests={`assert salida.strip() == "4 es par", f"imprimió {salida.strip()!r}"`}
+  pistas={[
+    "Seguilo con el 4: ¿cuánto da <code>4 % 2</code>? ¿Por qué rama entra entonces?",
+    "Los mensajes son correctos. Lo que no dice lo que debería es la <em>pregunta</em>.",
+  ]}
+>
+Este programa dice que **4 es impar**. Los mensajes están bien escritos.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="3 · La función doble"
+  dificultad="🌿"
+  codigo={`def doble(n):\n    print(n * 2)\n\nresultado = doble(7)\ntotal = resultado + 5\nprint(f"Total: {total}")`}
+  errores={[2]}
+  explicacion="La función muestra el resultado pero no lo entrega. Una función sin return devuelve None, y None + 5 no existe."
+  tests={`assert salida.strip().splitlines()[-1] == "Total: 19", f"la última línea fue {salida.strip().splitlines()[-1]!r}"`}
+  pistas={[
+    "Imprime 14 y después explota. Si el 14 se vio en pantalla, ¿por qué la cuenta de abajo no lo encuentra?",
+    "¿Qué devuelve una función que no dice explícitamente qué devolver?",
+  ]}
+>
+Debería mostrar `Total: 19`, pero lanza un `TypeError`.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="4 · La suma que se reinicia"
+  dificultad="🌿"
+  codigo={`numeros = [5, 15, 3, 20, 8, 12]\nsuma = 0\nfor n in numeros:\n    if n > 10:\n        suma = 0\n        suma += n\nprint(f"Suma de mayores a 10: {suma}")`}
+  errores={[5]}
+  explicacion="Esa línea pone el acumulador en cero cada vez que encuentra un número grande, así que al final solo queda el último. Fijate que arriba ya se inicializa en 0: esta línea directamente sobra."
+  pistas={[
+    "Seguí el valor de <code>suma</code> vuelta por vuelta: 15… 20… 12. ¿Se van sumando o se pisan?",
+    "Hay una línea que se ejecuta muchas veces cuando debería ejecutarse una sola. ¿Cuál?",
+  ]}
+>
+Debería dar `47` (15 + 20 + 12) pero imprime `12`.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="5 · La cuenta regresiva"
+  dificultad="🌱"
+  codigo={`contador = 5\nwhile contador > 0:\n    print(contador)\n    contador += 1`}
+  errores={[4]}
+  explicacion="El contador crece en vez de decrecer, así que nunca llega a 0 y la condición no se vuelve falsa nunca."
+  tests={`assert salida.split() == ["5","4","3","2","1"], f"imprimió {salida.split()!r}"`}
+  pistas={[
+    "Se llama cuenta <em>regresiva</em>. ¿Para dónde va el contador con esa línea?",
+    "¿En algún momento la condición del <code>while</code> se vuelve falsa?",
+  ]}
+>
+Debería imprimir 5, 4, 3, 2, 1. En cambio no termina nunca.
+
+:::note[Tranquilo]
+Si lo ejecutás colgado, la página corta sola a los 15 segundos.
+:::
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="6 · Del 1 al 10"
+  dificultad="🌱"
+  codigo={`for i in range(1, 10):\n    print(i)`}
+  errores={[1]}
+  explicacion="range(inicio, fin) NUNCA incluye el número final: llega hasta el anterior."
+  tests={`assert salida.split() == [str(n) for n in range(1, 11)], f"imprimió {salida.split()!r}"`}
+  pistas={[
+    "Contá cuántos números imprime y cuál es el último. ¿Cuál falta?",
+  ]}
+>
+Debería imprimir del 1 al 10. Le falta uno.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="7 · El último color"
+  dificultad="🌱"
+  codigo={`colores = ["rojo", "verde", "azul", "amarillo"]\nprint(f"El último color es: {colores[4]}")`}
+  errores={[2]}
+  explicacion="La lista tiene 4 elementos, pero las posiciones van del 0 al 3. La posición 4 no existe."
+  tests={`assert salida.strip() == "El último color es: amarillo", f"imprimió {salida.strip()!r}"`}
+  pistas={[
+    "Contá las posiciones en voz alta empezando por el <code>rojo</code>. ¿Qué número le toca al <code>amarillo</code>?",
+  ]}
+>
+Debería mostrar `amarillo`, pero lanza un `IndexError`.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="8 · El buscador de inscriptos"
+  dificultad="🌿"
+  codigo={`inscriptos = {"Ana", "Beto", "Cami", "Dante"}\nif inscriptos == "Dante":\n    print("Dante está inscripto")\nelse:\n    print("Dante no está inscripto")`}
+  errores={[2]}
+  explicacion="Se está comparando el conjunto ENTERO con un nombre, y un conjunto nunca va a ser igual a un texto. Lo que se quería preguntar es si el nombre está adentro."
+  tests={`assert salida.strip() == "Dante está inscripto", f"imprimió {salida.strip()!r}"`}
+  pistas={[
+    "Dante está en la lista y aun así dice que no. ¿Qué dos cosas está comparando ese <code>==</code>?",
+    "¿Qué palabra usás para preguntar si algo <em>pertenece</em> a una colección?",
+  ]}
+>
+Dante **sí** está inscripto, pero el programa dice que no.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="9 · La agenda"
+  dificultad="🌱"
+  codigo={`agenda = {\n    "Ana": "221-1234",\n    "Beto": "011-5678",\n    "Cami": "223-9012",\n}\nprint(f"El teléfono de Ana es: {agenda['ana']}")`}
+  errores={[6]}
+  explicacion="Las claves de un diccionario distinguen mayúsculas: 'Ana' y 'ana' son dos claves distintas."
+  tests={`assert salida.strip() == "El teléfono de Ana es: 221-1234", f"imprimió {salida.strip()!r}"`}
+  pistas={[
+    "Compará letra por letra la clave que se guardó con la que se pide.",
+  ]}
+>
+Debería mostrar el teléfono de Ana, pero lanza un `KeyError`.
+</EncontrarElError>
+
+<EncontrarElError
+  titulo="10 · ¿Este anda?"
+  dificultad="🌳"
+  codigo={`def palabra_mas_larga(palabras):\n    mas_larga = palabras[0]\n    for p in palabras:\n        if len(p) > len(mas_larga):\n            mas_larga = p\n    return mas_larga\n\nlista = ["python", "es", "increíblemente", "divertido"]\nprint(palabra_mas_larga(lista))`}
+  errores={[]}
+  explicacion="Arranca comparando contra el primer elemento (no contra una lista vacía ni contra 0), recorre todo, se queda con la más larga y la devuelve. Está bien."
+  pistas={[
+    "Seguilo con la lista dada: ¿con qué valor arranca <code>mas_larga</code> y cómo va cambiando?",
+    "Buscá los sospechosos de siempre: ¿el arranque es válido? ¿el recorrido llega hasta el final? ¿devuelve o imprime?",
+  ]}
+>
+Debería mostrar la palabra más larga de la lista.
+
+¿Tiene algún error?
+</EncontrarElError>
+
+---
+
+Si te salieron los diez —incluido el último— ya tenés el reflejo más útil para depurar: **seguir el
+valor de cada variable paso a paso** en lugar de mirar el código esperando que el error salte solo.

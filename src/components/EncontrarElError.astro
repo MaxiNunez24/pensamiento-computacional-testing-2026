@@ -1,0 +1,111 @@
+---
+/**
+ * Encontrar el error: leer código ajeno, señalar la línea con el bug y recién
+ * después arreglarla.
+ *
+ * Por qué existe: si le damos el código con bug en un editor libre, el alumno
+ * tantea hasta que los tests pasan, sin haber leído. Acá primero tiene que
+ * SEÑALAR dónde está el problema; el editor se habilita después, y solo en las
+ * líneas que marcó.
+ *
+ * Soporta varios errores en el mismo código, y también CERO errores: el botón
+ * "no hay ningún error" es parte del ejercicio, porque obliga a leer de verdad
+ * en vez de asumir que siempre hay algo roto.
+ *
+ * Uso (.mdx):
+ *   <EncontrarElError
+ *     titulo="La suma que se reinicia"
+ *     dificultad="🌿"
+ *     codigo={`total = 0\nfor n in [1, 2, 3]:\n    total = 0\n    total += n\nprint(total)`}
+ *     errores={[3]}
+ *     explicacion="El acumulador se reinicia en cada vuelta, así que al final solo queda el último número."
+ *     tests={`assert total == 6, "la suma de 1, 2 y 3 es 6"`}
+ *   >
+ *   Este programa debería sumar los números, pero imprime 3.
+ *   </EncontrarElError>
+ */
+interface Props {
+  titulo: string;
+  dificultad?: string;
+  /** El código con el/los bug(s). Una línea por renglón. */
+  codigo: string;
+  /** Números de línea (empezando en 1) que tienen error. Vacío = no hay ninguno. */
+  errores?: number[];
+  /** Qué estaba mal. Se muestra recién cuando acierta la ubicación. */
+  explicacion?: string;
+  /** Opcional: asserts para verificar el arreglo. Sin esto, el ejercicio termina al ubicar el error. */
+  tests?: string;
+  pistas?: string[];
+}
+
+const {
+  titulo,
+  dificultad = '',
+  codigo,
+  errores = [],
+  explicacion = '',
+  tests = '',
+  pistas = [],
+} = Astro.props;
+
+const lineas = codigo.replace(/\n$/, '').split('\n');
+const id = 'err-' + Math.random().toString(36).slice(2, 9);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+---
+
+<section
+  class="encontrar"
+  id={id}
+  data-titulo={titulo}
+  data-errores={enc(JSON.stringify(errores))}
+  data-explicacion={explicacion ? enc(explicacion) : undefined}
+  data-tests={tests ? enc(tests) : undefined}
+  data-codigo={enc(codigo)}
+>
+  <header class="ejercicio__header">
+    {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+  </header>
+
+  <div class="ejercicio__consigna">
+    <slot />
+  </div>
+
+  <p class="encontrar__ayuda" data-fase-texto>
+    👆 Tocá la línea (o las líneas) donde creés que está el error.
+  </p>
+
+  <ol class="encontrar__codigo" data-lineas>
+    {lineas.map((linea, i) => (
+      <li>
+        <button type="button" class="encontrar__linea" data-linea={i + 1} aria-pressed="false">
+          <span class="encontrar__num" aria-hidden="true">{i + 1}</span>
+          <code class="encontrar__texto">{linea === '' ? ' ' : linea}</code>
+          <span class="encontrar__marca" aria-hidden="true"></span>
+        </button>
+      </li>
+    ))}
+  </ol>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-confirmar>✓ Confirmar</button>
+    <button type="button" class="ejercicio__btn" data-sin-error>🤔 No hay ningún error</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reiniciar>↺ Reiniciar</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
+
+  {pistas.length > 0 && (
+    <details class="ejercicio__pistas">
+      <summary>💡 Pistas</summary>
+      <ol>
+        {pistas.map((p) => <li set:html={p} />)}
+      </ol>
+    </details>
+  )}
+</section>
+
+<script>
+  import '../scripts/encontrar-error.ts';
+</script>
