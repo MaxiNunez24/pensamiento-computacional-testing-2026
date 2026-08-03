@@ -41,6 +41,19 @@ Al revisar una clase existente, evaluá cada punto y reportá: ✅ cumple / ⚠�
 
 ---
 
+### Antes de dar por terminada una clase interactiva
+
+- [ ] **Corré los tests contra una solución de referencia.** Un test imposible, o uno que hace
+      `splitlines()[-1]` sobre una salida vacía, le muestra al alumno un error del test y no de su
+      código.
+- [ ] **Verificá el render**, no solo que el build pase: `python3 scripts/verificar_render.py dist`.
+      El build de Astro pasa en verde aunque el sitio se vea roto — para MDX una tabla mal formada es
+      texto válido. (El deploy lo corre solo, pero conviene verlo antes de pushear.)
+- [ ] **Mirá la página con los ojos** al menos una vez. El chequeo automático valida el HTML, no cómo
+      se ve: un botón desalineado o un contraste malo no los detecta nadie más que vos.
+- [ ] Ningún `def` si la clase va antes de Funciones I (ver prerequisitos).
+- [ ] Todas las pistas son preguntas.
+
 ## Contexto del curso
 
 - **Lenguaje:** Python 3
