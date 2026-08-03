@@ -879,3 +879,84 @@ body.pc-resizing * {
 .encontrar__editor .cm-line,
 .encontrar__editor .cm-gutters,
 .encontrar__editor .cm-gutterElement { line-height: normal; }
+
+/* ---------- Modo evaluación (parciales) ---------- */
+
+.evaluacion {
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.2rem 1.3rem;
+  border: 2px solid var(--sl-color-accent);
+  border-radius: 0.7rem;
+}
+.evaluacion__titulo { margin: 0 0 0.4rem; font-size: 1.35rem; }
+.evaluacion__aviso {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.evaluacion__items { list-style: none; margin: 0; padding: 0; counter-reset: none; }
+.evaluacion__item {
+  margin: 0 0 1.4rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+.evaluacion__item:last-child { border-bottom: 0; }
+.evaluacion__pregunta { margin: 0 0 0.6rem; line-height: 1.55; }
+
+.evaluacion__opciones { display: flex; flex-direction: column; gap: 0.35rem; }
+.evaluacion__opcion {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  /* 44px de alto táctil: se responde desde el celular sin errarle. */
+  min-height: 2.75rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.45rem;
+  cursor: pointer;
+}
+.evaluacion__opcion:hover { border-color: var(--sl-color-accent); }
+.evaluacion__opcion input { margin: 0; flex: 0 0 auto; }
+
+.evaluacion__texto {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.45rem;
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+  color: var(--sl-color-white);
+  /* 16px: menos que esto y Safari en iOS zoomea al enfocar. */
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.evaluacion__editor {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.45rem;
+  overflow: hidden;
+}
+.evaluacion__editor .cm-editor { font-size: 1rem; }
+.evaluacion__editor .cm-content,
+.evaluacion__editor .cm-line,
+.evaluacion__editor .cm-gutters,
+.evaluacion__editor .cm-gutterElement { line-height: normal; }
+.evaluacion__editor .cm-editor.is-bloqueado { opacity: 0.6; pointer-events: none; }
+
+.evaluacion__pie { margin-top: 0.5rem; }
+.evaluacion__nota {
+  margin: 0.6rem 0 0;
+  font-size: 0.88rem;
+  white-space: pre-wrap;
+}
+.evaluacion__nota.is-ok { color: #66bb6a; }
+.evaluacion__nota.is-error { color: #ef9a9a; }
+
+/* Mismo fix del margin de Starlight que en los otros componentes. */
+.evaluacion .evaluacion__items > *,
+.evaluacion .evaluacion__opciones > *,
+.evaluacion .ejercicio__acciones > * {
+  margin-top: 0;
+}

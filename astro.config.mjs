@@ -53,6 +53,7 @@ export default defineConfig({
             { label: '🔁 Bucles — while y for', link: '/clases/bucles/' },
             { label: '📋 Listas', link: '/clases/listas/' },
             { label: '📒 Cuadernillo de listas', link: '/clases/cuadernillo-listas/' },
+            { label: '📝 Mini Parcial', link: '/clases/mini-parcial/' },
           ],
         },
         {

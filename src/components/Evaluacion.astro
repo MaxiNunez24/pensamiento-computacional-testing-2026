@@ -1,0 +1,125 @@
+---
+/**
+ * Modo evaluación: un parcial completo en una sola pieza.
+ *
+ * A diferencia del resto de la plataforma, acá NO hay feedback instantáneo: el
+ * alumno responde todo y entrega una vez. Si durante el parcial le dijéramos si
+ * los tests pasan, dejaríamos de evaluar — probaría variantes hasta que se ponga
+ * verde. Sí puede ejecutar su código y ver qué imprime, que es exactamente lo
+ * mismo que tendría en VS Code.
+ *
+ * Sobre la integridad: esto NO impide que copien ni que abran otra pestaña, y no
+ * lo intenta. En el navegador eso no se puede garantizar, y las medidas típicas
+ * (bloquear copiado, detectar cambio de foco) se esquivan con el celular al lado
+ * y generan falsos positivos. El control es el aula; esto aporta el formato.
+ *
+ * Uso (.mdx):
+ *   <Evaluacion
+ *     titulo="Mini Parcial — Listas y control de flujo"
+ *     items={[
+ *       { tipo: "multiple", pregunta: "¿Qué tipo devuelve input()?",
+ *         opciones: ["int", "str", "depende"], correcta: 1, puntos: 1 },
+ *       { tipo: "abierta", pregunta: "¿Cuándo conviene while y cuándo for?" },
+ *       { tipo: "codigo", pregunta: "Sumá los pares de la lista.",
+ *         starter: "numeros = [1, 2, 3, 4]\n", tests: "assert total == 6" },
+ *     ]}
+ *   />
+ */
+interface Item {
+  tipo: 'multiple' | 'abierta' | 'codigo';
+  pregunta: string;
+  /** multiple */
+  opciones?: string[];
+  correcta?: number;
+  /** codigo */
+  starter?: string;
+  tests?: string;
+  /** Cuánto vale. Por defecto 1. Las abiertas y de código las corregís vos. */
+  puntos?: number;
+}
+
+interface Props {
+  titulo: string;
+  items: Item[];
+  /** Si es true, al entregar el alumno ve qué opciones acertó. Por defecto no. */
+  mostrarResultado?: boolean;
+}
+
+const { titulo, items, mostrarResultado = false } = Astro.props;
+
+const id = 'ev-' + Math.random().toString(36).slice(2, 9);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+
+// La clave de corrección va codificada. No es seguridad — cualquiera puede
+// mirar el HTML — pero evita que aparezca de casualidad al inspeccionar.
+const clave = items.map((it) => (it.tipo === 'multiple' ? (it.correcta ?? -1) : -1));
+const puntos = items.map((it) => it.puntos ?? 1);
+---
+
+<section
+  class="evaluacion"
+  id={id}
+  data-titulo={titulo}
+  data-clave={enc(JSON.stringify(clave))}
+  data-puntos={enc(JSON.stringify(puntos))}
+  data-tests={enc(JSON.stringify(items.map((it) => it.tests || '')))}
+  data-mostrar={mostrarResultado ? '1' : undefined}
+>
+  <header class="evaluacion__header">
+    <h2 class="evaluacion__titulo">📝 {titulo}</h2>
+    <p class="evaluacion__aviso">
+      Respondé todo y entregá <strong>una sola vez</strong> al final. No vas a ver si está bien o mal:
+      esto es una evaluación, no una práctica. En los ejercicios de código podés <strong>ejecutar</strong>
+      para ver qué imprime, igual que en VS Code.
+    </p>
+  </header>
+
+  <ol class="evaluacion__items">
+    {items.map((item, i) => (
+      <li class="evaluacion__item" data-item={i} data-tipo={item.tipo}>
+        <p class="evaluacion__pregunta"><strong>{i + 1}.</strong> <span set:html={item.pregunta} /></p>
+
+        {item.tipo === 'multiple' && (
+          <div class="evaluacion__opciones">
+            {(item.opciones || []).map((op, j) => (
+              <label class="evaluacion__opcion">
+                <input type="radio" name={`${id}-${i}`} value={j} />
+                <span set:html={op} />
+              </label>
+            ))}
+          </div>
+        )}
+
+        {item.tipo === 'abierta' && (
+          <textarea
+            class="evaluacion__texto"
+            rows="4"
+            data-respuesta
+            placeholder="Escribí tu respuesta con tus palabras…"
+          ></textarea>
+        )}
+
+        {item.tipo === 'codigo' && (
+          <div class="evaluacion__codigo">
+            <div class="evaluacion__editor" data-editor data-starter={enc(item.starter || '')}></div>
+            <div class="ejercicio__acciones">
+              <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
+            </div>
+            <pre class="ejercicio__salida" data-salida hidden></pre>
+          </div>
+        )}
+      </li>
+    ))}
+  </ol>
+
+  <footer class="evaluacion__pie">
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-entregar>
+      📨 Entregar el parcial
+    </button>
+    <p class="evaluacion__nota" data-estado></p>
+  </footer>
+</section>
+
+<script>
+  import '../scripts/evaluacion.ts';
+</script>
