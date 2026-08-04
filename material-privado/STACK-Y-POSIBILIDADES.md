@@ -102,6 +102,13 @@ guiones/                  → guiones de video (fuera del build)
     dan 404 en producción. Todo `src`/`href` propio tiene que llevar el `base` adelante.
   - `markdown: { gfm: true }` — **obligatorio**: Astro 6.4 dejó GFM en `undefined` para .mdx y sin
     esta línea **ninguna tabla se renderiza** (salen los pipes crudos).
+  - ⚠️ **El `base` NO se agrega solo a los links que escribís vos.** Starlight se lo pone al `sidebar`,
+    pero **no** a los `hero.actions` del frontmatter ni a los links markdown `[x](/ruta/)`: esos van al
+    `<a href>` tal cual y, si arrancan con `/clases/…`, apuntan a la raíz del dominio → **404 en
+    producción** (pasó con el botón de la portada). En el **cuerpo** de un `.mdx` usá
+    `import.meta.env.BASE_URL` (`export const b = import.meta.env.BASE_URL.replace(/\/$/,'') + '/'` y
+    después `<a href={b + 'clases/tema/'}>`). En el **frontmatter** (YAML, sin expresiones) no queda
+    otra que escribir la ruta completa con el `base`.
   - `favicon: '/favicon.ico'`, `customCss`, y el `sidebar` (se edita a mano al sumar clases).
 - **Sidebars redimensionables:** `public/sidebars-resizable.js` (script propio, se sirve con el `base`).
 

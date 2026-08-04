@@ -960,3 +960,48 @@ body.pc-resizing * {
 .evaluacion .ejercicio__acciones > * {
   margin-top: 0;
 }
+
+/* ---------------------------------------------------------------------------
+   Índice de clases de la portada
+   La portada usa `template: splash`, que oculta el sidebar: sin esta lista no
+   habría forma de llegar a una clase desde el inicio. Va sin viñetas y compacta
+   para que los cuatro bloques entren de un vistazo.
+--------------------------------------------------------------------------- */
+.indice-clases {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.indice-clases > li + li {
+  margin-top: 0.4rem;
+}
+.indice-clases a {
+  display: block;
+  text-decoration: none;
+  color: var(--sl-color-white);
+}
+/* En el celular estos links SON la navegación (el splash oculta el sidebar), y
+   con la altura de la línea sola quedan en 18px: imposible de acertar con el
+   dedo. Abajo de 50rem se les da alto de objetivo táctil. */
+@media (max-width: 50rem) {
+  .indice-clases a {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  .indice-clases > li + li {
+    margin-top: 0;
+    border-top: 1px solid var(--sl-color-gray-6);
+  }
+}
+.indice-clases a:hover {
+  color: var(--sl-color-text-accent);
+  text-decoration: underline;
+}
+/* El code de print()/input() no tiene que competir con el texto del link. */
+.indice-clases code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.95em;
+}

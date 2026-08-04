@@ -1,40 +1,114 @@
 ---
-title: Pensamiento Computacional y Testing
-description: Curso del CFP 401 «Laura Vicuña». Aprendé a programar haciendo, con Python que corre en tu navegador.
+title: Ejercicios del curso
+description: La plataforma de práctica de Pensamiento Computacional y Testing (CFP 401). Python de verdad en el navegador, con tests que te corrigen al instante.
 template: splash
 hero:
-  tagline: Acá no se lee programación, se hace. Escribís código, lo corrés y lo verificás — todo en la página.
+  title: Practicá Python acá mismo
+  tagline: Escribís el código, lo ejecutás y los tests te dicen al instante si está bien. Sin instalar nada, desde la compu o el celular.
   actions:
-    - text: Probar la demo interactiva
-      link: /clases/funciones-1/
+    # ⚠️ Los links del hero van con la ruta COMPLETA (incluido el `base`).
+    # Starlight pasa este `link` tal cual al <a href>: no le aplica `pathWithBase`
+    # como sí hace con el sidebar. Un "/clases/..." acá apunta a la raíz del
+    # dominio y da 404 en producción. En el cuerpo de la página, en cambio, se
+    # usa `import.meta.env.BASE_URL` (constante `b` más abajo).
+    - text: Empezar acá
+      link: /pensamiento-computacional-testing-2026/ejercicios/clases/como-usar-esto/
       icon: right-arrow
       variant: primary
+    - text: Ver la teoría
+      link: /pensamiento-computacional-testing-2026/
+      icon: open-book
+      variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## ¿Qué es esto?
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+export const teoria = b.replace(/ejercicios\/$/, '');
 
-Esta es la nueva versión del curso **Pensamiento Computacional y Testing de Aplicaciones**, pensada
-para **aprender haciendo**: cada concepto viene con ejercicios que ejecutás y verificás sin salir de
-la página, con feedback al instante.
+## Las dos mitades del curso
+
+El curso vive en dos partes que se complementan. Si buscás la **explicación** de un tema, está en la
+teoría; si querés **practicarlo**, estás en el lugar correcto.
 
 <CardGrid>
-  <Card title="🐍 Python en el navegador" >
-    No hay que instalar nada para practicar. El código corre de verdad, acá mismo.
+  <Card title="📖 La teoría">
+    Los apuntes de cada clase, el cronograma y el material de apoyo.
+
+    <a href={teoria}>Ir al sitio de teoría →</a>
   </Card>
-  <Card title="✅ Tests por ejercicio">
-    Cada ejercicio sabe si tu solución funciona. Probás, te equivocás, corregís.
-  </Card>
-  <Card title="🛠️ Proyectos reales">
-    Sistema de Asistencias, automatización con un bot, e IA. Python es solo la herramienta.
-  </Card>
-  <Card title="🧪 Testing de verdad">
-    Aprendés a verificar tu código como en la industria, en contexto y no como teoría suelta.
+  <Card title="🎮 La práctica (acá)">
+    Los ejercicios de cada clase, con Python que corre en esta misma página.
+
+    <a href={b + 'clases/como-usar-esto/'}>Cómo usar la plataforma →</a>
   </Card>
 </CardGrid>
 
-:::note[Prueba de concepto]
-Esta es una **demo** de la migración del curso a la nueva plataforma. Por ahora hay una sola clase de
-muestra: [📦 Funciones I](/clases/funciones-1/).
+## Todas las clases
+
+<CardGrid>
+  <Card title="🌱 Bloque 1 — Fundamentos">
+    <ul class="indice-clases">
+      <li><a href={b + 'clases/print/'}>🖨️ La función <code>print()</code></a></li>
+      <li><a href={b + 'clases/variables/'}>📊 Variables y tipos</a></li>
+      <li><a href={b + 'clases/input/'}>⌨️ La función <code>input()</code></a></li>
+      <li><a href={b + 'clases/condicionales/'}>🔀 Condicionales</a></li>
+      <li><a href={b + 'clases/bucles/'}>🔁 Bucles — while y for</a></li>
+      <li><a href={b + 'clases/listas/'}>📋 Listas</a></li>
+      <li><a href={b + 'clases/cuadernillo-listas/'}>📒 Cuadernillo de listas</a></li>
+      <li><a href={b + 'clases/mini-parcial/'}>📝 Mini Parcial</a></li>
+    </ul>
+  </Card>
+  <Card title="🌿 Bloque 2 — Colecciones y funciones">
+    <ul class="indice-clases">
+      <li><a href={b + 'clases/tuplas/'}>🎲 Tuplas</a></li>
+      <li><a href={b + 'clases/sets/'}>🗝️ Sets</a></li>
+      <li><a href={b + 'clases/diccionarios/'}>📔 Diccionarios</a></li>
+      <li><a href={b + 'clases/funciones-1/'}>📦 Funciones I</a></li>
+      <li><a href={b + 'clases/funciones-2/'}>🎛️ Funciones II</a></li>
+      <li><a href={b + 'clases/repaso/'}>🔁 Repaso general</a></li>
+      <li><a href={b + 'clases/lectura-codigo/'}>🔍 Lectura y corrección</a></li>
+      <li><a href={b + 'clases/bingo/'}>🎰 Bingo — integrador</a></li>
+    </ul>
+  </Card>
+  <Card title="🛠️ Bloque 3 — Persistencia">
+    <ul class="indice-clases">
+      <li><a href={b + 'clases/archivos/'}>💾 Manejo de archivos</a></li>
+      <li><a href={b + 'clases/json/'}>📋 JSON</a></li>
+    </ul>
+  </Card>
+  <Card title="🏗️ POO — Objetos">
+    <ul class="indice-clases">
+      <li><a href={b + 'clases/poo-1/'}>🧬 POO I — Clases y objetos</a></li>
+      <li><a href={b + 'clases/poo-2/'}>🛡️ POO II — Encapsulamiento</a></li>
+      <li><a href={b + 'clases/poo-herencia/'}>🔗 Herencia y polimorfismo</a></li>
+    </ul>
+  </Card>
+</CardGrid>
+
+## Cómo funciona
+
+<CardGrid>
+  <Card title="🐍 Python de verdad, en el navegador">
+    No es una simulación: es Python corriendo acá. No hay que instalar nada para practicar, ni en el
+    CFP ni en tu casa.
+  </Card>
+  <Card title="✅ Tests que te corrigen al instante">
+    Cada ejercicio sabe si tu solución funciona. Probás, te equivocás, corregís — sin esperar a la
+    clase que viene.
+  </Card>
+  <Card title="💾 Tu avance se guarda solo">
+    El código que escribís queda guardado en tu navegador. Cerrás la página, volvés mañana y seguís
+    donde ibas.
+  </Card>
+  <Card title="✉️ Consultas al profe">
+    ¿No te sale? Mandás tu código y tu duda desde el ejercicio y llega al canal **#Consultas** del
+    Discord del curso.
+  </Card>
+</CardGrid>
+
+:::tip[¿Es tu primera vez acá?]
+Empezá por <a href={b + 'clases/como-usar-esto/'}>Cómo usar esta plataforma</a>: son dos minutos y
+después no la necesitás más. Ahí se explican los botones **▶ Ejecutar** y **✓ Verificar**, las pistas
+y cómo mandar una consulta.
 :::

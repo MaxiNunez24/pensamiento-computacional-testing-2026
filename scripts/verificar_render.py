@@ -24,6 +24,12 @@ import re
 import sys
 import pathlib
 
+# La consola de Windows usa cp1252, que no sabe escribir ✓ ⚠ ✗: sin esto el
+# script CRASHEA al imprimir el resultado, aunque el chequeo haya salido bien.
+# En el CI (Linux, UTF-8) no hace falta, pero acá se corre a mano antes de pushear.
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 # Bloques cuyo contenido es texto a propósito: no los miramos.
 OPACOS = re.compile(r'<(script|style|pre|textarea|code)[^>]*>.*?</\1>', re.S)
 ETIQUETAS = re.compile(r'<[^>]+>')
