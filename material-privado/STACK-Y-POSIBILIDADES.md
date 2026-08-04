@@ -203,9 +203,17 @@ pie → se borra (Starlight la genera). Toda clase con tabs/asides-con-título/e
 > `/ejercicios/`**. El deploy ahora sale solo con el push a `main`.
 
 **`scripts/verificar_render.py`** mira el HTML *renderizado* (no el proceso de build) y **frena el
-deploy** si encuentra sintaxis sin renderizar (tablas con pipes crudos → GFM apagado, asides `:::` o
-`!!!` como texto, `[object Object]`) o un recurso propio que va a dar 404. Nace de dos bugs reales que
-el build no detecta (GFM apagado en .mdx y un favicon inexistente).
+deploy** si encuentra:
+
+- sintaxis sin renderizar (tablas con pipes crudos → GFM apagado, asides `:::` o `!!!` como texto,
+  `[object Object]`);
+- un recurso propio que va a dar 404 (favicon, css, js, imágenes);
+- **links internos rotos**: sin el `base` (el caso `/clases/tema/`, que apunta a la raíz del dominio)
+  o apuntando a una página que no existe en el build. El `base` lo **deduce** del `canonical`, y los
+  links a la mitad MkDocs los saltea porque no están en este build.
+
+Nace de bugs reales que el build no detecta: GFM apagado en .mdx, un favicon inexistente, y el botón
+de la portada que daba 404 solo en producción.
 
 **`.github/workflows/astro-ci.yml`:** build-check de Astro en `dev` (no publica).
 

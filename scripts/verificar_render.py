@@ -9,8 +9,12 @@ los notara:
    `astro build` pasa en verde.
 2. **favicon 404** — Starlight apuntaba a un archivo que no existía. Otro
    `<link>` más para el build.
+3. **links internos sin el `base`** — el botón de la portada apuntaba a
+   `/clases/funciones-1/`, que en producción es la raíz del dominio. Starlight
+   le pone el `base` al sidebar, pero no a los `hero.actions` ni a los links
+   markdown. En local anda, en producción es 404.
 
-Los dos se vieron recién mirando el sitio con los ojos. Este script mira el
+Los tres se vieron recién mirando el sitio con los ojos. Este script mira el
 resultado en vez del proceso.
 
 Uso:
@@ -33,6 +37,31 @@ if hasattr(sys.stdout, 'reconfigure'):
 # Bloques cuyo contenido es texto a propósito: no los miramos.
 OPACOS = re.compile(r'<(script|style|pre|textarea|code)[^>]*>.*?</\1>', re.S)
 ETIQUETAS = re.compile(r'<[^>]+>')
+CANONICAL = re.compile(r'<link rel="canonical" href="([^"]+)"')
+
+
+def detectar_base(raiz: pathlib.Path, paginas: list) -> str | None:
+    """Deduce el prefijo de URL del sitio (el `base` de Astro) desde el HTML.
+
+    Se saca comparando el `canonical` de una página con su ruta en disco: si el
+    archivo `clases/print/index.html` se declara en
+    `/pensamiento-computacional-testing-2026/ejercicios/clases/print/`, entonces
+    el base es lo que sobra adelante. Se deduce en vez de hardcodearlo para que
+    el día que cambie no haya que tocar este script.
+    """
+    for f in paginas:
+        m = CANONICAL.search(f.read_text(encoding='utf-8'))
+        if not m:
+            continue
+        ruta = re.sub(r'^https?://[^/]+', '', m.group(1))
+        if not ruta.endswith('/'):
+            ruta += '/'
+        rel = f.parent.relative_to(raiz).as_posix()
+        rel = '' if rel == '.' else rel + '/'
+        if rel and not ruta.endswith('/' + rel):
+            continue
+        return ruta[: len(ruta) - len(rel)] if rel else ruta
+    return None
 
 # Sintaxis que, si aparece como texto visible, es que no se renderizó.
 ERRORES_TEXTO = [
@@ -66,9 +95,10 @@ def main() -> int:
 
     errores, avisos = [], []
     recursos = set()
+    enlaces = set()
 
     for f in paginas:
-        nombre = f.parent.name or 'inicio'
+        nombre = 'inicio' if f.parent == raiz else f.parent.name
         html = f.read_text(encoding='utf-8')
         txt = texto_visible(html)
 
@@ -87,6 +117,11 @@ def main() -> int:
                 continue
             recursos.add(attr)
 
+        # Links de navegación (solo href, y solo absolutos: son los que puede
+        # escribir a mano quien autora una clase).
+        for href in re.findall(r'href="(/[^"]*)"', html):
+            enlaces.add((nombre, href))
+
     # Un recurso propio que no existe en el build es un 404 asegurado.
     for r in sorted(recursos):
         if not re.search(r'\.(ico|svg|png|jpg|webp|css|js|woff2?)$', r):
@@ -95,6 +130,37 @@ def main() -> int:
         candidatos = [destino, raiz / r.lstrip('/'), *raiz.glob('**/' + r.split('/')[-1])]
         if not any(c.exists() for c in candidatos):
             errores.append(('(global)', 'recurso referenciado que no existe', r))
+
+    # Links internos rotos. El caso típico: Starlight le pone el `base` al
+    # sidebar, pero NO a los hero.actions ni a los links markdown escritos a
+    # mano — esos van al <a href> tal cual, y un "/clases/tema/" apunta a la
+    # raíz del dominio. Da 404 solo en producción, así que no se ve al probar.
+    base = detectar_base(raiz, paginas)
+    if not base:
+        avisos.append(('(global)', 'no pude deducir el `base` (¿falta canonical?)',
+                       'links internos sin verificar'))
+    else:
+        construidas = {
+            '' if (rel := p.parent.relative_to(raiz).as_posix()) == '.' else rel
+            for p in paginas
+        }
+        # La otra mitad del curso (MkDocs) cuelga de la raíz del proyecto, un
+        # nivel arriba del `base`. No está en este build: no se puede verificar
+        # desde acá, pero tampoco es un error.
+        raiz_proyecto = '/' + base.strip('/').split('/')[0] + '/' if base.strip('/') else '/'
+
+        for nombre, href in sorted(enlaces):
+            ruta = href.split('#')[0].split('?')[0]
+            if '.' in ruta.rstrip('/').split('/')[-1]:
+                continue  # tiene extensión: es un recurso, ya se revisó arriba
+            if ruta.startswith(base):
+                destino = ruta[len(base):].strip('/')
+                if destino not in construidas:
+                    errores.append((nombre, 'link a una página que no existe en el build', href))
+            elif ruta.startswith(raiz_proyecto):
+                continue  # la otra mitad (MkDocs), fuera de este build
+            else:
+                errores.append((nombre, f'link sin el `base` (debería empezar con {base})', href))
 
     print(f"Revisadas {len(paginas)} páginas en {raiz}")
 

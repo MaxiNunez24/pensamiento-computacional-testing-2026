@@ -9,6 +9,10 @@ import Mermaid from '../../../components/Mermaid.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 import VolverATeoria from '../../../components/VolverATeoria.astro';
 
+{/* Los links a otras lecciones necesitan el `base`: Astro NO se lo agrega a los
+    links markdown, y un "/clases/..." pelado apunta a la raíz del dominio. */}
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
 <VolverATeoria ruta="clases/python/08_poo/poo_1/" />
 
 
@@ -51,7 +55,7 @@ print(ana.nombre)          # Ana   (acceso con punto, sin comillas)
 :::note[Es la caja negra otra vez]
 Cuando hacés `ana.aprobo()`, la usás confiando en lo que devuelve, sin pensar en su interior. Un
 objeto = **datos + sus propias funciones**. Si te marea, repasá la
-[entrada en calor de funciones](/clases/funciones-1/).
+<a href={b + 'clases/funciones-1/'}>entrada en calor de funciones</a>.
 :::
 
 <OpcionMultiple titulo="Chequeo rápido" opciones={[
