@@ -3,6 +3,18 @@ En esta sección encontrarás recursos adicionales para complementar tu aprendiz
 
 ---
 
+## 🎮 Plataforma de ejercicios
+
+Todos los ejercicios del curso están en la **plataforma interactiva**: escribís el código, lo ejecutás con **Python de verdad en el navegador** y los tests te dicen al instante si está bien. Sin instalar nada, desde la compu o el celular. Tu avance **se guarda solo**.
+
+!!! tip "🚀 Entrá y practicá cuando quieras"
+    [🎮 Ir a la plataforma de ejercicios](/pensamiento-computacional-testing-2026/ejercicios/){ .md-button .md-button--primary }
+    [👋 Cómo se usa (2 minutos)](/pensamiento-computacional-testing-2026/ejercicios/clases/como-usar-esto/){ .md-button }
+
+    Desde la portada llegás a los ejercicios de **cualquier clase**. Y si te trabás, podés mandarme tu código y tu duda con el botón **✉️ Enviar a mi profe**.
+
+---
+
 ## 🤖 Asistente del curso
 
 Podés armar tu propio **asistente del curso**: te **explica y te guía paso a paso** — **no te da la respuesta hecha**, te ayuda a llegar vos. 💪
