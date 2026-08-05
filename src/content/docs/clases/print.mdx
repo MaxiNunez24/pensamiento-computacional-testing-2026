@@ -154,23 +154,26 @@ OFERTA
 </EjercicioPython>
 
 <EjercicioPython
-  titulo="Desafío: la cadena de lenguajes"
+  titulo="Desafío: la ruta de lenguajes"
   dificultad="🌳"
-  datos={`lenguajes = ["Python", "Java", "C++", "JavaScript"]`}
-  starter={`# Mostrá los lenguajes separados por flechas.\n`}
-  tests={`assert correr().strip() == "Python -> Java -> C++ -> JavaScript", f"imprimiste {correr().strip()!r}"\nassert correr(lenguajes=["a", "b"]).strip() == "a -> b", "con dos elementos"\nassert correr(lenguajes=["solo"]).strip() == "solo", "con uno solo no hay flecha"`}
+  datos={`primero = "Python"\nsegundo = "Java"\ntercero = "C++"\ncuarto = "JavaScript"`}
+  starter={`# Los cuatro lenguajes ya tienen valor.\n# Mostrá la ruta en una sola línea.\n`}
+  tests={`assert correr().strip() == "Ruta: Python -> Java -> C++ -> JavaScript", f"imprimiste {correr().strip()!r}"\nassert len(correr().strip().splitlines()) == 1, "tiene que salir todo en UNA sola línea"\nassert correr(primero="Go", segundo="Rust", tercero="C", cuarto="Zig").strip() == "Ruta: Go -> Rust -> C -> Zig", "si cambian los lenguajes, la salida tiene que acompañar"`}
   pistas={[
-    "La lista puede tener cualquier cantidad de elementos. ¿Podés pasársela a <code>print</code> de forma que los trate como valores sueltos?",
-    "El separador tiene espacios de los dos lados de la flecha. ¿Cuál es exactamente el texto que va entre cada par?",
+    "Mirá los separadores: después de <code>Ruta:</code> hay un espacio, pero entre los lenguajes hay flechas. ¿Puede un mismo <code>print</code> usar dos separadores distintos a la vez?",
+    "Si te sale en dos líneas: ¿qué agrega <code>print</code> al final de todo, y con qué parámetro se cambia?",
+    "El segundo test cambia los cuatro lenguajes. ¿Qué pasaría si escribieras la ruta completa a mano dentro de las comillas?",
   ]}
 >
-Mostrá los lenguajes separados por flechas:
+Los cuatro lenguajes ya tienen valor. Mostrá la ruta en **una sola línea**:
 
 ```
-Python -> Java -> C++ -> JavaScript
+Ruta: Python -> Java -> C++ -> JavaScript
 ```
 
-Ojo: tiene que funcionar con **cualquier** cantidad de lenguajes, no solo con estos cuatro.
+Fijate que `Ruta:` va separado por un **espacio**, pero los lenguajes van separados por **flechas**.
+
+Ojo: si cambian los lenguajes, tu programa tiene que seguir funcionando.
 </EjercicioPython>
 
 ## Los tres errores que vas a cometer
