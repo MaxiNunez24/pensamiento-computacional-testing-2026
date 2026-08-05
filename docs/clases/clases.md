@@ -29,30 +29,42 @@
 - [📊 Variables, tipos de datos y operadores](./python/02_variables_y_tipos/variables.md)
 - [⌨️ La función `input()`](./python/02_variables_y_tipos/funcion_input.md)
 
-### Estructuras de control { #estructuras-de-control }
+### Condicionales { #estructuras-de-control }
 
 - [🔀 If / Else](./python/03_estructuras_de_control/if_else.md)
-- [🔄 While](./python/03_estructuras_de_control/while.md)
-- [🔁 For](./python/03_estructuras_de_control/for.md)
-- [🧮 Ejercicios: Estructuras de Control](./python/03_estructuras_de_control/ejercicios_estructuras_control.md)
 
 ### Listas { #listas }
 
 - [📋 Listas en Python](./python/04_listas/listas.md)
+
+### Bucles { #bucles }
+
+- [🔄 While](./python/03_estructuras_de_control/while.md)
+- [🔁 For](./python/03_estructuras_de_control/for.md)
+- [🧮 Ejercicios: Estructuras de Control](./python/03_estructuras_de_control/ejercicios_estructuras_control.md)
+
+### Práctica de listas { #practica-listas }
+
 - [📒 Cuadernillo de ejercicios: Listas](./python/04_listas/cuadernillo_listas_finde.md)
 - [📝 Mini Parcial](./python/04_listas/mini_parcial.md)
 
 ---
 
-## 🌿 Bloque 2 — Colecciones y Modularización ✅ { #colecciones }
+## 🌿 Bloque 2 — Funciones y Colecciones ✅ { #colecciones }
 
+!!! note "📐 Por qué Funciones II va después de las colecciones"
+    Porque explica `*args` como *"una tupla"* y `**kwargs` como *"un diccionario"*: sin haber visto
+    las colecciones primero, habría que explicarlas de prestado.
+
+- [📦 Funciones I — Definición, parámetros y retorno](./python/06_funciones/funciones_1.md)
+- [🧠 Cómo encarar un ejercicio](./python/06_funciones/como_encarar_ejercicios.md)
+- [🔥 Entrada en calor: Funciones como caja negra](./python/06_funciones/funciones_caja_negra.md)
 - [🎲 Tuplas y Sets](./python/05_colecciones/tuplas_sets.md)
 - [🗝️ Diccionarios](./python/05_colecciones/diccionarios.md)
-- [📦 Funciones I — Definición, parámetros y retorno](./python/06_funciones/funciones_1.md)
 - [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./python/06_funciones/funciones_2.md)
-- [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/06_funciones/bingo.md)
 - [📦 Anexo: Importar módulos](./python/06_funciones/imports_y_modulos.md)
 - [🧠 Del enunciado al programa — comprensión de problemas](./python/06_funciones/del_enunciado_al_programa.md)
+- [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/06_funciones/bingo.md)
 
 ---
 

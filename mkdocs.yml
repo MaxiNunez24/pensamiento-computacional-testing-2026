@@ -66,28 +66,38 @@ nav:
         - 📊 Variables: clases/python/02_variables_y_tipos/variables.md
         - 📐 Formato de strings: clases/python/02_variables_y_tipos/formato_strings.md
         - ⌨️ La función input(): clases/python/02_variables_y_tipos/funcion_input.md
-      - 🔀 Estructuras de Control:
+      # ⚠️ El orden de acá abajo es el orden en que se enseña, y cambió: Listas
+      # pasó ANTES que Bucles (un `for` necesita algo que recorrer) y Funciones I
+      # pasó antes que Colecciones. Funciones II queda después de Colecciones a
+      # propósito: explica `*args` como "una tupla" y `**kwargs` como "un
+      # diccionario". Las CARPETAS conservan su numeración vieja para no romper
+      # los links ya compartidos ni los videos grabados; manda este nav.
+      - 🔀 Condicionales:
         - 🔀 If - Else: clases/python/03_estructuras_de_control/if_else.md
+      - 📋 Listas:
+        - 📋 Listas en Python: clases/python/04_listas/listas.md
+      - 🔁 Bucles:
         - 🔄 While: clases/python/03_estructuras_de_control/while.md
         - 🔁 For: clases/python/03_estructuras_de_control/for.md
         - 🧮​ Ejercicios Estructuras de Control: clases/python/03_estructuras_de_control/ejercicios_estructuras_control.md
-      - 📋 Listas:
-        - 📋 Listas en Python: clases/python/04_listas/listas.md
+      - 📒 Práctica de Listas:
         - 📒 Cuadernillo de ejercicios sobre Listas: clases/python/04_listas/cuadernillo_listas_finde.md
         - 📝 Mini Parcial: clases/python/04_listas/mini_parcial.md
+      - 📦 Funciones I:
+        - 📦 Funciones I: clases/python/06_funciones/funciones_1.md
+        - 🧠 Cómo encarar un ejercicio: clases/python/06_funciones/como_encarar_ejercicios.md
+        - "🔥 Entrada en calor: Funciones como caja negra": clases/python/06_funciones/funciones_caja_negra.md
       - 🗂️ Colecciones:
         - 🎲 Tuplas y Sets: clases/python/05_colecciones/tuplas_sets.md
         - 🗝️ Diccionarios: clases/python/05_colecciones/diccionarios.md
-      - 📦 Funciones:
-        - 📦 Funciones I: clases/python/06_funciones/funciones_1.md
+      - 📦 Funciones II:
         - 📦 Funciones II: clases/python/06_funciones/funciones_2.md
-        - 🧠 Cómo encarar un ejercicio: clases/python/06_funciones/como_encarar_ejercicios.md
+        - "📦 Anexo: Importar módulos": clases/python/06_funciones/imports_y_modulos.md
+      - 🧠 Práctica e integradores:
         - 🔁 Repaso general: clases/python/06_funciones/repaso.md
         - 🔍 Lectura y corrección de código: clases/python/06_funciones/lectura_codigo.md
-        - "🔥 Entrada en calor: Funciones como caja negra": clases/python/06_funciones/funciones_caja_negra.md
-        - 🎲 Bingo: clases/python/06_funciones/bingo.md
-        - "📦 Anexo: Importar módulos": clases/python/06_funciones/imports_y_modulos.md
         - 🧠 Del enunciado al programa: clases/python/06_funciones/del_enunciado_al_programa.md
+        - 🎲 Bingo: clases/python/06_funciones/bingo.md
       - 💾 Persistencia:
         - 🐙 Git y GitHub: clases/python/07_persistencia/git_github.md
         - 📁 Archivos: clases/python/07_persistencia/archivos.md

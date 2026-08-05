@@ -17,6 +17,13 @@
     Así, si un tema necesita más tiempo, no se rompe todo el cronograma: simplemente seguimos
     sumando filas a la bitácora. El ritmo lo marca el grupo. 🧬
 
+!!! note "🔀 El índice está ordenado para estudiar, no por fecha"
+    Reordenamos el material para que cada clase solo use cosas ya vistas: **Listas** pasó antes que
+    **Bucles** (un `for` necesita algo que recorrer) y **Funciones I** antes que las colecciones.
+    Por eso el orden del [índice de clases](./clases/clases.md) no coincide con el de la **bitácora**
+    de acá abajo, que es el registro de lo que dimos cada día y **no se toca**. Para repasar, seguí
+    el índice; para recordar qué vimos tal fecha, mirá la bitácora.
+
 ---
 
 ## 🎯 Hitos del año
