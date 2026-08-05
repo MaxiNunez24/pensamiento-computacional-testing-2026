@@ -72,6 +72,16 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
     <button type="button" class="ejercicio__aviso-cerrar" data-aviso-cerrar aria-label="Entendido">Entendido</button>
   </p>
 
+  {/* Las variables de `datos` se ejecutan antes del código del alumno, pero si
+      no se las mostramos son invisibles: el enunciado le dice "ya tiene valor"
+      y él no sabe ni cómo se llaman ni qué tienen. Van acá, en solo lectura. */}
+  {datos && (
+    <div class="ejercicio__datos">
+      <span class="ejercicio__datos-label">📌 Esto ya está cargado — no hace falta que lo escribas:</span>
+      <pre><code>{datos}</code></pre>
+    </div>
+  )}
+
   <div class="ejercicio__editor" data-editor></div>
 
   {entradas && (

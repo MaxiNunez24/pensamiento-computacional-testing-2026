@@ -695,6 +695,10 @@ body.pc-resizing * {
   line-height: 1.45;
 }
 .ejercicio__aviso-datos > span { flex: 1 1 14rem; }
+/* Sin esto el botón "Entendido" no hace NADA visible: el `display: flex` de
+   arriba le gana al `display: none` que el navegador aplica por el atributo
+   `hidden`, así que el aviso seguía en pantalla aunque el JS lo ocultara. */
+.ejercicio__aviso-datos[hidden] { display: none; }
 .ejercicio__aviso-cerrar {
   flex: 0 0 auto;
   padding: 0.35rem 0.7rem;
@@ -705,6 +709,40 @@ body.pc-resizing * {
   font-size: 0.8rem;
   cursor: pointer;
 }
+
+/* Variables que el ejercicio le regala al alumno (prop `datos`). Se muestran en
+   solo lectura, arriba del editor: son suyas para usar, pero no las escribe él.
+   Va con un borde punteado justamente para que se lea como "esto ya está". */
+.ejercicio__datos {
+  margin: 0 0 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px dashed var(--sl-color-gray-4);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-6);
+}
+.ejercicio__datos-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--sl-color-gray-2);
+}
+.ejercicio__datos pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  overflow-x: auto;
+}
+.ejercicio__datos code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+/* Mismo fix del margin de Starlight que en los otros bloques del ejercicio. */
+.ejercicio .ejercicio__datos > * { margin-top: 0; }
 
 /* Plan B del envío: aparece recién después de tocar "Enviar a mi profe". */
 .ejercicio__envio {
