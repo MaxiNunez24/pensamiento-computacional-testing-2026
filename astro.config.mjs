@@ -43,6 +43,16 @@ export default defineConfig({
       sidebar: [
         { label: '🏠 Inicio', link: '/' },
         { label: '👋 Cómo usar esta plataforma', link: '/clases/como-usar-esto/' },
+        // ⚠️ El orden de acá abajo NO es cosmético: es el orden en que se enseña,
+        // y varias clases dependen de que lo anterior ya se haya visto.
+        //   · Listas va ANTES que Bucles: `for` necesita algo que recorrer, y
+        //     antes se lo pedía prestado a una clase posterior.
+        //   · Funciones I va antes que las colecciones, así los ejercicios de
+        //     tuplas/sets/diccionarios pueden pedir `def` en vez del rodeo
+        //     `datos`/`correr()`.
+        //   · Funciones II va DESPUÉS de las colecciones, y no junto a Funciones I:
+        //     `*args` se explica como "una tupla" y `**kwargs` como "un
+        //     diccionario". Adelantarla obligaría a explicar ambas cosas de prestado.
         {
           label: '🌱 Bloque 1 — Fundamentos',
           items: [
@@ -50,19 +60,19 @@ export default defineConfig({
             { label: '📊 Variables y tipos', link: '/clases/variables/' },
             { label: '⌨️ La función input()', link: '/clases/input/' },
             { label: '🔀 Condicionales', link: '/clases/condicionales/' },
-            { label: '🔁 Bucles — while y for', link: '/clases/bucles/' },
             { label: '📋 Listas', link: '/clases/listas/' },
+            { label: '🔁 Bucles — while y for', link: '/clases/bucles/' },
             { label: '📒 Cuadernillo de listas', link: '/clases/cuadernillo-listas/' },
             { label: '📝 Mini Parcial', link: '/clases/mini-parcial/' },
           ],
         },
         {
-          label: '🌿 Bloque 2 — Colecciones y funciones',
+          label: '🌿 Bloque 2 — Funciones y colecciones',
           items: [
+            { label: '📦 Funciones I', link: '/clases/funciones-1/' },
             { label: '🎲 Tuplas', link: '/clases/tuplas/' },
             { label: '🗝️ Sets', link: '/clases/sets/' },
             { label: '📔 Diccionarios', link: '/clases/diccionarios/' },
-            { label: '📦 Funciones I', link: '/clases/funciones-1/' },
             { label: '🎛️ Funciones II', link: '/clases/funciones-2/' },
             { label: '🔁 Repaso general', link: '/clases/repaso/' },
             { label: '🔍 Lectura y corrección', link: '/clases/lectura-codigo/' },

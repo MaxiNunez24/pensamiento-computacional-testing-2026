@@ -388,6 +388,58 @@ Pedí un número `n` y mostrá un triángulo de `n` filas:
 ```
 </EjercicioPython>
 
+## Recorrer listas: los tres patrones
+
+Estos tres se repiten toda la vida programando. Ahora que tenés `for` y listas, son tuyos.
+
+<EjercicioPython
+  titulo="Transformar una lista"
+  dificultad="🌱"
+  starter={`numeros = [1, 2, 3]\n\n# Creá una lista 'dobles' con cada número multiplicado por 2\n`}
+  tests={`assert dobles == [2, 4, 6], f"dobles debería ser [2, 4, 6] y quedó {dobles!r}"\nprint("¡Lista duplicada!")`}
+  pistas={[
+    "Si tuvieras que hacerlo a mano con lápiz: ¿arrancás con una hoja en blanco o ya escribiste algo? ¿Qué representa esa hoja en tu código?",
+    "Por cada número de la lista original vas a producir uno nuevo. ¿Dónde lo vas guardando para no perderlo?",
+  ]}
+>
+Tenés la lista `numeros = [1, 2, 3]`. Creá una lista llamada **`dobles`** con cada número
+multiplicado por 2.
+
+Resultado esperado: `dobles` debería ser `[2, 4, 6]`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Filtrar elementos"
+  dificultad="🌿"
+  starter={`numeros = [1, 2, 3, 4, 5, 6]\n\n# Creá una lista 'pares' con solo los números pares de 'numeros'\n`}
+  tests={`assert pares == [2, 4, 6], f"pares debería ser [2, 4, 6] y quedó {pares!r}"\nprint("¡Pares filtrados!")`}
+  pistas={[
+    "¿Cómo te das cuenta de que un número es par sin usar la calculadora? ¿Qué te tiene que dar la división por 2?",
+    "Esta vez no todos los elementos pasan a la lista nueva. ¿En qué momento del recorrido decidís si este entra o no?",
+  ]}
+>
+Tenés la lista `numeros = [1, 2, 3, 4, 5, 6]`. Creá una lista **`pares`** con **solo los números
+pares** (en el mismo orden).
+
+Resultado esperado: `pares` debería ser `[2, 4, 6]`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Mayores al promedio"
+  dificultad="🌳"
+  datos={`notas = [4, 8, 6, 10]`}
+  starter={`# Escribí tu programa acá.\n`}
+  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [8, 10], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(notas=[5, 5, 5]).strip().splitlines()[-1]) == [], "si son todas iguales, ninguna supera el promedio"\nassert ast.literal_eval(correr(notas=[1, 9]).strip().splitlines()[-1]) == [9], "solo el 9 supera el promedio de 5"`}
+  pistas={[
+    "Necesitás el promedio ANTES de poder comparar. ¿Se puede calcular mientras recorrés, o hay que sacarlo primero?",
+    "Fijate en el test donde todas las notas son iguales: ninguna tiene que aparecer. ¿Estás usando mayor, o mayor o igual?",
+  ]}
+>
+Mostrá una lista con las notas que están **por encima del promedio**.
+
+Con `[4, 8, 6, 10]` (promedio 7) tiene que dar `[8, 10]`.
+</EjercicioPython>
+
 ---
 
-Siguiente: [Listas](../listas/) — la colección que ya venías usando sin darte cuenta.
+Siguiente: [Cuadernillo de listas](../cuadernillo-listas/) — a practicar todo junto: listas, condicionales y bucles.

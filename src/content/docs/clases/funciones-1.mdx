@@ -160,8 +160,14 @@ Completá las tres funciones:
     "Tres de los cuatro salen de funciones que ya conocés. ¿Cuál es el que sí o sí tenés que contar vos?",
   ]}
 >
-Completá `analizar(numeros)` para que devuelva una **tupla** con el mínimo, el máximo, el promedio
-y la **cantidad de números pares**, en ese orden.
+Completá `analizar(numeros)` para que devuelva el mínimo, el máximo, el promedio y la **cantidad de
+números pares**, en ese orden.
+
+:::note[Devolver varios valores de una]
+`return a, b, c` devuelve las tres cosas juntas, separadas por coma. Lo que sale se llama **tupla** y
+tiene su propia clase más adelante; por ahora alcanza con saber que se escribe así y que del otro lado
+se puede desarmar: `minimo, maximo, promedio, pares = analizar(notas)`.
+:::
 
 `analizar([1, 2, 3, 4])` → `(1, 4, 2.5, 2)`
 </EjercicioPython>

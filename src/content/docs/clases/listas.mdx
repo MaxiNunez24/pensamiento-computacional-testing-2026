@@ -38,16 +38,18 @@ notas = [8, 10, 6, 9]
 print(notas[0])      # 8   (el primero: la posición arranca en 0)
 print(len(notas))    # 4   (cuántos elementos tiene)
 notas.append(7)      # agrega 7 al final  -> [8, 10, 6, 9, 7]
-
-for n in notas:      # recorrer de a uno
-    print(n)
 ```
 
-Tres cosas que vas a usar todo el tiempo:
+Dos cosas que vas a usar todo el tiempo:
 
 - **Índice**: `notas[0]` es el primero, `notas[-1]` el último.
 - **`len(lista)`**: la cantidad de elementos.
-- **`for x in lista:`**: recorrerla elemento por elemento.
+
+:::note[¿Y para recorrerla entera?]
+Seguro se te ocurrió: "¿tengo que escribir `notas[0]`, `notas[1]`, `notas[2]`… una por una?". No — se
+recorre con un `for`, y es **justo la clase que sigue**. Por ahora quedate con cómo se arma una lista
+y cómo se llega a un elemento; recorrerla viene enseguida.
+:::
 
 :::caution[La posición arranca en 0]
 El primer elemento es `lista[0]`, no `lista[1]`. Si una lista tiene 4 elementos, el último es
@@ -58,63 +60,53 @@ El primer elemento es `lista[0]`, no `lista[1]`. Si una lista tiene 4 elementos,
 
 :::note[Sobre estos ejercicios]
 Acá vas a escribir **código directo** (sin funciones todavía — eso viene más adelante). Partís de una
-lista que ya está dada y tenés que **crear una variable nueva** con el resultado. El verificador
-revisa esa variable. 😉
+lista que ya está dada. El verificador mira lo que imprimís o la variable que creás. 😉
 :::
 
 <EjercicioPython
-  titulo="Transformar una lista"
+  titulo="Primero, último y cuántos"
   dificultad="🌱"
-  starter={`numeros = [1, 2, 3]\n\n# Creá una lista 'dobles' con cada número multiplicado por 2\n`}
-  tests={`assert dobles == [2, 4, 6], "dobles debería ser [2, 4, 6]"\nprint("¡Lista duplicada!")`}
+  datos={`equipos = ["Argentina", "Francia", "México", "Japón"]`}
+  starter={`# 'equipos' ya tiene valor. Mostrá tres líneas:\n# el primero, el último y cuántos son.\n`}
+  tests={`r = correr().strip().splitlines()[-3:]\nassert r == ["Argentina", "Japón", "4"], f"salió {r!r}"\nr2 = correr(equipos=["Uruguay", "Brasil"]).strip().splitlines()[-3:]\nassert r2 == ["Uruguay", "Brasil", "2"], "con otra lista tiene que acompañar"\nr3 = correr(equipos=["Chile"]).strip().splitlines()[-3:]\nassert r3 == ["Chile", "Chile", "1"], "con uno solo, el primero y el último son el mismo"`}
   pistas={[
-    "Si tuvieras que hacerlo a mano con lápiz: ¿arrancás con una hoja en blanco o ya escribiste algo? ¿Qué representa esa hoja en tu código?",
-    "Por cada número de la lista original vas a producir uno nuevo. ¿Dónde lo vas guardando para no perderlo?",
+    "El segundo test cambia la lista entera. ¿Qué pasa si escribís <code>Japón</code> a mano en vez de sacarlo de la lista?",
+    "Para el último: podés contar cuántos hay y restar uno, o pedirlo desde el final. ¿Cuál de las dos no se rompe si la lista cambia de tamaño?",
   ]}
 >
-Tenés la lista `numeros = [1, 2, 3]`. Creá una lista llamada **`dobles`** con cada número
-multiplicado por 2.
+Mostrá, en tres líneas: el **primer** equipo, el **último** y **cuántos** hay.
 
-Resultado esperado: `dobles` debería ser `[2, 4, 6]`.
+Con la lista de arriba tiene que salir:
+
+```
+Argentina
+Japón
+4
+```
 </EjercicioPython>
 
 <EjercicioPython
-  titulo="Filtrar elementos"
-  dificultad="🌿"
-  starter={`numeros = [1, 2, 3, 4, 5, 6]\n\n# Creá una lista 'pares' con solo los números pares de 'numeros'\n`}
-  tests={`assert pares == [2, 4, 6], "pares debería ser [2, 4, 6]"\nprint("¡Pares filtrados!")`}
+  titulo="Sumar un equipo"
+  dificultad="🌱"
+  datos={`equipos = ["Argentina", "Francia"]`}
+  starter={`# Agregá "Brasil" al final de 'equipos' y después mostrá la lista.\n`}
+  tests={`r = correr().strip().splitlines()[-1]\nassert r == "['Argentina', 'Francia', 'Brasil']", f"salió {r!r}"\nr2 = correr(equipos=[]).strip().splitlines()[-1]\nassert r2 == "['Brasil']", "si la lista viene vacía, queda solo Brasil"`}
   pistas={[
-    "¿Cómo te das cuenta de que un número es par sin usar la calculadora? ¿Qué te tiene que dar la división por 2?",
-    "Esta vez no todos los elementos pasan a la lista nueva. ¿En qué momento del recorrido decidís si este entra o no?",
+    "Buscás el método que <em>agrega al final</em>. ¿Cómo se dice \"agregar al final\" en inglés?",
+    "Ojo: el método modifica la lista en el lugar, no devuelve una lista nueva. ¿Qué pasa si hacés <code>equipos = equipos.append(...)</code>?",
   ]}
 >
-Tenés la lista `numeros = [1, 2, 3, 4, 5, 6]`. Creá una lista **`pares`** con **solo los números
-pares** (en el mismo orden).
+Agregá `"Brasil"` al final de `equipos` y después mostrá la lista completa.
 
-Resultado esperado: `pares` debería ser `[2, 4, 6]`.
-</EjercicioPython>
-
-<EjercicioPython
-  titulo="Contar con una condición"
-  dificultad="🌿"
-  starter={`numeros = [1, 5, 8, 3, 9, 2]\nlimite = 4\n\n# Guardá en 'cantidad' cuántos números son MAYORES que 'limite'\n`}
-  tests={`assert cantidad == 3, "cantidad debería ser 3 (5, 8 y 9)"\nprint("¡Conteo correcto!")`}
-  pistas={[
-    "Si contaras a mano con el dedo, ¿en qué número arrancás antes de mirar el primer elemento?",
-    "¿Qué querés que quede al final: la lista de los que cumplen, o solamente cuántos son?",
-  ]}
->
-Tenés `numeros = [1, 5, 8, 3, 9, 2]` y `limite = 4`. Guardá en **`cantidad`** cuántos números son
-**estrictamente mayores** que `limite`.
-
-Resultado esperado: `cantidad` debería ser `3` (son el 5, el 8 y el 9).
+Tiene que salir: `['Argentina', 'Francia', 'Brasil']`
 </EjercicioPython>
 
 ## Para llevar
 
 - Lista: `[a, b, c]` — colección ordenada, índice desde `0`.
 - `lista[i]`, `lista[-1]`, `len(lista)`, `lista.append(x)`.
-- Patrón estrella: **lista vacía → recorrer con `for` → `append` si cumple → `return`**.
+- `sorted(lista)` devuelve una **nueva** ordenada; `lista.sort()` **modifica** la original.
+- Para recorrerla entera se usa `for`, que es la clase que sigue.
 
 ## Más práctica
 
@@ -137,23 +129,40 @@ Mostrá primero la lista **ordenada** y después la **original sin tocar**:
 ```
 </EjercicioPython>
 
+:::note[📦 Tres funciones que ya vienen con Python]
+No hace falta recorrer la lista para sacar estas tres: Python ya las trae.
+
+| Función | Qué devuelve | Ejemplo |
+|---------|--------------|---------|
+| `min(lista)` | el valor más chico | `min([4, 8, 6])` → `4` |
+| `max(lista)` | el valor más grande | `max([4, 8, 6])` → `8` |
+| `sum(lista)` | la suma de todos | `sum([4, 8, 6])` → `18` |
+:::
+
 <EjercicioPython
-  titulo="Mayores al promedio"
-  dificultad="🌳"
-  datos={`notas = [4, 8, 6, 10]`}
-  starter={`# Escribí tu programa acá.\n`}
-  tests={`import ast\nassert ast.literal_eval(correr().strip().splitlines()[-1]) == [8, 10], f"salió {correr().strip().splitlines()[-1]!r}"\nassert ast.literal_eval(correr(notas=[5, 5, 5]).strip().splitlines()[-1]) == [], "si son todas iguales, ninguna supera el promedio"\nassert ast.literal_eval(correr(notas=[1, 9]).strip().splitlines()[-1]) == [9], "solo el 9 supera el promedio de 5"`}
+  titulo="La nota más alta, la más baja y el total"
+  dificultad="🌿"
+  datos={`notas = [7, 10, 4, 9]`}
+  starter={`# Mostrá tres líneas: la más baja, la más alta y la suma.\n`}
+  tests={`r = correr().strip().splitlines()[-3:]\nassert r == ["4", "10", "30"], f"salió {r!r}"\nr2 = correr(notas=[5, 5]).strip().splitlines()[-3:]\nassert r2 == ["5", "5", "10"], "si son todas iguales, la más baja y la más alta son la misma"\nr3 = correr(notas=[8]).strip().splitlines()[-3:]\nassert r3 == ["8", "8", "8"], "con una sola nota"`}
   pistas={[
-    "Necesitás el promedio ANTES de poder comparar. ¿Se puede calcular mientras recorrés, o hay que sacarlo primero?",
-    "Fijate en el test donde todas las notas son iguales: ninguna tiene que aparecer. ¿Estás usando mayor, o mayor o igual?",
+    "Las tres salen de funciones que Python ya trae, sin recorrer nada. ¿Cuáles son?",
+    "Fijate el orden que piden los tests: primero la más baja. ¿Coincide con el orden en que las escribiste?",
   ]}
 >
-Mostrá una lista con las notas que están **por encima del promedio**.
+Mostrá, en tres líneas: la nota **más baja**, la **más alta** y el **total** (la suma).
 
-Con `[4, 8, 6, 10]` (promedio 7) tiene que dar `[8, 10]`.
+Con `[7, 10, 4, 9]` tiene que salir:
+
+```
+4
+10
+30
+```
 </EjercicioPython>
 
 :::note[¿Qué sigue?]
-Más adelante: *list comprehensions* (hacer lo de arriba en una sola línea) y listas de listas
-(matrices).
+En la próxima clase, **bucles**: recorrer la lista entera para transformarla, filtrarla o contar lo
+que cumple una condición. Y más adelante, *list comprehensions* (hacer todo eso en una sola línea) y
+listas de listas (matrices).
 :::
