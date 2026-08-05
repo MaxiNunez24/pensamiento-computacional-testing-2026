@@ -163,6 +163,31 @@ teléfono.
 
 Regla práctica: si lo que guardás **no es una lista de líneas sueltas**, es JSON.
 
+## Volvamos al ejercicio de Archivos
+
+En la clase de Archivos hiciste `guardar(ruta, items)`: escribía cada nombre en una línea. Funcionaba
+porque los nombres eran **texto suelto**.
+
+Ahora cada alumno tiene nombre **y** nota. Con el enfoque de antes tendrías que inventar un separador
+(`Guada,10`), y al leer, partir cada línea y convertir la nota a número a mano — y rezar que nadie
+tenga una coma en el nombre. Es el mismo ejercicio, pero con la herramienta que corresponde.
+
+<EjercicioPython
+  titulo="Anexo · La misma lista, pero que vuelva entera"
+  dificultad="🌿"
+  starter={`import json\n\ndef guardar(ruta, alumnos):\n    pass\n\ndef cargar(ruta):\n    pass`}
+  tests={`alumnos = [{"nombre": "Guada", "nota": 10}, {"nombre": "Brandon", "nota": 8}]\nguardar("anexo.json", alumnos)\nr = cargar("anexo.json")\nassert r == alumnos, f"lo que volvió fue {r!r}"\nassert isinstance(r[0]["nota"], int), "la nota tiene que volver como NÚMERO, no como texto: ahí está la diferencia con el .txt"\nguardar("anexo.json", [])\nassert cargar("anexo.json") == [], "con la lista vacía también tiene que andar"\nguardar("anexo.json", [{"nombre": "Ana, la del fondo", "nota": 7}])\nassert cargar("anexo.json")[0]["nombre"] == "Ana, la del fondo", "una coma en el nombre no tiene que romper nada"\nprint("Volvió intacta 🎉")`}
+  pistas={[
+    "Son las mismas dos operaciones de siempre (abrir para escribir, abrir para leer). ¿Cuál de las cuatro funciones de <code>json</code> trabaja directo con un archivo abierto?",
+    "Mirá el test que revisa que la nota sea un número. Si vos hicieras <code>f.write(str(alumnos))</code>, ¿qué tipo tendría al volver?",
+    "Fijate el último test: hay un nombre con una coma adentro. ¿Por qué eso rompería si vos hubieras inventado un separador?",
+  ]}
+>
+Completá `guardar(ruta, alumnos)` y `cargar(ruta)` usando JSON, de modo que la lista **vuelva
+exactamente como se fue**: los diccionarios como diccionarios y las notas como números.
+
+`alumnos` es una lista como `[{"nombre": "Guada", "nota": 10}, ...]`.
+</EjercicioPython>
 
 ## Más práctica
 

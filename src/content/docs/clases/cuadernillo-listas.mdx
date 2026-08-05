@@ -125,6 +125,12 @@ Pero **no la uses siempre**: si adentro necesitás un `if/else` largo o dos oper
 común se lee mejor. La comprehension es para transformaciones simples.
 :::
 
+:::note[Ojo que estos dos ya los resolviste]
+Los dos ejercicios que siguen son **los mismos** que hiciste en Bucles —
+*Transformar una lista* y *Filtrar elementos*—, ahora con la herramienta nueva. No es repetir por
+repetir: es para que veas en tu propio código lo que ganaste.
+:::
+
 <EjercicioPython
   titulo="2.1 · Tu primera traducción"
   dificultad="🌱"
@@ -135,7 +141,15 @@ común se lee mejor. La comprehension es para transformaciones simples.
     "Escribí primero el <code>for</code> de tres líneas como lo venías haciendo. Después mirá qué parte va antes del <code>for</code> en la versión corta.",
   ]}
 >
-Mostrá una lista con cada número **multiplicado por 3**, usando una list comprehension.
+En Bucles escribiste esto para armar los dobles:
+
+```python
+dobles = []
+for n in numeros:
+    dobles.append(n * 2)
+```
+
+Escribí **lo mismo en una línea**, pero multiplicando por 3, y mostralo.
 </EjercicioPython>
 
 <EjercicioPython
@@ -148,6 +162,9 @@ Mostrá una lista con cada número **multiplicado por 3**, usando una list compr
     "Acá no transformás nada: solo elegís cuáles pasan. ¿Qué ponés antes del <code>for</code> si el elemento va tal cual?",
   ]}
 >
+Mismo caso que *Filtrar elementos*: allá necesitaste un `for` con un `if` adentro y un `append`.
+Acá entra todo en una línea.
+
 Mostrá solo los números **pares** del 1 al 20, usando una comprehension con filtro.
 </EjercicioPython>
 
