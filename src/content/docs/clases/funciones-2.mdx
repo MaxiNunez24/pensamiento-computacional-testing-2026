@@ -239,6 +239,30 @@ crear_alumno(**datos)      # equivale a crear_alumno(nombre="Guada", edad=25)
 
 Regla para acordarse: **en la definición, el `*` junta; en la llamada, el `*` reparte.**
 
+<EjercicioPython
+  titulo="Desafío: la cadena de lenguajes"
+  dificultad="🌿"
+  datos={`lenguajes = ["Python", "Java", "C++", "JavaScript"]`}
+  starter={`# 'lenguajes' ya tiene valor, y puede traer CUALQUIER cantidad.\n# Mostralos separados por flechas usando UN SOLO print, sin bucles.\n`}
+  tests={`assert correr().strip() == "Python -> Java -> C++ -> JavaScript", f"imprimiste {correr().strip()!r}"\nassert correr(lenguajes=["a", "b"]).strip() == "a -> b", "con dos elementos"\nassert correr(lenguajes=["solo"]).strip() == "solo", "con uno solo no va ninguna flecha"\nassert correr(lenguajes=["a", "b", "c", "d", "e"]).strip() == "a -> b -> c -> d -> e", "con cinco tampoco tendría que cambiar tu código"`}
+  pistas={[
+    "Acordate de qué recibe <code>print</code>: valores sueltos, no una lista. ¿Cuál de los dos usos del <code>*</code> convierte una lista en valores sueltos?",
+    "El separador lleva un espacio de cada lado de la flecha. ¿Cuál es exactamente el texto que va entre cada par?",
+    "Probá primero con <code>print(lenguajes)</code> a secas y mirá qué sale. ¿Qué le está faltando para que trate a cada lenguaje por separado?",
+  ]}
+>
+Acá está el desafío que quedó pendiente en la primera clase, cuando todavía no teníamos las
+herramientas para resolverlo bien. Ahora sí.
+
+Mostrá los lenguajes separados por flechas:
+
+```
+Python -> Java -> C++ -> JavaScript
+```
+
+Ojo: tiene que funcionar con **cualquier** cantidad de lenguajes, no solo con estos cuatro — y sin
+escribir un bucle.
+</EjercicioPython>
 
 ## Más práctica
 
