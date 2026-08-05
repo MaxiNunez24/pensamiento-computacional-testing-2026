@@ -32,9 +32,14 @@ lectura de código) siguen viviendo en MkDocs mientras no tengan contraparte int
 Un solo repo (`pensamiento-computacional-testing-2026`, **público**) con las dos mitades:
 
 ```
-docs/                     → MkDocs (teoría). Clases en docs/clases/python/NN_tema/*.md
-mkdocs.yml                → nav + tema + extensiones de MkDocs
-requirements.txt          → mkdocs, mkdocs-material (para el build de CI)
+docs/                     → MkDocs (teoría). Clases agrupadas por BLOQUE:
+  clases/introduccion/                       (2)
+  clases/bloque_1_fundamentos/               (17)
+  clases/bloque_2_funciones_y_colecciones/   (11)
+  clases/bloque_3_persistencia/              (3)
+  clases/bloque_4_poo/                       (3)
+mkdocs.yml                → nav (manda el ORDEN) + tema + extensiones + redirects
+requirements.txt          → mkdocs, mkdocs-material, mkdocs-redirects (build de CI)
 
 src/                      → Astro (práctica interactiva)
   content/docs/clases/*.mdx   → cada lección interactiva
@@ -72,6 +77,12 @@ guiones/                  → guiones de video (fuera del build)
 - **Copiar código:** `features: [content.code.copy]` (¡ojo, `features` tiene que ser **lista** YAML!).
 - **CSS/JS propios:** `docs/stylesheets/extra.css` y `docs/javascripts/clases-restantes.js`
   (contador de clases restantes que se auto-decrementa por fecha real).
+- **Las carpetas agrupan por bloque, NO por tema, y no codifican el orden.** El orden vive solo en el
+  `nav` de `mkdocs.yml`: reordenar una clase es mover una línea, sin renombrar archivos ni romper
+  URLs. Si alguna vez se mueve una clase de carpeta, hay que sumarle una línea al `redirect_maps`
+  (plugin `mkdocs-redirects`), porque GitHub Pages es estático y no redirige del lado del servidor.
+  ⚠️ Al tocar `plugins:` acordarse de dejar `search` listado: declararlo desactiva el buscador
+  implícito y el sitio se publica sin buscador.
 - **Convenciones de una clase de teoría** (ver §6 para las reglas pedagógicas):
   - Sin frontmatter YAML. Arranca con `# Emoji Título`.
   - Anclas: MkDocs saca acentos y emojis del slug (heading "¿Dónde viven…?" → `donde-viven`).
