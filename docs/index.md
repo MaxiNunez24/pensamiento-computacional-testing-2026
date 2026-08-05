@@ -103,4 +103,4 @@ Además de tener varios proyectos para presentar, un perfil en LinkedIn y un por
 
 ---
 
-## [➡️ Comenzar curso](./clases/01_introduccion.md)
+## [➡️ Comenzar curso](./clases/introduccion/01_introduccion.md)

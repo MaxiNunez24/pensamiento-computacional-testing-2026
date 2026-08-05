@@ -8,6 +8,13 @@ mkdocs==1.6.1
 mkdocs-material==9.6.4
 pymdown-extensions==10.19.1
 
+# Redirecciones de las URLs viejas a las nuevas. Al reorganizar docs/clases/
+# por bloque cambió la URL de las 36 clases, y los links ya compartidos (grupo
+# del curso, videos grabados) apuntan a las viejas. Este plugin genera una
+# paginita de redirección en cada URL vieja, que es la única forma de resolverlo
+# en GitHub Pages: es hosting estático, no hay redirects del lado del servidor.
+mkdocs-redirects==1.2.3
+
 # Pygments va fijado a propósito: la 2.20.0 rompe con pymdown-extensions
 # 10.19.1. El HtmlFormatter nuevo hace html.escape(options.get('filename', ''))
 # y pymdownx le pasa filename=None explícito, así que el default no se aplica y

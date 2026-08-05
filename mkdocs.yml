@@ -42,6 +42,53 @@ markdown_extensions:
 
 
 
+plugins:
+  # ⚠️ Al declarar `plugins:` se desactiva el buscador, que hasta acá venía
+  # implícito. Por eso `search` va listado a mano: sin esta línea el sitio se
+  # publica sin buscador y nadie se entera hasta que un alumno lo usa.
+  - search
+  # URLs viejas -> nuevas. Ver el porqué en requirements.txt. Cuando se mueva
+  # una clase de lugar, agregar acá su ruta vieja: el costo es una línea y
+  # evita romperle el link a alguien que lo tenía guardado.
+  - redirects:
+      redirect_maps:
+        'clases/01_introduccion.md': 'clases/introduccion/01_introduccion.md'
+        'clases/02_que_es_programar.md': 'clases/introduccion/02_que_es_programar.md'
+        'clases/instalacion/instalacion_herramientas.md': 'clases/bloque_1_fundamentos/instalacion_herramientas.md'
+        'clases/instalacion/instalar_python.md': 'clases/bloque_1_fundamentos/instalar_python.md'
+        'clases/instalacion/instalar_vscode.md': 'clases/bloque_1_fundamentos/instalar_vscode.md'
+        'clases/python/01_introduccion/archivos_python.md': 'clases/bloque_1_fundamentos/archivos_python.md'
+        'clases/python/01_introduccion/ejecutar_programa.md': 'clases/bloque_1_fundamentos/ejecutar_programa.md'
+        'clases/python/01_introduccion/historia_caracteristicas.md': 'clases/bloque_1_fundamentos/historia_caracteristicas.md'
+        'clases/python/02_variables_y_tipos/formato_strings.md': 'clases/bloque_1_fundamentos/formato_strings.md'
+        'clases/python/02_variables_y_tipos/funcion_input.md': 'clases/bloque_1_fundamentos/funcion_input.md'
+        'clases/python/02_variables_y_tipos/funcion_print.md': 'clases/bloque_1_fundamentos/funcion_print.md'
+        'clases/python/02_variables_y_tipos/variables.md': 'clases/bloque_1_fundamentos/variables.md'
+        'clases/python/03_estructuras_de_control/ejercicios_estructuras_control.md': 'clases/bloque_1_fundamentos/ejercicios_estructuras_control.md'
+        'clases/python/03_estructuras_de_control/for.md': 'clases/bloque_1_fundamentos/for.md'
+        'clases/python/03_estructuras_de_control/if_else.md': 'clases/bloque_1_fundamentos/if_else.md'
+        'clases/python/03_estructuras_de_control/while.md': 'clases/bloque_1_fundamentos/while.md'
+        'clases/python/04_listas/cuadernillo_listas_finde.md': 'clases/bloque_1_fundamentos/cuadernillo_listas_finde.md'
+        'clases/python/04_listas/listas.md': 'clases/bloque_1_fundamentos/listas.md'
+        'clases/python/04_listas/mini_parcial.md': 'clases/bloque_1_fundamentos/mini_parcial.md'
+        'clases/python/05_colecciones/diccionarios.md': 'clases/bloque_2_funciones_y_colecciones/diccionarios.md'
+        'clases/python/05_colecciones/tuplas_sets.md': 'clases/bloque_2_funciones_y_colecciones/tuplas_sets.md'
+        'clases/python/06_funciones/bingo.md': 'clases/bloque_2_funciones_y_colecciones/bingo.md'
+        'clases/python/06_funciones/como_encarar_ejercicios.md': 'clases/bloque_2_funciones_y_colecciones/como_encarar_ejercicios.md'
+        'clases/python/06_funciones/del_enunciado_al_programa.md': 'clases/bloque_2_funciones_y_colecciones/del_enunciado_al_programa.md'
+        'clases/python/06_funciones/funciones_1.md': 'clases/bloque_2_funciones_y_colecciones/funciones_1.md'
+        'clases/python/06_funciones/funciones_2.md': 'clases/bloque_2_funciones_y_colecciones/funciones_2.md'
+        'clases/python/06_funciones/funciones_caja_negra.md': 'clases/bloque_2_funciones_y_colecciones/funciones_caja_negra.md'
+        'clases/python/06_funciones/imports_y_modulos.md': 'clases/bloque_2_funciones_y_colecciones/imports_y_modulos.md'
+        'clases/python/06_funciones/lectura_codigo.md': 'clases/bloque_2_funciones_y_colecciones/lectura_codigo.md'
+        'clases/python/06_funciones/repaso.md': 'clases/bloque_2_funciones_y_colecciones/repaso.md'
+        'clases/python/07_persistencia/archivos.md': 'clases/bloque_3_persistencia/archivos.md'
+        'clases/python/07_persistencia/git_github.md': 'clases/bloque_3_persistencia/git_github.md'
+        'clases/python/07_persistencia/json.md': 'clases/bloque_3_persistencia/json.md'
+        'clases/python/08_poo/poo_1.md': 'clases/bloque_4_poo/poo_1.md'
+        'clases/python/08_poo/poo_2.md': 'clases/bloque_4_poo/poo_2.md'
+        'clases/python/08_poo/poo_herencia.md': 'clases/bloque_4_poo/poo_herencia.md'
+
 nav:
   - 🏠​ Inicio: index.md
   - 📅 Cronograma del curso: cronograma.md
@@ -50,62 +97,64 @@ nav:
   - 🧪 Ejercicios interactivos: https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/
   - 📚 Clases: 
     - 📝 Índice: clases/clases.md
-    - 🧑‍🏫 Introducción: clases/01_introduccion.md
-    - 🧑‍💻 ¿Qué es programar?: clases/02_que_es_programar.md
+    - 🧑‍🏫 Introducción: clases/introduccion/01_introduccion.md
+    - 🧑‍💻 ¿Qué es programar?: clases/introduccion/02_que_es_programar.md
     - 🐍 Python Básico:
       - 🔰 Introducción:
-        - 📜 Historía y características: clases/python/01_introduccion/historia_caracteristicas.md
-        - 📁 Archivos de Python: clases/python/01_introduccion/archivos_python.md
-        - ▶️ Ejecutar el programa: clases/python/01_introduccion/ejecutar_programa.md
+        - 📜 Historía y características: clases/bloque_1_fundamentos/historia_caracteristicas.md
+        - 📁 Archivos de Python: clases/bloque_1_fundamentos/archivos_python.md
+        - ▶️ Ejecutar el programa: clases/bloque_1_fundamentos/ejecutar_programa.md
       - 💽​ Instalación:
-        - 💻 Instalando las herramientas: clases/instalacion/instalacion_herramientas.md
-        - 🐍 Instalando Python: clases/instalacion/instalar_python.md
-        - 🧑‍💻 Instalando VS Code: clases/instalacion/instalar_vscode.md
+        - 💻 Instalando las herramientas: clases/bloque_1_fundamentos/instalacion_herramientas.md
+        - 🐍 Instalando Python: clases/bloque_1_fundamentos/instalar_python.md
+        - 🧑‍💻 Instalando VS Code: clases/bloque_1_fundamentos/instalar_vscode.md
       - 📊 Variables y Tipos:
-        - 🖨️ La función print(): clases/python/02_variables_y_tipos/funcion_print.md
-        - 📊 Variables: clases/python/02_variables_y_tipos/variables.md
-        - 📐 Formato de strings: clases/python/02_variables_y_tipos/formato_strings.md
-        - ⌨️ La función input(): clases/python/02_variables_y_tipos/funcion_input.md
-      # ⚠️ El orden de acá abajo es el orden en que se enseña, y cambió: Listas
-      # pasó ANTES que Bucles (un `for` necesita algo que recorrer) y Funciones I
-      # pasó antes que Colecciones. Funciones II queda después de Colecciones a
-      # propósito: explica `*args` como "una tupla" y `**kwargs` como "un
-      # diccionario". Las CARPETAS conservan su numeración vieja para no romper
-      # los links ya compartidos ni los videos grabados; manda este nav.
+        - 🖨️ La función print(): clases/bloque_1_fundamentos/funcion_print.md
+        - 📊 Variables: clases/bloque_1_fundamentos/variables.md
+        - 📐 Formato de strings: clases/bloque_1_fundamentos/formato_strings.md
+        - ⌨️ La función input(): clases/bloque_1_fundamentos/funcion_input.md
+      # ⚠️ El orden de acá abajo es el orden en que se enseña: Listas va ANTES
+      # que Bucles (un `for` necesita algo que recorrer) y Funciones I antes que
+      # Colecciones. Funciones II queda después de Colecciones a propósito:
+      # explica `*args` como "una tupla" y `**kwargs` como "un diccionario".
+      #
+      # Las carpetas agrupan por BLOQUE, no por tema, justamente para que
+      # reordenar sea gratis: el orden vive acá y nada más que acá. Mover una
+      # clase de lugar en esta lista no renombra ni un archivo.
       - 🔀 Condicionales:
-        - 🔀 If - Else: clases/python/03_estructuras_de_control/if_else.md
+        - 🔀 If - Else: clases/bloque_1_fundamentos/if_else.md
       - 📋 Listas:
-        - 📋 Listas en Python: clases/python/04_listas/listas.md
+        - 📋 Listas en Python: clases/bloque_1_fundamentos/listas.md
       - 🔁 Bucles:
-        - 🔄 While: clases/python/03_estructuras_de_control/while.md
-        - 🔁 For: clases/python/03_estructuras_de_control/for.md
-        - 🧮​ Ejercicios Estructuras de Control: clases/python/03_estructuras_de_control/ejercicios_estructuras_control.md
+        - 🔄 While: clases/bloque_1_fundamentos/while.md
+        - 🔁 For: clases/bloque_1_fundamentos/for.md
+        - 🧮​ Ejercicios Estructuras de Control: clases/bloque_1_fundamentos/ejercicios_estructuras_control.md
       - 📒 Práctica de Listas:
-        - 📒 Cuadernillo de ejercicios sobre Listas: clases/python/04_listas/cuadernillo_listas_finde.md
-        - 📝 Mini Parcial: clases/python/04_listas/mini_parcial.md
+        - 📒 Cuadernillo de ejercicios sobre Listas: clases/bloque_1_fundamentos/cuadernillo_listas_finde.md
+        - 📝 Mini Parcial: clases/bloque_1_fundamentos/mini_parcial.md
       - 📦 Funciones I:
-        - 📦 Funciones I: clases/python/06_funciones/funciones_1.md
-        - 🧠 Cómo encarar un ejercicio: clases/python/06_funciones/como_encarar_ejercicios.md
-        - "🔥 Entrada en calor: Funciones como caja negra": clases/python/06_funciones/funciones_caja_negra.md
+        - 📦 Funciones I: clases/bloque_2_funciones_y_colecciones/funciones_1.md
+        - 🧠 Cómo encarar un ejercicio: clases/bloque_2_funciones_y_colecciones/como_encarar_ejercicios.md
+        - "🔥 Entrada en calor: Funciones como caja negra": clases/bloque_2_funciones_y_colecciones/funciones_caja_negra.md
       - 🗂️ Colecciones:
-        - 🎲 Tuplas y Sets: clases/python/05_colecciones/tuplas_sets.md
-        - 🗝️ Diccionarios: clases/python/05_colecciones/diccionarios.md
+        - 🎲 Tuplas y Sets: clases/bloque_2_funciones_y_colecciones/tuplas_sets.md
+        - 🗝️ Diccionarios: clases/bloque_2_funciones_y_colecciones/diccionarios.md
       - 📦 Funciones II:
-        - 📦 Funciones II: clases/python/06_funciones/funciones_2.md
-        - "📦 Anexo: Importar módulos": clases/python/06_funciones/imports_y_modulos.md
+        - 📦 Funciones II: clases/bloque_2_funciones_y_colecciones/funciones_2.md
+        - "📦 Anexo: Importar módulos": clases/bloque_2_funciones_y_colecciones/imports_y_modulos.md
       - 🧠 Práctica e integradores:
-        - 🔁 Repaso general: clases/python/06_funciones/repaso.md
-        - 🔍 Lectura y corrección de código: clases/python/06_funciones/lectura_codigo.md
-        - 🧠 Del enunciado al programa: clases/python/06_funciones/del_enunciado_al_programa.md
-        - 🎲 Bingo: clases/python/06_funciones/bingo.md
+        - 🔁 Repaso general: clases/bloque_2_funciones_y_colecciones/repaso.md
+        - 🔍 Lectura y corrección de código: clases/bloque_2_funciones_y_colecciones/lectura_codigo.md
+        - 🧠 Del enunciado al programa: clases/bloque_2_funciones_y_colecciones/del_enunciado_al_programa.md
+        - 🎲 Bingo: clases/bloque_2_funciones_y_colecciones/bingo.md
       - 💾 Persistencia:
-        - 🐙 Git y GitHub: clases/python/07_persistencia/git_github.md
-        - 📁 Archivos: clases/python/07_persistencia/archivos.md
-        - 📄 JSON: clases/python/07_persistencia/json.md
+        - 🐙 Git y GitHub: clases/bloque_3_persistencia/git_github.md
+        - 📁 Archivos: clases/bloque_3_persistencia/archivos.md
+        - 📄 JSON: clases/bloque_3_persistencia/json.md
       - 🏗️ POO:
-        - 🧬 POO I — Clases y objetos: clases/python/08_poo/poo_1.md
-        - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/python/08_poo/poo_2.md
-        - 🔗 Herencia y polimorfismo: clases/python/08_poo/poo_herencia.md
+        - 🧬 POO I — Clases y objetos: clases/bloque_4_poo/poo_1.md
+        - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/bloque_4_poo/poo_2.md
+        - 🔗 Herencia y polimorfismo: clases/bloque_4_poo/poo_herencia.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
     - 📖 Glosario de Python: material_apoyo/glosario.md

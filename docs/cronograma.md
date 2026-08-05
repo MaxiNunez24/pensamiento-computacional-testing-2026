@@ -97,54 +97,54 @@
 
 | Fecha | Tema | |
 |-------|------|--|
-| Mié 11/3 | Presentación e introducción a la Informática | [📄](./clases/01_introduccion.md) |
-| Vie 13/3 | ¿Qué es programar? Algoritmos, pseudocódigo, diagramas de flujo | [📄](./clases/02_que_es_programar.md) |
-| Mié 18/3 | Python básico: historia, instalación, `print()` | [📄](./clases/python/01_introduccion/historia_caracteristicas.md) |
-| Vie 20/3 | Continuación de `print()` e introducción a Variables | [📄](./clases/python/02_variables_y_tipos/variables.md) |
-| Mié 25/3 | Variables, tipos de datos y operadores | [📄](./clases/python/02_variables_y_tipos/variables.md) |
-| Vie 27/3 | La función `input()` | [📄](./clases/python/02_variables_y_tipos/funcion_input.md) |
-| Mié 1/4 | Estructuras de control: `if-else` | [📄](./clases/python/03_estructuras_de_control/if_else.md) |
+| Mié 11/3 | Presentación e introducción a la Informática | [📄](./clases/introduccion/01_introduccion.md) |
+| Vie 13/3 | ¿Qué es programar? Algoritmos, pseudocódigo, diagramas de flujo | [📄](./clases/introduccion/02_que_es_programar.md) |
+| Mié 18/3 | Python básico: historia, instalación, `print()` | [📄](./clases/bloque_1_fundamentos/historia_caracteristicas.md) |
+| Vie 20/3 | Continuación de `print()` e introducción a Variables | [📄](./clases/bloque_1_fundamentos/variables.md) |
+| Mié 25/3 | Variables, tipos de datos y operadores | [📄](./clases/bloque_1_fundamentos/variables.md) |
+| Vie 27/3 | La función `input()` | [📄](./clases/bloque_1_fundamentos/funcion_input.md) |
+| Mié 1/4 | Estructuras de control: `if-else` | [📄](./clases/bloque_1_fundamentos/if_else.md) |
 | Vie 3/4 | 🚫 Sin clases (Viernes Santo) | |
-| Mié 8/4 | Repaso de `if-elif-else` y buenas prácticas | [📄](./clases/python/03_estructuras_de_control/if_else.md) |
-| Vie 10/4 | Bucles `while` | [📄](./clases/python/03_estructuras_de_control/while.md) |
-| Mié 15/4 | Bucles `for` | [📄](./clases/python/03_estructuras_de_control/for.md) |
-| Vie 17/4 | Ejercicios de repaso: estructuras de control | [📄](./clases/python/03_estructuras_de_control/ejercicios_estructuras_control.md) |
-| Mié 22/4 | Listas: teoría y operaciones | [📄](./clases/python/04_listas/listas.md) |
-| Vie 24/4 | Listas: comprehensions y listas de listas | [📄](./clases/python/04_listas/listas.md) |
+| Mié 8/4 | Repaso de `if-elif-else` y buenas prácticas | [📄](./clases/bloque_1_fundamentos/if_else.md) |
+| Vie 10/4 | Bucles `while` | [📄](./clases/bloque_1_fundamentos/while.md) |
+| Mié 15/4 | Bucles `for` | [📄](./clases/bloque_1_fundamentos/for.md) |
+| Vie 17/4 | Ejercicios de repaso: estructuras de control | [📄](./clases/bloque_1_fundamentos/ejercicios_estructuras_control.md) |
+| Mié 22/4 | Listas: teoría y operaciones | [📄](./clases/bloque_1_fundamentos/listas.md) |
+| Vie 24/4 | Listas: comprehensions y listas de listas | [📄](./clases/bloque_1_fundamentos/listas.md) |
 
 ### 🌿 Bloque 2 — Colecciones y Modularización
 
 | Fecha | Tema | |
 |-------|------|--|
-| Mié 29/4 | Cierre de Listas + asignación del cuadernillo del finde | [📄](./clases/python/04_listas/cuadernillo_listas_finde.md) |
+| Mié 29/4 | Cierre de Listas + asignación del cuadernillo del finde | [📄](./clases/bloque_1_fundamentos/cuadernillo_listas_finde.md) |
 | Vie 1/5 | 🚫 Sin clases (Día del Trabajador) | |
-| Mié 6/5 | Repaso del cuadernillo de listas en clase | [📄](./clases/python/04_listas/cuadernillo_listas_finde.md) |
-| Vie 8/5 | **Mini Parcial** | [📄](./clases/python/04_listas/mini_parcial.md) |
-| Mié 13/5 | Tuplas, Sets y Diccionarios | [📄](./clases/python/05_colecciones/diccionarios.md) |
-| Vie 15/5 | Funciones I: definición, parámetros, retorno | [📄](./clases/python/06_funciones/funciones_1.md) |
-| Mié 20/5 | Funciones II: scope, valores por defecto, `*args`/`**kwargs` | [📄](./clases/python/06_funciones/funciones_2.md) |
-| Vie 22/5 | Cómo encarar un ejercicio + Python Tutor | [📄](./clases/python/06_funciones/como_encarar_ejercicios.md) |
-| Mié 27/5 | Repaso general | [📄](./clases/python/06_funciones/repaso.md) |
-| Vie 29/5 | Continuación del Repaso general | [📄](./clases/python/06_funciones/repaso.md) |
+| Mié 6/5 | Repaso del cuadernillo de listas en clase | [📄](./clases/bloque_1_fundamentos/cuadernillo_listas_finde.md) |
+| Vie 8/5 | **Mini Parcial** | [📄](./clases/bloque_1_fundamentos/mini_parcial.md) |
+| Mié 13/5 | Tuplas, Sets y Diccionarios | [📄](./clases/bloque_2_funciones_y_colecciones/diccionarios.md) |
+| Vie 15/5 | Funciones I: definición, parámetros, retorno | [📄](./clases/bloque_2_funciones_y_colecciones/funciones_1.md) |
+| Mié 20/5 | Funciones II: scope, valores por defecto, `*args`/`**kwargs` | [📄](./clases/bloque_2_funciones_y_colecciones/funciones_2.md) |
+| Vie 22/5 | Cómo encarar un ejercicio + Python Tutor | [📄](./clases/bloque_2_funciones_y_colecciones/como_encarar_ejercicios.md) |
+| Mié 27/5 | Repaso general | [📄](./clases/bloque_2_funciones_y_colecciones/repaso.md) |
+| Vie 29/5 | Continuación del Repaso general | [📄](./clases/bloque_2_funciones_y_colecciones/repaso.md) |
 | Mié 3/6 | Resolución de ejercicios variados de clases previas | |
 | Vie 5/6 | 🚫 Sin clases (el profe rindió un examen de la facultad — ¡mil disculpas!). ¡Gracias por comprender! 🙏 | |
-| Mié 10/6 | Lectura y corrección de código | [📄](./clases/python/06_funciones/lectura_codigo.md) |
-| Vie 12/6 | Continuación de Lectura y corrección — completamos los ejercicios + la ronda de bugs al pizarrón | [📄](./clases/python/06_funciones/lectura_codigo.md) |
-| Mié 17/6 | Entrada en calor: Funciones como caja negra (puente a la abstracción) | [📄](./clases/python/06_funciones/funciones_caja_negra.md) |
-| Vie 19/6 | Bingo — ejercicio integrador (parte 1) | [📄](./clases/python/06_funciones/bingo.md) |
-| Mié 24/6 | Bingo — ejercicio integrador (parte 2, cierre) | [📄](./clases/python/06_funciones/bingo.md) |
-| Vie 26/6 | Anexo: Importar módulos (organizar el código en varios archivos) | [📄](./clases/python/06_funciones/imports_y_modulos.md) |
-| Mié 1/7 | Repaso general (puente antes de arrancar Persistencia) | [📄](./clases/python/06_funciones/repaso.md) |
+| Mié 10/6 | Lectura y corrección de código | [📄](./clases/bloque_2_funciones_y_colecciones/lectura_codigo.md) |
+| Vie 12/6 | Continuación de Lectura y corrección — completamos los ejercicios + la ronda de bugs al pizarrón | [📄](./clases/bloque_2_funciones_y_colecciones/lectura_codigo.md) |
+| Mié 17/6 | Entrada en calor: Funciones como caja negra (puente a la abstracción) | [📄](./clases/bloque_2_funciones_y_colecciones/funciones_caja_negra.md) |
+| Vie 19/6 | Bingo — ejercicio integrador (parte 1) | [📄](./clases/bloque_2_funciones_y_colecciones/bingo.md) |
+| Mié 24/6 | Bingo — ejercicio integrador (parte 2, cierre) | [📄](./clases/bloque_2_funciones_y_colecciones/bingo.md) |
+| Vie 26/6 | Anexo: Importar módulos (organizar el código en varios archivos) | [📄](./clases/bloque_2_funciones_y_colecciones/imports_y_modulos.md) |
+| Mié 1/7 | Repaso general (puente antes de arrancar Persistencia) | [📄](./clases/bloque_2_funciones_y_colecciones/repaso.md) |
 
 ### 🛠️ Bloque 3 — Persistencia y Versionado
 
 | Fecha | Tema | |
 |-------|------|--|
-| Vie 3/7 | Git y GitHub — llegamos a **Git local** (`init`/`add`/`commit`/`status`/`log`); GitHub quedó pendiente | [📄](./clases/python/07_persistencia/git_github.md) |
-| Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/python/07_persistencia/archivos.md) |
+| Vie 3/7 | Git y GitHub — llegamos a **Git local** (`init`/`add`/`commit`/`status`/`log`); GitHub quedó pendiente | [📄](./clases/bloque_3_persistencia/git_github.md) |
+| Mié 8/7 | Repaso de Git/GitHub + **Manejo de archivos** (faltaron varios alumnos) | [📄](./clases/bloque_3_persistencia/archivos.md) |
 | Vie 10/7 | 🚫 Sin clases (feriado) | |
-| Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/python/06_funciones/del_enunciado_al_programa.md) |
-| Vie 17/7 | 🧺 **Picnic de cierre antes del receso** + cerramos **Git y GitHub** de una vez por todas (`push`/`clone`/`pull`, el flujo CFP ↔ casa) | [📄](./clases/python/07_persistencia/git_github.md) |
+| Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/bloque_2_funciones_y_colecciones/del_enunciado_al_programa.md) |
+| Vie 17/7 | 🧺 **Picnic de cierre antes del receso** + cerramos **Git y GitHub** de una vez por todas (`push`/`clone`/`pull`, el flujo CFP ↔ casa) | [📄](./clases/bloque_3_persistencia/git_github.md) |
 | 22/7 – 1/8 | ❄️ **Receso invernal** | |
 
 <!-- Plan post-receso (definido 1/8):

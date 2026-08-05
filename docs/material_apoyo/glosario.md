@@ -25,7 +25,7 @@ if edad >= 18 and tiene_dni:
     print("Puede ingresar")
 ```
 
-📖 [Clase: `if` / `elif` / `else`](../clases/python/03_estructuras_de_control/if_else.md)
+📖 [Clase: `if` / `elif` / `else`](../clases/bloque_1_fundamentos/if_else.md)
 
 ---
 
@@ -40,7 +40,7 @@ for n in range(10):
 # el bucle termina cuando n vale 5
 ```
 
-📖 [Clase: `while`](../clases/python/03_estructuras_de_control/while.md)
+📖 [Clase: `while`](../clases/bloque_1_fundamentos/while.md)
 
 ---
 
@@ -55,7 +55,7 @@ for n in range(5):
     print(n)        # imprime 0, 1, 3, 4
 ```
 
-📖 [Clase: `while`](../clases/python/03_estructuras_de_control/while.md)
+📖 [Clase: `while`](../clases/bloque_1_fundamentos/while.md)
 
 ---
 
@@ -68,7 +68,7 @@ def saludar(nombre):
     return f"Hola, {nombre}!"
 ```
 
-📖 [Clase: Funciones I](../clases/python/06_funciones/funciones_1.md)
+📖 [Clase: Funciones I](../clases/bloque_2_funciones_y_colecciones/funciones_1.md)
 
 ---
 
@@ -81,7 +81,7 @@ lista = [1, 2, 3]
 del lista[0]    # lista queda [2, 3]
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -98,7 +98,7 @@ else:
     print("Desaprobado")
 ```
 
-📖 [Clase: `if` / `elif` / `else`](../clases/python/03_estructuras_de_control/if_else.md)
+📖 [Clase: `if` / `elif` / `else`](../clases/bloque_1_fundamentos/if_else.md)
 
 ---
 
@@ -106,7 +106,7 @@ else:
 
 Rama que se ejecuta cuando la condición del `if` no se cumplió. También se puede usar al final de un `for` o `while` (se ejecuta si el bucle terminó sin `break`).
 
-📖 [Clase: `if` / `elif` / `else`](../clases/python/03_estructuras_de_control/if_else.md)
+📖 [Clase: `if` / `elif` / `else`](../clases/bloque_1_fundamentos/if_else.md)
 
 ---
 
@@ -119,7 +119,7 @@ activo = False
 print(type(activo))  # <class 'bool'>
 ```
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -133,7 +133,7 @@ for fruta in frutas:
     print(fruta)
 ```
 
-📖 [Clase: `for`](../clases/python/03_estructuras_de_control/for.md)
+📖 [Clase: `for`](../clases/bloque_1_fundamentos/for.md)
 
 ---
 
@@ -146,7 +146,7 @@ from datetime import date
 hoy = date.today()
 ```
 
-📖 [Clase: Funciones II](../clases/python/06_funciones/funciones_2.md)
+📖 [Clase: Funciones II](../clases/bloque_2_funciones_y_colecciones/funciones_2.md)
 
 ---
 
@@ -159,7 +159,7 @@ if temperatura > 30:
     print("Hace calor")
 ```
 
-📖 [Clase: `if` / `elif` / `else`](../clases/python/03_estructuras_de_control/if_else.md)
+📖 [Clase: `if` / `elif` / `else`](../clases/bloque_1_fundamentos/if_else.md)
 
 ---
 
@@ -172,7 +172,7 @@ import random
 numero = random.randint(1, 10)
 ```
 
-📖 [Clase: Funciones II](../clases/python/06_funciones/funciones_2.md)
+📖 [Clase: Funciones II](../clases/bloque_2_funciones_y_colecciones/funciones_2.md)
 
 ---
 
@@ -188,7 +188,7 @@ for x in lista:           # recorrer
     print(x)
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -215,7 +215,7 @@ x = sin_return()
 print(x)   # None
 ```
 
-📖 [Clase: Funciones I](../clases/python/06_funciones/funciones_1.md)
+📖 [Clase: Funciones I](../clases/bloque_2_funciones_y_colecciones/funciones_1.md)
 
 ---
 
@@ -228,7 +228,7 @@ if not logueado:
     print("Tenés que iniciar sesión")
 ```
 
-📖 [Clase: `if` / `elif` / `else`](../clases/python/03_estructuras_de_control/if_else.md)
+📖 [Clase: `if` / `elif` / `else`](../clases/bloque_1_fundamentos/if_else.md)
 
 ---
 
@@ -241,7 +241,7 @@ if dia == "sábado" or dia == "domingo":
     print("Es fin de semana")
 ```
 
-📖 [Clase: `if` / `elif` / `else`](../clases/python/03_estructuras_de_control/if_else.md)
+📖 [Clase: `if` / `elif` / `else`](../clases/bloque_1_fundamentos/if_else.md)
 
 ---
 
@@ -254,7 +254,7 @@ def funcion_a_completar():
     pass    # TODO: implementar
 ```
 
-📖 [Clase: Funciones I](../clases/python/06_funciones/funciones_1.md)
+📖 [Clase: Funciones I](../clases/bloque_2_funciones_y_colecciones/funciones_1.md)
 
 ---
 
@@ -271,7 +271,7 @@ resultado = doble(5)   # 10
 
 Sin `return`, la función devuelve `None`. Ver [`None`](#none).
 
-📖 [Clase: Funciones I](../clases/python/06_funciones/funciones_1.md)
+📖 [Clase: Funciones I](../clases/bloque_2_funciones_y_colecciones/funciones_1.md)
 
 ---
 
@@ -279,7 +279,7 @@ Sin `return`, la función devuelve `None`. Ver [`None`](#none).
 
 Uno de los dos valores booleanos — "verdadero". Siempre con **T mayúscula**.
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -294,7 +294,7 @@ while intentos < 3:
     intentos += 1
 ```
 
-📖 [Clase: `while`](../clases/python/03_estructuras_de_control/while.md)
+📖 [Clase: `while`](../clases/bloque_1_fundamentos/while.md)
 
 ---
 
@@ -311,7 +311,7 @@ vacio = len([]) == 0  # True
 
 Conversión: `bool(0)` → `False`, `bool(1)` → `True`, `bool("")` → `False`, `bool("x")` → `True`.
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -325,7 +325,7 @@ print(alumno["nombre"])   # Ana
 alumno["nota"] = 9        # agregar clave nueva
 ```
 
-📖 [Clase: Diccionarios](../clases/python/05_colecciones/diccionarios.md)
+📖 [Clase: Diccionarios](../clases/bloque_2_funciones_y_colecciones/diccionarios.md)
 
 ---
 
@@ -338,7 +338,7 @@ precio = 19.99
 pi = 3.14159
 ```
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -351,7 +351,7 @@ edad = 25
 cantidad = 10 + 3   # 13
 ```
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -366,7 +366,7 @@ notas[-1]          # 10 (último)
 notas.append(7)    # agrega al final
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -379,7 +379,7 @@ votos = ["Ana", "Beto", "Ana", "Cami"]
 set(votos)   # {"Ana", "Beto", "Cami"}  — solo únicos
 ```
 
-📖 [Clase: Tuplas y Sets](../clases/python/05_colecciones/tuplas_sets.md)
+📖 [Clase: Tuplas y Sets](../clases/bloque_2_funciones_y_colecciones/tuplas_sets.md)
 
 ---
 
@@ -392,7 +392,7 @@ nombre = "Marta"
 saludo = f"Hola, {nombre}!"
 ```
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -405,7 +405,7 @@ coordenada = (-34.6, -58.4)
 dia, mes, anio = (15, 3, 1998)   # desempaquetado
 ```
 
-📖 [Clase: Tuplas y Sets](../clases/python/05_colecciones/tuplas_sets.md)
+📖 [Clase: Tuplas y Sets](../clases/bloque_2_funciones_y_colecciones/tuplas_sets.md)
 
 ---
 
@@ -423,7 +423,7 @@ for i, fruta in enumerate(["manzana", "banana", "pera"]):
 # 0: manzana   1: banana   2: pera
 ```
 
-📖 [Clase: `for`](../clases/python/03_estructuras_de_control/for.md)
+📖 [Clase: `for`](../clases/bloque_1_fundamentos/for.md)
 
 ---
 
@@ -436,7 +436,7 @@ nombre = input("¿Cómo te llamás? ")
 edad = int(input("¿Cuántos años tenés? "))
 ```
 
-📖 [Clase: `input()`](../clases/python/02_variables_y_tipos/funcion_input.md)
+📖 [Clase: `input()`](../clases/bloque_1_fundamentos/funcion_input.md)
 
 ---
 
@@ -451,7 +451,7 @@ str(42)       # "42"
 
 Causa del error más frecuente: olvidar `int()` con `input()`.
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -465,7 +465,7 @@ len("hola")         # 4
 len({"a", "b"})     # 2
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -492,7 +492,7 @@ print(f"Hola, {nombre}!")    # con f-string
 print()                       # línea en blanco
 ```
 
-📖 [Clase: `print()`](../clases/python/02_variables_y_tipos/funcion_print.md)
+📖 [Clase: `print()`](../clases/bloque_1_fundamentos/funcion_print.md)
 
 ---
 
@@ -506,7 +506,7 @@ range(1, 6)      # 1, 2, 3, 4, 5
 range(0, 10, 2)  # 0, 2, 4, 6, 8  (salto de 2)
 ```
 
-📖 [Clase: `for`](../clases/python/03_estructuras_de_control/for.md)
+📖 [Clase: `for`](../clases/bloque_1_fundamentos/for.md)
 
 ---
 
@@ -538,7 +538,7 @@ type("hola")  # <class 'str'>
 type([1, 2])  # <class 'list'>
 ```
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -553,7 +553,7 @@ for nombre, nota in zip(nombres, notas):
     print(f"{nombre}: {nota}")
 ```
 
-📖 [Clase: Tuplas y Sets](../clases/python/05_colecciones/tuplas_sets.md)
+📖 [Clase: Tuplas y Sets](../clases/bloque_2_funciones_y_colecciones/tuplas_sets.md)
 
 ---
 
@@ -568,7 +568,7 @@ lista = [1, 2, 3]
 lista.append(4)    # [1, 2, 3, 4]
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -618,7 +618,7 @@ lista.pop()     # devuelve 3, lista queda [1, 2]
 lista.pop(0)    # devuelve 1, lista queda [2]
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -651,7 +651,7 @@ notas.sort()              # [1, 3, 8, 9]
 notas.sort(reverse=True)  # [9, 8, 3, 1]
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -708,7 +708,7 @@ Los métodos de string **no modifican** el original — devuelven un string nuev
 
 Muy útil para comparar sin importar si el usuario escribió en mayúscula o no.
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -749,7 +749,7 @@ s.add(4)    # {1, 2, 3, 4}
 s.add(2)    # sin cambios (ya existe)
 ```
 
-📖 [Clase: Tuplas y Sets](../clases/python/05_colecciones/tuplas_sets.md)
+📖 [Clase: Tuplas y Sets](../clases/bloque_2_funciones_y_colecciones/tuplas_sets.md)
 
 ---
 
@@ -790,7 +790,7 @@ a & b   # {2, 3}
 a - b   # {1}
 ```
 
-📖 [Clase: Tuplas y Sets](../clases/python/05_colecciones/tuplas_sets.md)
+📖 [Clase: Tuplas y Sets](../clases/bloque_2_funciones_y_colecciones/tuplas_sets.md)
 
 ---
 
@@ -809,7 +809,7 @@ d.get("Beto", 0)   # 0
 
 Preferible a `d["clave"]` cuando no estás seguro de que la clave existe.
 
-📖 [Clase: Diccionarios](../clases/python/05_colecciones/diccionarios.md)
+📖 [Clase: Diccionarios](../clases/bloque_2_funciones_y_colecciones/diccionarios.md)
 
 ---
 
@@ -820,7 +820,7 @@ for clave, valor in d.items():
     print(f"{clave}: {valor}")
 ```
 
-📖 [Clase: Diccionarios](../clases/python/05_colecciones/diccionarios.md)
+📖 [Clase: Diccionarios](../clases/bloque_2_funciones_y_colecciones/diccionarios.md)
 
 ---
 
@@ -873,7 +873,7 @@ def saludar(nombre):    # nombre → PARÁMETRO
 saludar("Ana")          # "Ana" → ARGUMENTO
 ```
 
-📖 [Clase: Funciones I](../clases/python/06_funciones/funciones_1.md)
+📖 [Clase: Funciones I](../clases/bloque_2_funciones_y_colecciones/funciones_1.md)
 
 ---
 
@@ -912,7 +912,7 @@ print(f"El doble de 7 es {7 * 2}")
 print(f"Precio: ${precio:.2f}")   # 2 decimales
 ```
 
-📖 [Clase: Formato de strings](../clases/python/02_variables_y_tipos/formato_strings.md)
+📖 [Clase: Formato de strings](../clases/bloque_1_fundamentos/formato_strings.md)
 
 ---
 
@@ -927,7 +927,7 @@ def area_rectangulo(base, altura):
 area = area_rectangulo(5, 3)   # 15
 ```
 
-📖 [Clase: Funciones I](../clases/python/06_funciones/funciones_1.md)
+📖 [Clase: Funciones I](../clases/bloque_2_funciones_y_colecciones/funciones_1.md)
 
 ---
 
@@ -943,7 +943,7 @@ lista[-1]   # "d"  — último
 lista[-2]   # "c"  — penúltimo
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -964,7 +964,7 @@ cuadrados = [n ** 2 for n in range(5)]   # [0, 1, 4, 9, 16]
 pares = [n for n in range(10) if n % 2 == 0]   # [0, 2, 4, 6, 8]
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -978,7 +978,7 @@ import math
 from datetime import date
 ```
 
-📖 [Clase: Funciones II](../clases/python/06_funciones/funciones_2.md)
+📖 [Clase: Funciones II](../clases/bloque_2_funciones_y_colecciones/funciones_2.md)
 
 ---
 
@@ -991,7 +991,7 @@ def doblar(numero):      # numero → PARÁMETRO
     return numero * 2
 ```
 
-📖 [Clase: Funciones I](../clases/python/06_funciones/funciones_1.md)
+📖 [Clase: Funciones I](../clases/bloque_2_funciones_y_colecciones/funciones_1.md)
 
 ---
 
@@ -1007,7 +1007,7 @@ calcular()
 print(resultado)    # NameError — resultado no existe acá
 ```
 
-📖 [Clase: Funciones II](../clases/python/06_funciones/funciones_2.md)
+📖 [Clase: Funciones II](../clases/bloque_2_funciones_y_colecciones/funciones_2.md)
 
 ---
 
@@ -1024,7 +1024,7 @@ lista[::2]     # [1, 3, 5]   (de 2 en 2)
 lista[::-1]    # [5, 4, 3, 2, 1]  (invertida)
 ```
 
-📖 [Clase: Listas](../clases/python/04_listas/listas.md)
+📖 [Clase: Listas](../clases/bloque_1_fundamentos/listas.md)
 
 ---
 
@@ -1039,7 +1039,7 @@ precios = [10, 20]  # list
 activo = True       # bool
 ```
 
-📖 [Clase: Variables y Tipos](../clases/python/02_variables_y_tipos/variables.md)
+📖 [Clase: Variables y Tipos](../clases/bloque_1_fundamentos/variables.md)
 
 ---
 
@@ -1056,7 +1056,7 @@ lista[5]             # IndexError: list index out of range
 
 **Solución:** Verificar que el índice esté entre `0` y `len(lista) - 1`. Usar `[-1]` para el último.
 
-📖 [Clase: Lectura y corrección de código](../clases/python/06_funciones/lectura_codigo.md)
+📖 [Clase: Lectura y corrección de código](../clases/bloque_2_funciones_y_colecciones/lectura_codigo.md)
 
 ---
 
@@ -1072,7 +1072,7 @@ d["ana"]     # KeyError: 'ana'  (aunque "Ana" sí existe)
 
 **Solución:** Usar `.get()` en vez de `d["clave"]`.
 
-📖 [Clase: Lectura y corrección de código](../clases/python/06_funciones/lectura_codigo.md)
+📖 [Clase: Lectura y corrección de código](../clases/bloque_2_funciones_y_colecciones/lectura_codigo.md)
 
 ---
 
@@ -1104,7 +1104,7 @@ edad + 10      # TypeError: str + int
 edad = int(input("Edad: "))
 ```
 
-📖 [Clase: Lectura y corrección de código](../clases/python/06_funciones/lectura_codigo.md)
+📖 [Clase: Lectura y corrección de código](../clases/bloque_2_funciones_y_colecciones/lectura_codigo.md)
 
 ---
 
@@ -1120,7 +1120,7 @@ if numero % 2 == 1:
 
 **Solución:** Trazar el código a mano con valores de ejemplo. Usar Python Tutor.
 
-📖 [Clase: Lectura y corrección de código](../clases/python/06_funciones/lectura_codigo.md)
+📖 [Clase: Lectura y corrección de código](../clases/bloque_2_funciones_y_colecciones/lectura_codigo.md)
 
 ---
 
@@ -1136,7 +1136,7 @@ while contador >= 0:    # siempre True
 
 **Señal:** el programa no muestra nada y no responde. **Terminarlo con Ctrl+C**.
 
-📖 [Clase: `while`](../clases/python/03_estructuras_de_control/while.md)
+📖 [Clase: `while`](../clases/bloque_1_fundamentos/while.md)
 
 ---
 

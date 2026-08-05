@@ -7,8 +7,8 @@
 
 ## 🧠 Introducción ✅ { #introduccion }
 
-- [Clase 1 – Introducción a la informática](./01_introduccion.md)
-- [Clase 2 – ¿Qué es programar? Algoritmos, pseudocódigo y diagramas de flujo](./02_que_es_programar.md)
+- [Clase 1 – Introducción a la informática](./introduccion/01_introduccion.md)
+- [Clase 2 – ¿Qué es programar? Algoritmos, pseudocódigo y diagramas de flujo](./introduccion/02_que_es_programar.md)
 
 ---
 
@@ -16,37 +16,37 @@
 
 ### Entorno y primeros pasos { #entorno }
 
-- [📜 Historia y características de Python](./python/01_introduccion/historia_caracteristicas.md)
-- [💻 Instalando las herramientas](./instalacion/instalacion_herramientas.md)
-- [🐍 Instalando Python](./instalacion/instalar_python.md)
-- [🧑‍💻 Instalando VS Code](./instalacion/instalar_vscode.md)
-- [📁 Archivos de Python](./python/01_introduccion/archivos_python.md)
-- [▶️ Ejecutar el programa](./python/01_introduccion/ejecutar_programa.md)
+- [📜 Historia y características de Python](./bloque_1_fundamentos/historia_caracteristicas.md)
+- [💻 Instalando las herramientas](./bloque_1_fundamentos/instalacion_herramientas.md)
+- [🐍 Instalando Python](./bloque_1_fundamentos/instalar_python.md)
+- [🧑‍💻 Instalando VS Code](./bloque_1_fundamentos/instalar_vscode.md)
+- [📁 Archivos de Python](./bloque_1_fundamentos/archivos_python.md)
+- [▶️ Ejecutar el programa](./bloque_1_fundamentos/ejecutar_programa.md)
 
 ### Variables y tipos de datos { #variables }
 
-- [🖨️ La función `print()`](./python/02_variables_y_tipos/funcion_print.md)
-- [📊 Variables, tipos de datos y operadores](./python/02_variables_y_tipos/variables.md)
-- [⌨️ La función `input()`](./python/02_variables_y_tipos/funcion_input.md)
+- [🖨️ La función `print()`](./bloque_1_fundamentos/funcion_print.md)
+- [📊 Variables, tipos de datos y operadores](./bloque_1_fundamentos/variables.md)
+- [⌨️ La función `input()`](./bloque_1_fundamentos/funcion_input.md)
 
 ### Condicionales { #estructuras-de-control }
 
-- [🔀 If / Else](./python/03_estructuras_de_control/if_else.md)
+- [🔀 If / Else](./bloque_1_fundamentos/if_else.md)
 
 ### Listas { #listas }
 
-- [📋 Listas en Python](./python/04_listas/listas.md)
+- [📋 Listas en Python](./bloque_1_fundamentos/listas.md)
 
 ### Bucles { #bucles }
 
-- [🔄 While](./python/03_estructuras_de_control/while.md)
-- [🔁 For](./python/03_estructuras_de_control/for.md)
-- [🧮 Ejercicios: Estructuras de Control](./python/03_estructuras_de_control/ejercicios_estructuras_control.md)
+- [🔄 While](./bloque_1_fundamentos/while.md)
+- [🔁 For](./bloque_1_fundamentos/for.md)
+- [🧮 Ejercicios: Estructuras de Control](./bloque_1_fundamentos/ejercicios_estructuras_control.md)
 
 ### Práctica de listas { #practica-listas }
 
-- [📒 Cuadernillo de ejercicios: Listas](./python/04_listas/cuadernillo_listas_finde.md)
-- [📝 Mini Parcial](./python/04_listas/mini_parcial.md)
+- [📒 Cuadernillo de ejercicios: Listas](./bloque_1_fundamentos/cuadernillo_listas_finde.md)
+- [📝 Mini Parcial](./bloque_1_fundamentos/mini_parcial.md)
 
 ---
 
@@ -56,31 +56,31 @@
     Porque explica `*args` como *"una tupla"* y `**kwargs` como *"un diccionario"*: sin haber visto
     las colecciones primero, habría que explicarlas de prestado.
 
-- [📦 Funciones I — Definición, parámetros y retorno](./python/06_funciones/funciones_1.md)
-- [🧠 Cómo encarar un ejercicio](./python/06_funciones/como_encarar_ejercicios.md)
-- [🔥 Entrada en calor: Funciones como caja negra](./python/06_funciones/funciones_caja_negra.md)
-- [🎲 Tuplas y Sets](./python/05_colecciones/tuplas_sets.md)
-- [🗝️ Diccionarios](./python/05_colecciones/diccionarios.md)
-- [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./python/06_funciones/funciones_2.md)
-- [📦 Anexo: Importar módulos](./python/06_funciones/imports_y_modulos.md)
-- [🧠 Del enunciado al programa — comprensión de problemas](./python/06_funciones/del_enunciado_al_programa.md)
-- [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./python/06_funciones/bingo.md)
+- [📦 Funciones I — Definición, parámetros y retorno](./bloque_2_funciones_y_colecciones/funciones_1.md)
+- [🧠 Cómo encarar un ejercicio](./bloque_2_funciones_y_colecciones/como_encarar_ejercicios.md)
+- [🔥 Entrada en calor: Funciones como caja negra](./bloque_2_funciones_y_colecciones/funciones_caja_negra.md)
+- [🎲 Tuplas y Sets](./bloque_2_funciones_y_colecciones/tuplas_sets.md)
+- [🗝️ Diccionarios](./bloque_2_funciones_y_colecciones/diccionarios.md)
+- [📦 Funciones II — Scope, parámetros avanzados y `*args`/`**kwargs`](./bloque_2_funciones_y_colecciones/funciones_2.md)
+- [📦 Anexo: Importar módulos](./bloque_2_funciones_y_colecciones/imports_y_modulos.md)
+- [🧠 Del enunciado al programa — comprensión de problemas](./bloque_2_funciones_y_colecciones/del_enunciado_al_programa.md)
+- [🎰 Bingo — Ejercicio integrador de colecciones y funciones](./bloque_2_funciones_y_colecciones/bingo.md)
 
 ---
 
 ## 🛠️ Bloque 3 — Persistencia y Versionado *(en curso)* { #persistencia }
 
-- [🌳 Git y GitHub](./python/07_persistencia/git_github.md)
-- [💾 Manejo de archivos](./python/07_persistencia/archivos.md)
-- [📋 JSON](./python/07_persistencia/json.md)
+- [🌳 Git y GitHub](./bloque_3_persistencia/git_github.md)
+- [💾 Manejo de archivos](./bloque_3_persistencia/archivos.md)
+- [📋 JSON](./bloque_3_persistencia/json.md)
 
 ---
 
 ## 🏗️ Bloque 4 — POO y Primer Proyecto *(próximamente)*
 
-- [🧬 POO I — Clases, objetos, atributos y métodos](./python/08_poo/poo_1.md)
-- [🛡️ POO II — Encapsulamiento y métodos especiales](./python/08_poo/poo_2.md)
-- [🔗 Herencia y polimorfismo](./python/08_poo/poo_herencia.md)
+- [🧬 POO I — Clases, objetos, atributos y métodos](./bloque_4_poo/poo_1.md)
+- [🛡️ POO II — Encapsulamiento y métodos especiales](./bloque_4_poo/poo_2.md)
+- [🔗 Herencia y polimorfismo](./bloque_4_poo/poo_herencia.md)
 - 🚀 Sistema de Asistencias del CFP (CLI con persistencia JSON)
 
 ---
