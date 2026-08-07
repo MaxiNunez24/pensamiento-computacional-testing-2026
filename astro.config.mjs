@@ -37,6 +37,10 @@ export default defineConfig({
           tag: 'script',
           attrs: { src: `${base}/sidebars-resizable.js`, defer: true },
         },
+        {
+          tag: 'script',
+          attrs: { src: `${base}/sync-progreso.js`, defer: true },
+        },
       ],
       // El buscador (Pagefind), el dark mode y el botón de copiar código
       // vienen de fábrica con Starlight.
