@@ -50,7 +50,9 @@ const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('ba
       <li>
         <button type="button" class="quiz__opcion" data-idx={i} aria-pressed="false">
           <span class="quiz__marca" aria-hidden="true"></span>
-          <span class="quiz__texto">{o.texto}</span>
+          {/* set:html para poder marcar código con <code> en la opción. Ojo:
+              acá va HTML, no Markdown — los backticks saldrían literales. */}
+          <span class="quiz__texto" set:html={o.texto} />
         </button>
       </li>
     ))}

@@ -86,6 +86,7 @@ export default defineConfig({
         {
           label: '🛠️ Bloque 3 — Persistencia',
           items: [
+            { label: '🐙 Git desde VS Code', link: '/clases/git-vscode/' },
             { label: '💾 Manejo de archivos', link: '/clases/archivos/' },
             { label: '📋 JSON', link: '/clases/json/' },
           ],

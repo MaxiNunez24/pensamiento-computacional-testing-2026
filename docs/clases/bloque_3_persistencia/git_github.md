@@ -519,6 +519,31 @@ flowchart LR
 !!! quote "Para cerrar"
     Git y GitHub son las herramientas de colaboración más usadas en el mundo del software. Que puedan decir "tengo mis proyectos en GitHub" es algo que ya diferencia a un programador de alguien que solo aprendió a programar. ¡Bienvenidos al ecosistema! 🌍
 
+---
+
+## 🖱️ Lo mismo, desde VS Code
+
+Todo lo de esta clase se puede hacer **sin escribir un solo comando**, desde el panel *Source Control*
+del editor (`Ctrl+Shift+G`). No es otra herramienta: cada botón ejecuta exactamente el comando que ya
+aprendiste.
+
+| En la terminal | En VS Code |
+|---|---|
+| `git status` | El panel mismo: los archivos y sus letras (**U**, **M**, **A**, **D**) |
+| `git add archivo` | El **`+`** al lado del archivo |
+| `git commit -m "mensaje"` | Escribir en la caja y tocar **✓ Commit** |
+| `git push` / `git pull` | **Sync Changes** (el ícono de flechas en círculo) |
+
+!!! tip "🎯 ¿Y por qué aprender las dos?"
+    La terminal te enseña **qué pasa**; el editor te lo hace **rápido**. En el trabajo vas a usar el
+    editor casi siempre, pero el día que algo falle, la terminal es la que te dice por qué.
+
+!!! tip "🧪 Practicalo con la pantalla adelante"
+    Hay ejercicios interactivos que te muestran el panel de VS Code y te preguntan qué está pasando:
+    qué significa cada letra, qué comando ejecuta cada botón y qué queda guardado en cada commit.
+
+    [🚀 Ir a los ejercicios de Git en VS Code](/pensamiento-computacional-testing-2026/ejercicios/clases/git-vscode/){ .md-button .md-button--primary }
+
 ## [⬅️ Anterior: Importar módulos](../bloque_2_funciones_y_colecciones/imports_y_modulos.md)
 ## [📚 Índice](../clases.md#persistencia)
 ## [➡️ Siguiente: Manejo de archivos](./archivos.md)

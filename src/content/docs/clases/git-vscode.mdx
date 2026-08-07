@@ -1,0 +1,153 @@
+---
+title: Git desde VS Code
+description: Los mismos comandos de Git que ya usás en la terminal, pero apretando botones. Relacioná cada acción del editor con lo que hace por debajo.
+---
+
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import PanelGitVSCode from '../../../components/PanelGitVSCode.astro';
+import VolverATeoria from '../../../components/VolverATeoria.astro';
+
+<VolverATeoria ruta="clases/bloque_3_persistencia/git_github/" />
+
+## El problema
+
+Ya sabés hacer `git add`, `git commit` y `git push` en la terminal. Pero cuando abrís VS Code te
+encontrás con esto en la barra de la izquierda:
+
+<PanelGitVSCode
+  mensaje=""
+  cambios={[{ nombre: 'main.py', letra: 'M' }, { nombre: 'notas.txt', letra: 'U' }]}
+  titulo="El panel Source Control (Ctrl+Shift+G)"
+/>
+
+Botones, letras de colores, un `+`… y ni un comando a la vista. La buena noticia: **no es otra cosa**.
+Cada botón de acá ejecuta exactamente el mismo comando que vos escribís. Si entendés el comando,
+entendés el botón.
+
+:::tip[Por qué te conviene saber las dos]
+La terminal te enseña **qué pasa**; el editor te lo hace **rápido**. En el laburo vas a usar el
+editor casi siempre, pero el día que algo falle, la terminal es la que te dice por qué. Saber las
+dos no es el doble de trabajo: es la misma idea vista de dos lados.
+:::
+
+## Las letras: el estado de cada archivo
+
+Al lado de cada archivo aparece una letra. **Es el estado de Git, no una decoración**:
+
+| Letra | Color | Qué significa | En la terminal lo verías como |
+|---|---|---|---|
+| **U** | verde | *Untracked*: archivo nuevo, Git todavía no lo sigue | `Untracked files` |
+| **M** | ámbar | *Modified*: ya estaba, y lo cambiaste | `Changes not staged for commit` |
+| **A** | verde | *Added*: preparado para el próximo commit | `Changes to be committed` |
+| **D** | rojo | *Deleted*: lo borraste | `deleted:` |
+
+<OpcionMultiple titulo="Leé la pantalla" opciones={[
+  { texto: "<code>notas.txt</code> es nuevo y Git todavía no lo está siguiendo.", correcta: true, explicacion: "Exacto: la U es de Untracked. Git lo ve en la carpeta pero no lo tiene registrado." },
+  { texto: "<code>notas.txt</code> está preparado para el commit.", explicacion: "No: preparado sería A (Added). La U significa que Git ni siquiera lo sigue todavía." },
+  { texto: "<code>notas.txt</code> tiene un error de sintaxis.", explicacion: "Git no mira el contenido de tus archivos ni sabe de sintaxis: solo registra qué cambió." },
+  { texto: "<code>notas.txt</code> se borró del proyecto.", explicacion: "Borrado sería D, y aparecería en rojo." },
+]}>
+Mirá el panel de arriba. ¿Qué te está diciendo la **U** verde al lado de `notas.txt`?
+</OpcionMultiple>
+
+## `git add` → el `+`
+
+Para preparar un archivo, en la terminal escribís `git add main.py`. En el editor, pasás el mouse por
+encima del archivo y tocás el **`+`**:
+
+<PanelGitVSCode
+  cambios={[{ nombre: 'main.py', letra: 'M' }, { nombre: 'notas.txt', letra: 'U' }]}
+  resaltar="mas"
+  titulo="El + aparece al pasar el mouse por encima del archivo"
+/>
+
+Cuando lo tocás, el archivo **sube** a una sección nueva llamada `STAGED CHANGES`. Eso es el área de
+preparación de la que hablamos en la terminal:
+
+<PanelGitVSCode
+  staged={[{ nombre: 'main.py', letra: 'M' }]}
+  cambios={[{ nombre: 'notas.txt', letra: 'U' }]}
+  titulo="Después de tocar el + en main.py"
+/>
+
+<OpcionMultiple titulo="¿Qué hace el +?" opciones={[
+  { texto: "<code>git add</code>", correcta: true, explicacion: "Sí. El + prepara ese archivo para el próximo commit, igual que git add archivo." },
+  { texto: "<code>git commit</code>", explicacion: "No: el commit es el botón azul de arriba. El + solo prepara, todavía no guarda nada." },
+  { texto: "<code>git push</code>", explicacion: "No: push manda a GitHub, y eso ni siquiera pasa hasta después del commit." },
+  { texto: "Crea un archivo nuevo", explicacion: "No: el archivo ya existe. El + lo prepara, no lo crea." },
+]}>
+El botón **`+`** al lado de un archivo, ¿qué comando ejecuta por debajo?
+</OpcionMultiple>
+
+## `git commit` → la caja y el botón azul
+
+Escribís el mensaje en la caja de arriba y tocás **✓ Commit**. Es el equivalente exacto de
+`git commit -m "tu mensaje"`.
+
+<PanelGitVSCode
+  mensaje="Agregar el cartón del bingo"
+  staged={[{ nombre: 'main.py', letra: 'M' }]}
+  cambios={[{ nombre: 'notas.txt', letra: 'U' }]}
+  resaltar="commit"
+  titulo="Mensaje escrito y listo para confirmar"
+/>
+
+:::caution[Ojo con lo que entra al commit]
+En el panel de arriba, `notas.txt` está en **CHANGES**, no en **STAGED CHANGES**. Si tocás Commit
+ahora, ese archivo **no entra**. Es el mismo error clásico de la terminal: hacer `commit` sin haber
+hecho `add`.
+:::
+
+<OpcionMultiple titulo="¿Qué queda guardado?" opciones={[
+  { texto: "Solo <code>main.py</code>.", correcta: true, explicacion: "Correcto: únicamente lo que está en STAGED CHANGES entra al commit. notas.txt queda esperando." },
+  { texto: "Los dos archivos.", explicacion: "No: notas.txt está en CHANGES, no preparado. Habría que tocarle el + primero." },
+  { texto: "Ninguno, porque falta hacer push.", explicacion: "El commit guarda igual en tu compu. El push es otro paso, después, y sirve para mandarlo a GitHub." },
+]}>
+Con la pantalla de arriba, si tocás **✓ Commit**, ¿qué archivos quedan guardados en ese commit?
+</OpcionMultiple>
+
+## `git push` y `git pull` → el botón de sincronizar
+
+Arriba a la derecha del panel hay un ícono de flechas en círculo. Ese botón hace **las dos cosas**:
+primero trae lo que haya en GitHub (`pull`) y después manda lo tuyo (`push`).
+
+<PanelGitVSCode
+  staged={[]}
+  cambios={[{ nombre: 'main.py', letra: 'M' }]}
+  resaltar="sync"
+  titulo="Sync Changes: pull y push de una"
+/>
+
+:::note[Es el mismo botón que ya usaste hoy]
+El botón **🔄 Sincronizar** de esta plataforma está hecho a propósito con esa idea: `push` sube lo
+tuyo, `pull` trae lo guardado. Cuando lo veas en VS Code no vas a estar aprendiendo algo nuevo.
+:::
+
+<OpcionMultiple titulo="¿Qué pasa si toco esto?" opciones={[
+  { texto: "Nada útil: todavía no hice el commit.", correcta: true, explicacion: "Tal cual. Sync manda COMMITS, no cambios sueltos. Con main.py sin commitear, no hay nada para mandar. El orden es siempre add → commit → sync." },
+  { texto: "Sube <code>main.py</code> a GitHub.", explicacion: "No: lo que viaja son commits. Un archivo modificado y sin commitear no sale de tu compu." },
+  { texto: "Guarda el archivo en la compu.", explicacion: "Guardar el archivo es Ctrl+S, y no tiene nada que ver con Git." },
+  { texto: "Borra mis cambios locales.", explicacion: "No: sincronizar nunca tira tus cambios así porque sí." },
+]}>
+En la pantalla de arriba `main.py` está modificado pero **no hay ningún commit hecho**. Si tocás el
+botón de sincronizar, ¿qué pasa?
+</OpcionMultiple>
+
+## La tabla que te conviene tener a mano
+
+| En la terminal | En VS Code |
+|---|---|
+| `git status` | El panel mismo: los archivos y sus letras |
+| `git add archivo` | El **`+`** al lado del archivo |
+| `git add .` | El **`+`** al lado del título **CHANGES** |
+| `git restore --staged archivo` | El **`−`** al lado del archivo preparado |
+| `git commit -m "mensaje"` | Escribir en la caja y tocar **✓ Commit** |
+| `git push` / `git pull` | **Sync Changes** (el ícono de flechas) |
+| `git log` | La vista **Graph** / el historial del panel |
+
+## Para llevar
+
+- El editor **no reemplaza** a Git: le pone botones adelante.
+- Las letras (**U**, **M**, **A**, **D**) son los estados de Git, los mismos de `git status`.
+- El orden nunca cambia: **preparar → confirmar → sincronizar** (`add` → `commit` → `push`).
+- Si algo falla y el botón no te dice por qué, abrí la terminal: ahí está el mensaje completo.
