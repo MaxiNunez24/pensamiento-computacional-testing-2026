@@ -13,13 +13,20 @@
  * está la función. Ver worker/README.md para los pasos.
  */
 (function () {
-  var WORKER_SYNC = 'sync.maxinunez434.workers.dev'; // ej: 'https://sync.TU-SUBDOMINIO.workers.dev'
+  var WORKER_SYNC = 'https://sync.maxinunez434.workers.dev'; // ej: 'https://sync.TU-SUBDOMINIO.workers.dev'
 
   // Permite probar la interfaz sin Worker desplegado (solo en localhost).
   if (!WORKER_SYNC && /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
     WORKER_SYNC = window.PC_SYNC_URL || '';
   }
   if (!WORKER_SYNC) return;
+
+  // Sin el "https://" adelante, fetch trata la URL como RELATIVA y pega contra
+  // el propio sitio (…/ejercicios/clases/sync.tu-worker.dev), que da 404 y hace
+  // parecer que el Worker está caído. Se agrega solo para que no dependa de
+  // haberlo escrito completo.
+  if (!/^https?:\/\//.test(WORKER_SYNC)) WORKER_SYNC = 'https://' + WORKER_SYNC;
+  WORKER_SYNC = WORKER_SYNC.replace(/\/+$/, '');
 
   var PREFIJO = 'pcp:'; // todo lo que guarda progreso.ts
   var LS_CODIGO = 'pc_sync_codigo';

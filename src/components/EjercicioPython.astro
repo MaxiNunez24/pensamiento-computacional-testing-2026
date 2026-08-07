@@ -110,7 +110,11 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
     <button type="button" class="ejercicio__tecla" data-ins="[">[</button>
     <button type="button" class="ejercicio__tecla" data-ins="]">]</button>
     <button type="button" class="ejercicio__tecla" data-ins="&quot;">"</button>
+    <button type="button" class="ejercicio__tecla" data-ins="'">'</button>
     <button type="button" class="ejercicio__tecla" data-ins="=">=</button>
+    {/* El % es el operador de módulo: aparece en cuanto se ve "¿es par?", y en
+        varios teclados de celular está enterrado en la tercera capa. */}
+    <button type="button" class="ejercicio__tecla" data-ins="%">%</button>
     <button type="button" class="ejercicio__tecla" data-ins="&lt;">&lt;</button>
     <button type="button" class="ejercicio__tecla" data-ins="&gt;">&gt;</button>
   </div>
