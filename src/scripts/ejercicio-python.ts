@@ -111,7 +111,15 @@ function aplicarPreferenciaTeclas(activas: boolean): void {
 }
 
 function conectarToggleTeclas(el: HTMLElement): void {
-  el.querySelector<HTMLButtonElement>('[data-toggle-teclas]')?.addEventListener('click', () => {
+  const boton = el.querySelector<HTMLButtonElement>('[data-toggle-teclas]');
+  boton?.addEventListener('click', () => {
+    // La preferencia vale para TODOS los ejercicios de la página a la vez, así
+    // que al togglear aparecen (o desaparecen) tantas barras como ejercicios
+    // haya: el documento cambia de alto de golpe y todo lo de abajo se corre.
+    // Medimos dónde estaba el botón en pantalla y volvemos a dejarlo ahí, para
+    // que visualmente no se mueva nada.
+    const antes = boton.getBoundingClientRect().top;
+
     const activas = !teclasActivas();
     try {
       localStorage.setItem(LS_TECLAS, activas ? '1' : '0');
@@ -119,6 +127,13 @@ function conectarToggleTeclas(el: HTMLElement): void {
       /* sin persistencia: vale para esta sesión igual */
     }
     aplicarPreferenciaTeclas(activas);
+
+    // getBoundingClientRect fuerza el recálculo, así que acá ya está el layout
+    // nuevo. 'instant' porque un scroll animado acá se ve como otro salto.
+    const despues = boton.getBoundingClientRect().top;
+    if (despues !== antes) {
+      window.scrollBy({ top: despues - antes, behavior: 'instant' as ScrollBehavior });
+    }
   });
 }
 
