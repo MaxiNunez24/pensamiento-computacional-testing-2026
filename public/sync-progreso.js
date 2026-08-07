@@ -13,7 +13,7 @@
  * está la función. Ver worker/README.md para los pasos.
  */
 (function () {
-  var WORKER_SYNC = ''; // ej: 'https://sync.TU-SUBDOMINIO.workers.dev'
+  var WORKER_SYNC = 'sync.maxinunez434.workers.dev'; // ej: 'https://sync.TU-SUBDOMINIO.workers.dev'
 
   // Permite probar la interfaz sin Worker desplegado (solo en localhost).
   if (!WORKER_SYNC && /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
