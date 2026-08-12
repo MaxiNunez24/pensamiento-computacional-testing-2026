@@ -261,11 +261,55 @@ body.pc-resizing * {
    CodeMirror dibuja varios .cm-selectionBackground y la regla "* + *" de
    Starlight le mete margin-top al 2º y 3º → quedan líneas sin pintar en el
    medio de la selección. */
+/* Vale para los TRES editores (ejercicio, encontrar-el-error y evaluación):
+   los tres son CodeMirror dentro de la prosa de Starlight, así que a los tres
+   les mete el mismo margin-top. Cuando esta regla cubría solo .ejercicio, en el
+   mini parcial los números del margen quedaban 16px por debajo de su línea. */
 .ejercicio .cm-line,
 .ejercicio .cm-gutterElement,
 .ejercicio .cm-layer,
-.ejercicio .cm-layer > * {
+.ejercicio .cm-layer > *,
+.encontrar__editor .cm-line,
+.encontrar__editor .cm-gutterElement,
+.encontrar__editor .cm-layer,
+.encontrar__editor .cm-layer > *,
+.evaluacion__editor .cm-line,
+.evaluacion__editor .cm-gutterElement,
+.evaluacion__editor .cm-layer,
+.evaluacion__editor .cm-layer > * {
   margin: 0 !important;
+}
+
+/* Números de línea desalineados respecto del código.
+   Dos causas distintas, sumadas:
+
+   1. CodeMirror le da 4px de aire arriba a .cm-content y 0 a .cm-gutters, así
+      que el número arranca 4px más alto que su línea.
+
+   2. CodeMirror nunca llegó a medir bien el alto de línea y se quedó con su
+      valor por defecto (14px), cuando la línea real mide 19. Ese 14 se lo
+      escribe INLINE a cada número del margen, así que el desfase se ACUMULA
+      ~5px por línea: en la sexta el número ya está más de una línea arriba.
+      `view.requestMeasure()` no lo recalcula (el theme ya lo llama al cargar
+      la fuente y sigue en 14), así que no peleamos contra su medición: como no
+      usamos ajuste de línea, cada línea ocupa exactamente una fila y alcanza
+      con dejar que el número tome su alto natural para que queden 1:1.
+
+   ⚠️ El PRIMER .cm-gutterElement es el espaciador interno de CodeMirror (alto 0,
+   visibility:hidden). Si también le damos alto automático se infla y empuja
+   todos los números una línea hacia abajo — de ahí el :not(:first-child).
+   ⚠️ Si algún día se activa EditorView.lineWrapping, esto hay que repensarlo:
+   ahí una línea puede ocupar varias filas y el alto sí lo tiene que decidir
+   CodeMirror. */
+.ejercicio .cm-gutters,
+.encontrar__editor .cm-gutters,
+.evaluacion__editor .cm-gutters {
+  padding-top: 4px;
+}
+.ejercicio .cm-lineNumbers .cm-gutterElement:not(:first-child),
+.encontrar__editor .cm-lineNumbers .cm-gutterElement:not(:first-child),
+.evaluacion__editor .cm-lineNumbers .cm-gutterElement:not(:first-child) {
+  height: auto !important;
 }
 
 /* ---------- Completar el código (fill-in-the-blank) ---------- */
