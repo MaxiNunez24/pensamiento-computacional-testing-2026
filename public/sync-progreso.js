@@ -90,17 +90,31 @@
   }
 
   // --- Interfaz ---
-  var fab = document.createElement('button');
-  fab.type = 'button';
-  fab.className = 'pc-sync-fab';
-  fab.title = 'Sincronizar tu avance con otro dispositivo';
-  fab.innerHTML = '<span aria-hidden="true">🔄</span><span>Sincronizar</span>';
+  // El botón va en el encabezado, al lado del selector de tema. Antes flotaba
+  // abajo a la derecha y tapaba el último ejercicio de cada clase.
+  //
+  // Starlight duplica sus propios controles: .right-group para escritorio y
+  // .mobile-preferences (adentro del menú) para el celular, y muestra uno u
+  // otro por CSS. Hacemos lo mismo, así el botón está siempre a mano sin
+  // pelear con su diseño responsive.
+  function crearBoton() {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pc-sync-btn-header';
+    b.title = 'Sincronizar tu avance con otro dispositivo';
+    b.innerHTML = '<span aria-hidden="true">🔄</span><span class="pc-sync-btn-texto">Sincronizar</span>';
+    b.addEventListener('click', abrir);
+    return b;
+  }
+
+  var botones = [];
 
   var modal = document.createElement('div');
   modal.className = 'pc-sync-modal';
   modal.hidden = true;
   modal.innerHTML = [
-    '<div class="pc-sync-panel" role="dialog" aria-modal="true" aria-labelledby="pc-sync-tit">',
+    // tabindex="-1" para poder enfocar el diálogo sin meterlo en el orden de tabulación.
+    '<div class="pc-sync-panel" role="dialog" aria-modal="true" aria-labelledby="pc-sync-tit" tabindex="-1">',
     '  <button type="button" class="pc-sync-cerrar" aria-label="Cerrar">✕</button>',
     '  <h2 id="pc-sync-tit">🔄 Sincronizar progreso</h2>',
     '  <p class="pc-sync-intro">Tu avance se guarda en <strong>este</strong> navegador. Para seguir en otra',
@@ -140,11 +154,21 @@
     modal.querySelector('.pc-sync-codigo').value = codigo();
     estado('');
     modal.hidden = false;
-    modal.querySelector('.pc-sync-codigo').focus();
+    // El foco va al diálogo, NO al campo del código: enfocar un input abre el
+    // teclado del celular de entrada, y el código casi nunca se toca (se genera
+    // solo y solo se escribe la primera vez en el otro dispositivo).
+    modal.querySelector('.pc-sync-panel').focus();
   }
   function cerrar() {
     modal.hidden = true;
-    fab.focus();
+    // Devolvemos el foco al botón que se ve (hay uno por breakpoint: el otro
+    // está oculto, y enfocar algo invisible deja al teclado sin referencia).
+    for (var i = 0; i < botones.length; i++) {
+      if (botones[i].offsetParent !== null) {
+        botones[i].focus();
+        return;
+      }
+    }
   }
 
   async function push() {
@@ -212,9 +236,35 @@
   }
 
   function iniciar() {
-    document.body.appendChild(fab);
+    // En ESCRITORIO va en el encabezado, antes del selector de tema: ahí hay un
+    // hueco libre y deja de tapar el último ejercicio.
+    var derecha = document.querySelector('.right-group');
+    if (derecha) {
+      var bh = crearBoton();
+      derecha.insertBefore(bh, derecha.querySelector('starlight-theme-select'));
+      botones.push(bh);
+    }
+
+    // En CELULAR sigue flotando. El otro lugar posible sería .mobile-preferences,
+    // pero eso vive adentro del menú hamburguesa: serían dos toques y scroll
+    // para algo que se usa al llegar y al irse de cada clase.
+    var bf = crearBoton();
+    bf.className += ' pc-sync-flotante';
+    document.body.appendChild(bf);
+    botones.push(bf);
+
+    // Se muestra uno solo: el flotante aparece únicamente cuando el del
+    // encabezado NO se ve. Se decide mirando el DOM en vez de repetir el
+    // breakpoint de Starlight en una media query nuestra, que quedaría
+    // desincronizada el día que ellos lo cambien.
+    function ajustarBotones() {
+      if (!derecha) return; // sin encabezado donde anclar: siempre el flotante
+      bf.style.display = bh.offsetParent !== null ? 'none' : '';
+    }
+    ajustarBotones();
+    window.addEventListener('resize', ajustarBotones);
+
     document.body.appendChild(modal);
-    fab.addEventListener('click', abrir);
     modal.querySelector('.pc-sync-cerrar').addEventListener('click', cerrar);
     modal.addEventListener('click', function (e) {
       if (e.target === modal) cerrar();
