@@ -1044,6 +1044,64 @@ body.pc-resizing * {
 }
 
 /* ---------------------------------------------------------------------------
+   Índice de ejercicios en el sidebar derecho (public/indice-ejercicios.js)
+   Va abajo del índice de Starlight y se parece a propósito: es el mismo gesto
+   de "saltar a una parte de la página", solo que a los ejercicios, que no
+   entran en el índice nativo porque sus títulos están dentro de un componente.
+--------------------------------------------------------------------------- */
+.idx-ej {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--sl-color-hairline-light, var(--sl-color-gray-5));
+}
+.idx-ej__titulo {
+  margin: 0 0 0.5rem;
+  font-size: var(--sl-text-h5, 0.9rem);
+  font-weight: 600;
+  color: var(--sl-color-white);
+}
+.idx-ej__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.idx-ej__link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.35rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  text-decoration: none;
+  color: var(--sl-color-gray-2);
+}
+.idx-ej__link:hover {
+  color: var(--sl-color-white);
+  background: var(--sl-color-gray-6);
+}
+/* El ejercicio que el alumno está mirando, para no perder el hilo al scrollear. */
+.idx-ej__link.is-activo {
+  color: var(--sl-color-text-accent);
+  background: var(--sl-color-gray-6);
+  font-weight: 600;
+}
+.idx-ej__icono {
+  flex: 0 0 auto;
+}
+.idx-ej__nombre {
+  flex: 1 1 auto;
+}
+.idx-ej__ok {
+  flex: 0 0 auto;
+  color: #66bb6a;
+  font-weight: 700;
+}
+.idx-ej__ok[hidden] {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
    Sincronizar progreso entre dispositivos (public/sync-progreso.js)
    El botón va flotando abajo a la derecha para que esté a mano desde cualquier
    clase, y por encima del contenido pero por debajo de los diálogos del navegador.
