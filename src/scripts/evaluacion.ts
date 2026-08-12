@@ -16,6 +16,7 @@ import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
+import { medirCuandoSeaVisible } from './medir-editor';
 
 const EMAIL_PROFE = 'maxinunez434@gmail.com';
 const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.workers.dev/';
@@ -68,6 +69,7 @@ function initEvaluacion(el: HTMLElement): void {
       extensions: [basicSetup, python(), oneDark, keymap.of([indentWithTab])],
       parent: cajaEditor,
     });
+    medirCuandoSeaVisible(view);
     editores.set(i, view);
 
     const salida = item.querySelector<HTMLElement>('[data-salida]');

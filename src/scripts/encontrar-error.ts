@@ -12,6 +12,7 @@ import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { estaHecho, marcarHecho, pintarSello, actualizarResumen } from './progreso';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
+import { medirCuandoSeaVisible } from './medir-editor';
 
 function b64decode(s: string): string {
   if (!s) return '';
@@ -97,6 +98,7 @@ function initEncontrar(el: HTMLElement): void {
         extensions: [basicSetup, python(), oneDark, keymap.of([indentWithTab])],
         parent: cajaEditor,
       });
+      medirCuandoSeaVisible(editor);
       editor.focus();
     }
     if (btnConfirmar) btnConfirmar.textContent = '✓ Verificar el arreglo';

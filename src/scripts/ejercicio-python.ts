@@ -17,6 +17,7 @@ import {
   actualizarResumen,
 } from './progreso';
 import { runPython, ensureWorker, pythonReady, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
+import { medirCuandoSeaVisible } from './medir-editor';
 
 // Casilla a la que el alumno manda su código (un solo lugar para cambiarla).
 const EMAIL_PROFE = 'maxinunez434@gmail.com';
@@ -218,11 +219,10 @@ function initEjercicio(el: HTMLElement): void {
   // el código programáticamente).
   (el as unknown as { __cmView: EditorView }).__cmView = view;
 
-  // Re-medir cuando carga la fuente monoespaciada: si no, CodeMirror midió con
-  // la fuente de fallback y el caret queda corrido respecto de la línea.
-  if (document.fonts?.ready) {
-    document.fonts.ready.then(() => view.requestMeasure()).catch(() => {});
-  }
+  // Medir al cargar la fuente Y al entrar en pantalla: medir solo al cargar la
+  // fuente no alcanza porque los ejercicios de más abajo todavía no son
+  // visibles y CodeMirror no puede medir. Ver medir-editor.ts.
+  medirCuandoSeaVisible(view);
 
   const getCode = () => view.state.doc.toString();
 
