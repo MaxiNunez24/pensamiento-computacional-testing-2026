@@ -1,0 +1,323 @@
+---
+title: Eficiencia — que ande y que salga barato
+description: "Medimos cuántos pasos ejecuta tu solución con datos cada vez más grandes. No alcanza con llegar al resultado: hay que llegar sin hacerle repetir trabajo a la máquina."
+---
+
+import EjercicioEficiencia from '../../../components/EjercicioEficiencia.astro';
+import CroquisRecorridos from '../../../components/CroquisRecorridos.astro';
+import CroquisCrecimiento from '../../../components/CroquisCrecimiento.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+## "Anda" es el piso, no el techo
+
+Todos los ejercicios que hiciste hasta ahora tenían un solo criterio: que los tests pasaran.
+
+Los de esta clase tienen dos. Primero que ande — eso no cambia. Y después, **cuánto le costó
+andar**: los mismos tests, pero corriendo tu solución con 10 datos, con 100 y con 1.000, para ver
+qué le pasa a tu programa cuando el problema crece.
+
+Porque el problema siempre crece. La lista de tres alumnos con la que probás es la lista de
+cuarenta mil que va a tener el sistema el día que funcione.
+
+<CroquisRecorridos />
+
+## Qué es un "paso"
+
+El medidor cuenta **cuántas líneas de tu código ejecuta Python**. Nada más que eso: si tu `for` da
+mil vueltas y adentro tiene dos líneas, son unos dos mil pasos.
+
+Es una medida grosera a propósito. No sirve para comparar dos soluciones que están a un 10% una de
+otra; sirve para lo que importa acá, que es ver la diferencia entre 900 y 400.000.
+
+:::note[Por qué `sum()` cuenta como un solo paso]
+Las funciones que ya vienen con Python (`sum`, `max`, `sorted`, `set`…) están escritas en C, y el
+contador solo mira **tus** líneas. Así que `sum(numeros)` figura como 1 paso y tu `for` equivalente
+como 2.000.
+
+No es trampa del medidor: es lo que realmente pasa. Ese recorrido igual existe, pero lo hace código
+compilado que corre entre 10 y 100 veces más rápido que un bucle escrito por vos. Apoyarte en las
+herramientas del lenguaje **es** la optimización.
+
+Lo que sí conviene tener claro: rápido no es gratis. `sorted(lista)` es una barbaridad de eficiente,
+pero sigue costando más que recorrer la lista una vez. Cuando dos caminos usan funciones de Python,
+el contador ya no te alcanza para elegir — ahí hay que pensar.
+:::
+
+## Las insignias
+
+Cuando los tests pasan, aparece una tarjeta con la medición y una de estas cuatro:
+
+| | Qué significa |
+|---|---|
+| 🏆 **Óptimo** | No le estás haciendo repetir trabajo a la máquina. |
+| ⚡ **Eficiente** | Recorrés los datos lo justo. Hay una variante todavía más barata. |
+| 🟡 **Se puede mejorar** | Anda bien, pero hacés de más. Suele ser un recorrido que sobra. |
+| 🐢 **Fuerza bruta** | Probás muchísimas más cosas de las necesarias. Con datos de verdad, no termina. |
+
+Se guarda **tu mejor marca**, así que podés probar otra idea sin miedo a perder la insignia que ya
+te ganaste.
+
+## Las tres formas
+
+Toda solución que escribas va a tener una de estas tres formas. Reconocerla de un vistazo es,
+básicamente, todo el tema.
+
+<CroquisCrecimiento />
+
+---
+
+## Los ejercicios
+
+<EjercicioEficiencia
+  titulo="Sumar del 1 al N"
+  dificultad="🌱"
+  starter={`def sumar_hasta(n):\n    # Devolvé 1 + 2 + 3 + ... + n\n    pass`}
+  tests={`assert sumar_hasta(1) == 1\nassert sumar_hasta(10) == 55, "1+2+...+10 = 55"\nassert sumar_hasta(100) == 5050\nassert sumar_hasta(0) == 0, "sin números que sumar, la suma es 0"`}
+  escenarios={[
+    { etiqueta: 'n = 100', tamano: 100, codigo: 'sumar_hasta(100)' },
+    { etiqueta: 'n = 10.000', tamano: 10000, codigo: 'sumar_hasta(10000)' },
+  ]}
+  optimo={5}
+  bueno={60}
+  mejorable={40000}
+  pistas={[
+    'Empecemos por lo obvio: un <code>for</code> que sume de a uno funciona. Con <code>n = 10.000</code>, ¿cuántas vueltas da? ¿Y con <code>n = 1.000.000</code>?',
+    'Escribí a mano la suma del 1 al 10, pero apareándolos desde las puntas: 1+10, 2+9, 3+8… ¿Cuánto da cada par? ¿Cuántos pares hay?',
+    'Si cada par da <code>n + 1</code> y hay <code>n / 2</code> pares… ya tenés la cuenta. Ojo con la división: <code>//</code> devuelve entero.',
+  ]}
+  caminos={[
+    {
+      titulo: 'El bucle honesto',
+      codigo: 'total = 0\nfor i in range(1, n + 1):\n    total += i\nreturn total',
+      costo: 'unos 20.000 pasos con n = 10.000',
+      porque: 'Da una vuelta por cada número. Con <code>n</code> diez veces más grande, tarda diez veces más. Es la forma <strong>⚡ una sola vuelta</strong> del croquis.',
+    },
+    {
+      titulo: 'Delegarlo en Python',
+      codigo: 'return sum(range(1, n + 1))',
+      costo: '1 paso tuyo',
+      porque: 'El recorrido sigue existiendo, pero lo hace <code>sum()</code> en C. Muchísimo más rápido que tu <code>for</code>… aunque todavía depende de <code>n</code>.',
+    },
+    {
+      titulo: 'La cuenta de Gauss',
+      codigo: 'return n * (n + 1) // 2',
+      costo: '1 paso, y con n = un billón también',
+      porque: 'Acá no hay recorrido en ningún lado. Es la única de las tres que <strong>no depende del tamaño</strong>: la forma 🏆 del croquis.',
+    },
+  ]}
+>
+Escribí `sumar_hasta(n)`, que devuelve la suma de todos los números del 1 al `n`.
+
+Hacelo andar primero como te salga. Después mirá el número de pasos y volvé — hay una forma de
+resolverlo que **no cambia** aunque `n` sea un millón.
+</EjercicioEficiencia>
+
+<EjercicioEficiencia
+  titulo="¿Hay algún repetido?"
+  dificultad="🌿"
+  starter={`def hay_repetidos(numeros):\n    # True si algún número aparece más de una vez, False si son todos distintos\n    pass`}
+  tests={`assert hay_repetidos([1, 2, 2, 3]), "el 2 está dos veces"\nassert not hay_repetidos([1, 2, 3]), "son todos distintos"\nassert not hay_repetidos([]), "una lista vacía no tiene repetidos"\nassert hay_repetidos([7, 7])\nassert not hay_repetidos([5])`}
+  escenarios={[
+    { etiqueta: '60 números, todos distintos', tamano: 60, codigo: 'hay_repetidos(list(range(60)))' },
+    { etiqueta: '600 números, todos distintos', tamano: 600, codigo: 'hay_repetidos(list(range(600)))' },
+  ]}
+  optimo={5}
+  bueno={2500}
+  mejorable={20000}
+  pistas={[
+    'La idea que sale primero es: por cada número, comparalo con todos los demás. Con 600 números, ¿cuántas comparaciones son? (pista: seiscientos por seiscientos).',
+    'Ahora al revés: recorré la lista <em>una sola vez</em> anotando en algún lado los que ya viste. ¿Qué estructura de las que conocés te dice al toque si algo ya está adentro?',
+    'Última idea, y es de una línea: un <code>set</code> tira los repetidos solo. Si le sacás los repetidos a la lista y quedan <em>menos</em> elementos que antes… ¿qué significa eso?',
+  ]}
+  caminos={[
+    {
+      titulo: 'Comparar cada uno con todos',
+      codigo: 'for i in range(len(numeros)):\n    for j in range(i + 1, len(numeros)):\n        if numeros[i] == numeros[j]:\n            return True\nreturn False',
+      costo: 'más de 300.000 pasos con 600 números (tuvimos que cortarlo)',
+      porque: 'Un bucle adentro de otro. Cada número se compara con todos los que le siguen: es la grilla 🐢 del croquis. Con 6.000 números serían cien veces más.',
+    },
+    {
+      titulo: 'Una sola vuelta, anotando lo visto',
+      codigo: 'vistos = set()\nfor n in numeros:\n    if n in vistos:\n        return True\n    vistos.add(n)\nreturn False',
+      costo: 'unos 1.800 pasos con 600 números',
+      porque: 'Preguntarle a un <code>set</code> si algo está adentro es instantáneo: no recorre nada. Por eso alcanza con una vuelta.',
+    },
+    {
+      titulo: 'Contar antes y después',
+      codigo: 'return len(set(numeros)) != len(numeros)',
+      costo: '1 paso tuyo',
+      porque: 'El <code>set</code> descarta los repetidos al armarse. Si quedaron menos elementos, es porque había repetidos. El recorrido lo hace Python.',
+    },
+  ]}
+>
+Escribí `hay_repetidos(numeros)`: devuelve `True` si algún número aparece más de una vez, y `False`
+si son todos distintos.
+
+Cuidado con este: la primera idea que se le ocurre a todo el mundo es la más cara de todas.
+</EjercicioEficiencia>
+
+<EjercicioEficiencia
+  titulo="Buscar y cortar a tiempo"
+  dificultad="🌿"
+  starter={`def posicion_de(numeros, buscado):\n    # La posición de la PRIMERA aparición, o -1 si no está\n    pass`}
+  tests={`assert posicion_de([5, 9, 2], 9) == 1\nassert posicion_de([5, 9, 2], 5) == 0\nassert posicion_de([5, 9, 2], 7) == -1, "si no está, va -1"\nassert posicion_de([], 1) == -1\nassert posicion_de([4, 8, 4], 4) == 0, "la PRIMERA aparición, no la última"`}
+  escenarios={[
+    { etiqueta: 'lista de 200 — el buscado está 4º', tamano: 200, codigo: 'posicion_de(list(range(200)), 3)' },
+    { etiqueta: 'lista de 2.000 — el buscado está 4º', tamano: 2000, codigo: 'posicion_de(list(range(2000)), 3)' },
+  ]}
+  optimo={12}
+  bueno={40}
+  mejorable={3000}
+  pistas={[
+    'Los dos escenarios buscan algo que está en el <strong>cuarto lugar</strong>. Si tu solución tarda diez veces más en la lista de 2.000… ¿qué estuvo haciendo después de encontrarlo?',
+    'Adentro de un <code>for</code>, <code>return</code> no solo devuelve: <em>termina la función ahí mismo</em>. Las vueltas que faltaban no se dan.',
+    'Si estás guardando el resultado en una variable para devolverlo al final, fijate qué ganás con eso. ¿Necesitás seguir mirando?',
+  ]}
+  caminos={[
+    {
+      titulo: 'Recorrer todo y quedarse con lo último',
+      codigo: 'resultado = -1\nfor i in range(len(numeros)):\n    if numeros[i] == buscado and resultado == -1:\n        resultado = i\nreturn resultado',
+      costo: 'unos 4.000 pasos en la lista de 2.000',
+      porque: 'Encuentra el valor en la cuarta vuelta y sigue recorriendo 1.996 veces más al pedo. Además es la versión que más se equivoca con "la primera aparición".',
+    },
+    {
+      titulo: 'Cortar apenas aparece',
+      codigo: 'for i, n in enumerate(numeros):\n    if n == buscado:\n        return i\nreturn -1',
+      costo: '9 pasos — los mismos en las dos listas',
+      porque: 'Es el único caso del curso donde el tamaño de los datos <strong>no cambia nada</strong>: si lo que buscás está al principio, terminás al principio.',
+    },
+  ]}
+>
+Escribí `posicion_de(numeros, buscado)`: devuelve la posición de la **primera** aparición de
+`buscado`, o `-1` si no está.
+
+Los dos escenarios buscan algo que está casi al principio. Una solución bien pensada debería tardar
+**lo mismo** en la lista de 200 que en la de 2.000.
+</EjercicioEficiencia>
+
+<EjercicioEficiencia
+  titulo="La palabra más larga"
+  dificultad="🌱"
+  starter={`def mas_larga(palabras):\n    # La palabra con más letras. Si empatan, la primera.\n    pass`}
+  tests={`assert mas_larga(["sol", "luna", "estrella"]) == "estrella"\nassert mas_larga(["hola"]) == "hola"\nassert mas_larga(["ab", "cd"]) == "ab", "si empatan, la primera"\nassert mas_larga(["a", "bbb", "cc"]) == "bbb"`}
+  escenarios={[
+    { etiqueta: '50 palabras', tamano: 50, codigo: 'mas_larga(["x" * (i % 12 + 1) for i in range(50)])' },
+    { etiqueta: '500 palabras', tamano: 500, codigo: 'mas_larga(["x" * (i % 12 + 1) for i in range(500)])' },
+  ]}
+  optimo={5}
+  bueno={2000}
+  mejorable={15000}
+  pistas={[
+    'Es el mismo esquema que "el número más alto" que ordenaste en la clase anterior, pero comparando <code>len(palabra)</code> en vez del valor.',
+    'Ojo con el empate: si comparás con <code>&gt;=</code> en vez de <code>&gt;</code>, te vas a quedar con la última de las que empatan, no con la primera.',
+    'Y una vez que te salga: <code>max()</code> acepta un parámetro <code>key</code>, que le dice <em>según qué</em> comparar. ¿Qué función devuelve la cantidad de letras?',
+  ]}
+  caminos={[
+    {
+      titulo: 'Comparar cada palabra con todas',
+      codigo: 'for p in palabras:\n    es_la_mas_larga = True\n    for otra in palabras:\n        if len(otra) > len(p):\n            es_la_mas_larga = False\n    if es_la_mas_larga:\n        return p',
+      costo: 'unos 15.000 pasos con 500 palabras… y podrían ser 250.000',
+      porque: 'La grilla 🐢: por cada palabra, las comparás con todas. Acá zafa porque en estos datos la más larga aparece temprano y corta; si estuviera al final, se pasaría del tope del medidor. <strong>Una solución que depende de tener suerte con los datos no es una solución.</strong>',
+    },
+    {
+      titulo: 'Una vuelta, acordándote de la mejor',
+      codigo: 'mejor = palabras[0]\nfor p in palabras:\n    if len(p) > len(mejor):\n        mejor = p\nreturn mejor',
+      costo: 'unos 1.000 pasos con 500 palabras',
+      porque: 'Una sola pasada. Esta es la solución "correcta de manual", y en la mayoría de los problemas es la que vas a querer.',
+    },
+    {
+      titulo: 'Decirle a Python según qué comparar',
+      codigo: 'return max(palabras, key=len)',
+      costo: '1 paso tuyo',
+      porque: '<code>max</code> ya sabe recorrer y quedarse con el mejor; con <code>key=len</code> le decís que "mejor" significa "más letras". Y en los empates devuelve el primero, justo lo que pedía el enunciado.',
+    },
+  ]}
+>
+Escribí `mas_larga(palabras)`, que devuelve la palabra con más letras. Si dos empatan, la **primera**.
+</EjercicioEficiencia>
+
+<EjercicioEficiencia
+  titulo="Pares que suman un total"
+  dificultad="🌳"
+  starter={`def pares_que_suman(numeros, objetivo):\n    # Cuántas parejas de números distintos de la lista suman 'objetivo'\n    # (los números de la lista nunca se repiten)\n    pass`}
+  tests={`assert pares_que_suman([1, 2, 3, 4], 5) == 2, "son (1,4) y (2,3)"\nassert pares_que_suman([2, 8, 1, 7, 3], 10) == 2, "son (2,8) y (7,3)"\nassert pares_que_suman([1, 2, 3], 10) == 0\nassert pares_que_suman([], 5) == 0\nassert pares_que_suman([5, 5000], 5005) == 1`}
+  escenarios={[
+    { etiqueta: '60 números', tamano: 60, codigo: 'pares_que_suman(list(range(60)), 59)' },
+    { etiqueta: '300 números', tamano: 300, codigo: 'pares_que_suman(list(range(300)), 299)' },
+  ]}
+  optimo={1200}
+  bueno={3000}
+  mejorable={20000}
+  pistas={[
+    'La solución directa es probar todas las parejas. Con 300 números son unas 45.000 parejas. ¿Y con 3.000? (no son 450.000).',
+    'Dale vuelta la pregunta. Estás parado en el número <code>n</code> y el objetivo es 10: en vez de probar contra todos, <strong>ya sabés</strong> qué número necesitás. ¿Cuál es?',
+    'Si sabés exactamente qué número te falta, el problema pasa a ser "¿ese número ya lo vi?". Y eso, con un <code>set</code>, es instantáneo.',
+    'Cuidado con contar dos veces: si al llegar al 7 contás la pareja con el 3, cuando llegues al 3 no la tenés que volver a contar. ¿Qué pasa si solo mirás <em>hacia atrás</em>, entre los que ya viste?',
+  ]}
+  caminos={[
+    {
+      titulo: 'Probar todas las parejas',
+      codigo: 'total = 0\nfor i in range(len(numeros)):\n    for j in range(i + 1, len(numeros)):\n        if numeros[i] + numeros[j] == objetivo:\n            total += 1\nreturn total',
+      costo: 'unos 90.000 pasos con 300 números',
+      porque: 'Anda perfecto y es fácil de leer. El problema es la grilla: multiplicar los datos por 5 multiplicó el trabajo por 25.',
+    },
+    {
+      titulo: 'Preguntar por el que falta',
+      codigo: 'vistos = set()\ntotal = 0\nfor n in numeros:\n    if objetivo - n in vistos:\n        total += 1\n    vistos.add(n)\nreturn total',
+      costo: 'unos 1.000 pasos con 300 números',
+      porque: 'La vuelta de tuerca: en vez de <em>buscar</em> el compañero de <code>n</code>, lo <em>calculás</em> (<code>objetivo - n</code>) y preguntás si ya apareció. Como solo mirás hacia atrás, cada pareja se cuenta una sola vez.',
+    },
+  ]}
+>
+Escribí `pares_que_suman(numeros, objetivo)`: cuántas **parejas** de números distintos de la lista
+suman exactamente `objetivo`. La pareja `(2, 8)` y la `(8, 2)` son la misma y cuentan una sola vez.
+
+Los números de la lista nunca se repiten.
+
+Este es el más difícil de la clase, y el que mejor muestra de qué se trata todo esto: la solución
+barata no es la misma solución "hecha más prolija", es **otra idea**.
+</EjercicioEficiencia>
+
+---
+
+## Para cerrar
+
+<OpcionMultiple
+  titulo="¿Cuándo importa la eficiencia?"
+  opciones={[
+    {
+      texto: 'Cuando la cantidad de datos puede crecer',
+      correcta: true,
+      explicacion: 'Exacto. Con 10 datos no se nota nada; el problema aparece el día que son 100.000.',
+    },
+    {
+      texto: 'Cuando tu solución tiene un bucle adentro de otro que recorre lo mismo',
+      correcta: true,
+      explicacion: 'Es la señal de alarma número uno. No siempre se puede evitar, pero siempre hay que preguntárselo.',
+    },
+    {
+      texto: 'Siempre, incluso antes de que el programa ande',
+      explicacion: 'No. Primero que ande. Una solución lenta y correcta se puede mejorar; una rápida y equivocada no sirve para nada.',
+    },
+    {
+      texto: 'Cuando el código te queda largo',
+      explicacion: 'No van de la mano. Hay soluciones de una línea carísimas y soluciones de quince líneas óptimas.',
+    },
+  ]}
+>
+Marcá todas las que valgan.
+</OpcionMultiple>
+
+Y la regla práctica para llevarse:
+
+:::tip[La pregunta de tres segundos]
+Cada vez que escribas un `for`, preguntate: **¿hay otro `for` adentro que recorra lo mismo?**
+
+Si la respuesta es sí, todavía no está mal — pero es el momento exacto de preguntarse si no hay una
+forma de saber la respuesta sin volver a mirar todo.
+:::
+
+---
+
+Siguiente: [Desafíos de optimización](../logica-desafios/) — tres problemas donde la solución
+directa no alcanza.

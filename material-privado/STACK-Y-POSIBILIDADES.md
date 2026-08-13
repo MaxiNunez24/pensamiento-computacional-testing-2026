@@ -139,6 +139,10 @@ quiere que el alumno *piense*, no por variar.**
 | **`<Evaluacion>`** | Modo parcial: ítems `multiple` / `abierta` / `codigo`, **sin feedback instantáneo**, se entrega una sola vez. Puede ejecutar código pero no ve si pasa. | Mini-parciales y evaluaciones. El control real es el aula; esto aporta el formato. |
 | **`<DiagramaClases>` / `<DiagramaLibre>`** | Armar diagramas UML arrastrando/clic. | POO: pensar la estructura antes del código. |
 | **`<Mermaid>`** | Diagramas de lectura (flujos, procesos), carga perezosa, tema según Starlight. | Explicar un flujo/proceso, no estructuras de datos. |
+| **`<EjercicioEficiencia>`** | Igual que `<EjercicioPython>` + **mide** cuántas líneas ejecuta la solución con datos chicos y grandes, y le pone insignia 🏆⚡🟡🐢. | Cuando hay **más de una solución correcta** y la gracia es elegir la barata. Requiere Bloque 2 (funciones, sets, dicts). |
+| **`<OrdenarPasos>`** | Lista de pasos desordenada; se acomoda con ▲▼ o arrastrando. Feedback = cuántos están en su lugar. | Pensar el algoritmo **sin escribir código**. Bueno como paso previo a un `<EjercicioPython>` del mismo problema. |
+| **`<PanelGitVSCode>`** | Maqueta SVG del panel Source Control de VS Code (estados M/U/A/D, resaltados). | Relacionar acciones de Git con lo que se ve en el editor. |
+| **`<CroquisRecorridos>` / `<CroquisCrecimiento>`** | Croquis SVG: "una pasada vs una por cada dato", y las tres formas de crecimiento. | Dar la imagen mental antes de la medición. |
 | **`<VolverATeoria ruta="…">`** | Link de vuelta a la clase teórica en MkDocs. | Al inicio de **cada** lección interactiva. |
 
 ### Props de `<EjercicioPython>` (el más importante)
@@ -152,6 +156,31 @@ incluye), y tres para casos especiales:
 - **`datos`** — código que corre ANTES del del alumno y le regala variables ya cargadas (para clases
   **anteriores a Funciones**, donde el alumno escribe un *programa*, no una función).
 - **`entradas`** — respuestas pre-cargadas para ejercicios con `input()` (Pyodide no teclea en vivo).
+
+### Props de `<EjercicioEficiencia>`
+
+Los de `<EjercicioPython>` (`titulo`, `dificultad`, `starter`, `tests`, `pistas`, `solucion`,
+`datos`) más:
+
+- **`escenarios`** — array `{ etiqueta, tamano, codigo }`, **del más chico al más grande**. `codigo`
+  es una expresión que USA la solución del alumno (`resolver(list(range(600)))`). Los ejercicios
+  tienen que resolverse con una **función**.
+- **`optimo` / `bueno` / `mejorable`** — cortes en pasos, medidos sobre el escenario **más grande**.
+  Por encima de `mejorable` (o si hubo que cortar por el tope de 300.000): 🐢.
+- **`caminos`** — array `{ titulo, codigo, costo, porque }`: otras soluciones y lo que cuestan. Es
+  donde vive la explicación de *por qué* una es peor.
+
+**Cómo se mide:** `sys.settrace` en el Web Worker cuenta eventos `line` cuyo archivo es `tu_codigo`
+(ver `_medir` en `src/scripts/pyodide-worker.ts`). Por eso los builtins (`sum`, `max`, `set`,
+`Counter`) valen **1 paso**: el recorrido existe pero pasa en C.
+
+⚠️ **El medidor tiene un punto ciego** y hay que tenerlo presente al diseñar: `lista.count(x)` o
+`x in lista` adentro de un `for` son O(n²) reales y el contador los ve como 1 paso. Diseñá los
+ejercicios de modo que la diferencia se vea en líneas **del alumno**, o convertí el punto ciego en
+la lección (así está hecho el último "camino" de `contar_letras` en `logica-desafios`).
+
+Los umbrales **se calibran corriendo las soluciones en el navegador**, no a ojo: `medirPython` da
+números exactos y reproducibles.
 
 En los tests de esas clases sin `def` se usa **`correr(**variables)`** / **`correr(entradas=[…])`**,
 que re-ejecuta el programa del alumno con otros valores y devuelve lo que imprimió (así no pasan el

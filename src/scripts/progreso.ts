@@ -50,6 +50,38 @@ export function borrarCodigo(titulo: string): void {
   }
 }
 
+// ---------- Insignia de eficiencia ----------
+// Los ejercicios de lógica guardan, además del "hecho", la mejor marca lograda.
+// Va con el mismo prefijo 'pcp:' que todo lo demás, así viaja en el sincronizado.
+
+export interface MarcaEficiencia {
+  pasos: number;
+  nivel: string; // 'optimo' | 'bueno' | 'mejorable' | 'bruta'
+  emoji: string;
+}
+
+export function leerEficiencia(titulo: string): MarcaEficiencia | null {
+  try {
+    const crudo = localStorage.getItem(`${NS}:efi:${base(titulo)}`);
+    return crudo ? (JSON.parse(crudo) as MarcaEficiencia) : null;
+  } catch {
+    return null;
+  }
+}
+
+// Solo pisa la marca anterior si esta es MEJOR (menos pasos). Así probar una
+// idea peor no borra el récord que ya se había ganado.
+export function guardarEficiencia(titulo: string, marca: MarcaEficiencia): boolean {
+  const previa = leerEficiencia(titulo);
+  if (previa && previa.pasos <= marca.pasos) return false;
+  try {
+    localStorage.setItem(`${NS}:efi:${base(titulo)}`, JSON.stringify(marca));
+  } catch {
+    /* nada */
+  }
+  return true;
+}
+
 // Marca/oculta el sello "✓ Resuelto" de un ejercicio.
 export function pintarSello(el: HTMLElement, hecho: boolean): void {
   const sello = el.querySelector<HTMLElement>('.ej-hecho');
@@ -74,7 +106,9 @@ function borrarProgresoPagina(): void {
 
 // Crea/actualiza la barra de progreso arriba del contenido.
 export function actualizarResumen(): void {
-  const ejercicios = document.querySelectorAll<HTMLElement>('.ejercicio, .diagrama, .quiz');
+  const ejercicios = document.querySelectorAll<HTMLElement>(
+    '.ejercicio, .diagrama, .quiz, .ordenar',
+  );
   if (ejercicios.length === 0) return;
   const total = ejercicios.length;
   let hechos = 0;

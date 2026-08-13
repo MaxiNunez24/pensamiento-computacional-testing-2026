@@ -1,0 +1,197 @@
+---
+title: Pensar antes de escribir
+description: "El croquis mental que va antes del código: qué me dan, qué me piden, cómo lo haría a mano y qué se repite."
+---
+
+import OrdenarPasos from '../../../components/OrdenarPasos.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import Mermaid from '../../../components/Mermaid.astro';
+
+## Un error que el intérprete no te marca
+
+Hasta acá, cuando algo estaba mal, Python te lo decía: `SyntaxError`, `NameError`, un test en rojo.
+
+Este bloque es sobre el otro tipo de error, el que **no** te avisa nadie: el de haber pensado mal
+el problema. El código compila, corre, no rompe… y hace algo distinto de lo que hacía falta, o lo
+hace de la forma más cara posible.
+
+La buena noticia es que se arregla con lápiz y papel, antes de tocar el teclado.
+
+## Las cuatro preguntas
+
+Antes de escribir la primera línea, contestá estas cuatro. En voz alta si hace falta.
+
+<Mermaid code={`flowchart TD
+    A["1 · ¿Qué me dan?<br/>los datos de entrada"] --> B["2 · ¿Qué me piden?<br/>el resultado exacto"]
+    B --> C["3 · ¿Cómo lo haría a mano?<br/>con 3 datos, en papel"]
+    C --> D["4 · ¿Qué se repite?<br/>eso de ahí es el bucle"]
+    D --> E["Recién ahora:<br/>escribir código"]`} />
+
+La tercera es la más importante y la que más se saltea. **Si no podés resolverlo a mano con tres
+datos, no lo vas a poder programar** — no porque te falte Python, sino porque todavía no sabés qué
+hay que hacer.
+
+:::tip[La prueba del papel]
+Agarrá tres datos de ejemplo y resolvelo con la mano, anotando cada cosa que hacés. Esa lista de
+cosas que anotaste **es** el algoritmo. Programar, después, es traducirla.
+:::
+
+## Seguir el programa con el dedo
+
+La otra herramienta es al revés: ya hay código, y hay que saber qué hace. Se sigue con una tabla,
+anotando cuánto vale cada variable en cada vuelta.
+
+```python
+numeros = [4, 9, 2]
+mayor = numeros[0]
+for n in numeros:
+    if n > mayor:
+        mayor = n
+print(mayor)
+```
+
+| Vuelta | `n` | ¿`n > mayor`? | `mayor` al final de la vuelta |
+|--------|-----|---------------|-------------------------------|
+| (antes) | — | — | 4 |
+| 1 | 4 | no (4 > 4 es falso) | 4 |
+| 2 | 9 | sí | 9 |
+| 3 | 2 | no | 9 |
+
+Tres renglones y ya sabés que imprime `9`, sin ejecutar nada. Esta tabla es tu mejor amiga cuando un
+ejercicio "da cualquier cosa" y no entendés por qué.
+
+## Poner los pasos en orden
+
+Estos tres ejercicios no tienen código: tienen los pasos correctos, pero desordenados. Moverlos con
+▲▼ (o arrastrándolos) hasta que la lista se pueda leer de arriba a abajo y tenga sentido.
+
+<OrdenarPasos
+  titulo="El número más alto de una lista"
+  pasos={[
+    'Guardar el primer número como <strong>el más alto hasta ahora</strong>',
+    'Tomar el siguiente número de la lista',
+    'Si ese número es mayor que <strong>el más alto hasta ahora</strong>, pasa a ser el nuevo más alto',
+    'Repetir con el que sigue, hasta que no queden números',
+    'Devolver <strong>el más alto hasta ahora</strong>',
+  ]}
+  inicial={[3, 5, 1, 4, 2]}
+  pistas={[
+    '¿Con qué valor arranca <strong>el más alto hasta ahora</strong>? Si todavía no lo guardaste, no tenés con qué comparar.',
+    'Devolver el resultado no puede estar en el medio del recorrido: mientras queden números, la respuesta todavía puede cambiar.',
+  ]}
+>
+Estos son los pasos para encontrar el número más grande de una lista. Ordenalos.
+</OrdenarPasos>
+
+<OrdenarPasos
+  titulo="Contar cuántas veces aparece una palabra"
+  pasos={[
+    'Arrancar un contador en cero',
+    'Tomar la siguiente palabra de la lista',
+    'Si es igual a la palabra buscada, sumarle uno al contador',
+    'Repetir con la palabra que sigue, hasta que no queden',
+    'Devolver el contador',
+  ]}
+  inicial={[2, 5, 3, 1, 4]}
+  pistas={[
+    'Si el contador se crea adentro del recorrido, ¿qué le pasa en cada vuelta?',
+  ]}
+>
+Los pasos para contar cuántas veces aparece una palabra dentro de una lista de palabras.
+</OrdenarPasos>
+
+<OrdenarPasos
+  titulo="Promedio de las notas aprobadas"
+  dificultad="🌿"
+  pasos={[
+    'Arrancar la suma en cero y el contador de aprobadas en cero',
+    'Tomar la siguiente nota',
+    'Si la nota es 6 o más: sumarla a la suma y sumar uno al contador',
+    'Repetir con la nota que sigue, hasta que no queden',
+    'Si el contador quedó en cero, devolver 0 y terminar (no hubo aprobadas)',
+    'Devolver la suma dividida por el contador',
+  ]}
+  inicial={[6, 3, 1, 5, 2, 4]}
+  pistas={[
+    'Hay <em>dos</em> cosas que se preparan antes de empezar a recorrer. ¿Cuáles?',
+    'El promedio se divide por la cantidad de notas <em>aprobadas</em>, no por el total. ¿Qué pasa si no hubo ninguna y dividís igual?',
+    'Ese chequeo tiene que estar <em>después</em> de recorrer (recién ahí sabés cuántas hubo) y <em>antes</em> de dividir.',
+  ]}
+>
+Ojo con este: hay un paso que existe solo para evitar que el programa explote.
+</OrdenarPasos>
+
+## Chequeos rápidos
+
+<OpcionMultiple
+  titulo="¿Por dónde se empieza?"
+  opciones={[
+    {
+      texto: 'Resolviéndolo a mano con dos o tres datos de ejemplo',
+      correcta: true,
+      explicacion: 'Sí. Lo que anotás mientras lo resolvés a mano es el algoritmo; después se traduce.',
+    },
+    {
+      texto: 'Escribiendo el <code>for</code>, que casi siempre hace falta',
+      explicacion: 'Es tentador, pero todavía no sabés qué va adentro del for. Escribir primero la estructura te ata a un camino que quizás no sirve.',
+    },
+    {
+      texto: 'Buscando un ejercicio parecido para copiar la estructura',
+      explicacion: 'Puede ayudar después, pero si no entendiste TU problema no vas a saber qué cambiar del ejemplo.',
+    },
+  ]}
+>
+Te dan un problema nuevo, que no se parece a ninguno que hayas hecho. ¿Cuál es el primer movimiento?
+</OpcionMultiple>
+
+<OpcionMultiple
+  titulo="Seguir el código con el dedo"
+  opciones={[
+    { texto: '<code>3</code>', explicacion: 'Ese es el último valor que toma <code>n</code>, no el que se guarda en <code>menor</code>.' },
+    { texto: '<code>7</code>', explicacion: 'Ese es el valor con el que arranca <code>menor</code>, pero después cambia.' },
+    {
+      texto: '<code>1</code>',
+      correcta: true,
+      explicacion: 'Vuelta a vuelta: 7 → (3 &lt; 7, sí) 3 → (1 &lt; 3, sí) 1 → (8 &lt; 1, no) 1.',
+    },
+    { texto: '<code>8</code>', explicacion: 'Ese es el más grande. El código compara con <code>&lt;</code>, así que busca el más chico.' },
+  ]}
+>
+Armá la tabla mentalmente. ¿Qué imprime?
+
+```python
+numeros = [7, 3, 1, 8]
+menor = numeros[0]
+for n in numeros:
+    if n < menor:
+        menor = n
+print(menor)
+```
+</OpcionMultiple>
+
+## De los pasos al código
+
+Ahora sí, el paso final: traducir a Python la lista de pasos que ordenaste recién.
+
+<EjercicioPython
+  titulo="Traducir el promedio de aprobadas"
+  dificultad="🌿"
+  starter={`def promedio_aprobadas(notas):\n    # Seguí los pasos que ordenaste arriba, uno por uno.\n    pass`}
+  tests={`assert promedio_aprobadas([10, 4, 8]) == 9, "con [10, 4, 8] las aprobadas son 10 y 8: promedio 9"\nassert promedio_aprobadas([2, 3, 5]) == 0, "si no hay ninguna aprobada tiene que devolver 0, no romper"\nassert promedio_aprobadas([6]) == 6\nassert promedio_aprobadas([]) == 0, "con la lista vacía tampoco puede romper"\nassert abs(promedio_aprobadas([7, 8]) - 7.5) < 0.001`}
+  pistas={[
+    'Los dos primeros pasos van <em>antes</em> del <code>for</code>: son las dos variables que arrancan en cero.',
+    'Aprobada es de 6 para arriba: <code>if nota >= 6:</code>. Adentro pasan dos cosas, no una.',
+    'El chequeo del cero va después del <code>for</code>. Si dividís sin chequear, con <code>[2, 3, 5]</code> vas a ver un <code>ZeroDivisionError</code>: probalo, vale la pena verlo una vez.',
+  ]}
+>
+Escribí `promedio_aprobadas(notas)`, que recibe una lista de notas y devuelve el promedio de las que
+son **6 o más**.
+
+Si no hay ninguna aprobada, tiene que devolver `0` — no romper.
+</EjercicioPython>
+
+---
+
+Siguiente: [Eficiencia — no todas las soluciones cuestan lo mismo](../logica-eficiencia/), donde
+además de que ande, vamos a mirar cuánto le cuesta.

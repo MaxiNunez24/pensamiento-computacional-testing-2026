@@ -62,16 +62,12 @@ export function ensureWorker(): Promise<void> {
   return readyPromise;
 }
 
-export async function runPython(
-  code: string,
-  tests: string,
-  archivo = '',
-  datos = '',
-  entradas: string[] = [],
-): Promise<RunResult> {
+// Manda un pedido al worker y espera la respuesta, con el timeout que protege
+// de los bucles infinitos.
+async function pedir(mensaje: Record<string, unknown>): Promise<string> {
   await ensureWorker();
   const id = nextId++;
-  const raw = await new Promise<string>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     const timer = setTimeout(() => {
       pending.delete(id);
       // El código del alumno sigue colgado dentro del worker: lo terminamos
@@ -89,7 +85,54 @@ export async function runPython(
         reject(e);
       },
     });
-    worker!.postMessage({ id, code, tests, archivo, datos, entradas });
+    worker!.postMessage({ id, ...mensaje });
   });
+}
+
+export async function runPython(
+  code: string,
+  tests: string,
+  archivo = '',
+  datos = '',
+  entradas: string[] = [],
+): Promise<RunResult> {
+  const raw = await pedir({ code, tests, archivo, datos, entradas });
   return JSON.parse(raw) as RunResult;
+}
+
+// ---------- Medición de eficiencia ----------
+
+export interface Escenario {
+  etiqueta: string;
+  /** Cuántos datos maneja este escenario (para hablar de cómo crece el costo). */
+  tamano: number;
+  /** Código que USA la solución del alumno, p. ej. `resolver(list(range(1000)))`. */
+  codigo: string;
+}
+
+export interface Medicion {
+  etiqueta: string;
+  tamano: number;
+  pasos: number;
+  /** true = se pasó del tope y dejamos de contar (el número real es mayor). */
+  cortado: boolean;
+}
+
+export interface MedirResult {
+  ok: boolean;
+  err: string;
+  escenarios: Medicion[];
+}
+
+// Tope de pasos por escenario. Trazar es caro: sin tope, una solución de fuerza
+// bruta se lleva puesto el timeout y el alumno ve "se colgó" en vez de "es lenta".
+export const TOPE_PASOS = 300_000;
+
+export async function medirPython(
+  code: string,
+  escenarios: Escenario[],
+  datos = '',
+): Promise<MedirResult> {
+  const raw = await pedir({ modo: 'medir', code, tests: '', datos, escenarios, tope: TOPE_PASOS });
+  return JSON.parse(raw) as MedirResult;
 }

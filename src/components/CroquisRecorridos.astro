@@ -1,0 +1,88 @@
+---
+/**
+ * Croquis: "una vuelta" vs "una vuelta por cada dato".
+ *
+ * Es el dibujo que hay que tener en la cabeza antes de escribir nada. A la
+ * izquierda, el recorrido que mira cada dato una vez. A la derecha, el que por
+ * cada dato vuelve a mirar todos los demás — y que con pocos datos parece igual
+ * de bueno, que es exactamente por qué se cuela.
+ *
+ * Va en SVG y no en Mermaid porque lo importante acá es la GRILLA: se tiene que
+ * ver el cuadrado de miradas, no un flujo de cajas.
+ */
+interface Props {
+  /** Cuántos datos dibujamos (6 entra cómodo en celular). */
+  n?: number;
+}
+const { n = 6 } = Astro.props;
+
+const celda = 26;
+const sep = 4;
+const paso = celda + sep;
+const ancho = n * paso - sep;
+
+const filas = Array.from({ length: n }, (_, i) => i);
+const cols = Array.from({ length: n }, (_, i) => i);
+---
+
+<figure class="croquis">
+  <svg viewBox="0 0 520 300" role="img" aria-labelledby="croquis-rec-titulo">
+    <title id="croquis-rec-titulo">
+      Comparación entre recorrer una lista una vez y recorrerla una vez por cada dato
+    </title>
+
+    {/* ---------- Izquierda: una sola pasada ---------- */}
+    <text x="0" y="16" class="croquis__titulo">Una pasada</text>
+    <text x="0" y="34" class="croquis__sub">mirás cada dato una vez</text>
+
+    <g transform="translate(0, 50)">
+      {cols.map((c) => (
+        <rect x={c * paso} y="0" width={celda} height={celda} rx="4" class="croquis__celda croquis__celda--visto" />
+      ))}
+      {/* La flecha que barre de una punta a la otra: el recorrido entero. */}
+      <path
+        d={`M 2 ${celda + 16} H ${ancho - 8}`}
+        class="croquis__flecha"
+        marker-end="url(#croquis-punta)"
+      />
+    </g>
+
+    <text x="0" y="118" class="croquis__cuenta">{n} miradas</text>
+    <text x="0" y="138" class="croquis__nota">Con 1.000 datos: 1.000 miradas</text>
+
+    {/* ---------- Derecha: una pasada por cada dato ---------- */}
+    <g transform="translate(280, 0)">
+      <text x="0" y="16" class="croquis__titulo">Una pasada por cada dato</text>
+      <text x="0" y="34" class="croquis__sub">por cada uno, volvés a mirar todos</text>
+
+      <g transform="translate(0, 50)">
+        {filas.map((f) =>
+          cols.map((c) => (
+            <rect
+              x={c * paso}
+              y={f * paso}
+              width={celda}
+              height={celda}
+              rx="4"
+              class="croquis__celda croquis__celda--visto"
+            />
+          )),
+        )}
+      </g>
+
+      <text x="0" y={50 + n * paso + 14} class="croquis__cuenta">{n * n} miradas</text>
+      <text x="0" y={50 + n * paso + 34} class="croquis__nota">Con 1.000 datos: 1.000.000</text>
+    </g>
+
+    <defs>
+      <marker id="croquis-punta" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M 0 0 L 7 3 L 0 6 z" class="croquis__punta" />
+      </marker>
+    </defs>
+  </svg>
+  <figcaption>
+    Los dos programas dan el resultado correcto. El de la derecha le pide a la máquina
+    <strong> {n * n} veces</strong> lo que el de la izquierda le pide {n}. Con seis datos no se
+    nota; con mil, es la diferencia entre un parpadeo y un café.
+  </figcaption>
+</figure>

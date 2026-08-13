@@ -1,0 +1,63 @@
+---
+/**
+ * Croquis: cómo crece el trabajo cuando crecen los datos.
+ *
+ * Tres formas, que son las tres que van a encontrar en todo el curso:
+ *   · plana    → no importa cuántos datos haya, el costo es el mismo
+ *   · derecha  → el doble de datos, el doble de trabajo
+ *   · curva    → el doble de datos, CUATRO veces el trabajo
+ *
+ * La idea del dibujo es que el alumno reconozca la forma de su solución sin
+ * tener que calcular nada.
+ */
+const X0 = 62;
+const X1 = 470;
+const Y0 = 246; // el piso del gráfico
+const Y1 = 34; // el techo
+
+const puntos = (f: (t: number) => number): string =>
+  Array.from({ length: 41 }, (_, i) => {
+    const t = i / 40;
+    const x = X0 + t * (X1 - X0);
+    const y = Y0 - Math.min(1, f(t)) * (Y0 - Y1);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+const plana = puntos(() => 0.06);
+const recta = puntos((t) => t * 0.9);
+const curva = puntos((t) => t * t * 0.98);
+---
+
+<figure class="croquis">
+  <svg viewBox="0 0 520 300" role="img" aria-labelledby="croquis-crec-titulo">
+    <title id="croquis-crec-titulo">
+      Tres formas en que puede crecer el trabajo de un programa cuando crecen los datos
+    </title>
+
+    {/* Ejes */}
+    <line x1={X0} y1={Y1 - 8} x2={X0} y2={Y0} class="croquis__eje" />
+    <line x1={X0} y1={Y0} x2={X1 + 10} y2={Y0} class="croquis__eje" />
+    <text x={X0 - 8} y={Y1 - 14} class="croquis__sub" text-anchor="start">↑ pasos que ejecuta</text>
+    <text x={X1 + 10} y={Y0 + 20} class="croquis__sub" text-anchor="end">cantidad de datos →</text>
+
+    {/* Las tres formas */}
+    <polyline points={curva} class="croquis__linea croquis__linea--mala" />
+    <polyline points={recta} class="croquis__linea croquis__linea--media" />
+    <polyline points={plana} class="croquis__linea croquis__linea--buena" />
+
+    <text x={X1 - 6} y={Y1 + 6} class="croquis__etiqueta croquis__etiqueta--mala" text-anchor="end">
+      🐢 una vuelta por cada dato
+    </text>
+    <text x={X1 - 6} y={Y0 - (Y0 - Y1) * 0.9 - 10} class="croquis__etiqueta croquis__etiqueta--media" text-anchor="end">
+      ⚡ una sola vuelta
+    </text>
+    <text x={X1 - 6} y={Y0 - (Y0 - Y1) * 0.06 - 12} class="croquis__etiqueta croquis__etiqueta--buena" text-anchor="end">
+      🏆 sin vueltas
+    </text>
+  </svg>
+  <figcaption>
+    Fijate que cerca del origen —o sea, con pocos datos— las tres formas están casi pegadas.
+    Por eso una solución cara <strong>parece buena mientras probás con tres elementos</strong>,
+    y recién muestra el problema el día que le entran mil.
+  </figcaption>
+</figure>

@@ -143,6 +143,83 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
     finally:
         sys.stdout = old
     return json.dumps({"ok": ok, "out": buf.getvalue(), "err": err})
+
+
+class _TopeDePasos(Exception):
+    """El código del alumno superó el máximo de pasos que estamos dispuestos a contar."""
+
+
+def _medir(code, datos, escenarios_json, tope):
+    """Cuenta cuántas LÍNEAS de código ejecuta la solución del alumno.
+
+    Ese número es la métrica de eficiencia del curso. Es honesto y, sobre todo,
+    ENTENDIBLE: no hace falta hablar de notación O-grande para que se vea que
+    una solución hace 30 pasos y otra 500.000 con los mismos datos.
+
+    Cómo: sys.settrace con un tracer que solo se engancha a los frames cuyo
+    archivo es "tu_codigo". Así no contamos ni el armado del escenario ni las
+    entrañas de Python.
+
+    Efecto de borde buscado: sum(), max(), sorted() y compañía están escritos en
+    C, así que valen UN paso. Es exactamente la lección que queremos dar —
+    apoyarse en las herramientas del lenguaje sale más barato que reescribirlas.
+
+    El tope corta los bucles desbocados: trazar es lento y sin él una solución
+    de fuerza bruta se comería el timeout entero.
+    """
+    linecache.cache["tu_codigo"] = (len(code), None, code.splitlines(keepends=True), "tu_codigo")
+    escenarios = json.loads(escenarios_json)
+    resultados = []
+    err = ""
+    buf = io.StringIO()
+    old = sys.stdout
+    sys.stdout = buf
+    try:
+        for esc in escenarios:
+            ns = {}
+            if datos:
+                exec(compile(datos, "los_datos", "exec"), ns)
+            # Las definiciones se ejecutan ANTES de empezar a contar: lo que se
+            # mide es resolver el problema, no declarar la función.
+            exec(compile(code, "tu_codigo", "exec"), ns)
+
+            cuenta = [0]
+
+            def _local(frame, event, arg, _c=cuenta, _t=tope):
+                if event == "line":
+                    _c[0] += 1
+                    if _c[0] > _t:
+                        raise _TopeDePasos()
+                return _local
+
+            def _global(frame, event, arg):
+                if frame.f_code.co_filename == "tu_codigo":
+                    return _local
+                return None
+
+            cortado = False
+            sys.settrace(_global)
+            try:
+                exec(compile(esc["codigo"], "el_escenario", "exec"), ns)
+            except _TopeDePasos:
+                cortado = True
+            finally:
+                sys.settrace(None)
+
+            resultados.append({
+                "etiqueta": esc.get("etiqueta", ""),
+                "tamano": esc.get("tamano", 0),
+                "pasos": cuenta[0],
+                "cortado": cortado,
+            })
+    except Exception as e:
+        tipo = type(e).__name__
+        msg = str(e)
+        err = f"{tipo}: {msg}" if msg else tipo
+    finally:
+        sys.settrace(None)
+        sys.stdout = old
+    return json.dumps({"ok": err == "", "err": err, "escenarios": resultados})
 `;
 
 type RunUserFn = (
@@ -153,14 +230,18 @@ type RunUserFn = (
   entradasJson: string,
 ) => string;
 
+type MedirFn = (code: string, datos: string, escenariosJson: string, tope: number) => string;
+
 let runUser: RunUserFn | null = null;
+let medir: MedirFn | null = null;
 
 async function init(): Promise<void> {
   const mod = await import(/* @vite-ignore */ `${PYODIDE_URL}pyodide.mjs`);
   const py = await mod.loadPyodide({ indexURL: PYODIDE_URL });
   py.runPython(RUNNER);
-  // Guardamos UNA referencia a la función (un solo PyProxy, sin fugas por corrida).
+  // Guardamos UNA referencia a cada función (un solo PyProxy, sin fugas por corrida).
   runUser = py.globals.get('_run_user') as RunUserFn;
+  medir = py.globals.get('_medir') as MedirFn;
   postMessage({ type: 'ready' });
 }
 
@@ -176,14 +257,21 @@ self.onmessage = async (
     archivo?: string;
     datos?: string;
     entradas?: string[];
+    /** 'medir' cuenta pasos en vez de correr tests (ejercicios de eficiencia). */
+    modo?: 'correr' | 'medir';
+    escenarios?: unknown[];
+    tope?: number;
   }>,
 ) => {
-  const { id, code, tests, archivo, datos, entradas } = ev.data;
+  const { id, code, tests, archivo, datos, entradas, modo, escenarios, tope } = ev.data;
   await initPromise;
-  if (!runUser) return; // ya se reportó init-error
+  if (!runUser || !medir) return; // ya se reportó init-error
   let raw: string;
   try {
-    raw = runUser(code, tests, archivo || '', datos || '', JSON.stringify(entradas || []));
+    raw =
+      modo === 'medir'
+        ? medir(code, datos || '', JSON.stringify(escenarios || []), tope || 200_000)
+        : runUser(code, tests, archivo || '', datos || '', JSON.stringify(entradas || []));
   } catch (e) {
     raw = JSON.stringify({ ok: false, out: '', err: String(e) });
   }

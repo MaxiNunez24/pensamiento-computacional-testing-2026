@@ -87,6 +87,18 @@ export default defineConfig({
             { label: '🎰 Bingo — integrador', link: '/clases/bingo/' },
           ],
         },
+        // Va acá y no antes: los ejercicios de eficiencia se resuelven con
+        // funciones, listas, sets y diccionarios — o sea, todo el Bloque 2. Es
+        // el primer momento del curso en que se puede comparar DOS soluciones
+        // correctas y discutir cuál conviene.
+        {
+          label: '🧠 Lógica y eficiencia',
+          items: [
+            { label: '✏️ Pensar antes de escribir', link: '/clases/logica-pensar/' },
+            { label: '⏱️ Eficiencia', link: '/clases/logica-eficiencia/' },
+            { label: '🏁 Desafíos de optimización', link: '/clases/logica-desafios/' },
+          ],
+        },
         {
           label: '🛠️ Bloque 3 — Persistencia',
           items: [

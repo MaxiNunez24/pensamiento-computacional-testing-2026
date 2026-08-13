@@ -1,0 +1,246 @@
+---
+/**
+ * Ejercicio de LÓGICA: no alcanza con que ande, tiene que andar barato.
+ *
+ * Además de correr los tests de siempre, mide cuántas líneas de Python ejecuta
+ * la solución del alumno con distintos tamaños de datos, y le pone una insignia
+ * (🏆 Óptimo / ⚡ Eficiente / 🟡 Mejorable / 🐢 Fuerza bruta).
+ *
+ * Los ejercicios de acá se resuelven SIEMPRE con una función: los escenarios
+ * son código que la llama con datos cada vez más grandes.
+ *
+ * Ejemplo de uso en una página .mdx:
+ *
+ *   <EjercicioEficiencia
+ *     titulo="Sumar del 1 al N"
+ *     dificultad="🌿"
+ *     starter={`def sumar_hasta(n):\n    # tu código acá\n    pass`}
+ *     tests={`assert sumar_hasta(10) == 55`}
+ *     escenarios={[
+ *       { etiqueta: 'n = 100', tamano: 100, codigo: 'sumar_hasta(100)' },
+ *       { etiqueta: 'n = 10.000', tamano: 10000, codigo: 'sumar_hasta(10000)' },
+ *     ]}
+ *     optimo={3}
+ *     bueno={40}
+ *   />
+ */
+interface Escenario {
+  /** Cómo se muestra en la tabla, ej. "una lista de 1.000 números". */
+  etiqueta: string;
+  /** Cuántos datos maneja, para poder hablar de cómo crece el costo. */
+  tamano: number;
+  /** Código que USA la solución del alumno, ej. `resolver(list(range(1000)))`. */
+  codigo: string;
+}
+
+interface Camino {
+  titulo: string;
+  codigo: string;
+  /** Cuánto cuesta, en criollo: "unos 3.000 pasos con 1.000 datos". */
+  costo: string;
+  /** Por qué cuesta eso (una o dos frases). */
+  porque: string;
+}
+
+interface Props {
+  titulo: string;
+  dificultad?: string; // 🌱 / 🌿 / 🌳
+  starter?: string;
+  tests: string;
+  /** Escenarios de medición, del más chico al más grande. */
+  escenarios: Escenario[];
+  /** Pasos máximos en el escenario MÁS GRANDE para llevarse el 🏆. */
+  optimo: number;
+  /** Pasos máximos en el escenario más grande para el ⚡. */
+  bueno: number;
+  /** Pasos máximos para el 🟡. Por encima de esto (o si hubo que cortar): 🐢.
+   *  Por defecto, diez veces `bueno`. */
+  mejorable?: number;
+  /** Preguntas que empujan a pensar el costo, no solo el resultado. Acepta HTML. */
+  pistas?: string[];
+  /** Otros caminos posibles y lo que cuestan. Se puede mirar en cualquier momento. */
+  caminos?: Camino[];
+  solucion?: string;
+  /** Variables ya cargadas, igual que en EjercicioPython. */
+  datos?: string;
+}
+
+const {
+  titulo,
+  dificultad = '',
+  starter = '',
+  tests,
+  escenarios,
+  optimo,
+  bueno,
+  mejorable = bueno * 10,
+  pistas = [],
+  caminos = [],
+  solucion,
+  datos = '',
+} = Astro.props;
+
+const id = 'ef-' + Math.random().toString(36).slice(2, 9);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+---
+
+<section
+  class="ejercicio ejercicio--eficiencia"
+  id={id}
+  data-titulo={titulo}
+  data-starter={enc(starter)}
+  data-tests={enc(tests)}
+  data-datos={datos ? enc(datos) : undefined}
+  data-escenarios={enc(JSON.stringify(escenarios))}
+  data-optimo={String(optimo)}
+  data-bueno={String(bueno)}
+  data-mejorable={String(mejorable)}
+>
+  <header class="ejercicio__header">
+    {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+    {/* Insignia ganada en visitas anteriores; el script la rellena al cargar. */}
+    <span class="efi__sello" data-efi-sello hidden></span>
+  </header>
+
+  <div class="ejercicio__consigna">
+    <slot />
+  </div>
+
+  <p class="ejercicio__aviso-datos" data-aviso-datos hidden>
+    <span>📶 La primera vez se descarga Python (unos 10&nbsp;MB). Si estás con datos del celular, mejor esperá a tener WiFi. Después queda guardado y ya no se baja más.</span>
+    <button type="button" class="ejercicio__aviso-cerrar" data-aviso-cerrar aria-label="Entendido">Entendido</button>
+  </p>
+
+  {datos && (
+    <div class="ejercicio__datos">
+      <span class="ejercicio__datos-label">📌 Esto ya está cargado — no hace falta que lo escribas:</span>
+      <pre><code>{datos}</code></pre>
+    </div>
+  )}
+
+  {/* Con qué se va a probar. Mostrarlo no es un detalle: sin saber que lo van a
+      correr con 1.000 datos, "recorrer todo dos veces" no suena a problema. */}
+  <div class="efi__escenarios">
+    <span class="efi__escenarios-label">⏱️ Lo vamos a medir con:</span>
+    <ul>
+      {escenarios.map((e) => (
+        <li><code>{e.codigo}</code> <span class="efi__escenarios-et">— {e.etiqueta}</span></li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="ejercicio__editor" data-editor></div>
+
+  <div class="ejercicio__teclas" data-teclas aria-label="Símbolos de Python">
+    <button type="button" class="ejercicio__tecla" data-indent="mas" title="Indentar">⇥</button>
+    <button type="button" class="ejercicio__tecla" data-indent="menos" title="Quitar indentación">⇤</button>
+    <button type="button" class="ejercicio__tecla" data-ins=":">:</button>
+    <button type="button" class="ejercicio__tecla" data-ins="_">_</button>
+    <button type="button" class="ejercicio__tecla" data-ins="(">(</button>
+    <button type="button" class="ejercicio__tecla" data-ins=")">)</button>
+    <button type="button" class="ejercicio__tecla" data-ins="[">[</button>
+    <button type="button" class="ejercicio__tecla" data-ins="]">]</button>
+    <button type="button" class="ejercicio__tecla" data-ins="&quot;">"</button>
+    <button type="button" class="ejercicio__tecla" data-ins="'">'</button>
+    <button type="button" class="ejercicio__tecla" data-ins="=">=</button>
+    <button type="button" class="ejercicio__tecla" data-ins="%">%</button>
+    <button type="button" class="ejercicio__tecla" data-ins="&lt;">&lt;</button>
+    <button type="button" class="ejercicio__tecla" data-ins="&gt;">&gt;</button>
+  </div>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--verify"
+      data-verify
+      title="Verificar y medir (Ctrl/Cmd + Enter)"
+    >⏱️ Verificar y medir</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--teclado"
+      data-toggle-teclas
+      aria-pressed="false"
+      title="Mostrar u ocultar la barra de símbolos"
+    >⌨️ Símbolos</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--enviar"
+      data-enviar
+      title="Enviar tu código al profe por email"
+    >✉️ Enviar a mi profe</button>
+  </div>
+
+  <div class="ejercicio__envio" data-envio hidden>
+    <p>
+      Tu consulta se publica en <strong>#Consultas</strong> de Discord (fijate el cartelito del
+      botón) y además abrimos tu correo en otra pestaña, para que le llegue por las dos vías.
+      <strong>Si el correo no se abrió, no pasa nada.</strong> Y si querés mandarlo por tu cuenta,
+      acá tenés el mensaje:
+    </p>
+    <button type="button" class="ejercicio__btn" data-copiar-envio>📋 Copiar el mensaje</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
+
+  {/* Tarjeta de eficiencia: aparece recién cuando los tests pasan. */}
+  <div class="efi" data-efi hidden>
+    <div class="efi__cabecera">
+      <span class="efi__emoji" data-efi-emoji aria-hidden="true"></span>
+      <div>
+        <strong class="efi__nivel" data-efi-nivel></strong>
+        <p class="efi__mensaje" data-efi-mensaje></p>
+      </div>
+    </div>
+    <table class="efi__tabla">
+      <thead>
+        <tr><th>Con estos datos</th><th>Pasos que ejecutó tu código</th></tr>
+      </thead>
+      <tbody data-efi-filas></tbody>
+    </table>
+    <p class="efi__crecimiento" data-efi-crecimiento></p>
+    <p class="efi__record" data-efi-record hidden></p>
+  </div>
+
+  {pistas.length > 0 && (
+    <details class="ejercicio__pistas">
+      <summary>💡 Pistas para pensar el costo</summary>
+      <ol>
+        {pistas.map((p) => <li set:html={p} />)}
+      </ol>
+    </details>
+  )}
+
+  {caminos.length > 0 && (
+    <details class="efi__caminos">
+      <summary>🔬 Otros caminos, y lo que cuesta cada uno</summary>
+      <p class="efi__caminos-intro">
+        Todos estos <strong>funcionan</strong>. La diferencia está en lo que le hacen hacer a la
+        máquina.
+      </p>
+      {caminos.map((c) => (
+        <div class="efi__camino">
+          <h4>{c.titulo}</h4>
+          <pre><code>{c.codigo}</code></pre>
+          <p class="efi__camino-costo">⏱️ {c.costo}</p>
+          <p set:html={c.porque} />
+        </div>
+      ))}
+    </details>
+  )}
+
+  {solucion && (
+    <details class="ejercicio__solucion">
+      <summary>✅ Ver una solución posible</summary>
+      <p class="ejercicio__aviso">Intentá resolverlo vos primero — se aprende haciendo 😉</p>
+      <pre><code>{solucion}</code></pre>
+    </details>
+  )}
+</section>
+
+<script>
+  import '../scripts/eficiencia.ts';
+</script>

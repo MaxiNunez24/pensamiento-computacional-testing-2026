@@ -1,0 +1,191 @@
+---
+title: Desafíos de optimización
+description: "Tres problemas donde la solución directa anda pero no alcanza, y un caso donde el medidor de pasos te miente."
+---
+
+import EjercicioEficiencia from '../../../components/EjercicioEficiencia.astro';
+import OrdenarPasos from '../../../components/OrdenarPasos.astro';
+
+## Cómo encarar estos tres
+
+Los de acá son más difíciles que los de la clase anterior, y con todos te va a pasar lo mismo: la
+primera solución te va a salir en cinco minutos y va a andar. La segunda te va a llevar más, y es
+la que importa.
+
+El orden de trabajo es siempre el mismo:
+
+<OrdenarPasos
+  titulo="Los pasos para optimizar"
+  dificultad="🧩"
+  pasos={[
+    'Hacer que ande, como salga',
+    'Medir y mirar la forma: ¿el trabajo crece igual que los datos, o mucho más rápido?',
+    'Encontrar QUÉ es lo que se está repitiendo de más',
+    'Preguntarse si esa información se puede saber sin volver a recorrer',
+    'Reescribir con la idea nueva, y volver a medir',
+    'Comprobar que los tests siguen pasando',
+  ]}
+  inicial={[3, 1, 5, 2, 6, 4]}
+  pistas={[
+    'Optimizar algo que todavía no anda es optimizar cualquier cosa: no sabés si el camino que estás haciendo más rápido es el correcto.',
+    'El último paso no es opcional. Es facilísimo hacer una versión veloz que dejó de dar el resultado bien.',
+  ]}
+>
+Ordená los pasos del método. Uno de ellos va **al final** por un motivo muy concreto: las soluciones
+rápidas se rompen más que las lentas.
+</OrdenarPasos>
+
+---
+
+<EjercicioEficiencia
+  titulo="¿Es primo?"
+  dificultad="🌳"
+  starter={`def es_primo(n):\n    # True si n solo es divisible por 1 y por sí mismo.\n    # Ojo: 0 y 1 NO son primos.\n    pass`}
+  tests={`assert es_primo(2), "2 es primo (el único par que lo es)"\nassert es_primo(7)\nassert es_primo(97)\nassert not es_primo(1), "el 1 no es primo"\nassert not es_primo(0)\nassert not es_primo(9), "9 = 3 x 3"\nassert not es_primo(100)\nassert es_primo(7919)`}
+  escenarios={[
+    { etiqueta: 'n = 9.973 (es primo)', tamano: 9973, codigo: 'es_primo(9973)' },
+    { etiqueta: 'n = 999.983 (es primo)', tamano: 999983, codigo: 'es_primo(999983)' },
+  ]}
+  optimo={3500}
+  bueno={9000}
+  mejorable={60000}
+  pistas={[
+    'Lo directo es probar todos los divisores del 2 al <code>n - 1</code>. Con <code>n</code> de un millón, eso es un millón de vueltas para responder una pregunta de sí o no.',
+    'Agarrá el 36 y escribí todas sus parejas de divisores: 2×18, 3×12, 4×9, 6×6, 9×4, 12×3, 18×2. ¿Notás que a partir del 6 se empiezan a repetir dadas vuelta?',
+    'Ese 6 es la raíz cuadrada de 36. Si un número tiene un divisor <em>más grande</em> que su raíz, entonces también tiene uno más chico — y a ese ya lo ibas a encontrar antes. ¿Hasta dónde te alcanza con probar?',
+    'Para no importar nada: en vez de <code>i &lt;= raiz(n)</code> podés preguntar <code>i * i &lt;= n</code>. Es la misma condición.',
+  ]}
+  caminos={[
+    {
+      titulo: 'Probar todos los divisores',
+      codigo: 'if n < 2:\n    return False\nfor i in range(2, n):\n    if n % i == 0:\n        return False\nreturn True',
+      costo: 'más de 300.000 pasos con n = 999.983 (lo cortamos: eran unos 2.000.000)',
+      porque: 'Correcto y carísimo. Para un número primo hace <em>todas</em> las divisiones, porque nunca encuentra una que corte.',
+    },
+    {
+      titulo: 'Hasta la raíz cuadrada',
+      codigo: 'if n < 2:\n    return False\ni = 2\nwhile i * i <= n:\n    if n % i == 0:\n        return False\n    i += 1\nreturn True',
+      costo: 'unos 3.000 pasos con n = 999.983',
+      porque: 'El número creció 100 veces y el trabajo solo 10. Esa es la forma más linda que vas a ver en el curso: cuanto más grande el problema, <em>proporcionalmente</em> menos trabajás.',
+    },
+    {
+      titulo: 'Y encima, saltear los pares',
+      codigo: 'if n < 2:\n    return False\nif n == 2:\n    return True\nif n % 2 == 0:\n    return False\ni = 3\nwhile i * i <= n:\n    if n % i == 0:\n        return False\n    i += 2\nreturn True',
+      costo: 'unos 1.500 pasos',
+      porque: 'Si no es divisible por 2, tampoco lo va a ser por 4, 6, 8… Probar solo los impares parte el trabajo al medio. Es una mejora real, pero <strong>de otro tipo</strong>: no cambia la forma de la curva, solo la baja. La de la raíz cuadrada sí cambia la forma.',
+    },
+  ]}
+>
+Escribí `es_primo(n)`: `True` si `n` es primo, `False` si no.
+
+Hacelo andar primero de la forma obvia. Después mirá la medición del segundo escenario y buscá la
+idea que lo cambia todo — es de matemática de la secundaria, no de programación.
+</EjercicioEficiencia>
+
+<EjercicioEficiencia
+  titulo="Contar cada letra"
+  dificultad="🌿"
+  starter={`def contar_letras(texto):\n    # Un diccionario {letra: cuántas veces aparece}\n    pass`}
+  tests={`assert contar_letras("aba") == {"a": 2, "b": 1}\nassert contar_letras("") == {}\nassert contar_letras("xxx") == {"x": 3}\nassert contar_letras("abc") == {"a": 1, "b": 1, "c": 1}`}
+  escenarios={[
+    { etiqueta: 'texto de 300 letras', tamano: 300, codigo: 'contar_letras("abcdefghij" * 30)' },
+    { etiqueta: 'texto de 3.000 letras', tamano: 3000, codigo: 'contar_letras("abcdefghij" * 300)' },
+  ]}
+  optimo={1000}
+  bueno={11000}
+  mejorable={80000}
+  pistas={[
+    'Con una sola pasada alcanza: por cada letra, o la agregás al diccionario con un 1, o le sumás uno a lo que ya tenía.',
+    'Si tu solución recorre el texto una vez <em>por cada letra distinta</em>, estás recorriendo el mismo texto muchas veces. ¿Hace falta?',
+    'Los diccionarios tienen <code>.get(clave, valor_por_defecto)</code>: devuelve lo que haya, y si no hay nada devuelve el valor que le pases. Con eso el <code>if</code> desaparece.',
+  ]}
+  caminos={[
+    {
+      titulo: 'Una pasada, armando el diccionario',
+      codigo: 'cuentas = {}\nfor letra in texto:\n    if letra in cuentas:\n        cuentas[letra] += 1\n    else:\n        cuentas[letra] = 1\nreturn cuentas',
+      costo: 'unos 9.000 pasos con 3.000 letras',
+      porque: 'Tres líneas por letra, una sola vuelta. Es la solución que hay que saber escribir.',
+    },
+    {
+      titulo: 'Lo mismo pero más corto',
+      codigo: 'cuentas = {}\nfor letra in texto:\n    cuentas[letra] = cuentas.get(letra, 0) + 1\nreturn cuentas',
+      costo: 'unos 6.000 pasos',
+      porque: 'Misma idea, una línea menos por vuelta. No cambia la forma de la curva, pero se lee mejor.',
+    },
+    {
+      titulo: 'La que ya viene hecha',
+      codigo: 'from collections import Counter\n\ndef contar_letras(texto):\n    return dict(Counter(texto))',
+      costo: '1 paso tuyo',
+      porque: '<code>Counter</code> es parte de la librería estándar de Python: hace exactamente esto y está escrito en C. Antes de programar algo, siempre vale la pena preguntarse si no está hecho.',
+    },
+    {
+      titulo: '⚠️ El camino donde el medidor te miente',
+      codigo: 'cuentas = {}\nfor letra in texto:\n    cuentas[letra] = texto.count(letra)\nreturn cuentas',
+      costo: 'unos 6.000 pasos según el medidor… y es la PEOR de todas',
+      porque: 'Cada <code>texto.count(letra)</code> recorre el texto entero, pero como <code>count</code> está escrito en C el contador lo ve como un solo paso. En realidad esto recorre 3.000 letras, 3.000 veces: nueve millones de comparaciones. <strong>Moraleja: el medidor cuenta tus líneas, no el trabajo escondido adentro de las funciones.</strong> Cuando llames a algo que recorre, pensá vos cuántas veces lo estás llamando.',
+    },
+  ]}
+>
+Escribí `contar_letras(texto)`, que devuelve un diccionario con cuántas veces aparece cada letra.
+
+Con `"aba"` tiene que devolver `{"a": 2, "b": 1}`.
+
+Cuando termines, mirá el último de los "otros caminos": es el más importante de toda la clase.
+</EjercicioEficiencia>
+
+<EjercicioEficiencia
+  titulo="Sacar repetidos sin perder el orden"
+  dificultad="🌿"
+  starter={`def sin_repetidos(items):\n    # La misma lista sin repetidos, respetando el orden de aparición\n    pass`}
+  tests={`assert sin_repetidos([1, 2, 1, 3, 2]) == [1, 2, 3]\nassert sin_repetidos([]) == []\nassert sin_repetidos(["a", "a"]) == ["a"]\nassert sin_repetidos([3, 2, 1]) == [3, 2, 1], "si no hay repetidos, queda igual"\nassert sin_repetidos([9, 9, 9, 1]) == [9, 1]`}
+  escenarios={[
+    { etiqueta: '80 items (40 distintos)', tamano: 80, codigo: 'sin_repetidos([i % 40 for i in range(80)])' },
+    { etiqueta: '400 items (200 distintos)', tamano: 400, codigo: 'sin_repetidos([i % 200 for i in range(400)])' },
+  ]}
+  optimo={10}
+  bueno={2200}
+  mejorable={20000}
+  pistas={[
+    'Un <code>set(items)</code> saca los repetidos de una… pero se lleva puesto el orden. Acá el orden importa, así que el set no puede ser el resultado: tiene que ser tu <em>anotador</em>.',
+    'Recorré la lista una vez y llevá dos cosas al mismo tiempo: la lista que vas armando (donde importa el orden) y un conjunto de los que ya viste (para preguntar rápido).',
+    '¿Por qué no preguntarle directamente a la lista que vas armando, con <code>if x not in resultado</code>? Anda, pero <code>not in</code> sobre una lista la recorre entera cada vez. El medidor no te lo va a marcar; la máquina sí lo paga.',
+  ]}
+  caminos={[
+    {
+      titulo: 'Buscar a mano entre los que ya guardé',
+      codigo: 'resultado = []\nfor x in items:\n    ya_esta = False\n    for y in resultado:\n        if x == y:\n            ya_esta = True\n    if not ya_esta:\n        resultado.append(x)\nreturn resultado',
+      costo: 'más de 100.000 pasos con 400 items',
+      porque: 'La grilla otra vez: por cada item, recorrés todo lo que llevás guardado. Y encima no corta cuando lo encuentra.',
+    },
+    {
+      titulo: 'Lista para el orden, set para preguntar',
+      codigo: 'resultado = []\nvistos = set()\nfor x in items:\n    if x not in vistos:\n        resultado.append(x)\n        vistos.add(x)\nreturn resultado',
+      costo: 'unos 1.200 pasos con 400 items',
+      porque: 'Cada estructura hace lo que sabe hacer: la lista guarda el orden, el set responde "¿ya lo vi?" al instante. Esta combinación aparece por todos lados una vez que la conocés.',
+    },
+    {
+      titulo: 'El truco de los diccionarios',
+      codigo: 'return list(dict.fromkeys(items))',
+      costo: '1 paso tuyo',
+      porque: 'Desde Python 3.7 los diccionarios <strong>recuerdan el orden en que se agregaron las claves</strong>, y las claves no se repiten. Así que un diccionario armado con los items ya es, exactamente, la lista sin repetidos y en orden.',
+    },
+  ]}
+>
+Escribí `sin_repetidos(items)`, que devuelve la misma lista pero sin elementos repetidos,
+**respetando el orden en que aparecieron**.
+
+Con `[1, 2, 1, 3, 2]` tiene que devolver `[1, 2, 3]`.
+</EjercicioEficiencia>
+
+---
+
+## Lo que te llevás
+
+1. **Primero que ande.** Después se mejora. Nunca al revés.
+2. **Un bucle adentro de otro** que recorre lo mismo es la señal de alarma número uno.
+3. La solución barata casi nunca es la misma solución más prolija: es **otra idea**. Suele aparecer
+   cuando te preguntás *"¿puedo saber esto sin volver a mirar todo?"*.
+4. **Usá lo que ya está hecho.** `set`, `dict`, `max(…, key=…)`, `Counter`: están escritos en C y
+   pensados por gente que le dedicó mucho tiempo.
+5. **Contá las llamadas, no solo las líneas.** Si adentro de un `for` llamás a algo que recorre
+   (`.count()`, `in` sobre una lista, `sorted()`), el costo está ahí aunque no lo veas.
