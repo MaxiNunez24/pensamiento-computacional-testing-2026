@@ -143,6 +143,7 @@ quiere que el alumno *piense*, no por variar.**
 | **`<OrdenarPasos>`** | Lista de pasos desordenada; se acomoda con ▲▼ o arrastrando. Feedback = cuántos están en su lugar. | Pensar el algoritmo **sin escribir código**. Bueno como paso previo a un `<EjercicioPython>` del mismo problema. |
 | **`<PanelGitVSCode>`** | Maqueta SVG del panel Source Control de VS Code (estados M/U/A/D, resaltados). | Relacionar acciones de Git con lo que se ve en el editor. |
 | **`<CroquisRecorridos>` / `<CroquisCrecimiento>`** | Croquis SVG: "una pasada vs una por cada dato", y las tres formas de crecimiento. | Dar la imagen mental antes de la medición. |
+| **`<BarraSimbolos>`** | Las 29 teclas de símbolos de Python. Ya viene adentro de `<EjercicioPython>` y `<EjercicioEficiencia>`. | Solo si se hace un componente NUEVO con editor: ponerla y llamar a `conectarTeclas(el, view)`. |
 | **`<VolverATeoria ruta="…">`** | Link de vuelta a la clase teórica en MkDocs. | Al inicio de **cada** lección interactiva. |
 
 ### Props de `<EjercicioPython>` (el más importante)
@@ -156,6 +157,17 @@ incluye), y tres para casos especiales:
 - **`datos`** — código que corre ANTES del del alumno y le regala variables ya cargadas (para clases
   **anteriores a Funciones**, donde el alumno escribe un *programa*, no una función).
 - **`entradas`** — respuestas pre-cargadas para ejercicios con `input()` (Pyodide no teclea en vivo).
+
+### La barra de símbolos
+
+Está en `src/components/BarraSimbolos.astro` y la usan `<EjercicioPython>` y
+`<EjercicioEficiencia>`. **`<EncontrarElError>`, `<CompletarCodigo>` y `<Evaluacion>` tienen editor
+pero NO la tienen** — si algún día se les agrega, hay que poner `<BarraSimbolos />` en el `.astro` y
+llamar a `conectarTeclas(el, view)` en su script.
+
+Qué símbolos entran: los que aparecen de verdad en los `starter`, `tests` y bloques de código de las
+clases. Se cuentan, no se adivinan. Quedan afuera `` ` `` y `|` justamente porque ningún ejercicio
+los usa todavía.
 
 ### Props de `<EjercicioEficiencia>`
 
