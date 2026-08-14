@@ -213,6 +213,43 @@ export function conectarTeclas(
     const indent = btn.dataset.indent;
     const texto = btn.dataset.ins;
 
+    const escribirEnCampo = (campo: HTMLInputElement | HTMLTextAreaElement) => {
+      if (indent) {
+        if (campo instanceof HTMLTextAreaElement) {
+          // Varias líneas (la caja de Entradas): el ⇥ es un tabulador y va
+          // donde está el cursor.
+          const desde = campo.selectionStart ?? campo.value.length;
+          if (indent === 'mas') campo.setRangeText(INDENTACION, desde, desde, 'end');
+          else campo.value = campo.value.replace(new RegExp(' {1,' + INDENTACION.length + '}$'), '');
+        } else {
+          // Una sola línea (la línea a corregir): acá ⇥ significa "indentá esta
+          // línea", así que va al principio sin importar dónde esté el cursor.
+          if (indent === 'mas') campo.value = INDENTACION + campo.value;
+          else campo.value = campo.value.replace(new RegExp('^ {1,' + INDENTACION.length + '}'), '');
+        }
+      } else if (texto != null) {
+        const desde = campo.selectionStart ?? campo.value.length;
+        const hasta = campo.selectionEnd ?? desde;
+        campo.setRangeText(texto, desde, hasta, 'end');
+      }
+      campo.focus();
+      // Que quien escuche 'input' se entere del cambio hecho por código.
+      campo.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
+    // Manda dónde está escribiendo el alumno. Si tiene el cursor en un campo de
+    // texto —la caja de Entradas, o la línea a corregir— el símbolo va ahí;
+    // si no, al editor de código. Sin esto, en un ejercicio con input() la barra
+    // escribía siempre en el editor aunque el alumno estuviera cargando datos.
+    const activo = document.activeElement;
+    if (
+      (activo instanceof HTMLInputElement || activo instanceof HTMLTextAreaElement) &&
+      el.contains(activo)
+    ) {
+      escribirEnCampo(activo);
+      return;
+    }
+
     const view = dameVista();
     if (view) {
       if (indent) {
@@ -229,22 +266,9 @@ export function conectarTeclas(
       return;
     }
 
-    // Sin editor: va al campo de texto. Se sigue soportando indentar, que en
-    // estos ejercicios importa —la indentación mal puesta es un bug clásico—.
+    // Sin editor y sin foco: el respaldo (último campo usado, o el único que hay).
     const campo = campoDondeEscribir();
-    if (!campo) return;
-    if (indent === 'mas') {
-      campo.value = INDENTACION + campo.value;
-    } else if (indent === 'menos') {
-      campo.value = campo.value.replace(new RegExp('^ {1,' + INDENTACION.length + '}'), '');
-    } else if (texto != null) {
-      const desde = campo.selectionStart ?? campo.value.length;
-      const hasta = campo.selectionEnd ?? desde;
-      campo.setRangeText(texto, desde, hasta, 'end');
-    }
-    campo.focus();
-    // Que quien escuche 'input' se entere del cambio hecho por código.
-    campo.dispatchEvent(new Event('input', { bubbles: true }));
+    if (campo) escribirEnCampo(campo);
   });
 }
 

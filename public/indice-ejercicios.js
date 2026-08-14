@@ -44,6 +44,7 @@
     if (!tocs.length) return;
 
     var enlaces = [];
+    var indices = [];
 
     Array.prototype.forEach.call(tocs, function (toc) {
       if (toc.querySelector('.idx-ej')) return; // ya construido
@@ -89,6 +90,9 @@
 
       caja.appendChild(ul);
       (toc.querySelector('.dropdown') || toc).appendChild(caja);
+      // Ahora que el bloque de ejercicios ya está colgado, juntamos los links de
+      // TODO este índice (títulos + ejercicios) para poder acompañarlo.
+      juntarObjetivos(toc);
     });
 
     // ---- Resaltar el que se está mirando ----
@@ -96,7 +100,6 @@
     // por segundo) en vez de con IntersectionObserver: son 7 rects, el costo es
     // nada, y así el cálculo es una función pura y verificable en vez de
     // depender de cuándo el navegador decide entregar las intersecciones.
-    var ultimoActivo = null;
 
     function marcarActivo() {
       // Una LÍNEA de lectura, no una franja: el ejercicio activo es el que la
@@ -119,18 +122,58 @@
           if (secciones[i].getBoundingClientRect().bottom < linea) activo = secciones[i].id;
         }
       }
-      // Solo seguimos al activo cuando CAMBIA: si lo hiciéramos en cada scroll,
-      // el alumno no podría recorrer la lista a mano (se la estaríamos moviendo
-      // de vuelta todo el tiempo).
-      var cambio = activo !== ultimoActivo;
-      ultimoActivo = activo;
-
       enlaces.forEach(function (a) {
-        var esActivo = a.dataset.para === activo;
-        a.classList.toggle('is-activo', esActivo);
-        if (esActivo && cambio) seguirAlActivo(a);
+        a.classList.toggle('is-activo', a.dataset.para === activo);
       });
+      seguirElIndice();
       return activo;
+    }
+
+    // ---- Que el índice acompañe la lectura ----
+    // El índice de la derecha ahora scrollea, así que "dónde estoy" puede quedar
+    // fuera de vista. Seguimos TODO el índice, no solo los ejercicios: los
+    // títulos de la clase también son parte de la lectura, y quedarse siempre
+    // abajo mientras se lee la teoría de arriba se siente como que el índice se
+    // desconectó de la página.
+    //
+    // Una sola regla para las dos cosas: gana la entrada del índice cuyo destino
+    // esté más abajo SIN pasar la línea de lectura. Como un ejercicio arranca
+    // después del título que lo precede, adentro de un ejercicio gana el
+    // ejercicio, y en la prosa gana el título. No hace falta priorizar nada.
+
+    function juntarObjetivos(toc) {
+      var objetivos = [];
+      Array.prototype.forEach.call(toc.querySelectorAll('a[href^="#"]'), function (a) {
+        var id = a.getAttribute('href').slice(1);
+        var destino = null;
+        try {
+          destino = document.getElementById(decodeURIComponent(id));
+        } catch (e) {
+          destino = document.getElementById(id); // href mal escapado: probamos crudo
+        }
+        if (destino) objetivos.push({ a: a, destino: destino });
+      });
+      indices.push({ objetivos: objetivos, ultimo: null });
+    }
+
+    function seguirElIndice() {
+      var linea = window.innerHeight * 0.35;
+      indices.forEach(function (idx) {
+        var mejor = null;
+        var mejorTop = -Infinity;
+        idx.objetivos.forEach(function (o) {
+          var top = o.destino.getBoundingClientRect().top;
+          if (top <= linea && top > mejorTop) {
+            mejorTop = top;
+            mejor = o.a;
+          }
+        });
+        // Solo cuando CAMBIA: si moviéramos el índice en cada scroll, el alumno
+        // no podría recorrerlo a mano (se lo estaríamos acomodando de vuelta).
+        if (!mejor || mejor === idx.ultimo) return;
+        idx.ultimo = mejor;
+        seguirAlActivo(mejor);
+      });
     }
 
     // El primer ancestro que scrollea de verdad. Hoy es el .sl-container del
