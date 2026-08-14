@@ -26,6 +26,10 @@ const MAX_CONSULTA = 1000;
 const MAX_CODIGO = 1700;
 // Las entradas van como campo del embed, y ahí el tope de Discord es 1024.
 const MAX_ENTRADAS = 800;
+// Un adjunto NO tiene el problema de los 2000 caracteres del mensaje: es lo que
+// usamos para las entregas de parcial, que no entran ni cerca. 200 KB es de
+// sobra para un parcial entero y sigue lejos del límite de Discord (8 MB).
+const MAX_ADJUNTO = 200 * 1024;
 
 function cors(origen) {
   return {
@@ -83,7 +87,18 @@ export default {
     const leccion = recortar(datos.leccion, 200);
     const url = recortar(datos.url, 300);
 
-    if (!codigo) {
+    // Entrega de parcial: viaja como archivo, no como texto del mensaje.
+    let adjunto = null;
+    if (datos.adjunto && typeof datos.adjunto.contenido === 'string' && datos.adjunto.contenido) {
+      adjunto = {
+        nombre: String(datos.adjunto.nombre || 'entrega.txt')
+          .replace(/[^\w.\-]/g, '_')
+          .slice(0, 60) || 'entrega.txt',
+        contenido: datos.adjunto.contenido.slice(0, MAX_ADJUNTO),
+      };
+    }
+
+    if (!codigo && !adjunto) {
       return new Response('Falta el código', { status: 400, headers: cors(origen) });
     }
 
@@ -107,14 +122,30 @@ export default {
         },
       ],
       // El código va aparte del embed: así Discord le da resaltado de Python.
-      content: '```python\n' + sinCercos(codigo) + '\n```',
+      // Con adjunto no mandamos nada de texto: el contenido entero está en el
+      // archivo, y meter un pedazo acá solo serviría para confundir.
+      content: adjunto ? '' : '```python\n' + sinCercos(codigo) + '\n```',
     };
 
-    const r = await fetch(env.DISCORD_WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(cuerpo),
-    });
+    let r;
+    if (adjunto) {
+      // multipart: el JSON del mensaje va en payload_json y el archivo aparte.
+      const form = new FormData();
+      form.append('payload_json', JSON.stringify(cuerpo));
+      form.append(
+        'files[0]',
+        new Blob([adjunto.contenido], { type: 'text/plain;charset=utf-8' }),
+        adjunto.nombre,
+      );
+      // Sin Content-Type a mano: lo pone fetch con el boundary que corresponde.
+      r = await fetch(env.DISCORD_WEBHOOK, { method: 'POST', body: form });
+    } else {
+      r = await fetch(env.DISCORD_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cuerpo),
+      });
+    }
 
     if (!r.ok) {
       return new Response('Discord rechazó el mensaje', { status: 502, headers: cors(origen) });

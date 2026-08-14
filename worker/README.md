@@ -27,8 +27,10 @@ Esa URL es la credencial: **no va al sitio ni al repo**. Solo se pega en Cloudfl
 
 > ⚠️ **Cuando cambia `consultas-discord.js` hay que volver a pegarlo y hacer Deploy.** El Worker no
 > se actualiza solo con el push al repo: el código vive en Cloudflare. (La última vez que cambió: se
-> agregó el campo **⌨️ Lo que tecleó**, con las entradas de los ejercicios con `input()`. Sin
-> re-deployar, esas entradas llegan al Worker y se descartan — el resto sigue andando igual.)
+> las **entregas de parcial ahora van como ARCHIVO ADJUNTO**. Esta vez el re-deploy no es opcional:
+> sin él, un parcial entero no entra en los 2000 caracteres de un mensaje de Discord y **se pierde
+> el final**, que es justo el problema que esto viene a arreglar. Antes se había agregado el campo
+> **⌨️ Lo que tecleó**, con las entradas de los ejercicios con `input()`.)
 
 ## 3. Guardar el webhook como secreto
 

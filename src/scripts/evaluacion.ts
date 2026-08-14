@@ -9,14 +9,25 @@
 // La corrección de la opción múltiple se calcula en el cliente y viaja adentro
 // de la entrega. No es una nota final: es para ahorrarle al profe la parte
 // mecánica. Lo abierto y el código los corrige él.
+//
+// SOBRE EL GUARDADO (lo más importante de este archivo): un parcial que se
+// pierde no se puede rehacer. Por eso:
+//   1. Se autoguarda cada respuesta mientras el alumno escribe, no al entregar.
+//   2. Al entregar, lo PRIMERO que pasa es guardar; recién después se manda. Si
+//      falla la red, se cierra el navegador o se recarga la página, el parcial
+//      ya está a salvo.
+//   3. Después de entregado queda visible pero de solo lectura, también al
+//      volver a abrir la página.
 
 import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
+import { Compartment, EditorState } from '@codemirror/state';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
 import { medirCuandoSeaVisible } from './medir-editor';
+import { editorTheme } from './editor-comun';
 
 const EMAIL_PROFE = 'maxinunez434@gmail.com';
 const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.workers.dev/';
@@ -47,16 +58,87 @@ function nombreAlumno(): string | null {
   return n;
 }
 
+// ---------- Guardado ----------
+// Con el prefijo 'pcp:' de progreso.ts, así el parcial también viaja cuando el
+// alumno usa "Sincronizar progreso".
+
+interface Guardado {
+  respuestas?: Record<string, string>;
+  /** Fecha ISO de la entrega. Si está, el parcial queda de solo lectura. */
+  entregado?: string;
+  nombre?: string;
+  resumen?: { acertadas: number; posibles: number };
+  /** El parcial ya armado, para poder volver a descargarlo cuando sea. */
+  texto?: string;
+}
+
+function clave(titulo: string): string {
+  return `pcp:eval:${location.pathname}::${titulo}`;
+}
+
+function leerGuardado(titulo: string): Guardado {
+  try {
+    return JSON.parse(localStorage.getItem(clave(titulo)) || '{}') as Guardado;
+  } catch {
+    return {};
+  }
+}
+
+function escribirGuardado(titulo: string, g: Guardado): boolean {
+  try {
+    localStorage.setItem(clave(titulo), JSON.stringify(g));
+    return true;
+  } catch {
+    return false; // modo privado o disco lleno: hay que avisarle
+  }
+}
+
+function descargarTexto(nombreArchivo: string, contenido: string): void {
+  const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombreArchivo;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function comoArchivo(s: string): string {
+  return (s || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+}
+
+function escapar(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ---------- Un parcial ----------
+
 function initEvaluacion(el: HTMLElement): void {
   const titulo = el.dataset.titulo || 'Evaluación';
-  const clave: number[] = JSON.parse(b64decode(el.dataset.clave || '[]'));
+  const claveCorrecta: number[] = JSON.parse(b64decode(el.dataset.clave || '[]'));
   const puntos: number[] = JSON.parse(b64decode(el.dataset.puntos || '[]'));
   const mostrar = el.dataset.mostrar === '1';
   const items = Array.from(el.querySelectorAll<HTMLElement>('.evaluacion__item'));
   const btnEntregar = el.querySelector<HTMLButtonElement>('[data-entregar]');
   const estado = el.querySelector<HTMLElement>('[data-estado]');
+  const avisoGuardado = el.querySelector<HTMLElement>('[data-guardado]');
+  const cajaDescargas = el.querySelector<HTMLElement>('[data-descargas]');
+  const btnTxt = el.querySelector<HTMLButtonElement>('[data-bajar-txt]');
+  const btnPdf = el.querySelector<HTMLButtonElement>('[data-bajar-pdf]');
   const editores = new Map<number, EditorView>();
-  let entregado = false;
+  // Un compartment por editor: es la pieza de CodeMirror que permite cambiar una
+  // extensión (acá, "solo lectura") sin recrear el editor.
+  const bloqueos = new Map<number, Compartment>();
+
+  const guardado = leerGuardado(titulo);
+  let entregado = Boolean(guardado.entregado);
 
   // --- Editores de los ítems de código ---
   items.forEach((item) => {
@@ -64,13 +146,29 @@ function initEvaluacion(el: HTMLElement): void {
     const cajaEditor = item.querySelector<HTMLElement>('[data-editor]');
     if (!cajaEditor) return;
     const starter = b64decode(cajaEditor.dataset.starter || '');
+    const previo = guardado.respuestas?.[String(i)];
+    const bloqueo = new Compartment();
+    bloqueos.set(i, bloqueo);
     const view = new EditorView({
-      doc: starter,
-      extensions: [basicSetup, python(), oneDark, keymap.of([indentWithTab])],
+      doc: previo != null ? previo : starter,
+      extensions: [
+        basicSetup,
+        python(),
+        oneDark,
+        editorTheme,
+        keymap.of([indentWithTab]),
+        bloqueo.of([]),
+        EditorView.updateListener.of((u) => {
+          if (u.docChanged) autoguardar();
+        }),
+      ],
       parent: cajaEditor,
     });
     medirCuandoSeaVisible(view);
     editores.set(i, view);
+    // Handle accesible desde el DOM, igual que en EjercicioPython: sirve para
+    // verificar el guardado y el bloqueo sin tener que tipear a mano.
+    (el as unknown as { __cmViews: Map<number, EditorView> }).__cmViews = editores;
 
     const salida = item.querySelector<HTMLElement>('[data-salida]');
     const btnRun = item.querySelector<HTMLButtonElement>('[data-run]');
@@ -98,7 +196,66 @@ function initEvaluacion(el: HTMLElement): void {
     });
   });
 
+  // --- Restaurar lo que había escrito ---
+  items.forEach((item) => {
+    const i = String(item.dataset.item);
+    const valor = guardado.respuestas?.[i];
+    if (valor == null) return;
+    if (item.dataset.tipo === 'multiple') {
+      const radio = item.querySelector<HTMLInputElement>(`input[type=radio][value="${valor}"]`);
+      if (radio) radio.checked = true;
+    } else if (item.dataset.tipo === 'abierta') {
+      const ta = item.querySelector<HTMLTextAreaElement>('[data-respuesta]');
+      if (ta) ta.value = valor;
+    }
+  });
+
   el.addEventListener('pointerdown', () => void ensureWorker().catch(() => {}), { once: true });
+
+  // --- Autoguardado ---
+
+  function respuestasActuales(): Record<string, string> {
+    const r: Record<string, string> = {};
+    items.forEach((item) => {
+      const i = String(item.dataset.item);
+      const tipo = item.dataset.tipo;
+      if (tipo === 'multiple') {
+        const c = item.querySelector<HTMLInputElement>('input[type=radio]:checked');
+        if (c) r[i] = c.value;
+      } else if (tipo === 'abierta') {
+        const ta = item.querySelector<HTMLTextAreaElement>('[data-respuesta]');
+        if (ta && ta.value) r[i] = ta.value;
+      } else {
+        const v = editores.get(Number(i));
+        if (v) r[i] = v.state.doc.toString();
+      }
+    });
+    return r;
+  }
+
+  let temporizador: ReturnType<typeof setTimeout> | undefined;
+  function autoguardar(): void {
+    if (entregado) return; // ya entregado: no se pisa nada
+    clearTimeout(temporizador);
+    temporizador = setTimeout(() => {
+      const g = leerGuardado(titulo);
+      g.respuestas = respuestasActuales();
+      const ok = escribirGuardado(titulo, g);
+      if (!avisoGuardado) return;
+      if (ok) {
+        const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        avisoGuardado.textContent = `💾 Guardado ${hora} — si se cierra la página, tus respuestas siguen acá.`;
+        avisoGuardado.className = 'evaluacion__guardado';
+      } else {
+        avisoGuardado.textContent =
+          '⚠️ No se puede guardar en este navegador (¿ventana privada?). NO recargues la página.';
+        avisoGuardado.className = 'evaluacion__guardado is-error';
+      }
+    }, 400);
+  }
+
+  el.addEventListener('input', autoguardar);
+  el.addEventListener('change', autoguardar);
 
   // --- Recolección ---
   function recolectar() {
@@ -114,7 +271,7 @@ function initEvaluacion(el: HTMLElement): void {
         const elegida = item.querySelector<HTMLInputElement>('input[type=radio]:checked');
         const idx = elegida ? Number(elegida.value) : -1;
         const texto = elegida?.parentElement?.textContent?.trim() || '(sin responder)';
-        const bien = idx === clave[i];
+        const bien = idx === claveCorrecta[i];
         posibles += puntos[i] ?? 1;
         if (bien) acertadas += puntos[i] ?? 1;
         return { n: i + 1, tipo, pregunta, respuesta: texto, correcta: bien };
@@ -129,12 +286,15 @@ function initEvaluacion(el: HTMLElement): void {
     return { respuestas, acertadas, posibles };
   }
 
-  function armarTexto(nombre: string, datos: ReturnType<typeof recolectar>): string {
+  type Datos = ReturnType<typeof recolectar>;
+
+  function armarTexto(nombre: string, datos: Datos, cuando: Date): string {
     const lineas = [
       `PARCIAL: ${titulo}`,
       `ALUMNO/A: ${nombre}`,
-      `ENTREGADO: ${new Date().toLocaleString('es-AR')}`,
+      `ENTREGADO: ${cuando.toLocaleString('es-AR')}`,
       `OPCIÓN MÚLTIPLE (corrección automática): ${datos.acertadas} / ${datos.posibles}`,
+      `PÁGINA: ${location.href}`,
       '',
     ];
     for (const r of datos.respuestas) {
@@ -151,6 +311,80 @@ function initEvaluacion(el: HTMLElement): void {
     return lineas.join('\n');
   }
 
+  function nombreArchivo(nombre: string): string {
+    return `parcial-${comoArchivo(nombre)}-${comoArchivo(titulo)}.txt`;
+  }
+
+  // --- Imprimir / guardar como PDF ---
+  // Sin librerías: se arma una hoja limpia, se la cuelga del <body> y se llama a
+  // window.print(). El "Guardar como PDF" del navegador hace el resto, y de paso
+  // el alumno puede imprimirlo en papel si el profe se lo pide.
+  function imprimir(): void {
+    const g = leerGuardado(titulo);
+    const texto = g.texto;
+    if (!texto) return;
+    const hoja = document.createElement('div');
+    hoja.className = 'eval-print';
+    hoja.innerHTML = `<h1>${escapar(titulo)}</h1><pre>${escapar(texto)}</pre>`;
+    document.body.appendChild(hoja);
+    document.body.classList.add('pc-imprimiendo');
+    const limpiar = () => {
+      document.body.classList.remove('pc-imprimiendo');
+      hoja.remove();
+      window.removeEventListener('afterprint', limpiar);
+    };
+    window.addEventListener('afterprint', limpiar);
+    window.print();
+    // Safari en iOS no siempre dispara afterprint: red de contención.
+    setTimeout(limpiar, 60000);
+  }
+
+  // --- Bloquear después de entregar ---
+  function bloquear(): void {
+    entregado = true;
+    el.classList.add('evaluacion--entregado');
+    el.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea').forEach((c) => {
+      c.disabled = true;
+    });
+    el.querySelectorAll<HTMLButtonElement>('[data-run]').forEach((b) => {
+      b.disabled = true;
+    });
+    editores.forEach((v, i) => {
+      const c = bloqueos.get(i);
+      if (c) {
+        // readOnly frena los cambios; editable saca el cursor y el foco, así no
+        // parece editable. Sobrevive a la recarga porque se aplica al cargar.
+        v.dispatch({
+          effects: c.reconfigure([EditorState.readOnly.of(true), EditorView.editable.of(false)]),
+        });
+      }
+      v.dom.classList.add('is-bloqueado');
+    });
+    if (btnEntregar) btnEntregar.hidden = true;
+    if (cajaDescargas) cajaDescargas.hidden = false;
+  }
+
+  // --- Estado al abrir la página ---
+  if (entregado) {
+    bloquear();
+    const cuando = new Date(guardado.entregado as string).toLocaleString('es-AR');
+    if (estado) {
+      estado.textContent = `🔒 Entregado el ${cuando}. Tus respuestas quedaron guardadas y ya no se pueden cambiar.`;
+      estado.className = 'evaluacion__nota is-ok';
+    }
+    if (avisoGuardado) avisoGuardado.textContent = '';
+  } else if (guardado.respuestas && Object.keys(guardado.respuestas).length && avisoGuardado) {
+    avisoGuardado.textContent = '💾 Recuperamos lo que habías escrito antes.';
+    avisoGuardado.className = 'evaluacion__guardado';
+  }
+
+  btnTxt?.addEventListener('click', () => {
+    const g = leerGuardado(titulo);
+    if (g.texto) descargarTexto(nombreArchivo(g.nombre || 'alumno'), g.texto);
+  });
+  btnPdf?.addEventListener('click', imprimir);
+
+  // --- Entregar ---
   btnEntregar?.addEventListener('click', () => {
     if (entregado) return;
     const sinResponder = items.filter((item) => {
@@ -164,19 +398,37 @@ function initEvaluacion(el: HTMLElement): void {
       const n = sinResponder.map((i) => Number(i.dataset.item) + 1).join(', ');
       if (!window.confirm(`Te quedaron sin responder: ${n}.\n\n¿Entregar igual?`)) return;
     }
+    if (!window.confirm('Una vez entregado no vas a poder cambiar tus respuestas.\n\n¿Entregar?')) return;
 
     const nombre = nombreAlumno();
     if (!nombre) return;
 
+    const cuando = new Date();
     const datos = recolectar();
-    const texto = armarTexto(nombre, datos);
+    const texto = armarTexto(nombre, datos, cuando);
 
-    entregado = true;
-    btnEntregar.disabled = true;
-    if (estado) estado.textContent = '⏳ Entregando…';
+    // 1) GUARDAR. Va primero, antes de cualquier cosa que pueda fallar: si se
+    //    cae la red o el alumno recarga, el parcial ya está.
+    const g = leerGuardado(titulo);
+    g.respuestas = respuestasActuales();
+    g.entregado = cuando.toISOString();
+    g.nombre = nombre;
+    g.resumen = { acertadas: datos.acertadas, posibles: datos.posibles };
+    g.texto = texto;
+    const seGuardo = escribirGuardado(titulo, g);
 
-    // Igual que en las consultas: se manda por los dos canales. Acá importa más,
-    // porque si la entrega se pierde el alumno se queda sin parcial.
+    // 2) Una copia en el disco del alumno, todavía dentro del clic (si lo
+    //    hiciéramos después de un await, el navegador bloquearía la descarga).
+    descargarTexto(nombreArchivo(nombre), texto);
+
+    bloquear();
+    if (estado) {
+      estado.textContent = '⏳ Entregando…';
+      estado.className = 'evaluacion__nota';
+    }
+    if (avisoGuardado) avisoGuardado.textContent = '';
+
+    // 3) Recién ahora, mandarlo.
     const asunto = `[PARCIAL] ${nombre} — ${titulo}`;
     window.open(
       `mailto:${EMAIL_PROFE}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(texto)}`,
@@ -193,7 +445,10 @@ function initEvaluacion(el: HTMLElement): void {
           body: JSON.stringify({
             nombre,
             consulta: `📝 ENTREGA DE PARCIAL — opción múltiple: ${datos.acertadas}/${datos.posibles}`,
-            codigo: texto,
+            // Como ARCHIVO ADJUNTO y no como texto del mensaje: un parcial entero
+            // no entra en los 2000 caracteres de un mensaje de Discord, y lo que
+            // sobraba se perdía justo al final.
+            adjunto: { nombre: nombreArchivo(nombre), contenido: texto },
             ejercicio: titulo,
             leccion: document.title,
             url: location.href,
@@ -205,9 +460,12 @@ function initEvaluacion(el: HTMLElement): void {
         aDiscord = false;
       }
       if (estado) {
+        const guardadoTxt = seGuardo
+          ? 'Tu parcial quedó guardado en esta página y te bajamos una copia.'
+          : '⚠️ Este navegador no deja guardar: quedate con el archivo que se descargó.';
         estado.textContent = aDiscord
-          ? '✅ Parcial entregado. Le llegó al profe.'
-          : '⚠️ No se pudo enviar automáticamente. Revisá que se haya abierto tu correo, o avisale al profe AHORA.';
+          ? `✅ Parcial entregado. Le llegó al profe. ${guardadoTxt}`
+          : `⚠️ No se pudo enviar automáticamente. ${guardadoTxt} Mandale el archivo al profe AHORA (o avisale).`;
         estado.className = 'evaluacion__nota ' + (aDiscord ? 'is-ok' : 'is-error');
       }
       if (mostrar) {
@@ -217,11 +475,6 @@ function initEvaluacion(el: HTMLElement): void {
           .join('   ');
         if (estado) estado.textContent += `\n\nOpción múltiple: ${datos.acertadas}/${datos.posibles}   ${detalle}`;
       }
-      // Bloquear todo después de entregar.
-      el.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea').forEach((c) => {
-        c.disabled = true;
-      });
-      editores.forEach((v) => v.dom.classList.add('is-bloqueado'));
     })();
   });
 }

@@ -116,7 +116,16 @@ const puntos = items.map((it) => it.puntos ?? 1);
     <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-entregar>
       📨 Entregar el parcial
     </button>
+    {/* Aviso de autoguardado: el alumno tiene que VER que no se le pierde nada.
+        Es la mitad del valor de guardar; la otra mitad es no perder el parcial. */}
+    <p class="evaluacion__guardado" data-guardado></p>
     <p class="evaluacion__nota" data-estado></p>
+    {/* Aparece recién después de entregar. */}
+    <div class="evaluacion__descargas" data-descargas hidden>
+      <span>Tu parcial entregado:</span>
+      <button type="button" class="ejercicio__btn" data-bajar-txt>📄 Descargar copia</button>
+      <button type="button" class="ejercicio__btn" data-bajar-pdf>🖨️ Guardar como PDF</button>
+    </div>
   </footer>
 </section>
 

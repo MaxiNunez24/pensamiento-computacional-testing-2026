@@ -1783,3 +1783,82 @@ body.pc-resizing * {
   white-space: nowrap;
   pointer-events: none;
 }
+
+
+/* ---------- Parcial: guardado, entregado e impresión ---------- */
+
+.evaluacion__guardado {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+.evaluacion__guardado.is-error {
+  color: #ef9a9a;
+  font-weight: 600;
+  opacity: 1;
+}
+
+/* Ya entregado: se ve, no se toca. El borde verde a la izquierda es el mismo
+   lenguaje que el "✓ Resuelto" de los ejercicios. */
+.evaluacion--entregado {
+  border-left: 4px solid #2e7d32;
+}
+.evaluacion--entregado .evaluacion__opcion,
+.evaluacion--entregado .evaluacion__texto {
+  opacity: 0.85;
+  cursor: default;
+}
+.evaluacion--entregado .evaluacion__texto {
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+}
+/* El editor bloqueado: sin cursor de texto y sin el borde de foco. */
+.evaluacion .cm-editor.is-bloqueado {
+  opacity: 0.9;
+}
+.evaluacion .cm-editor.is-bloqueado .cm-content {
+  cursor: default;
+}
+
+.evaluacion__descargas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--sl-color-gray-5);
+  font-size: 0.9rem;
+}
+.evaluacion__descargas[hidden] {
+  display: none;
+}
+.evaluacion .evaluacion__descargas > * {
+  margin-top: 0;
+}
+
+/* Hoja de impresión: se cuelga del <body> solo mientras dura el print, y ahí se
+   esconde todo lo demás. Es lo que convierte "Guardar como PDF" del navegador
+   en un PDF del parcial, sin necesidad de ninguna librería. */
+.eval-print {
+  display: none;
+}
+@media print {
+  body.pc-imprimiendo > *:not(.eval-print) {
+    display: none !important;
+  }
+  body.pc-imprimiendo .eval-print {
+    display: block;
+    color: #000;
+    background: #fff;
+  }
+  .eval-print h1 {
+    font-size: 1.3rem;
+    margin: 0 0 1rem;
+  }
+  .eval-print pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+}
