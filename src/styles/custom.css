@@ -1752,3 +1752,34 @@ body.pc-resizing * {
     font-size: 0.8rem;
   }
 }
+
+
+/* ---------- Copiar el texto del enunciado de un toque ---------- */
+/* Los tests comparan caracter por caracter, así que tipear a mano lo que pide
+   el enunciado es donde más se pierde tiempo (un acento, una mayúscula). El
+   código en línea del enunciado se copia con un clic; ver copiar-texto.js. */
+[data-copiable] {
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+[data-copiable]:hover {
+  background: color-mix(in srgb, var(--sl-color-accent) 25%, transparent);
+}
+[data-copiable].is-copiado::after {
+  content: '✓ copiado';
+  position: absolute;
+  bottom: calc(100% + 0.3rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.3rem;
+  background: #2e7d32;
+  color: #fff;
+  font-family: var(--sl-font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}

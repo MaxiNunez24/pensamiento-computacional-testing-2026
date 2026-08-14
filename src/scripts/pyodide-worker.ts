@@ -11,13 +11,159 @@ const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/${PYODIDE_VERSION}/full/`;
 // Ejecuta el código del alumno y, opcionalmente, los tests, capturando stdout.
 // Devuelve JSON {ok, out, err} con errores traducidos a mensajes amigables.
 const RUNNER = `
-import sys, io, traceback, json, linecache, importlib, os
+import sys, io, traceback, json, linecache, importlib, os, ast, unicodedata
 
 # La carpeta actual en sys.path: así un ejercicio puede importar el módulo
 # (archivo .py) que escribió otro ejercicio antes. Es lo que permite "tener
 # clases en distintos archivos".
 if "." not in sys.path:
     sys.path.insert(0, ".")
+
+
+# ---------------------------------------------------------------------------
+# Comparaciones que EXPLICAN por qué no coinciden
+#
+# El caso que más frena a los alumnos: el print tiene que salir textual, y
+# 'Ana tiene 30 anos' vs 'Ana tiene 30 años' se ven casi iguales. Mirar dos
+# strings caracter por caracter para encontrar una tilde es un ejercicio de
+# paciencia, no de programación.
+#
+# Cada 'assert a == b' de los tests se reescribe (más abajo, con ast) para que
+# al fallar diga QUÉ difiere: los acentos, las mayúsculas, un espacio de más, o
+# en qué caracter exacto se separan.
+# ---------------------------------------------------------------------------
+
+def _sin_tildes(s):
+    return "".join(
+        c for c in unicodedata.normalize("NFD", s)
+        if unicodedata.category(c) != "Mn"
+    )
+
+def _pista_texto(a, b):
+    """La diferencia entre dos strings, en criollo. '' si no hay nada útil."""
+    # El más frecuente de todos y el que peor se explica solo: no salió nada.
+    if a == "":
+        return "👉 Tu programa no mostró nada. ¿Le falta el print(), o el print quedó adentro de un if que no se cumple?"
+    sa, sb = _sin_tildes(a), _sin_tildes(b)
+    if sa == sb:
+        return "👉 Es el mismo texto salvo por los ACENTOS y la ñ. Lo más cómodo: copiá el texto del enunciado y pegalo."
+    if a.lower() == b.lower():
+        return "👉 Es el mismo texto pero cambian las MAYÚSCULAS y minúsculas."
+    if sa.lower() == sb.lower():
+        return "👉 Es el mismo texto salvo por los ACENTOS y las MAYÚSCULAS."
+    if a.strip() == b.strip():
+        return "👉 El texto está bien: sobra (o falta) un espacio o un salto de línea al principio o al final."
+    if a.split() == b.split():
+        return "👉 Las palabras están bien: lo que no coincide son los ESPACIOS del medio."
+
+    # Uno está adentro del otro: sobra o falta un pedazo. Va ANTES de buscar la
+    # primera diferencia, porque si sobra algo al principio ese cálculo dice
+    # "difieren en el caracter 1" y no ayuda a nadie.
+    def _bordes(entero, parte):
+        i = entero.index(parte)
+        antes, despues = entero[:i], entero[i + len(parte):]
+        trozos = []
+        if antes:
+            trozos.append("al principio " + repr(antes))
+        if despues:
+            trozos.append("al final " + repr(despues))
+        return " y ".join(trozos)
+
+    if b and b in a:
+        donde = _bordes(a, b)
+        if donde:
+            return "👉 Lo que hay que mostrar está adentro de tu texto, pero te SOBRA " + donde + "."
+    if a and a in b:
+        donde = _bordes(b, a)
+        if donde:
+            return "👉 Lo que escribiste está bien pero INCOMPLETO: te falta " + donde + "."
+
+    # Dónde se separan, que es lo primero que uno mira.
+    n = min(len(a), len(b))
+    i = 0
+    while i < n and a[i] == b[i]:
+        i += 1
+    if i == n and len(a) != len(b):
+        if len(a) > len(b):
+            return "👉 Empieza igual, pero al final te SOBRA: " + repr(a[n:])
+        return "👉 Empieza igual, pero al final te FALTA: " + repr(b[n:])
+    if i > 0:
+        return ("👉 Coinciden hasta " + repr(a[:i]) + ". La primera diferencia está en el caracter "
+                + str(i + 1) + ": vos pusiste " + repr(a[i]) + " y va " + repr(b[i]) + ".")
+    return "👉 No se parecen desde el arranque. Volvé a leer el enunciado: ¿estás mostrando lo que pide?"
+
+def _explicar(obtenido, esperado, texto):
+    lineas = []
+    if texto:
+        lineas.append(str(texto))
+    ro, resp = repr(obtenido), repr(esperado)
+    # Si el mensaje del ejercicio ya muestra el valor, no lo repetimos.
+    faltan = []
+    if not texto or ro not in texto:
+        faltan.append("Vos diste:   " + ro)
+    if not texto or resp not in texto:
+        faltan.append("Se esperaba: " + resp)
+    if faltan:
+        if lineas:
+            lineas.append("")
+        lineas.extend(faltan)
+    if isinstance(obtenido, str) and isinstance(esperado, str):
+        pista = _pista_texto(obtenido, esperado)
+        if pista:
+            lineas.append("")
+            lineas.append(pista)
+    return "\\n".join(lineas) or "Ese caso no dio el resultado esperado."
+
+def _igual(obtenido, esperado, msg=None):
+    if obtenido == esperado:
+        return
+    texto = None
+    if msg is not None:
+        # El mensaje llega como lambda y se evalúa SOLO acá: varios tests hacen
+        # correr(...) adentro de su f-string, y evaluarlo siempre significaría
+        # ejecutar el código del alumno de nuevo en cada assert que pasa.
+        try:
+            texto = msg()
+        except Exception:
+            texto = None
+    raise AssertionError(_explicar(obtenido, esperado, texto))
+
+class _ReescribirAsserts(ast.NodeTransformer):
+    """assert a == b, msg   ->   _igual(a, b, lambda: msg)
+
+    Solo el == simple. Todo lo demás (assert not x, a != b, comparaciones
+    encadenadas) queda intacto y sigue funcionando como siempre.
+    """
+
+    def visit_Assert(self, nodo):
+        prueba = nodo.test
+        if not isinstance(prueba, ast.Compare):
+            return nodo
+        if len(prueba.ops) != 1 or not isinstance(prueba.ops[0], ast.Eq):
+            return nodo
+        if nodo.msg is None:
+            mensaje = ast.Constant(value=None)
+        else:
+            mensaje = ast.Lambda(
+                args=ast.arguments(
+                    posonlyargs=[], args=[], vararg=None,
+                    kwonlyargs=[], kw_defaults=[], kwarg=None, defaults=[],
+                ),
+                body=nodo.msg,
+            )
+        llamada = ast.Call(
+            func=ast.Name(id="_igual", ctx=ast.Load()),
+            args=[prueba.left, prueba.comparators[0], mensaje],
+            keywords=[],
+        )
+        return ast.copy_location(ast.Expr(value=llamada), nodo)
+
+def _compilar_tests(tests):
+    # Los números de línea se preservan, así el traceback sigue apuntando a la
+    # línea real del test que escribió el profe.
+    arbol = _ReescribirAsserts().visit(ast.parse(tests, "los_tests", "exec"))
+    ast.fix_missing_locations(arbol)
+    return compile(arbol, "los_tests", "exec")
 
 def _mk_input(cola):
     """Devuelve un input() que consume respuestas ya cargadas.
@@ -111,7 +257,8 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
                 return _buf.getvalue()
 
             ns["correr"] = _correr
-            exec(compile(tests, "los_tests", "exec"), ns)
+            ns["_igual"] = _igual
+            exec(_compilar_tests(tests), ns)
     except SyntaxError as e:
         ok = False
         donde = "los tests" if e.filename == "los_tests" else "tu código"

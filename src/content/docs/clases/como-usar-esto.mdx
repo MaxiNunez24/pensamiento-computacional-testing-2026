@@ -63,6 +63,16 @@ la definís, solo la usás.
 Y si tocás **✓ Verificar** sin hacer nada, el test falla y te dice qué esperaba. **Eso está bien**: el
 mensaje de error es información, no un reto.
 
+:::tip[El texto tiene que salir EXACTO — y hay dos ayudas para eso]
+Los tests comparan **letra por letra**: `años` no es lo mismo que `anos`, ni `Hola` que `hola`, y un
+espacio de más cuenta.
+
+1. **Si no coincide, te dice por qué.** Abajo del error vas a ver algo como *"es el mismo texto salvo
+   por los acentos"* o *"te sobra al final `' es mayor que 3'`"*. No hace falta que compares a ojo.
+2. **Tocá el texto para copiarlo.** Todo lo que en el enunciado está en `formato código` se copia con
+   un clic. Pegalo en tu `print()` y listo — así no hay tilde que se te escape.
+:::
+
 <EjercicioPython
   titulo="El doble"
   dificultad="🌱"
