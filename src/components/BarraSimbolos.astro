@@ -1,0 +1,95 @@
+---
+/**
+ * Barra de símbolos de Python, compartida por todos los ejercicios con editor.
+ *
+ * Para qué: en el teclado del celular casi todo esto vive en la segunda o
+ * tercera capa, y buscarlo corta el hilo de lo que estabas pensando. En
+ * escritorio es opcional (el toggle "⌨️ Símbolos"), y sirve para quien pelea
+ * con la distribución del teclado.
+ *
+ * Qué símbolos entran: los que se usan de verdad en los ejercicios del curso.
+ * El criterio no es "todos los de Python" sino lo que el alumno va a teclear;
+ * se sacó contando los caracteres de los `starter`, `tests` y bloques de código
+ * de las 24 clases.
+ *
+ * Los grupos ordenan las teclas (indentación / estructura / texto / operadores
+ * / castellano) pero NO se dibuja una línea entre ellos: probado, la línea cae
+ * donde la deje el salto de fila y termina partiendo un grupo al medio, así que
+ * hace ver rota una grilla que está bien. Y como el ancho depende del celular y
+ * de cuánto haya arrastrado el alumno los sidebars, no hay agrupación que
+ * sobreviva a todos los anchos. Lo que sí ordena es la vecindad: los símbolos
+ * relacionados están al lado.
+ */
+interface Tecla {
+  /** Caracter a insertar donde está el cursor. */
+  ins?: string;
+  /** O bien: indentar / desindentar la línea. */
+  indent?: 'mas' | 'menos';
+  /** Qué se ve en la tecla (por defecto, `ins`). */
+  txt?: string;
+  /** Ayuda al pasar el mouse. Vale la pena en los que no son obvios. */
+  ayuda?: string;
+}
+
+const grupos: Tecla[][] = [
+  [
+    { indent: 'mas', txt: '⇥', ayuda: 'Indentar (meter la línea para adentro)' },
+    { indent: 'menos', txt: '⇤', ayuda: 'Quitar indentación' },
+  ],
+  // Estructura: lo que abre y cierra.
+  [
+    { ins: '(' },
+    { ins: ')' },
+    { ins: '[', ayuda: 'Abrir lista o índice' },
+    { ins: ']' },
+    { ins: '{', ayuda: 'Abrir diccionario, o hueco de una f-string' },
+    { ins: '}' },
+    { ins: ':', ayuda: 'Cierra el if, el for, el while y el def' },
+    { ins: ',' },
+    { ins: '_', ayuda: 'Para separar palabras en los nombres: mi_variable' },
+  ],
+  // Texto y comentarios.
+  [
+    { ins: '"' },
+    { ins: "'" },
+    { ins: '\\', ayuda: 'La barra de \\n (salto de línea)' },
+    { ins: '#', ayuda: 'Comentario: Python ignora el resto de la línea' },
+  ],
+  // Operadores: comparar y hacer cuentas. Van juntos y no en dos grupos porque
+  // en celular las filas entran de a 7: con grupos chicos, los separadores caen
+  // en cualquier lado y terminan partiendo un grupo al medio.
+  [
+    { ins: '=' },
+    { ins: '!', ayuda: 'Para != (distinto)' },
+    { ins: '<' },
+    { ins: '>' },
+    { ins: '+' },
+    { ins: '-' },
+    { ins: '*' },
+    { ins: '/' },
+    { ins: '%', ayuda: 'Resto de la división (sirve para saber si es par)' },
+    { ins: '.', ayuda: 'Decimales, y también lista.append()' },
+  ],
+  // Castellano y varios: en un teclado configurado en inglés no están.
+  [
+    { ins: '¿' },
+    { ins: '?' },
+    { ins: '¡' },
+    { ins: '$' },
+  ],
+];
+---
+
+<div class="ejercicio__teclas" data-teclas aria-label="Símbolos de Python">
+  {grupos.flat().map((t) =>
+    t.indent ? (
+      <button type="button" class="ejercicio__tecla" data-indent={t.indent} title={t.ayuda}>
+        {t.txt}
+      </button>
+    ) : (
+      <button type="button" class="ejercicio__tecla" data-ins={t.ins} title={t.ayuda}>
+        {t.txt || t.ins}
+      </button>
+    ),
+  )}
+</div>

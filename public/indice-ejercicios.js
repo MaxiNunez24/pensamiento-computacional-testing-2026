@@ -96,6 +96,8 @@
     // por segundo) en vez de con IntersectionObserver: son 7 rects, el costo es
     // nada, y así el cálculo es una función pura y verificable en vez de
     // depender de cuándo el navegador decide entregar las intersecciones.
+    var ultimoActivo = null;
+
     function marcarActivo() {
       // Una LÍNEA de lectura, no una franja: el ejercicio activo es el que la
       // cruza. Con una franja, un ejercicio alto sigue tocándola cuando ya
@@ -117,10 +119,34 @@
           if (secciones[i].getBoundingClientRect().bottom < linea) activo = secciones[i].id;
         }
       }
+      // Solo seguimos al activo cuando CAMBIA: si lo hiciéramos en cada scroll,
+      // el alumno no podría recorrer la lista a mano (se la estaríamos moviendo
+      // de vuelta todo el tiempo).
+      var cambio = activo !== ultimoActivo;
+      ultimoActivo = activo;
+
       enlaces.forEach(function (a) {
-        a.classList.toggle('is-activo', a.dataset.para === activo);
+        var esActivo = a.dataset.para === activo;
+        a.classList.toggle('is-activo', esActivo);
+        if (esActivo && cambio) seguirAlActivo(a);
       });
       return activo;
+    }
+
+    // Cuando la lista tiene scroll propio (escritorio), que el ejercicio
+    // resaltado no quede fuera de la vista. Movemos SOLO la lista: nada de
+    // scrollIntoView, que también scrollea la página y le sacaría al alumno el
+    // ejercicio de adelante de los ojos.
+    function seguirAlActivo(a) {
+      var lista = a.closest('.idx-ej__lista');
+      if (!lista || lista.scrollHeight <= lista.clientHeight + 1) return;
+      var arriba = a.offsetTop;
+      var abajo = arriba + a.offsetHeight;
+      if (arriba < lista.scrollTop) {
+        lista.scrollTop = arriba;
+      } else if (abajo > lista.scrollTop + lista.clientHeight) {
+        lista.scrollTop = abajo - lista.clientHeight;
+      }
     }
 
     var ultimo = 0;

@@ -681,15 +681,18 @@ body.pc-resizing * {
 
 /* Barra de símbolos: oculta en escritorio (ahí está el teclado completo) y
    visible en pantallas angostas, que es donde ':' o '_' cuestan de encontrar. */
+/* La barra ENVUELVE en varias filas en vez de scrollear al costado. Con 14
+   teclas el scroll horizontal alcanzaba; con 29 no: buscar el # deslizando de
+   costado es el mismo problema que buscarlo en la tercera capa del teclado del
+   celular, que es justo lo que esta barra vino a resolver. Mejor cuatro filas
+   con todo a la vista. */
 .ejercicio__teclas {
   display: none;
-  gap: 0.3rem;
+  flex-wrap: wrap;
+  gap: 0.25rem;
   margin-top: 0.4rem;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
 }
-.ejercicio__teclas::-webkit-scrollbar { display: none; }
+
 
 /* En pantallas angostas va siempre: ahí el teclado del celular la necesita. */
 @media (max-width: 50rem) {
@@ -715,8 +718,12 @@ body.pc-resizing * {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* 2.75rem ≈ 44px: el mínimo recomendado para tocar con el dedo sin errarle. */
-  min-width: 2.75rem;
+  /* 44px de ALTO: el mínimo recomendado para tocar con el dedo sin errarle.
+     De ancho alcanza con menos —son de a un caracter, y las teclas de un
+     teclado de celular andan por los 33px—. Con 2.1rem (33.6px) y el gap de
+     0.25rem entran 8 por fila en un celular de 375px, y las 29 teclas cierran
+     en cuatro filas justas en vez de cinco con una sola tecla colgando. */
+  min-width: 2.1rem;
   min-height: 2.75rem;
   border: 1px solid var(--sl-color-gray-5);
   border-radius: 0.45rem;
@@ -1071,6 +1078,57 @@ body.pc-resizing * {
   list-style: none;
   margin: 0;
   padding: 0;
+  /* position: relative para que el offsetTop de cada link sea relativo A ESTA
+     lista — de ahí lo lee el script para seguir al ejercicio activo. */
+  position: relative;
+}
+
+/* En escritorio la lista tiene su propio scroll, con una barra ANCHA y visible.
+   Dos motivos: con muchos ejercicios el índice de títulos de la clase quedaba
+   empujado fuera de la pantalla, y hay quien prefiere arrastrar la barra antes
+   que usar la ruedita —y la barra fina de Starlight es casi imposible de
+   agarrar—. En celular no va: el índice ya vive adentro de un desplegable que
+   scrollea, y anidar dos scrolls en una pantalla táctil es un lío.
+
+   Ojo con el selector: el <mobile-starlight-toc> vive DENTRO de .right-sidebar
+   (en un div que el breakpoint oculta), así que ".right-sidebar .idx-ej__lista"
+   agarraba los dos. Hay que apuntar al elemento de escritorio por su tag. */
+starlight-toc .idx-ej__lista {
+  max-height: 45vh;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* al llegar al final no arrastra la página */
+  scrollbar-gutter: stable;
+  scrollbar-width: auto; /* Firefox: la ancha, no la fina */
+  scrollbar-color: var(--sl-color-gray-4) var(--sl-color-gray-6);
+}
+
+/* La misma barra ancha para el índice entero, que también scrollea cuando la
+   clase es larga. */
+.right-sidebar {
+  scrollbar-width: auto;
+  scrollbar-color: var(--sl-color-gray-4) transparent;
+}
+.right-sidebar::-webkit-scrollbar,
+starlight-toc .idx-ej__lista::-webkit-scrollbar {
+  width: 14px;
+}
+starlight-toc .idx-ej__lista::-webkit-scrollbar-track {
+  background: var(--sl-color-gray-6);
+  border-radius: 999px;
+}
+.right-sidebar::-webkit-scrollbar-thumb,
+starlight-toc .idx-ej__lista::-webkit-scrollbar-thumb {
+  /* El borde transparente + background-clip deja el pulgar de ~10px con aire
+     alrededor: se ve prolijo y sigue siendo agarrable. */
+  background: var(--sl-color-gray-4);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+  border-radius: 999px;
+}
+.right-sidebar::-webkit-scrollbar-thumb:hover,
+starlight-toc .idx-ej__lista::-webkit-scrollbar-thumb:hover {
+  background: var(--sl-color-gray-3);
+  background-clip: padding-box;
 }
 .idx-ej__link {
   display: flex;
