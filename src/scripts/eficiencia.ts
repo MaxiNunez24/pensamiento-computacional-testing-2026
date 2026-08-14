@@ -38,7 +38,6 @@ import {
   editorTheme,
   b64decode,
   avisarDescargaUnaVez,
-  teclasActivas,
   aplicarPreferenciaTeclas,
   conectarTeclas,
   conectarToggleTeclas,
@@ -351,7 +350,7 @@ function initEficiencia(el: HTMLElement): void {
 }
 
 function boot(): void {
-  aplicarPreferenciaTeclas(teclasActivas());
+  aplicarPreferenciaTeclas();
   document.querySelectorAll<HTMLElement>('.ejercicio--eficiencia').forEach((el) => {
     if (el.dataset.init) return;
     el.dataset.init = '1';

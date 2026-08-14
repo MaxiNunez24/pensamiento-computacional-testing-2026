@@ -88,24 +88,47 @@ export function avisarDescargaUnaVez(el: HTMLElement): void {
 
 // ---------- Barra de símbolos ----------
 
-// Preferencia de mostrar la barra de símbolos también en escritorio. Se guarda
-// como una clase en <html> para que el CSS la aplique a TODOS los ejercicios de
-// la página de una, sin recorrerlos uno por uno.
+// Preferencia de mostrar la barra de símbolos. Se guarda como una clase en
+// <html> para que el CSS la aplique a TODOS los ejercicios de la página de una,
+// sin recorrerlos uno por uno.
+//
+// Son TRES estados y no dos, porque el default depende de la pantalla: en
+// celular la barra viene encendida (es donde hace falta) y en escritorio
+// apagada. Si guardáramos solo un booleano, "no elegí nada" y "la apagué"
+// serían lo mismo y no se podría apagar en celular.
+//   '1'  → mostrarla siempre
+//   '0'  → ocultarla siempre
+//   null → como venga por defecto según el tamaño de pantalla
 const LS_TECLAS = 'pc_teclas_escritorio';
 
-export function teclasActivas(): boolean {
+function preferenciaTeclas(): '1' | '0' | null {
   try {
-    return localStorage.getItem(LS_TECLAS) === '1';
+    const v = localStorage.getItem(LS_TECLAS);
+    return v === '1' || v === '0' ? v : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
-export function aplicarPreferenciaTeclas(activas: boolean): void {
-  document.documentElement.classList.toggle('pc-teclas', activas);
+// Si la barra se está mostrando (o se mostraría, en un ejercicio que todavía no
+// llegó a la fase de escribir). Lo leemos del CSS en vez de recalcular el
+// breakpoint a mano: así la regla vive en un solo lugar.
+function teclasSeVen(): boolean {
+  const barra = document.querySelector<HTMLElement>('[data-teclas]');
+  return !!barra && getComputedStyle(barra).display !== 'none';
+}
+
+export function aplicarPreferenciaTeclas(): void {
+  const pref = preferenciaTeclas();
+  const raiz = document.documentElement.classList;
+  raiz.toggle('pc-teclas', pref === '1');
+  raiz.toggle('pc-teclas-off', pref === '0');
+  // El aria-pressed refleja lo que realmente se ve, no la preferencia guardada:
+  // con null, en celular se ve y en escritorio no.
+  const visible = teclasSeVen();
   document
     .querySelectorAll<HTMLButtonElement>('[data-toggle-teclas]')
-    .forEach((b) => b.setAttribute('aria-pressed', String(activas)));
+    .forEach((b) => b.setAttribute('aria-pressed', String(visible)));
 }
 
 export function conectarToggleTeclas(el: HTMLElement): void {
@@ -118,13 +141,15 @@ export function conectarToggleTeclas(el: HTMLElement): void {
     // que visualmente no se mueva nada.
     const antes = boton.getBoundingClientRect().top;
 
-    const activas = !teclasActivas();
+    // Se togglea contra lo que se VE, no contra lo guardado: si nunca eligió
+    // nada y está en el celular, el primer toque tiene que apagarla.
+    const mostrar = !teclasSeVen();
     try {
-      localStorage.setItem(LS_TECLAS, activas ? '1' : '0');
+      localStorage.setItem(LS_TECLAS, mostrar ? '1' : '0');
     } catch {
       /* sin persistencia: vale para esta sesión igual */
     }
-    aplicarPreferenciaTeclas(activas);
+    aplicarPreferenciaTeclas();
 
     // getBoundingClientRect fuerza el recálculo, así que acá ya está el layout
     // nuevo. 'instant' porque un scroll animado acá se ve como otro salto.
@@ -137,9 +162,46 @@ export function conectarToggleTeclas(el: HTMLElement): void {
 
 // Barra de símbolos (celular): inserta el caracter donde está el cursor sin
 // robarle el foco al editor, para que no se cierre el teclado del teléfono.
-export function conectarTeclas(el: HTMLElement, view: EditorView): void {
+//
+// `vista` puede ser un EditorView o una función que lo devuelva (o null). Lo
+// segundo es para EncontrarElError, donde según el ejercicio se arregla en un
+// editor CodeMirror o en un <input> de una sola línea, y eso se decide recién
+// cuando el alumno ya ubicó el error. Si no hay editor, escribimos en el último
+// campo de texto que estuvo enfocado.
+const INDENTACION = '    '; // 4 espacios, como manda Python
+
+export function conectarTeclas(
+  el: HTMLElement,
+  vista: EditorView | (() => EditorView | null),
+): void {
   const barra = el.querySelector<HTMLElement>('[data-teclas]');
   if (!barra) return;
+  const dameVista = typeof vista === 'function' ? vista : () => vista;
+
+  // Guardamos el último campo enfocado porque para cuando llega el click, el
+  // foco puede haberse ido: el alumno toca el símbolo, no el campo.
+  let ultimoCampo: HTMLInputElement | HTMLTextAreaElement | null = null;
+  el.addEventListener('focusin', (e) => {
+    const t = e.target;
+    if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement) ultimoCampo = t;
+  });
+
+  // Tres intentos para saber dónde escribir, de más preciso a más tolerante. El
+  // último existe porque 'focusin' no siempre llega (si la ventana no tiene el
+  // foco del sistema, focus() no lo dispara), y quedarse sin hacer nada por eso
+  // sería peor que escribir en el único campo que hay.
+  const campoDondeEscribir = (): HTMLInputElement | HTMLTextAreaElement | null => {
+    const activo = document.activeElement;
+    if (
+      (activo instanceof HTMLInputElement || activo instanceof HTMLTextAreaElement) &&
+      el.contains(activo)
+    ) {
+      return activo;
+    }
+    if (ultimoCampo && el.contains(ultimoCampo)) return ultimoCampo;
+    const campos = el.querySelectorAll<HTMLInputElement>('input[type="text"], textarea');
+    return campos.length === 1 ? campos[0] : null;
+  };
 
   // Clave: sin este preventDefault el botón toma el foco, el editor lo pierde y
   // el teclado del celular se cierra en cada símbolo.
@@ -149,18 +211,40 @@ export function conectarTeclas(el: HTMLElement, view: EditorView): void {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button');
     if (!btn) return;
     const indent = btn.dataset.indent;
-    if (indent) {
-      (indent === 'mas' ? indentMore : indentLess)(view);
-    } else if (btn.dataset.ins != null) {
-      const texto = btn.dataset.ins;
-      const { from, to } = view.state.selection.main;
-      view.dispatch({
-        changes: { from, to, insert: texto },
-        selection: { anchor: from + texto.length },
-        scrollIntoView: true,
-      });
+    const texto = btn.dataset.ins;
+
+    const view = dameVista();
+    if (view) {
+      if (indent) {
+        (indent === 'mas' ? indentMore : indentLess)(view);
+      } else if (texto != null) {
+        const { from, to } = view.state.selection.main;
+        view.dispatch({
+          changes: { from, to, insert: texto },
+          selection: { anchor: from + texto.length },
+          scrollIntoView: true,
+        });
+      }
+      view.focus();
+      return;
     }
-    view.focus();
+
+    // Sin editor: va al campo de texto. Se sigue soportando indentar, que en
+    // estos ejercicios importa —la indentación mal puesta es un bug clásico—.
+    const campo = campoDondeEscribir();
+    if (!campo) return;
+    if (indent === 'mas') {
+      campo.value = INDENTACION + campo.value;
+    } else if (indent === 'menos') {
+      campo.value = campo.value.replace(new RegExp('^ {1,' + INDENTACION.length + '}'), '');
+    } else if (texto != null) {
+      const desde = campo.selectionStart ?? campo.value.length;
+      const hasta = campo.selectionEnd ?? desde;
+      campo.setRangeText(texto, desde, hasta, 'end');
+    }
+    campo.focus();
+    // Que quien escuche 'input' se entere del cambio hecho por código.
+    campo.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
 

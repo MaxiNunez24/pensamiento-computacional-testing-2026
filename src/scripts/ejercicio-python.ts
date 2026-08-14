@@ -22,7 +22,6 @@ import {
   editorTheme,
   b64decode,
   avisarDescargaUnaVez,
-  teclasActivas,
   aplicarPreferenciaTeclas,
   conectarTeclas,
   conectarToggleTeclas,
@@ -169,7 +168,7 @@ function initEjercicio(el: HTMLElement): void {
 
 function boot(): void {
   // Antes de inicializar: dejar la barra como la eligió el alumno la última vez.
-  aplicarPreferenciaTeclas(teclasActivas());
+  aplicarPreferenciaTeclas();
   // Los de eficiencia también son .ejercicio (heredan todo el CSS), pero los
   // maneja su propio script: acá los salteamos para no inicializarlos dos veces.
   document.querySelectorAll<HTMLElement>('.ejercicio:not(.ejercicio--eficiencia)').forEach((el) => {

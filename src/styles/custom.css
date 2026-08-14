@@ -696,14 +696,18 @@ body.pc-resizing * {
 
 /* En pantallas angostas va siempre: ahí el teclado del celular la necesita. */
 @media (max-width: 50rem) {
+  /* En celular viene encendida por defecto: es donde el teclado esconde los
+     símbolos. Pero se puede apagar con el mismo botón que en escritorio —son 29
+     teclas y ocupan cuatro filas, que no siempre se quieren tener ahí. */
   .ejercicio__teclas { display: flex; }
-  /* El toggle no tiene sentido acá, la barra ya está puesta. */
-  .ejercicio__btn--teclado { display: none; }
 }
 
-/* En escritorio es opcional: la clase la pone el toggle (se recuerda en
-   localStorage) y vale para todos los ejercicios de la página a la vez. */
+/* Las dos clases las pone el toggle (se recuerda en localStorage) y valen para
+   todos los ejercicios de la página a la vez. `pc-teclas-off` le tiene que
+   ganar al default de celular de arriba: gana por especificidad (0,2,1 contra
+   0,1,0), porque las media queries no suman especificidad. */
 :root.pc-teclas .ejercicio__teclas { display: flex; }
+:root.pc-teclas-off .ejercicio__teclas { display: none; }
 
 .ejercicio__btn--teclado[aria-pressed='true'] {
   border-color: var(--sl-color-accent);
@@ -1078,46 +1082,37 @@ body.pc-resizing * {
   list-style: none;
   margin: 0;
   padding: 0;
-  /* position: relative para que el offsetTop de cada link sea relativo A ESTA
-     lista — de ahí lo lee el script para seguir al ejercicio activo. */
-  position: relative;
 }
 
-/* En escritorio la lista tiene su propio scroll, con una barra ANCHA y visible.
-   Dos motivos: con muchos ejercicios el índice de títulos de la clase quedaba
-   empujado fuera de la pantalla, y hay quien prefiere arrastrar la barra antes
-   que usar la ruedita —y la barra fina de Starlight es casi imposible de
-   agarrar—. En celular no va: el índice ya vive adentro de un desplegable que
-   scrollea, y anidar dos scrolls en una pantalla táctil es un lío.
 
-   Ojo con el selector: el <mobile-starlight-toc> vive DENTRO de .right-sidebar
-   (en un div que el breakpoint oculta), así que ".right-sidebar .idx-ej__lista"
-   agarraba los dos. Hay que apuntar al elemento de escritorio por su tag. */
-starlight-toc .idx-ej__lista {
-  max-height: 45vh;
+/* ---------- La barra de scroll del índice derecho ----------
+
+   UNA sola barra, de alto completo, para todo el índice (títulos + ejercicios).
+   Antes la lista de ejercicios tenía su propio scroll y la barra cubría solo
+   ese pedazo, que es justo lo que se veía mal.
+
+   Por qué va acá y no en .right-sidebar, que es quien scrollea de fábrica: ese
+   div es `position: fixed` y mide 100% del VIEWPORT (1265px), arrancando en el
+   x del sidebar (~913). O sea que su borde derecho —y con él su barra de
+   scroll— cae casi 1000px fuera de la pantalla. Se puede estilar todo lo que
+   uno quiera: no se ve. El primer elemento con el ancho real de la columna es
+   .sl-container, así que el scroll va ahí.
+
+   El alto: la columna arranca debajo del encabezado (--sl-nav-height) y le
+   dejamos 2rem de aire abajo. Medido: 804px en una ventana de 900. */
+.right-sidebar .sl-container {
+  max-height: calc(100vh - var(--sl-nav-height, 4rem) - 2rem);
   overflow-y: auto;
   overscroll-behavior: contain; /* al llegar al final no arrastra la página */
-  scrollbar-gutter: stable;
-  scrollbar-width: auto; /* Firefox: la ancha, no la fina */
-  scrollbar-color: var(--sl-color-gray-4) var(--sl-color-gray-6);
-}
-
-/* La misma barra ancha para el índice entero, que también scrollea cuando la
-   clase es larga. */
-.right-sidebar {
+  /* Ancha y agarrable, no la barra fina de Starlight: hay quien la arrastra en
+     vez de usar la ruedita, y con 4px de ancho eso es puntería fina. */
   scrollbar-width: auto;
   scrollbar-color: var(--sl-color-gray-4) transparent;
 }
-.right-sidebar::-webkit-scrollbar,
-starlight-toc .idx-ej__lista::-webkit-scrollbar {
+.right-sidebar .sl-container::-webkit-scrollbar {
   width: 14px;
 }
-starlight-toc .idx-ej__lista::-webkit-scrollbar-track {
-  background: var(--sl-color-gray-6);
-  border-radius: 999px;
-}
-.right-sidebar::-webkit-scrollbar-thumb,
-starlight-toc .idx-ej__lista::-webkit-scrollbar-thumb {
+.right-sidebar .sl-container::-webkit-scrollbar-thumb {
   /* El borde transparente + background-clip deja el pulgar de ~10px con aire
      alrededor: se ve prolijo y sigue siendo agarrable. */
   background: var(--sl-color-gray-4);
@@ -1125,8 +1120,7 @@ starlight-toc .idx-ej__lista::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 999px;
 }
-.right-sidebar::-webkit-scrollbar-thumb:hover,
-starlight-toc .idx-ej__lista::-webkit-scrollbar-thumb:hover {
+.right-sidebar .sl-container::-webkit-scrollbar-thumb:hover {
   background: var(--sl-color-gray-3);
   background-clip: padding-box;
 }

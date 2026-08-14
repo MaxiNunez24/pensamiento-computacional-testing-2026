@@ -13,6 +13,12 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { estaHecho, marcarHecho, pintarSello, actualizarResumen } from './progreso';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
 import { medirCuandoSeaVisible } from './medir-editor';
+import {
+  editorTheme,
+  aplicarPreferenciaTeclas,
+  conectarTeclas,
+  conectarToggleTeclas,
+} from './editor-comun';
 
 function b64decode(s: string): string {
   if (!s) return '';
@@ -37,6 +43,7 @@ function initEncontrar(el: HTMLElement): void {
   const btnReiniciar = el.querySelector<HTMLButtonElement>('[data-reiniciar]');
   const botonesLinea = Array.from(el.querySelectorAll<HTMLButtonElement>('.encontrar__linea'));
   const cajaEditor = el.querySelector<HTMLElement>('[data-editor-completo]');
+  const cajaTeclas = el.querySelector<HTMLElement>('[data-caja-teclas]');
   let editor: EditorView | null = null;
   if (!salida) return;
 
@@ -88,6 +95,7 @@ function initEncontrar(el: HTMLElement): void {
   // La fase de señalar ya pasó, así que no se puede tantear sin haber leído.
   function habilitarArregloCompleto(): void {
     fase = 'arreglar';
+    if (cajaTeclas) cajaTeclas.hidden = false;
     if (ayuda) ayuda.textContent = '✏️ Ahora arreglalo. Podés reacomodar el código como haga falta.';
     const lista = el.querySelector<HTMLElement>('[data-lineas]');
     if (lista) lista.hidden = true;
@@ -95,7 +103,7 @@ function initEncontrar(el: HTMLElement): void {
       cajaEditor.hidden = false;
       editor = new EditorView({
         doc: codigo.replace(/\n$/, ''),
-        extensions: [basicSetup, python(), oneDark, keymap.of([indentWithTab])],
+        extensions: [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab])],
         parent: cajaEditor,
       });
       medirCuandoSeaVisible(editor);
@@ -108,6 +116,7 @@ function initEncontrar(el: HTMLElement): void {
   function habilitarArreglo(): void {
     if (modoArreglo === 'completo') return habilitarArregloCompleto();
     fase = 'arreglar';
+    if (cajaTeclas) cajaTeclas.hidden = false;
     if (ayuda) ayuda.textContent = '✏️ Ahora arreglá esa línea (las demás quedan como están).';
     botonesLinea.forEach((btn) => {
       const n = Number(btn.dataset.linea);
@@ -229,7 +238,10 @@ function initEncontrar(el: HTMLElement): void {
   btnSinError?.addEventListener('click', () => confirmarUbicacion(true));
 
   btnReiniciar?.addEventListener('click', () => {
-    // Volver a fase 1: deshacer los inputs y dejar el código como vino.
+    // Volver a fase 1: deshacer los inputs y dejar el código como vino. La barra
+    // de símbolos se esconde con ellos: en la fase de señalar no hay dónde
+    // escribir.
+    if (cajaTeclas) cajaTeclas.hidden = true;
     el.querySelectorAll<HTMLInputElement>('.encontrar__input').forEach((input) => {
       const btn = input.closest<HTMLButtonElement>('.encontrar__linea');
       const n = btn ? Number(btn.dataset.linea) : 0;
@@ -260,6 +272,12 @@ function initEncontrar(el: HTMLElement): void {
     if (btnSinError) btnSinError.hidden = false;
   });
 
+  // La barra de símbolos: getter y no una vista fija, porque en el modo 'linea'
+  // nunca hay editor (se escribe en <input>) y en 'completo' recién existe
+  // después de que el alumno ubica el error.
+  conectarTeclas(el, () => editor);
+  conectarToggleTeclas(el);
+
   // Precarga de Python solo si el ejercicio va a necesitarlo para el arreglo.
   if (tests) {
     el.addEventListener('pointerdown', () => void ensureWorker().catch(() => {}), { once: true });
@@ -267,6 +285,7 @@ function initEncontrar(el: HTMLElement): void {
 }
 
 function boot(): void {
+  aplicarPreferenciaTeclas();
   document.querySelectorAll<HTMLElement>('.encontrar').forEach((el) => {
     if (el.dataset.init) return;
     el.dataset.init = '1';

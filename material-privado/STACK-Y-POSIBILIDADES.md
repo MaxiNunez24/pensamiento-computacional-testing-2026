@@ -166,8 +166,13 @@ pero NO la tienen** — si algún día se les agrega, hay que poner `<BarraSimbo
 llamar a `conectarTeclas(el, view)` en su script.
 
 Qué símbolos entran: los que aparecen de verdad en los `starter`, `tests` y bloques de código de las
-clases. Se cuentan, no se adivinan. Quedan afuera `` ` `` y `|` justamente porque ningún ejercicio
-los usa todavía.
+clases. Se cuentan, no se adivinan. (El `|` es la excepción: entró a pedido, previendo las uniones
+de sets.)
+
+**El botón "⌨️ Símbolos" existe en las dos pantallas** y la preferencia tiene TRES estados, no dos:
+`'1'` mostrar / `'0'` ocultar / ausente = el default según pantalla (celular sí, escritorio no). Con
+un booleano, "no elegí nada" y "la apagué" serían lo mismo y no se podría apagar en celular — que es
+donde más molesta, porque son cuatro filas (188px) debajo de cada editor.
 
 ### Props de `<EjercicioEficiencia>`
 

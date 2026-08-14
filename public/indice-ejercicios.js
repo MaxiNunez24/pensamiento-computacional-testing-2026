@@ -133,19 +133,33 @@
       return activo;
     }
 
-    // Cuando la lista tiene scroll propio (escritorio), que el ejercicio
-    // resaltado no quede fuera de la vista. Movemos SOLO la lista: nada de
-    // scrollIntoView, que también scrollea la página y le sacaría al alumno el
-    // ejercicio de adelante de los ojos.
+    // El primer ancestro que scrollea de verdad. Hoy es el .sl-container del
+    // índice derecho, pero no lo damos por sentado: el .right-sidebar también
+    // declara overflow-y y en celular no scrollea ninguno de los dos.
+    function contenedorQueScrollea(el) {
+      var n = el.parentElement;
+      while (n && n !== document.body) {
+        var ov = getComputedStyle(n).overflowY;
+        if ((ov === 'auto' || ov === 'scroll') && n.scrollHeight > n.clientHeight + 1) return n;
+        n = n.parentElement;
+      }
+      return null;
+    }
+
+    // Que el ejercicio resaltado no quede fuera de la vista. Movemos SOLO ese
+    // contenedor: nada de scrollIntoView, que también scrollea la página y le
+    // sacaría al alumno el ejercicio de adelante de los ojos.
     function seguirAlActivo(a) {
-      var lista = a.closest('.idx-ej__lista');
-      if (!lista || lista.scrollHeight <= lista.clientHeight + 1) return;
-      var arriba = a.offsetTop;
-      var abajo = arriba + a.offsetHeight;
-      if (arriba < lista.scrollTop) {
-        lista.scrollTop = arriba;
-      } else if (abajo > lista.scrollTop + lista.clientHeight) {
-        lista.scrollTop = abajo - lista.clientHeight;
+      var caja = contenedorQueScrollea(a);
+      if (!caja) return;
+      // Con rects en vez de offsetTop: así no depende de cuál sea el ancestro
+      // posicionado, que cambia según dónde termine viviendo el índice.
+      var r = a.getBoundingClientRect();
+      var rc = caja.getBoundingClientRect();
+      if (r.top < rc.top) {
+        caja.scrollTop -= rc.top - r.top;
+      } else if (r.bottom > rc.bottom) {
+        caja.scrollTop += r.bottom - rc.bottom;
       }
     }
 

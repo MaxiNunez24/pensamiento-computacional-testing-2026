@@ -24,6 +24,8 @@
  *   Este programa debería sumar los números, pero imprime 3.
  *   </EncontrarElError>
  */
+import BarraSimbolos from './BarraSimbolos.astro';
+
 interface Props {
   titulo: string;
   dificultad?: string;
@@ -99,10 +101,25 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
     <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-confirmar>✓ Confirmar</button>
     <button type="button" class="ejercicio__btn" data-sin-error>🤔 No hay ningún error</button>
     <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reiniciar>↺ Reiniciar</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--teclado"
+      data-toggle-teclas
+      aria-pressed="false"
+      title="Mostrar u ocultar la barra de símbolos"
+    >⌨️ Símbolos</button>
   </div>
 
   {/* Editor completo: aparece solo en modo 'completo', después de ubicar el error. */}
   <div class="encontrar__editor" data-editor-completo hidden></div>
+
+  {/* La barra de símbolos aparece recién en la fase de arreglar: antes de ubicar
+      el error no hay dónde escribir, y mostrarla sería ofrecer algo que no hace
+      nada. Sirve para los dos modos —el editor completo y los <input> de una
+      línea—; de eso se encarga conectarTeclas. */}
+  <div data-caja-teclas hidden>
+    <BarraSimbolos />
+  </div>
 
   <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
 
