@@ -168,7 +168,15 @@ export function conectarTeclas(el: HTMLElement, view: EditorView): void {
 
 // mailto: (100% estático, sin terceros) + publicación en Discord vía Worker.
 // `getCode` se pasa como función porque el código cambia entre clics.
-export function conectarEnvio(el: HTMLElement, getCode: () => string): void {
+//
+// `getEntradas` es para los ejercicios con input(): sin saber QUÉ tecleó el
+// alumno, su código no se puede reproducir del otro lado. Y como la caja de
+// entradas es editable, lo que probó él puede no ser lo que trae el ejercicio.
+export function conectarEnvio(
+  el: HTMLElement,
+  getCode: () => string,
+  getEntradas?: () => string[],
+): void {
   const btnEnviar = el.querySelector<HTMLButtonElement>('[data-enviar]');
   if (!btnEnviar) return;
   const cajaEnvio = el.querySelector<HTMLElement>('[data-envio]');
@@ -185,6 +193,7 @@ export function conectarEnvio(el: HTMLElement, getCode: () => string): void {
       ) || ''
     ).trim();
     const asunto = `${nombre} — ${titulo}`;
+    const entradas = (getEntradas ? getEntradas() : []).filter((e) => e !== '');
     const cuerpo =
       `¡Hola profe! Te mando mi intento. 🙂\n\n` +
       `Lección: ${document.title}\n` +
@@ -192,6 +201,7 @@ export function conectarEnvio(el: HTMLElement, getCode: () => string): void {
       `Ejercicio: ${titulo}\n` +
       `Alumno/a: ${nombre}\n\n` +
       (consulta ? `--- mi consulta ---\n${consulta}\n\n` : '') +
+      (entradas.length ? `--- lo que tecleé (entradas) ---\n${entradas.join('\n')}\n\n` : '') +
       `--- mi código ---\n` +
       `${getCode()}\n`;
     ultimoMensaje = `Para: ${EMAIL_PROFE}\nAsunto: ${asunto}\n\n${cuerpo}`;
@@ -236,6 +246,7 @@ export function conectarEnvio(el: HTMLElement, getCode: () => string): void {
             nombre,
             consulta,
             codigo: getCode(),
+            entradas,
             ejercicio: titulo,
             leccion: document.title,
             url: location.href,

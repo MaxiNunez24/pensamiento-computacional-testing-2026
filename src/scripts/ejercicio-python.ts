@@ -150,7 +150,7 @@ function initEjercicio(el: HTMLElement): void {
     }
   });
 
-  conectarEnvio(el, getCode);
+  conectarEnvio(el, getCode, leerEntradas);
 
   // Barra de símbolos: siempre en pantallas angostas, opcional en escritorio.
   conectarTeclas(el, view);

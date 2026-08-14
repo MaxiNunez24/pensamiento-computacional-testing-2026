@@ -25,6 +25,11 @@ Esa URL es la credencial: **no va al sitio ni al repo**. Solo se pega en Cloudfl
 2. Ponele de nombre `consultas` (queda `https://consultas.<tu-subdominio>.workers.dev`).
 3. **Edit code**, borrá lo que trae y pegá el contenido de `consultas-discord.js`. **Deploy**.
 
+> ⚠️ **Cuando cambia `consultas-discord.js` hay que volver a pegarlo y hacer Deploy.** El Worker no
+> se actualiza solo con el push al repo: el código vive en Cloudflare. (La última vez que cambió: se
+> agregó el campo **⌨️ Lo que tecleó**, con las entradas de los ejercicios con `input()`. Sin
+> re-deployar, esas entradas llegan al Worker y se descartan — el resto sigue andando igual.)
+
 ## 3. Guardar el webhook como secreto
 
 En el Worker → **Settings** → **Variables and Secrets** → **Add**:
@@ -39,7 +44,7 @@ En el Worker → **Settings** → **Variables and Secrets** → **Add**:
 
 ## 4. Enchufarlo al sitio
 
-En `src/scripts/ejercicio-python.ts`, arriba de todo:
+En `src/scripts/editor-comun.ts`, arriba de todo:
 
 ```ts
 const WORKER_CONSULTAS = 'https://consultas.TU-SUBDOMINIO.workers.dev';

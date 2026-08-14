@@ -16,10 +16,16 @@
 // casual, que es el realista.
 const ORIGENES_PERMITIDOS = ['https://maxinunez24.github.io'];
 
-// Topes para que nadie use esto de megáfono. Discord corta en 2000 caracteres.
+// Topes para que nadie use esto de megáfono.
 const MAX_NOMBRE = 80;
 const MAX_CONSULTA = 1000;
-const MAX_CODIGO = 3000;
+// El código viaja en `content`, y ahí Discord corta en 2000 caracteres. Con el
+// cerco de ```python y el aviso de recorte, 1700 deja margen de sobra; con el
+// 3000 de antes, un código largo hacía que Discord rechazara el mensaje entero
+// y el alumno veía "Discord no respondió" sin entender por qué.
+const MAX_CODIGO = 1700;
+// Las entradas van como campo del embed, y ahí el tope de Discord es 1024.
+const MAX_ENTRADAS = 800;
 
 function cors(origen) {
   return {
@@ -33,6 +39,12 @@ function cors(origen) {
 function recortar(valor, max) {
   const s = typeof valor === 'string' ? valor.trim() : '';
   return s.length > max ? s.slice(0, max) + '\n…(recortado)' : s;
+}
+
+// Dentro de un bloque de código de Discord, ``` lo cierra antes de tiempo. Se
+// mete un caracter invisible en el medio para que se vea igual y no rompa nada.
+function sinCercos(s) {
+  return s.replace(/```/g, '`​``');
 }
 
 export default {
@@ -60,6 +72,13 @@ export default {
     const nombre = recortar(datos.nombre, MAX_NOMBRE) || 'Alumno/a sin nombre';
     const consulta = recortar(datos.consulta, MAX_CONSULTA);
     const codigo = recortar(datos.codigo, MAX_CODIGO);
+    // Las entradas de los ejercicios con input(): sin ellas, el código del
+    // alumno no se puede volver a correr igual del otro lado. Llegan como
+    // array (una por línea), pero aceptamos también un string por las dudas.
+    const entradas = recortar(
+      Array.isArray(datos.entradas) ? datos.entradas.join('\n') : datos.entradas,
+      MAX_ENTRADAS,
+    );
     const ejercicio = recortar(datos.ejercicio, 120) || 'Ejercicio';
     const leccion = recortar(datos.leccion, 200);
     const url = recortar(datos.url, 300);
@@ -78,6 +97,9 @@ export default {
           color: 0x5865f2,
           author: { name: nombre },
           fields: [
+            ...(entradas
+              ? [{ name: '⌨️ Lo que tecleó', value: '```\n' + sinCercos(entradas) + '\n```' }]
+              : []),
             ...(leccion ? [{ name: 'Lección', value: leccion }] : []),
             ...(url ? [{ name: 'Link', value: url }] : []),
           ],
@@ -85,7 +107,7 @@ export default {
         },
       ],
       // El código va aparte del embed: así Discord le da resaltado de Python.
-      content: '```python\n' + codigo.replace(/```/g, '`​``') + '\n```',
+      content: '```python\n' + sinCercos(codigo) + '\n```',
     };
 
     const r = await fetch(env.DISCORD_WEBHOOK, {
