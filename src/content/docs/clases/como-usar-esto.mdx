@@ -12,7 +12,8 @@ necesitás más.
 :::tip[¿Por qué existe esto?]
 Para que puedas practicar **en cualquier lado**. Hasta ahora, si querías seguir un ejercicio en casa,
 tenías que tener Python instalado y el archivo a mano. Acá abrís el link y seguís donde ibas: **tu
-código se guarda solo** en el navegador.
+código se guarda solo** en el navegador, y con **🔄 Sincronizar** lo llevás de la compu del CFP a la
+tuya (punto 8).
 :::
 
 ## 1. El recuadro negro es tu editor
@@ -87,9 +88,21 @@ Usalas sin culpa. Trabarse es parte de programar; quedarse trabado media hora en
 
 ## 6. Los botones de símbolos ⌨️
 
-En el celular (y en la compu si tocás **⌨️ Símbolos**) aparece una barra con `: _ ( ) [ ] " = < >` y
-las flechas de indentar. Están ahí porque esos caracteres son un dolor de encontrar en el teclado del
-teléfono, o si te tocó un teclado con distribución rara.
+Debajo del editor hay una barra con los 30 símbolos que se usan en el curso: paréntesis, corchetes,
+llaves, comillas, `:`, `#`, `%`, `\`, `¿`… y las flechas **⇥ ⇤** para indentar y desindentar.
+
+Están ahí porque en el teclado del celular esos caracteres viven en la segunda o tercera capa, y
+buscarlos te corta el hilo de lo que estabas pensando. En la compu pasa lo mismo si te tocó un
+teclado con distribución rara.
+
+- **En el celular viene puesta.** Si te ocupa mucho lugar, la apagás con **⌨️ Símbolos**.
+- **En la compu viene apagada.** La prendés con ese mismo botón.
+- Como sea que la dejes, **se recuerda** y vale para todos los ejercicios.
+
+:::note[Escribe donde tengas el cursor]
+Si estás escribiendo en el editor, el símbolo va al código. Si estás en la caja de **⌨️ Entradas**
+(la que tienen los ejercicios con `input()`), va ahí. No hace falta que le avises nada.
+:::
 
 ## 7. ↺ Reiniciar y el guardado
 
@@ -98,7 +111,41 @@ teléfono, o si te tocó un teclado con distribución rara.
   empezar de cero.
 - Cuando un ejercicio pasa los tests, le queda un sello **✓ Resuelto**.
 
-## 8. ✉️ Enviar a mi profe
+## 8. 🔄 Sincronizar: del CFP a tu casa
+
+Lo de arriba tiene una letra chica: tu código se guarda **en este navegador**. Lo que hacés en la
+compu del CFP no aparece solo en la de tu casa, ni en el celular.
+
+Para eso está el botón **🔄 Sincronizar** — en la compu, arriba a la derecha; en el celular, el
+redondito que flota abajo. Se abre esto:
+
+| Lo que tocás | Qué hace |
+|--------------|----------|
+| **`git push`** — Subir mi avance | Manda a la nube todo lo que hiciste en **este** navegador. |
+| **`git pull`** — Traer mi avance | Baja acá lo que hayas subido antes desde otro lado. |
+
+Arriba del todo vas a ver **tu código**, algo tipo `guada-7f3k`. Se arma solo con tu nombre la
+primera vez. **Anotalo**: es lo único que hace falta para reconocerte del otro lado — no hay usuario
+ni contraseña. Hay un botón 📋 para copiarlo.
+
+Los nombres no son casualidad: es **exactamente la idea de Git** que damos en clase. `push` sube,
+`pull` trae. Cuando lo veamos con VS Code te va a resultar familiar porque ya lo venías haciendo.
+
+:::caution[El `pull` reemplaza]
+Traer tu avance **pisa** lo que tengas en ese navegador con el mismo nombre de ejercicio. Te va a
+preguntar antes de hacerlo, pero tenelo en cuenta: si escribiste algo bueno acá y todavía no lo
+subiste, hacé `push` primero.
+:::
+
+:::tip[La rutina que conviene]
+**Antes de irte del CFP: `push`.** Al llegar a tu casa: `pull`. Y al revés cuando volvés. Si dudás,
+`push` — subir de más no rompe nada.
+:::
+
+Viaja **todo**: tu código, los sellos ✓ Resuelto, las insignias de eficiencia y hasta los pasos que
+hayas ordenado.
+
+## 9. ✉️ Enviar a mi profe
 
 Si un ejercicio no te sale y querés preguntar, tocá **✉️ Enviar a mi profe**. Te va a pedir tu nombre
 (una sola vez) y te deja escribir **qué no te sale o qué error te aparece**. Manda eso junto con tu
@@ -109,10 +156,47 @@ si a vos te trabó algo, es muy probable que a otro le esté pasando lo mismo, y
 sirve a todos. Después se abre también tu app de correo con el mismo mensaje, para que le llegue al
 profe por las dos vías. **Si el mail no se abre, no importa**: la consulta ya se envió.
 
+Si el ejercicio tiene caja de **⌨️ Entradas**, también se manda lo que hayas cargado ahí: sin eso, del
+otro lado no se puede reproducir lo que te pasó.
+
 :::tip[Escribí la consulta, aunque sea corta]
 "No me sale" me obliga a adivinar. "Me tira `NameError` y no entiendo qué es" me deja ayudarte de una.
 :::
 
+## 10. Saltar a un ejercicio sin buscarlo
+
+Algunas clases tienen quince o veinte ejercicios y scrollear a ojo es un embole. En el **índice de la
+derecha**, abajo de los títulos de la clase, hay un bloque **Ejercicios** con el nombre de cada uno.
+Tocás y vas.
+
+- El que estás mirando queda **resaltado**, y el índice se mueve solo para no perderlo de vista.
+- Los que ya resolviste tienen su **✓**.
+- Si la clase es larga, el índice tiene su propia barra de scroll para recorrerlo sin mover la página.
+
+En el celular está adentro de **“En esta página”**, arriba de todo.
+
+## 11. No todos los ejercicios son iguales
+
+Primero, el emoji que aparece al lado de cada título: **🌱 🌿 🌳 es la dificultad**, de "recién
+arranco" a "esto es un desafío". No es el tipo de ejercicio.
+
+La mayoría son como los de arriba: escribís código y verificás. Pero te vas a cruzar con estos:
+
+- **❓ Opción múltiple.** Sin código: elegís y te explica por qué cada opción está bien o mal.
+- **Encontrar el error.** Primero **señalás** la línea que tiene el bug; recién si acertás se
+  habilita arreglarla. Es a propósito: entrena a *leer* el código antes de tocarlo.
+- **🧩 Ordenar los pasos.** Movés los pasos de un algoritmo con ▲▼ (o arrastrándolos) hasta que la
+  lista se pueda leer de arriba a abajo y tenga sentido. No se escribe nada de código.
+- **Eficiencia.** Acá el botón dice **⏱️ Verificar y medir**, y esa es toda la diferencia: no alcanza
+  con que ande. Después de pasar los tests, corre tu solución con datos cada vez más grandes, te
+  muestra cuántos pasos ejecutó y te pone 🏆, ⚡, 🟡 o 🐢. Están en el bloque **🧠 Lógica y
+  eficiencia** del menú, y son los únicos donde hay varias respuestas correctas y hay que elegir la
+  mejor. Guardan **tu mejor marca**, así que podés probar otra idea sin miedo a perder la insignia
+  que ya te ganaste.
+- **📝 Parcial.** Se entrega una sola vez y no te dice si está bien. Es para practicar el formato.
+
 ---
 
 Listo, eso es todo. 🎉 Arrancá por la primera clase en el menú de la izquierda.
+
+Y antes de irte del CFP, acordate: **🔄 Sincronizar → `git push`**.
