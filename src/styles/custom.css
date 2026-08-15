@@ -1870,3 +1870,38 @@ body.pc-resizing * {
 .ejercicio__teclas[hidden] {
   display: none !important;
 }
+
+
+/* ---------- Probador libre ---------- */
+/* Usa la caja de .ejercicio; acá solo lo propio. */
+
+.probador__tests {
+  margin-top: 0.7rem;
+  border: 1px dashed var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.7rem;
+}
+.probador__tests > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.ejercicio .probador__tests-ayuda {
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+.probador__editor-tests {
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+/* Más bajo que el editor principal: los tests suelen ser dos o tres renglones. */
+.probador__editor-tests .cm-editor {
+  max-height: 12rem;
+}
+.ejercicio .probador__guardado {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  opacity: 0.7;
+}

@@ -106,8 +106,10 @@ function borrarProgresoPagina(): void {
 
 // Crea/actualiza la barra de progreso arriba del contenido.
 export function actualizarResumen(): void {
+  // .probador queda afuera: usa el CSS de .ejercicio pero no es algo que se
+  // "resuelva", así que contarlo daría un 0/1 permanente.
   const ejercicios = document.querySelectorAll<HTMLElement>(
-    '.ejercicio, .diagrama, .quiz, .ordenar',
+    '.ejercicio:not(.probador), .diagrama, .quiz, .ordenar',
   );
   if (ejercicios.length === 0) return;
   const total = ejercicios.length;

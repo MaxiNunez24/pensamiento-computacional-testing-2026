@@ -55,6 +55,7 @@ export default defineConfig({
       sidebar: [
         { label: '🏠 Inicio', link: '/' },
         { label: '👋 Cómo usar esta plataforma', link: '/clases/como-usar-esto/' },
+        { label: '🧪 Probador libre', link: '/probador/' },
         // ⚠️ El orden de acá abajo NO es cosmético: es el orden en que se enseña,
         // y varias clases dependen de que lo anterior ya se haya visto.
         //   · Listas va ANTES que Bucles: `for` necesita algo que recorrer, y

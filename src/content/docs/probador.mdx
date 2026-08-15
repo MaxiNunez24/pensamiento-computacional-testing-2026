@@ -1,0 +1,65 @@
+---
+title: Probador libre
+description: "Un Python en blanco para probar lo que quieras, sin consigna y sin corrección. Con caja de entradas y tests que escribís vos."
+---
+
+import Probador from '../../components/Probador.astro';
+
+Todo lo demás de esta plataforma tiene una consigna y unos tests que te dicen si está bien.
+**Acá no hay nada de eso.** Es una hoja en blanco con Python adentro.
+
+Sirve para:
+
+- Probar una idea suelta sin ensuciar un ejercicio.
+- Copiar el código de la clase y verlo correr.
+- Pelearte con un error hasta entenderlo.
+- Escribir en un renglón para ver *qué devuelve esto*, que es la mejor forma de sacarse una duda.
+
+Se guarda solo, así que lo que dejes acá va a seguir cuando vuelvas.
+
+<Probador />
+
+## La caja de tests
+
+Abrí **🧪 Mis tests** y vas a encontrar el otro lado del mostrador: en vez de que los tests vengan
+dados, los escribís vos.
+
+Un test es una **afirmación sobre tu código**. Si es verdadera no pasa nada; si es falsa, salta:
+
+```python
+assert 2 + 2 == 4        # no pasa nada: es verdad
+assert 2 + 2 == 5        # 💥 salta
+```
+
+Adentro de los tests tenés `salida`, que es **todo lo que imprimió tu programa**:
+
+```python
+assert salida.strip() == "Hola"
+```
+
+Y si tu código define funciones, las podés llamar directamente:
+
+```python
+assert sumar(2, 3) == 5
+assert sumar(-1, 1) == 0
+```
+
+:::tip[Cuando algo no coincide, mirá la explicación]
+Si un `assert` de igualdad falla, abajo te dice **qué difiere**: si son el mismo texto salvo por los
+acentos, si cambian las mayúsculas, si sobra un espacio, o en qué caracter exacto se separan.
+:::
+
+:::note[Esto es testing, y lo vamos a ver en serio más adelante]
+Escribir tests es la mitad del oficio: no alcanza con que tu programa ande *con el caso que probaste*.
+Un buen test es el que **atrapa el error que todavía no sabés que tenés** — por ejemplo, ¿tu función
+anda con la lista vacía? ¿Con un número negativo? ¿Con cero?
+
+Por ahora, usá esta caja para acostumbrarte a preguntarte *"¿cómo sé que esto está bien?"*.
+:::
+
+## Las entradas
+
+Si tu código usa `input()`, cargá los valores en la caja de **⌨️ Entradas**, uno por línea. El
+programa los va tomando en orden, como si alguien los estuviera tecleando.
+
+Dejala vacía si no usás `input()`.

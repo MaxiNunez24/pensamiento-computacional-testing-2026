@@ -158,6 +158,7 @@ function initEvaluacion(el: HTMLElement): void {
   // Un compartment por editor: es la pieza de CodeMirror que permite cambiar una
   // extensión (acá, "solo lectura") sin recrear el editor.
   const bloqueos = new Map<number, Compartment>();
+  const entradasPorItem = new Map<number, () => string[]>();
 
   const guardado = leerGuardado(titulo);
   let entregado = Boolean(guardado.entregado);
@@ -197,6 +198,19 @@ function initEvaluacion(el: HTMLElement): void {
     conectarTeclas(item, view);
     conectarToggleTeclas(item);
 
+    // Entradas del ítem (solo en los que piden input()). Se leen en cada corrida
+    // para que el alumno pueda probar con otros valores.
+    const cajaEntradas = item.querySelector<HTMLTextAreaElement>('[data-entradas-input]');
+    const leerEntradas = (): string[] => {
+      const txt = cajaEntradas ? cajaEntradas.value : '';
+      return txt === '' ? [] : txt.replace(/\n$/, '').split('\n');
+    };
+    if (cajaEntradas) {
+      const previas = guardado.respuestas?.[`e${i}`];
+      if (previas != null) cajaEntradas.value = previas;
+      entradasPorItem.set(i, leerEntradas);
+    }
+
     const salida = item.querySelector<HTMLElement>('[data-salida]');
     const btnRun = item.querySelector<HTMLButtonElement>('[data-run]');
     btnRun?.addEventListener('click', async () => {
@@ -206,7 +220,7 @@ function initEvaluacion(el: HTMLElement): void {
       salida.textContent = '⏳ Ejecutando…';
       try {
         // Sin tests: el alumno ve lo que imprime su programa, nada más.
-        const res = await runPython(view.state.doc.toString(), '');
+        const res = await runPython(view.state.doc.toString(), '', '', '', leerEntradas());
         salida.className = 'ejercicio__salida';
         salida.textContent = res.out || '(tu programa no imprimió nada)';
         if (!res.ok) {
@@ -255,6 +269,9 @@ function initEvaluacion(el: HTMLElement): void {
       } else {
         const v = editores.get(Number(i));
         if (v) r[i] = v.state.doc.toString();
+        // Las entradas van aparte: son con qué probó, no su respuesta.
+        const caja = item.querySelector<HTMLTextAreaElement>('[data-entradas-input]');
+        if (caja) r[`e${i}`] = caja.value;
       }
     });
     return r;
@@ -307,7 +324,14 @@ function initEvaluacion(el: HTMLElement): void {
         return { n: i + 1, tipo, pregunta, respuesta: (ta?.value || '').trim() || '(sin responder)' };
       }
       const view = editores.get(i);
-      return { n: i + 1, tipo, pregunta, respuesta: view?.state.doc.toString() || '(sin responder)' };
+      const leer = entradasPorItem.get(i);
+      return {
+        n: i + 1,
+        tipo,
+        pregunta,
+        respuesta: view?.state.doc.toString() || '(sin responder)',
+        entradas: leer ? leer() : [],
+      };
     });
     return { respuestas, acertadas, posibles };
   }
@@ -329,6 +353,10 @@ function initEvaluacion(el: HTMLElement): void {
         lineas.push(`Respondió: ${r.respuesta}  ${r.correcta ? '✓' : '✗'}`);
       } else if (r.tipo === 'codigo') {
         lineas.push('```python', r.respuesta, '```');
+        // Con qué lo probó: sin esto, un programa con input() no se puede volver
+        // a correr igual del otro lado.
+        const ent = (r as { entradas?: string[] }).entradas;
+        if (ent && ent.length) lineas.push('Entradas que usó: ' + ent.join(' | '));
       } else {
         lineas.push(r.respuesta);
       }

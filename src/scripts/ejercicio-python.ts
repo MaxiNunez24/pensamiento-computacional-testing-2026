@@ -171,7 +171,9 @@ function boot(): void {
   aplicarPreferenciaTeclas();
   // Los de eficiencia también son .ejercicio (heredan todo el CSS), pero los
   // maneja su propio script: acá los salteamos para no inicializarlos dos veces.
-  document.querySelectorAll<HTMLElement>('.ejercicio:not(.ejercicio--eficiencia)').forEach((el) => {
+  document
+    .querySelectorAll<HTMLElement>('.ejercicio:not(.ejercicio--eficiencia):not(.probador)')
+    .forEach((el) => {
     if (el.dataset.init) return;
     el.dataset.init = '1';
     initEjercicio(el);

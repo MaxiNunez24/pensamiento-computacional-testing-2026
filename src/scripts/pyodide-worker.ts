@@ -46,7 +46,7 @@ def _pista_texto(a, b):
         return "👉 Tu programa no mostró nada. ¿Le falta el print(), o el print quedó adentro de un if que no se cumple?"
     sa, sb = _sin_tildes(a), _sin_tildes(b)
     if sa == sb:
-        return "👉 Es el mismo texto salvo por los ACENTOS y la ñ. Lo más cómodo: copiá el texto del enunciado y pegalo."
+        return "👉 Es el mismo texto salvo por los ACENTOS y la ñ. Si el texto sale del enunciado, lo más cómodo es tocarlo para copiarlo y pegarlo."
     if a.lower() == b.lower():
         return "👉 Es el mismo texto pero cambian las MAYÚSCULAS y minúsculas."
     if sa.lower() == sb.lower():

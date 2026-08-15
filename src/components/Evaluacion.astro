@@ -36,6 +36,9 @@ interface Item {
   /** codigo */
   starter?: string;
   tests?: string;
+  /** Respuestas que va a ir devolviendo input(), una por línea. Si se setea, el
+   *  ítem muestra la caja de Entradas, igual que en los ejercicios normales. */
+  entradas?: string;
   /** Cuánto vale. Por defecto 1. Las abiertas y de código las corregís vos. */
   puntos?: number;
 }
@@ -109,6 +112,21 @@ const puntos = items.map((it) => it.puntos ?? 1);
         {item.tipo === 'codigo' && (
           <div class="evaluacion__codigo">
             <div class="evaluacion__editor" data-editor data-starter={enc(item.starter || '')}></div>
+            {/* Caja de Entradas: los ítems que piden input() la necesitan para
+                poder probarse. Sin esto, el enunciado hablaba de "la caja de
+                entradas" y esa caja no existía en ningún lado. */}
+            {item.entradas && (
+              <div class="ejercicio__entradas">
+                <label>
+                  <span>⌨️ Entradas — lo que “escribe” el usuario, una por línea</span>
+                  <textarea data-entradas-input rows={Math.min(4, item.entradas.split('\n').length)}>{item.entradas}</textarea>
+                </label>
+                <p class="ejercicio__entradas-nota">
+                  Tu programa las va tomando con <code>input()</code>, en orden. Podés cambiarlas y
+                  volver a ejecutar para probar otros casos.
+                </p>
+              </div>
+            )}
             {/* Una barra por ítem de código: acá el alumno escribe Python igual
                 que en cualquier ejercicio, y en el celular los símbolos están
                 igual de escondidos. Se oculta sola al entregar. */}

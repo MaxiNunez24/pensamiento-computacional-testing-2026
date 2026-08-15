@@ -1,0 +1,108 @@
+---
+/**
+ * Probador libre: un editor de Python sin consigna y sin corrección.
+ *
+ * Para qué: en el resto de la plataforma siempre hay un ejercicio que resolver.
+ * Acá no. Sirve para probar una idea suelta, copiar código de la clase y verlo
+ * correr, o pelearse con un error sin ensuciar un ejercicio de verdad.
+ *
+ * Y trae algo que ningún ejercicio tiene: la caja de TESTS es editable. El
+ * alumno escribe sus propios `assert`, que es exactamente lo que vamos a hacer
+ * cuando lleguemos a testing — ahí el ejercicio deja de ser "escribí el código
+ * que pasa los tests" y pasa a ser "escribí los tests que atrapan el error".
+ *
+ * Todo lo que escriba se guarda solo (con prefijo pcp:, así viaja en
+ * "Sincronizar progreso").
+ */
+import BarraSimbolos from './BarraSimbolos.astro';
+
+interface Props {
+  /** Identifica este probador dentro de la página. Con uno solo alcanza el default. */
+  nombre?: string;
+  starter?: string;
+  tests?: string;
+  entradas?: string;
+}
+
+const {
+  nombre = 'probador',
+  starter = '# Escribí lo que quieras y tocá ▶ Ejecutar.\nprint("Hola")\n',
+  tests = '',
+  entradas = '',
+} = Astro.props;
+
+const id = 'pb-' + Math.random().toString(36).slice(2, 9);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+---
+
+<section
+  class="ejercicio probador"
+  id={id}
+  data-probador={nombre}
+  data-starter={enc(starter)}
+  data-tests-inicial={enc(tests)}
+  data-entradas-inicial={enc(entradas)}
+>
+  <div class="ejercicio__editor" data-editor></div>
+
+  <div class="ejercicio__entradas">
+    <label>
+      <span>⌨️ Entradas — lo que “escribe” el usuario, una por línea (dejalo vacío si no usás <code>input()</code>)</span>
+      <textarea data-entradas-input rows="2"></textarea>
+    </label>
+  </div>
+
+  {/* La caja de tests: el alumno escribe sus propios assert. Cerrada por
+      defecto para no asustar a quien solo vino a probar un print. */}
+  <details class="probador__tests" data-caja-tests>
+    <summary>🧪 Mis tests (opcional)</summary>
+    <p class="probador__tests-ayuda">
+      Escribí <code>assert</code> para comprobar que tu código hace lo que decís. Podés usar
+      <code>salida</code>, que es todo lo que imprimió tu programa.
+      <br />Por ejemplo: <code>assert salida.strip() == "Hola"</code> o <code>assert sumar(2, 3) == 5</code>.
+    </p>
+    <div class="probador__editor-tests" data-editor-tests></div>
+  </details>
+
+  <BarraSimbolos />
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--verify"
+      data-verify
+      title="Corre tu código y después tus tests (Ctrl/Cmd + Enter)"
+    >🧪 Correr mis tests</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Limpiar</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--teclado"
+      data-toggle-teclas
+      aria-pressed="false"
+      title="Mostrar u ocultar la barra de símbolos"
+    >⌨️ Símbolos</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--enviar"
+      data-enviar
+      title="Enviar tu código al profe por email"
+    >✉️ Enviar a mi profe</button>
+  </div>
+
+  <div class="ejercicio__envio" data-envio hidden>
+    <p>
+      Tu consulta se publica en <strong>#Consultas</strong> de Discord y además abrimos tu correo en
+      otra pestaña. <strong>Si el correo no se abrió, no pasa nada.</strong> Y si querés mandarlo por
+      tu cuenta, acá tenés el mensaje:
+    </p>
+    <button type="button" class="ejercicio__btn" data-copiar-envio>📋 Copiar el mensaje</button>
+  </div>
+
+  <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
+  <p class="probador__guardado" data-guardado></p>
+</section>
+
+<script>
+  import '../scripts/probador.ts';
+</script>
