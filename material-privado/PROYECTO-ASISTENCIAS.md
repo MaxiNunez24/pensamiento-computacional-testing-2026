@@ -3,7 +3,7 @@
 > Documento de trabajo, teacher-only. Vive en `material-privado/` (no se publica en el sitio).
 > **No poner datos personales de alumnos acá** (nombres, DNI, teléfonos): el repo puede leerse.
 >
-> Última actualización: 15/8/2026.
+> Última actualización: 15/8/2026 (v4: vista por día + celular).
 
 ---
 
@@ -27,7 +27,8 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 
 | Archivo | Qué es |
 |---|---|
-| `sistema_asistencia_cfp401_v3.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
+| `sistema_asistencia_cfp401_v4.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
+| `sistema_asistencia_cfp401_v3.html` | Igual pero sin la vista por día ni el diseño para celular. Referencia histórica. |
 | `asistencia_marzo_cfp401_8.html` | La planilla de impresión suelta (abril), con datos escritos a mano. **Ya está integrada al v3**; queda como referencia del formato aprobado. |
 | `asistencia_cfp_3.html` | El sistema anterior, antes de integrar la planilla. Referencia histórica. |
 | `2026.1 Pensamiento Comp- Maxi.xlsx` | El Excel original. Hojas: AYUDA, Inicial de Carga, Ficha de Curso, un mes por hoja, Evaluación de Módulo, Acta de Examen. |
@@ -35,12 +36,22 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 
 ---
 
-## 3. Estado del prototipo (v3)
+## 3. Estado del prototipo (v4)
 
 **Funciona:**
 
 - Alta, edición, baja y borrado de alumnos; importación pegando CSV de Google Forms.
-- Grilla de asistencia mensual con P / A / T / J, "marcar días de clase", "limpiar mes".
+- **"Pasar lista": la vista por día.** Se elige la fecha y se marca la lista, un alumno por
+  renglón con cuatro botones. Botones ‹ › para moverse de a un día y "‹ Clase / Clase ›" para
+  saltar al día de cursada anterior o siguiente. Avisa si el día tiene clase y con qué horario, y
+  al pie cuenta presentes/ausentes/sin marcar. Tocar de nuevo el botón ya marcado lo desmarca.
+- **Aviso en el panel** cuando hay días de clase que ya pasaron y quedaron sin cargar; cada día es
+  un botón que abre directamente esa fecha.
+- **Anda en el celular**: abajo de 860px la barra lateral se convierte en un encabezado con menú
+  ☰ y todo lo de dos columnas pasa a una. Los botones de asistencia miden 40px de alto (menos que
+  eso se yerra el dedo).
+- Grilla de asistencia mensual con P / A / T / J, "marcar días de clase", "limpiar mes" — ahora
+  queda como vista de repaso y corrección, no como la forma de tomar asistencia.
 - Configuración del curso: especialidad, curso, centro, distrito, localidad, sede, instructor,
   días de cursada y **un horario por día**.
 - **Planilla oficial** generada desde los datos, con vista previa en pantalla y zoom.
@@ -72,6 +83,9 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
   directa sobre `td`. Solución: todas las clases de la planilla van prefijadas con `.T`.
 - *El zoom de la vista previa se llevaba a la impresión*: hay que resetear `#pl-hoja` y `.sheet`
   dentro de `@media print`.
+- *Fechas corridas un día*: `new Date("2026-08-19")` y `.toISOString()` trabajan en UTC, y en
+  Argentina (UTC−3) eso devuelve el día anterior. En la vista por día la fecha se arma y se lee a
+  mano (`getFullYear/getMonth/getDate`). Es el error clásico y sería un buen ejercicio de clase.
 
 **Al imprimir:** elegir **Legal / Oficio** y **horizontal** en el diálogo. Chrome a veces ignora
 `@page { size: legal landscape }` y deja el papel que tenga configurado la impresora.
@@ -82,12 +96,11 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 
 Ordenado por lo que conviene hacer primero.
 
-### 4.1 Asistencia por día (no mensual)
+### 4.1 Asistencia por día (no mensual) — ✅ hecho en v4
 
-Hoy la grilla es mes × alumno, pensada para escritorio. Lo natural para tomar asistencia —sobre todo
-en celular— es: **elegir el día y marcar la lista**. Es la vista que más se va a usar.
-
-Barato de hacer y de mucho impacto en la demo. **Candidato a hacerlo antes del viernes.**
+Se agregó "Pasar lista" y el diseño para celular (ver §3). Los dos datos viven en el mismo lugar
+que la grilla mensual (`state.asistencia[mes][alumno][día]`), así que marcar en una se ve en la
+otra y en la planilla oficial.
 
 ### 4.2 Múltiples cursos
 
@@ -105,10 +118,11 @@ un servidor con base de datos y login**.
 La buena noticia: ese servidor es **Flask**, que es exactamente adonde iba el proyecto del curso. O
 sea que el pedido de los preceptores no desvía el plan: lo justifica.
 
-### 4.4 Recordatorio de pasar asistencia
+### 4.4 Recordatorio de pasar asistencia — parcialmente hecho
 
-Aviso cuando hay un día de clase sin cargar. En web sin servidor es limitado; con Flask se puede
-mandar mail o mostrarlo al entrar.
+En v4 el panel avisa cuáles días de clase quedaron sin cargar (mira 45 días para atrás) y deja
+abrirlos de un toque. Eso cubre el caso "entro al sistema y me entero". Lo que **no** se puede
+hacer sin servidor es el aviso que llega solo: mail o notificación. Queda para Flask.
 
 ### 4.5 Inscripciones: ¿Forms o formulario propio?
 
@@ -164,6 +178,10 @@ logo esté embebido. Es la forma rápida de saber que un cambio no desarmó la t
 Vale la pena mantenerlo: los errores de `colspan` no se ven a simple vista, se ven como una hoja
 torcida tres pantallas más abajo.
 
+Hay un segundo script para la vista por día: comprueba que marcar guarde donde la planilla lo
+busca, que tocar dos veces desmarque, que el cambio de mes no pierda datos, que la fecha no se
+corra por zona horaria y que el aviso de días sin cargar no invente ni se olvide días.
+
 ---
 
 ## 8. Fichas que faltan implementar
@@ -174,3 +192,134 @@ Del Excel original, en orden de cuándo las piden:
 2. **Asistencia mensual** — ✅ hecha.
 3. **Evaluación de Módulo** — al finalizar cada curso.
 4. **Acta de Examen** — al finalizar el año.
+
+---
+
+## 9. Qué cambia en la planificación del curso para poder hospedarlo
+
+El camino que ya estaba acordado —**datos en memoria → JSON → CLI → Flask → Playwright**— no
+cambia de forma. Lo que cambia es que **Flask deja de ser el final del recorrido y pasa a ser la
+mitad**: una aplicación que corre en la máquina del que la programó no le sirve a nadie más. Para
+que preceptores y directivos entren desde el celular hacen falta cuatro cosas que hoy no están en
+la planificación.
+
+### 9.1 Lo que hay que agregar
+
+| Qué | Cuánto | Por qué no se puede saltear |
+|---|---|---|
+| **Entorno virtual y `requirements.txt`** | media clase | Sin esto el proyecto anda en una computadora sola. Es además el primer momento en que "instalar una librería" deja de ser magia. |
+| **SQLite en vez de JSON** | 2 clases | Con JSON, dos personas guardando a la vez se pisan (una lee el archivo, la otra lo reescribe entero, gana la última). Con varios usuarios eso deja de ser teórico. `sqlite3` viene en la biblioteca estándar: no hay que instalar ni administrar nada, la base es **un archivo**. |
+| **Usuarios, contraseñas y roles** | 2 clases | Es el pedido de los preceptores. La clase que importa no es el formulario de login: es **por qué nunca se guarda una contraseña en texto plano** (hash con `werkzeug.security`) y qué es una sesión. |
+| **Puesta en producción** | 1 clase | Subir el proyecto, variables de entorno, `debug=False`, y la copia de seguridad de la base. Es la clase que convierte un ejercicio en un sistema. |
+
+Total: **entre 5 y 6 clases** que hoy no están contempladas.
+
+### 9.2 De dónde sacar ese tiempo
+
+Tres opciones, en orden de preferencia:
+
+1. **Que reemplacen ejercicios sueltos, no contenido.** Estas clases *son* práctica: cada una tiene
+   un entregable visible. Encaja con lo que ya se venía corrigiendo del curso —menos teoría, más
+   aprender haciendo—.
+2. **Correr Playwright / Bot SiGes al final del módulo de Testing.** El bot ya vive ahí por ser
+   framework E2E; no hace falta adelantarlo.
+3. **Dejar el deploy como taller extra fuera del cronograma** si el año se pone corto. Es lo único
+   de la lista que el profe puede hacer solo sin romper el proyecto de los alumnos.
+
+### 9.3 Lo que conviene NO dar
+
+- **HTML y CSS como unidad.** Las plantillas se entregan hechas (la planilla ya es un molde). El
+  alumno programa lo que las llena, que es diccionarios, listas, bucles y f-strings.
+- **Administración de servidores.** Eso es contenido del curso de **Reparador de PCs**; acá alcanza
+  con "subir el proyecto a un lugar que ya está configurado".
+- **Git como unidad aparte.** Se usa para subir el proyecto y se explica en el momento, no antes.
+
+### 9.4 Efectos de arrastre
+
+- El proyecto pasa a tener **datos personales reales** (alumnos del CFP). Con los alumnos se
+  trabaja con **datos inventados**, siempre. Da además para una charla de diez minutos sobre datos
+  personales que en este curso viene sola.
+- Aparece una **cuenta de hosting**: alguien tiene que ser el dueño. Que sea del CFP y no personal.
+- La **copia de seguridad** deja de ser opcional: si la base se pierde, se pierde la asistencia del
+  año. Un `cp base.db base-2026-08-15.db` una vez por semana alcanza, y es un ejercicio de
+  `pathlib` + `datetime` de manual.
+
+---
+
+## 10. Dónde hospedarlo (y por qué)
+
+Primero el tamaño real del problema: **entre 5 y 15 personas**, que entran unos minutos por día,
+desde el celular, dentro del mismo edificio casi siempre. No hace falta nada grande. El requisito
+que manda no es la potencia: es que **la base de datos no se borre** y que **no haya que poner una
+tarjeta de crédito**.
+
+### 10.1 La comparación
+
+| Opción | Cuesta | La base sobrevive | Contras |
+|---|---|---|---|
+| **PythonAnywhere** (recomendada) | Gratis | **Sí**, el disco es permanente | Hay que entrar cada 3 meses a apretar un botón para que no se apague; el dominio es `usuario.pythonanywhere.com` |
+| **Red local del CFP** (una PC del centro) | Gratis | Sí | Solo se entra desde adentro del edificio y con la PC prendida |
+| **Render / Railway / Fly** | Gratis con asterisco | **No** con SQLite: el disco se borra en cada actualización | Se duerme a los 15 min y tarda casi un minuto en despertar; piden tarjeta o base de datos aparte paga |
+| **Servidor propio del CFP** | Gratis (luz) | Sí | IP fija o DDNS, abrir puertos, alguien que lo mantenga → proyecto del curso de Reparador de PCs |
+
+**Por qué PythonAnywhere y no Render**, que es el que más se recomienda por ahí: Render borra el
+disco en cada despliegue. Con SQLite eso significa **perder la asistencia cargada**, y la
+alternativa es contratar una base de datos aparte. PythonAnywhere guarda los archivos como una
+computadora normal: la base es un archivo en tu carpeta y ahí se queda. Para este tamaño de
+sistema, eso vale más que cualquier otra diferencia. Además está pensado para enseñar Python: la
+consola es web, no hace falta instalar nada en el CFP, y el HTTPS ya viene puesto.
+
+### 10.2 Cómo se sube (PythonAnywhere, paso a paso)
+
+1. **Cuenta** en pythonanywhere.com → plan *Beginner* (gratis, no pide tarjeta). Que la cuenta sea
+   **institucional**, no personal.
+2. **Subir el código.** Consola *Bash* → `git clone <url del repo>`. Si no hay repo, la solapa
+   *Files* sube archivos a mano.
+3. **Entorno virtual** (la carpeta con las librerías del proyecto):
+   ```
+   mkvirtualenv --python=/usr/bin/python3.11 asistencias
+   pip install -r requirements.txt
+   ```
+4. **Crear la web app.** Solapa *Web* → *Add a new web app* → **Manual configuration** → Python
+   3.11. (Manual, no el asistente de Flask: el asistente crea un proyecto vacío y lo pisa todo.)
+5. **Decirle dónde está la aplicación.** Editar el archivo WSGI que aparece en esa misma pantalla y
+   dejar solamente:
+   ```python
+   import sys
+   sys.path.insert(0, '/home/USUARIO/asistencias')
+   from app import app as application   # PythonAnywhere busca el nombre "application"
+   ```
+6. **Apuntar el virtualenv**: en la misma solapa, campo *Virtualenv* →
+   `/home/USUARIO/.virtualenvs/asistencias`.
+7. **Archivos estáticos**: URL `/static/` → directorio `/home/USUARIO/asistencias/static/`. Sin
+   esto el CSS no carga y parece que todo se rompió.
+8. **Reload** (el botón verde). Anda en `https://usuario.pythonanywhere.com`.
+
+Después de eso, cada cambio son tres pasos: `git pull` en la consola → *Reload* → probar.
+
+### 10.3 Cosas que se olvidan y duelen
+
+- **`debug=True` jamás en producción.** Con debug activado, cualquiera que provoque un error ve el
+  código y puede ejecutar Python en el servidor. Es literalmente una consola abierta.
+- **La `SECRET_KEY` no va en el código.** Va en una variable de entorno. Si va en el repo, cualquiera
+  que lo lea puede falsificar sesiones y entrar como directivo.
+- **Backup de la base.** Es un archivo: copiarlo con fecha una vez por semana. Sin esto, un error
+  borra el año.
+- **La base no se sube al repo.** Al `.gitignore`, junto con `.env`. Tiene datos personales.
+- **HTTPS**: viene incluido en el dominio de PythonAnywhere. Si algún día se usa dominio propio,
+  hay que resolverlo aparte.
+
+### 10.4 Para la demo del viernes
+
+Nada de esto hace falta. El prototipo se abre desde un archivo y funciona.
+
+**Si querés que lo prueben desde sus propios celulares en la reunión**, la forma más barata es
+servir el archivo en la red local: en la carpeta donde está el HTML, `python -m http.server 8000`,
+y pasarles `http://<ip-de-la-notebook>:8000/sistema_asistencia_cfp401_v4.html` estando todos en el
+mismo Wi-Fi.
+
+⚠️ **Ojo con esto en la demo:** el prototipo guarda en el navegador de cada uno. Si tres preceptores
+entran desde sus teléfonos, cada uno ve **su propia copia** y lo que carga uno no lo ve el otro.
+Eso no es un error a disimular: es exactamente el motivo por el que hace falta un servidor, y
+dicho en la reunión explica en treinta segundos por qué el sistema definitivo lleva más trabajo
+que "esto que ya funciona".
