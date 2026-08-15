@@ -90,7 +90,7 @@ def _pista_texto(a, b):
     if i > 0:
         return ("👉 Coinciden hasta " + repr(a[:i]) + ". La primera diferencia está en el caracter "
                 + str(i + 1) + ": vos pusiste " + repr(a[i]) + " y va " + repr(b[i]) + ".")
-    return "👉 No se parecen desde el arranque. Volvé a leer el enunciado: ¿estás mostrando lo que pide?"
+    return "👉 No se parecen desde el arranque. ¿Estás mostrando lo que se pide?"
 
 def _explicar(obtenido, esperado, texto):
     lineas = []

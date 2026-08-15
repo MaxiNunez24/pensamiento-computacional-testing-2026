@@ -63,3 +63,29 @@ Si tu código usa `input()`, cargá los valores en la caja de **⌨️ Entradas*
 programa los va tomando en orden, como si alguien los estuviera tecleando.
 
 Dejala vacía si no usás `input()`.
+
+:::caution[Ojo con `salida` cuando usás `input()`]
+Para que se parezca a una terminal de verdad, cada `input()` **imprime su pregunta seguida de lo que
+se “tecleó”**. O sea que eso también queda adentro de `salida`.
+
+Con este programa y la entrada `Guada`:
+
+```python
+n = input("Nombre? ")
+print("Hola", n)
+```
+
+`salida` no es `"Hola Guada"`, es:
+
+```
+Nombre? Guada
+Hola Guada
+```
+
+Así que un test como `assert salida.strip() == "Hola Guada"` **falla**. Si querés mirar solo lo
+último que mostró tu programa, usá:
+
+```python
+assert salida.strip().splitlines()[-1] == "Hola Guada"
+```
+:::
