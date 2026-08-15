@@ -27,7 +27,12 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { Compartment, EditorState } from '@codemirror/state';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
 import { medirCuandoSeaVisible } from './medir-editor';
-import { editorTheme } from './editor-comun';
+import {
+  editorTheme,
+  aplicarPreferenciaTeclas,
+  conectarTeclas,
+  conectarToggleTeclas,
+} from './editor-comun';
 
 const EMAIL_PROFE = 'maxinunez434@gmail.com';
 const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.workers.dev/';
@@ -169,6 +174,11 @@ function initEvaluacion(el: HTMLElement): void {
     // Handle accesible desde el DOM, igual que en EjercicioPython: sirve para
     // verificar el guardado y el bloqueo sin tener que tipear a mano.
     (el as unknown as { __cmViews: Map<number, EditorView> }).__cmViews = editores;
+
+    // La barra de símbolos de ESTE ítem: se le pasa el <li>, así cada barra
+    // escribe en su propio editor y no en el del ítem de al lado.
+    conectarTeclas(item, view);
+    conectarToggleTeclas(item);
 
     const salida = item.querySelector<HTMLElement>('[data-salida]');
     const btnRun = item.querySelector<HTMLButtonElement>('[data-run]');
@@ -349,6 +359,11 @@ function initEvaluacion(el: HTMLElement): void {
     el.querySelectorAll<HTMLButtonElement>('[data-run]').forEach((b) => {
       b.disabled = true;
     });
+    // Los símbolos también: readOnly frena el tecleo, pero estos botones
+    // escriben por código y se saltearían el candado.
+    el.querySelectorAll<HTMLElement>('[data-teclas], [data-toggle-teclas]').forEach((b) => {
+      b.hidden = true;
+    });
     editores.forEach((v, i) => {
       const c = bloqueos.get(i);
       if (c) {
@@ -480,6 +495,7 @@ function initEvaluacion(el: HTMLElement): void {
 }
 
 function boot(): void {
+  aplicarPreferenciaTeclas();
   document.querySelectorAll<HTMLElement>('.evaluacion').forEach((el) => {
     if (el.dataset.init) return;
     el.dataset.init = '1';

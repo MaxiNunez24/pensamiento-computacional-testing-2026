@@ -214,6 +214,9 @@ export function conectarTeclas(
     const texto = btn.dataset.ins;
 
     const escribirEnCampo = (campo: HTMLInputElement | HTMLTextAreaElement) => {
+      // Un campo deshabilitado o de solo lectura no se toca: es lo que pasa con
+      // un parcial ya entregado.
+      if (campo.disabled || campo.readOnly) return;
       if (indent) {
         if (campo instanceof HTMLTextAreaElement) {
           // Varias líneas (la caja de Entradas): el ⇥ es un tabulador y va
@@ -252,6 +255,11 @@ export function conectarTeclas(
 
     const view = dameVista();
     if (view) {
+      // Mismo motivo: si el editor quedó de solo lectura (parcial entregado),
+      // la barra tampoco puede escribir. El CSS lo esconde, pero el candado de
+      // verdad tiene que estar acá — estos botones escriben por código y
+      // EditorState.readOnly solo frena el tecleo del alumno.
+      if (view.state.readOnly) return;
       if (indent) {
         (indent === 'mas' ? indentMore : indentLess)(view);
       } else if (texto != null) {

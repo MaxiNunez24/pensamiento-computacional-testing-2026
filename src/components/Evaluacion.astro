@@ -25,6 +25,8 @@
  *     ]}
  *   />
  */
+import BarraSimbolos from './BarraSimbolos.astro';
+
 interface Item {
   tipo: 'multiple' | 'abierta' | 'codigo';
   pregunta: string;
@@ -102,8 +104,19 @@ const puntos = items.map((it) => it.puntos ?? 1);
         {item.tipo === 'codigo' && (
           <div class="evaluacion__codigo">
             <div class="evaluacion__editor" data-editor data-starter={enc(item.starter || '')}></div>
+            {/* Una barra por ítem de código: acá el alumno escribe Python igual
+                que en cualquier ejercicio, y en el celular los símbolos están
+                igual de escondidos. Se oculta sola al entregar. */}
+            <BarraSimbolos />
             <div class="ejercicio__acciones">
               <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
+              <button
+                type="button"
+                class="ejercicio__btn ejercicio__btn--teclado"
+                data-toggle-teclas
+                aria-pressed="false"
+                title="Mostrar u ocultar la barra de símbolos"
+              >⌨️ Símbolos</button>
             </div>
             <pre class="ejercicio__salida" data-salida hidden></pre>
           </div>

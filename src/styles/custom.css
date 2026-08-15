@@ -1862,3 +1862,11 @@ body.pc-resizing * {
     line-height: 1.45;
   }
 }
+
+/* La barra se esconde con [hidden] al entregar un parcial. Necesita !important
+   porque las reglas que la muestran (:root.pc-teclas .ejercicio__teclas y el
+   default de celular) tienen más especificidad que [hidden], igual que le pasó
+   al botón "Entendido" del aviso de datos. */
+.ejercicio__teclas[hidden] {
+  display: none !important;
+}
