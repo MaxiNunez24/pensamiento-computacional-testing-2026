@@ -110,13 +110,30 @@ function descargarTexto(nombreArchivo: string, contenido: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
-function comoArchivo(s: string): string {
+function comoArchivo(s: string, largo = 24): string {
   return (s || '')
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-zA-Z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
-    .slice(0, 40);
+    .slice(0, largo)
+    .replace(/-+$/, '');
+}
+
+// El enunciado tal como se lee en pantalla, para el archivo de la entrega.
+// Dos detalles que importan:
+//   · sin el número (va aparte, si no queda "1. 1. ¿Cuál es…")
+//   · los <br> vuelven a ser saltos de línea y los &nbsp; espacios comunes; si
+//     no, el código de una consigna llega todo pegado en un renglón y no hay
+//     forma de leerlo.
+function textoDelEnunciado(item: HTMLElement): string {
+  const fuente =
+    item.querySelector<HTMLElement>('.evaluacion__enunciado') ||
+    item.querySelector<HTMLElement>('.evaluacion__pregunta');
+  if (!fuente) return '';
+  const copia = fuente.cloneNode(true) as HTMLElement;
+  copia.querySelectorAll('br').forEach((br) => br.replaceWith('\n'));
+  return (copia.textContent || '').replace(/ /g, ' ').trim();
 }
 
 function escapar(s: string): string {
@@ -274,8 +291,7 @@ function initEvaluacion(el: HTMLElement): void {
     const respuestas = items.map((item) => {
       const i = Number(item.dataset.item);
       const tipo = item.dataset.tipo;
-      const preguntaEl = item.querySelector<HTMLElement>('.evaluacion__pregunta');
-      const pregunta = (preguntaEl?.textContent || '').trim();
+      const pregunta = textoDelEnunciado(item);
 
       if (tipo === 'multiple') {
         const elegida = item.querySelector<HTMLInputElement>('input[type=radio]:checked');

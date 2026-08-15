@@ -18,6 +18,10 @@
     '.quiz__pregunta code',
     '.encontrar__consigna code',
     '.ordenar .ejercicio__consigna code',
+    // El parcial: solo el enunciado. Las OPCIONES quedan afuera a propósito —
+    // están adentro de un <label>, así que un clic ahí también marcaría esa
+    // respuesta, y en un parcial marcar algo sin querer es caro.
+    '.evaluacion__enunciado code',
   ].join(', ');
 
   function esInterno(el) {

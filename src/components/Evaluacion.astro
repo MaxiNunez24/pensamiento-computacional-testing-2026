@@ -79,7 +79,12 @@ const puntos = items.map((it) => it.puntos ?? 1);
   <ol class="evaluacion__items">
     {items.map((item, i) => (
       <li class="evaluacion__item" data-item={i} data-tipo={item.tipo}>
-        <p class="evaluacion__pregunta"><strong>{i + 1}.</strong> <span set:html={item.pregunta} /></p>
+        {/* El enunciado va en su propio span, separado del número: así el
+            archivo de la entrega puede tomar solo el texto (si tomara el <p>
+            entero, el número saldría repetido: "1. 1. ¿Cuál es…"). */}
+        <p class="evaluacion__pregunta">
+          <strong>{i + 1}.</strong> <span class="evaluacion__enunciado" set:html={item.pregunta} />
+        </p>
 
         {item.tipo === 'multiple' && (
           <div class="evaluacion__opciones">
