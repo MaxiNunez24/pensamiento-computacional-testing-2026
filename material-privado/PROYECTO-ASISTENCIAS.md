@@ -27,7 +27,7 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 
 | Archivo | Qué es |
 |---|---|
-| `sistema_asistencia_cfp401_v5.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
+| `sistema_asistencia_cfp401_v6.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
 | `sistema_asistencia_cfp401_v4.html` | Igual, pero con la planilla todavía sin corregir contra el Excel. Referencia histórica. |
 | `asistencia_marzo_cfp401_8.html` | La planilla de impresión suelta (abril), con datos escritos a mano. **Ya está integrada al v3**; queda como referencia del formato aprobado. |
 | `asistencia_cfp_3.html` | El sistema anterior, antes de integrar la planilla. Referencia histórica. |
@@ -73,8 +73,17 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
   franja vacía con el rótulo HORARIO bajando por toda la hoja.
 - **`CURSO N° 1978` también vive en las columnas del panel**, arriba del bloque de horarios — no en
   el bloque de la izquierda. Era la diferencia que más saltaba a la vista contra el Excel.
-- **No existe ninguna casilla "TIPO Fo / Cap / Otros"** en el formulario. Estaba inventada.
+- La casilla **`TIPO` / `Fo Cap Otros`** va entre DISTRITO y el separador. (La saqué una vez por
+  leerla mal en una captura de Excel en modo oscuro, donde el recuadro no se distinguía del fondo.
+  **Comparar siempre contra una captura en blanco**, sin Dark Reader ni tema oscuro.)
 - El encabezado de totales son **dos filas**: `Totales` arriba, `Pres. | Aus.` abajo.
+- El separador entre la tabla y el panel mide **0,8mm**. Con 2mm se leía como una columna vacía.
+  Los milímetros que se le saquen hay que **dárselos a otra columna**: si el total baja de 344,1 el
+  navegador reparte el sobrante y los días se ensanchan.
+- ⚠️ La app le pone `text-transform: uppercase` a todos los `th`, y eso se colaba en la hoja:
+  escribía "APELLIDOS Y NOMBRES" y "TOTALES" donde el formulario dice "APELLIDOS y Nombres" y
+  "Totales". Las clases de la planilla no declaran `text-transform`, así que ganaba la de la app.
+  Está neutralizado en `.sheet td, .sheet th`.
 - Cada fila del encabezado tiene que **sumar 50** contando los `colspan` y los `rowspan` que bajan
   de arriba. Hay un verificador que lo comprueba (ver §7). Son **7 filas de encabezado**.
 - **El formulario oficial es blanco y negro.** Lo que ordena la hoja son los recuadros y los
