@@ -27,8 +27,8 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 
 | Archivo | Qué es |
 |---|---|
-| `sistema_asistencia_cfp401_v4.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
-| `sistema_asistencia_cfp401_v3.html` | Igual pero sin la vista por día ni el diseño para celular. Referencia histórica. |
+| `sistema_asistencia_cfp401_v5.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
+| `sistema_asistencia_cfp401_v4.html` | Igual, pero con la planilla todavía sin corregir contra el Excel. Referencia histórica. |
 | `asistencia_marzo_cfp401_8.html` | La planilla de impresión suelta (abril), con datos escritos a mano. **Ya está integrada al v3**; queda como referencia del formato aprobado. |
 | `asistencia_cfp_3.html` | El sistema anterior, antes de integrar la planilla. Referencia histórica. |
 | `2026.1 Pensamiento Comp- Maxi.xlsx` | El Excel original. Hojas: AYUDA, Inicial de Carga, Ficha de Curso, un mes por hoja, Evaluación de Módulo, Acta de Examen. |
@@ -71,8 +71,16 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 - El **bloque de horarios no tiene columnas propias**: vive arriba del panel derecho, en las mismas
   columnas que "Temas tratados". Cuando tenía las suyas, empujaba el panel a la derecha y dejaba una
   franja vacía con el rótulo HORARIO bajando por toda la hoja.
+- **`CURSO N° 1978` también vive en las columnas del panel**, arriba del bloque de horarios — no en
+  el bloque de la izquierda. Era la diferencia que más saltaba a la vista contra el Excel.
+- **No existe ninguna casilla "TIPO Fo / Cap / Otros"** en el formulario. Estaba inventada.
+- El encabezado de totales son **dos filas**: `Totales` arriba, `Pres. | Aus.` abajo.
 - Cada fila del encabezado tiene que **sumar 50** contando los `colspan` y los `rowspan` que bajan
-  de arriba. Hay un verificador que lo comprueba (ver §7).
+  de arriba. Hay un verificador que lo comprueba (ver §7). Son **7 filas de encabezado**.
+- **El formulario oficial es blanco y negro.** Lo que ordena la hoja son los recuadros y los
+  títulos. Los rellenos pastel (azul en temas, rojo en bajas, verde en movimiento) eran una
+  interpretación de la primera versión en HTML y son lo que más la alejaba del original: quedan
+  disponibles con la casilla **"Colores"** de la barra, para leer en pantalla.
 
 **Bugs que ya se arreglaron** (para no repetirlos):
 
@@ -86,6 +94,12 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 - *Fechas corridas un día*: `new Date("2026-08-19")` y `.toISOString()` trabajan en UTC, y en
   Argentina (UTC−3) eso devuelve el día anterior. En la vista por día la fecha se arma y se lee a
   mano (`getFullYear/getMonth/getDate`). Es el error clásico y sería un buen ejercicio de clase.
+- *Celdas que decían nada en vez de 0*: `(valor || '')` convierte el número **0** en texto vacío,
+  así que "Bajas: 0" salía en blanco. Otro ejercicio de clase servido: en Python pasa igual con
+  `if lista:` y con `valor or "—"`.
+- *Campos nuevos de configuración que salían vacíos*: `load()` reemplazaba `state` entero por lo
+  guardado, así que un campo agregado después (el instructor) nunca aparecía para quien ya venía
+  usando el sistema. Ahora se completa con los valores por defecto.
 
 **Al imprimir:** elegir **Legal / Oficio** y **horizontal** en el diálogo. Chrome a veces ignora
 `@page { size: legal landscape }` y deja el papel que tenga configurado la impresora.
