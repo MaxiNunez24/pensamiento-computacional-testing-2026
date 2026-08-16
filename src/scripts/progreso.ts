@@ -27,10 +27,29 @@ export function marcarHecho(titulo: string): void {
     /* sin persistencia (modo privado): seguimos igual */
   }
   actualizarResumen();
+  avisarCambio();
+}
+
+// El sincronizador (public/sync-progreso.js) escucha esto para subir el avance
+// solo. No se lo llama directo porque ese script es vanilla y vive aparte del
+// bundle; el evento es el único punto de contacto entre los dos.
+function avisarCambio(): void {
+  try {
+    document.dispatchEvent(new CustomEvent('pcp:progreso'));
+  } catch {
+    /* nada */
+  }
 }
 export function guardarCodigo(titulo: string, code: string): void {
   try {
     localStorage.setItem(codeKey(titulo), code);
+  } catch {
+    /* nada */
+  }
+  // Escribir código no dispara una subida (sería una por tecla), pero sí deja
+  // anotado que hay algo sin subir: al cerrar la pestaña se manda.
+  try {
+    document.dispatchEvent(new CustomEvent('pcp:cambio'));
   } catch {
     /* nada */
   }
@@ -89,16 +108,65 @@ export function pintarSello(el: HTMLElement, hecho: boolean): void {
   el.classList.toggle('ej-resuelto', hecho);
 }
 
-// Borra todo el progreso (código + hechos) de la página actual.
-function borrarProgresoPagina(): void {
+// Borra el progreso (código + hechos) de la página actual — solo de esta clase,
+// nunca de todo el sitio. Devuelve cuántas claves borró.
+//
+// Antes borraba y listo. Un alumno perdió su avance (por una limpieza del
+// navegador, no por este botón) y el susto dejó clara una cosa: un botón que
+// destruye trabajo y no se puede deshacer no tiene por qué existir. Ahora lo
+// borrado va a una papelera de la que se puede volver.
+const PAPELERA = `${NS}:papelera:`;
+
+function borrarProgresoPagina(): number {
   try {
     const marca = `:${location.pathname}::`;
     const aBorrar: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith(NS + ':') && k.includes(marca)) aBorrar.push(k);
+      if (k && k.startsWith(NS + ':') && !k.startsWith(PAPELERA) && k.includes(marca)) aBorrar.push(k);
     }
-    aBorrar.forEach((k) => localStorage.removeItem(k));
+    const copia: Record<string, string> = {};
+    aBorrar.forEach((k) => {
+      copia[k] = localStorage.getItem(k) ?? '';
+      localStorage.removeItem(k);
+    });
+    localStorage.setItem(PAPELERA + location.pathname, JSON.stringify(copia));
+    return aBorrar.length;
+  } catch {
+    return 0;
+  }
+}
+
+function contarGuardado(): number {
+  try {
+    const marca = `:${location.pathname}::`;
+    let n = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(NS + ':') && !k.startsWith(PAPELERA) && k.includes(marca)) n++;
+    }
+    return n;
+  } catch {
+    return 0;
+  }
+}
+
+function hayEnPapelera(): number {
+  try {
+    const crudo = localStorage.getItem(PAPELERA + location.pathname);
+    return crudo ? Object.keys(JSON.parse(crudo) as Record<string, string>).length : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function restaurarPapelera(): void {
+  try {
+    const crudo = localStorage.getItem(PAPELERA + location.pathname);
+    if (!crudo) return;
+    const copia = JSON.parse(crudo) as Record<string, string>;
+    Object.keys(copia).forEach((k) => localStorage.setItem(k, copia[k]));
+    localStorage.removeItem(PAPELERA + location.pathname);
   } catch {
     /* nada */
   }
@@ -128,18 +196,36 @@ export function actualizarResumen(): void {
   }
   const pct = Math.round((hechos / total) * 100);
   const completo = hechos === total;
+  const enPapelera = hayEnPapelera();
   banner.innerHTML = `
     <div class="pcp-resumen__txt">
       <span>${completo ? '🎉 ' : '📈 '}Tu progreso: <strong>${hechos}/${total}</strong> ejercicios</span>
-      <button type="button" class="pcp-resumen__reset" title="Borra tu código y tus marcas de esta clase">↺ Borrar mi progreso</button>
+      ${
+        enPapelera
+          ? `<button type="button" class="pcp-resumen__deshacer">↶ Deshacer el borrado (${enPapelera})</button>`
+          : `<button type="button" class="pcp-resumen__reset" title="Borra tu código y tus marcas de ESTA clase. Se puede deshacer.">↺ Empezar esta clase de nuevo</button>`
+      }
     </div>
     <div class="pcp-barra"><div class="pcp-barra__fill" style="width:${pct}%"></div></div>`;
+
   banner
     .querySelector<HTMLButtonElement>('.pcp-resumen__reset')
     ?.addEventListener('click', () => {
-      if (confirm('¿Borrar tu código y tus marcas de esta clase? No se puede deshacer.')) {
+      // Se cuenta lo que REALMENTE hay guardado, no los ejercicios de la
+      // página: decir "19" cuando el alumno resolvió 2 asusta de más.
+      const msg =
+        `Vas a borrar lo que tenés guardado de ESTA clase (${contarGuardado()} cosas: código y marcas).\n\n` +
+        `El resto de las clases no se toca, y vas a poder deshacerlo desde esta misma barra.\n\n¿Seguimos?`;
+      if (confirm(msg)) {
         borrarProgresoPagina();
         location.reload();
       }
+    });
+
+  banner
+    .querySelector<HTMLButtonElement>('.pcp-resumen__deshacer')
+    ?.addEventListener('click', () => {
+      restaurarPapelera();
+      location.reload();
     });
 }

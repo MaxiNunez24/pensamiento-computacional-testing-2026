@@ -10,6 +10,9 @@
  * con el mismo código (pull). No hay cuentas ni contraseñas: el código ES la
  * llave, y se genera solo la primera vez.
  *
+ * El push FUSIONA, no reemplaza (ver más abajo el porqué), y guarda la versión
+ * anterior en "<codigo>:anterior" por las dudas.
+ *
  * ⚠️ Esto NO es un sistema seguro y no pretende serlo: quien tenga el código de
  * otro puede leer y pisar su avance. Es aceptable porque lo que se guarda son
  * ejercicios de un curso, no datos sensibles. No poner acá nada que importe.
@@ -97,14 +100,44 @@ export default {
         });
       }
 
+      // ---- El push NO pisa: FUSIONA ----
+      // Antes esto era un `put` directo, y ahí había una forma silenciosa de
+      // perder trabajo: si un alumno abría el sitio en la compu del CFP (donde
+      // el navegador arranca vacío), resolvía dos ejercicios y hacía push, los
+      // sesenta que tenía guardados se reemplazaban por dos.
+      //
+      // Como los ejercicios solo se AGREGAN, la unión es la respuesta correcta:
+      // lo que llega gana sobre la misma clave (es más nuevo), y lo que estaba
+      // solo en la nube se conserva. Con esto, un push nunca puede restar.
+      let previo = null;
+      try {
+        previo = JSON.parse((await env.PROGRESO.get(codigo)) || 'null');
+      } catch {
+        previo = null; // guardado corrupto: se ignora y se sigue
+      }
+      const claves = { ...((previo && previo.claves) || {}), ...datos.claves };
+
       const guardar = JSON.stringify({
-        claves: datos.claves,
-        nombre: typeof datos.nombre === 'string' ? datos.nombre.slice(0, 80) : '',
+        claves,
+        nombre: typeof datos.nombre === 'string' && datos.nombre
+          ? datos.nombre.slice(0, 80)
+          : (previo && previo.nombre) || '',
         fecha: new Date().toISOString(),
       });
+
+      // Copia de la versión anterior antes de escribir. Es la red de seguridad
+      // para el día que algo salga mal: se recupera a mano desde el panel de
+      // Cloudflare, buscando la clave "<codigo>:anterior".
+      if (previo) {
+        await env.PROGRESO.put(codigo + ':anterior', JSON.stringify(previo));
+      }
       await env.PROGRESO.put(codigo, guardar);
 
-      return new Response(JSON.stringify({ ok: true, guardadas: Object.keys(datos.claves).length }), {
+      return new Response(JSON.stringify({
+        ok: true,
+        guardadas: Object.keys(datos.claves).length,
+        total: Object.keys(claves).length,
+      }), {
         status: 200,
         headers: { ...cabeceras, 'Content-Type': 'application/json' },
       });

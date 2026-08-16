@@ -140,7 +140,18 @@
     '  </div>',
     '  <p class="pc-sync-estado" role="status" aria-live="polite"></p>',
     '  <p class="pc-sync-nota">Igual que en Git: <code>push</code> sube lo que hiciste acá y',
-    '     <code>pull</code> trae lo que subiste antes. Si dudás, hacé <code>push</code> antes de irte.</p>',
+    '     <code>pull</code> trae lo que subiste antes. Subir <strong>nunca borra</strong> lo que',
+    '     ya tenías guardado: se suma.</p>',
+    '  <details class="pc-sync-extra">',
+    '    <summary>Copia de seguridad en un archivo</summary>',
+    '    <p>Por si algún día se borran los datos del navegador. El archivo es tuyo y no',
+    '       depende de internet.</p>',
+    '    <div class="pc-sync-extra-btns">',
+    '      <button type="button" class="pc-sync-mini" data-accion="descargar">⬇ Descargar copia</button>',
+    '      <button type="button" class="pc-sync-mini" data-accion="restaurar">⬆ Restaurar de un archivo</button>',
+    '    </div>',
+    '    <input type="file" class="pc-sync-archivo" accept="application/json,.json" hidden />',
+    '  </details>',
     '</div>',
   ].join('\n');
 
@@ -171,27 +182,137 @@
     }
   }
 
+  async function subir(c) {
+    var claves = leerTodo();
+    var r = await fetch(WORKER_SYNC + '?codigo=' + encodeURIComponent(c), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ claves: claves, nombre: localStorage.getItem(LS_NOMBRE) || '' }),
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json().catch(function () { return {}; });
+  }
+
+  // Lee lo que hay guardado en la nube sin tocar nada de acá. Devuelve null si
+  // no hay nada o si no se pudo consultar (sin internet): en ese caso no se
+  // bloquea la subida, solo se pierde el aviso.
+  async function claveEnLaNube(c) {
+    try {
+      var r = await fetch(WORKER_SYNC + '?codigo=' + encodeURIComponent(c));
+      if (!r.ok) return null;
+      var d = await r.json();
+      return (d && d.claves) || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   async function push() {
     var c = slug(modal.querySelector('.pc-sync-codigo').value) || codigo();
     guardarCodigo(c);
-    var claves = leerTodo();
-    var n = contarEjercicios(claves);
+    var n = contarEjercicios(leerTodo());
     if (!n) {
       estado('Todavía no hay nada para subir: resolvé algún ejercicio primero.', 'error');
       return;
     }
+
+    // Aviso de "estás subiendo menos de lo que tenías".
+    //
+    // Desde que el Worker fusiona, subir de menos ya no borra nada. Pero el
+    // aviso sigue valiendo, y no por los datos: si en este navegador hay 3
+    // ejercicios y en la nube 49, lo que pasa es que el alumno está en una
+    // compu que no es la suya, o que se le limpió el navegador. Lo que quiere
+    // hacer ahí es un pull, no un push.
+    estado('Revisando lo que ya tenías guardado…');
+    var nube = await claveEnLaNube(c);
+    var nNube = nube ? contarEjercicios(nube) : 0;
+    if (nNube > n) {
+      var msg =
+        'Ojo: en este navegador hay ' + n + ' ejercicio(s) y con tu código hay ' + nNube + ' guardados.\n\n' +
+        'Subir NO borra nada (se suman los dos lados), pero esto suele significar que estás en otra ' +
+        'compu o que se limpió el navegador. En ese caso conviene primero "Traer mi avance".\n\n' +
+        '¿Subir igual?';
+      if (!confirm(msg)) {
+        estado('No se subió nada. Probá con "Traer mi avance" (pull) y fijate si vuelve todo.', 'error');
+        return;
+      }
+    }
+
     estado('Subiendo…');
     try {
-      var r = await fetch(WORKER_SYNC + '?codigo=' + encodeURIComponent(c), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ claves: claves, nombre: localStorage.getItem(LS_NOMBRE) || '' }),
-      });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      estado('✅ Listo: subiste ' + n + ' ejercicio' + (n === 1 ? '' : 's') + '. En la otra compu usá el código ' + c + '.', 'ok');
+      var res = await subir(c);
+      var total = (res && res.total) || n;
+      estado('✅ Listo: subiste ' + n + ' ejercicio' + (n === 1 ? '' : 's') +
+             '. Con tu código quedan ' + total + ' guardados en total. En la otra compu usá ' + c + '.', 'ok');
     } catch (e) {
       estado('No se pudo subir. Fijate que tengas internet y volvé a intentar.', 'error');
     }
+  }
+
+  /* --- Subida automática ---------------------------------------------------
+   * El avance vive en el navegador, y un navegador se limpia: basta con
+   * "borrar datos de navegación" para que desaparezcan meses de trabajo. Que
+   * la copia de la nube dependa de acordarse de apretar un botón es pedir
+   * demasiado. Cada vez que se resuelve un ejercicio se sube solo, con unos
+   * segundos de espera para no mandar uno por tecla.
+   *
+   * Es seguro porque el Worker fusiona: subir de más nunca resta.
+   * Si falla (sin internet), no se avisa: el botón manual sigue estando.
+   */
+  var reloj = null;
+  var pendiente = false;
+  function subirSolo() {
+    clearTimeout(reloj);
+    pendiente = true;
+    reloj = setTimeout(function () {
+      pendiente = false;
+      if (!contarEjercicios(leerTodo())) return;
+      subir(codigo()).catch(function () { /* se reintenta al próximo ejercicio */ });
+    }, 4000);
+  }
+
+  /* --- Copia en archivo ----------------------------------------------------
+   * Independiente del Worker y de internet. Es la única copia que sigue
+   * existiendo si un día se cae todo lo demás.
+   */
+  function descargar() {
+    var datos = { claves: leerTodo(), nombre: localStorage.getItem(LS_NOMBRE) || '', fecha: new Date().toISOString() };
+    var n = contarEjercicios(datos.claves);
+    var hoy = new Date();
+    var f = hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0') + '-' + String(hoy.getDate()).padStart(2, '0');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(datos)], { type: 'application/json' }));
+    a.download = 'mi-progreso-' + (codigo() || 'alumno') + '-' + f + '.json';
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    estado('Copia descargada: ' + n + ' ejercicio(s). Guardala en un lugar seguro.', 'ok');
+  }
+
+  function restaurar(archivo) {
+    var lector = new FileReader();
+    lector.onload = function () {
+      var datos;
+      try {
+        datos = JSON.parse(String(lector.result));
+      } catch (e) {
+        estado('Ese archivo no es una copia válida.', 'error');
+        return;
+      }
+      var claves = (datos && datos.claves) || {};
+      var n = contarEjercicios(claves);
+      if (!n) {
+        estado('Ese archivo no tiene ejercicios adentro.', 'error');
+        return;
+      }
+      if (!confirm('Vas a restaurar ' + n + ' ejercicio(s).\n\nLo que tengas acá con el mismo nombre se reemplaza; lo demás se conserva. ¿Seguimos?')) return;
+      for (var k in claves) {
+        if (k.indexOf(PREFIJO) === 0) localStorage.setItem(k, claves[k]);
+      }
+      if (datos.nombre) localStorage.setItem(LS_NOMBRE, datos.nombre);
+      estado('✅ Restaurados ' + n + ' ejercicio(s). Recargando…', 'ok');
+      setTimeout(function () { location.reload(); }, 900);
+    };
+    lector.readAsText(archivo);
   }
 
   async function pull() {
@@ -216,8 +337,30 @@
         return;
       }
       // Se confirma porque pisa lo que haya en ESTE navegador con el mismo
-      // nombre de ejercicio. Lo que solo esté acá no se toca.
-      if (!confirm('Vas a traer ' + n + ' ejercicio(s).\n\nLo que tengas acá con el mismo nombre se reemplaza. ¿Seguimos?')) {
+      // nombre de ejercicio. El riesgo real es ese: un ejercicio que acá está
+      // más avanzado que en la nube (se mejoró y no se subió) queda pisado por
+      // la versión vieja. Por eso se cuenta y se dice cuántos son.
+      var aca = leerTodo();
+      var pisados = 0, soloAca = 0;
+      for (var kl in aca) {
+        if (kl.indexOf(PREFIJO + 'code:') !== 0) continue;
+        if (kl in claves) { if (aca[kl] !== claves[kl]) pisados++; }
+        else soloAca++;
+      }
+      var aviso = 'Vas a traer ' + n + ' ejercicio(s).\n\n';
+      if (pisados) {
+        aviso += pisados === 1
+          ? '⚠️ 1 de ellos lo tenés acá con OTRO contenido y se va a reemplazar por la versión guardada. ' +
+            'Si acá lo tenías más avanzado, subí primero (push).\n\n'
+          : '⚠️ ' + pisados + ' de ellos los tenés acá con OTRO contenido y se van a reemplazar por la ' +
+            'versión guardada. Si acá los tenías más avanzados, subí primero (push).\n\n';
+      }
+      if (soloAca) {
+        aviso += soloAca === 1
+          ? 'El que solo está acá no se toca.\n\n'
+          : 'Los ' + soloAca + ' que solo están acá no se tocan.\n\n';
+      }
+      if (!confirm(aviso + '¿Seguimos?')) {
         estado('');
         return;
       }
@@ -280,6 +423,41 @@
     });
     modal.querySelector('[data-accion="push"]').addEventListener('click', push);
     modal.querySelector('[data-accion="pull"]').addEventListener('click', pull);
+
+    var archivo = modal.querySelector('.pc-sync-archivo');
+    modal.querySelector('[data-accion="descargar"]').addEventListener('click', descargar);
+    modal.querySelector('[data-accion="restaurar"]').addEventListener('click', function () {
+      archivo.click();
+    });
+    archivo.addEventListener('change', function () {
+      if (archivo.files && archivo.files[0]) restaurar(archivo.files[0]);
+      archivo.value = ''; // permite volver a elegir el mismo archivo
+    });
+
+    // progreso.ts avisa por acá cada vez que se marca un ejercicio resuelto.
+    document.addEventListener('pcp:progreso', subirSolo);
+    // Y por acá cuando solo se editó código: no se sube en el momento (sería
+    // una subida por tecla), pero queda anotado para el envío del cierre.
+    document.addEventListener('pcp:cambio', function () { pendiente = true; });
+    // Y al cerrar la pestaña, por si el alumno resolvió algo y cerró antes de
+    // que venciera la espera. `fetch` no sirve acá: la página se está yendo y
+    // el pedido se cancela. sendBeacon lo entrega igual.
+    window.addEventListener('pagehide', function () {
+      if (!pendiente) return;
+      clearTimeout(reloj);
+      pendiente = false;
+      try {
+        // text/plain a propósito: con application/json el navegador exige un
+        // preflight, y un beacon no puede hacerlo — el envío se descartaría en
+        // silencio. El Worker lee el cuerpo como texto, así que le da igual.
+        navigator.sendBeacon &&
+          navigator.sendBeacon(
+            WORKER_SYNC + '?codigo=' + encodeURIComponent(codigo()),
+            new Blob([JSON.stringify({ claves: leerTodo(), nombre: localStorage.getItem(LS_NOMBRE) || '' })],
+                     { type: 'text/plain' }),
+          );
+      } catch (e) {}
+    });
   }
 
   if (document.readyState === 'loading') {
