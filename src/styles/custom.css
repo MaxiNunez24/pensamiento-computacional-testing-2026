@@ -1197,11 +1197,27 @@ body.pc-resizing * {
 .pc-sync-btn-header:hover {
   border-color: var(--sl-color-accent);
 }
+/* "hace 5 min" al lado de Sincronizar. Va más chico y apagado: es información
+   de fondo, no una acción — que se lea de reojo sin competir con el botón. */
+.pc-sync-ultima {
+  font-size: 0.72rem;
+  color: var(--sl-color-gray-3);
+  font-variant-numeric: tabular-nums;
+}
+.pc-sync-ultima:empty {
+  display: none; /* sin sincronizar todavía: no se muestra un hueco */
+}
+/* En el flotante del celular solo va el ícono, así que la fecha tampoco entra;
+   ahí se lee al abrir el panel. */
+.pc-sync-flotante .pc-sync-ultima {
+  display: none;
+}
 /* Entre 50rem y 72rem el encabezado se aprieta (entra el buscador completo):
    dejamos solo el ícono para no empujar nada. En el menú del celular hay lugar
    de sobra, así que ahí el texto se mantiene. */
 @media (max-width: 72rem) {
-  .right-group .pc-sync-btn-header .pc-sync-btn-texto {
+  .right-group .pc-sync-btn-header .pc-sync-btn-texto,
+  .right-group .pc-sync-btn-header .pc-sync-ultima {
     display: none;
   }
   .right-group .pc-sync-btn-header {
@@ -1279,6 +1295,14 @@ body.pc-resizing * {
 }
 /* Copia en archivo: va plegada porque no es el camino de todos los días, pero
    es la que salva cuando fallan las otras dos. */
+.pc-sync-ultima-linea {
+  margin: 0 0 0.9rem;
+  font-size: 0.82rem;
+  color: var(--sl-color-gray-2);
+}
+.pc-sync-ultima-linea.is-vacia {
+  color: var(--sl-color-gray-3);
+}
 .pc-sync-extra {
   margin-top: 0.9rem;
   border-top: 1px solid var(--sl-color-gray-5);

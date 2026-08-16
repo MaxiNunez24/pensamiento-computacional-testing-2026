@@ -31,6 +31,7 @@
   var PREFIJO = 'pcp:'; // todo lo que guarda progreso.ts
   var LS_CODIGO = 'pc_sync_codigo';
   var LS_NOMBRE = 'pc_alumno';
+  var LS_ULTIMA = 'pc_sync_ultima'; // cuándo se guardó por última vez en la nube
 
   // --- Íconos (los de VS Code para push/pull: nube con flecha) ---
   var ICONO_PUSH =
@@ -89,6 +90,60 @@
     } catch (e) {}
   }
 
+  /* --- "última sincronización" ---------------------------------------------
+   * Sirve para lo mismo que el "guardado hace 2 minutos" de cualquier editor:
+   * que el alumno no tenga que confiar en que pasó algo. Y sobre todo, que si
+   * un día algo falla, se vea ANTES de perder la clase entera y no después.
+   */
+  function marcarSincro() {
+    try {
+      localStorage.setItem(LS_ULTIMA, new Date().toISOString());
+    } catch (e) {}
+    pintarUltima();
+  }
+
+  function textoRelativo(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    var min = Math.floor((Date.now() - d.getTime()) / 60000);
+    if (min < 1) return 'recién';
+    if (min < 60) return 'hace ' + min + ' min';
+    var hora = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
+    var hoy = new Date();
+    var mismoDia = function (a, b) {
+      return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    };
+    if (mismoDia(d, hoy)) return 'hoy ' + hora;
+    var ayer = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1);
+    if (mismoDia(d, ayer)) return 'ayer ' + hora;
+    return 'el ' + d.getDate() + '/' + (d.getMonth() + 1) + ' a las ' + hora;
+  }
+
+  function pintarUltima() {
+    var iso = '';
+    try {
+      iso = localStorage.getItem(LS_ULTIMA) || '';
+    } catch (e) {}
+    var rel = iso ? textoRelativo(iso) : '';
+    var titulo = rel
+      ? 'Última sincronización: ' + rel
+      : 'Sincronizar tu avance con otro dispositivo';
+
+    for (var i = 0; i < botones.length; i++) {
+      var span = botones[i].querySelector('.pc-sync-ultima');
+      if (span) span.textContent = rel;
+      botones[i].title = titulo;
+      botones[i].classList.toggle('tiene-fecha', !!rel);
+    }
+    var linea = modal.querySelector('.pc-sync-ultima-linea');
+    if (linea) {
+      linea.textContent = rel
+        ? '☁️ Última vez guardado en la nube: ' + rel + '.'
+        : '☁️ Todavía no guardaste nada en la nube desde este navegador.';
+      linea.classList.toggle('is-vacia', !rel);
+    }
+  }
+
   // --- Interfaz ---
   // El botón va en el encabezado, al lado del selector de tema. Antes flotaba
   // abajo a la derecha y tapaba el último ejercicio de cada clase.
@@ -102,7 +157,10 @@
     b.type = 'button';
     b.className = 'pc-sync-btn-header';
     b.title = 'Sincronizar tu avance con otro dispositivo';
-    b.innerHTML = '<span aria-hidden="true">🔄</span><span class="pc-sync-btn-texto">Sincronizar</span>';
+    b.innerHTML =
+      '<span aria-hidden="true">🔄</span>' +
+      '<span class="pc-sync-btn-texto">Sincronizar</span>' +
+      '<span class="pc-sync-ultima"></span>';
     b.addEventListener('click', abrir);
     return b;
   }
@@ -119,6 +177,7 @@
     '  <h2 id="pc-sync-tit">🔄 Sincronizar progreso</h2>',
     '  <p class="pc-sync-intro">Tu avance se guarda en <strong>este</strong> navegador. Para seguir en otra',
     '     compu, subilo acá y bajalo allá. <em>Es la misma idea de Git que estamos viendo en clase.</em></p>',
+    '  <p class="pc-sync-ultima-linea"></p>',
     '  <label class="pc-sync-codigo-wrap">',
     '    <span>Tu código (anotalo, es el que va en la otra compu):</span>',
     '    <span class="pc-sync-codigo-row">',
@@ -163,6 +222,7 @@
 
   function abrir() {
     modal.querySelector('.pc-sync-codigo').value = codigo();
+    pintarUltima();
     estado('');
     modal.hidden = false;
     // El foco va al diálogo, NO al campo del código: enfocar un input abre el
@@ -190,6 +250,7 @@
       body: JSON.stringify({ claves: claves, nombre: localStorage.getItem(LS_NOMBRE) || '' }),
     });
     if (!r.ok) throw new Error('HTTP ' + r.status);
+    marcarSincro(); // solo si el Worker contestó que sí: la fecha no puede mentir
     return r.json().catch(function () { return {}; });
   }
 
@@ -369,6 +430,7 @@
         if (k.indexOf(PREFIJO) === 0) localStorage.setItem(k, claves[k]);
       }
       if (datos.nombre) localStorage.setItem(LS_NOMBRE, datos.nombre);
+      marcarSincro();
       estado('✅ Listo: trajiste ' + n + ' ejercicio(s). Recargando…', 'ok');
       setTimeout(function () {
         location.reload();
@@ -439,6 +501,14 @@
     // Y por acá cuando solo se editó código: no se sube en el momento (sería
     // una subida por tecla), pero queda anotado para el envío del cierre.
     document.addEventListener('pcp:cambio', function () { pendiente = true; });
+
+    // "hace 3 min" envejece solo: se repinta cada minuto y al volver a la
+    // pestaña, porque si no queda congelado en la hora en que se cargó.
+    pintarUltima();
+    setInterval(pintarUltima, 60000);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) pintarUltima();
+    });
     // Y al cerrar la pestaña, por si el alumno resolvió algo y cerró antes de
     // que venciera la espera. `fetch` no sirve acá: la página se está yendo y
     // el pedido se cancela. sendBeacon lo entrega igual.
