@@ -27,7 +27,7 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 
 | Archivo | Qué es |
 |---|---|
-| `sistema_asistencia_cfp401_v6.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
+| `sistema_asistencia_cfp401_v7.html` | **El prototipo actual.** Un solo archivo, se abre en el navegador, guarda en localStorage. |
 | `sistema_asistencia_cfp401_v4.html` | Igual, pero con la planilla todavía sin corregir contra el Excel. Referencia histórica. |
 | `asistencia_marzo_cfp401_8.html` | La planilla de impresión suelta (abril), con datos escritos a mano. **Ya está integrada al v3**; queda como referencia del formato aprobado. |
 | `asistencia_cfp_3.html` | El sistema anterior, antes de integrar la planilla. Referencia histórica. |
@@ -55,7 +55,13 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 - Configuración del curso: especialidad, curso, centro, distrito, localidad, sede, instructor,
   días de cursada y **un horario por día**.
 - **Planilla oficial** generada desde los datos, con vista previa en pantalla y zoom.
-- Temas tratados / en tratamiento, por mes.
+- Temas tratados / en tratamiento, por mes, **avisando qué entra en la planilla**: cada línea del
+  cuadro de texto es un renglón de la hoja, y lo que se pasa de ancho la planilla lo corta sin
+  decir nada. El aviso mide el texto con la misma tipografía y el mismo ancho de celda que la hoja
+  (canvas `measureText`), así que no es una estimación: comprobado, da el mismo milímetro. Si se
+  está escribiendo al final, pasa solo a la línea siguiente; si se está corrigiendo en el medio,
+  solo avisa —mover el texto bajo el cursor sería insoportable— y queda el botón "Acomodar
+  renglones".
 - Bajas y movimiento de alumnos calculados solos.
 - Exportar CSV.
 
@@ -80,6 +86,13 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 - El separador entre la tabla y el panel mide **0,8mm**. Con 2mm se leía como una columna vacía.
   Los milímetros que se le saquen hay que **dárselos a otra columna**: si el total baja de 344,1 el
   navegador reparte el sobrante y los días se ensanchan.
+- **La hoja tiene que llenar el Oficio apaisado**: 215,9mm de alto menos 6mm de márgenes = 209,9mm
+  útiles. Los renglones de alumno miden **15pt** y la hoja queda en ~195mm. Si se cambian, **medir
+  de nuevo**: quedarse corto se ve feo, pasarse manda todo a una segunda página.
+- **La localidad se movió al bloque izquierdo**, al lado de "Lugar que se dicta". Es la **única
+  diferencia a propósito** con el original: libera un renglón del panel, así los temas tratados
+  pasan de 4 a 5 líneas. El primero de esos renglones se dibuja en el encabezado, por eso
+  `plPanel()` arranca por `temasTratados[1]`.
 - ⚠️ La app le pone `text-transform: uppercase` a todos los `th`, y eso se colaba en la hoja:
   escribía "APELLIDOS Y NOMBRES" y "TOTALES" donde el formulario dice "APELLIDOS y Nombres" y
   "Totales". Las clases de la planilla no declaran `text-transform`, así que ganaba la de la app.
