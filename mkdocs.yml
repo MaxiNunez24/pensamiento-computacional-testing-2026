@@ -39,6 +39,12 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  # Casillas "- [ ]" de verdad, para la página de puesta al día.
+  # clickable_checkbox: se pueden tildar en pantalla (no se guardan al recargar,
+  # pero sirven para ir marcando mientras se resuelve).
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
 
 
 
@@ -155,6 +161,10 @@ nav:
         - 🧬 POO I — Clases y objetos: clases/bloque_4_poo/poo_1.md
         - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/bloque_4_poo/poo_2.md
         - 🔗 Herencia y polimorfismo: clases/bloque_4_poo/poo_herencia.md
+  # Adelanto del proyecto: el prototipo es un .html suelto que MkDocs copia tal
+  # cual al sitio (solo procesa los .md). Vive en docs/proyecto/.
+  - ✅ Ponerse al día: al_dia.md
+  - 🔭 Adelanto del proyecto: proyecto/index.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
     - 📖 Glosario de Python: material_apoyo/glosario.md

@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Asistencia — CFP 401 "Laura Vicuña"</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2332;
+    --border: #2a3050;
+    --border2: #3a4470;
+    --accent: #4f8ef7;
+    --accent2: #38d9a9;
+    --warn: #ffa94d;
+    --danger: #ff6b6b;
+    --text: #e8ecf5;
+    --text2: #8892aa;
+    --text3: #5a6480;
+    --radius: 10px;
+    --radius2: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .shell { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo .org { font-size: 10px; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+  .sidebar-logo .title { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .sidebar-logo .subtitle { font-size: 11px; color: var(--accent2); margin-top: 2px; }
+
+  .sidebar-course {
+    margin: 12px 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 10px 12px;
+  }
+  .course-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
+  .course-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--accent); margin-top: 2px; }
+
+  .nav { padding: 8px 0; flex: 1; }
+  .nav-group { padding: 8px 16px 4px; font-size: 10px; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 16px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    border-left: 3px solid transparent;
+    font-size: 13px;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(79,142,247,.07); }
+  .nav-item .ico { font-size: 16px; width: 20px; text-align: center; }
+
+  .main { flex: 1; padding: 28px 32px; max-width: 1200px; }
+
+  /* ---------- HEADER ---------- */
+  .page-header { margin-bottom: 24px; }
+  .page-header h1 { font-size: 22px; font-weight: 600; }
+  .page-header p { color: var(--text2); margin-top: 4px; font-size: 13px; }
+
+  /* ---------- CARDS ---------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .card-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 16px; text-transform: uppercase; letter-spacing: .06em; }
+
+  /* ---------- STATS ROW ---------- */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
+  .stat-val { font-family: 'DM Mono', monospace; font-size: 26px; font-weight: 500; margin-top: 4px; }
+  .stat-val.blue { color: var(--accent); }
+  .stat-val.green { color: var(--accent2); }
+  .stat-val.orange { color: var(--warn); }
+
+  /* ---------- FORMS ---------- */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row.three { grid-template-columns: 2fr 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .form-group label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; }
+  .form-group input, .form-group select {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius2);
+    color: var(--text);
+    padding: 8px 12px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border .15s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface2); }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    padding: 8px 16px;
+    border-radius: var(--radius2);
+    border: 1px solid var(--border2);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+    font-weight: 500;
+  }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { opacity: .88; }
+  .btn-ghost { background: transparent; color: var(--text2); }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+  .btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+  .btn-danger:hover { background: rgba(255,107,107,.1); }
+  .btn-success { background: var(--accent2); border-color: var(--accent2); color: #0f1117; }
+  .btn-success:hover { opacity: .88; }
+  .btn-warn { background: var(--warn); border-color: var(--warn); color: #0f1117; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+
+  /* ---------- TABLE ---------- */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border2); color: var(--text3); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+
+  /* ---------- BADGE ---------- */
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-m { background: rgba(79,142,247,.15); color: var(--accent); }
+  .badge-f { background: rgba(56,217,169,.15); color: var(--accent2); }
+  .badge-p { background: rgba(56,217,169,.15); color: var(--accent2); }
+  .badge-a { background: rgba(255,107,107,.15); color: var(--danger); }
+  .badge-t { background: rgba(255,169,77,.15); color: var(--warn); }
+  .badge-j { background: rgba(200,200,220,.1); color: var(--text2); }
+
+  /* ---------- ASISTENCIA GRID ---------- */
+  .asist-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .asist-table th { padding: 6px 4px; color: var(--text3); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border2); text-align: center; white-space: nowrap; }
+  .asist-table td { padding: 5px 3px; border-bottom: 1px solid var(--border); text-align: center; }
+  .asist-table td.name-col { text-align: left; padding-left: 8px; white-space: nowrap; font-size: 12px; }
+  .asist-btn {
+    width: 28px; height: 24px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all .1s;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+  }
+  .asist-btn:hover { border-color: var(--text2); color: var(--text); }
+  .asist-btn.P { background: rgba(56,217,169,.15); border-color: var(--accent2); color: var(--accent2); }
+  .asist-btn.A { background: rgba(255,107,107,.15); border-color: var(--danger); color: var(--danger); }
+  .asist-btn.T { background: rgba(255,169,77,.15); border-color: var(--warn); color: var(--warn); }
+  .asist-btn.J { background: rgba(150,150,180,.08); border-color: var(--text3); color: var(--text2); }
+
+  .month-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .month-nav button { padding: 6px 14px; }
+  .month-title { font-family: 'DM Mono', monospace; font-size: 15px; color: var(--accent); min-width: 180px; text-align: center; }
+
+  /* ---------- TOTALS BAR ---------- */
+  .totals-bar { display: flex; gap: 16px; margin-top: 12px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 12px; flex-wrap: wrap; }
+  .tot { display: flex; gap: 5px; align-items: center; }
+  .tot-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ---------- CONFIG ---------- */
+  .config-section { margin-bottom: 24px; }
+  .config-section h3 { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .06em; }
+
+  /* ---------- TABS ---------- */
+  .tabs { display: flex; gap: 2px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text3);
+    border-bottom: 2px solid transparent;
+    transition: all .15s;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--text2); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ---------- VIEWS ---------- */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ---------- EMPTY STATE ---------- */
+  .empty { text-align: center; padding: 40px 20px; color: var(--text3); }
+  .empty .ico { font-size: 32px; margin-bottom: 12px; }
+  .empty p { font-size: 13px; }
+
+  /* ---------- TOAST ---------- */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    font-size: 13px;
+    display: none;
+    z-index: 999;
+    animation: fadein .2s;
+  }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+
+  /* ============================================================
+     PLANILLA OFICIAL — formato de impresión fiel al original
+     ------------------------------------------------------------
+     49 columnas que suman 344mm dentro de una hoja de 349mm, y la
+     hoja entra en Legal apaisada (355.6mm) con 3mm de margen. No
+     tocar los anchos sin recalcular el total: si se pasan, la
+     última columna se corta al imprimir.
+
+     Sobre la especificidad: la app define estilos genéricos para
+     table / td / th (color claro, padding, borde, hover) que se
+     colaban adentro de la hoja y le pintaban el texto de gris casi
+     blanco sobre fondo blanco. Por eso las clases de la planilla van
+     todas prefijadas con `.T`: así ganan por especificidad sin tener
+     que usar !important en cada una.
+     ============================================================ */
+
+  /* La hoja tal como se ve en pantalla (vista previa). */
+  .pl-toolbar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .pl-zoom { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
+  .pl-canvas {
+    background: #6f7480;
+    padding: 14px;
+    border-radius: var(--radius);
+    overflow: auto;
+    max-height: 78vh;
+  }
+  .sheet {
+    background: #fff;
+    width: 349mm;
+    padding: 2.5mm 2mm;
+    box-shadow: 0 3px 22px rgba(0,0,0,.35);
+    transform-origin: top left;
+    color: #000;
+  }
+  /* Neutraliza los estilos genéricos de tabla de la app dentro de la hoja.
+     El `text-transform: uppercase` que la app le pone a todos los `th` se
+     colaba acá y escribía "APELLIDOS Y NOMBRES", "TOTALES", "PRES." donde el
+     formulario dice "APELLIDOS y Nombres", "Totales", "Pres.". Como ninguna
+     clase de la planilla declara text-transform, ganaba la regla de la app. */
+  .sheet table { font-size: inherit; color: #000; }
+  .sheet td, .sheet th { color: inherit; text-align: inherit;
+                         text-transform: none; letter-spacing: normal; }
+  .sheet tr:hover td { background-color: transparent; }
+
+  /* --- la tabla --- */
+  .T { width: 100%; border-collapse: collapse; table-layout: fixed;
+       font-family: Arial, Helvetica, sans-serif; font-size: 6pt; line-height: 1.1; color: #000; }
+  .T td, .T th { border: .4pt solid #555; padding: 0 1.5px; vertical-align: middle; overflow: hidden; }
+
+  /* cabecera */
+  .T .logo-td { text-align: center; vertical-align: middle; padding: 2px; }
+  .T .tit-td { text-align: center; vertical-align: middle; font-size: 12.5pt; font-weight: bold;
+               letter-spacing: .4pt; white-space: nowrap; }
+  /* CENTRO N° / DISTRITO: rótulo a la derecha, valor grande al lado, como el
+     Excel. Antes iban en una sola celda ("CENTRO N°  401") y no coincidía. */
+  .T .cn-lbl { font-size: 5.8pt; font-weight: bold; text-align: right; padding-right: 3px;
+               vertical-align: middle; }
+  .T .cn-val { font-size: 8pt; font-weight: bold; text-align: center; vertical-align: middle; }
+  /* Zonas del formulario que en el original no tienen recuadro. */
+  .T .hueco { border: none; }
+  /* TIPO (Fo / Cap / Otros): la casilla que va entre DISTRITO y el separador.
+     La había sacado por leerla mal en la captura en modo oscuro; existe. */
+  .T .tipo-lbl { text-align: center; font-size: 6pt; font-weight: bold; vertical-align: bottom;
+                 border-bottom: none; }
+  .T .tipo-val { text-align: center; font-size: 5.5pt; vertical-align: top; border-top: none; }
+  /* CURSO N° vive en las columnas del panel, arriba del bloque de horarios. */
+  .T .curso-td { vertical-align: middle; text-align: center; padding: 0 3px; }
+  .T .curso-lbl { font-size: 9pt; font-weight: bold; }
+  .T .curso-num { font-size: 20pt; font-weight: bold; letter-spacing: .5pt; }
+  .T .hrot { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 5.5pt; font-weight: bold;
+             text-align: center; vertical-align: middle; }
+  .T .hlbl { text-align: center; font-size: 5.5pt; font-weight: bold; padding: 0 1px; }
+  .T .hval { text-align: center; font-size: 5pt; vertical-align: middle; line-height: 1.25; }
+  .T .inf-td { font-size: 7pt; text-align: center; vertical-align: middle; }
+  .T .esp-lbl { font-size: 5.3pt; font-weight: bold; text-align: right; padding-right: 2px;
+                vertical-align: middle; }
+  .T .esp-val { font-size: 5.3pt; font-weight: bold; padding-left: 2px; vertical-align: middle; }
+  .T .loc-lbl { font-size: 5.3pt; font-weight: bold; text-align: right; padding-right: 2px;
+                vertical-align: middle; }
+  .T .loc-val { font-size: 7pt; font-weight: bold; padding-left: 2px; vertical-align: middle; }
+
+  /* headers de días */
+  .T .ch { font-weight: bold; font-size: 5.5pt; text-align: center;
+           height: 11pt; vertical-align: middle; }
+  .T .dh { font-weight: bold; font-size: 4.5pt; text-align: center;
+           padding: 0; height: 11pt; vertical-align: middle; }
+  /* el día que NO existe en el mes (ej. 30 y 31 en febrero) */
+  .T .dh.off, .T .vd.off { color: #bbb; }
+
+  /* filas de alumnos
+     La altura sale de una cuenta: la hoja tiene que llenar el Oficio apaisado
+     (215,9mm menos los márgenes) sin pasarse, o se va a una segunda página.
+     Con 10pt quedaba en 151mm y sobraba un tercio de hoja en blanco; con 15pt
+     llega a ~202mm. Si se cambia, medir de nuevo: pasarse es peor que sobrar. */
+  .T .ar td { height: 15pt; font-size: 6.5pt; }
+  .T .vn { text-align: center; font-size: 6pt; }
+  .T .vn.vacia { color: #ccc; }
+  .T .vs { text-align: center; font-size: 6pt; }
+  .T .vname { text-align: left; padding-left: 2px; font-size: 6.5pt; white-space: nowrap; overflow: hidden; }
+  .T .vd { text-align: center; font-size: 6.5pt; padding: 0; }
+  .T .vP, .T .vA, .T .vT, .T .vJ { font-weight: bold; }
+  .T .vtot { text-align: center; font-weight: bold; font-size: 5.5pt; }
+  .T .vtota { text-align: center; font-weight: bold; font-size: 5.5pt; }
+  .T .vsep { border: none !important; background: #fff; }
+
+  /* panel derecho — el formulario oficial es blanco: lo que ordena son los
+     recuadros y los títulos, no el color. Los rellenos pastel de la versión
+     anterior son los que hacían que no se pareciera al Excel. Quedan
+     disponibles con el interruptor "Colores" (ver .pl-color más abajo). */
+  .T .st { font-size: 6pt; padding: 0 2px; }
+  .T .sit { font-style: italic; font-weight: bold; text-decoration: underline; }
+  .T .sith { text-align: center; font-weight: bold; font-size: 6pt; text-decoration: underline; }
+  .T .sbh { font-size: 8pt; font-weight: bold; text-align: center; letter-spacing: .3pt; }
+  .T .sbth { font-size: 5.5pt; font-weight: bold; padding: 0 2px; text-align: center; }
+  .T .sb { font-size: 5.5pt; padding: 0 2px; }
+  .T .smh { font-size: 7pt; font-weight: bold; text-align: center; letter-spacing: .3pt; }
+  .T .sm { font-size: 5.5pt; padding: 0 2px; }
+  .T .smn { font-size: 6.5pt; font-weight: bold; text-align: center; }
+  .T .sf { font-size: 5.5pt; padding: 0 2px; }
+  .T .sfi { font-size: 5.5pt; font-weight: bold; }
+  .T .sfv { border: none; }
+
+  /* ---- versión en colores (opcional) ----
+     La de antes. Se enciende con la casilla "Colores" de la barra: ayuda a
+     leer en pantalla, pero para entregar conviene la fiel, que además gasta
+     mucha menos tinta. */
+  .pl-color .T .ch, .pl-color .T .dh { background: #ddd; }
+  .pl-color .T .dh.off, .pl-color .T .vd.off { background: #f3f3f3; }
+  .pl-color .T .hrot, .pl-color .T .hlbl { background: #f0f0f0; }
+  .pl-color .T .hlbl.mk { background: #F4B942; color: #5a3000; }
+  .pl-color .T .hval.mk { background: #FDEBC8; }
+  .pl-color .T .vP { background: #E8F5E9; color: #1a5c1a; }
+  .pl-color .T .vA { background: #FFEBEE; color: #b71c1c; }
+  .pl-color .T .vT { background: #FFFDE7; color: #e65100; }
+  .pl-color .T .vJ { background: #EDE7F6; color: #4a148c; }
+  .pl-color .T .vtota { color: #b71c1c; }
+  .pl-color .T .st, .pl-color .T .sith { background: #EBF3FB; border-color: #aac; color: #1a3a5c; }
+  .pl-color .T .sbh { background: #C0504D; border-color: #963; color: #fff; }
+  .pl-color .T .sbth { background: #F4B8A8; border-color: #c55; color: #5a1a1a; }
+  .pl-color .T .sb { background: #FDE9E4; border-color: #c55; }
+  .pl-color .T .smh { background: #9BBB59; border-color: #7a7; color: #fff; text-decoration: underline; }
+  .pl-color .T .sm, .pl-color .T .smn { background: #EBF1DD; border-color: #7a7; }
+  .pl-color .T .smn { color: #1a4a7a; }
+
+  /* pie */
+  .T .foot td { font-size: 5pt; font-style: italic; padding: 1px 3px; height: 8pt;
+                vertical-align: middle; color: #333; }
+
+  /* ---- impresión ----
+     OJO: la hoja vive ADENTRO del shell de la app (dentro de <main>). El
+     `display:none` sobre `.shell` que había acá dejaba la impresión EN BLANCO,
+     porque escondía también la hoja. Hay que esconder todo menos la vista de
+     la planilla, no el contenedor que la tiene adentro. */
+  @media print {
+    @page { size: legal landscape; margin: 3mm; }
+    html, body { background: #fff !important; }
+
+    .sidebar,
+    .no-print,
+    .pl-toolbar,
+    #toast,
+    .modal-backdrop,
+    #view-planilla .page-header,
+    #view-planilla .card { display: none !important; }
+
+    .shell { display: block !important; min-height: 0 !important; }
+    .main { padding: 0 !important; max-width: none !important; }
+    .view { display: none !important; }
+    #view-planilla { display: block !important; }
+
+    .pl-canvas { background: #fff !important; padding: 0 !important;
+                 max-height: none !important; overflow: visible !important; }
+    /* El zoom de la vista previa deja alto y ancho en línea: hay que sacarlos
+       o la hoja se imprime del tamaño de la miniatura. */
+    #pl-hoja { width: auto !important; height: auto !important; }
+    .sheet { width: 100% !important; padding: 0 !important; box-shadow: none !important;
+             transform: none !important; }
+
+    /* Que los fondos de color salgan impresos (Chrome los saca por defecto). */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+
+  .print-only { display: none; }
+  #print-view { display: none; }
+
+  /* ---------- MODAL ---------- */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 500; backdrop-filter: blur(2px);
+  }
+  .modal-backdrop.hidden { display: none; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 24px;
+    width: 480px;
+    max-width: 95vw;
+    box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  }
+  .modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 18px; }
+
+  /* ---------- DAY-OF-WEEK PILLS ---------- */
+  .dow-grid { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .dow-pill {
+    padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1px solid var(--border2); background: transparent; color: var(--text2);
+    cursor: pointer; transition: all .15s; font-family: 'Sora', sans-serif;
+  }
+  .dow-pill.on { background: rgba(79,142,247,.18); border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- AVISO DE RENGLONES EN LOS TEMAS ---------- */
+  .tema-estado { font-size: 11.5px; line-height: 1.4; margin-top: 6px; min-height: 16px; }
+  .tema-estado.ok { color: var(--accent2); }
+  .tema-estado.mal { color: var(--warn); }
+
+  /* ---------- DIAS DE CURSADA highlight ---------- */
+  .asist-btn.class-day { border-color: var(--border2); opacity: 1; }
+  .col-day-header.class-day-h { color: var(--accent) !important; font-weight: 700; }
+
+  /* ============================================================
+     VISTA POR DÍA — la que se usa para pasar lista
+     ------------------------------------------------------------
+     La grilla mensual sirve para revisar el mes entero, pero la
+     asistencia se toma parada y con el teléfono en la mano: se
+     elige el día y se marca la lista. Una fila por alumno y cuatro
+     botones grandes (40px de alto: menos que eso se yerra el dedo).
+     ============================================================ */
+  .dia-nav {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .dia-fecha {
+    background: var(--bg); border: 1px solid var(--border2); border-radius: var(--radius2);
+    color: var(--text); padding: 8px 12px; font-family: 'DM Mono', monospace;
+    font-size: 13px; outline: none; color-scheme: dark;
+  }
+  .dia-titulo {
+    font-size: 15px; color: var(--accent); text-transform: capitalize;
+    flex: 1; min-width: 160px;
+  }
+  .dia-titulo small { display: block; font-size: 11px; color: var(--text3); text-transform: none; }
+  .dia-tag {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 500; margin-left: 8px;
+  }
+  .dia-tag.si { background: rgba(56,217,169,.15); color: var(--accent2); }
+  .dia-tag.no { background: rgba(200,200,220,.08); color: var(--text3); }
+
+  .dia-lista { display: flex; flex-direction: column; gap: 8px; }
+  .dia-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    border-radius: var(--radius2); padding: 8px 10px;
+  }
+  .dia-row.is-P { border-left-color: var(--accent2); }
+  .dia-row.is-A { border-left-color: var(--danger); }
+  .dia-row.is-T { border-left-color: var(--warn); }
+  .dia-row.is-J { border-left-color: var(--text3); }
+  .dia-row .n { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3);
+                width: 20px; text-align: right; flex: none; }
+  .dia-row .nm { flex: 1; min-width: 0; font-size: 14px; line-height: 1.25; }
+  .dia-row .nm small { display: block; font-size: 11px; color: var(--text3); }
+  .dia-btns { display: flex; gap: 6px; flex: none; }
+  .dia-b {
+    width: 42px; height: 40px; border-radius: 8px;
+    border: 1px solid var(--border2); background: transparent; color: var(--text3);
+    font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .12s;
+  }
+  .dia-b:active { transform: scale(.94); }
+  .dia-b.on.P { background: rgba(56,217,169,.18); border-color: var(--accent2); color: var(--accent2); }
+  .dia-b.on.A { background: rgba(255,107,107,.18); border-color: var(--danger); color: var(--danger); }
+  .dia-b.on.T { background: rgba(255,169,77,.18); border-color: var(--warn); color: var(--warn); }
+  .dia-b.on.J { background: rgba(150,150,180,.14); border-color: var(--text2); color: var(--text); }
+
+  .dia-resumen {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text2);
+  }
+  .dia-resumen b { color: var(--text); font-family: 'DM Mono', monospace; }
+
+  /* ---------- AVISO DE DÍAS SIN CARGAR ---------- */
+  .alerta {
+    background: rgba(255,169,77,.08); border: 1px solid rgba(255,169,77,.3);
+    border-radius: var(--radius); padding: 12px 14px; margin-bottom: 18px; font-size: 13px;
+  }
+  .alerta b { color: var(--warn); }
+  .alerta .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .chip-dia {
+    background: rgba(255,169,77,.12); border: 1px solid rgba(255,169,77,.35);
+    color: var(--warn); border-radius: 20px; padding: 5px 12px;
+    font-size: 12px; font-family: 'DM Mono', monospace; cursor: pointer;
+  }
+  .chip-dia:hover { background: rgba(255,169,77,.22); }
+
+  /* ============================================================
+     CELULAR — abajo de 860px
+     ------------------------------------------------------------
+     La mayoría lo va a usar desde el teléfono. La barra lateral fija
+     de 240px se convierte en un encabezado con menú desplegable, y
+     todo lo que estaba en dos columnas pasa a una sola.
+     ============================================================ */
+  .menu-btn { display: none; }
+
+  @media (max-width: 860px) {
+    .shell { flex-direction: column; }
+    .sidebar {
+      width: 100%; height: auto; min-height: 0; overflow: visible;
+      position: sticky; top: 0; z-index: 50;
+      border-right: none; border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 14px;
+    }
+    .sidebar-logo .org, .sidebar-logo .subtitle { display: none; }
+    .sidebar-logo .title { font-size: 14px; }
+    .sidebar-logo .title br { display: none; }
+    .menu-btn {
+      display: block; flex: none;
+      background: var(--surface2); border: 1px solid var(--border2);
+      color: var(--text); border-radius: var(--radius2);
+      padding: 8px 13px; font-size: 15px; cursor: pointer;
+    }
+    /* El menú arranca cerrado y se abre con el botón. */
+    .sidebar-course, .sidebar .nav { display: none; }
+    .sidebar.open .sidebar-course { display: block; }
+    .sidebar.open .nav { display: block; }
+    .nav-item { padding: 12px 16px; font-size: 14px; }
+
+    .main { padding: 16px 14px; max-width: none; }
+    .page-header { margin-bottom: 16px; }
+    .page-header h1 { font-size: 19px; }
+    .card { padding: 14px; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .form-row, .form-row.three { grid-template-columns: 1fr; }
+    .tabs { overflow-x: auto; }
+    .tab { white-space: nowrap; }
+
+    .month-title { order: -1; flex: 1 1 100%; min-width: 0; }
+    .month-nav { flex-wrap: wrap; gap: 8px; }
+    .month-nav button { flex: 1 1 auto; margin-left: 0 !important; }
+
+    .pl-canvas { max-height: 62vh; }
+    .pl-toolbar button { flex: 1 1 auto; }
+
+    /* Los botones de asistencia bajan a su propio renglón y se
+       reparten el ancho: así se llega con el pulgar. */
+    .dia-row { flex-wrap: wrap; }
+    .dia-btns { width: 100%; }
+    .dia-b { flex: 1; width: auto; }
+    .dia-fecha { flex: 1 1 auto; }
+  }
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- ═══════════════ MODAL EDITAR ALUMNO ═══════════════ -->
+<div id="modal-edit" class="modal-backdrop hidden">
+  <div class="modal">
+    <h2>Editar alumno</h2>
+    <input type="hidden" id="edit-id">
+    <div class="form-row">
+      <div class="form-group"><label>Apellido(s) *</label><input id="edit-apellido" type="text"></div>
+      <div class="form-group"><label>Nombre(s) *</label><input id="edit-nombre" type="text"></div>
+    </div>
+    <div class="form-row three">
+      <div class="form-group"><label>DNI</label><input id="edit-dni" type="text"></div>
+      <div class="form-group"><label>Sexo *</label>
+        <select id="edit-sex"><option value="M">M — Varón</option><option value="F">F — Mujer</option></select>
+      </div>
+      <div class="form-group"><label>Estado</label>
+        <select id="edit-estado"><option value="activo">Activo</option><option value="baja">Baja</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Teléfono</label><input id="edit-tel" type="text"></div>
+      <div class="form-group"><label>Email</label><input id="edit-email" type="email"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveEdit()">Guardar cambios</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ APP SHELL ═══════════════ -->
+<div class="shell no-print">
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div>
+        <div class="org">Gobierno de la Provincia de Buenos Aires</div>
+        <div class="title">CFP 401<br>"Laura Vicuña"</div>
+        <div class="subtitle">Sistema de Asistencia</div>
+      </div>
+      <!-- Solo se ve en celular (ver @media): abre y cierra el menú. -->
+      <button class="menu-btn" onclick="toggleMenu()" aria-label="Menú">☰</button>
+    </div>
+    <div class="sidebar-course" id="sb-course">
+      <div class="course-label">Curso activo</div>
+      <div class="course-val" id="sb-course-val">—</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">Principal</div>
+      <div class="nav-item active" data-view="dashboard" onclick="goView('dashboard',this)">
+        <span class="ico">◈</span> Panel
+      </div>
+      <div class="nav-item" data-view="alumnos" onclick="goView('alumnos',this)">
+        <span class="ico">◉</span> Alumnos
+      </div>
+      <div class="nav-item" data-view="dia" onclick="goView('dia',this)">
+        <span class="ico">✓</span> Pasar lista
+      </div>
+      <div class="nav-item" data-view="asistencia" onclick="goView('asistencia',this)">
+        <span class="ico">◷</span> Mes completo
+      </div>
+      <div class="nav-group">Reportes</div>
+      <div class="nav-item" data-view="planilla" onclick="goView('planilla',this)">
+        <span class="ico">⬡</span> Planilla oficial
+      </div>
+      <div class="nav-item" onclick="exportCSV()">
+        <span class="ico">↓</span> Exportar CSV
+      </div>
+      <div class="nav-group">Sistema</div>
+      <div class="nav-item" data-view="config" onclick="goView('config',this)">
+        <span class="ico">◎</span> Configuración
+      </div>
+    </nav>
+  </nav>
+
+  <main class="main">
+
+    <!-- ──── DASHBOARD ──── -->
+    <div id="view-dashboard" class="view active">
+      <div class="page-header">
+        <h1>Panel de control</h1>
+        <p id="dash-subtitle">Resumen del curso activo</p>
+      </div>
+      <!-- Recordatorio: días de clase que pasaron y quedaron sin cargar. -->
+      <div id="dash-aviso"></div>
+      <div class="stats-row" id="stats-row">
+        <div class="stat"><div class="stat-label">Alumnos totales</div><div class="stat-val blue" id="s-total">0</div></div>
+        <div class="stat"><div class="stat-label">Varones</div><div class="stat-val" id="s-m">0</div></div>
+        <div class="stat"><div class="stat-label">Mujeres</div><div class="stat-val green" id="s-f">0</div></div>
+        <div class="stat"><div class="stat-label">% asist. del mes</div><div class="stat-val orange" id="s-pct">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Últimas incorporaciones</div>
+        <div id="last-students"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Actividad rápida</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goView('alumnos', document.querySelector('[data-view=alumnos]'))">+ Nuevo alumno</button>
+          <button class="btn btn-success" onclick="irADia()">✓ Pasar lista de hoy</button>
+          <button class="btn btn-warn" onclick="verPlanilla()">Ver planilla oficial</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──── ALUMNOS ──── -->
+    <div id="view-alumnos" class="view">
+      <div class="page-header">
+        <h1>Gestión de alumnos</h1>
+        <p>Alta, baja y consulta de estudiantes del curso</p>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('tab-lista',this)">Lista de alumnos</div>
+        <div class="tab" onclick="switchTab('tab-nuevo',this)">+ Nuevo alumno</div>
+        <div class="tab" onclick="switchTab('tab-import',this)">Importar CSV</div>
+      </div>
+
+      <div id="tab-lista">
+        <div class="card">
+          <div style="display:flex; gap:10px; margin-bottom:16px; align-items:center;">
+            <input id="search" type="text" placeholder="Buscar alumno..." style="flex:1; max-width:280px;" oninput="renderTable()">
+            <select id="filter-sex" onchange="renderTable()" style="width:120px;">
+              <option value="">Todos</option>
+              <option value="M">Varones</option>
+              <option value="F">Mujeres</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Apellido y Nombre</th><th>Sexo</th><th>DNI</th><th>Tel./Email</th><th>Estado</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="tbody-alumnos"></tbody>
+            </table>
+          </div>
+          <div id="no-alumnos" class="empty" style="display:none;">
+            <div class="ico">◉</div>
+            <p>Aún no hay alumnos cargados.<br>Usá la solapa "+ Nuevo alumno" para empezar.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-nuevo" style="display:none;">
+        <div class="card">
+          <div class="card-title">Datos del alumno</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Apellido(s) *</label>
+              <input id="in-apellido" type="text" placeholder="ej. GARCIA">
+            </div>
+            <div class="form-group">
+              <label>Nombre(s) *</label>
+              <input id="in-nombre" type="text" placeholder="ej. Luis Fabián">
+            </div>
+          </div>
+          <div class="form-row three">
+            <div class="form-group">
+              <label>DNI</label>
+              <input id="in-dni" type="text" placeholder="ej. 38521000">
+            </div>
+            <div class="form-group">
+              <label>Sexo *</label>
+              <select id="in-sex">
+                <option value="">— elegir —</option>
+                <option value="M">M — Varón</option>
+                <option value="F">F — Mujer</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select id="in-estado">
+                <option value="activo">Activo</option>
+                <option value="baja">Baja</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Teléfono</label>
+              <input id="in-tel" type="text" placeholder="ej. 0221-154000000">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input id="in-email" type="email" placeholder="ej. alumno@correo.com">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="addAlumno()">Guardar alumno</button>
+            <button class="btn btn-ghost" onclick="clearForm()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-import" style="display:none;">
+        <div class="card">
+          <div class="card-title">Importar desde CSV (Google Forms)</div>
+          <p style="color:var(--text2); margin-bottom:14px; font-size:13px;">
+            Pegá el contenido de un CSV exportado de Google Forms o Sheets.<br>
+            Columnas esperadas: <code style="background:var(--surface2);padding:2px 5px;border-radius:3px;">apellido,nombre,sexo,dni,telefono,email</code>
+          </p>
+          <div class="form-group">
+            <label>Contenido CSV</label>
+            <textarea id="csv-input" rows="8" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:10px;font-family:'DM Mono',monospace;font-size:12px;width:100%;outline:none;resize:vertical;" placeholder="apellido,nombre,sexo,dni,telefono,email&#10;GARCIA,Luis Fabián,M,38521000,0221-15400000,lgf@mail.com&#10;..."></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="importCSV()">Importar</button>
+          </div>
+          <div id="import-result" style="margin-top:12px; font-size:13px; color:var(--accent2);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──── PASAR LISTA (POR DÍA) ──── -->
+    <div id="view-dia" class="view">
+      <div class="page-header">
+        <h1>Pasar lista</h1>
+        <p>Elegí el día y marcá la lista. Es la vista para usar en el aula, desde el celular.</p>
+      </div>
+
+      <div class="dia-nav">
+        <button class="btn btn-ghost" onclick="cambiarDia(-1)" title="Día anterior">‹</button>
+        <input type="date" id="dia-input" class="dia-fecha" onchange="setDiaDesdeInput()">
+        <button class="btn btn-ghost" onclick="cambiarDia(1)" title="Día siguiente">›</button>
+        <button class="btn btn-ghost" onclick="irADia()">Hoy</button>
+        <button class="btn btn-ghost" onclick="saltarClase(-1)" title="Ir al día de clase anterior">‹ Clase</button>
+        <button class="btn btn-ghost" onclick="saltarClase(1)" title="Ir al próximo día de clase">Clase ›</button>
+      </div>
+
+      <div class="card">
+        <div class="dia-titulo" id="dia-titulo">—</div>
+        <div class="btn-row" style="margin: 12px 0 16px;">
+          <button class="btn btn-success" onclick="marcarDiaTodos('P')">✓ Todos presentes</button>
+          <button class="btn btn-ghost" onclick="marcarDiaTodos('A')">✗ Todos ausentes</button>
+          <button class="btn btn-danger" onclick="marcarDiaTodos('')">⊘ Limpiar día</button>
+        </div>
+        <div class="dia-lista" id="dia-lista"></div>
+        <div class="dia-resumen" id="dia-resumen"></div>
+      </div>
+    </div>
+
+    <!-- ──── ASISTENCIA ──── -->
+    <div id="view-asistencia" class="view">
+      <div class="page-header">
+        <h1>Registro de asistencia</h1>
+        <p>La grilla del mes completo, para revisar y corregir. Para tomar asistencia conviene "Pasar lista".</p>
+      </div>
+      <div class="month-nav">
+        <button class="btn btn-ghost" onclick="changeMonth(-1)">‹ Anterior</button>
+        <div class="month-title" id="month-title">—</div>
+        <button class="btn btn-ghost" onclick="changeMonth(1)">Siguiente ›</button>
+        <button class="btn btn-success" onclick="marcarDiasCursada()" style="margin-left:auto;" title="Marca P solo en los días que se dicta el curso">✓ Marcar días de clase</button>
+        <button class="btn btn-ghost" onclick="marcarTodos('P')">✓ Todos presentes</button>
+        <button class="btn btn-ghost" onclick="marcarTodos('A')">✗ Todos ausentes</button>
+        <button class="btn btn-danger" onclick="limpiarMes()" title="Borra toda la asistencia de este mes">⊘ Limpiar mes</button>
+      </div>
+      <div style="margin-bottom:10px; font-size:12px; color:var(--text3);">
+        <span style="margin-right:12px;"><span class="badge badge-p">P</span> Presente</span>
+        <span style="margin-right:12px;"><span class="badge badge-a">A</span> Ausente</span>
+        <span style="margin-right:12px;"><span class="badge badge-t">T</span> Tarde</span>
+        <span><span class="badge badge-j">J</span> Justificado</span>
+        &nbsp;—&nbsp; Hacé clic en cada celda para ciclar estados
+      </div>
+      <div class="card" style="overflow:auto;">
+        <div id="asist-wrap"></div>
+      </div>
+      <div class="totals-bar" id="totals-bar"></div>
+    </div>
+
+
+    <!-- ──── PLANILLA OFICIAL ──── -->
+    <div id="view-planilla" class="view">
+      <div class="page-header">
+        <h1>Planilla oficial de asistencia</h1>
+        <p>La planilla del mes con el formato exacto que se entrega. Sale de los datos cargados.</p>
+      </div>
+
+      <div class="card no-print">
+        <div class="card-title">Temas — <span id="pl-mes" style="color:var(--accent)">—</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Temas tratados desde el último informe (una línea por renglón)</label>
+            <textarea id="pl-temas" rows="5" oninput="revisarTemas('pl-temas')" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:10px;font-family:'Sora',sans-serif;font-size:13px;width:100%;outline:none;resize:vertical;"></textarea>
+            <div class="tema-estado" id="est-pl-temas"></div>
+          </div>
+          <div class="form-group">
+            <label>Temas en tratamiento (una línea por renglón)</label>
+            <textarea id="pl-temas-trat" rows="5" oninput="revisarTemas('pl-temas-trat')" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:10px;font-family:'Sora',sans-serif;font-size:13px;width:100%;outline:none;resize:vertical;"></textarea>
+            <div class="tema-estado" id="est-pl-temas-trat"></div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="guardarTemas()">Guardar temas y actualizar</button>
+          <button class="btn btn-ghost" onclick="acomodarTemas()" title="Reparte el texto en renglones que entren en la planilla, cortando entre palabras">✂️ Acomodar renglones</button>
+        </div>
+      </div>
+
+      <div class="pl-toolbar no-print">
+        <button class="btn btn-ghost" onclick="cambiarMesPlanilla(-1)">‹ Mes anterior</button>
+        <button class="btn btn-ghost" onclick="cambiarMesPlanilla(1)">Mes siguiente ›</button>
+        <button class="btn btn-success" onclick="imprimirPlanilla()">🖨️ Imprimir — Legal horizontal</button>
+        <label class="pl-zoom" style="cursor:pointer;" title="El formulario oficial es blanco. Los colores ayudan a leer en pantalla, pero gastan tinta y se alejan del original.">
+          <input type="checkbox" id="pl-color" onchange="togglePlColor()" style="width:auto;margin:0;"> Colores
+        </label>
+        <div class="pl-zoom">
+          Zoom
+          <select id="pl-zoom" onchange="aplicarZoomPlanilla()" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 8px;font-size:12px;">
+            <option value="0.5">50%</option>
+            <option value="0.65">65%</option>
+            <option value="0.75" selected>75%</option>
+            <option value="1">100%</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pl-canvas">
+        <div id="pl-hoja"></div>
+      </div>
+    </div>
+
+    <!-- ──── CONFIG ──── -->
+    <div id="view-config" class="view">
+      <div class="page-header">
+        <h1>Configuración del curso</h1>
+        <p>Datos que aparecerán en la planilla impresa</p>
+      </div>
+      <div class="card">
+        <div class="config-section">
+          <h3>Institución y curso</h3>
+          <div class="form-row three">
+            <div class="form-group">
+              <label>Especialidad</label>
+              <input id="c-especialidad" type="text" value="PENSAMIENTO COMPUTACIONAL">
+            </div>
+            <div class="form-group">
+              <label>N° de Curso</label>
+              <input id="c-curso" type="text" value="1978">
+            </div>
+            <div class="form-group">
+              <label>Centro N°</label>
+              <input id="c-centro" type="text" value="401">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Distrito</label>
+              <input id="c-distrito" type="text" value="ENSENADA">
+            </div>
+            <div class="form-group">
+              <label>Localidad (sede)</label>
+              <input id="c-localidad" type="text" value="ENSENADA">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Lugar donde se dicta (Sede)</label>
+              <input id="c-sede" type="text" value="Sede">
+            </div>
+            <div class="form-group">
+              <label>Instructor</label>
+              <input id="c-instructor" type="text" value="">
+            </div>
+          </div>
+        </div>
+        <div class="config-section">
+          <h3>Horarios (para la planilla)</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Días de cursada</label>
+              <div class="dow-grid" id="dow-grid">
+                <button class="dow-pill" data-dow="1" onclick="toggleDow(this)">Lun</button>
+                <button class="dow-pill" data-dow="2" onclick="toggleDow(this)">Mar</button>
+                <button class="dow-pill" data-dow="3" onclick="toggleDow(this)">Mié</button>
+                <button class="dow-pill" data-dow="4" onclick="toggleDow(this)">Jue</button>
+                <button class="dow-pill" data-dow="5" onclick="toggleDow(this)">Vie</button>
+                <button class="dow-pill" data-dow="6" onclick="toggleDow(this)">Sáb</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Horario de cada día (como va en la planilla)</label>
+              <div id="c-horarios" style="display:flex;flex-direction:column;gap:6px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);text-transform:none;letter-spacing:0;">
+                  <span style="width:70px;">Lunes</span><input id="c-h-1" type="text" placeholder="ej. 13.20 a 16.40hs" style="flex:1;"></label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);text-transform:none;letter-spacing:0;">
+                  <span style="width:70px;">Martes</span><input id="c-h-2" type="text" style="flex:1;"></label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);text-transform:none;letter-spacing:0;">
+                  <span style="width:70px;">Miércoles</span><input id="c-h-3" type="text" style="flex:1;"></label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);text-transform:none;letter-spacing:0;">
+                  <span style="width:70px;">Jueves</span><input id="c-h-4" type="text" style="flex:1;"></label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);text-transform:none;letter-spacing:0;">
+                  <span style="width:70px;">Viernes</span><input id="c-h-5" type="text" style="flex:1;"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveConfig()">Guardar configuración</button>
+          <button class="btn btn-danger" onclick="resetAll()">Borrar todos los datos</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+// Los valores por defecto viven aparte para poder completar con ellos lo que
+// falte en un `state` guardado de una versión anterior (ver load()).
+const CONFIG_POR_DEFECTO = {
+  especialidad: "PENSAMIENTO COMPUTACIONAL",
+  curso: "1978",
+  centro: "401",
+  distrito: "ENSENADA",
+  localidad: "ENSENADA",
+  sede: "Sede",
+  instructor: "",
+  dias: "miércoles y viernes",
+  horarios: { 3: "13.20 a 16.40hs", 5: "14 a 17.20hs" },
+  diasCursada: [3, 5]
+};
+
+let state = {
+  alumnos: [],
+  asistencia: {},   // { "YYYY-MM": { alumnoId: { day: "P"|"A"|"T"|"J"|"" } } }
+  config: Object.assign({}, CONFIG_POR_DEFECTO),
+  temas: {},  // { "YYYY-MM": { tratados, enTratamiento } }
+  plColor: false   // la planilla se dibuja como el original: blanco y negro
+};
+let currentMonth = new Date(); // Date object, day ignored
+let currentDay = new Date();   // el día que se está pasando en "Pasar lista"
+
+/* ══════════════════════════════════════════
+   PERSISTENCE
+══════════════════════════════════════════ */
+function save() {
+  localStorage.setItem('cfp401_state', JSON.stringify(state));
+}
+function load() {
+  const raw = localStorage.getItem('cfp401_state');
+  if (raw) {
+    try { state = JSON.parse(raw); } catch(e) {}
+  }
+  // Los campos nuevos de configuración tienen que aparecer también para quien
+  // ya venía usando el sistema: `state` guardado pisa el objeto entero, así que
+  // sin esto un campo agregado después (el instructor, por ejemplo) queda
+  // vacío para siempre y sale en blanco en la planilla.
+  state.config = Object.assign({}, CONFIG_POR_DEFECTO, state.config || {});
+
+  // Migración: antes había UN horario para todos los días. La planilla oficial
+  // tiene una columna por día, así que ahora se guarda uno por día.
+  if (state.config && !state.config.horarios) {
+    state.config.horarios = {};
+    (state.config.diasCursada || []).forEach(d => {
+      state.config.horarios[d] = state.config.horario || '';
+    });
+    delete state.config.horario;
+  }
+  if (!state.temas) state.temas = {};
+
+  // seed demo data if empty
+  if (!state.alumnos || state.alumnos.length === 0) {
+    state.alumnos = [
+      {id:1, apellido:"ALVAREZ", nombre:"Nicolás Ezequiel", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:2, apellido:"AYALA CORVALAN", nombre:"Marisa Elena", sexo:"F", dni:"", tel:"", email:"", estado:"activo"},
+      {id:3, apellido:"BENITEZ ROMERO", nombre:"Jazmín Noemí", sexo:"F", dni:"", tel:"", email:"", estado:"activo"},
+      {id:4, apellido:"CABRERA", nombre:"Rodolfo Fabián", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:5, apellido:"D'AMBROSIO", nombre:"Guadalupe", sexo:"F", dni:"", tel:"", email:"", estado:"activo"},
+      {id:6, apellido:"ESPINOSA", nombre:"Macarena Tatiana", sexo:"F", dni:"", tel:"", email:"", estado:"activo"},
+      {id:7, apellido:"FERREYRA", nombre:"Brandon Lihuel", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:8, apellido:"GIMENEZ", nombre:"Kevin Rodrigo", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:9, apellido:"HERRERA", nombre:"Carlos Aníbal", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:10, apellido:"LEDESMA", nombre:"Alberto Luis Luciano", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:11, apellido:"MOLINA", nombre:"Claudio Uriel", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:12, apellido:"NAVARRO", nombre:"Patricio Agustín", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+      {id:13, apellido:"OJEDA", nombre:"Hernán Ariel Jesús", sexo:"M", dni:"", tel:"", email:"", estado:"activo"},
+    ];
+    save();
+  }
+}
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+function goView(id, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  // En celular el menú está desplegado sobre el contenido: al elegir, se cierra.
+  document.querySelector('.sidebar').classList.remove('open');
+  window.scrollTo(0, 0);
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'alumnos') renderTable();
+  if (id === 'dia') renderDia();
+  if (id === 'asistencia') renderAsistencia();
+  if (id === 'config') loadConfig();
+  if (id === 'planilla') { cargarTemas(); verPlanillaSilencioso(); }
+}
+
+function switchTab(tabId, el) {
+  ['tab-lista','tab-nuevo','tab-import'].forEach(t => {
+    document.getElementById(t).style.display = (t === tabId) ? 'block' : 'none';
+  });
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (tabId === 'tab-lista') renderTable();
+}
+
+/* ══════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════ */
+function renderDashboard() {
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  document.getElementById('s-total').textContent = activos.length;
+  document.getElementById('s-m').textContent = activos.filter(a => a.sexo === 'M').length;
+  document.getElementById('s-f').textContent = activos.filter(a => a.sexo === 'F').length;
+  document.getElementById('sb-course-val').textContent = `Curso ${state.config.curso} — ${state.config.especialidad}`;
+
+  const mk = monthKey(currentMonth);
+  const mData = state.asistencia[mk] || {};
+  let pCount = 0, total = 0;
+  for (const id in mData) {
+    for (const d in mData[id]) {
+      const v = mData[id][d];
+      if (v) { total++; if (v === 'P' || v === 'T') pCount++; }
+    }
+  }
+  document.getElementById('s-pct').textContent = total ? Math.round(pCount/total*100)+'%' : '—';
+  renderAviso();
+
+  const last = [...activos].reverse().slice(0,5);
+  const el = document.getElementById('last-students');
+  if (!last.length) { el.innerHTML = '<div class="empty"><p>Sin alumnos aún.</p></div>'; return; }
+  el.innerHTML = `<table><thead><tr><th>Alumno</th><th>Sexo</th></tr></thead><tbody>
+    ${last.map(a => `<tr><td>${a.apellido}, ${a.nombre}</td><td><span class="badge badge-${a.sexo.toLowerCase()}">${a.sexo}</span></td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+/* ══════════════════════════════════════════
+   ALUMNOS TABLE
+══════════════════════════════════════════ */
+function renderTable() {
+  const q = (document.getElementById('search')?.value || '').toLowerCase();
+  const sf = document.getElementById('filter-sex')?.value || '';
+  const list = state.alumnos.filter(a => {
+    const name = (a.apellido + ' ' + a.nombre).toLowerCase();
+    return (!q || name.includes(q)) && (!sf || a.sexo === sf);
+  });
+  const tbody = document.getElementById('tbody-alumnos');
+  const empty = document.getElementById('no-alumnos');
+  if (!list.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = list.map((a, i) => `
+    <tr>
+      <td style="color:var(--text3); font-family:'DM Mono',monospace;">${i+1}</td>
+      <td style="font-weight:500;">${a.apellido}, ${a.nombre}</td>
+      <td><span class="badge badge-${a.sexo.toLowerCase()}">${a.sexo}</span></td>
+      <td style="color:var(--text2); font-family:'DM Mono',monospace;">${a.dni || '—'}</td>
+      <td style="color:var(--text2);">${a.tel || a.email || '—'}</td>
+      <td><span class="badge" style="${a.estado==='activo'?'background:rgba(56,217,169,.12);color:var(--accent2)':'background:rgba(255,107,107,.1);color:var(--danger)'}">${a.estado}</span></td>
+      <td>
+        <button class="btn btn-ghost" style="padding:4px 10px; font-size:11px;" onclick="openEdit(${a.id})">✎ Editar</button>
+        <button class="btn btn-ghost" style="padding:4px 10px; font-size:11px;" onclick="toggleEstado(${a.id})">${a.estado==='activo'?'↓ Baja':'↑ Reactivar'}</button>
+        <button class="btn btn-danger" style="padding:4px 10px; font-size:11px; margin-left:4px;" onclick="deleteAlumno(${a.id})">✕</button>
+      </td>
+    </tr>`).join('');
+}
+
+function nextId() { return state.alumnos.length ? Math.max(...state.alumnos.map(a => a.id)) + 1 : 1; }
+
+function addAlumno() {
+  const ap = document.getElementById('in-apellido').value.trim().toUpperCase();
+  const nm = document.getElementById('in-nombre').value.trim();
+  const sx = document.getElementById('in-sex').value;
+  if (!ap || !nm || !sx) { toast('Completá apellido, nombre y sexo.'); return; }
+  state.alumnos.push({
+    id: nextId(), apellido: ap, nombre: nm, sexo: sx,
+    dni: document.getElementById('in-dni').value.trim(),
+    tel: document.getElementById('in-tel').value.trim(),
+    email: document.getElementById('in-email').value.trim(),
+    estado: document.getElementById('in-estado').value
+  });
+  save(); clearForm();
+  toast('Alumno guardado ✓');
+  switchTab('tab-lista', document.querySelector('.tab'));
+  renderTable();
+}
+
+function clearForm() {
+  ['in-apellido','in-nombre','in-dni','in-tel','in-email'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('in-sex').value = '';
+  document.getElementById('in-estado').value = 'activo';
+}
+
+function toggleEstado(id) {
+  const a = state.alumnos.find(x => x.id === id);
+  if (a) { a.estado = a.estado === 'activo' ? 'baja' : 'activo'; save(); renderTable(); }
+}
+
+function deleteAlumno(id) {
+  if (!confirm('¿Eliminar este alumno? Se perderá su historial de asistencia.')) return;
+  state.alumnos = state.alumnos.filter(a => a.id !== id);
+  save(); renderTable(); toast('Alumno eliminado.');
+}
+
+/* ══════════════════════════════════════════
+   CSV IMPORT
+══════════════════════════════════════════ */
+function importCSV() {
+  const raw = document.getElementById('csv-input').value.trim();
+  if (!raw) { toast('Pegá el CSV primero.'); return; }
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  const header = lines[0].toLowerCase().split(',').map(h => h.trim());
+  const idx = k => header.indexOf(k);
+  let added = 0, errors = 0;
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g,''));
+    const ap = idx('apellido') >= 0 ? cols[idx('apellido')].toUpperCase() : '';
+    const nm = idx('nombre') >= 0 ? cols[idx('nombre')] : '';
+    const sx = idx('sexo') >= 0 ? cols[idx('sexo')].toUpperCase() : '';
+    if (!ap || !nm || !['M','F'].includes(sx)) { errors++; continue; }
+    state.alumnos.push({
+      id: nextId(), apellido: ap, nombre: nm, sexo: sx,
+      dni: idx('dni') >= 0 ? cols[idx('dni')] : '',
+      tel: idx('telefono') >= 0 ? cols[idx('telefono')] : '',
+      email: idx('email') >= 0 ? cols[idx('email')] : '',
+      estado: 'activo'
+    });
+    added++;
+  }
+  save();
+  document.getElementById('import-result').textContent = `Importados: ${added} alumnos. Errores: ${errors} filas omitidas.`;
+  toast(`${added} alumnos importados ✓`);
+}
+
+function exportCSV() {
+  const header = 'apellido,nombre,sexo,dni,telefono,email,estado';
+  const rows = state.alumnos.map(a => [a.apellido,a.nombre,a.sexo,a.dni,a.tel,a.email,a.estado].join(','));
+  const blob = new Blob([header+'\n'+rows.join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `alumnos_cfp401.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ══════════════════════════════════════════
+   ASISTENCIA
+══════════════════════════════════════════ */
+function monthKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+function monthLabel(d) {
+  return d.toLocaleDateString('es-AR', {month:'long', year:'numeric'}).replace(/^\w/, c => c.toUpperCase());
+}
+function daysInMonth(d) { return new Date(d.getFullYear(), d.getMonth()+1, 0).getDate(); }
+
+function changeMonth(dir) {
+  currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + dir, 1);
+  renderAsistencia();
+}
+
+const STATES = ['', 'P', 'A', 'T', 'J'];
+
+function cycleState(alumnoId, day) {
+  const mk = monthKey(currentMonth);
+  if (!state.asistencia[mk]) state.asistencia[mk] = {};
+  if (!state.asistencia[mk][alumnoId]) state.asistencia[mk][alumnoId] = {};
+  const cur = state.asistencia[mk][alumnoId][day] || '';
+  const next = STATES[(STATES.indexOf(cur) + 1) % STATES.length];
+  state.asistencia[mk][alumnoId][day] = next;
+  save();
+  const btn = document.getElementById(`ab-${alumnoId}-${day}`);
+  if (btn) {
+    btn.textContent = next || '·';
+    btn.className = 'asist-btn' + (next ? ' ' + next : '');
+  }
+  updateTotals();
+}
+
+function marcarTodos(val) {
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  const mk = monthKey(currentMonth);
+  const days = daysInMonth(currentMonth);
+  if (!state.asistencia[mk]) state.asistencia[mk] = {};
+  activos.forEach(a => {
+    if (!state.asistencia[mk][a.id]) state.asistencia[mk][a.id] = {};
+    for (let d = 1; d <= days; d++) state.asistencia[mk][a.id][d] = val;
+  });
+  save(); renderAsistencia();
+}
+
+function renderAsistencia() {
+  document.getElementById('month-title').textContent = monthLabel(currentMonth);
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  const wrap = document.getElementById('asist-wrap');
+  if (!activos.length) {
+    wrap.innerHTML = '<div class="empty"><div class="ico">◷</div><p>No hay alumnos activos.</p></div>';
+    return;
+  }
+  const mk = monthKey(currentMonth);
+  const mData = state.asistencia[mk] || {};
+  const days = daysInMonth(currentMonth);
+
+  let html = `<div style="overflow-x:auto;"><table class="asist-table"><thead><tr>
+    <th style="text-align:left; padding-left:8px; min-width:160px;">Alumno</th>`;
+  for (let d = 1; d <= days; d++) html += `<th class="col-day">${d}</th>`;
+  html += `<th style="min-width:40px;">Tot.</th></tr></thead><tbody>`;
+
+  activos.forEach(a => {
+    const ad = mData[a.id] || {};
+    let tot = 0;
+    html += `<tr><td class="name-col">${a.apellido}, ${a.nombre.split(' ')[0]}</td>`;
+    for (let d = 1; d <= days; d++) {
+      const v = ad[d] || '';
+      if (v === 'P' || v === 'T') tot++;
+      html += `<td><button id="ab-${a.id}-${d}" class="asist-btn${v?' '+v:''}" onclick="cycleState(${a.id},${d})">${v||'·'}</button></td>`;
+    }
+    html += `<td style="font-family:'DM Mono',monospace; font-size:11px; font-weight:500;">${tot||'—'}</td></tr>`;
+  });
+  html += '</tbody></table></div>';
+  wrap.innerHTML = html;
+  updateTotals();
+}
+
+function updateTotals() {
+  const mk = monthKey(currentMonth);
+  const mData = state.asistencia[mk] || {};
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  let P=0,A=0,T=0,J=0;
+  activos.forEach(a => {
+    const ad = mData[a.id] || {};
+    Object.values(ad).forEach(v => { if(v==='P')P++; else if(v==='A')A++; else if(v==='T')T++; else if(v==='J')J++; });
+  });
+  document.getElementById('totals-bar').innerHTML = `
+    <div class="tot"><div class="tot-dot" style="background:var(--accent2)"></div> Presentes: <b>${P}</b></div>
+    <div class="tot"><div class="tot-dot" style="background:var(--danger)"></div> Ausentes: <b>${A}</b></div>
+    <div class="tot"><div class="tot-dot" style="background:var(--warn)"></div> Tarde: <b>${T}</b></div>
+    <div class="tot"><div class="tot-dot" style="background:var(--text3)"></div> Justificados: <b>${J}</b></div>
+  `;
+}
+
+/* ══════════════════════════════════════════
+   PASAR LISTA — vista por día
+   ------------------------------------------
+   Misma información que la grilla mensual (se guarda en el mismo
+   lugar: state.asistencia[mes][alumno][día]), pero mostrada como
+   se toma en la realidad: un día, la lista de alumnos, cuatro
+   botones. Pensada para el celular.
+══════════════════════════════════════════ */
+function fechaISO(d) {
+  // No usar toISOString(): convierte a UTC y en Argentina devuelve el día anterior.
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function fechaLarga(d) {
+  return d.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+function esDiaDeClase(d) {
+  return (state.config.diasCursada || []).includes(d.getDay());
+}
+function marcaDe(d, alumnoId) {
+  const mes = state.asistencia[monthKey(d)] || {};
+  return (mes[alumnoId] || {})[d.getDate()] || '';
+}
+
+function irADia() {
+  currentDay = new Date();
+  goView('dia', document.querySelector('[data-view=dia]'));
+}
+function cambiarDia(dir) {
+  currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate() + dir);
+  renderDia();
+}
+function setDiaDesdeInput() {
+  const v = document.getElementById('dia-input').value;
+  if (!v) return;
+  const [y, m, d] = v.split('-').map(Number);
+  currentDay = new Date(y, m - 1, d);   // sin new Date(string): eso lo lee como UTC
+  renderDia();
+}
+function saltarClase(dir) {
+  const dows = state.config.diasCursada || [];
+  if (!dows.length) { toast('Primero configurá los días de cursada en Configuración.'); return; }
+  let d = new Date(currentDay);
+  for (let i = 0; i < 400; i++) {          // tope por si la config quedara vacía
+    d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + dir);
+    if (dows.includes(d.getDay())) { currentDay = d; renderDia(); return; }
+  }
+}
+
+function setEstadoDia(alumnoId, val) {
+  const mk = monthKey(currentDay);
+  const dia = currentDay.getDate();
+  if (!state.asistencia[mk]) state.asistencia[mk] = {};
+  if (!state.asistencia[mk][alumnoId]) state.asistencia[mk][alumnoId] = {};
+  // Tocar el botón que ya estaba marcado lo desmarca: así se corrige un error
+  // sin tener que dar la vuelta entera a los cuatro estados.
+  const actual = state.asistencia[mk][alumnoId][dia] || '';
+  state.asistencia[mk][alumnoId][dia] = (actual === val) ? '' : val;
+  save();
+  renderDia();
+}
+
+function marcarDiaTodos(val) {
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  const mk = monthKey(currentDay);
+  const dia = currentDay.getDate();
+  if (val === '' && !confirm(`¿Borrar la asistencia del ${fechaLarga(currentDay)}?`)) return;
+  if (!state.asistencia[mk]) state.asistencia[mk] = {};
+  activos.forEach(a => {
+    if (!state.asistencia[mk][a.id]) state.asistencia[mk][a.id] = {};
+    state.asistencia[mk][a.id][dia] = val;
+  });
+  save(); renderDia();
+}
+
+function renderDia() {
+  document.getElementById('dia-input').value = fechaISO(currentDay);
+
+  const clase = esDiaDeClase(currentDay);
+  const horario = (state.config.horarios || {})[currentDay.getDay()] || '';
+  document.getElementById('dia-titulo').innerHTML =
+    fechaLarga(currentDay)
+    + (clase
+        ? `<span class="dia-tag si">día de clase${horario ? ' · ' + horario : ''}</span>`
+        : '<span class="dia-tag no">no hay clase este día</span>');
+
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  const lista = document.getElementById('dia-lista');
+  if (!activos.length) {
+    lista.innerHTML = '<div class="empty"><div class="ico">◉</div><p>No hay alumnos activos.</p></div>';
+    document.getElementById('dia-resumen').innerHTML = '';
+    return;
+  }
+
+  const ESTADOS = [['P','Presente'], ['A','Ausente'], ['T','Tarde'], ['J','Justificado']];
+  lista.innerHTML = activos.map((a, i) => {
+    const v = marcaDe(currentDay, a.id);
+    const botones = ESTADOS.map(([e, titulo]) =>
+      `<button class="dia-b ${e}${v === e ? ' on' : ''}" title="${titulo}"
+               onclick="setEstadoDia(${a.id},'${e}')">${e}</button>`).join('');
+    return `<div class="dia-row${v ? ' is-' + v : ''}">
+      <span class="n">${i + 1}</span>
+      <span class="nm">${a.apellido}, ${a.nombre}<small>${a.sexo === 'F' ? 'Mujer' : 'Varón'}${a.dni ? ' · DNI ' + a.dni : ''}</small></span>
+      <span class="dia-btns">${botones}</span>
+    </div>`;
+  }).join('');
+
+  let P=0, A=0, T=0, J=0;
+  activos.forEach(a => {
+    const v = marcaDe(currentDay, a.id);
+    if (v === 'P') P++; else if (v === 'A') A++; else if (v === 'T') T++; else if (v === 'J') J++;
+  });
+  const sin = activos.length - (P + A + T + J);
+  document.getElementById('dia-resumen').innerHTML =
+    `Presentes <b>${P}</b> · Ausentes <b>${A}</b> · Tarde <b>${T}</b> · Justificados <b>${J}</b>`
+    + (sin ? ` · <span style="color:var(--warn)">sin marcar <b>${sin}</b></span>` : ' · <span style="color:var(--accent2)">lista completa ✓</span>');
+}
+
+/* ── Recordatorio: días de clase que ya pasaron y no se cargaron ── */
+function diasPendientes(limite = 6) {
+  const dows = state.config.diasCursada || [];
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  if (!dows.length || !activos.length) return [];
+  const hoy = new Date();
+  const pend = [];
+  // Se miran los últimos 45 días: alcanza para el mes en curso y el anterior.
+  for (let i = 0; i <= 45; i++) {
+    const d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - i);
+    if (!dows.includes(d.getDay())) continue;
+    const cargado = activos.some(a => marcaDe(d, a.id) !== '');
+    if (!cargado) pend.push(d);
+    if (pend.length >= limite) break;
+  }
+  return pend;
+}
+
+function renderAviso() {
+  const cont = document.getElementById('dash-aviso');
+  const pend = diasPendientes();
+  if (!pend.length) { cont.innerHTML = ''; return; }
+  const chips = pend.map(d =>
+    `<span class="chip-dia" onclick="abrirDia('${fechaISO(d)}')">${d.toLocaleDateString('es-AR', {weekday:'short', day:'numeric', month:'numeric'})}</span>`
+  ).join('');
+  cont.innerHTML = `<div class="alerta">
+    <b>Falta pasar asistencia</b> en ${pend.length} ${pend.length === 1 ? 'día de clase' : 'días de clase'}.
+    Tocá el día para cargarlo.
+    <div class="chips">${chips}</div>
+  </div>`;
+}
+
+function abrirDia(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  currentDay = new Date(y, m - 1, d);
+  goView('dia', document.querySelector('[data-view=dia]'));
+}
+
+/* ── Menú del celular ── */
+function toggleMenu() {
+  document.querySelector('.sidebar').classList.toggle('open');
+}
+
+/* ══════════════════════════════════════════
+   MODAL EDITAR
+══════════════════════════════════════════ */
+function openEdit(id) {
+  const a = state.alumnos.find(x => x.id === id);
+  if (!a) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-apellido').value = a.apellido;
+  document.getElementById('edit-nombre').value = a.nombre;
+  document.getElementById('edit-dni').value = a.dni || '';
+  document.getElementById('edit-sex').value = a.sexo;
+  document.getElementById('edit-estado').value = a.estado;
+  document.getElementById('edit-tel').value = a.tel || '';
+  document.getElementById('edit-email').value = a.email || '';
+  document.getElementById('modal-edit').classList.remove('hidden');
+}
+function closeModal() { document.getElementById('modal-edit').classList.add('hidden'); }
+function saveEdit() {
+  const id = parseInt(document.getElementById('edit-id').value);
+  const ap = document.getElementById('edit-apellido').value.trim().toUpperCase();
+  const nm = document.getElementById('edit-nombre').value.trim();
+  const sx = document.getElementById('edit-sex').value;
+  if (!ap || !nm || !sx) { toast('Completá apellido, nombre y sexo.'); return; }
+  const a = state.alumnos.find(x => x.id === id);
+  if (a) {
+    a.apellido = ap; a.nombre = nm; a.sexo = sx;
+    a.dni = document.getElementById('edit-dni').value.trim();
+    a.tel = document.getElementById('edit-tel').value.trim();
+    a.email = document.getElementById('edit-email').value.trim();
+    a.estado = document.getElementById('edit-estado').value;
+  }
+  save(); closeModal(); renderTable(); toast('Alumno actualizado ✓');
+}
+// cerrar modal con clic en backdrop
+document.getElementById('modal-edit').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+/* ══════════════════════════════════════════
+   LIMPIAR MES
+══════════════════════════════════════════ */
+function limpiarMes() {
+  const label = monthLabel(currentMonth);
+  if (!confirm(`¿Borrar toda la asistencia de ${label}? No se puede deshacer.`)) return;
+  const mk = monthKey(currentMonth);
+  delete state.asistencia[mk];
+  save(); renderAsistencia(); toast(`Asistencia de ${label} borrada.`);
+}
+
+/* ══════════════════════════════════════════
+   DÍAS DE CURSADA
+══════════════════════════════════════════ */
+const DOW_NAMES = {1:'lunes',2:'martes',3:'miércoles',4:'jueves',5:'viernes',6:'sábado'};
+
+function toggleDow(el) { el.classList.toggle('on'); }
+
+function getSelectedDows() {
+  return [...document.querySelectorAll('.dow-pill.on')].map(el => parseInt(el.dataset.dow));
+}
+
+function loadDowPills() {
+  const saved = state.config.diasCursada || [];
+  document.querySelectorAll('.dow-pill').forEach(el => {
+    el.classList.toggle('on', saved.includes(parseInt(el.dataset.dow)));
+  });
+}
+
+function marcarDiasCursada() {
+  const dows = state.config.diasCursada || [];
+  if (!dows.length) { toast('Primero configurá los días de cursada en Configuración.'); return; }
+  const activos = state.alumnos.filter(a => a.estado === 'activo');
+  const mk = monthKey(currentMonth);
+  const year = currentMonth.getFullYear(), month = currentMonth.getMonth();
+  const days = daysInMonth(currentMonth);
+  if (!state.asistencia[mk]) state.asistencia[mk] = {};
+  activos.forEach(a => {
+    if (!state.asistencia[mk][a.id]) state.asistencia[mk][a.id] = {};
+    for (let d = 1; d <= days; d++) {
+      const dow = new Date(year, month, d).getDay(); // 0=dom,1=lun,...
+      // JS: 0=dom,1=lun,2=mar,3=mié,4=jue,5=vie,6=sáb — coincide con nuestro esquema
+      if (dows.includes(dow)) {
+        if (!state.asistencia[mk][a.id][d]) state.asistencia[mk][a.id][d] = 'P';
+      }
+    }
+  });
+  save(); renderAsistencia();
+  const names = dows.map(d => DOW_NAMES[d] || d).join(', ');
+  toast(`Presente marcado en días de clase (${names}) ✓`);
+}
+
+/* ══════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════ */
+function loadConfig() {
+  const c = state.config;
+  document.getElementById('c-especialidad').value = c.especialidad || '';
+  document.getElementById('c-curso').value = c.curso || '';
+  document.getElementById('c-centro').value = c.centro || '';
+  document.getElementById('c-distrito').value = c.distrito || '';
+  document.getElementById('c-localidad').value = c.localidad || '';
+  document.getElementById('c-sede').value = c.sede || '';
+  document.getElementById('c-instructor').value = c.instructor || '';
+  const hs = c.horarios || {};
+  for (let d = 1; d <= 5; d++) document.getElementById('c-h-' + d).value = hs[d] || '';
+  loadDowPills();
+}
+
+function saveConfig() {
+  const dows = getSelectedDows();
+  state.config = {
+    especialidad: document.getElementById('c-especialidad').value,
+    curso: document.getElementById('c-curso').value,
+    centro: document.getElementById('c-centro').value,
+    distrito: document.getElementById('c-distrito').value,
+    localidad: document.getElementById('c-localidad').value,
+    sede: document.getElementById('c-sede').value,
+    instructor: document.getElementById('c-instructor').value,
+    horarios: (() => {
+      const h = {};
+      for (let d = 1; d <= 5; d++) {
+        const v = document.getElementById('c-h-' + d).value.trim();
+        if (v) h[d] = v;
+      }
+      return h;
+    })(),
+    diasCursada: dows,
+    dias: dows.map(d => DOW_NAMES[d] || d).join(' y '),
+  };
+  save(); toast('Configuración guardada ✓');
+  document.getElementById('sb-course-val').textContent = `Curso ${state.config.curso} — ${state.config.especialidad}`;
+}
+
+function resetAll() {
+  if (!confirm('¿Borrar TODOS los datos? Esta acción no se puede deshacer.')) return;
+  localStorage.removeItem('cfp401_state');
+  location.reload();
+}
+
+const PL_LOGO = "data:image/png;base64,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";
+
+/* ══════════════════════════════════════════
+   PLANILLA OFICIAL
+   ------------------------------------------
+   Arma la planilla de asistencia con el formato que pide la Dirección de
+   Formación Profesional, a partir de los datos cargados.
+
+   Antes esto era un archivo aparte con los datos escritos a mano: se veía
+   igual al original pero no servía para trabajar. Ahora sale de `state`.
+
+   SOBRE LAS COLUMNAS (lo que se corrigió mirando el Excel original):
+   el bloque de horarios NO tiene columnas propias — vive arriba del panel
+   derecho, en las mismas columnas que "Temas tratados". Cuando tenía las
+   suyas, empujaba todo el panel a la derecha y dejaba una franja vacía
+   con el rótulo HORARIO bajando por toda la hoja.
+
+   SOBRE LOS ANCHOS: las proporciones salen de medir el Excel — los días
+   ocupan ~36% del ancho y el nombre ~30%. Con los días anchos la hoja se
+   ve estirada y no se parece al original.
+
+   El nombre va en DOS columnas (se fusionan en las filas de alumno). No es
+   capricho: el logo abarca las primeras columnas, y con el nombre en una
+   sola columna de 97mm el logo salía tres veces más grande que en el Excel.
+
+   Son 50 columnas: 4 (N°/Sexo/Nombre×2) + 31 días + 2 totales + 1 separador
+   + 12 del panel. Cada fila del encabezado tiene que sumar 50 contando los
+   colspan y los rowspan que bajan de arriba — si no, la tabla se desarma.
+   Los comentarios de cada fila dicen cuánto suma.
+══════════════════════════════════════════ */
+
+const PL_DIAS = 31;                    // el formulario oficial siempre trae 31
+const PL_FILAS = 29;                   // y siempre 29 renglones de alumno
+const PL_COLS = 50;
+const PL_DOW = { 1: 'lunes', 2: 'martes', 3: 'miércoles', 4: 'jueves', 5: 'viernes' };
+// El miércoles ocupa dos columnas, como en el original.
+const PL_SPAN_DIA = { 1: 2, 2: 2, 3: 3, 4: 2, 5: 2 };
+
+function plEsc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* Los renglones del panel derecho, uno por cada fila de alumno. Las
+   posiciones salen del Excel original: temas arriba, bajas al medio,
+   movimiento y firmas abajo. */
+function plPanel(i, d) {
+  // Ojo con el `|| ''`: si el valor es el número 0 (por ejemplo "Bajas: 0"),
+  // se lo comía y la celda salía vacía. En el Excel dice 0.
+  const cel = (cls, txt, span) => '<td colspan="' + (span || 12) + '" class="' + cls + '">'
+    + (txt === 0 ? '0' : (txt || '')) + '</td>';
+
+  // La primera línea de "temas tratados" se dibuja en el encabezado (en el
+  // renglón que liberó la localidad), así que acá se arranca por la segunda.
+  if (i <= 3) return cel('st', plEsc(d.temasTratados[i + 1] || ''));
+  if (i === 4) return cel('st', '');
+  if (i === 5) return cel('st sit', 'Temas en tratamiento:');
+  if (i <= 8) return cel('st', plEsc(d.temasEnTratamiento[i - 6] || ''));
+  if (i === 9) return cel('st', '');
+  if (i === 10) return cel('sbh', 'BAJAS DE ALUMNOS');
+  if (i === 11) return cel('sbth', 'sexo', 3) + cel('sbth', 'APELLIDOS Y Nombres', 9);
+  if (i <= 17) {
+    const b = d.bajas[i - 12];
+    return '<td colspan="3" class="sb" style="text-align:center">' + (b ? plEsc(b.sexo) : '') + '</td>'
+         + cel('sb', b ? plEsc(b.apellido + ', ' + b.nombre) : '', 9);
+  }
+  if (i === 18) return cel('smh', 'MOVIMIENTO DE ALUMNOS');
+  if (i <= 23) {
+    const mov = [
+      ['Total de alumnos al iniciar el mes', d.alIniciar],
+      ['Bajas', d.bajas.length],
+      ['Total de <b>varones</b> al finalizar el mes', d.varones],
+      ['Total de <b>mujeres</b> al finalizar el mes', d.mujeres],
+      ['Total de <b>alumnos</b> al finalizar el mes', d.total],
+    ][i - 19];
+    return cel('sm', mov[0], 9) + cel('smn', mov[1], 3);
+  }
+  if (i === 25) return cel('sf', '<span style="display:inline-block;padding-left:30%">Firma</span>');
+  if (i === 27) return cel('sf sfi', 'Instructor: &nbsp;' + plEsc(d.instructor));
+  if (i === 28) return cel('sf sfi', 'Entregó &nbsp;…./…./….&nbsp;&nbsp;&nbsp; Recibió:');
+  return cel('sf', '');
+}
+
+function plHtml() {
+  const c = state.config;
+  const activos = state.alumnos.filter(a => a.estado === 'activo')
+    .sort((a, b) => (a.apellido + ' ' + a.nombre).localeCompare(b.apellido + ' ' + b.nombre, 'es'));
+  const bajas = state.alumnos.filter(a => a.estado === 'baja');
+  const mk = monthKey(currentMonth);
+  const mData = state.asistencia[mk] || {};
+  const diasDelMes = daysInMonth(currentMonth);
+  const mes = monthLabel(currentMonth).split(' ')[0];
+  const anio = currentMonth.getFullYear();
+  const dows = c.diasCursada || [];
+  const horarios = c.horarios || {};
+  const temas = (state.temas && state.temas[mk]) || { tratados: '', enTratamiento: '' };
+
+  const datosPanel = {
+    temasTratados: (temas.tratados || '').split('\n'),
+    temasEnTratamiento: (temas.enTratamiento || '').split('\n'),
+    bajas: bajas,
+    alIniciar: activos.length + bajas.length,
+    varones: activos.filter(a => a.sexo === 'M').length,
+    mujeres: activos.filter(a => a.sexo === 'F').length,
+    total: activos.length,
+    instructor: c.instructor || '',
+  };
+
+  /* --- anchos: 5+4.5+45+52 + 31×4 + 6+6 + 0.8 + 12×8.4 = 344.1mm ---
+     El total tiene que dar el ancho útil de la hoja (349mm menos 4mm de
+     padding). Si suma menos, el navegador reparte el sobrante entre todas
+     las columnas y los días vuelven a quedar anchos.
+
+     El separador entre la tabla y el panel medía 2mm —media columna de día— y
+     se leía como una columna vacía. Con 0,8mm las dos secciones quedan
+     pegadas y el panel sigue siendo un recuadro aparte, como en el Excel.
+     Los 1,2mm que se liberan van al panel: si no, el sobrante lo reparte el
+     navegador y los días se ensanchan de nuevo. */
+  const col = w => '<col style="width:' + w + 'mm">';
+  const colgroup = '<colgroup>'
+    + col(5) + col(4.5) + col(45) + col(52)
+    + Array.from({ length: PL_DIAS }, () => col(4)).join('')
+    + col(6) + col(6)
+    + col(0.8)
+    + Array.from({ length: 12 }, () => col(8.4)).join('')
+    + '</colgroup>';
+
+  /* Bloque de horarios: va ARRIBA del panel derecho, ocupando sus columnas. */
+  const etiquetasHorario = [1, 2, 3, 4, 5].map(dw =>
+    '<td colspan="' + PL_SPAN_DIA[dw] + '" class="hlbl' + (dows.includes(dw) ? ' mk' : '') + '">'
+    + PL_DOW[dw] + '</td>').join('');
+  const valoresHorario = [1, 2, 3, 4, 5].map(dw => {
+    const h = plEsc(horarios[dw] || '').replace(' a ', ' a<br>');
+    return '<td colspan="' + PL_SPAN_DIA[dw] + '" class="hval' + (dows.includes(dw) ? ' mk' : '')
+      + '" style="font-size:4.8pt;line-height:1.3">' + h + '</td>';
+  }).join('');
+
+  /* --- encabezado ---
+     Bloque izquierdo = 37 columnas (4 + 31 días + 2 totales), separador = 1,
+     panel = 12. Cada fila tiene que sumar 50 contando los rowspan que bajan de
+     arriba; hay un verificador que lo comprueba.
+
+     Lo que la primera versión tenía mal, mirando el Excel al lado:
+     · CURSO N° va ARRIBA DEL PANEL, en sus mismas columnas, no en el bloque
+       de la izquierda. Es lo que más saltaba a la vista.
+     · No existe ninguna casilla "TIPO Fo/Cap/Otros" en el formulario.
+     · "Especialidad:" entraba en 2 columnas (9,5mm) y salía cortado como
+       "Especialid".
+     · Los totales llevan un "Totales" arriba y "Pres. | Aus." abajo, o sea
+       dos filas de encabezado, no dos rótulos sueltos. */
+  const head = [
+    // fila 1 · logo 3 + título 14 + centro 6+9 + vacío 5 = 37 | sep 1 | curso 12 = 50
+    '<tr style="height:20pt">',
+    '<td rowspan="4" colspan="3" class="logo-td"><img src="' + PL_LOGO + '" alt="Gobierno de la Provincia de Buenos Aires" style="width:100%;height:100%;object-fit:contain;display:block;max-height:58pt"></td>',
+    '<td rowspan="2" colspan="14" class="tit-td">ASISTENCIA DE ALUMNOS</td>',
+    '<td colspan="6" class="cn-lbl">CENTRO N°</td>',
+    '<td colspan="9" class="cn-val">' + plEsc(c.centro) + '</td>',
+    '<td colspan="5" class="tipo-lbl">TIPO</td>',
+    '<td rowspan="7" class="vsep"></td>',
+    '<td rowspan="2" colspan="12" class="curso-td"><span class="curso-lbl">CURSO N°</span> <span class="curso-num">' + plEsc(c.curso) + '</span></td>',
+    '</tr>',
+    // fila 2 · [logo 3 + título 14 + hueco 5 + sep 1 + curso 12 = 35] + 6 + 9 = 50
+    '<tr style="height:13pt">',
+    '<td colspan="6" class="cn-lbl">DISTRITO</td>',
+    '<td colspan="9" class="cn-val">' + plEsc(c.distrito) + '</td>',
+    '<td colspan="5" class="tipo-val">Fo&nbsp;&nbsp;Cap&nbsp;&nbsp;Otros</td>',
+    '</tr>',
+    // fila 3 · [logo 3 + sep 1 = 4] + 34 | panel: hrot 1 + días 11 = 50
+    '<tr style="height:11pt">',
+    '<td colspan="34" class="hueco"></td>',
+    '<td rowspan="2" class="hrot">horario</td>',
+    etiquetasHorario,
+    '</tr>',
+    // fila 4 · [logo 3 + sep 1 + hrot 1 = 5] + 34 + 11 = 50
+    '<tr style="height:15pt">',
+    '<td colspan="34" class="inf-td">Informe del mes de &nbsp;<strong style="font-size:8.5pt">' + plEsc(mes) + '</strong>&nbsp;&nbsp; de &nbsp;&nbsp;<strong style="font-size:8.5pt">' + anio + '</strong></td>',
+    valoresHorario,
+    '</tr>',
+    // fila 5 · [sep 1] + 3+9+7+5+13 = 37 | panel: 3 + 9 = 50
+    '<tr style="height:11pt">',
+    // La localidad, que en el Excel está sobre el panel, se pasa acá a la
+    // izquierda. Es la única diferencia a propósito con el original: libera
+    // ese renglón del panel y los temas tratados ganan una línea.
+    '<td colspan="3" class="esp-lbl">Especialidad:</td>',
+    '<td colspan="9" class="esp-val">' + plEsc(c.especialidad) + '</td>',
+    '<td colspan="7" class="esp-lbl" style="text-align:center">Lugar que se dicta:</td>',
+    '<td colspan="5" class="esp-val">' + plEsc(c.sede) + '</td>',
+    '<td colspan="4" class="loc-lbl">localidad</td>',
+    '<td colspan="9" class="loc-val">' + plEsc(c.localidad) + '</td>',
+    '<td colspan="12" class="st sith">Temas tratados desde el ultimo informe:</td>',
+    '</tr>',
+    // fila 6 · 1+1+2 + 31 + 2 = 37 | [sep 1] | panel 12 = 50
+    '<tr>',
+    '<th rowspan="2" class="ch" style="font-size:5.5pt">N°</th>',
+    '<th rowspan="2" class="ch" style="font-size:4pt;line-height:1.05">Sexo<br>M/F</th>',
+    '<th rowspan="2" colspan="2" class="ch" style="text-align:left;padding-left:2px;font-size:5.5pt">APELLIDOS y Nombres</th>',
+    '<th colspan="' + PL_DIAS + '" class="ch" style="height:6pt"></th>',
+    '<th colspan="2" class="ch" style="font-size:4.5pt">Totales</th>',
+    // El renglón que dejó libre la localidad: primera línea de temas.
+    '<td rowspan="2" colspan="12" class="st">' + plEsc(datosPanel.temasTratados[0] || '') + '</td>',
+    '</tr>',
+    // fila 7 · [4 + sep 1 + panel 12 = 17] + 31 + 2 = 50
+    '<tr>',
+    Array.from({ length: PL_DIAS }, (_, i) =>
+      '<th class="dh' + (i + 1 > diasDelMes ? ' off' : '') + '">' + (i + 1) + '</th>').join(''),
+    '<th class="ch" style="font-size:4pt">Pres.</th>',
+    '<th class="ch" style="font-size:4pt">Aus.</th>',
+    '</tr>',
+  ].join('');
+
+  /* --- filas de alumnos --- */
+  const filas = Array.from({ length: PL_FILAS }, (_, i) => {
+    const a = activos[i];
+    const ad = a ? (mData[a.id] || {}) : {};
+    let pres = 0, aus = 0;
+    const celdas = Array.from({ length: PL_DIAS }, (_, d) => {
+      const dia = d + 1;
+      const fuera = dia > diasDelMes;
+      const v = a && !fuera ? (ad[dia] || '') : '';
+      if (v === 'P' || v === 'T') pres++;
+      if (v === 'A') aus++;
+      return '<td class="vd' + (v ? ' v' + v : '') + (fuera ? ' off' : '') + '">' + v + '</td>';
+    }).join('');
+    return '<tr class="ar">'
+      + '<td class="vn' + (a ? '' : ' vacia') + '">' + (i + 1) + '</td>'
+      + '<td class="vs">' + (a ? plEsc(a.sexo) : '') + '</td>'
+      + '<td class="vname" colspan="2">' + (a ? plEsc(a.apellido + ', ' + a.nombre) : '') + '</td>'
+      + celdas
+      + '<td class="vtot">' + (pres || '') + '</td>'
+      + '<td class="vtota">' + (aus || '') + '</td>'
+      + '<td class="vsep"></td>'
+      + plPanel(i, datosPanel)
+      + '</tr>';
+  }).join('');
+
+  const pie = '<tr class="foot">'
+    + '<td colspan="37" style="text-align:left">Presentar el primer día hábil del mes POR DUPLICADO, ORIGINAL Servicio - DUPLICADO Instructor</td>'
+    + '<td class="vsep"></td>'
+    + '<td colspan="12" style="text-align:center">Dirección General de Cultura y Educación – Dirección de Formación Profesional</td>'
+    + '</tr>';
+
+  return '<div class="sheet' + (state.plColor ? ' pl-color' : '') + '">'
+    + '<table class="T">' + colgroup + head + filas + pie + '</table>'
+    + '</div>';
+}
+
+/* Vista previa en pantalla. Antes se disparaba window.print() a ciegas: no se
+   podía revisar la planilla sin abrir el diálogo de impresión, que además en
+   una demo queda incómodo. */
+function verPlanilla() {
+  goView('planilla', document.querySelector('[data-view=planilla]'));
+}
+
+// Redibuja la hoja sin cambiar de vista (al entrar, o al cambiar de mes).
+function verPlanillaSilencioso() {
+  const chk = document.getElementById('pl-color');
+  if (chk) chk.checked = !!state.plColor;
+  document.getElementById('pl-hoja').innerHTML = plHtml();
+  aplicarZoomPlanilla();
+}
+
+// Blanco y negro (como el formulario oficial) o con colores para leer en
+// pantalla. La preferencia se guarda: quien imprime siempre igual no tiene
+// que acordarse de destildarlo cada mes.
+function togglePlColor() {
+  state.plColor = document.getElementById('pl-color').checked;
+  save();
+  verPlanillaSilencioso();
+}
+
+function cambiarMesPlanilla(dir) {
+  currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + dir, 1);
+  cargarTemas();
+  verPlanillaSilencioso();
+}
+
+function aplicarZoomPlanilla() {
+  const z = parseFloat(document.getElementById('pl-zoom').value);
+  const hoja = document.querySelector('#pl-hoja .sheet');
+  if (!hoja) return;
+  hoja.style.transform = 'scale(' + z + ')';
+  // El scale no cambia el espacio que ocupa: sin esto queda un hueco enorme.
+  hoja.parentElement.style.height = (hoja.offsetHeight * z) + 'px';
+  hoja.parentElement.style.width = (hoja.offsetWidth * z) + 'px';
+}
+
+function imprimirPlanilla() {
+  if (!document.querySelector('#pl-hoja .sheet')) verPlanillaSilencioso();
+  window.print();
+}
+
+function guardarTemas() {
+  const mk = monthKey(currentMonth);
+  if (!state.temas) state.temas = {};
+  state.temas[mk] = {
+    tratados: document.getElementById('pl-temas').value,
+    enTratamiento: document.getElementById('pl-temas-trat').value,
+  };
+  save();
+  verPlanillaSilencioso();
+  toast('Temas guardados ✓');
+}
+
+/* ══════════════════════════════════════════
+   TEMAS: avisar qué entra y qué no
+   ------------------------------------------
+   Cada línea del textarea es UN renglón de la planilla, y lo que se pasa de
+   ancho la planilla lo corta sin avisar (overflow:hidden). Antes eso se
+   descubría al imprimir. Ahora se mide con las mismas medidas de la hoja: el
+   ancho real de la celda y la misma tipografía.
+══════════════════════════════════════════ */
+const PL_TEMAS = {
+  'pl-temas':      { maxLineas: 5, nombre: 'Temas tratados' },
+  'pl-temas-trat': { maxLineas: 3, nombre: 'Temas en tratamiento' },
+};
+// 12 columnas de 8,4mm menos el padding de la celda (2px de cada lado).
+const PL_ANCHO_RENGLON_MM = 12 * 8.4 - 1.1;
+const PL_FUENTE_RENGLON = '6pt Arial, Helvetica, sans-serif';
+
+let plLienzo = null;
+function anchoTextoMm(txt) {
+  if (!plLienzo) plLienzo = document.createElement('canvas').getContext('2d');
+  plLienzo.font = PL_FUENTE_RENGLON;
+  return plLienzo.measureText(txt).width / (96 / 25.4);
+}
+
+// Corta el texto en renglones que entren, siempre entre palabras. Una palabra
+// más larga que el renglón entero se deja como está: partirla al medio sería
+// peor que dejarla larga y que se vea al revisar.
+function acomodarLineas(texto) {
+  const salida = [];
+  texto.split('\n').forEach(linea => {
+    let actual = '';
+    linea.trim().split(/\s+/).forEach(palabra => {
+      if (!palabra) return;
+      const prueba = actual ? actual + ' ' + palabra : palabra;
+      if (actual && anchoTextoMm(prueba) > PL_ANCHO_RENGLON_MM) {
+        salida.push(actual);
+        actual = palabra;
+      } else {
+        actual = prueba;
+      }
+    });
+    salida.push(actual);
+  });
+  return salida.join('\n');
+}
+
+function revisarTemas(id) {
+  const ta = document.getElementById(id);
+  const cfg = PL_TEMAS[id];
+  const est = document.getElementById('est-' + id);
+  if (!ta || !cfg || !est) return;
+
+  const lineas = ta.value.split('\n');
+  const largas = [];
+  lineas.forEach((l, i) => { if (anchoTextoMm(l) > PL_ANCHO_RENGLON_MM) largas.push(i + 1); });
+  const sobran = lineas.length - cfg.maxLineas;
+
+  // Acomodar solo mientras se escribe AL FINAL: si el cursor está en el medio
+  // de una corrección, mover el texto solo sería insoportable.
+  const alFinal = ta.selectionStart === ta.value.length && ta.selectionEnd === ta.value.length;
+  if (largas.length && alFinal) {
+    ta.value = acomodarLineas(ta.value);
+    ta.selectionStart = ta.selectionEnd = ta.value.length;
+    est.className = 'tema-estado ok';
+    est.textContent = '↩ Se pasó a la línea siguiente, no entraba en el renglón.';
+    return;
+  }
+
+  const avisos = [];
+  if (largas.length) {
+    avisos.push(largas.length === 1
+      ? 'El renglón ' + largas[0] + ' no entra: se va a cortar al imprimir.'
+      : 'Los renglones ' + largas.join(', ') + ' no entran: se van a cortar al imprimir.');
+  }
+  if (sobran > 0) {
+    avisos.push('En la planilla entran ' + cfg.maxLineas + ' renglones y hay ' + lineas.length +
+                '; los últimos ' + sobran + ' no se van a ver.');
+  }
+  if (avisos.length) {
+    est.className = 'tema-estado mal';
+    est.textContent = '⚠ ' + avisos.join(' ') + ' Probá "Acomodar renglones".';
+  } else {
+    const usados = lineas.filter(l => l.trim()).length;
+    est.className = 'tema-estado ok';
+    est.textContent = '✓ Entra todo (' + usados + ' de ' + cfg.maxLineas + ' renglones).';
+  }
+}
+
+function acomodarTemas() {
+  Object.keys(PL_TEMAS).forEach(id => {
+    const ta = document.getElementById(id);
+    if (ta) ta.value = acomodarLineas(ta.value);
+    revisarTemas(id);
+  });
+  toast('Renglones acomodados ✓');
+}
+
+function cargarTemas() {
+  const mk = monthKey(currentMonth);
+  const t = (state.temas && state.temas[mk]) || { tratados: '', enTratamiento: '' };
+  document.getElementById('pl-temas').value = t.tratados || '';
+  document.getElementById('pl-temas-trat').value = t.enTratamiento || '';
+  document.getElementById('pl-mes').textContent = monthLabel(currentMonth);
+  revisarTemas('pl-temas');
+  revisarTemas('pl-temas-trat');
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 2800);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+load();
+currentMonth = new Date();
+currentDay = new Date();
+renderDashboard();
+document.getElementById('sb-course-val').textContent = `Curso ${state.config.curso} — ${state.config.especialidad}`;
+</script>
+</body>
+</html>

@@ -30,15 +30,15 @@
 
 | Fecha | Hito |
 |-------|------|
-| 🔁 **15 – 17/7** | Repaso y **práctica** de Persistencia (Git, GitHub, Archivos, JSON) antes del receso |
-| 🏗️ **Post-receso (agosto)** | **POO** (clases y objetos), antes de arrancar el proyecto |
-| ❄️ **22/7 – 1/8** | Receso invernal |
-| 🚀 **Agosto (post-receso)** | Arranque del **Sistema de Asistencias** (primer proyecto, CLI) — necesita POO |
-| ✅ **Agosto** | Primer hito del proyecto: versión CLI funcionando |
-| 🌐 **Ago – Sep** | Migración de Asistencias a **web (Flask)** + arranque del **Bot SiGes** (segundo proyecto) |
+| ❄️ **22/7 – 1/8** | Receso invernal *(pasado)* |
+| 🔁 **Agosto** | Vuelta del receso: **repaso y práctica** en la plataforma, y cierre de **Archivos y JSON** |
+| 🏗️ **Septiembre** | **POO** y arranque del **Sistema de Asistencias** (primer proyecto, CLI) |
 | 🎉 **21/9** | **Nerdearla** |
-| 🤖 **Mié 7/10** | Arranque del **proyecto final con IA** |
-| 🏆 **9/11** | **Expo CFP 2026** |
+| ✅ **Mié 30/9** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en JSON |
+| 🌐 **Oct** | **Testing con pytest** y migración del sistema a **web (Flask)** |
+| 🏆 **9/11** | **Expo CFP 2026** — se presenta el **Sistema de Asistencias** |
+| 🚀 **Mié 11/11** | Tercer hito: **el sistema publicado en internet**, usable desde el celular |
+| 🤖 **Mié 25/11** | Arranque del **proyecto final con IA** |
 | 🎓 **Vie 18/12** | Última clase y celebración de cierre |
 
 ---
@@ -66,6 +66,8 @@
     reemplaza el flujo actual (formulario → planilla a mano). Se construye primero en **CLI** (para
     clavar el dominio) y respeta el **formato oficial** del centro. **Testing con `pytest`** sobre
     código propio, entrelazado con el proyecto.
+
+    👉 El prototipo del sistema ya se puede **[ver y probar](./proyecto/index.md)**.
 
 !!! info "🌐 Bloque 5 — Web y Segundo Proyecto: Bot SiGes"
     Cómo funciona la web (HTTP, request/response, rutas) y **Flask** (Jinja2, formularios). Se
@@ -146,6 +148,21 @@
 | Mié 15/7 | 💻 **Clase virtual por Discord** (13:20 a 16:00, acortada por el partido de Argentina ⚽): checkpoint de **Git/GitHub desde casa** + **del enunciado al programa** (comprensión de problemas) | [📄](./clases/bloque_2_funciones_y_colecciones/del_enunciado_al_programa.md) |
 | Vie 17/7 | 🧺 **Picnic de cierre antes del receso** + cerramos **Git y GitHub** de una vez por todas (`push`/`clone`/`pull`, el flujo CFP ↔ casa) | [📄](./clases/bloque_3_persistencia/git_github.md) |
 | 22/7 – 1/8 | ❄️ **Receso invernal** | |
+
+### 🔁 Vuelta del receso — repaso y práctica
+
+!!! tip "Por qué cuatro clases de práctica seguidas"
+    Al volver del receso el grupo venía de tres semanas sin escribir código, y **Archivos** había
+    quedado flojo (se dio el 8/7 con varios ausentes). En vez de arrancar con tema nuevo,
+    dedicamos estas clases a **resolver ejercicios en la plataforma**, que es donde de verdad se
+    fija lo aprendido. Los alumnos siguen sumando ejercicios desde casa.
+
+| Fecha | Tema | |
+|-------|------|--|
+| Mié 5/8 | Vuelta del receso: repaso general y resolución de ejercicios en la plataforma | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/) |
+| Vie 7/8 | Práctica en la plataforma: `print`, variables, `input` y condicionales | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/) |
+| Mié 12/8 | Práctica en la plataforma: listas y condicionales + **Mini Parcial** | [📄](./clases/bloque_1_fundamentos/mini_parcial.md) |
+| Vie 14/8 | Práctica en la plataforma: **bucles** (`while` y `for`) | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bucles/) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.
