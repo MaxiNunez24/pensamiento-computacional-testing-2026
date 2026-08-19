@@ -52,6 +52,53 @@
     return claves;
   }
 
+  /* --- Fusionar dos avances, quedándose con la ÚLTIMA edición de cada uno ---
+   *
+   * Antes la unión era `Object.assign({}, nube, local)`: ante el mismo ejercicio
+   * en las dos computadoras ganaba el de acá, sin mirar cuál se escribió
+   * después. Eso podía pisar con una versión vieja algo mejor que estaba
+   * arriba.
+   *
+   * Ahora cada ejercicio lleva su fecha en `pcp:ts:<ruta>::<título>` y la regla
+   * es la única razonable: **gana el más nuevo**. Las fechas son ISO, así que
+   * comparar como texto ya las ordena por tiempo.
+   *
+   * Lo guardado antes de esta versión no tiene fecha. En ese caso gana el que
+   * SÍ la tiene (es al menos tan nuevo), y si ninguno la tiene se mantiene el
+   * comportamiento anterior. La ventana dura poco: todo lo que se toque de acá
+   * en más queda fechado.
+   */
+  function baseDe(k) {
+    return k.replace(/^pcp:[a-z]+:/, '');
+  }
+
+  function fusionar(viejo, nuevo) {
+    var out = {};
+    var todas = {};
+    var k;
+    for (k in viejo) todas[k] = 1;
+    for (k in nuevo) todas[k] = 1;
+
+    for (k in todas) {
+      var a = viejo[k];
+      var b = nuevo[k];
+      if (a === undefined) { out[k] = b; continue; }
+      if (b === undefined) { out[k] = a; continue; }
+      if (a === b) { out[k] = a; continue; }
+
+      // Las propias fechas: siempre la mayor.
+      if (k.indexOf('pcp:ts:') === 0) { out[k] = a > b ? a : b; continue; }
+
+      var ta = viejo['pcp:ts:' + baseDe(k)] || '';
+      var tb = nuevo['pcp:ts:' + baseDe(k)] || '';
+      if (ta && tb) out[k] = tb >= ta ? b : a;
+      else if (tb) out[k] = b;
+      else if (ta) out[k] = a;
+      else out[k] = b;
+    }
+    return out;
+  }
+
   function contarEjercicios(claves) {
     var n = 0;
     for (var k in claves) if (k.indexOf(PREFIJO + 'code:') === 0) n++;
@@ -259,7 +306,7 @@
      * alguien se acuerde de pegar un archivo. */
     var nube = nubeYaLeida !== undefined ? nubeYaLeida : await claveEnLaNube(c);
     if (nube) ultimaNube = nube;
-    var claves = nube ? Object.assign({}, nube, local) : local;
+    var claves = nube ? fusionar(nube, local) : local;
 
     var r = await fetch(WORKER_SYNC + '?codigo=' + encodeURIComponent(c), {
       method: 'POST',
@@ -439,37 +486,34 @@
         estado('Lo guardado con ese código está vacío.', 'error');
         return;
       }
-      // Se confirma porque pisa lo que haya en ESTE navegador con el mismo
-      // nombre de ejercicio. El riesgo real es ese: un ejercicio que acá está
-      // más avanzado que en la nube (se mejoró y no se subió) queda pisado por
-      // la versión vieja. Por eso se cuenta y se dice cuántos son.
+      /* Traer ya no es "pisar todo con lo de la nube": es FUSIONAR quedándose
+         con la última edición de cada ejercicio. Así, después de un pull, la
+         computadora queda con lo mejor de las dos: lo que se hizo acá y lo que
+         se hizo en la otra, cada uno en su versión más nueva. */
       var aca = leerTodo();
-      var pisados = 0, soloAca = 0;
-      for (var kl in aca) {
+      var resultado = fusionar(aca, claves);   // 'claves' es lo de la nube
+
+      var vienen = 0, ganaLoDeAca = 0, seActualizan = 0;
+      for (var kl in resultado) {
         if (kl.indexOf(PREFIJO + 'code:') !== 0) continue;
-        if (kl in claves) { if (aca[kl] !== claves[kl]) pisados++; }
-        else soloAca++;
+        if (!(kl in aca)) vienen++;
+        else if (resultado[kl] !== aca[kl]) seActualizan++;
+        else if (kl in claves && claves[kl] !== aca[kl]) ganaLoDeAca++;
       }
-      var aviso = 'Vas a traer ' + n + ' ejercicio(s).\n\n';
-      if (pisados) {
-        aviso += pisados === 1
-          ? '⚠️ 1 de ellos lo tenés acá con OTRO contenido y se va a reemplazar por la versión guardada. ' +
-            'Si acá lo tenías más avanzado, subí primero (push).\n\n'
-          : '⚠️ ' + pisados + ' de ellos los tenés acá con OTRO contenido y se van a reemplazar por la ' +
-            'versión guardada. Si acá los tenías más avanzados, subí primero (push).\n\n';
-      }
-      if (soloAca) {
-        aviso += soloAca === 1
-          ? 'El que solo está acá no se toca.\n\n'
-          : 'Los ' + soloAca + ' que solo están acá no se tocan.\n\n';
-      }
-      if (!confirm(aviso + '¿Seguimos?')) {
+
+      var aviso = 'Se junta lo de esta compu con lo guardado, y de cada ejercicio queda ' +
+                  'LA ÚLTIMA VERSIÓN.' + '\n\n';
+      if (vienen) aviso += '· ' + vienen + ' ejercicio(s) que acá no tenías: se agregan.' + '\n';
+      if (seActualizan) aviso += '· ' + seActualizan + ' que en la otra compu quedaron más nuevos: se actualizan.' + '\n';
+      if (ganaLoDeAca) aviso += '· ' + ganaLoDeAca + ' que acá son más nuevos: se quedan como están.' + '\n';
+      if (!vienen && !seActualizan && !ganaLoDeAca) aviso += 'Está todo igual en los dos lados.' + '\n';
+      if (!confirm(aviso + '\n' + '¿Seguimos?')) {
         estado('');
         return;
       }
       guardarCodigo(c);
-      for (var k in claves) {
-        if (k.indexOf(PREFIJO) === 0) localStorage.setItem(k, claves[k]);
+      for (var k in resultado) {
+        if (k.indexOf(PREFIJO) === 0) localStorage.setItem(k, resultado[k]);
       }
       if (datos.nombre) localStorage.setItem(LS_NOMBRE, datos.nombre);
       marcarSincro();
@@ -566,7 +610,7 @@
           navigator.sendBeacon(
             WORKER_SYNC + '?codigo=' + encodeURIComponent(codigo()),
             new Blob([JSON.stringify({
-              claves: ultimaNube ? Object.assign({}, ultimaNube, leerTodo()) : leerTodo(),
+              claves: ultimaNube ? fusionar(ultimaNube, leerTodo()) : leerTodo(),
               nombre: localStorage.getItem(LS_NOMBRE) || '',
             })],
                      { type: 'text/plain' }),

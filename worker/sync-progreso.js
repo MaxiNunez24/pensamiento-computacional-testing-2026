@@ -29,6 +29,41 @@ const MAX_BYTES = 512 * 1024;
 // Letras y números, guiones y guión bajo. Sin barras: el código va en la URL.
 const CODIGO_OK = /^[a-z0-9_-]{4,40}$/;
 
+/* Fusiona dos avances quedándose con la ÚLTIMA edición de cada ejercicio.
+ *
+ * Cada ejercicio lleva su fecha en `pcp:ts:<ruta>::<título>` (la escribe
+ * progreso.ts). Ante el mismo ejercicio en las dos computadoras, gana el más
+ * nuevo — no "el que llega último en el pedido", que era lo de antes y no tiene
+ * nada que ver con cuál se escribió después.
+ *
+ * Lo guardado antes de esta versión no tiene fecha: ahí gana el que sí la
+ * tiene, y si ninguno la tiene, el entrante (como antes).
+ *
+ * Es la MISMA regla que aplica el cliente en public/sync-progreso.js. Están
+ * duplicadas a propósito: el cliente no puede confiar en qué versión del Worker
+ * está desplegada, y el Worker no puede confiar en qué versión del sitio tiene
+ * abierta el alumno.
+ */
+function fusionar(viejo, nuevo) {
+  const out = {};
+  const base = (k) => k.replace(/^pcp:[a-z]+:/, '');
+  for (const k of new Set([...Object.keys(viejo), ...Object.keys(nuevo)])) {
+    const a = viejo[k];
+    const b = nuevo[k];
+    if (a === undefined) { out[k] = b; continue; }
+    if (b === undefined) { out[k] = a; continue; }
+    if (a === b) { out[k] = a; continue; }
+    if (k.startsWith('pcp:ts:')) { out[k] = a > b ? a : b; continue; }
+    const ta = viejo['pcp:ts:' + base(k)] || '';
+    const tb = nuevo['pcp:ts:' + base(k)] || '';
+    if (ta && tb) out[k] = tb >= ta ? b : a;
+    else if (tb) out[k] = b;
+    else if (ta) out[k] = a;
+    else out[k] = b;
+  }
+  return out;
+}
+
 function cors(origen) {
   return {
     'Access-Control-Allow-Origin': origen,
@@ -115,7 +150,7 @@ export default {
       } catch {
         previo = null; // guardado corrupto: se ignora y se sigue
       }
-      const claves = { ...((previo && previo.claves) || {}), ...datos.claves };
+      const claves = fusionar((previo && previo.claves) || {}, datos.claves);
 
       const guardar = JSON.stringify({
         claves,
@@ -124,6 +159,24 @@ export default {
           : (previo && previo.nombre) || '',
         fecha: new Date().toISOString(),
       });
+
+      // Si la fusión no cambió nada, no se escribe. El envío del cierre de
+      // pestaña manda seguido exactamente lo mismo que ya está guardado, y la
+      // capa gratuita de KV tiene 1000 escrituras por día: no hay por qué
+      // gastarlas en confirmar que todo sigue igual.
+      // Se compara con las claves ORDENADAS: dos objetos iguales pueden
+      // serializarse distinto solo por el orden en que se armaron.
+      const huella = (o) =>
+        JSON.stringify(Object.keys(o).sort().map((k) => [k, o[k]]));
+      const sinCambios = previo && huella(claves) === huella(previo.claves || {});
+      if (sinCambios) {
+        return new Response(JSON.stringify({
+          ok: true,
+          guardadas: 0,
+          total: Object.keys(claves).length,
+          sinCambios: true,
+        }), { status: 200, headers: { ...cabeceras, 'Content-Type': 'application/json' } });
+      }
 
       // Copia de la versión anterior antes de escribir. Es la red de seguridad
       // para el día que algo salga mal: se recupera a mano desde el panel de

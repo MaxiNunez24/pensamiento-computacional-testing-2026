@@ -9,6 +9,27 @@ function base(titulo: string): string {
 export function codeKey(titulo: string): string {
   return `${NS}:code:${base(titulo)}`;
 }
+
+/* Marca de tiempo por ejercicio.
+ *
+ * Sin esto, cuando el mismo ejercicio existe en dos computadoras la
+ * sincronización tiene que adivinar cuál conservar, y lo que hacía era quedarse
+ * con "el que llega último en el pedido", que no tiene nada que ver con cuál se
+ * escribió después. Con la fecha, la regla pasa a ser la única razonable:
+ * **gana la última edición**.
+ *
+ * Va como clave aparte (`pcp:ts:<ruta>::<título>`) y no adentro del valor, para
+ * no romper lo que ya está guardado en los navegadores de los alumnos. */
+function tsKey(titulo: string): string {
+  return `${NS}:ts:${base(titulo)}`;
+}
+function marcarTiempo(titulo: string): void {
+  try {
+    localStorage.setItem(tsKey(titulo), new Date().toISOString());
+  } catch {
+    /* nada */
+  }
+}
 function doneKey(titulo: string): string {
   return `${NS}:done:${base(titulo)}`;
 }
@@ -26,6 +47,7 @@ export function marcarHecho(titulo: string): void {
   } catch {
     /* sin persistencia (modo privado): seguimos igual */
   }
+  marcarTiempo(titulo);
   actualizarResumen();
   avisarCambio();
 }
@@ -46,6 +68,7 @@ export function guardarCodigo(titulo: string, code: string): void {
   } catch {
     /* nada */
   }
+  marcarTiempo(titulo);
   // Escribir código no dispara una subida (sería una por tecla), pero sí deja
   // anotado que hay algo sin subir: al cerrar la pestaña se manda.
   try {
