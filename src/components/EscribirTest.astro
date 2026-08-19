@@ -1,0 +1,95 @@
+---
+/**
+ * "Escribí el test que atrape el bug".
+ *
+ * Es el único formato que corrige de verdad un test. La consigna da una función
+ * YA ESCRITA y el alumno no la toca: escribe los `assert`. Después se corre su
+ * batería dos veces:
+ *
+ *   1. contra la versión CORRECTA  → sus asserts tienen que PASAR
+ *      (si fallan, el test está mal escrito: acusa a un código que anda)
+ *   2. contra cada versión ROTA    → sus asserts tienen que FALLAR
+ *      (si pasan, el test no sirve: deja pasar un bug)
+ *
+ * Las dos condiciones juntas son lo que hace que un test valga. Con una sola,
+ * `assert True` aprobaría.
+ *
+ * Cada versión rota lleva un `pista` que describe qué le hicieron: al terminar,
+ * el alumno ve cuáles atrapó y cuál se le escapó, que es donde se aprende.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Rota {
+  /** Qué se rompió, en castellano. Se muestra recién al verificar. */
+  pista: string;
+  /** La función con el bug adentro. */
+  codigo: string;
+}
+
+const {
+  titulo,
+  dificultad = '🧪',
+  correcta,
+  rotas,
+  starter = '',
+  pistas = [],
+} = Astro.props as {
+  titulo: string;
+  dificultad?: string;
+  correcta: string;
+  rotas: Rota[];
+  starter?: string;
+  pistas?: string[];
+};
+
+const id = idEjercicio(titulo);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+---
+
+<section class="ejercicio escribir-test" id={id} data-titulo={titulo}
+  data-correcta={enc(correcta)}
+  data-rotas={enc(JSON.stringify(rotas))}
+  data-starter={enc(starter)}
+>
+  <header class="ejercicio__header">
+    <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+  </header>
+
+  <div class="ejercicio__consigna">
+    <slot />
+  </div>
+
+  <details class="et__codigo">
+    <summary>👀 Ver la función que vas a probar</summary>
+    <pre><code>{correcta}</code></pre>
+    <p class="et__nota">
+      Esta función <strong>no se toca</strong>. Vos escribís los <code>assert</code> que la ponen a prueba.
+    </p>
+  </details>
+
+  <div class="ejercicio__editor" data-editor></div>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-verify>🧪 Probar mis tests</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--enviar" data-enviar>✉️ Enviar a mi profe</button>
+  </div>
+
+  {pistas.length > 0 && (
+    <details class="ejercicio__pistas">
+      <summary>💡 Pista</summary>
+      <ul>{pistas.map((p) => <li set:html={p} />)}</ul>
+    </details>
+  )}
+
+  <p class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></p>
+  <ul class="et__marcador" data-marcador hidden></ul>
+  <p class="ejercicio__envio" data-envio hidden></p>
+</section>
+
+<script>
+  import { conectarEscribirTest } from '../scripts/escribir-test';
+  document.querySelectorAll<HTMLElement>('.escribir-test').forEach(conectarEscribirTest);
+</script>

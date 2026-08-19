@@ -1,0 +1,131 @@
+---
+title: Testing I — probar en serio
+description: Qué es probar un programa, por qué un test vale más que ejecutarlo a mano, y cómo se escribe uno que sirva.
+---
+
+import Clasificar from '../../../components/Clasificar.astro';
+import EscribirTest from '../../../components/EscribirTest.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+Todos ustedes ya probaron sus programas. Los corrieron, escribieron algo, miraron
+la pantalla y dijeron "anda". **Eso es probar.** Lo que cambia acá es quién lo hace: en vez
+de vos cada vez, lo hace el programa, siempre igual y sin cansarse.
+
+:::note[¿Por qué esto tiene una clase entera?]
+Porque el curso se llama **Pensamiento Computacional y Testing de Aplicaciones**. Y porque el
+día que el sistema de asistencias tenga 40 pantallas, probarlo a mano después de cada cambio
+va a ser imposible.
+:::
+
+## Lo que ya venís haciendo sin saberlo
+
+Cada vez que tocás **Verificar** en un ejercicio, se corre un test. El botón no mira si tu
+código "está lindo": corre tu función con valores concretos y compara el resultado con el
+esperado. Eso es todo lo que es un test.
+
+```python
+assert sumar(2, 3) == 5
+```
+
+`assert` significa "afirmo que esto es verdad". Si lo es, no pasa nada. Si no lo es, el
+programa se detiene y avisa. **Un test es una afirmación sobre tu código.**
+
+<OpcionMultiple
+  titulo="¿Para qué sirve un test?"
+  dificultad="🟢"
+  opciones={[
+    'Para que el programa ande más rápido',
+    'Para avisar si un cambio rompió algo que antes funcionaba',
+    'Para que el código quede más ordenado',
+    'Para reemplazar los comentarios',
+  ]}
+  correcta={1}
+  explicacion="Un test no mejora el programa: lo VIGILA. Su valor aparece cuando cambiás algo dentro de un mes y el test te avisa que rompiste una parte que ni te acordabas que existía."
+/>
+
+## Tres alturas para mirar lo mismo
+
+Un programa se puede probar de a pedacitos o entero, y las dos cosas sirven para distinto.
+
+<Clasificar
+  titulo="¿Unitaria, de integración o de punta a punta?"
+  dificultad="🟡"
+  cajas={[
+    { id: 'unitaria', nombre: '🔩 Prueba unitaria', ayuda: 'una pieza sola, aislada' },
+    { id: 'integracion', nombre: '🔗 Prueba de integración', ayuda: 'dos o más piezas trabajando juntas' },
+    { id: 'e2e', nombre: '🚦 Punta a punta (E2E)', ayuda: 'el sistema entero, como lo usa una persona' },
+  ]}
+  tarjetas={[
+    { texto: 'Probar que promedio([7, 8, 9]) devuelve 8', caja: 'unitaria',
+      porque: 'Es una sola función, con datos inventados y sin depender de nada más.' },
+    { texto: 'Probar que guardar_alumno() escribe bien el archivo JSON', caja: 'integracion',
+      porque: 'Junta tu función con el sistema de archivos: son dos piezas colaborando.' },
+    { texto: 'Abrir el sistema, cargar un alumno, pasar lista e imprimir la planilla', caja: 'e2e',
+      porque: 'Recorre todo el camino que hace un preceptor. Si esto anda, el sistema sirve.' },
+    { texto: 'Probar que contar_presentes() devuelve 0 con la lista vacía', caja: 'unitaria',
+      porque: 'Una función, un caso borde, nada más alrededor.' },
+    { texto: 'Probar que el alumno que se da de baja deja de aparecer en la planilla', caja: 'integracion',
+      porque: 'Involucra el alta, la baja y la generación de la planilla: varias partes.' },
+    { texto: 'Simular a alguien llenando el formulario en el navegador', caja: 'e2e',
+      porque: 'Es lo que va a hacer Playwright cuando armemos el bot del SiGes.' },
+  ]}
+  pistas={[
+    'Preguntate <strong>cuántas piezas tuyas</strong> participan: una sola, varias, o el sistema completo.',
+    'Si para probarlo hace falta abrir el navegador, casi seguro es de punta a punta.',
+  ]}
+>
+  Arrastrá cada caso a la altura que le corresponde.
+</Clasificar>
+
+:::tip[La regla práctica]
+Muchas unitarias (son baratas y rápidas), algunas de integración, **pocas** de punta a punta:
+son las más lentas y las que más se rompen por cualquier cosa.
+:::
+
+## Ahora escribís vos
+
+Acá está la parte que importa. Un test **no** se juzga por lo que dice, sino por lo que
+**detecta**: tiene que pasar con el código que anda y fallar con el código roto. Si no
+distingue uno del otro, no sirve, por más lindo que se vea.
+
+<EscribirTest
+  titulo="El test que atrapa el bug"
+  dificultad="🟠"
+  correcta={`def promedio(notas):
+    if not notas:
+        return 0
+    return sum(notas) / len(notas)`}
+  rotas={[
+    { pista: 'la versión que se rompe con la lista vacía (divide por cero)',
+      codigo: `def promedio(notas):
+    return sum(notas) / len(notas)` },
+    { pista: 'la versión que se olvida del último elemento',
+      codigo: `def promedio(notas):
+    if not notas:
+        return 0
+    return sum(notas[:-1]) / len(notas[:-1]) if len(notas) > 1 else notas[0]` },
+    { pista: 'la versión que devuelve la suma en vez del promedio',
+      codigo: `def promedio(notas):
+    if not notas:
+        return 0
+    return sum(notas)` },
+  ]}
+  starter={`# La función promedio(notas) ya está escrita: vos NO la tocás.
+# Escribí los assert que la pongan a prueba de verdad.
+
+assert promedio([10, 10]) == 10
+`}
+  pistas={[
+    'Con un solo caso no alcanza: <code>promedio([10, 10])</code> da 10 tanto en la versión buena como en la que suma sin dividir… ¿o no? Probalo.',
+    'Pensá en los <strong>bordes</strong>: ¿qué pasa con la lista vacía? ¿Y con un solo elemento?',
+    'Un promedio no siempre da un número redondo. Probá con <code>[7, 8]</code>.',
+  ]}
+>
+  Escribí los `assert` necesarios para que **pasen con la versión correcta** y **fallen con
+  las tres versiones rotas**. Abajo vas a ver cuáles atrapaste y cuál se te escapó.
+</EscribirTest>
+
+:::caution[Lo que acabás de descubrir]
+Un test que pasa **no** significa que el código esté bien: significa que ese caso anda.
+Por eso los bugs se escapan — no porque nadie pruebe, sino porque nadie probó *ese* caso.
+:::

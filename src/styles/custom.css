@@ -2078,3 +2078,136 @@ body.pc-resizing * {
 @media (max-width: 500px) {
   .plan__tema > h4 { flex-wrap: wrap; gap: 0.25rem; }
 }
+
+/* ---------------------------------------------------------------------------
+   CLASIFICAR — arrastrar cada tarjeta a su caja
+   Se puede arrastrar, pero el camino principal es tocar tarjeta → tocar caja:
+   arrastrar con el dedo en un celular es incómodo y se falla.
+--------------------------------------------------------------------------- */
+.clasificar__ayuda {
+  font-size: 0.85rem;
+  color: var(--sl-color-gray-3);
+  margin: 0.5rem 0;
+}
+@media (hover: none) {
+  .clasificar__ayuda-mouse { display: none; }
+}
+
+.clasificar__pozo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 3.2rem;
+  padding: 0.6rem;
+  border: 2px dashed var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+.clasificar__tarjeta {
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: left;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.4rem;
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+  cursor: grab;
+  max-width: 100%;
+}
+.clasificar__tarjeta:hover { border-color: var(--sl-color-accent); }
+.clasificar__tarjeta.is-elegida {
+  border-color: var(--sl-color-accent);
+  box-shadow: 0 0 0 2px var(--sl-color-accent);
+}
+.clasificar__tarjeta.is-arrastrando { opacity: 0.45; }
+.clasificar__tarjeta.is-bien { border-color: #2e7d32; border-left-width: 4px; }
+.clasificar__tarjeta.is-mal { border-color: #c62828; border-left-width: 4px; }
+
+/* Mientras hay una tarjeta elegida, las cajas se ofrecen como destino. */
+.clasificar.tiene-elegida .clasificar__caja {
+  border-color: var(--sl-color-accent);
+  cursor: pointer;
+}
+
+.clasificar__cajas {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+.clasificar__caja {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+.clasificar__caja.is-encima,
+.clasificar__caja-contenido.is-encima { background: var(--sl-color-gray-6); }
+.clasificar__caja-tit {
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 0.5rem;
+}
+.clasificar__caja-tit small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--sl-color-gray-3);
+  margin-top: 0.15rem;
+}
+.clasificar__caja-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-height: 2.6rem;
+}
+
+.clasificar__porques {
+  list-style: none;
+  padding: 0;
+  margin: 0.8rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+.clasificar__porques li {
+  padding: 0.4rem 0.6rem;
+  border-left: 3px solid var(--sl-color-gray-4);
+  background: var(--sl-color-gray-6);
+  border-radius: 0.3rem;
+}
+.clasificar__porques li.es-bien { border-left-color: #2e7d32; }
+.clasificar__porques li.es-mal { border-left-color: #c62828; }
+
+/* ---------------------------------------------------------------------------
+   ESCRIBIR EL TEST — marcador de bugs atrapados
+--------------------------------------------------------------------------- */
+.et__codigo { margin: 0.75rem 0; }
+.et__codigo > summary { cursor: pointer; font-size: 0.9rem; }
+.et__nota { font-size: 0.82rem; color: var(--sl-color-gray-3); margin: 0.4rem 0 0; }
+
+.et__marcador {
+  list-style: none;
+  padding: 0;
+  margin: 0.8rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+}
+.et__marcador li {
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.35rem;
+  border-left: 3px solid var(--sl-color-gray-4);
+  background: var(--sl-color-gray-6);
+}
+.et__marcador li.es-bien { border-left-color: #2e7d32; }
+.et__marcador li.es-mal { border-left-color: #c62828; }
+
+.ejercicio__salida.is-warn {
+  border-left-color: #ffa94d;
+}
+.et__marcador li.es-neutro {
+  border-left-color: var(--sl-color-gray-4);
+  color: var(--sl-color-gray-2);
+  font-size: 0.84rem;
+}

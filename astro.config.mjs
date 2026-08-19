@@ -123,6 +123,12 @@ export default defineConfig({
             { label: '🔗 Herencia y polimorfismo', link: '/clases/poo-herencia/' },
           ],
         },
+        {
+          label: '🧪 Testing',
+          items: [
+            { label: '🧪 Testing I — probar en serio', link: '/clases/testing-1/' },
+          ],
+        },
       ],
     }),
   ],
