@@ -35,7 +35,7 @@
 | 🏗️ **Septiembre** | **POO** y arranque del **Sistema de Asistencias** (primer proyecto, CLI) |
 | 🎉 **21/9** | **Nerdearla** |
 | ✅ **Mié 30/9** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en JSON |
-| 🌐 **Oct** | **Testing con pytest** y migración del sistema a **web (Flask)** |
+| 🧪 **Oct** | **Testing** (teoría + `pytest` sobre el proyecto) y migración del sistema a **web (Flask)** |
 | 🏆 **9/11** | **Expo CFP 2026** — se presenta el **Sistema de Asistencias** |
 | 🚀 **Mié 11/11** | Tercer hito: **el sistema publicado en internet**, usable desde el celular |
 | 🤖 **Mié 25/11** | Arranque del **proyecto final con IA** |
@@ -76,12 +76,18 @@
     datos ya cargados en Asistencias. Playwright sirve además para **testing E2E** — engancha con el
     módulo de Testing.
 
-!!! info "📊 Bloque 6 — Análisis de datos (pandas / numpy)"
-    Trabajar con **datos reales**: `numpy` para cálculo numérico y `pandas` para tablas (leer,
-    filtrar, agrupar, sacar estadísticas). Practicamos sobre datos que importan: la **propia planilla
-    de asistencia** que generamos en el proyecto (reportes, % de asistencia) y datasets externos
-    (precios de acciones, clima, etc.). Es el puente entre la persistencia que ya vimos y la IA que
-    viene.
+!!! info "🧪 Bloque 6 — Testing (teórico y aplicado)"
+    **Testing está en el nombre del curso**, así que tiene su propio bloque. Primero la **teoría**:
+    por qué se prueba, qué es un caso de prueba, la diferencia entre prueba **unitaria**, de
+    **integración** y **E2E**, qué es una regresión y qué mide (y qué no) la cobertura. Después,
+    **`pytest` aplicado al proyecto propio**: el primer test, los casos borde, un bug real cazado
+    por un test, y las pruebas de la app web. El **E2E con Playwright** cierra el bloque y se
+    engancha con el Bot SiGes.
+
+!!! note "📊 Optativo — Análisis de datos (pandas / numpy)"
+    Si el tiempo alcanza: `pandas` para sacar **reportes de la propia planilla de asistencia** que
+    generamos en el proyecto (porcentajes, faltas, estadísticas). Es contenido lindo, pero va
+    después de terminar bien el proyecto y el testing.
 
 !!! info "🤖 Bloque 7 — IA y Proyecto Final"
     Qué es una **API de IA** y cómo consumirla desde Python; integrar modelos de lenguaje o visión.

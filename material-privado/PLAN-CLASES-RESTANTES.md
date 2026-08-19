@@ -36,13 +36,26 @@ IA hecho a las corridas.
 
 → **El proyecto final con IA pasa a ser el cierre de diciembre.**
 
-### 2.2 pandas y numpy quedan como optativo
+### 2.2 pandas queda optativo; testing se amplía
 
-El Bloque 6 estaba pensado como puente hacia la IA. Con el tiempo que hay, meterlo obliga a
-recortar el proyecto o el testing. **Testing está en el nombre del curso**; pandas no.
+El Bloque 6 (pandas/numpy) estaba pensado como puente hacia la IA. Con el tiempo que hay, meterlo
+obliga a recortar el proyecto o el testing. **Testing está en el nombre del curso**; pandas no.
 
-→ Queda **una clase de "reportes con pandas"** sobre la propia planilla de asistencia (que para
-entonces tiene datos reales, así que se justifica sola), y si el grupo va rápido, se suma otra.
+→ pandas queda como **clase optativa** ("reportes sobre la propia planilla de asistencia"), y las
+horas van a **testing**, que pasa de 2 a **4 clases**:
+
+| Clase | Qué |
+|---|---|
+| **Testing I — teoría** | Por qué se prueba. Qué es un caso de prueba. Unitario vs. integración vs. E2E. Regresión: por qué un test viejo sigue corriendo. Qué es y qué no es la cobertura. |
+| **Testing II — pytest** | El primer test sobre **código propio**: `assert`, nombres de test, correr la suite. |
+| **Testing III — pytest aplicado** | Casos borde, un **bug real** encontrado por un test, y qué hacer cuando el test tiene razón. |
+| **Testing IV — la app web** | Probar rutas con el cliente de pruebas de Flask, ya con el sistema andando. |
+
+Más el **E2E con Playwright** en noviembre, que cierra el módulo con la otra punta de la pirámide.
+
+Que la teoría venga **antes** y el resto **sobre el proyecto propio** no es casual: un test sobre
+código ajeno de ejemplo se olvida; un test que atrapa un bug en el sistema que estás construyendo,
+no.
 
 ### 2.3 El deploy se da, no se saltea
 
@@ -85,10 +98,10 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 
 | Fecha | Clase | Notas |
 |---|---|---|
-| Vie 2/10 | **pytest I** — el primer test sobre código propio | El módulo de Testing arranca acá, con código que les importa. |
-| Mié 7/10 | **pytest II** — casos borde, y un bug real encontrado por un test | |
-| Vie 9/10 | **Entorno**: `venv` y `requirements.txt` | Corto; deja el proyecto instalable en otra máquina. |
-| Mié 14/10 | **Cómo funciona la web** + Flask "hola mundo" | |
+| Vie 2/10 | **Testing I — teoría** | Qué se prueba y por qué. Sin código todavía. |
+| Mié 7/10 | **Testing II — pytest** | El primer test sobre **su** código. |
+| Vie 9/10 | **Testing III — pytest aplicado** | Casos borde y un bug real cazado por un test. |
+| Mié 14/10 | **Entorno** (`venv`, `requirements.txt`) + **cómo funciona la web** | Las dos son cortas y van juntas. |
 | Vie 16/10 | **Flask**: rutas y plantillas | Las plantillas HTML **se entregan hechas** (la planilla ya es un molde). |
 | Mié 21/10 | **Flask**: formularios — alta de alumnos por web | |
 | Vie 23/10 | **Migrar el CLI a Flask I** | Refactor de código propio: la lección está acá. |
@@ -111,7 +124,7 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 
 | Fecha | Clase | Notas |
 |---|---|---|
-| Mié 2/12 | **Reportes con pandas** sobre la planilla propia | Optativo: si el proyecto final va apretado, se saltea. |
+| Mié 2/12 | **Testing IV — probar la app web** (cliente de pruebas de Flask) | Si el grupo ya lo tiene firme, se cambia por **reportes con pandas** sobre la planilla propia. |
 | Vie 4/12 | Taller de proyecto final | |
 | Mié 9/12 | Taller de proyecto final | |
 | Vie 11/12 | Taller de proyecto final | |

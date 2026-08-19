@@ -1,4 +1,5 @@
 ---
+import { idEjercicio } from '../scripts/id-ejercicio';
 /**
  * Diagrama de clases de "lienzo libre": el alumno MUEVE las clases donde quiera
  * y DIBUJA las flechas él mismo (elige el tipo, clic en origen → clic en destino).
@@ -24,7 +25,7 @@ interface Props {
 
 const { titulo = 'Armá el diagrama desde cero', clases, tiposFlecha, relaciones } = Astro.props;
 
-const id = 'dl-' + Math.random().toString(36).slice(2, 9);
+const id = idEjercicio(titulo);
 const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
 
 // Posiciones por defecto (en %) si el autor no las dio: repartidas en grilla.

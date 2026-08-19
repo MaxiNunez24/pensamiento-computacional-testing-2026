@@ -19,6 +19,7 @@
  *   </EjercicioPython>
  */
 import BarraSimbolos from './BarraSimbolos.astro';
+import { idEjercicio } from '../scripts/id-ejercicio';
 
 interface Props {
   titulo: string;
@@ -40,7 +41,7 @@ interface Props {
 
 const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '' } = Astro.props;
 
-const id = 'ej-' + Math.random().toString(36).slice(2, 9);
+const id = idEjercicio(titulo);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 ---
 

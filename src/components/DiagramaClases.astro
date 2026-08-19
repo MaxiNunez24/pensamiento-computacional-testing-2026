@@ -1,4 +1,5 @@
 ---
+import { idEjercicio } from '../scripts/id-ejercicio';
 /**
  * Ejercicio de "armar un diagrama de clases" arrastrando (o tocando):
  *  - cajas de CLASES a sus SLOTS (posiciones),
@@ -43,7 +44,7 @@ const {
   flechaEnConexion,
 } = Astro.props;
 
-const id = 'dg-' + Math.random().toString(36).slice(2, 9);
+const id = idEjercicio(titulo);
 const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
 const slotById: Record<string, Slot> = Object.fromEntries(slots.map((s) => [s.id, s]));
 const conex = conexiones.map((c) => {

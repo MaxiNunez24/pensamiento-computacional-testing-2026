@@ -25,6 +25,7 @@
  *   />
  */
 import BarraSimbolos from './BarraSimbolos.astro';
+import { idEjercicio } from '../scripts/id-ejercicio';
 
 interface Escenario {
   /** Cómo se muestra en la tabla, ej. "una lista de 1.000 números". */
@@ -82,7 +83,7 @@ const {
   datos = '',
 } = Astro.props;
 
-const id = 'ef-' + Math.random().toString(36).slice(2, 9);
+const id = idEjercicio(titulo);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 ---
 

@@ -1978,3 +1978,103 @@ body.pc-resizing * {
   font-size: 0.78rem;
   opacity: 0.7;
 }
+
+/* ---------------------------------------------------------------------------
+   PLAN DE PUESTA AL DÍA
+   Lista de ejercicios mínimos que se tilda sola leyendo el progreso guardado.
+   Nadie lleva la cuenta a mano: el alumno ve lo mismo que ve el profe.
+--------------------------------------------------------------------------- */
+.plan__total {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.6rem;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0 2rem;
+  background: var(--sl-color-black);
+}
+.plan__total-txt {
+  font-size: 1rem;
+}
+.plan__total-txt strong {
+  font-size: 1.6rem;
+  color: var(--sl-color-accent-high);
+  font-variant-numeric: tabular-nums;
+}
+.plan__barra {
+  margin-top: 0.6rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--sl-color-gray-5);
+  overflow: hidden;
+}
+.plan__barra-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: #2e7d32;
+  transition: width 0.4s ease;
+}
+:root[data-theme='dark'] .plan__barra-fill { background: #4caf50; }
+.plan__mensaje {
+  margin: 0.6rem 0 0;
+  font-size: 0.88rem;
+  color: var(--sl-color-gray-2);
+}
+
+.plan__semana { margin-bottom: 2rem; }
+.plan__semana > h3 { margin-bottom: 0.8rem; }
+.plan__fecha {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--sl-color-gray-3);
+}
+
+.plan__tema { margin-bottom: 1.1rem; }
+.plan__tema > h4 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+.plan__cuenta {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--sl-color-gray-3);
+  white-space: nowrap;
+}
+.plan__tema.is-completo .plan__cuenta { color: #4caf50; font-weight: 600; }
+
+.plan__lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+.plan__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.35rem;
+  line-height: 1.4;
+}
+.plan__item:hover { background: var(--sl-color-gray-6); }
+.plan__marca {
+  flex: none;
+  width: 1.1rem;
+  text-align: center;
+  color: var(--sl-color-gray-4);
+  font-weight: 700;
+}
+/* Resuelto: tilde verde y el texto se apaga, para que lo que FALTA sea lo que
+   salta a la vista. Sin tachado: el ejercicio sigue sirviendo para repasar. */
+.plan__item.is-hecho .plan__marca { color: #4caf50; }
+.plan__item.is-hecho a { color: var(--sl-color-gray-3); }
+.plan__item a { text-decoration: none; }
+.plan__item a:hover { text-decoration: underline; }
+
+@media (max-width: 500px) {
+  .plan__tema > h4 { flex-wrap: wrap; gap: 0.25rem; }
+}

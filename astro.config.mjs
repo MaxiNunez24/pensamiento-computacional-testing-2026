@@ -56,6 +56,9 @@ export default defineConfig({
         { label: '🏠 Inicio', link: '/' },
         { label: '👋 Cómo usar esta plataforma', link: '/clases/como-usar-esto/' },
         { label: '🧪 Probador libre', link: '/probador/' },
+        // Arriba de todo a propósito: es lo que hay que mirar primero mientras
+        // el grupo esté atrasado. Se tilda sola leyendo el progreso guardado.
+        { label: '✅ Ponerse al día', link: '/al-dia/' },
         // ⚠️ El orden de acá abajo NO es cosmético: es el orden en que se enseña,
         // y varias clases dependen de que lo anterior ya se haya visto.
         //   · Listas va ANTES que Bucles: `for` necesita algo que recorrer, y

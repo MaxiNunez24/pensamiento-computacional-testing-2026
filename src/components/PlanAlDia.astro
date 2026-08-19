@@ -1,0 +1,164 @@
+---
+/**
+ * Plan de puesta al día con el progreso REAL del alumno.
+ *
+ * La versión anterior vivía en el sitio de teoría (MkDocs) con casillas que
+ * había que tildar a mano y no sabían nada de lo que el alumno había resuelto.
+ * Acá, en cambio, estamos en el mismo origen que los ejercicios: el progreso
+ * está en localStorage bajo `pcp:done:<ruta>::<título>` y se puede leer.
+ *
+ * Resultado: la lista se tilda sola. Nadie tiene que llevar la cuenta, y lo que
+ * el alumno ve es lo mismo que ve el profe.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Tema {
+  clase: string;       // carpeta bajo clases/
+  titulo: string;      // nombre visible
+  emoji: string;
+  ejercicios: string[]; // títulos EXACTOS, tal como están en el .mdx
+}
+interface Semana {
+  nombre: string;
+  fecha: string;
+  temas: Tema[];
+  parcial?: boolean;
+}
+
+const { semanas } = Astro.props as { semanas: Semana[] };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<div class="plan" data-plan>
+  <div class="plan__total">
+    <div class="plan__total-txt">
+      <strong data-plan-hechos>—</strong> de <span data-plan-total>—</span> ejercicios mínimos
+    </div>
+    <div class="plan__barra"><div class="plan__barra-fill" data-plan-barra></div></div>
+    <p class="plan__mensaje" data-plan-mensaje></p>
+  </div>
+
+  {semanas.map((sem) => (
+    <section class="plan__semana">
+      <h3>{sem.nombre} <span class="plan__fecha">hasta el {sem.fecha}</span></h3>
+
+      {sem.temas.map((tema) => (
+        <div class="plan__tema" data-tema={tema.clase}>
+          <h4>
+            <a href={`${base}/clases/${tema.clase}/`}>{tema.emoji} {tema.titulo}</a>
+            <span class="plan__cuenta" data-cuenta>0/{tema.ejercicios.length}</span>
+          </h4>
+          <ul class="plan__lista">
+            {tema.ejercicios.map((ej) => (
+              <li
+                class="plan__item"
+                data-ruta={`${base}/clases/${tema.clase}/`}
+                data-titulo={ej}
+              >
+                <span class="plan__marca" aria-hidden="true">○</span>
+                <a href={`${base}/clases/${tema.clase}/#${idEjercicio(ej)}`}>{ej}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      {sem.parcial && (
+        <div class="plan__tema plan__tema--parcial">
+          <h4>
+            <a href={`${base}/clases/mini-parcial/`}>📝 Mini Parcial</a>
+            <span class="plan__cuenta" data-cuenta-parcial>—</span>
+          </h4>
+          <ul class="plan__lista">
+            <li class="plan__item" data-parcial>
+              <span class="plan__marca" aria-hidden="true">○</span>
+              <a href={`${base}/clases/mini-parcial/`}>Entregarlo</a>
+            </li>
+          </ul>
+        </div>
+      )}
+    </section>
+  ))}
+</div>
+
+<script>
+  import { estaHecho } from '../scripts/progreso';
+
+  /* El progreso se guarda con la RUTA de la página donde está el ejercicio, no
+     con la de esta página. Por eso no se puede usar estaHecho() tal cual (arma
+     la clave con location.pathname): se lee la clave a mano. */
+  function hecho(ruta: string, titulo: string): boolean {
+    try {
+      return localStorage.getItem(`pcp:done:${ruta}::${titulo}`) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  function pintar() {
+    const plan = document.querySelector<HTMLElement>('[data-plan]');
+    if (!plan) return;
+
+    let hechos = 0;
+    let total = 0;
+
+    plan.querySelectorAll<HTMLElement>('[data-tema]').forEach((tema) => {
+      let n = 0;
+      const items = tema.querySelectorAll<HTMLElement>('.plan__item');
+      items.forEach((li) => {
+        const ok = hecho(li.dataset.ruta || '', li.dataset.titulo || '');
+        li.classList.toggle('is-hecho', ok);
+        const marca = li.querySelector('.plan__marca');
+        if (marca) marca.textContent = ok ? '✓' : '○';
+        if (ok) n++;
+      });
+      const cuenta = tema.querySelector('[data-cuenta]');
+      if (cuenta) cuenta.textContent = `${n}/${items.length}`;
+      tema.classList.toggle('is-completo', n === items.length && items.length > 0);
+      hechos += n;
+      total += items.length;
+    });
+
+    // El Mini Parcial no es un ejercicio: se guarda como `pcp:eval:` y lo que
+    // importa es si está ENTREGADO, no si tiene texto escrito.
+    const liParcial = plan.querySelector<HTMLElement>('[data-parcial]');
+    if (liParcial) {
+      let entregado = false;
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('pcp:eval:') && k.includes('mini-parcial')) {
+            const v = JSON.parse(localStorage.getItem(k) || '{}');
+            if (v && v.entregado) entregado = true;
+          }
+        }
+      } catch { /* nada */ }
+      liParcial.classList.toggle('is-hecho', entregado);
+      const marca = liParcial.querySelector('.plan__marca');
+      if (marca) marca.textContent = entregado ? '✓' : '○';
+      const c = plan.querySelector('[data-cuenta-parcial]');
+      if (c) c.textContent = entregado ? 'entregado ✓' : 'sin entregar';
+    }
+
+    const elHechos = plan.querySelector('[data-plan-hechos]');
+    const elTotal = plan.querySelector('[data-plan-total]');
+    const barra = plan.querySelector<HTMLElement>('[data-plan-barra]');
+    const msj = plan.querySelector('[data-plan-mensaje]');
+    if (elHechos) elHechos.textContent = String(hechos);
+    if (elTotal) elTotal.textContent = String(total);
+    const pct = total ? Math.round((hechos / total) * 100) : 0;
+    if (barra) barra.style.width = pct + '%';
+    if (msj) {
+      msj.textContent =
+        hechos === 0 ? 'Todavía no arrancaste. Empezá por el primero de la lista: son 20 minutos.'
+        : hechos === total ? '🎉 ¡Estás al día! Podés seguir con el resto de los ejercicios de cada clase.'
+        : `Te faltan ${total - hechos}. Con dos por día llegás sobrado.`;
+    }
+  }
+
+  pintar();
+  // Al volver de resolver ejercicios en otra pestaña, que se actualice solo.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) pintar(); });
+  window.addEventListener('pageshow', pintar);
+  window.addEventListener('storage', pintar);
+</script>

@@ -1,4 +1,5 @@
 ---
+import { idEjercicio } from '../scripts/id-ejercicio';
 /**
  * Ejercicio de opción múltiple (chequeo de concepto). Una o varias respuestas
  * correctas. La pregunta va en el slot (Markdown/MDX).
@@ -31,7 +32,7 @@ opciones.forEach((o, i) => {
 });
 const multiple = correctas.length > 1;
 
-const id = 'q-' + Math.random().toString(36).slice(2, 9);
+const id = idEjercicio(titulo);
 const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
 ---
 

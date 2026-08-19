@@ -1,4 +1,5 @@
 ---
+import { idEjercicio } from '../scripts/id-ejercicio';
 /**
  * Ordenar los pasos de un algoritmo (o de un diagrama) hasta que tengan sentido.
  *
@@ -43,7 +44,7 @@ const orden = inicial && inicial.length === pasos.length
   ? inicial
   : pasos.map((_, i) => pasos.length - i);
 
-const id = 'or-' + Math.random().toString(36).slice(2, 9);
+const id = idEjercicio(titulo);
 ---
 
 <section class="ordenar" id={id} data-titulo={titulo}>

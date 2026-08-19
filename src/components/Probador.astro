@@ -15,6 +15,7 @@
  * "Sincronizar progreso").
  */
 import BarraSimbolos from './BarraSimbolos.astro';
+import { idEjercicio } from '../scripts/id-ejercicio';
 
 interface Props {
   /** Identifica este probador dentro de la página. Con uno solo alcanza el default. */
@@ -31,7 +32,7 @@ const {
   entradas = '',
 } = Astro.props;
 
-const id = 'pb-' + Math.random().toString(36).slice(2, 9);
+const id = idEjercicio(nombre);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 ---
 
