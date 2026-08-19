@@ -242,16 +242,38 @@
     }
   }
 
-  async function subir(c) {
-    var claves = leerTodo();
+  // Última foto conocida de lo que hay en la nube. Sirve de red para el envío
+  // del cierre de pestaña, que no llega a consultar nada.
+  var ultimaNube = null;
+
+  async function subir(c, nubeYaLeida) {
+    var local = leerTodo();
+
+    /* Red de seguridad: SE MANDA LA UNIÓN, no solo lo de acá.
+     *
+     * El Worker nuevo ya fusiona, pero eso vive en Cloudflare y hay que
+     * desplegarlo a mano: si el que está publicado es una versión vieja que
+     * PISA, mandar solo lo local le borra al alumno todo lo que tenga arriba.
+     * Pasó de verdad. Mandando la unión el resultado es el mismo con cualquier
+     * versión del Worker, y la seguridad de los datos deja de depender de que
+     * alguien se acuerde de pegar un archivo. */
+    var nube = nubeYaLeida !== undefined ? nubeYaLeida : await claveEnLaNube(c);
+    if (nube) ultimaNube = nube;
+    var claves = nube ? Object.assign({}, nube, local) : local;
+
     var r = await fetch(WORKER_SYNC + '?codigo=' + encodeURIComponent(c), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ claves: claves, nombre: localStorage.getItem(LS_NOMBRE) || '' }),
     });
     if (!r.ok) throw new Error('HTTP ' + r.status);
+    ultimaNube = claves;   // lo que acabamos de dejar arriba
     marcarSincro(); // solo si el Worker contestó que sí: la fecha no puede mentir
-    return r.json().catch(function () { return {}; });
+    var res = await r.json().catch(function () { return {}; });
+    // El Worker viejo no informa el total. Lo sabemos igual: es exactamente lo
+    // que acabamos de mandar.
+    if (res && !res.total) res.total = contarEjercicios(claves);
+    return res;
   }
 
   // Lee lo que hay guardado en la nube sin tocar nada de acá. Devuelve null si
@@ -268,8 +290,27 @@
     }
   }
 
+  /* Avisar cuando el código escrito NO es el de este navegador.
+   *
+   * Es la causa más común de "hice pull y no vino nada": el alumno tiene un
+   * código en la compu del CFP y otro en la de casa (se genera uno por
+   * navegador), y cada código guarda un avance distinto. Sin este aviso, la
+   * confusión se descubre recién cuando falta el trabajo de toda una clase. */
+  function confirmarCodigo(c) {
+    var guardado = '';
+    try { guardado = localStorage.getItem(LS_CODIGO) || ''; } catch (e) {}
+    if (!guardado || guardado === c) return true;
+    return confirm(
+      'Ojo: el código de este navegador es "' + guardado + '" y estás por usar "' + c + '".' +
+      '\n\nCada código guarda un avance separado. Si usás otro, vas a ver otro avance ' +
+      '(o ninguno), y lo tuyo sigue guardado en "' + guardado + '".' +
+      '\n\n¿Seguro que querés usar "' + c + '"?'
+    );
+  }
+
   async function push() {
     var c = slug(modal.querySelector('.pc-sync-codigo').value) || codigo();
+    if (!confirmarCodigo(c)) { estado('No se subió nada.', 'error'); return; }
     guardarCodigo(c);
     var n = contarEjercicios(leerTodo());
     if (!n) {
@@ -301,7 +342,7 @@
 
     estado('Subiendo…');
     try {
-      var res = await subir(c);
+      var res = await subir(c, nube);
       var total = (res && res.total) || n;
       estado('✅ Listo: subiste ' + n + ' ejercicio' + (n === 1 ? '' : 's') +
              '. Con tu código quedan ' + total + ' guardados en total. En la otra compu usá ' + c + '.', 'ok');
@@ -382,6 +423,7 @@
       estado('Escribí tu código primero.', 'error');
       return;
     }
+    if (!confirmarCodigo(c)) { estado('No se trajo nada.', 'error'); return; }
     estado('Buscando…');
     try {
       var r = await fetch(WORKER_SYNC + '?codigo=' + encodeURIComponent(c));
@@ -523,7 +565,10 @@
         navigator.sendBeacon &&
           navigator.sendBeacon(
             WORKER_SYNC + '?codigo=' + encodeURIComponent(codigo()),
-            new Blob([JSON.stringify({ claves: leerTodo(), nombre: localStorage.getItem(LS_NOMBRE) || '' })],
+            new Blob([JSON.stringify({
+              claves: ultimaNube ? Object.assign({}, ultimaNube, leerTodo()) : leerTodo(),
+              nombre: localStorage.getItem(LS_NOMBRE) || '',
+            })],
                      { type: 'text/plain' }),
           );
       } catch (e) {}
