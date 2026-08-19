@@ -12,7 +12,7 @@
 - Los ejercicios están en la **[plataforma de ejercicios](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/)**.
 - Se hacen **desde casa**, a su ritmo. En clase seguimos con temas nuevos.
 - **Todo se guarda solo** y se sincroniza con su código. No pierden nada. 💾
-- Si uno se traba: mándenlo por Discord con el botón **"Consultar"** del ejercicio. Llega con su
+- Si uno se traba: mándenlo por Discord con el botón **"✉️ Enviar a mi profe"** del ejercicio. Llega con su
   código y con lo que probaron. **Preguntar no es hacer trampa: es lo que hace un programador.** 💬
 
 ---
