@@ -9,23 +9,53 @@
  *
  * La idea del dibujo es que el alumno reconozca la forma de su solución sin
  * tener que calcular nada.
+ *
+ * Sobre la escala: la primera versión hacía que la curva terminara en 0.98 y la
+ * recta en 0.90, o sea que se cruzaban recién en el borde derecho y la curva
+ * "mala" parecía apenas peor. Eso contaba mal la historia. Ahora la curva SE VA
+ * POR ARRIBA del gráfico bastante antes del final, que es lo que pasa de
+ * verdad: no es que sea un poco peor, es que se dispara.
  */
 const X0 = 62;
 const X1 = 470;
 const Y0 = 246; // el piso del gráfico
 const Y1 = 34; // el techo
 
-const puntos = (f: (t: number) => number): string =>
-  Array.from({ length: 41 }, (_, i) => {
-    const t = i / 40;
-    const x = X0 + t * (X1 - X0);
-    const y = Y0 - Math.min(1, f(t)) * (Y0 - Y1);
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
+const px = (t: number) => X0 + t * (X1 - X0);
+const py = (v: number) => Y0 - v * (Y0 - Y1);
+
+/** Puntos hasta que la línea se sale por el techo (ahí se corta). */
+const puntos = (f: (t: number) => number, hasta = 1): string => {
+  const out: string[] = [];
+  const N = 60;
+  for (let i = 0; i <= N; i++) {
+    const t = (i / N) * hasta;
+    const v = f(t);
+    if (v > 1) {
+      // Punto exacto donde cruza el techo, para que el corte quede limpio.
+      const anterior = f(((i - 1) / N) * hasta);
+      const p = (1 - anterior) / (v - anterior);
+      const tCruce = ((i - 1 + p) / N) * hasta;
+      out.push(`${px(tCruce).toFixed(1)},${py(1).toFixed(1)}`);
+      break;
+    }
+    out.push(`${px(t).toFixed(1)},${py(v).toFixed(1)}`);
+  }
+  return out.join(' ');
+};
+
+// La curva llega al techo al 58% del ancho: de ahí en más ya no entra en la hoja.
+const T_FUGA = 0.58;
+const fCurva = (t: number) => (t / T_FUGA) ** 2;
+const fRecta = (t: number) => t * 0.62;
 
 const plana = puntos(() => 0.06);
-const recta = puntos((t) => t * 0.9);
-const curva = puntos((t) => t * t * 0.98);
+const recta = puntos(fRecta);
+const curva = puntos(fCurva);
+
+// Dónde termina cada línea, para colgar ahí la etiqueta.
+const xFuga = px(T_FUGA);
+const yRectaFin = py(fRecta(1));
 ---
 
 <figure class="croquis">
@@ -45,19 +75,25 @@ const curva = puntos((t) => t * t * 0.98);
     <polyline points={recta} class="croquis__linea croquis__linea--media" />
     <polyline points={plana} class="croquis__linea croquis__linea--buena" />
 
-    <text x={X1 - 6} y={Y1 + 6} class="croquis__etiqueta croquis__etiqueta--mala" text-anchor="end">
+    {/* La curva no termina: se va de la hoja. La flechita lo dice. */}
+    <text x={xFuga + 8} y={Y1 + 4} class="croquis__etiqueta croquis__etiqueta--mala" text-anchor="start">
+      ↑ sigue subiendo
+    </text>
+    <text x={xFuga - 12} y={Y1 + 34} class="croquis__etiqueta croquis__etiqueta--mala" text-anchor="end">
       🐢 una vuelta por cada dato
     </text>
-    <text x={X1 - 6} y={Y0 - (Y0 - Y1) * 0.9 - 10} class="croquis__etiqueta croquis__etiqueta--media" text-anchor="end">
+
+    <text x={X1 - 4} y={yRectaFin - 12} class="croquis__etiqueta croquis__etiqueta--media" text-anchor="end">
       ⚡ una sola vuelta
     </text>
-    <text x={X1 - 6} y={Y0 - (Y0 - Y1) * 0.06 - 12} class="croquis__etiqueta croquis__etiqueta--buena" text-anchor="end">
+    <text x={X1 - 4} y={py(0.06) - 12} class="croquis__etiqueta croquis__etiqueta--buena" text-anchor="end">
       🏆 sin vueltas
     </text>
   </svg>
   <figcaption>
-    Fijate que cerca del origen —o sea, con pocos datos— las tres formas están casi pegadas.
-    Por eso una solución cara <strong>parece buena mientras probás con tres elementos</strong>,
-    y recién muestra el problema el día que le entran mil.
+    Fijate en las dos puntas. Cerca del origen —con pocos datos— las tres formas están casi
+    pegadas: por eso una solución cara <strong>parece buena mientras probás con tres elementos</strong>.
+    Del otro lado, la roja no termina: <strong>se va del gráfico</strong>. Ahí está el problema, y
+    aparece el día que le entran mil datos.
   </figcaption>
 </figure>

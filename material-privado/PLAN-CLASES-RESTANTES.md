@@ -75,10 +75,15 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 
 | Fecha | Clase | Notas |
 |---|---|---|
-| Mié 19/8 | **Archivos** — retomarlo en serio: leer, escribir, `with` | Quedó flojo del 8/7. Práctica en la plataforma. |
-| Vie 21/8 | **Archivos** práctica + guardar/leer una lista de alumnos | Ojo: puede caer acá la **demo a preceptores**. |
-| Mié 26/8 | **JSON** — leer y escribir, por qué no alcanza un `.txt` | |
-| Vie 28/8 | **JSON** práctica — cierra el Bloque 3 | Acá ya guardan datos que sobreviven al cierre. |
+| Mié 19/8 | Resolución de dudas sobre los ejercicios | ✅ dada. |
+| Vie 21/8 | **Lógica: pensar como programador** | Va antes de seguir practicando: es método, y el método multiplica la práctica que viene después. |
+| Mié 26/8 | **Archivos** — retomarlo en serio: leer, escribir, `with` | Quedó flojo del 8/7. Ojo: puede caer acá la **demo a preceptores**. |
+| Vie 28/8 | **JSON** — leer y escribir, por qué no alcanza un `.txt` | Cierra el Bloque 3. Fecha límite de la **puesta al día**. |
+
+> ⚠️ Archivos y JSON quedan en una clase cada uno, no dos. Se sostiene porque los dos temas ya se
+> vieron una vez y porque la plataforma tiene ejercicios de ambos. Si el 26/8 se nota que Archivos
+> sigue flojo, **se corre POO una clase** antes que darlo por visto: es el mismo criterio que con la
+> puesta al día.
 
 ### 🏗️ Septiembre — POO y arranque del proyecto (9 clases)
 
@@ -90,7 +95,7 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 | Vie 11/9 | **POO II** práctica | |
 | Mié 16/9 | **Herencia** — lo justo, sin `super()` avanzado | |
 | Vie 18/9 | **Del prototipo al modelo**: qué clases necesita el sistema | Se les muestra el prototipo y **entre todos** se decide `Alumno`, `Curso`, `Asistencia`. |
-| Mié 23/9 | **Proyecto CLI 1** — alta y listado de alumnos | |
+| Mié 23/9 | **Proyecto CLI 1** — alta y listado de alumnos + **Eficiencia** | Acá cae sola: buscar un alumno entre 13 recorriendo la lista vs. buscarlo por su DNI en un diccionario. Es el momento en que "cuál solución es mejor" deja de ser abstracto. |
 | Vie 25/9 | **Proyecto CLI 2** — pasar asistencia por día | |
 | Mié 30/9 | **Proyecto CLI 3** — guardar en JSON | ✅ **Hito: CLI funcionando.** |
 
