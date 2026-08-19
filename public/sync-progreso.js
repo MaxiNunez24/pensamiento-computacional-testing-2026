@@ -516,8 +516,20 @@
         if (k.indexOf(PREFIJO) === 0) localStorage.setItem(k, resultado[k]);
       }
       if (datos.nombre) localStorage.setItem(LS_NOMBRE, datos.nombre);
+
+      /* Y se devuelve el resultado a la nube, así los dos lados quedan iguales.
+         Sin esto hay una trampa de orden: si el alumno hace PULL antes que
+         PUSH, lo que tenía acá sin subir se queda solo acá, y desde la otra
+         computadora sigue sin verse. Con esto, un solo botón alcanza y no hay
+         orden correcto que recordar. */
+      try {
+        await subir(c, claves);
+      } catch (e) {
+        /* sin internet justo ahora: quedó bien acá y se sube al próximo intento */
+      }
+
       marcarSincro();
-      estado('✅ Listo: trajiste ' + n + ' ejercicio(s). Recargando…', 'ok');
+      estado('✅ Listo: quedaron ' + contarEjercicios(resultado) + ' ejercicio(s), lo mejor de las dos compus. Recargando…', 'ok');
       setTimeout(function () {
         location.reload();
       }, 900);
