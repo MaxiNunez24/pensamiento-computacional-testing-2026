@@ -309,11 +309,16 @@ export function conectarEnvio(
       ) || ''
     ).trim();
     const asunto = `${nombre} — ${titulo}`;
+    // Link al EJERCICIO, no a la clase entera. Antes se mandaba `location.href`
+    // pelado y del otro lado había que buscar cuál de los 19 ejercicios era.
+    // Los id ahora salen del título (ver scripts/id-ejercicio.ts), así que la
+    // dirección sigue sirviendo después del próximo deploy.
+    const enlace = el.id ? `${location.href.split('#')[0]}#${el.id}` : location.href;
     const entradas = (getEntradas ? getEntradas() : []).filter((e) => e !== '');
     const cuerpo =
       `¡Hola profe! Te mando mi intento. 🙂\n\n` +
       `Lección: ${document.title}\n` +
-      `${location.href}\n` +
+      `${enlace}\n` +
       `Ejercicio: ${titulo}\n` +
       `Alumno/a: ${nombre}\n\n` +
       (consulta ? `--- mi consulta ---\n${consulta}\n\n` : '') +
@@ -365,7 +370,7 @@ export function conectarEnvio(
             entradas,
             ejercicio: titulo,
             leccion: document.title,
-            url: location.href,
+            url: enlace,
           }),
         });
         // No alcanza con que responda 200: un Worker a medio configurar (el
