@@ -36,8 +36,8 @@
 | 🎉 **21/9** | **Nerdearla** |
 | ✅ **Mié 30/9** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en JSON |
 | 🧪 **Oct** | **Testing** (teoría + `pytest` sobre el proyecto) y migración del sistema a **web (Flask)** |
-| 🏆 **9/11** | **Expo CFP 2026** — se presenta el **Sistema de Asistencias** |
-| 🚀 **Mié 11/11** | Tercer hito: **el sistema publicado en internet**, usable desde el celular |
+| 🚀 **Vie 6/11** | Tercer hito: **el sistema publicado en internet**, usable desde el celular |
+| 🏆 **Vie 13/11** | **Expo CFP 2026** — presentamos el **Sistema de Asistencias** 🎪 |
 | 🤖 **Mié 25/11** | Arranque del **proyecto final con IA** |
 | 🎓 **Vie 18/12** | Última clase y celebración de cierre |
 

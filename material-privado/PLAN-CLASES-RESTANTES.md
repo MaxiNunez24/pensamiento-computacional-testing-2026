@@ -113,24 +113,30 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 | Mié 28/10 | **Migrar el CLI a Flask II** | |
 | Vie 30/10 | **SQLite** — por qué JSON deja de alcanzar con varios usuarios | |
 
-### 🚀 Noviembre — cerrar el sistema y la Expo (7 clases, 20/11 feriado)
+### 🚀 Noviembre — la Expo (7 clases, 20/11 feriado)
+
+⚠️ **La Expo es el viernes 13/11 y cae en día de clase**: se lleva puesta una de las siete.
 
 | Fecha | Clase | Notas |
 |---|---|---|
 | Mié 4/11 | **SQLite II** + **login**: contraseñas hasheadas, sesiones | Nunca guardar una contraseña en texto plano. |
-| Vie 6/11 | **Roles y permisos** + preparar la Expo | |
-| Mié 11/11 | **Deploy**: subir el proyecto a PythonAnywhere | ✅ **Hito: el sistema en internet.** |
-| Vie 13/11 | **Playwright I** — Bot SiGes | Necesita las fotos del proceso de carga. |
-| Mié 18/11 | **Playwright II** — y testing E2E | Cierra el módulo de Testing. |
-| Mié 25/11 | **IA**: qué es una API y cómo se consume desde Python | Arranca el proyecto final. |
-| Vie 27/11 | **Proyecto final**: elegir tema y armar el plan | |
+| Vie 6/11 | **Deploy**: subir el proyecto a PythonAnywhere | ✅ **Hito: el sistema en internet**, una semana ANTES de la Expo. |
+| Mié 11/11 | **Armado del stand y ensayo** | Cargar datos de demo, repartir quién dice qué, probar todo en la máquina que va a estar en el stand. |
+| **Vie 13/11** | 🏆 **EXPO CFP 2026** | |
+| Mié 18/11 | **Playwright I** — Bot SiGes | Necesita las fotos del proceso de carga. |
+| Mié 25/11 | **Playwright II** + testing E2E | Cierra el módulo de Testing. |
+| Vie 27/11 | **IA**: qué es una API y cómo se consume | Arranca el proyecto final. |
+
+> Por qué el deploy se adelanta al 6/11: antes estaba el 11/11, a **dos días** de la Expo. Un
+> problema de última hora ahí no se arregla. Con el 6/11 hay una semana de colchón, y el 11/11
+> queda para lo que de verdad necesita ser lo último: ensayar.
 
 ### 🎓 Diciembre — proyecto final (6 clases)
 
 | Fecha | Clase | Notas |
 |---|---|---|
 | Mié 2/12 | **Testing IV — probar la app web** (cliente de pruebas de Flask) | Si el grupo ya lo tiene firme, se cambia por **reportes con pandas** sobre la planilla propia. |
-| Vie 4/12 | Taller de proyecto final | |
+| Vie 4/12 | **Proyecto final**: elegir tema y armar el plan | |
 | Mié 9/12 | Taller de proyecto final | |
 | Vie 11/12 | Taller de proyecto final | |
 | Mié 16/12 | **Presentaciones** | |
