@@ -23,3 +23,8 @@ venv/
 .vscode/
 .idea/
 *.swp
+
+# Capturas del proceso de carga al SiGeS: son pantallas reales del sistema del
+# Ministerio, con DNI y nombres de personas. El repo es PUBLICO: no se suben.
+# Viven solo en la maquina del profe.
+material-privado/capturas_bot/
