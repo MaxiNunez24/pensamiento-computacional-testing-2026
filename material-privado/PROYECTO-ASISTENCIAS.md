@@ -3,7 +3,8 @@
 > Documento de trabajo, teacher-only. Vive en `material-privado/` (no se publica en el sitio).
 > **No poner datos personales de alumnos acá** (nombres, DNI, teléfonos): el repo puede leerse.
 >
-> Última actualización: 15/8/2026 (v4: vista por día + celular).
+> Última actualización: 20/8/2026 — ver **§11 (lo que salió de la elicitación)** y
+> **§12 (la decisión de la red local)**, que son las novedades grandes.
 
 ---
 
@@ -359,3 +360,154 @@ entran desde sus teléfonos, cada uno ve **su propia copia** y lo que carga uno 
 Eso no es un error a disimular: es exactamente el motivo por el que hace falta un servidor, y
 dicho en la reunión explica en treinta segundos por qué el sistema definitivo lleva más trabajo
 que "esto que ya funciona".
+
+---
+
+## 11. Lo que salió de la elicitación (20/8/2026)
+
+> Resultado de la lluvia de ideas con los alumnos y de la charla con la preceptora.
+> **Está sin filtrar a propósito**: primero se anota todo, después se decide. Filtrar mientras el
+> cliente habla es la forma más rápida de perder el requisito que importaba.
+
+### 11.1 Ideas de los alumnos
+
+#### 🔢 Teclado numérico en la entrada (autoasistencia)
+
+El alumno llega, escribe su **DNI**, la pantalla le muestra quién es, confirma y toca Enter. Eso:
+
+- avisa al profesor que llegó,
+- deja la asistencia asentada **en el momento**, no a fin de mes,
+- el profesor después **confirma o corrige** (el alumno propone, el docente dispone),
+- y preceptores y auxiliares lo ven en vivo.
+
+**Es la mejor idea que salió**, y no por la tecnología: porque ataca el problema de raíz. Hoy la
+asistencia se pasa tarde y de memoria; así se registra sola en el momento exacto.
+
+Cosas a resolver antes de construirlo:
+
+| | |
+|---|---|
+| 🔒 **Privacidad en la pantalla** | Mostrar "¿Sos ***REMOVED*** Soledad González?" en la entrada significa que **cualquiera que pase ve quién llegó**. Mejor solo nombre e inicial ("¿Sos ***REMOVED*** G.?"). |
+| 🕵️ **El DNI no es secreto** | Cualquiera que sepa el DNI de otro puede marcarlo presente. Por eso la confirmación del docente **no es opcional**: es lo que hace confiable al sistema. Ya lo pensaron bien. |
+| 🔌 **Si el sistema se cae, la entrada se cae** | Hace falta plan B en papel, y que el sistema **no bloquee la entrada** de nadie. |
+| 🖥️ **Qué aparato** | Una compu vieja con teclado numérico alcanza. No hace falta hardware especial. |
+
+> 💡 Para el curso: esto es **un segundo cliente del mismo sistema**. Los mismos datos, otra
+> pantalla, otro usuario. Es la mejor forma de que entiendan por qué los datos van separados de la
+> interfaz.
+
+#### 🍫 Rol de auxiliares — cuántas meriendas preparar
+
+Las auxiliares hoy **no saben para cuántos preparar**. Con la asistencia cargada en el momento, es
+un número que ya existe.
+
+Es el requisito más barato de todos: **una pantalla con un número grande**. Y es el mejor ejemplo
+de algo que conviene decir en clase: *los mismos datos le sirven a distinta gente de distinta
+manera*. El preceptor quiere la planilla, el docente su curso, la auxiliar un número.
+
+### 11.2 Seguridad: que funcione solo en la red del CFP
+
+Decisión del grupo: el sistema **no se publica en internet**. Anda en la red del centro; se entra
+desde el celular o desde una compu **estando conectado al wifi del CFP**. Ver §12.
+
+### 11.3 Lo que contó la preceptora
+
+Esto agranda el proyecto bastante. **No es "asistencias": es la gestión del centro.**
+
+#### Cursos
+
+- **~30 cursos simultáneos**, y más por año porque algunos son semestrales.
+- La planificación **cambia todos los años** y la avalan los directivos.
+- De cada curso se guarda: **número de curso**, **grupo según el catálogo jurisdiccional**,
+  **código del curso**, **certificación** (el nombre correcto según el catálogo), **docente**,
+  **horarios**, **horas cátedra semanales**, **fecha de inicio** y **fecha de finalización**.
+
+> Ojo con esto: la **certificación** y el **trayecto** salen de un **catálogo jurisdiccional**, no
+> los inventa el CFP. O sea que hay una tabla externa que el sistema debería tener cargada, no un
+> campo de texto libre. Es la diferencia entre un sistema que ordena y uno que deja escribir
+> cualquier cosa.
+
+#### Dos planillas nuevas: retiro de certificado y de título
+
+Se pide **número de curso**, **nombre y apellido**, y ahí aparece el **número histórico de
+alumno** — un identificador que el CFP ya lleva y que hoy no está en ningún lado del prototipo.
+
+#### La impresión de certificados (Excel + Word)
+
+Hoy: un **Excel** con los alumnos y un **Word** que toma sus campos (combinación de
+correspondencia). Los campos son:
+
+nombre del curso según catálogo · trayecto según catálogo · nombre y apellido · duración en horas
+cátedra totales · número de documento · **número de egresado** · número de curso · módulos según
+catálogo · fecha de finalización (que coincide con la del acta de examen y con la planificación).
+
+> 💡 **Esto es un segundo bot esperando.** Generar los certificados desde los datos es el mismo
+> problema que la planilla: un molde más datos. Con `python-docx` se hace, y es bastante más
+> simple que el bot del SiGeS.
+
+### 11.4 Y ahora lo difícil: priorizar
+
+Salieron más cosas de las que entran en un año. **Eso no es un problema: es el resultado esperado
+de una buena elicitación.** Lo que sigue no es programar, es decidir.
+
+Propuesta de corte, para discutir con ellos:
+
+| | Qué | Por qué ahí |
+|---|---|---|
+| **Ahora** | Asistencia + planilla oficial + multi-curso | Es el dolor original y lo que ya está a medio hacer |
+| **Después** | Autoasistencia con DNI + vista de auxiliares | Alto impacto, bajo costo, y el mejor material de clase |
+| **Después** | Ficha de curso con los campos del catálogo | La piden una vez al año, hay tiempo |
+| **Más adelante** | Certificados desde Word | Es un proyecto en sí mismo (y un buen proyecto final) |
+| **Fuera de alcance por ahora** | Retiro de certificados y títulos, número histórico | Requiere datos que el CFP tiene en otro lado |
+
+⚠️ **Nada de esto se promete todavía.** Se muestra la lista, se explica el corte y se pide que lo
+prioricen ellos. Un cliente que participa del recorte no reclama después por lo que quedó afuera.
+
+---
+
+## 12. La decisión de la red local (20/8)
+
+El grupo propuso que el sistema **solo funcione dentro de la red del CFP**. Me parece **la decisión
+correcta para este proyecto**, y por un motivo que conviene decir en voz alta: acá hay datos
+personales de mucha gente, varios de ellos menores. El sistema más seguro es el que **no está
+expuesto**.
+
+Pero cambia cosas y hay que decirlas.
+
+### 12.1 La red no es la seguridad
+
+> ⚠️ **Estar en la red local reduce quién puede llegar al sistema. No reemplaza tener usuarios y
+> contraseñas.**
+
+Todo el que esté conectado al wifi del CFP —incluidos los alumnos con su celular— puede llegar al
+sistema. Sin login, cualquiera de ellos entra y modifica la asistencia. **El login sigue siendo
+obligatorio.** Lo que la red local elimina es al resto del mundo, que no es poco.
+
+### 12.2 Lo que se pierde
+
+| | Consecuencia | Qué hacer |
+|---|---|---|
+| 🏠 | **No se puede usar desde casa** | ⚠️ **Confirmarlo con ellos.** Antes pidieron "usarlo desde el celular"; hay que chequear si eso incluía desde la casa |
+| 💾 | **Si se rompe esa computadora, se pierde todo** | Copia automática a un disco **y una copia fuera del edificio**. Un incendio o un robo no distinguen |
+| 🔌 | Alguien tiene que **mantener la máquina prendida** | Definir cuál es y quién la enciende |
+| 🔄 | Actualizar es ir hasta esa máquina | Aceptable |
+
+### 12.3 Lo que cambia en el plan de clases
+
+La clase de **deploy a PythonAnywhere (6/11)** pasa a ser **"poner el sistema en la red del CFP"**.
+
+Y es una buena noticia para el curso:
+
+- **Es más fácil de enseñar**: `flask run --host=0.0.0.0` y entrar por la IP. Se ve al toque.
+- **No depende de una cuenta externa** ni de renovarla cada 3 meses.
+- **Se prueba en el aula ese mismo día**: todos entran desde su celular. Ese momento —cada uno
+  viendo el sistema en su teléfono— es mejor demo que cualquier dirección pública.
+- Se pierde el "está en internet", que era lindo pero no era el objetivo.
+
+> 💡 **Concepto para regalarles ahí:** el programa **no sabe dónde está corriendo**. El mismo
+> código anda en la compu del CFP, en una de casa o en un servidor de internet; lo único que cambia
+> es quién puede llegar hasta él. Entenderlo vale más que cualquier receta de deploy.
+
+**Igual conviene escribirlo para que pueda correr en los dos lados.** No cuesta nada hacerlo así
+desde el principio, y el día que dirección pida acceso desde afuera es mover el programa de lugar
+en vez de rehacerlo.
