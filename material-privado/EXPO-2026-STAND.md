@@ -20,6 +20,22 @@ Y la segunda regla, que es la que hace que valga la pena para el curso:
 
 ---
 
+## 1.bis El armado físico (confirmado)
+
+- **Proyector sobre lona**: la notebook del profe proyectada. Es la pantalla grande donde se ve el
+  sistema y donde corre lo que se muestra a distancia — lo que atrae desde lejos.
+- **Una o dos PC de escritorio adelante**, con teclado y mouse: es donde el visitante **mete mano**.
+
+Esa separación es la que hace que el stand funcione: **la lona atrae, las PC retienen.** Y tiene
+una consecuencia práctica —
+
+> Lo que va en las PC de escritorio tiene que poder usarse **sin que nadie explique nada**. Teclado
+> y mouse, sin instrucciones habladas: un cartelito de una línea arriba de cada máquina y listo.
+
+Con dos PC conviene que **cada una tenga algo distinto**: una con el sistema de asistencias (para
+quien quiere ver el trabajo hecho) y otra con los juegos (para quien pasa y quiere jugar treinta
+segundos). Si se pone lo mismo en las dos, se hace cola en una sola.
+
 ## 2. Qué mostramos
 
 ### 2.1 El sistema, funcionando de verdad
