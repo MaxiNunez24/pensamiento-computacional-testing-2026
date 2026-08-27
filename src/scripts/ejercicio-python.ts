@@ -26,6 +26,7 @@ import {
   conectarTeclas,
   conectarToggleTeclas,
   conectarEnvio,
+  autocompletado,
 } from './editor-comun';
 
 // ---------- Un ejercicio ----------
@@ -66,7 +67,7 @@ function initEjercicio(el: HTMLElement): void {
   const view = new EditorView({
     doc: guardado != null ? guardado : starter,
     // keymap.of([indentWithTab]) hace que Tab indente en vez de saltar el foco.
-    extensions: [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
+    extensions: [basicSetup, ...autocompletado(datos), python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
     parent: editorEl,
   });
   // Handle del editor accesible desde el DOM (útil para tests y para setear

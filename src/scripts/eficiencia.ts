@@ -42,6 +42,7 @@ import {
   conectarTeclas,
   conectarToggleTeclas,
   conectarEnvio,
+  autocompletado,
 } from './editor-comun';
 
 // ---------- Los niveles ----------
@@ -173,7 +174,7 @@ function initEficiencia(el: HTMLElement): void {
 
   const view = new EditorView({
     doc: guardado != null ? guardado : starter,
-    extensions: [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
+    extensions: [basicSetup, ...autocompletado(datos), python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
     parent: editorEl,
   });
   (el as unknown as { __cmView: EditorView }).__cmView = view;

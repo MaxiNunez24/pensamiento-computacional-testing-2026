@@ -18,6 +18,7 @@ import {
   aplicarPreferenciaTeclas,
   conectarTeclas,
   conectarToggleTeclas,
+  autocompletado,
 } from './editor-comun';
 
 function b64decode(s: string): string {
@@ -103,7 +104,7 @@ function initEncontrar(el: HTMLElement): void {
       cajaEditor.hidden = false;
       editor = new EditorView({
         doc: codigo.replace(/\n$/, ''),
-        extensions: [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab])],
+        extensions: [basicSetup, ...autocompletado(''), python(), oneDark, editorTheme, keymap.of([indentWithTab])],
         parent: cajaEditor,
       });
       medirCuandoSeaVisible(editor);

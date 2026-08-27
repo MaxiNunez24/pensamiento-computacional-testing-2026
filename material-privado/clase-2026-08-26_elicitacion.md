@@ -1,6 +1,8 @@
-# Clase del miércoles 20/8 — Elicitación + preparar la demo del viernes
+# Clase de elicitación — dada el miércoles 26/8
 
 > Run of show. 13:20 a 16:40 (límite duro).
+> ✅ **Dada el 26/8/2026.** De acá salieron el teclado de la entrada, el rol de las auxiliares y
+> la decisión de la red local (ver PROYECTO-ASISTENCIAS §11).
 > Objetivo del día: que el viernes los alumnos sepan **qué preguntar y cómo anotarlo**.
 
 ---

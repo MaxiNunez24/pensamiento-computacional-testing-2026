@@ -171,7 +171,7 @@
 | Vie 14/8 | Práctica en la plataforma: **bucles** (`while` y `for`) | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bucles/) |
 | Mié 19/8 | Resolución de dudas sobre los ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
 | Vie 21/8 | Consulta y resolución de ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
-| Mié 26/8 | Consulta y resolución de ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
+| Mié 26/8 | **Elicitación de requerimientos**: lluvia de ideas sobre el sistema y preparación de la demo | [🗺️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/proyecto/) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.

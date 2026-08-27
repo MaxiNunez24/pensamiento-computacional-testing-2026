@@ -23,6 +23,10 @@ export const editorTheme = EditorView.theme({
   // 1rem (16px) y no menos: Safari en iOS hace zoom automático al enfocar un
   // campo con tipografía menor a 16px, y la página queda corrida.
   '&': { fontSize: '1rem', maxHeight: '22rem' },
+  // Aire abajo del código. NO es estético: es para que el cartel de sugerencias
+  // tenga dónde aparecer cuando el alumno escribe en la última línea. Sin este
+  // espacio, CodeMirror lo da vuelta y lo pone encima de lo que está tecleando.
+  '.cm-content': { paddingBottom: '7rem' },
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
   },
@@ -405,4 +409,85 @@ export function conectarEnvio(
     }
     setTimeout(() => { btnCopiar.textContent = original; }, 4000);
   });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   AUTOCOMPLETADO
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Dos problemas que reportaron los alumnos, los dos del mismo lugar:
+
+   1. El cartelito de sugerencias TAPABA lo que estaban escribiendo. Pasaba al
+      escribir en la última línea: CodeMirror pone el cartel abajo del cursor y,
+      si no le entra adentro del editor, lo da vuelta y lo pone ARRIBA — justo
+      encima del renglón que estás tecleando. La solución no es mover el cartel:
+      es dejarle lugar abajo (ver `padding-bottom` en el theme).
+
+   2. Las variables que el ejercicio ya define (`precio`, `cantidad`, `frase`…)
+      NO aparecían entre las sugerencias. Y es lógico: no están escritas en el
+      editor, se inyectan por afuera antes de correr el código. CodeMirror
+      sugiere lo que ve, y no las veía.
+
+   Lo segundo importa más de lo que parece: el alumno mira el editor vacío y no
+   se acuerda de cómo se llamaba la variable. Ahora se la ofrece el editor.
+*/
+import { autocompletion, completeFromList, type Completion } from '@codemirror/autocomplete';
+import { pythonLanguage } from '@codemirror/lang-python';
+
+/** Saca los nombres que define un bloque de `datos`: `precio = 1500` → precio. */
+export function variablesDe(datos: string): string[] {
+  const nombres = new Set<string>();
+  for (const linea of (datos || '').split('\n')) {
+    // Solo asignaciones al principio de la línea (sin indentar): las de adentro
+    // de un if o un for son detalles internos, no datos del ejercicio.
+    const m = /^([A-Za-z_][A-Za-z0-9_]*)\s*=(?!=)/.exec(linea);
+    if (m) nombres.add(m[1]);
+  }
+  return [...nombres];
+}
+
+// Lo mínimo de Python que usan en el curso. No es la biblioteca entera a
+// propósito: una lista de 300 sugerencias es ruido, no ayuda.
+const BASICOS: Completion[] = [
+  { label: 'print', type: 'function', detail: 'mostrar en pantalla' },
+  { label: 'input', type: 'function', detail: 'pedir un dato' },
+  { label: 'len', type: 'function', detail: 'cuántos elementos' },
+  { label: 'int', type: 'function', detail: 'a número entero' },
+  { label: 'float', type: 'function', detail: 'a número con coma' },
+  { label: 'str', type: 'function', detail: 'a texto' },
+  { label: 'range', type: 'function', detail: 'secuencia de números' },
+  { label: 'sum', type: 'function', detail: 'sumar una lista' },
+  { label: 'min', type: 'function', detail: 'el más chico' },
+  { label: 'max', type: 'function', detail: 'el más grande' },
+  { label: 'sorted', type: 'function', detail: 'ordenar sin modificar' },
+  { label: 'abs', type: 'function', detail: 'valor absoluto' },
+  { label: 'round', type: 'function', detail: 'redondear' },
+  { label: 'type', type: 'function', detail: 'de qué tipo es' },
+];
+
+/**
+ * Extensiones de autocompletado para un editor de ejercicio.
+ * `datos` es el bloque de variables que el ejercicio inyecta (puede ir vacío).
+ */
+export function autocompletado(datos = '') {
+  const delEjercicio: Completion[] = variablesDe(datos).map((nombre) => ({
+    label: nombre,
+    type: 'variable',
+    detail: 'ya tiene valor en este ejercicio',
+    // boost la pone primera: es lo que el alumno está buscando.
+    boost: 99,
+  }));
+
+  return [
+    pythonLanguage.data.of({
+      autocomplete: completeFromList([...delEjercicio, ...BASICOS]),
+    }),
+    autocompletion({
+      // Sin esto, el cartel se cierra al tocar afuera y en el celular eso pasa
+      // con cualquier scroll.
+      closeOnBlur: true,
+      // Una lista corta se lee; una larga se ignora.
+      maxRenderedOptions: 8,
+    }),
+  ];
 }
