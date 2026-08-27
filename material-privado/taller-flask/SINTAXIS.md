@@ -2,6 +2,11 @@
 
 > Para leer al lado del código. Nada de acá es magia de Flask: casi todo es Python normal usado de
 > una forma que todavía no habías visto.
+>
+> 🎓 **Los conceptos de Python que no vimos en el curso** (decoradores, `with`, `try/except`,
+> `__init__`/`self`, comprensiones, `enumerate`) tienen ahora su propia clase **para los
+> alumnos**, con ejercicios: **Lo que Python hace por vos**. Cada atajo está al lado de cómo
+> sería el mismo código sin él. Este archivo se queda con lo específico de Flask.
 
 ---
 

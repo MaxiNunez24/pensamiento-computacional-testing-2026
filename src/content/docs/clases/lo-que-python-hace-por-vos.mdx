@@ -1,0 +1,397 @@
+---
+title: Lo que Python hace por vos
+description: Los atajos que vas a ver en el proyecto, y cómo sería el mismo código sin ellos.
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+Cuando empecemos con el sistema van a aparecer cosas raras: un `@` colgado arriba de una función,
+un `with`, un `try`. No son magia y **no son obligatorias**: son atajos para escribir menos.
+
+Esta clase muestra cada atajo **al lado de cómo sería sin él**. Esa es toda la idea:
+
+:::tip[La regla para no asustarse nunca más]
+Si podés escribir la versión larga, entendiste el atajo. Y si algún día el atajo falla, sabés
+exactamente qué estaba haciendo por vos.
+:::
+
+---
+
+## 1. El `@` — decoradores
+
+Es lo que más impresiona y lo más simple de los cinco.
+
+```python
+@app.route("/lista")
+def lista():
+    return "hola"
+```
+
+### Sin el atajo
+
+Esas dos líneas son **exactamente** esto:
+
+```python
+def lista():
+    return "hola"
+
+lista = app.route("/lista")(lista)
+```
+
+Se define la función normal, y después se la **manda a otra función** que hace algo con ella. El
+`@` es solo una forma más corta de escribir esa última línea.
+
+### Por qué existe
+
+Porque `lista = app.route("/lista")(lista)` es feo, es fácil de olvidar, y queda **abajo** de la
+función — o sea, lejos de donde uno la lee. El `@` lo pone arriba, donde se ve.
+
+### Hacete uno
+
+Un decorador es **una función que recibe una función y devuelve otra**. Nada más.
+
+<EjercicioPython
+  titulo="Tu primer decorador"
+  dificultad="🟡"
+  starter={`def gritar(funcion):
+    def envuelta():
+        # Llamá a la función original y devolvé el resultado
+        # en MAYÚSCULAS y con "!!!" al final.
+        pass
+    return envuelta
+
+
+@gritar
+def saludar():
+    return "hola"
+
+
+print(saludar())`}
+  tests={`assert "HOLA!!!" in salida, f'esperaba HOLA!!! y salió {salida.strip()!r}'`}
+  pistas={[
+    "Adentro de <code>envuelta</code>, <code>funcion()</code> te da el 'hola'. ¿Cómo lo ponés en mayúsculas?",
+    "<code>.upper()</code> pone en mayúsculas, y con <code>+</code> pegás los '!!!' al final.",
+    "Acordate de <strong>devolver</strong> el resultado con <code>return</code>, no de imprimirlo.",
+  ]}
+  solucion={`def gritar(funcion):
+    def envuelta():
+        return funcion().upper() + "!!!"
+    return envuelta`}
+>
+  Completá `envuelta` para que `saludar()` devuelva `HOLA!!!` en vez de `hola`.
+
+  Fijate lo que pasa: **`saludar` ya no es tu función**. Es `envuelta`, que llama a la tuya y le
+  hace algo al resultado.
+</EjercicioPython>
+
+<OpcionMultiple
+  titulo="¿Qué es un decorador?"
+  opciones={[
+    { texto: 'Una instrucción especial de Python que solo funciona con Flask',
+      explicacion: 'No: es Python común. Flask los usa, pero podés escribir los tuyos, como recién.' },
+    { texto: 'Una función que recibe una función y devuelve otra', correcta: true,
+      explicacion: 'Nada más que eso. El <code>@</code> es una forma corta de escribir <code>mi_funcion = decorador(mi_funcion)</code>.' },
+    { texto: 'Una forma de comentar el código',
+      explicacion: 'Los comentarios van con <code>#</code> y Python los ignora. El decorador se ejecuta.' },
+    { texto: 'Una clase que hereda de otra',
+      explicacion: 'La herencia es otra cosa. Acá no hay clases: son dos funciones.' },
+  ]}
+>
+  ¿Qué es un decorador, en una línea?
+</OpcionMultiple>
+
+---
+
+## 2. El `with` — abrir y cerrar sin olvidarse
+
+Lo vas a ver en cuanto trabajemos con archivos.
+
+```python
+with open("datos.txt") as f:
+    contenido = f.read()
+```
+
+### Sin el atajo
+
+```python
+f = open("datos.txt")
+try:
+    contenido = f.read()
+finally:
+    f.close()          # esto SIEMPRE tiene que pasar
+```
+
+### Por qué existe
+
+Porque **todo el mundo se olvida de cerrar el archivo**. Y si el programa falla en el medio, el
+`close()` nunca se ejecuta: el archivo queda abierto, y en Windows eso significa que después no lo
+podés ni borrar ni abrir con otro programa.
+
+El `with` garantiza el cierre **aunque explote todo lo de adentro**. Por eso es la forma
+recomendada, no una preferencia de estilo.
+
+:::note[Dónde lo vas a usar]
+En el sistema, cada vez que guardemos o leamos los datos. Va a estar en todos lados.
+:::
+
+---
+
+## 3. `try` / `except` — cuando algo puede salir mal
+
+```python
+try:
+    edad = int(input("Tu edad: "))
+except ValueError:
+    print("Eso no era un número")
+```
+
+### Sin el atajo
+
+No hay versión larga: **sin `try`, el programa se corta**. Lo único que podés hacer es revisar
+antes:
+
+```python
+texto = input("Tu edad: ")
+if texto.isdigit():
+    edad = int(texto)
+else:
+    print("Eso no era un número")
+```
+
+### Cuándo cada uno
+
+| | Cuándo conviene |
+|---|---|
+| **`if` antes** | Cuando podés preguntar barato: ¿la lista está vacía? ¿es un número? |
+| **`try`** | Cuando no podés saberlo sin intentar: abrir un archivo, hablar con internet, convertir algo raro |
+
+> Nadie puede saber si un archivo se va a poder abrir sin intentar abrirlo. Entre que preguntás
+> "¿existe?" y lo abrís, alguien lo pudo haber borrado. Por eso ahí va `try`.
+
+<EjercicioPython
+  titulo="Que no se caiga"
+  dificultad="🟡"
+  datos={`respuestas = ["12", "hola", "7", "", "25"]`}
+  starter={`# 'respuestas' tiene lo que escribió la gente en un formulario.
+# Mostrá la suma de las que SÍ son números, sin que el programa se caiga.
+`}
+  tests={`assert salida.strip() == "44", f'12 + 7 + 25 = 44, y salió {salida.strip()!r}'`}
+  pistas={[
+    "Recorré la lista con un <code>for</code> e intentá convertir cada una con <code>int()</code>.",
+    "Si <code>int()</code> falla, tira un <code>ValueError</code>. Atajalo con <code>except ValueError:</code> y seguí de largo.",
+    "Dentro del <code>except</code> podés poner <code>continue</code>, o simplemente no hacer nada con <code>pass</code>.",
+  ]}
+  solucion={`total = 0
+for r in respuestas:
+    try:
+        total += int(r)
+    except ValueError:
+        pass
+print(total)`}
+>
+  La lista `respuestas` tiene texto que escribió la gente: hay números, una palabra y un vacío.
+  Sumá **solo los que son números**, sin que el programa se caiga.
+</EjercicioPython>
+
+---
+
+## 4. `__init__` y `self` — el molde de los objetos
+
+Esto llega con POO, y es lo que más ruido hace.
+
+```python
+class Alumno:
+    def __init__(self, dni, apellido):
+        self.dni = dni
+        self.apellido = apellido
+
+a = Alumno("***REMOVED***", "***REMOVED***")
+print(a.apellido)
+```
+
+### Sin el atajo
+
+Lo mismo, con un diccionario:
+
+```python
+def crear_alumno(dni, apellido):
+    return {"dni": dni, "apellido": apellido}
+
+a = crear_alumno("***REMOVED***", "***REMOVED***")
+print(a["apellido"])
+```
+
+**Funciona igual.** Y hasta que el sistema crece, es más simple.
+
+### Por qué existe entonces
+
+Por dos cosas que el diccionario no te da:
+
+1. **Los datos y lo que se puede hacer con ellos viajan juntos.** `a.nombre_completo()` está al
+   lado de `a.apellido`. Con diccionarios, la función anda suelta por ahí.
+2. **El molde obliga.** Si `__init__` pide `dni` y `apellido`, no podés crear un alumno sin
+   apellido. Con un diccionario sí, y te enterás tres pantallas después.
+
+### Y `self`, ¿qué es?
+
+**Es el objeto mismo.** Cuando escribís `a.nombre_completo()`, Python por detrás hace:
+
+```python
+Alumno.nombre_completo(a)      # ← 'a' entra como self
+```
+
+Por eso `self` es el primer parámetro de todos los métodos: **es el objeto sobre el que estás
+trabajando**. No es una palabra reservada, es un parámetro común — podrías llamarlo distinto, pero
+todo el mundo lo llama `self` y conviene no innovar ahí.
+
+---
+
+## 5. Comprensiones de lista
+
+```python
+pares = [n for n in numeros if n % 2 == 0]
+```
+
+### Sin el atajo
+
+```python
+pares = []
+for n in numeros:
+    if n % 2 == 0:
+        pares.append(n)
+```
+
+### Por qué existe
+
+Porque el patrón "recorrer, filtrar, guardar en una lista nueva" aparece **todo el tiempo**, y en
+una línea se lee de un vistazo.
+
+:::caution[La trampa]
+Es tentador meter todo adentro. Si tu comprensión necesita dos `if` y un `for` anidado, **escribí
+el `for` largo**: el atajo dejó de ahorrar y empezó a esconder.
+:::
+
+<OpcionMultiple
+  titulo="¿Qué hace esta comprensión?"
+  opciones={[
+    { texto: 'Recorre <code>nombres</code> y guarda todos en mayúsculas',
+      explicacion: 'Le falta el filtro: el <code>if</code> deja afuera a los cortos.' },
+    { texto: 'Recorre <code>nombres</code>, se queda con los de más de 3 letras y los guarda en mayúsculas',
+      correcta: true,
+      explicacion: 'Exacto. El <code>if</code> filtra y lo de adelante transforma: primero se filtra, después se transforma.' },
+    { texto: 'Cuenta cuántos tienen más de 3 letras',
+      explicacion: 'Devolvería un número. Esto devuelve una lista de textos.' },
+    { texto: 'Ordena los nombres por longitud',
+      explicacion: 'Para ordenar haría falta <code>sorted()</code>. Una comprensión no ordena.' },
+  ]}
+>
+  `largos = [n.upper() for n in nombres if len(n) > 3]`
+</OpcionMultiple>
+
+---
+
+## 6. Los atajos chicos que te van a ahorrar mucho
+
+### `.get()` en diccionarios
+
+```python
+estado = asistencia.get(dni, "")      # si no está, devuelve ""
+```
+
+Sin él:
+
+```python
+if dni in asistencia:
+    estado = asistencia[dni]
+else:
+    estado = ""
+```
+
+**Por qué importa en el sistema:** cuando preguntás por un alumno que todavía no fue marcado,
+`asistencia[dni]` **explota**. Con `.get()` devuelve vacío y seguís.
+
+### `enumerate` — el número de orden
+
+```python
+for numero, alumno in enumerate(alumnos, start=1):
+    print(numero, alumno)
+```
+
+Sin él:
+
+```python
+numero = 1
+for alumno in alumnos:
+    print(numero, alumno)
+    numero += 1
+```
+
+**En el sistema:** la columna N° de la planilla sale de acá.
+
+### `zip` — dos listas a la vez
+
+```python
+for nombre, nota in zip(nombres, notas):
+    print(nombre, nota)
+```
+
+Sin él:
+
+```python
+for i in range(len(nombres)):
+    print(nombres[i], notas[i])
+```
+
+<EjercicioPython
+  titulo="La lista numerada"
+  dificultad="🟢"
+  datos={`alumnos = ["Alvarez", "Benitez", "Cabrera"]`}
+  starter={`# Mostrá la lista numerada, empezando en 1:
+# 1 - Alvarez
+# 2 - Benitez
+# 3 - Cabrera
+`}
+  tests={`assert salida.strip() == "1 - Alvarez\\n2 - Benitez\\n3 - Cabrera", f'salió {salida.strip()!r}'`}
+  pistas={[
+    "<code>enumerate(alumnos, start=1)</code> te da el número y el nombre juntos en cada vuelta.",
+    "El <code>for</code> puede recibir dos variables: <code>for n, a in enumerate(...)</code>",
+    "Para el guion del medio, acordate de los espacios: <code>f\"{n} - {a}\"</code>",
+  ]}
+  solucion={`for n, a in enumerate(alumnos, start=1):
+    print(f"{n} - {a}")`}
+>
+  Es exactamente la primera columna de la planilla oficial. Numerá la lista empezando en 1.
+</EjercicioPython>
+
+---
+
+## 7. `if __name__ == "__main__":`
+
+```python
+if __name__ == "__main__":
+    app.run()
+```
+
+Significa: **"esto corre solo si ejecutás ESTE archivo directamente"**, y no si otro archivo lo
+importa.
+
+### Por qué lo vas a necesitar
+
+Cuando escribamos los tests, el archivo de tests va a hacer `import app`. Sin esa línea, importarlo
+**arrancaría un servidor web** en medio de los tests y todo se colgaría.
+
+Es la diferencia entre *"corré este programa"* y *"prestame tus funciones"*.
+
+---
+
+## Para llevarse
+
+:::tip[Lo único que hay que recordar]
+Ninguno de estos atajos hace algo que no podrías escribir vos. Todos existen porque el código
+largo era **fácil de olvidar** (`close()`), **fácil de romper** (`asistencia[dni]`) o
+**incómodo de leer**.
+
+Cuando veas uno nuevo en el proyecto, la pregunta no es "¿qué es esta magia?". Es
+**"¿cómo lo escribiría sin esto?"**. Si tenés la respuesta, ya lo entendiste.
+:::

@@ -117,6 +117,12 @@ export default defineConfig({
           ],
         },
         {
+          label: '🧰 Herramientas de Python',
+          items: [
+            { label: '🎁 Lo que Python hace por vos', link: '/clases/lo-que-python-hace-por-vos/' },
+          ],
+        },
+        {
           label: '🏗️ POO',
           items: [
             { label: '🧬 POO I — Clases y objetos', link: '/clases/poo-1/' },

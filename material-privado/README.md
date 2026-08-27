@@ -38,6 +38,7 @@ sin definir**, que es lo que conviene revisar.
 | **26/8** | [`clase-2026-08-26_elicitacion.md`](./clase-2026-08-26_elicitacion.md) | Run of show de la clase de elicitación, **dada el 26/8**. De ahí salieron el teclado de la entrada, el rol de las auxiliares y la red local. |
 | **26/8** | [`bot-siges/`](./bot-siges/) | El bot de carga al SiGeS: [README](./bot-siges/README.md) (cómo funciona y cómo demostrarlo), [mapa del proceso](./bot-siges/mapa_siges.md), y el código andando. |
 | **26/8** | [`clase-bot-siges.md`](./clase-bot-siges.md) | Cómo dar el bot en clase: el pantallazo de lo que viene y la clase para construirlo. |
+| **27/8** | [`REESTRUCTURA-HACIA-EL-PROYECTO.md`](./REESTRUCTURA-HACIA-EL-PROYECTO.md) | Cómo pasar de ejercicios sueltos a que cada uno sea una pieza del sistema (arranca en POO, 9/9), qué hacer con los 168 ejercicios que ya existen, la página que junta las soluciones, y **cómo repartir el trabajo entre seis sin que las faltas rompan nada**. |
 | **27/8** | [`taller-flask/`](./taller-flask/) | **El sistema construido de verdad**, en etapas, con tests. [`GUIA.md`](./taller-flask/GUIA.md) explica por qué Flask y no otro framework, y tiene la tabla de dónde se traban los alumnos. [`SINTAXIS.md`](./taller-flask/SINTAXIS.md) es el glosario: qué significa el `@`, GET vs POST, `request.form`, las plantillas y los cinco errores más comunes. Para hacerlo el profe primero. |
 
 ---
