@@ -1,0 +1,207 @@
+---
+/**
+ * Mapa navegable del proyecto: en qué partes se divide un sistema y por qué.
+ *
+ * No es un diagrama decorativo. La idea pedagógica es que el alumno vea que un
+ * sistema NO se piensa como "una app", sino como piezas que se pueden construir
+ * y probar por separado — y que se dé cuenta de eso **tocando**, no leyéndolo.
+ *
+ * Cada pieza guarda quién la usa, qué datos toca, en qué etapa se construye y
+ * un boceto de cómo se vería. Los bocetos son a propósito feos y a mano alzada:
+ * un boceto lindo se discute como si fuera el diseño final, y en esta etapa lo
+ * que hay que discutir es QUÉ VA, no de qué color.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Pieza {
+  id: string;
+  nombre: string;
+  emoji: string;
+  capa: 'entra' | 'nucleo' | 'sale';
+  /** hecho | ahora | despues | quizas */
+  estado: string;
+  quien: string[];
+  queHace: string;
+  queNecesita: string;
+  etapa: string;
+  /** La decisión de diseño que conviene discutir en clase. */
+  nota?: string;
+  boceto?: string;
+  /** Con qué se construye. */
+  tecnologias?: string[];
+  /** Qué hay que saber ANTES de poder construirla. */
+  saberes?: string[];
+}
+
+const { piezas, titulo = 'El sistema, por partes' } = Astro.props as {
+  piezas: Pieza[];
+  titulo?: string;
+};
+
+const CAPAS = [
+  {
+    id: 'entra',
+    nombre: 'Por acá ENTRAN los datos',
+    ayuda: 'Todo lo que alguien carga, escribe o toca',
+  },
+  {
+    id: 'nucleo',
+    nombre: 'Acá VIVEN los datos y las reglas',
+    ayuda: 'El corazón. No tiene pantalla: es lo que sabe y lo que decide',
+  },
+  {
+    id: 'sale',
+    nombre: 'Por acá SALEN',
+    ayuda: 'Papeles, pantallas y otros sistemas',
+  },
+];
+
+const ESTADOS: Record<string, { texto: string; clase: string }> = {
+  hecho: { texto: 'ya funciona', clase: 'es-hecho' },
+  ahora: { texto: 'lo hacemos este año', clase: 'es-ahora' },
+  despues: { texto: 'después', clase: 'es-despues' },
+  quizas: { texto: 'fuera de alcance por ahora', clase: 'es-quizas' },
+};
+
+const id = idEjercicio(titulo);
+---
+
+<section class="mapa" id={id}>
+  <div class="mapa__leyenda">
+    {Object.entries(ESTADOS).map(([k, v]) => (
+      <span class={'mapa__chip ' + v.clase}>{v.texto}</span>
+    ))}
+  </div>
+
+  {CAPAS.map((capa) => (
+    <div class="mapa__capa" data-capa={capa.id}>
+      <h3 class="mapa__capa-tit">
+        {capa.nombre}
+        <small>{capa.ayuda}</small>
+      </h3>
+      <div class="mapa__piezas">
+        {piezas.filter((p) => p.capa === capa.id).map((p) => (
+          <button
+            type="button"
+            class={'mapa__pieza ' + (ESTADOS[p.estado]?.clase || '')}
+            data-pieza={p.id}
+            aria-expanded="false"
+          >
+            <span class="mapa__pieza-emoji" aria-hidden="true">{p.emoji}</span>
+            <span class="mapa__pieza-nombre">{p.nombre}</span>
+            <span class="mapa__pieza-quien">{p.quien.join(' · ')}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  ))}
+
+  {/* El detalle vive acá abajo y se llena al tocar una pieza. Que sea UNO SOLO
+      y no un panel por pieza no es capricho: obliga a comparar de a una y evita
+      la pared de texto que nadie lee. */}
+  <div class="mapa__detalle" data-detalle hidden>
+    <button type="button" class="mapa__cerrar" data-cerrar aria-label="Cerrar">✕</button>
+    <h4 data-d-nombre></h4>
+    <p class="mapa__d-estado" data-d-estado></p>
+    <div class="mapa__d-cuerpo">
+      <div>
+        <p class="mapa__d-campo"><strong>Qué hace:</strong> <span data-d-hace></span></p>
+        <p class="mapa__d-campo"><strong>Quién lo usa:</strong> <span data-d-quien></span></p>
+        <p class="mapa__d-campo"><strong>Qué necesita para funcionar:</strong> <span data-d-necesita></span></p>
+        <p class="mapa__d-campo"><strong>Cuándo lo construimos:</strong> <span data-d-etapa></span></p>
+        <p class="mapa__d-nota" data-d-nota hidden></p>
+
+        <details class="mapa__conque" data-d-conque hidden>
+          <summary>🛠️ Con qué se construye</summary>
+          <div class="mapa__conque-cuerpo">
+            <p class="mapa__conque-tit">Tecnologías</p>
+            <ul data-d-tec></ul>
+            <p class="mapa__conque-tit">Lo que hay que saber antes</p>
+            <ul data-d-saberes></ul>
+          </div>
+        </details>
+      </div>
+      <figure class="mapa__boceto" data-d-boceto hidden></figure>
+    </div>
+  </div>
+
+  <p class="mapa__vacio" data-vacio>👆 Tocá una pieza para ver qué hace, quién la usa y cómo se vería.</p>
+
+  <script type="application/json" data-piezas set:html={JSON.stringify(piezas)}></script>
+</section>
+
+<script>
+  const ESTADOS = {
+    hecho: 'ya funciona',
+    ahora: 'lo hacemos este año',
+    despues: 'después',
+    quizas: 'fuera de alcance por ahora',
+  };
+
+  document.querySelectorAll('.mapa').forEach((mapa) => {
+    const datos = JSON.parse(mapa.querySelector('[data-piezas]').textContent);
+    const porId = Object.fromEntries(datos.map((p) => [p.id, p]));
+    const det = mapa.querySelector('[data-detalle]');
+    const vacio = mapa.querySelector('[data-vacio]');
+    const q = (sel) => mapa.querySelector(sel);
+
+    function cerrar() {
+      det.hidden = true;
+      vacio.hidden = false;
+      mapa.querySelectorAll('.mapa__pieza').forEach((b) => {
+        b.classList.remove('is-abierta');
+        b.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    mapa.querySelectorAll('.mapa__pieza').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        const p = porId[boton.dataset.pieza];
+        if (!p) return;
+        if (boton.classList.contains('is-abierta')) { cerrar(); return; }
+
+        mapa.querySelectorAll('.mapa__pieza').forEach((b) => {
+          b.classList.remove('is-abierta');
+          b.setAttribute('aria-expanded', 'false');
+        });
+        boton.classList.add('is-abierta');
+        boton.setAttribute('aria-expanded', 'true');
+
+        q('[data-d-nombre]').textContent = p.emoji + '  ' + p.nombre;
+        q('[data-d-estado]').textContent = ESTADOS[p.estado] || '';
+        q('[data-d-estado]').className = 'mapa__d-estado es-' + p.estado;
+        q('[data-d-hace]').textContent = p.queHace;
+        q('[data-d-quien]').textContent = p.quien.join(', ');
+        q('[data-d-necesita]').textContent = p.queNecesita;
+        q('[data-d-etapa]').textContent = p.etapa;
+
+        const nota = q('[data-d-nota]');
+        nota.hidden = !p.nota;
+        if (p.nota) nota.innerHTML = '🧠 <strong>Para pensar:</strong> ' + p.nota;
+
+        const conque = q('[data-d-conque]');
+        const hayConque = (p.tecnologias && p.tecnologias.length) || (p.saberes && p.saberes.length);
+        conque.hidden = !hayConque;
+        if (hayConque) {
+          conque.open = false;   // arranca cerrado: primero QUÉ hace, después con qué
+          const lista = (sel, items) => {
+            q(sel).innerHTML = (items || []).map((x) => '<li>' + x + '</li>').join('')
+              || '<li class="mapa__nada">nada nuevo: se usa lo que ya vimos</li>';
+          };
+          lista('[data-d-tec]', p.tecnologias);
+          lista('[data-d-saberes]', p.saberes);
+        }
+
+        const boceto = q('[data-d-boceto]');
+        boceto.hidden = !p.boceto;
+        if (p.boceto) boceto.innerHTML = p.boceto + '<figcaption>Boceto — así se vería, más o menos</figcaption>';
+
+        det.hidden = false;
+        vacio.hidden = true;
+        det.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+
+    mapa.querySelector('[data-cerrar]').addEventListener('click', cerrar);
+  });
+</script>

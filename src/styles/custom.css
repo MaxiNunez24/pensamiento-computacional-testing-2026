@@ -2211,3 +2211,104 @@ body.pc-resizing * {
   color: var(--sl-color-gray-2);
   font-size: 0.84rem;
 }
+
+/* ---------------------------------------------------------------------------
+   MAPA DEL PROYECTO — el sistema dividido en piezas, navegable
+   La idea es que se entienda TOCANDO. Por eso hay un solo panel de detalle y
+   no uno por pieza: obliga a mirar de a una y evita la pared de texto.
+--------------------------------------------------------------------------- */
+.mapa { margin: 1.5rem 0 2rem; }
+
+.mapa__leyenda { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+.mapa__chip {
+  font-size: 0.72rem; padding: 0.15rem 0.6rem; border-radius: 999px;
+  border: 1px solid var(--sl-color-gray-4); color: var(--sl-color-gray-2);
+}
+.mapa__chip.es-hecho, .mapa__pieza.es-hecho { border-color: #4caf50; }
+.mapa__chip.es-ahora, .mapa__pieza.es-ahora { border-color: var(--sl-color-accent); }
+.mapa__chip.es-despues, .mapa__pieza.es-despues { border-color: #ffa94d; }
+.mapa__chip.es-quizas, .mapa__pieza.es-quizas { border-color: var(--sl-color-gray-4); opacity: 0.75; }
+
+.mapa__capa { margin-bottom: 1.1rem; }
+.mapa__capa-tit {
+  font-size: 0.9rem; margin: 0 0 0.5rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em; color: var(--sl-color-gray-2);
+}
+.mapa__capa-tit small {
+  display: block; text-transform: none; letter-spacing: normal;
+  font-weight: 400; font-size: 0.8rem; color: var(--sl-color-gray-3); margin-top: 0.1rem;
+}
+/* La flecha entre capas: se ve que los datos van en una dirección. */
+.mapa__capa + .mapa__capa::before {
+  content: '↓';
+  display: block; text-align: center; color: var(--sl-color-gray-4);
+  margin: -0.4rem 0 0.5rem; font-size: 1.1rem;
+}
+
+.mapa__piezas { display: grid; gap: 0.6rem; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.mapa__pieza {
+  display: flex; flex-direction: column; gap: 0.2rem; text-align: left;
+  font: inherit; cursor: pointer; padding: 0.7rem 0.8rem;
+  border: 1px solid var(--sl-color-gray-5); border-left-width: 4px;
+  border-radius: 0.5rem; background: var(--sl-color-black); color: var(--sl-color-white);
+  transition: transform 0.12s, border-color 0.12s;
+}
+.mapa__pieza:hover { transform: translateY(-2px); }
+.mapa__pieza.is-abierta { background: var(--sl-color-gray-6); border-color: var(--sl-color-accent); }
+.mapa__pieza-emoji { font-size: 1.3rem; }
+.mapa__pieza-nombre { font-weight: 600; font-size: 0.95rem; line-height: 1.25; }
+.mapa__pieza-quien { font-size: 0.74rem; color: var(--sl-color-gray-3); }
+
+.mapa__detalle {
+  position: relative; margin-top: 1rem; padding: 1.1rem 1.2rem;
+  border: 1px solid var(--sl-color-accent); border-radius: 0.6rem;
+  background: var(--sl-color-black);
+}
+.mapa__detalle h4 { margin: 0 0 0.2rem; font-size: 1.1rem; }
+.mapa__cerrar {
+  position: absolute; top: 0.6rem; right: 0.6rem;
+  background: none; border: none; color: var(--sl-color-gray-3);
+  font-size: 1rem; cursor: pointer; padding: 0.2rem 0.4rem;
+}
+.mapa__d-estado { font-size: 0.75rem; margin: 0 0 0.9rem; color: var(--sl-color-gray-2); }
+.mapa__d-cuerpo { display: grid; gap: 1.2rem; grid-template-columns: 1fr auto; align-items: start; }
+.mapa__d-campo { margin: 0 0 0.45rem; font-size: 0.9rem; line-height: 1.5; }
+.mapa__d-campo strong { color: var(--sl-color-white); }
+.mapa__d-nota {
+  margin: 0.9rem 0 0; padding: 0.6rem 0.8rem; font-size: 0.86rem; line-height: 1.55;
+  border-left: 3px solid #ffa94d; background: var(--sl-color-gray-6); border-radius: 0.3rem;
+}
+
+/* "Con qué se construye": plegado a propósito. Primero QUÉ hace la pieza y para
+   quién; recién después con qué se hace. Al revés, la tecnología se come la
+   conversación sobre el problema. */
+.mapa__conque { margin-top: 0.9rem; }
+.mapa__conque > summary {
+  cursor: pointer; font-size: 0.85rem; color: var(--sl-color-accent);
+  padding: 0.3rem 0;
+}
+.mapa__conque-cuerpo { padding-left: 0.2rem; }
+.mapa__conque-tit {
+  margin: 0.6rem 0 0.2rem; font-size: 0.74rem; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--sl-color-gray-3);
+}
+.mapa__conque ul { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+.mapa__conque li.mapa__nada { color: var(--sl-color-gray-3); font-style: italic; list-style: none; margin-left: -1.1rem; }
+
+.mapa__boceto { margin: 0; max-width: 320px; }
+.mapa__boceto svg {
+  width: 100%; height: auto; color: var(--sl-color-gray-2);
+  background: var(--sl-color-gray-6); border-radius: 0.4rem; padding: 0.4rem;
+}
+.mapa__boceto figcaption {
+  font-size: 0.72rem; color: var(--sl-color-gray-3); text-align: center; margin-top: 0.3rem;
+}
+.mapa__vacio {
+  margin-top: 1rem; padding: 0.9rem; text-align: center; font-size: 0.88rem;
+  color: var(--sl-color-gray-3); border: 1px dashed var(--sl-color-gray-5); border-radius: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .mapa__d-cuerpo { grid-template-columns: 1fr; }
+  .mapa__boceto { max-width: none; }
+}

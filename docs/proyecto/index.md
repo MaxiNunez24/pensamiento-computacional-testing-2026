@@ -11,6 +11,14 @@ Se abre en el navegador, no hay que instalar nada. Cargá alumnos, pasá lista, 
 
 [🚀 Abrir el prototipo](./sistema-asistencias.html){ .md-button .md-button--primary target=_blank }
 
+## 🗺️ El mapa del proyecto
+
+Antes de programar nada hay que decidir **en qué partes se divide** el sistema. Esa página es
+navegable: se toca cada pieza y muestra qué hace, quién la usa, con qué se construye y un boceto
+de cómo se vería.
+
+[🗺️ Ver el proyecto por partes](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/proyecto/){ .md-button target=_blank }
+
 ## ¿Qué es lo que estoy viendo?
 
 Un **prototipo**: una maqueta que funciona de verdad, hecha para mostrarles a los preceptores y a

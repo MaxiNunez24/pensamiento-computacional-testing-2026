@@ -1,0 +1,306 @@
+---
+title: El proyecto, por partes
+description: Cómo se piensa y se divide un sistema real antes de escribir una línea de código.
+---
+
+import MapaProyecto from '../../components/MapaProyecto.astro';
+
+Un sistema no se piensa como "una app". Se piensa como **piezas que se pueden construir, probar y
+entender por separado**. Esta página es el mapa de las piezas del nuestro.
+
+:::note[Cómo usar esta página]
+Está hecha para tocar. **Hacé clic en cualquier pieza** y vas a ver qué hace, quién la usa, qué
+necesita para funcionar y un boceto de cómo se vería.
+:::
+
+---
+
+## 1. Antes de las piezas: el problema
+
+Todo esto existe por algo muy poco tecnológico:
+
+> En el CFP, la asistencia se anota en papel, se pasa a un Excel con fórmulas que se rompen, y a
+> fin de mes hay que rehacer a mano una planilla oficial de 50 columnas para entregar al
+> Ministerio. Y los datos de inscripción se vuelven a escribir, uno por uno, en otro sistema.
+
+Fijate que en ese párrafo **no aparece ninguna tecnología**. Eso está bien: un proyecto arranca por
+el problema, no por la herramienta. Si arranca al revés, termina siendo una solución buscando un
+problema.
+
+---
+
+## 2. Quiénes lo van a usar
+
+Antes de decidir qué construir hay que saber **para quién**. Y son más de los que parece:
+
+| Quién | Qué necesita | Cuánto tiempo le puede dedicar |
+|---|---|---|
+| 🎓 **El alumno** | Avisar que llegó | 5 segundos, parado en la puerta |
+| 🧑‍🏫 **El docente** | Pasar lista y corregirla | 2 minutos, con el celular en la mano |
+| 📋 **El preceptor** | La planilla oficial, todos los cursos | Lo que haga falta, pero una vez por mes |
+| 🏛️ **Los directivos** | Ver cómo viene todo | Un minuto, y desde arriba |
+| 🍫 **Las auxiliares** | Un número: cuántas meriendas | 3 segundos |
+
+:::tip[La lección que vale más que el sistema entero]
+**Los mismos datos le sirven a cada uno de otra manera.** El preceptor quiere una planilla de 50
+columnas; la auxiliar quiere **un número**. Es la misma asistencia.
+
+Por eso los datos van **separados** de las pantallas: si estuvieran mezclados, habría que guardar
+la asistencia cinco veces, una por cada forma de mirarla.
+:::
+
+---
+
+## 3. El mapa
+
+<MapaProyecto piezas={[
+  {
+    id: 'inscripcion', nombre: 'Inscripción', emoji: '📝', capa: 'entra', estado: 'hecho',
+    quien: ['alumno'],
+    queHace: 'Recibe los datos del alumno cuando se anota: nombre, DNI, domicilio, teléfono.',
+    queNecesita: 'Hoy es un formulario de Google. Más adelante puede ser una pantalla del sistema.',
+    etapa: 'Ya existe (Google Forms). Reemplazarlo es de las últimas cosas.',
+    nota: 'Los datos llegan sucios: "Argentina" escrito de cuatro formas, un DNI en el campo del domicilio, una fecha de nacimiento en 2072. ¿Los arregla el sistema, o hay que evitar que entren mal?',
+    boceto: `<svg viewBox="0 0 300 170" role="img" aria-label="Boceto del formulario de inscripción">
+      <rect x="10" y="10" width="280" height="150" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="24" y="34" font-size="11" fill="currentColor">Inscripción 2026</text>
+      <rect x="24" y="46" width="250" height="18" rx="3" fill="none" stroke="currentColor" opacity=".5"/>
+      <text x="28" y="59" font-size="8" fill="currentColor" opacity=".7">DNI</text>
+      <rect x="24" y="72" width="250" height="18" rx="3" fill="none" stroke="currentColor" opacity=".5"/>
+      <text x="28" y="85" font-size="8" fill="currentColor" opacity=".7">Apellido y nombre</text>
+      <rect x="24" y="98" width="250" height="18" rx="3" fill="none" stroke="currentColor" opacity=".5"/>
+      <text x="28" y="111" font-size="8" fill="currentColor" opacity=".7">Domicilio</text>
+      <rect x="24" y="126" width="80" height="20" rx="4" fill="currentColor" opacity=".8"/>
+      <text x="42" y="140" font-size="9" fill="var(--sl-color-bg)">Enviar</text>
+    </svg>`,
+    tecnologias: ['Google Forms (hoy)', 'CSV — el formato en que se bajan las respuestas', 'Más adelante: un formulario propio con <strong>Flask</strong>'],
+    saberes: ['Leer archivos', 'El módulo <code>csv</code>', 'Listas y diccionarios', 'Validar datos: <code>if</code>, <code>str</code>, y el módulo <code>re</code>'],
+  },
+  {
+    id: 'entrada', nombre: 'Teclado en la puerta', emoji: '🔢', capa: 'entra', estado: 'despues',
+    quien: ['alumno'],
+    queHace: 'El alumno escribe su DNI al llegar, confirma que es él y queda registrada su llegada con la hora exacta.',
+    queNecesita: 'Una computadora vieja con teclado numérico y una pantalla. Nada más.',
+    etapa: 'Después del sistema básico. Es una pantalla más sobre los mismos datos.',
+    nota: 'El DNI de otro es fácil de saber: cualquiera podría marcar presente a un compañero. Por eso el docente confirma después. Y ojo con la pantalla: mostrar el nombre completo deja ver a cualquiera que pase quién llegó.',
+    boceto: `<svg viewBox="0 0 300 170" role="img" aria-label="Boceto del teclado de entrada">
+      <rect x="10" y="10" width="280" height="150" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="150" y="42" font-size="12" text-anchor="middle" fill="currentColor">¿Sos ***REMOVED*** G.?</text>
+      <text x="150" y="66" font-size="18" text-anchor="middle" fill="currentColor" opacity=".85">41 678 277</text>
+      <g stroke="currentColor" opacity=".55" fill="none">
+        <rect x="98" y="80" width="30" height="22" rx="3"/><rect x="134" y="80" width="30" height="22" rx="3"/><rect x="170" y="80" width="30" height="22" rx="3"/>
+        <rect x="98" y="106" width="30" height="22" rx="3"/><rect x="134" y="106" width="30" height="22" rx="3"/><rect x="170" y="106" width="30" height="22" rx="3"/>
+      </g>
+      <rect x="98" y="132" width="102" height="20" rx="4" fill="currentColor" opacity=".8"/>
+      <text x="149" y="146" font-size="9" text-anchor="middle" fill="var(--sl-color-bg)">ENTER = sí, soy yo</text>
+    </svg>`,
+    tecnologias: ['Una PC vieja con teclado numérico', '<strong>Flask</strong> para la pantalla', 'El navegador en pantalla completa (modo kiosco)'],
+    saberes: ['Funciones', 'Diccionarios: buscar a alguien por su DNI', '<code>datetime</code> para la hora de llegada', 'Flask: una ruta que recibe un dato'],
+  },
+  {
+    id: 'pasar-lista', nombre: 'Pasar lista', emoji: '✅', capa: 'entra', estado: 'hecho',
+    quien: ['docente'],
+    queHace: 'Muestra la lista del día y permite marcar presente, ausente, tarde o justificado. También corregir lo que marcó el alumno en la puerta.',
+    queNecesita: 'La lista de alumnos del curso y saber qué días hay clase.',
+    etapa: 'Ya funciona en el prototipo.',
+    nota: 'Se usa parado, con el celular, mientras entran los alumnos. Por eso los botones son grandes y la lista es de un día, no de un mes.',
+    boceto: `<svg viewBox="0 0 300 170" role="img" aria-label="Boceto de pasar lista">
+      <rect x="60" y="8" width="180" height="154" rx="12" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="150" y="30" font-size="10" text-anchor="middle" fill="currentColor">viernes 21/8</text>
+      <g font-size="8" fill="currentColor">
+        <text x="72" y="52">1  ALVAREZ, N.</text><text x="72" y="76">2  BENITEZ, M.</text>
+        <text x="72" y="100">3  CABRERA, J.</text><text x="72" y="124">4  DIAZ, R.</text>
+      </g>
+      <g fill="none" stroke="currentColor" opacity=".6">
+        <rect x="170" y="42" width="14" height="14" rx="3"/><rect x="188" y="42" width="14" height="14" rx="3"/><rect x="206" y="42" width="14" height="14" rx="3"/>
+        <rect x="170" y="66" width="14" height="14" rx="3"/><rect x="188" y="66" width="14" height="14" rx="3"/><rect x="206" y="66" width="14" height="14" rx="3"/>
+        <rect x="170" y="90" width="14" height="14" rx="3"/><rect x="188" y="90" width="14" height="14" rx="3"/><rect x="206" y="90" width="14" height="14" rx="3"/>
+        <rect x="170" y="114" width="14" height="14" rx="3"/><rect x="188" y="114" width="14" height="14" rx="3"/><rect x="206" y="114" width="14" height="14" rx="3"/>
+      </g>
+      <rect x="170" y="42" width="14" height="14" rx="3" fill="currentColor" opacity=".75"/>
+      <rect x="170" y="90" width="14" height="14" rx="3" fill="currentColor" opacity=".75"/>
+      <text x="150" y="152" font-size="7" text-anchor="middle" fill="currentColor" opacity=".6">P   A   T</text>
+    </svg>`,
+    tecnologias: ['<strong>Flask</strong> + plantillas (el HTML se entrega hecho)', 'El celular como pantalla'],
+    saberes: ['Listas y diccionarios', 'Bucles para recorrer la lista', 'Formularios web: cómo llega lo que el usuario toca'],
+  },
+  {
+    id: 'datos', nombre: 'Los datos', emoji: '🗃️', capa: 'nucleo', estado: 'ahora',
+    quien: ['nadie: es de adentro'],
+    queHace: 'Guarda alumnos, cursos y asistencia. Es lo único que sobrevive cuando se apaga la computadora.',
+    queNecesita: 'Archivos (etapa 2) y después una base de datos (etapa 5).',
+    etapa: 'Etapas 2 y 5.',
+    nota: 'Esta pieza NO tiene pantalla, y es la más importante. Si los datos están bien guardados, cualquier pantalla se puede rehacer. Si están mal, no hay pantalla que lo arregle.',
+    tecnologias: ['<strong>JSON</strong> (etapa 2)', '<strong>SQLite</strong> (etapa 5)', 'El módulo <code>pathlib</code> para ubicar los archivos'],
+    saberes: ['Archivos: abrir, escribir, cerrar', 'El módulo <code>json</code>', 'Diccionarios y listas anidadas', 'Más adelante: SQL básico (SELECT, INSERT)'],
+  },
+  {
+    id: 'reglas', nombre: 'Las reglas', emoji: '⚖️', capa: 'nucleo', estado: 'ahora',
+    quien: ['nadie: es de adentro'],
+    queHace: 'Sabe contar los presentes, calcular el porcentaje de asistencia, decidir si alguien está de baja, armar el movimiento del mes.',
+    queNecesita: 'Solo los datos. No sabe nada de pantallas ni de papeles.',
+    etapa: 'Etapa 1, con la versión de consola.',
+    nota: 'Acá van los tests. Es la pieza que se puede probar sola, sin abrir nada: le das unos datos inventados y verificás que cuente bien.',
+    tecnologias: ['Python y nada más', '<strong>pytest</strong> para probarlas'],
+    saberes: ['<strong>POO</strong>: clases, objetos, métodos', 'Funciones que devuelven valores', 'Bucles y condicionales', '<code>datetime</code> para trabajar con fechas'],
+  },
+  {
+    id: 'usuarios', nombre: 'Usuarios y permisos', emoji: '🔐', capa: 'nucleo', estado: 'ahora',
+    quien: ['todos, sin darse cuenta'],
+    queHace: 'Sabe quién es cada uno y qué puede hacer. El docente solo su curso; el preceptor, todos.',
+    queNecesita: 'Que cada persona tenga usuario y contraseña.',
+    etapa: 'Etapa 5, junto con la base de datos.',
+    nota: 'El sistema va a funcionar solo dentro del CFP, sin internet. Igual hace falta contraseña: todo el que esté conectado al wifi —incluidos los alumnos— llega al sistema. La red deja afuera al resto del mundo, no a los de adentro.',
+    tecnologias: ['<strong>Flask</strong> (sesiones)', '<code>werkzeug.security</code> para las contraseñas', 'SQLite para guardar los usuarios'],
+    saberes: ['Qué es una sesión', 'Por qué <strong>nunca</strong> se guarda una contraseña tal cual', 'Diccionarios para los permisos de cada rol'],
+  },
+  {
+    id: 'planilla', nombre: 'Planilla oficial', emoji: '🖨️', capa: 'sale', estado: 'hecho',
+    quien: ['preceptor'],
+    queHace: 'Genera el formulario del Ministerio, con sus 50 columnas y su logo, listo para imprimir en Oficio.',
+    queNecesita: 'La asistencia del mes y los datos del curso.',
+    etapa: 'Ya funciona. Es el molde que se les entrega hecho.',
+    nota: 'El formato no se discute: lo define el Ministerio. Por eso esta pieza se les da resuelta y ustedes programan lo que la llena. En el trabajo real también recibís diseños que no elegiste.',
+    boceto: `<svg viewBox="0 0 300 170" role="img" aria-label="Boceto de la planilla oficial">
+      <rect x="14" y="24" width="272" height="122" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="14" y1="46" x2="286" y2="46" stroke="currentColor"/>
+      <line x1="200" y1="24" x2="200" y2="146" stroke="currentColor"/>
+      <text x="60" y="40" font-size="9" fill="currentColor">ASISTENCIA DE ALUMNOS</text>
+      <text x="215" y="40" font-size="9" fill="currentColor">CURSO 1978</text>
+      <g stroke="currentColor" opacity=".35">
+        <line x1="14" y1="60" x2="200" y2="60"/><line x1="14" y1="74" x2="200" y2="74"/>
+        <line x1="14" y1="88" x2="200" y2="88"/><line x1="14" y1="102" x2="200" y2="102"/>
+        <line x1="14" y1="116" x2="200" y2="116"/><line x1="14" y1="130" x2="200" y2="130"/>
+        <line x1="76" y1="46" x2="76" y2="146"/>
+        <line x1="88" y1="46" x2="88" y2="146"/><line x1="100" y1="46" x2="100" y2="146"/>
+        <line x1="112" y1="46" x2="112" y2="146"/><line x1="124" y1="46" x2="124" y2="146"/>
+        <line x1="136" y1="46" x2="136" y2="146"/><line x1="148" y1="46" x2="148" y2="146"/>
+        <line x1="160" y1="46" x2="160" y2="146"/><line x1="172" y1="46" x2="172" y2="146"/>
+        <line x1="184" y1="46" x2="184" y2="146"/>
+      </g>
+      <text x="215" y="62" font-size="7" fill="currentColor" opacity=".7">Temas tratados</text>
+      <text x="215" y="100" font-size="7" fill="currentColor" opacity=".7">Bajas</text>
+      <text x="215" y="128" font-size="7" fill="currentColor" opacity=".7">Movimiento</text>
+    </svg>`,
+    tecnologias: ['HTML y CSS — <strong>se entregan hechos</strong>', 'El <code>@media print</code> del navegador', 'f-strings de Python para llenar el molde'],
+    saberes: ['f-strings', 'Bucles para generar las filas', '<strong>No hace falta</strong> saber HTML ni CSS: el molde viene resuelto'],
+  },
+  {
+    id: 'merienda', nombre: 'Pantalla de la merienda', emoji: '🍫', capa: 'sale', estado: 'despues',
+    quien: ['auxiliares'],
+    queHace: 'Muestra un número: cuántos alumnos hay hoy en el edificio.',
+    queNecesita: 'La asistencia del día. Nada más.',
+    etapa: 'Después del sistema básico. Es la pieza más chica de todas.',
+    nota: 'Toda la pieza es un número grande en una pantalla. Fijate que resuelve un problema real ("¿para cuántos preparo?") sin agregar ni un dato nuevo: usa lo que ya está.',
+    boceto: `<svg viewBox="0 0 300 170" role="img" aria-label="Boceto de la pantalla de merienda">
+      <rect x="10" y="10" width="280" height="150" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="150" y="46" font-size="10" text-anchor="middle" fill="currentColor" opacity=".7">Hoy en el CFP</text>
+      <text x="150" y="110" font-size="56" text-anchor="middle" fill="currentColor" font-weight="bold">83</text>
+      <text x="150" y="134" font-size="9" text-anchor="middle" fill="currentColor" opacity=".7">alumnos presentes</text>
+    </svg>`,
+    tecnologias: ['<strong>Flask</strong>: una sola pantalla', 'Un poco de CSS para que el número se vea de lejos'],
+    saberes: ['Contar elementos de una lista (<code>len</code>, <code>sum</code>)', 'Una ruta de Flask que devuelve un número'],
+  },
+  {
+    id: 'ficha', nombre: 'Ficha de curso', emoji: '📄', capa: 'sale', estado: 'despues',
+    quien: ['preceptor', 'directivos'],
+    queHace: 'El formulario anual de cada curso: número, código, certificación, docente, horarios, horas cátedra, fechas.',
+    queNecesita: 'Los datos del curso y el catálogo jurisdiccional.',
+    etapa: 'Después. Se entrega una vez al año.',
+    nota: 'La certificación y el trayecto salen de un catálogo del Ministerio: no los inventa el CFP. Eso significa que el sistema debería tener esa lista cargada, y no dejar escribir cualquier cosa. Es la diferencia entre un sistema que ordena y uno que solo guarda.',
+    tecnologias: ['HTML de impresión, igual que la planilla', 'Una tabla con el <strong>catálogo jurisdiccional</strong> cargado'],
+    saberes: ['Diccionarios', 'f-strings', 'Por qué conviene una lista cerrada de opciones y no texto libre'],
+  },
+  {
+    id: 'bot', nombre: 'Bot del SiGeS', emoji: '🤖', capa: 'sale', estado: 'ahora',
+    quien: ['preceptor'],
+    queHace: 'Carga los alumnos en el sistema del Ministerio solo, manejando un navegador de verdad.',
+    queNecesita: 'Los datos ya limpios y que una persona esté mirando.',
+    etapa: 'Noviembre, después de ver Playwright para probar.',
+    nota: 'Un bot no arregla un proceso malo: lo acelera. Si los datos están sucios, los carga sucios más rápido. Por eso primero se limpian, y lo que no se puede limpiar con certeza no se carga.',
+    tecnologias: ['<strong>Playwright</strong> (Python)', 'Un navegador de verdad (Chromium)', 'El simulador para practicar sin tocar el sistema real'],
+    saberes: ['Funciones', 'Bucles: uno por cada persona a cargar', 'Limpieza de datos con <code>re</code>', 'Manejo de errores: <code>try</code> / <code>except</code>', 'Haber visto Playwright antes, para <em>probar</em> lo propio'],
+  },
+  {
+    id: 'certificados', nombre: 'Certificados', emoji: '🎓', capa: 'sale', estado: 'quizas',
+    quien: ['preceptor'],
+    queHace: 'Genera los certificados de fin de curso desde los datos, sin combinar Excel con Word a mano.',
+    queNecesita: 'Datos que hoy el CFP tiene en otro lado (número de egresado, módulos del catálogo).',
+    etapa: 'Fuera de alcance por ahora. Buen candidato a proyecto final.',
+    nota: 'Es el mismo problema que la planilla: un molde más datos. Si entendés uno, entendés el otro.',
+    tecnologias: ['<strong>python-docx</strong>', 'Un Word que hace de molde'],
+    saberes: ['Leer datos de un archivo', 'f-strings', 'La misma idea del molde de la planilla, pero en Word'],
+  },
+]} />
+
+---
+
+## 4. Por qué se divide así
+
+Fijate que las piezas quedaron en **tres capas**, y no es casualidad:
+
+```
+   ENTRA  ─────►   NÚCLEO   ─────►  SALE
+ formularios      datos            planilla
+ teclado          reglas           pantallas
+ pasar lista      permisos         otros sistemas
+```
+
+La regla es esta: **el núcleo no sabe quién le habla ni para qué le piden los datos.**
+
+Y eso trae tres consecuencias muy concretas:
+
+1. **Se puede agregar una pantalla sin tocar nada más.** La pantalla de la merienda es un número
+   sacado de datos que ya existían: no hubo que cambiar cómo se guarda la asistencia.
+2. **Se puede probar sin abrir el programa.** Las reglas se prueban con datos inventados, sin
+   pantalla, sin navegador. Es lo que vamos a hacer con `pytest`.
+3. **Se puede cambiar dónde se guardan los datos** —de un archivo a una base de datos— sin
+   reescribir el resto.
+
+:::caution[El error más caro y más común]
+Mezclar las tres capas. Un programa donde la cuenta de presentes está escrita **adentro** del
+código que dibuja la pantalla no se puede probar, no se puede reusar y no se puede cambiar.
+
+Es exactamente lo que pasa hoy con el Excel: las fórmulas (las reglas) están mezcladas con las
+celdas (la pantalla). Por eso **se rompe todo al borrar una celda**.
+:::
+
+---
+
+## 5. Las etapas: cómo se construye algo grande
+
+No se construye entero. Se construye en **versiones que funcionan**, cada una un poco más completa
+que la anterior:
+
+| | Qué se construye | Qué se aprende | Ya sirve para… |
+|---|---|---|---|
+| 1️⃣ | El sistema **por consola** | POO: clases y objetos | Probar que las reglas están bien |
+| 2️⃣ | Que **guarde los datos** | Archivos y JSON | Que no se pierda nada al cerrar |
+| 3️⃣ | Que tenga **tests** | `pytest` | Cambiar cosas sin miedo |
+| 4️⃣ | Que sea una **página web** | Flask | Que lo use alguien que no sabe programar |
+| 5️⃣ | Que ande **en la red del CFP** | Base de datos, usuarios | Que lo usen todos, desde el celular |
+
+:::tip[La idea más importante de esta tabla]
+**Cada etapa termina en algo que funciona.** No hay una etapa que sea "la mitad de un programa".
+
+Es al revés de como uno lo imagina: no se construye la casa entera y después se prueba. Se
+construye una pieza chiquita que anda, y se le va agregando.
+:::
+
+---
+
+## 6. Lo que NO va a estar
+
+Tan importante como la lista de lo que sí. Un proyecto que promete todo no termina nunca:
+
+- ❌ **No** va a estar en internet: anda solo dentro del CFP.
+- ❌ **No** va a reemplazar al SiGeS. Le carga datos, nada más.
+- ❌ **No** va a manejar notas ni exámenes este año.
+- ❌ **No** va a emitir certificados este año.
+
+:::note[Para cuando alguien pida algo nuevo]
+La respuesta no es "no". La respuesta es **"lo anotamos y vemos dónde entra"**. Después se decide,
+mirando la lista completa y con el cliente presente.
+
+Un "sí" dicho apurado en una reunión se convierte en una deuda que alguien tiene que pagar.
+:::
