@@ -71,39 +71,51 @@ un sistema.
 Fechas fijas: lo demás se corre si hace falta. La regla del curso sigue siendo la misma: **si un
 tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 
-### 🛠️ Agosto — cerrar Persistencia (4 clases)
+### 🛠️ Agosto — lo que realmente pasó
+
+| Fecha | Clase | |
+|---|---|---|
+| Mié 19/8 | Resolución de dudas sobre los ejercicios | ✅ |
+| Vie 21/8 | Consulta y resolución de ejercicios | ✅ |
+| Mié 26/8 | Consulta y resolución de ejercicios | ✅ |
+| **Vie 28/8** | **Archivos** | ← la próxima |
+
+> 😬 **El atraso es real y hay que mirarlo de frente.** Tres clases seguidas de práctica sin tema
+> nuevo. La puesta al día no se logró y **Archivos y JSON siguen sin darse**, que era lo que
+> cerraba el Bloque 3 en agosto.
+>
+> Esto no es un reproche: el grupo necesitaba la práctica y se le dio. Pero cambia el resto del
+> año, y conviene decirlo ahora y no en octubre.
+
+### 🍂 Septiembre — arrancar el proyecto de una vez (9 clases)
 
 | Fecha | Clase | Notas |
 |---|---|---|
-| Mié 19/8 | Resolución de dudas sobre los ejercicios | ✅ dada. |
-| Vie 21/8 | 🎪 **Demo a preceptoría** + **Archivos y JSON juntos** (versión resumida) | La demo se lleva la primera parte. Archivos y JSON se dan **condensados**: los conceptos y unos pocos ejercicios, el resto queda para resolver en clase. |
-| Mié 26/8 | **Archivos y JSON: práctica** + **Lógica** si entra | Acá se resuelven los ejercicios que quedaron del viernes. |
-| Vie 28/8 | **Lógica: pensar como programador** + cierre del Bloque 3 | Fecha límite de la **puesta al día**. |
+| Mié 2/9 | **JSON** | Cierra el Bloque 3. |
+| **Vie 4/9** | 🎪 **Demo a preceptoría** + arranque de **POO** | La demo se lleva la primera hora. Después, POO I. |
+| Mié 9/9 | **POO I** — clases y objetos | |
+| Vie 11/9 | **POO I** práctica, **con el sistema** | Los ejercicios ya son piezas del proyecto. |
+| Mié 16/9 | **POO II** — métodos, `__init__`, `__str__` | |
+| Vie 18/9 | **POO II** práctica, con el sistema | |
+| Mié 23/9 | **Del prototipo al modelo**: qué clases necesita el sistema | Se decide entre todos: `Alumno`, `Curso`, `Asistencia`. |
+| Vie 25/9 | **Proyecto: alta y listado de alumnos** | Primera pieza que corre de verdad. |
+| Mié 30/9 | **Proyecto: pasar asistencia** + **Eficiencia** | Buscar un alumno recorriendo la lista vs. por DNI en un diccionario. |
 
-> ⚠️ Archivos y JSON quedan en una clase cada uno, no dos. Se sostiene porque los dos temas ya se
-> vieron una vez y porque la plataforma tiene ejercicios de ambos. Si el 26/8 se nota que Archivos
-> sigue flojo, **se corre POO una clase** antes que darlo por visto: es el mismo criterio que con la
-> puesta al día.
+> ⚠️ **Herencia se cae del plan.** Con el atraso, no entra sin comerse el proyecto. No es
+> imprescindible: el sistema se puede construir entero sin herencia, y es mejor entender bien
+> clases y objetos que ver tres temas a medias.
 
-### 🏗️ Septiembre — POO y arranque del proyecto (9 clases)
-
-| Fecha | Clase | Notas |
-|---|---|---|
-| Mié 2/9 | **POO I** — clases, objetos, atributos | |
-| Vie 4/9 | **POO I** práctica | |
-| Mié 9/9 | **POO II** — métodos, `__init__`, `__str__` | |
-| Vie 11/9 | **POO II** práctica | |
-| Mié 16/9 | **Herencia** — lo justo, sin `super()` avanzado | |
-| Vie 18/9 | **Del prototipo al modelo**: qué clases necesita el sistema | Se les muestra el prototipo y **entre todos** se decide `Alumno`, `Curso`, `Asistencia`. |
-| Mié 23/9 | **Proyecto CLI 1** — alta y listado de alumnos + **Eficiencia** | Acá cae sola: buscar un alumno entre 13 recorriendo la lista vs. buscarlo por su DNI en un diccionario. Es el momento en que "cuál solución es mejor" deja de ser abstracto. |
-| Vie 25/9 | **Proyecto CLI 2** — pasar asistencia por día | |
-| Mié 30/9 | **Proyecto CLI 3** — guardar en JSON | ✅ **Hito: CLI funcionando.** |
+> 📌 **La puesta al día cambia de fecha y de forma.** El 28/8 ya no sirve como límite. La nueva
+> fecha es el **9/9**, cuando arranca POO en serio, y el argumento es más fuerte: *sin soltura con
+> listas y bucles no se puede construir el sistema*, que ya no es una amenaza abstracta sino la
+> cosa que van a estar haciendo.
 
 ### 🧪 Octubre — Testing, entorno y web (9 clases)
 
 | Fecha | Clase | Notas |
 |---|---|---|
-| Vie 2/10 | **Testing I — teoría** | Qué se prueba y por qué. Sin código todavía. |
+| Vie 2/10 | **Proyecto: guardar en JSON** | ✅ **Hito: el sistema por consola, funcionando y guardando.** |
+| Mié 7/10 | **Testing I — teoría** | Qué se prueba y por qué. Sin código todavía. |
 | Mié 7/10 | **Testing II — pytest** | El primer test sobre **su** código. |
 | Vie 9/10 | **Testing III — pytest aplicado** | Casos borde y un bug real cazado por un test. |
 | Mié 14/10 | **Entorno** (`venv`, `requirements.txt`) + **cómo funciona la web** | Las dos son cortas y van juntas. |
@@ -190,13 +202,13 @@ estricto**: hay una página pública con lo mínimo que hay que resolver en casa
 
 - **27 ejercicios en dos semanas**, no 60. Un mínimo alcanzable se hace; una lista de 60 se
   abandona el primer día. Los elegidos son los que después reaparecen en POO y en el proyecto.
-- **La fecha tiene un motivo explicado**: el 2/9 arranca POO. No es "porque lo digo yo", es que
+- **La fecha tiene un motivo explicado**: el 9/9 arranca POO. No es "porque lo digo yo", es que
   POO no se entiende sin soltura con variables, condicionales, listas y bucles. Un plazo con razón
   se cumple mucho más que un plazo con autoridad.
 - **Termina con el Mini Parcial entregado**, que es lo que falta y lo que da la foto real de dónde
   está cada uno.
 - **Se pide avisar si no se llega.** Sirve más un "no llegué con bucles" el 27/8 que descubrirlo
-  el 2/9 con POO empezado.
+  el 9/9 con POO empezado.
 
 ### Cómo saber quién va al día
 
@@ -206,6 +218,6 @@ a uno.
 
 ### Si el grupo no llega
 
-**No arrancar POO igual.** Correr una clase y usar el 2/9 como taller de puesta al día es más
+**No arrancar POO igual.** Correr una clase y usar el 9/9 como taller de puesta al día es más
 barato que dar POO sobre bases flojas y tener que repetirlo entero en octubre — cuando ya no hay
 tiempo. El plan de arriba tiene margen justamente para eso.
