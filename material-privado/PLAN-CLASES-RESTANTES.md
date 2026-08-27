@@ -76,9 +76,9 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 | Fecha | Clase | Notas |
 |---|---|---|
 | Mié 19/8 | Resolución de dudas sobre los ejercicios | ✅ dada. |
-| Vie 21/8 | **Lógica: pensar como programador** | Va antes de seguir practicando: es método, y el método multiplica la práctica que viene después. |
-| Mié 26/8 | **Archivos** — retomarlo en serio: leer, escribir, `with` | Quedó flojo del 8/7. Ojo: puede caer acá la **demo a preceptores**. |
-| Vie 28/8 | **JSON** — leer y escribir, por qué no alcanza un `.txt` | Cierra el Bloque 3. Fecha límite de la **puesta al día**. |
+| Vie 21/8 | 🎪 **Demo a preceptoría** + **Archivos y JSON juntos** (versión resumida) | La demo se lleva la primera parte. Archivos y JSON se dan **condensados**: los conceptos y unos pocos ejercicios, el resto queda para resolver en clase. |
+| Mié 26/8 | **Archivos y JSON: práctica** + **Lógica** si entra | Acá se resuelven los ejercicios que quedaron del viernes. |
+| Vie 28/8 | **Lógica: pensar como programador** + cierre del Bloque 3 | Fecha límite de la **puesta al día**. |
 
 > ⚠️ Archivos y JSON quedan en una clase cada uno, no dos. Se sostiene porque los dos temas ya se
 > vieron una vez y porque la plataforma tiene ejercicios de ambos. Si el 26/8 se nota que Archivos

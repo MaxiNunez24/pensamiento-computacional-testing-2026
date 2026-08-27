@@ -170,6 +170,8 @@
 | Mié 12/8 | Práctica en la plataforma: listas y condicionales + **Mini Parcial** | [📄](./clases/bloque_1_fundamentos/mini_parcial.md) |
 | Vie 14/8 | Práctica en la plataforma: **bucles** (`while` y `for`) | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bucles/) |
 | Mié 19/8 | Resolución de dudas sobre los ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
+| Mié 20/8 | Resolución de ejercicios y dudas | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
+| Vie 21/8 | 🎪 **Demostración del sistema de asistencias** a preceptoría + **Archivos y JSON** | [📄](./clases/bloque_3_persistencia/archivos.md) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.

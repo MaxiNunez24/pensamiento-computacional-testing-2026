@@ -1,0 +1,4 @@
+# Los datos de prueba del taller: los genera cada uno al correrlo.
+datos.json
+__pycache__/
+.pytest_cache/

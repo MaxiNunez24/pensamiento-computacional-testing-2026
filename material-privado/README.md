@@ -38,6 +38,7 @@ sin definir**, que es lo que conviene revisar.
 | **26/8** | [`clase-2026-08-20_elicitacion.md`](./clase-2026-08-20_elicitacion.md) | Run of show de la clase de elicitación de requerimientos y preparación de la demo con preceptores. |
 | **26/8** | [`bot-siges/`](./bot-siges/) | El bot de carga al SiGeS: [README](./bot-siges/README.md) (cómo funciona y cómo demostrarlo), [mapa del proceso](./bot-siges/mapa_siges.md), y el código andando. |
 | **26/8** | [`clase-bot-siges.md`](./clase-bot-siges.md) | Cómo dar el bot en clase: el pantallazo de lo que viene y la clase para construirlo. |
+| **27/8** | [`taller-flask/`](./taller-flask/) | **El sistema construido de verdad**, en etapas, con tests. [`GUIA.md`](./taller-flask/GUIA.md) explica por qué Flask y no otro framework, y tiene la tabla de dónde se traban los alumnos. Para hacerlo el profe primero. |
 
 ---
 
