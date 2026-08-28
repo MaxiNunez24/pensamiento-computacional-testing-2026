@@ -125,3 +125,52 @@ Abrí cualquier clase, resolvé un ejercicio y tocá **🔄 Sincronizar** → **
 ## Si algún día alguien abusa
 
 Cloudflare → tu Worker → **Settings** → borrar la clave del KV que corresponda, o cambiar el nombre del binding. Como los códigos se generan por alumno, el daño queda acotado a uno.
+
+---
+
+## Worker 3: el tablero y el foro de soluciones (`tablero.js`)
+
+Es **un Worker aparte a propósito**. El de progreso guarda el trabajo de meses de los alumnos: no
+se le agregan funciones nuevas para no arriesgarlo. Si este se rompe, la sincronización sigue
+andando igual.
+
+### Qué hace
+
+| Ruta | Para qué |
+|---|---|
+| `GET /tablero` | El estado del proyecto, compartido por toda la clase |
+| `POST /tablero` | Mover tarjetas (con control de versión: si dos guardan a la vez, el segundo se entera) |
+| `GET /soluciones?ejercicio=X` | Las soluciones publicadas, **anónimas**, con sus votos |
+| `POST /soluciones?ejercicio=X` | Publicar la propia (volver a publicar reemplaza, no duplica) |
+| `POST /voto?ejercicio=X` | Votar. Votar de nuevo **cambia** el voto, no suma otro |
+| `POST /elegir?ejercicio=X` | Marcar cuál va al sistema |
+
+### Instalación
+
+1. Crear un **KV namespace** nuevo llamado `TABLERO` (Workers & Pages → KV → Create).
+2. Crear un Worker nuevo, pegar `worker/tablero.js` y desplegar.
+3. En Settings → Bindings, agregar el KV con el nombre de variable **`TABLERO`**.
+4. Copiar la URL del Worker a `public/tablero.js` del sitio.
+
+### Sobre el anonimato
+
+Acá **no se guarda quién escribió cada solución**: ni el nombre, ni el código de sincronización.
+Lo único que se guarda es un identificador al azar del navegador, y solo para que nadie vote diez
+veces ni le queden dos soluciones suyas dadas de alta. La respuesta del Worker nunca lo devuelve.
+
+Es una decisión del curso: **se discute el código, no la persona.**
+
+### Sobre la clave
+
+`CLAVE_CURSO` no es seguridad de verdad —está del lado del cliente y cualquiera puede leerla—.
+Evita que alguien que pase por el sitio público mueva las tarjetas por diversión, nada más. Es
+suficiente porque acá **no hay datos personales**: hay tarjetas de tareas y código de ejercicios.
+
+### Pruebas
+
+```bash
+node worker/pruebas/tablero.test.mjs
+```
+
+18 casos: el control de versión del tablero, que republicar reemplace, que votar dos veces cambie
+el voto en vez de sumarlo, y que **nunca se devuelva quién escribió ni quién votó**.
