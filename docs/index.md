@@ -15,7 +15,7 @@ Bienvenidos al curso donde aprenderemos a pensar como programadores y construir 
 ## ⏱️ Horarios
 
 - **Miércoles**: 13:20 a 16:40
-- **Viernes**: 14:00 a 17:20
+- **Viernes**: 13:20 a 16:40
 
 ---
 

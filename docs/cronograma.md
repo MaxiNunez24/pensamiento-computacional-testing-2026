@@ -4,7 +4,7 @@
 
 !!! tip "Pensamiento Computacional y Testing de Aplicaciones — CFP 401"
     Curso anual para aprender a programar con buenas prácticas y desarrollar **proyectos reales**.
-    Clases los **miércoles de 13:20 a 16:40** y los **viernes de 14:00 a 17:20**.
+    Clases los **miércoles y viernes de 13:20 a 16:40**.
 
 !!! info "🧭 Cómo leer este cronograma"
     En vez de una grilla fija que hay que reacomodar ante cada cambio, este cronograma tiene tres
