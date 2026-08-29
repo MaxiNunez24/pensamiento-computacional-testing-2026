@@ -1,0 +1,198 @@
+---
+/**
+ * El camino del curso: las clases en el orden en que se dan.
+ *
+ * El menú lateral está ordenado por BLOQUES, que es como se busca algo cuando
+ * ya lo viste ("¿dónde estaba lo de diccionarios?"). Pero para el que va
+ * avanzando, ese orden no dice por dónde seguir. Esta página es la otra vista:
+ * el camino, numerado, con cuánto lleva hecho de cada clase.
+ *
+ * Los totales NO se escriben a mano: se cuentan de los propios .mdx al
+ * construir el sitio. Así el día que se agregue un ejercicio, el número
+ * acompaña solo — una lista de totales escrita a mano se desactualiza en dos
+ * semanas y después miente.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Parada {
+  clase: string;
+  nombre: string;
+  /** vista | ahora | viene | optativa */
+  estado?: string;
+  nota?: string;
+}
+interface Etapa {
+  nombre: string;
+  meta: string;
+  paradas: Parada[];
+}
+
+const { etapas, titulo = 'El camino del curso' } = Astro.props as {
+  etapas: Etapa[];
+  titulo?: string;
+};
+
+// Los .mdx crudos, para contar los ejercicios de cada clase.
+const fuentes = import.meta.glob('../content/docs/clases/*.mdx', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+const COMPONENTES =
+  /<(EjercicioPython|CompletarCodigo|OpcionMultiple|EncontrarElError|OrdenarPasos|EjercicioEficiencia|DiagramaClases|DiagramaLibre|Clasificar|EscribirTest)\b/g;
+
+function fuenteDe(clase: string): string {
+  const clave = Object.keys(fuentes).find((k) => k.endsWith(`/${clase}.mdx`));
+  return clave ? fuentes[clave] : '';
+}
+
+function cuantosEjercicios(clase: string): number {
+  return (fuenteDe(clase).match(COMPONENTES) || []).length;
+}
+
+/* El mini parcial es una sola pieza <Evaluacion> y guarda con `pcp:eval:`, no
+   con `pcp:done:`. Contarlo como "0 ejercicios" sería mentira: no tiene
+   ejercicios sueltos, tiene una entrega. Se muestra como lo que es. */
+function esEvaluacion(clase: string): boolean {
+  return fuenteDe(clase).includes('<Evaluacion');
+}
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const id = idEjercicio(titulo);
+
+const conTotales = etapas.map((e) => ({
+  ...e,
+  paradas: e.paradas.map((p) => ({
+    ...p,
+    total: cuantosEjercicios(p.clase),
+    evaluacion: esEvaluacion(p.clase),
+  })),
+}));
+const totalCurso = conTotales
+  .flatMap((e) => e.paradas)
+  .filter((p) => p.estado !== 'optativa')
+  .reduce((n, p) => n + p.total, 0);
+---
+
+<div class="camino" id={id} data-camino data-base={base}>
+
+  <div class="camino__resumen">
+    <div class="camino__numeros">
+      <strong data-hechos>—</strong> de {totalCurso} ejercicios
+      <span data-pct></span>
+    </div>
+    <div class="camino__barra"><div class="camino__barra-fill" data-barra></div></div>
+    <p class="camino__mensaje" data-mensaje></p>
+  </div>
+
+  {conTotales.map((etapa, i) => (
+    <section class="camino__etapa">
+      <h3 class="camino__etapa-tit">
+        <span class="camino__num">{i + 1}</span>
+        {etapa.nombre}
+        <small>{etapa.meta}</small>
+      </h3>
+
+      <ol class="camino__paradas">
+        {etapa.paradas.map((p) => (
+          <li
+            class={'camino__parada' + (p.estado ? ' es-' + p.estado : '')}
+            data-clase={p.clase}
+            data-total={String(p.total)}
+          >
+            <a href={`${base}/clases/${p.clase}/`}>
+              <span class="camino__nombre">{p.nombre}</span>
+              {p.nota && <span class="camino__nota">{p.nota}</span>}
+            </a>
+            <span class="camino__progreso">
+              {p.total > 0 ? (
+                <>
+                  <span class="camino__mini"><span class="camino__mini-fill" data-mini></span></span>
+                  <span class="camino__cuenta" data-cuenta>0/{p.total}</span>
+                </>
+              ) : (
+                <span class="camino__cuenta camino__cuenta--sin">
+                  {p.evaluacion ? 'se entrega' : 'para leer'}
+                </span>
+              )}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll('[data-camino]').forEach((camino) => {
+    const base = camino.dataset.base;
+
+    /* Se cuentan las claves `pcp:done:` de cada clase. A propósito NO hace
+       falta saber los títulos: alcanza con contar las que empiezan con la ruta
+       de esa clase, así el día que cambie un enunciado la cuenta sigue bien. */
+    function resueltosDe(clase) {
+      const prefijo = `pcp:done:${base}/clases/${clase}/::`;
+      let n = 0;
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith(prefijo) && localStorage.getItem(k) === '1') n++;
+        }
+      } catch { /* sin localStorage: queda todo en cero */ }
+      return n;
+    }
+
+    function pintar() {
+      let hechos = 0;
+      let total = 0;
+      let primeraSinTerminar = null;
+
+      camino.querySelectorAll('[data-clase]').forEach((li) => {
+        const tot = Number(li.dataset.total) || 0;
+        const n = Math.min(resueltosDe(li.dataset.clase), tot);
+        const opcional = li.classList.contains('es-optativa');
+
+        const cuenta = li.querySelector('[data-cuenta]');
+        const mini = li.querySelector('[data-mini]');
+        if (cuenta && tot > 0) cuenta.textContent = `${n}/${tot}`;
+        if (mini) mini.style.width = tot ? (n / tot) * 100 + '%' : '0%';
+
+        const completa = tot > 0 && n === tot;
+        li.classList.toggle('is-completa', completa);
+        li.classList.toggle('is-empezada', n > 0 && !completa);
+
+        if (!opcional) {
+          hechos += n;
+          total += tot;
+          if (!completa && tot > 0 && !primeraSinTerminar) primeraSinTerminar = li;
+        }
+        li.classList.remove('is-aca');
+      });
+
+      // "Estás acá": la primera clase sin terminar. Es la respuesta a la
+      // pregunta que trae a alguien a esta página.
+      if (primeraSinTerminar) primeraSinTerminar.classList.add('is-aca');
+
+      const pct = total ? Math.round((hechos / total) * 100) : 0;
+      camino.querySelector('[data-hechos]').textContent = String(hechos);
+      camino.querySelector('[data-pct]').textContent = ` · ${pct}%`;
+      camino.querySelector('[data-barra]').style.width = pct + '%';
+
+      const msj = camino.querySelector('[data-mensaje]');
+      if (hechos === 0) {
+        msj.textContent = 'Todavía no arrancaste. La primera parada está marcada abajo.';
+      } else if (pct === 100) {
+        msj.textContent = '🎉 Hiciste todo el camino. En serio, todo.';
+      } else if (primeraSinTerminar) {
+        const nombre = primeraSinTerminar.querySelector('.camino__nombre').textContent;
+        msj.textContent = `Seguí por: ${nombre}`;
+      }
+    }
+
+    pintar();
+    // Al volver de resolver ejercicios en otra pestaña, se actualiza solo.
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) pintar(); });
+    window.addEventListener('pageshow', pintar);
+  });
+</script>

@@ -62,6 +62,7 @@ export default defineConfig({
         { label: '🧪 Probador libre', link: '/probador/' },
         // Arriba de todo a propósito: es lo que hay que mirar primero mientras
         // el grupo esté atrasado. Se tilda sola leyendo el progreso guardado.
+        { label: '🧭 Por dónde empezar', link: '/camino/' },
         { label: '✅ Ponerse al día', link: '/al-dia/' },
         { label: '🗺️ El proyecto, por partes', link: '/proyecto/' },
         { label: '📋 Tablero del proyecto', link: '/tablero/' },

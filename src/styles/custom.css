@@ -2391,3 +2391,98 @@ body.pc-resizing * {
   border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-gray-2);
 }
 .tb__mover button:hover { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
+
+/* ---------------------------------------------------------------------------
+   EL CAMINO DEL CURSO
+   La otra vista del material: no por temas (eso es el menú) sino en el orden
+   en que se dan las clases, con cuánto llevás hecho de cada una.
+--------------------------------------------------------------------------- */
+.camino__resumen {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.6rem;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0 2rem;
+  background: var(--sl-color-black);
+}
+.camino__numeros { font-size: 1rem; }
+.camino__numeros strong {
+  font-size: 1.7rem; color: var(--sl-color-accent-high);
+  font-variant-numeric: tabular-nums;
+}
+.camino__numeros span { color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; }
+.camino__barra {
+  margin-top: 0.6rem; height: 0.55rem; border-radius: 999px;
+  background: var(--sl-color-gray-5); overflow: hidden;
+}
+.camino__barra-fill {
+  height: 100%; width: 0; border-radius: 999px;
+  background: #2e7d32; transition: width 0.4s ease;
+}
+:root[data-theme='dark'] .camino__barra-fill { background: #4caf50; }
+.camino__mensaje { margin: 0.6rem 0 0; font-size: 0.88rem; color: var(--sl-color-gray-2); }
+
+.camino__etapa { margin-bottom: 1.6rem; }
+.camino__etapa-tit {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;
+  font-size: 1.05rem; margin: 0 0 0.6rem;
+}
+.camino__num {
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.6rem; height: 1.6rem; border-radius: 999px;
+  background: var(--sl-color-gray-6); border: 1px solid var(--sl-color-gray-5);
+  font-size: 0.82rem; font-variant-numeric: tabular-nums; color: var(--sl-color-gray-2);
+}
+.camino__etapa-tit small {
+  flex-basis: 100%; font-weight: 400; font-size: 0.82rem;
+  color: var(--sl-color-gray-3); margin-left: 2.1rem;
+}
+
+.camino__paradas { list-style: none; padding: 0 0 0 0.75rem; margin: 0; }
+/* La línea del camino: une las paradas de una etapa. */
+.camino__paradas { border-left: 2px solid var(--sl-color-gray-5); }
+
+.camino__parada {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.75rem; flex-wrap: wrap;
+  padding: 0.5rem 0.7rem; margin-left: -2px;
+  border-left: 2px solid transparent;
+}
+.camino__parada a { text-decoration: none; flex: 1; min-width: 12rem; }
+.camino__nombre { display: block; font-weight: 500; }
+.camino__nota { display: block; font-size: 0.78rem; color: var(--sl-color-gray-3); }
+
+.camino__parada.is-completa { border-left-color: #4caf50; }
+.camino__parada.is-empezada { border-left-color: var(--sl-color-accent); }
+.camino__parada.es-optativa { opacity: 0.72; }
+.camino__parada.es-optativa .camino__nombre::after {
+  content: ' optativa'; font-size: 0.7rem; font-weight: 400;
+  color: var(--sl-color-gray-3); text-transform: uppercase; letter-spacing: 0.05em;
+}
+.camino__parada.is-aca {
+  background: var(--sl-color-gray-6); border-radius: 0.4rem;
+  border-left-color: var(--sl-color-accent-high);
+}
+.camino__parada.is-aca .camino__nombre::before {
+  content: 'estás acá'; display: inline-block; margin-right: 0.5rem;
+  padding: 0.05rem 0.5rem; border-radius: 999px;
+  background: var(--sl-color-accent-high); color: var(--sl-color-black);
+  font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  vertical-align: 0.12em;
+}
+
+.camino__progreso { display: flex; align-items: center; gap: 0.5rem; flex: none; }
+.camino__mini {
+  display: block; width: 4.5rem; height: 0.4rem; border-radius: 999px;
+  background: var(--sl-color-gray-5); overflow: hidden;
+}
+.camino__mini-fill { display: block; height: 100%; width: 0; background: #4caf50; }
+.camino__cuenta {
+  font-size: 0.78rem; font-variant-numeric: tabular-nums;
+  color: var(--sl-color-gray-3); min-width: 2.8rem; text-align: right;
+}
+.camino__cuenta--sin { min-width: 0; font-style: italic; white-space: nowrap; }
+
+@media (max-width: 30rem) {
+  .camino__progreso { width: 100%; justify-content: flex-start; }
+}

@@ -1,0 +1,111 @@
+---
+title: Por dónde empezar
+description: Las clases en el orden en que se dan, y cuánto llevás hecho de cada una.
+---
+
+import Camino from '../../components/Camino.astro';
+
+El menú de la izquierda está ordenado **por temas**, que es como se busca algo cuando ya lo viste:
+*"¿dónde estaba lo de diccionarios?"*.
+
+Esta página es la otra vista: **el camino**, en el orden en que damos las clases. Sirve para dos
+cosas — saber por dónde seguir, y ver cuánto llevás.
+
+:::tip[Se actualiza solo]
+No hay nada que marcar. Cada clase muestra cuántos ejercicios resolviste, y la parada donde estás
+queda señalada con **estás acá**.
+:::
+
+<Camino etapas={[
+  {
+    nombre: 'Primeros pasos',
+    meta: 'Que el programa haga algo y que puedas guardar un dato',
+    paradas: [
+      { clase: 'como-usar-esto', nombre: 'Cómo usar esta plataforma', estado: 'vista' },
+      { clase: 'print', nombre: 'La función print()', estado: 'vista' },
+      { clase: 'variables', nombre: 'Variables y tipos de datos', estado: 'vista' },
+      { clase: 'input', nombre: 'La función input()', estado: 'vista' },
+    ],
+  },
+  {
+    nombre: 'Decidir y repetir',
+    meta: 'Las dos cosas que convierten una lista de órdenes en un programa',
+    paradas: [
+      { clase: 'condicionales', nombre: 'Condicionales: if / elif / else', estado: 'vista' },
+      { clase: 'listas', nombre: 'Listas', estado: 'vista' },
+      { clase: 'bucles', nombre: 'Bucles: while y for', estado: 'vista' },
+      { clase: 'cuadernillo-listas', nombre: 'Cuadernillo de listas', estado: 'vista',
+        nota: 'Slicing, listas de listas y comprensiones' },
+      { clase: 'mini-parcial', nombre: 'Mini Parcial', estado: 'vista' },
+    ],
+  },
+  {
+    nombre: 'Ordenar el código',
+    meta: 'Guardar muchos datos juntos y partir el programa en piezas',
+    paradas: [
+      { clase: 'funciones-1', nombre: 'Funciones I: definir y llamar', estado: 'vista' },
+      { clase: 'tuplas', nombre: 'Tuplas', estado: 'vista' },
+      { clase: 'sets', nombre: 'Sets', estado: 'vista' },
+      { clase: 'diccionarios', nombre: 'Diccionarios', estado: 'vista' },
+      { clase: 'funciones-2', nombre: 'Funciones II: scope y parámetros', estado: 'vista' },
+    ],
+  },
+  {
+    nombre: 'Practicar y leer',
+    meta: 'Escribir no alcanza: hay que saber leer código y encontrar errores',
+    paradas: [
+      { clase: 'repaso', nombre: 'Repaso general', estado: 'vista' },
+      { clase: 'lectura-codigo', nombre: 'Lectura y corrección de código', estado: 'vista' },
+      { clase: 'bingo', nombre: 'Bingo — integrador', estado: 'vista' },
+      { clase: 'logica-pensar', nombre: 'Pensar antes de escribir', estado: 'viene',
+        nota: 'Cómo encarar un ejercicio que no sabés resolver' },
+    ],
+  },
+  {
+    nombre: 'Que los datos no se pierdan',
+    meta: 'El paso que convierte un ejercicio en un programa de verdad',
+    paradas: [
+      { clase: 'git-vscode', nombre: 'Git desde VS Code', estado: 'vista' },
+      { clase: 'archivos', nombre: 'Manejo de archivos', estado: 'ahora' },
+      { clase: 'json', nombre: 'JSON', estado: 'viene' },
+    ],
+  },
+  {
+    nombre: 'Armar el sistema',
+    meta: 'Acá arranca el proyecto del CFP',
+    paradas: [
+      { clase: 'lo-que-python-hace-por-vos', nombre: 'Lo que Python hace por vos', estado: 'viene',
+        nota: 'Los atajos que vas a ver en el sistema' },
+      { clase: 'poo-1', nombre: 'POO I: clases y objetos', estado: 'viene' },
+      { clase: 'poo-2', nombre: 'POO II: métodos y encapsulamiento', estado: 'viene' },
+      { clase: 'logica-eficiencia', nombre: 'Eficiencia', estado: 'viene',
+        nota: 'Buscar un alumno entre 5.000, de dos formas' },
+      { clase: 'poo-herencia', nombre: 'Herencia y polimorfismo', estado: 'optativa',
+        nota: 'No hace falta para el sistema' },
+      { clase: 'logica-desafios', nombre: 'Desafíos de optimización', estado: 'optativa' },
+    ],
+  },
+  {
+    nombre: 'Probar lo que hicimos',
+    meta: 'La otra mitad del nombre del curso',
+    paradas: [
+      { clase: 'testing-1', nombre: 'Testing I: probar en serio', estado: 'viene' },
+    ],
+  },
+]} />
+
+---
+
+## Las marcas
+
+| | Qué significa |
+|---|---|
+| **estás acá** | La primera clase que te falta terminar. Por ahí seguí. |
+| **ya la dimos** | Se dio en clase. Los ejercicios podés hacerlos cuando quieras. |
+| **la que viene** | Es la próxima. |
+| **optativa** | Está buena, pero no hace falta para el proyecto. No cuenta en el total. |
+
+:::note[¿Y si me falta una de atrás?]
+No pasa nada, pero **no la saltees**: cada clase usa lo de la anterior. Si empezás bucles sin
+listas firmes, el problema no va a ser el bucle.
+:::
