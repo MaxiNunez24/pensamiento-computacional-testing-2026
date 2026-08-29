@@ -34,6 +34,7 @@ Son **dos proyectos encadenados** y son el proyecto del curso (reemplazan la Bol
 | `asistencia_cfp_3.html` | El sistema anterior, antes de integrar la planilla. Referencia histórica. |
 | `2026.1 Pensamiento Comp- Maxi.xlsx` | El Excel original. Hojas: AYUDA, Inicial de Carga, Ficha de Curso, un mes por hoja, Evaluación de Módulo, Acta de Examen. |
 | Logo | Embebido en base64 dentro del HTML. No necesita internet. |
+| `PERSISTENCIA-JSON-VS-SQLITE.md` | **Dónde guardar los datos.** JSON hasta el 30/10, SQLite de ahí en más; medido, con el motivo (dos personas guardando a la vez) y con lo único que hay que hacer ya: el módulo `repositorio.py`. |
 
 ---
 
@@ -466,6 +467,8 @@ prioricen ellos. Un cliente que participa del recorte no reclama después por lo
 ---
 
 ## 12. La decisión de la red local (20/8)
+
+> 📎 Sobre **en qué formato** viven los datos en esa máquina —JSON o SQLite— está todo en [`PERSISTENCIA-JSON-VS-SQLITE.md`](PERSISTENCIA-JSON-VS-SQLITE.md). Resumen: SQLite, pero recién el 30/10, y el código se escribe desde ahora para que el cambio cueste un archivo.
 
 El grupo propuso que el sistema **solo funcione dentro de la red del CFP**. Me parece **la decisión
 correcta para este proyecto**, y por un motivo que conviene decir en voz alta: acá hay datos

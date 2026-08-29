@@ -123,7 +123,7 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 | Mié 21/10 | **Flask**: formularios — alta de alumnos por web | |
 | Vie 23/10 | **Migrar el CLI a Flask I** | Refactor de código propio: la lección está acá. |
 | Mié 28/10 | **Migrar el CLI a Flask II** | |
-| Vie 30/10 | **SQLite** — por qué JSON deja de alcanzar con varios usuarios | |
+| Vie 30/10 | **SQLite** — por qué JSON deja de alcanzar con varios usuarios | El argumento medido está en [`PERSISTENCIA-JSON-VS-SQLITE.md`](PERSISTENCIA-JSON-VS-SQLITE.md): dos personas marcando a la vez y una marca que desaparece. **Requiere** que el sistema tenga `repositorio.py` desde el CLI (2/10). |
 
 ### 🚀 Noviembre — la Expo (7 clases, 20/11 feriado)
 
@@ -163,6 +163,7 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 - **El CLI antes de Flask**: migrar código propio es la mitad del aprendizaje. Si arrancan
   directo en Flask, se pierde.
 - **SQLite antes de login**: los usuarios se guardan en algún lado.
+- **`repositorio.py` antes de SQLite**: si el CLI y Flask abren archivos por su cuenta, el 30/10 no es dar una clase, es reescribir el sistema.
 - **Datos inventados siempre.** El prototipo que se les muestra ya viene con alumnos ficticios.
 
 ---
