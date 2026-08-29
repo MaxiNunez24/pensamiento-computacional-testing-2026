@@ -1,0 +1,72 @@
+---
+title: Tablero del proyecto
+description: En qué anda cada pieza del sistema, quién la está haciendo y qué ya funciona.
+---
+
+import Tablero from '../../components/Tablero.astro';
+
+Acá se ve **en qué anda el sistema**. Las tarjetas se mueven con las flechitas `‹ ›` o
+arrastrándolas, y lo que muevas lo ven todos.
+
+:::tip[Cómo se usa]
+- **Por hacer** — nadie la agarró todavía.
+- **En curso** — alguien la está haciendo *ahora*. Que no haya más de una o dos por persona.
+- **Hecho** — anda, tiene su test y ya está en el sistema. Que esté escrito no alcanza.
+:::
+
+<Tablero tareas={[
+  { id: 'm1', seccion: '1 · El modelo', texto: 'Clase <code>Alumno</code> con DNI, apellido y nombre', necesita: 'POO I' },
+  { id: 'm2', seccion: '1 · El modelo', texto: 'Método <code>nombre_completo()</code>', necesita: 'POO I' },
+  { id: 'm3', seccion: '1 · El modelo', texto: 'Clase <code>Curso</code> con su lista de alumnos', necesita: 'POO I' },
+  { id: 'm4', seccion: '1 · El modelo', texto: 'Inscribir un alumno, sin repetir DNI', necesita: 'POO I + listas' },
+  { id: 'm5', seccion: '1 · El modelo', texto: 'Buscar un alumno por DNI', necesita: 'bucles' },
+  { id: 'm6', seccion: '1 · El modelo', texto: 'Dar de baja sin borrar', necesita: 'POO I' },
+
+  { id: 'a1', seccion: '2 · La asistencia', texto: 'Marcar P / A / T / J de un alumno en un día', necesita: 'diccionarios' },
+  { id: 'a2', seccion: '2 · La asistencia', texto: 'Contar presentes de un día (¿el tarde vino?)', necesita: 'bucles' },
+  { id: 'a3', seccion: '2 · La asistencia', texto: 'Porcentaje de asistencia de un alumno', necesita: 'bucles' },
+  { id: 'a4', seccion: '2 · La asistencia', texto: 'Saber si un día es día de clase', necesita: '<code>datetime</code>' },
+  { id: 'a5', seccion: '2 · La asistencia', texto: 'Días de clase que quedaron sin cargar', necesita: 'bucles + fechas' },
+  { id: 'a6', seccion: '2 · La asistencia', texto: 'Movimiento del mes: altas, bajas y totales', necesita: 'bucles' },
+
+  { id: 'd1', seccion: '3 · Guardar', texto: 'Guardar el curso en un archivo JSON', necesita: 'archivos + JSON' },
+  { id: 'd2', seccion: '3 · Guardar', texto: 'Volver a armar los objetos al arrancar', necesita: 'JSON + POO' },
+  { id: 'd3', seccion: '3 · Guardar', texto: 'Si no hay archivo, arrancar vacío sin romper', necesita: 'archivos' },
+  { id: 'd4', seccion: '3 · Guardar', texto: 'Importar alumnos desde el CSV del formulario', necesita: '<code>csv</code>' },
+  { id: 'd5', seccion: '3 · Guardar', texto: 'Copia de seguridad con la fecha en el nombre', necesita: '<code>pathlib</code>' },
+
+  { id: 't1', seccion: '4 · Tests', texto: 'Test de que no se puede inscribir dos veces', necesita: 'pytest' },
+  { id: 't2', seccion: '4 · Tests', texto: 'Test del porcentaje, incluida la lista vacía', necesita: 'pytest' },
+  { id: 't3', seccion: '4 · Tests', texto: 'Test de que lo guardado vuelve igual', necesita: 'pytest' },
+  { id: 't4', seccion: '4 · Tests', texto: 'Test del alumno que llegó tarde', necesita: 'pytest' },
+
+  { id: 'w1', seccion: '5 · Las pantallas', texto: 'Pasar lista del día', necesita: 'Flask' },
+  { id: 'w2', seccion: '5 · Las pantallas', texto: 'Guardar la lista desde el formulario', necesita: 'Flask + POST' },
+  { id: 'w3', seccion: '5 · Las pantallas', texto: 'Alta y listado de alumnos', necesita: 'Flask' },
+  { id: 'w4', seccion: '5 · Las pantallas', texto: 'Pantalla de la merienda: un número grande', necesita: 'Flask' },
+  { id: 'w5', seccion: '5 · Las pantallas', texto: 'Elegir el curso y el mes', necesita: 'Flask' },
+  { id: 'w6', seccion: '5 · Las pantallas', texto: 'Llenar el molde de la planilla oficial', necesita: 'f-strings' },
+
+  { id: 'p1', seccion: '6 · Ponerlo a andar', texto: 'Base de datos en vez de JSON', necesita: 'SQLite' },
+  { id: 'p2', seccion: '6 · Ponerlo a andar', texto: 'Usuarios con contraseña hasheada', necesita: 'Flask + seguridad' },
+  { id: 'p3', seccion: '6 · Ponerlo a andar', texto: 'Permisos: qué ve cada rol', necesita: 'diccionarios' },
+  { id: 'p4', seccion: '6 · Ponerlo a andar', texto: 'Que entre todo el CFP desde la red', necesita: 'redes' },
+  { id: 'p5', seccion: '6 · Ponerlo a andar', texto: 'Datos de demo para la Expo', necesita: '—' },
+]} />
+
+---
+
+## Por qué tres columnas y no cuatro
+
+Se pensó agregar **"En revisión"** y se descartó. Con seis personas queda vacía casi siempre, y una
+columna vacía en un tablero enseña una sola cosa: a ignorar el tablero.
+
+La revisión igual existe — es uno de los roles que rotan cada clase. Lo que no tiene es columna.
+
+:::caution[Qué significa "Hecho"]
+Que **anda**, no que está escrito. Una tarjeta pasa a Hecho cuando su código está en el sistema,
+tiene su test, y el sistema entero sigue funcionando después de agregarla.
+
+Es la regla que más cuesta y la que evita terminar con treinta tarjetas en Hecho y un sistema que
+no arranca.
+:::

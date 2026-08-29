@@ -49,6 +49,10 @@ export default defineConfig({
           tag: 'script',
           attrs: { src: `${base}/copiar-texto.js`, defer: true },
         },
+        {
+          tag: 'script',
+          attrs: { src: `${base}/tablero.js`, defer: true },
+        },
       ],
       // El buscador (Pagefind), el dark mode y el botón de copiar código
       // vienen de fábrica con Starlight.
@@ -60,6 +64,7 @@ export default defineConfig({
         // el grupo esté atrasado. Se tilda sola leyendo el progreso guardado.
         { label: '✅ Ponerse al día', link: '/al-dia/' },
         { label: '🗺️ El proyecto, por partes', link: '/proyecto/' },
+        { label: '📋 Tablero del proyecto', link: '/tablero/' },
         // ⚠️ El orden de acá abajo NO es cosmético: es el orden en que se enseña,
         // y varias clases dependen de que lo anterior ya se haya visto.
         //   · Listas va ANTES que Bucles: `for` necesita algo que recorrer, y

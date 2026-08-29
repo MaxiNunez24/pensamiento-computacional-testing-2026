@@ -49,10 +49,16 @@ function initQuiz(el: HTMLElement): void {
     });
   });
 
+  /* Las explicaciones se escriben con algo de HTML (<code>, <strong>) porque
+     casi siempre nombran una función o una palabra clave, y en texto plano se
+     leen mal. Con textContent salían las etiquetas crudas en pantalla.
+     El contenido lo escribe el profe en el .mdx, no viene de nadie de afuera. */
   const mostrar = (texto: string, estado: 'is-ok' | 'is-error') => {
     if (!salida) return;
     salida.hidden = false;
-    salida.textContent = texto;
+    // Los saltos de línea del armado se convierten en <br> para no depender
+    // del white-space del CSS.
+    salida.innerHTML = texto.replace(/\n/g, '<br>');
     salida.className = 'ejercicio__salida ' + estado;
   };
 

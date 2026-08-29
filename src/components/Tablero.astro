@@ -1,0 +1,209 @@
+---
+/**
+ * Tablero del proyecto (Kanban).
+ *
+ * Tres columnas —Por hacer / En curso / Hecho— porque es lo mínimo que
+ * funciona. Se pensó una cuarta ("En revisión") y se descartó: con seis
+ * personas queda vacía casi siempre, y una columna vacía en un tablero enseña
+ * a ignorar el tablero.
+ *
+ * Las tarjetas vienen cargadas y agrupadas por sección del sistema. Que ya
+ * estén es a propósito: un tablero vacío el primer día se llena de tarjetas
+ * inventadas para llenarlo. Con las tarjetas puestas, la conversación del
+ * primer sprint es "¿cuáles entran?", que es la que hay que tener.
+ *
+ * El estado vive en el Worker, así que todos ven lo mismo desde su máquina.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Tarea {
+  id: string;
+  texto: string;
+  seccion: string;
+  /** hacer | curso | hecho */
+  col?: string;
+  /** Pista de qué hace falta saber para tomarla. */
+  necesita?: string;
+}
+
+const { tareas, titulo = 'Tablero del proyecto' } = Astro.props as {
+  tareas: Tarea[];
+  titulo?: string;
+};
+
+const COLUMNAS = [
+  { id: 'hacer', nombre: 'Por hacer', ayuda: 'Nadie la agarró todavía' },
+  { id: 'curso', nombre: 'En curso', ayuda: 'Alguien la está haciendo' },
+  { id: 'hecho', nombre: 'Hecho', ayuda: 'Anda y está en el sistema' },
+];
+
+const SECCIONES = [...new Set(tareas.map((t) => t.seccion))];
+const id = idEjercicio(titulo);
+---
+
+<section class="tb" id={id} data-tablero>
+  <div class="tb__barra">
+    <span class="tb__estado" data-estado>Cargando el tablero…</span>
+    <button type="button" class="tb__btn" data-recargar>↻ Actualizar</button>
+    <label class="tb__filtro">
+      Sección
+      <select data-filtro>
+        <option value="">todas</option>
+        {SECCIONES.map((s) => <option value={s}>{s}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <div class="tb__columnas">
+    {COLUMNAS.map((c) => (
+      <div class="tb__col" data-col={c.id}>
+        <div class="tb__col-tit">
+          {c.nombre} <span class="tb__cuenta" data-cuenta={c.id}>0</span>
+          <small>{c.ayuda}</small>
+        </div>
+        <div class="tb__zona" data-zona={c.id}></div>
+      </div>
+    ))}
+  </div>
+
+  <script type="application/json" data-tareas set:html={JSON.stringify(tareas)}></script>
+</section>
+
+<script>
+  document.querySelectorAll('[data-tablero]').forEach((tb) => {
+    const iniciales = JSON.parse(tb.querySelector('[data-tareas]').textContent);
+    const estado = tb.querySelector('[data-estado]');
+    const filtro = tb.querySelector('[data-filtro]');
+    let tareas = [];
+    let version = 0;
+    let guardando = false;
+
+    const api = () => window.PC_TABLERO;
+
+    function avisar(txt, clase = '') {
+      estado.textContent = txt;
+      estado.className = 'tb__estado' + (clase ? ' ' + clase : '');
+    }
+
+    /* La primera vez el tablero del Worker está vacío: se siembra con las
+       tarjetas de la página. De ahí en más manda lo guardado, así lo que
+       muevan no se pisa cada vez que alguien entra. */
+    async function cargar() {
+      if (!api()) { avisar('El tablero todavía no está configurado.', 'es-mal'); return; }
+      try {
+        const r = await api().traerTablero();
+        version = r.version || 0;
+        tareas = (r.tareas && r.tareas.length) ? r.tareas : iniciales.map((t) => ({ ...t, col: t.col || 'hacer' }));
+        pintar();
+        avisar(version === 0 ? 'Tablero nuevo — sin guardar todavía' : 'Al día');
+      } catch (e) {
+        avisar('No se pudo traer el tablero: ' + e.message, 'es-mal');
+        tareas = iniciales.map((t) => ({ ...t, col: t.col || 'hacer' }));
+        pintar();
+      }
+    }
+
+    async function guardar() {
+      if (guardando) return;
+      guardando = true;
+      try {
+        const r = await api().guardarTablero(tareas, version);
+        version = r.version;
+        avisar('Guardado ✓');
+      } catch (e) {
+        if (e.status === 409) {
+          // Alguien movió una tarjeta mientras vos movías otra.
+          avisar('Alguien movió algo antes que vos. Traigo lo último…', 'es-mal');
+          await cargar();
+        } else {
+          avisar('No se pudo guardar: ' + e.message, 'es-mal');
+        }
+      } finally {
+        guardando = false;
+      }
+    }
+
+    function pintar() {
+      const soloSeccion = filtro.value;
+      ['hacer', 'curso', 'hecho'].forEach((col) => {
+        const zona = tb.querySelector(`[data-zona="${col}"]`);
+        const dela = tareas.filter((t) => t.col === col);
+        zona.innerHTML = '';
+        tb.querySelector(`[data-cuenta="${col}"]`).textContent = String(dela.length);
+
+        let seccionActual = null;
+        dela.forEach((t) => {
+          if (soloSeccion && t.seccion !== soloSeccion) return;
+          if (t.seccion !== seccionActual) {
+            seccionActual = t.seccion;
+            const h = document.createElement('p');
+            h.className = 'tb__seccion';
+            h.textContent = t.seccion;
+            zona.appendChild(h);
+          }
+          const tar = document.createElement('article');
+          tar.className = 'tb__tarjeta';
+          tar.draggable = true;
+          tar.dataset.id = t.id;
+          tar.innerHTML =
+            `<span class="tb__texto">${t.texto}</span>` +
+            (t.necesita ? `<span class="tb__necesita">${t.necesita}</span>` : '') +
+            `<span class="tb__mover">
+               <button type="button" data-mover="-1" aria-label="Mover a la izquierda">‹</button>
+               <button type="button" data-mover="1" aria-label="Mover a la derecha">›</button>
+             </span>`;
+          zona.appendChild(tar);
+        });
+      });
+    }
+
+    const ORDEN = ['hacer', 'curso', 'hecho'];
+
+    function mover(idTarea, aColumna) {
+      const t = tareas.find((x) => x.id === idTarea);
+      if (!t || t.col === aColumna) return;
+      t.col = aColumna;
+      pintar();
+      guardar();
+    }
+
+    // Botones ‹ › — el camino principal: funciona con dedo y con teclado.
+    tb.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-mover]');
+      if (b) {
+        const tar = b.closest('.tb__tarjeta');
+        const t = tareas.find((x) => x.id === tar.dataset.id);
+        const i = ORDEN.indexOf(t.col) + Number(b.dataset.mover);
+        if (i >= 0 && i < ORDEN.length) mover(t.id, ORDEN[i]);
+        return;
+      }
+      if (e.target.closest('[data-recargar]')) cargar();
+    });
+
+    // Arrastrar — atajo para quien está con mouse.
+    let arrastrada = null;
+    tb.addEventListener('dragstart', (e) => {
+      const t = e.target.closest('.tb__tarjeta');
+      if (!t) return;
+      arrastrada = t.dataset.id;
+      t.classList.add('is-arrastrando');
+      e.dataTransfer?.setData('text/plain', arrastrada);
+    });
+    tb.addEventListener('dragend', (e) => {
+      e.target.closest?.('.tb__tarjeta')?.classList.remove('is-arrastrando');
+      tb.querySelectorAll('.is-encima').forEach((z) => z.classList.remove('is-encima'));
+    });
+    tb.querySelectorAll('[data-zona]').forEach((zona) => {
+      zona.addEventListener('dragover', (e) => { e.preventDefault(); zona.classList.add('is-encima'); });
+      zona.addEventListener('dragleave', () => zona.classList.remove('is-encima'));
+      zona.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zona.classList.remove('is-encima');
+        if (arrastrada) mover(arrastrada, zona.dataset.zona);
+      });
+    });
+
+    filtro.addEventListener('change', pintar);
+    cargar();
+  });
+</script>

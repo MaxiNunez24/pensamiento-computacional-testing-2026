@@ -32,16 +32,19 @@ programa se detiene y avisa. **Un test es una afirmación sobre tu código.**
 
 <OpcionMultiple
   titulo="¿Para qué sirve un test?"
-  dificultad="🟢"
   opciones={[
-    'Para que el programa ande más rápido',
-    'Para avisar si un cambio rompió algo que antes funcionaba',
-    'Para que el código quede más ordenado',
-    'Para reemplazar los comentarios',
+    { texto: 'Para que el programa ande más rápido',
+      explicacion: 'No: un test no toca el rendimiento. De hecho agrega código que también hay que correr.' },
+    { texto: 'Para avisar si un cambio rompió algo que antes funcionaba', correcta: true,
+      explicacion: 'Un test no mejora el programa: lo <strong>vigila</strong>. Su valor aparece cuando cambiás algo dentro de un mes y te avisa que rompiste una parte que ni te acordabas que existía.' },
+    { texto: 'Para que el código quede más ordenado',
+      explicacion: 'Ordenar el código es refactorizar. Los tests son los que te dejan refactorizar sin miedo, pero no ordenan solos.' },
+    { texto: 'Para reemplazar los comentarios',
+      explicacion: 'Un test muestra <em>cómo se usa</em> algo, y en eso se parece a un comentario. Pero no explica el porqué.' },
   ]}
-  correcta={1}
-  explicacion="Un test no mejora el programa: lo VIGILA. Su valor aparece cuando cambiás algo dentro de un mes y el test te avisa que rompiste una parte que ni te acordabas que existía."
-/>
+>
+  ¿Para qué sirve un test?
+</OpcionMultiple>
 
 ## Tres alturas para mirar lo mismo
 

@@ -2312,3 +2312,82 @@ body.pc-resizing * {
   .mapa__d-cuerpo { grid-template-columns: 1fr; }
   .mapa__boceto { max-width: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   TABLERO DEL PROYECTO (Kanban)
+   Tres columnas. Se mueve con las flechitas ‹ › o arrastrando: las flechitas
+   son el camino principal porque funcionan con el dedo y con el teclado, y
+   arrastrar en un celular es incómodo.
+--------------------------------------------------------------------------- */
+.tb__barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem; font-size: 0.85rem;
+}
+.tb__estado { color: var(--sl-color-gray-3); flex: 1; min-width: 12rem; }
+.tb__estado.es-mal { color: #ffa94d; }
+.tb__btn {
+  font: inherit; font-size: 0.82rem; cursor: pointer;
+  padding: 0.3rem 0.7rem; border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.tb__btn:hover { border-color: var(--sl-color-accent); }
+.tb__filtro { display: flex; align-items: center; gap: 0.4rem; color: var(--sl-color-gray-3); }
+.tb__filtro select {
+  font: inherit; font-size: 0.82rem; padding: 0.25rem 0.4rem;
+  background: var(--sl-color-black); color: var(--sl-color-white);
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.35rem;
+}
+
+.tb__columnas {
+  display: grid; gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.tb__col {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 0.75rem;
+}
+.tb__col-tit {
+  font-weight: 600; font-size: 0.95rem; margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;
+}
+.tb__col-tit small {
+  flex-basis: 100%; font-weight: 400; font-size: 0.75rem; color: var(--sl-color-gray-3);
+}
+.tb__cuenta {
+  font-family: var(--sl-font-mono, monospace); font-variant-numeric: tabular-nums;
+  font-size: 0.78rem; padding: 0.05rem 0.45rem; border-radius: 100px;
+  background: var(--sl-color-gray-6); color: var(--sl-color-gray-2);
+}
+.tb__col[data-col="hecho"] .tb__cuenta { background: #1b3d20; color: #7bc47f; }
+
+.tb__zona {
+  display: flex; flex-direction: column; gap: 0.4rem; min-height: 4rem;
+  border-radius: 0.4rem; transition: background 0.15s;
+}
+.tb__zona.is-encima { background: var(--sl-color-gray-6); }
+
+.tb__seccion {
+  margin: 0.5rem 0 0.1rem; font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--sl-color-gray-3);
+}
+.tb__seccion:first-child { margin-top: 0; }
+
+.tb__tarjeta {
+  display: grid; grid-template-columns: 1fr auto; gap: 0.2rem 0.5rem;
+  align-items: center;
+  padding: 0.55rem 0.65rem; border-radius: 0.4rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-6);
+  cursor: grab; font-size: 0.86rem; line-height: 1.35;
+}
+.tb__tarjeta.is-arrastrando { opacity: 0.45; }
+.tb__texto { grid-column: 1; }
+.tb__necesita {
+  grid-column: 1; font-size: 0.72rem; color: var(--sl-color-gray-3);
+}
+.tb__mover { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 0.15rem; }
+.tb__mover button {
+  font: inherit; line-height: 1; cursor: pointer;
+  width: 1.6rem; height: 1.6rem; border-radius: 0.3rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-gray-2);
+}
+.tb__mover button:hover { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
