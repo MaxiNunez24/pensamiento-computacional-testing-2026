@@ -264,6 +264,86 @@ Ojo: tiene que funcionar con **cualquier** cantidad de lenguajes, no solo con es
 escribir un bucle.
 </EjercicioPython>
 
+## 🏗️ El sistema: pasar lista sin escribir de más
+
+Todo lo de esta clase —valores por defecto, `*args`, `**kwargs`— existe para lo mismo: que quien
+usa la función escriba **solo lo que no es obvio**. En una lista de asistencia eso se nota mucho,
+porque el día normal es "vinieron casi todos".
+
+<EjercicioPython
+  titulo="Lo normal es que hayan venido"
+  dificultad="🌱"
+  starter={`def marcar(dia, dni, estado):\n    # Hacé que 'estado' valga "P" cuando no se lo pasan.\n    pass`}
+  tests={`dia = {}\nmarcar(dia, "30111222")\nassert dia == {"30111222": "P"}, f"sin decir nada tendría que quedar presente, y quedó {dia!r}"\nmarcar(dia, "28999888", "A")\nassert dia["28999888"] == "A", "si se dice el estado, manda el que se dijo"\nassert len(dia) == 2\nmarcar(dia, "30111222", "T")\nassert dia["30111222"] == "T", "corregir pisa la marca anterior"\nassert len(dia) == 2, "corregir no agrega a nadie"\nprint("¡Por defecto OK!")`}
+  pistas={[
+    "El valor por defecto se escribe en la firma de la función, al lado del parámetro.",
+    "Fijate que el primer test llama a <code>marcar</code> con dos argumentos y el segundo con tres. La misma función tiene que aceptar las dos formas.",
+  ]}
+>
+Completá `marcar(dia, dni, estado)` para que **el estado sea opcional**: si no se lo pasan, vale
+`"P"`.
+
+:::note[Por qué esto no es un capricho]
+La preceptora abre el sistema y marca a los cinco que faltaron. Los otros veinticinco vinieron, y
+escribir `"P"` veinticinco veces es la clase de trabajo que hace que la gente vuelva al papel.
+
+Un valor por defecto bien elegido **es una decisión sobre cómo se usa el sistema**, no un detalle
+de sintaxis.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Pasar lista de varios de una"
+  dificultad="🌿"
+  starter={`def marcar_varios(dia, *dnis, estado="P"):\n    pass`}
+  tests={`dia = {}\nmarcar_varios(dia, "1", "2", "3")\nassert dia == {"1": "P", "2": "P", "3": "P"}, f"quedó {dia!r}"\nmarcar_varios(dia, "4", "5", estado="A")\nassert dia["4"] == "A" and dia["5"] == "A", "los dos tenían que quedar ausentes"\nassert len(dia) == 5, "los tres de antes tienen que seguir estando"\nmarcar_varios(dia)\nassert len(dia) == 5, "sin ningún DNI no tiene que romper ni agregar nada"\nmarcar_varios(dia, "1", estado="J")\nassert dia["1"] == "J", "también sirve para uno solo"\nprint("¡Varios OK!")`}
+  pistas={[
+    "<code>dnis</code> llega como una tupla con todos los DNI que hayan pasado. Recorrela.",
+    "Ojo con el llamado sin ningún DNI: la tupla llega vacía y el bucle simplemente no entra. No hace falta un <code>if</code> aparte.",
+  ]}
+>
+Completá `marcar_varios`: marca a todos los DNI que le pasen, con el mismo estado.
+
+```python
+marcar_varios(dia, "30111222", "28999888", "27888444")          # los tres presentes
+marcar_varios(dia, "30111222", "28999888", estado="A")          # los dos ausentes
+```
+
+:::note[Por qué `estado` va después del `*dnis`]
+Porque queda **obligatoriamente por nombre**. Si estuviera antes, un
+`marcar_varios(dia, "A", "30111222")` se leería como "marcá a los alumnos A y 30111222", y nadie se
+enteraría hasta ver la planilla. Poniéndolo después del `*`, la única forma de pasarlo es
+`estado="A"` — y ahí no hay confusión posible.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Buscar con los filtros que vengan"
+  dificultad="🌿"
+  starter={`def buscar(alumnos, **filtros):\n    pass`}
+  tests={`alumnos = [\n    {"dni": "1", "apellido": "Perez", "activo": True},\n    {"dni": "2", "apellido": "Gomez", "activo": True},\n    {"dni": "3", "apellido": "Perez", "activo": False},\n]\nassert buscar(alumnos) == alumnos, "sin filtros salen todos"\nr = buscar(alumnos, apellido="Perez")\nassert [a["dni"] for a in r] == ["1", "3"], f"por apellido salieron {[a['dni'] for a in r]!r}"\nr = buscar(alumnos, apellido="Perez", activo=True)\nassert [a["dni"] for a in r] == ["1"], "con dos filtros se tienen que cumplir los DOS"\nassert buscar(alumnos, apellido="Lopez") == [], "si no coincide ninguno, la lista vacía"\nassert buscar(alumnos, color="verde") == [], "un filtro por algo que los alumnos no tienen no puede devolver a todos"\nassert len(alumnos) == 3, "buscar no toca la lista original"\nprint("¡Búsqueda OK!")`}
+  pistas={[
+    "<code>filtros</code> llega como un diccionario: <code>{\"apellido\": \"Perez\", \"activo\": True}</code>. Un alumno entra si cumple TODOS.",
+    "Para cada alumno, recorré los filtros y fijate si alguno no coincide. Con que falle uno, ese alumno queda afuera.",
+    "El test del filtro <code>color=\"verde\"</code> es el que atrapa la solución perezosa: si pedís la clave con corchetes explota, y si la ignorás cuando no está, devolvés a todos.",
+  ]}
+>
+Completá `buscar(alumnos, **filtros)`: devuelve los alumnos que cumplen **todos** los filtros que
+le pasen, sean los que sean.
+
+```python
+buscar(alumnos)                                  # todos
+buscar(alumnos, apellido="Perez")                # los Perez
+buscar(alumnos, apellido="Perez", activo=True)   # los Perez que siguen cursando
+```
+
+:::note[Una sola función para todas las búsquedas]
+Sin `**kwargs` habría que escribir `buscar_por_apellido`, `buscar_por_dni`,
+`buscar_por_apellido_y_activo`… y una función nueva cada vez que a alguien se le ocurre una
+pregunta. Con esto, la pregunta la arma quien llama.
+:::
+</EjercicioPython>
+
 ## Más práctica
 
 <EjercicioPython

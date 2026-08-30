@@ -42,6 +42,16 @@ Lo que cambia es **cuáles se marcan como obligatorios** y cuáles quedan como p
 **Traducido: hay que reescribir ~37 ejercicios y crear los de las etapas nuevas.** No es poco,
 pero no es empezar de cero, y se puede hacer clase por clase, una semana antes de darla.
 
+> ⚠️ **Corrección del 29/8: "re-dirigir" dejó de querer decir "reescribir".**
+>
+> Al hacerlo se vio que reescribir tira práctica que ya estaba andando, y el grupo necesita lo
+> contrario. El criterio nuevo es: **se agrega una sección dirigida al sistema, y lo que había
+> queda debajo como práctica adicional.** Nadie pierde un ejercicio.
+>
+> Cambia la cuenta: en vez de ~37 reescritos, van **~37 nuevos encima de los que ya estaban**. Es
+> más trabajo de escritura y menos riesgo: si un ejercicio dirigido al sistema sale confuso, el
+> viejo sigue ahí y la clase no se queda sin práctica.
+
 ---
 
 ## 3. Cómo se ve un ejercicio "dirigido al proyecto"
@@ -187,8 +197,10 @@ Tres horas y veinte, que es exactamente lo que dura la clase.
       *Hecho el 29/8:* `src/components/Foro.astro` + `/foro/` en el menú.
 - [ ] **Antes de la primera clase con roles** — imprimir las seis tarjetas de rol. Que sean físicas
       y se repartan en la mesa: se rota mucho mejor que con una lista en el pizarrón.
-- [ ] **Re-dirigir** `diccionarios`, `funciones-1/2`, `archivos` y `json` (~37 ejercicios), una
-      clase antes de darla.
+- [x] **Re-dirigir** `diccionarios`, `funciones-1/2`, `archivos` y `json`. *Hecho el 29/8*, con
+      el criterio corregido: **16 ejercicios nuevos** dirigidos al sistema, y los 30 que ya
+      estaban intactos abajo. Ver la sección 9.
+- [ ] **Re-dirigir** `tuplas` y `sets`, que quedaron afuera de esa tanda.
 
 ---
 
@@ -241,4 +253,42 @@ se marca cuál va al sistema.
 > ⚠️ El Worker solo acepta pedidos desde `https://maxinunez24.github.io`. En `localhost` el foro
 > carga y la pantalla anda, pero traer y publicar dan error: **hay que probarlo en el sitio
 > publicado**. Es a propósito y es el mismo caso del tablero.
+
+---
+
+## 9. Las cinco clases dirigidas al sistema (29/8)
+
+Cada una tiene ahora una sección `🏗️ El sistema` **antes** de "Más práctica". Lo que había no se
+tocó: quedó abajo, y sigue contando.
+
+| Clase | Nuevos | Qué pieza del sistema es |
+|---|---|---|
+| `diccionarios` | 4 | La lista del día: consultar (el que no está es ausente), marcar/corregir, el resumen de los cuatro estados, y las marcas de un alumno en todo el mes |
+| `funciones-1` | 3 | `vino()`, `porcentaje_asistencia()` y una que **usa** a `vino()` en vez de repetir la regla |
+| `funciones-2` | 3 | El estado por defecto `"P"`, marcar a varios con `*args`, y buscar con los filtros que vengan (`**kwargs`) |
+| `archivos` | 3 | Guardar la lista del día, leerla (y arrancar vacío si no está), y la copia de seguridad con la fecha en el nombre |
+| `json` | 3 | El curso entero ida y vuelta, marcar sin perder lo de antes, e importar los inscriptos del formulario |
+
+**Los 16 pasan con una solución de referencia y rechazan las doce equivocaciones típicas** — desde
+`setdefault` (que de paso agrega la clave que fue a buscar) hasta importar dos veces el mismo
+archivo del formulario.
+
+### Los tres tests que valen más que el ejercicio
+
+- **`funciones-1` / "Una función que usa a otra"** — el test **redefine `vino()`** al final y
+  comprueba que `cuantos_vinieron()` dé otro número sola. Si el alumno copió la regla adentro, el
+  resultado no cambia y el test lo detecta. Es la primera vez en el curso que un test no mira el
+  resultado sino **cómo está armado el programa**.
+- **`json` / "El curso que sobrevive al apagado"** — carga dos cursos vacíos distintos, le agrega un
+  alumno a uno y comprueba que el otro siga vacío. Atrapa al que devuelve la constante `VACIO` en
+  vez de una copia: el alias de la clase de listas, ahora en un caso donde no se ve.
+- **`json` / "Marcar sin perder lo de antes"** — el ejercicio es leer-modificar-escribir, funciona
+  perfecto, y la nota al pie avisa que **lo vamos a romper a propósito el 30/10**: es exactamente
+  el patrón que pierde una marca cuando dos personas guardan a la vez. El mismo caso que le borró
+  el progreso a un alumno en agosto.
+
+### Lo que quedó afuera
+
+`tuplas` y `sets` estaban en la misma fila de la tabla de la sección 2 y no se tocaron. No es
+urgente: los dos son estructuras que el sistema usa de paso, no piezas con nombre propio.
 

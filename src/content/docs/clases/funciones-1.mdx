@@ -118,6 +118,75 @@ Ejemplo: `promedio([10, 8, 9])` → `9`.
 - `return` devuelve un valor (distinto de `print`).
 - Definís una vez, la llamás todas las veces que quieras → **menos repetición, menos errores**.
 
+## 🏗️ El sistema: las tres funciones que más se van a usar
+
+Estas tres van a estar en el sistema de asistencias, tal cual las escribas acá. La tercera es la
+más importante y la que menos lo parece.
+
+<EjercicioPython
+  titulo="¿Vino o no vino?"
+  dificultad="🌱"
+  starter={`def vino(estado):\n    # "P" y "T" cuentan como que vino.\n    # "A" y "J", como que no.\n    pass`}
+  tests={`assert vino("P") is True, 'vino("P") tiene que devolver True (el valor True, no el texto)'\nassert vino("T") is True, "el que llegó tarde vino igual"\nassert vino("A") is False, 'vino("A") tiene que devolver False'\nassert vino("J") is False, "la falta justificada sigue siendo una falta"\nassert vino("") is False, "cualquier otra cosa tampoco es haber venido"\nprint("¡Regla OK!")`}
+  pistas={[
+    "Se puede escribir en una línea sola, sin ningún <code>if</code>: ¿cómo preguntás si algo está entre varias opciones?",
+    "Los tests usan <code>is True</code> / <code>is False</code>: tiene que devolver el booleano, no un 1 o un 0.",
+  ]}
+>
+Completá `vino(estado)`: devuelve `True` si esa marca significa que el alumno estuvo en clase.
+
+:::caution[Es la función más importante de todo el sistema]
+Parece una tontería de una línea, y es la regla que decide **el número que va a la planilla oficial**
+de cada alumno. Que la `T` cuente como presente lo decidió el CFP, no Python.
+
+Escrita acá, el día que preceptoría cambie de opinión se cambia **una línea**. Escrita a mano en
+cada lugar donde hace falta —el porcentaje, el reporte del mes, la pantalla de la merienda, el
+resumen del día— se cambia en cinco lugares, y en el sexto que te olvidás vive el bug.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="El porcentaje de asistencia"
+  dificultad="🌿"
+  starter={`def porcentaje_asistencia(marcas):\n    pass`}
+  tests={`assert porcentaje_asistencia(["P", "P", "P", "A"]) == 75.0, f'con 3 de 4 esperaba 75.0 y salió {porcentaje_asistencia(["P", "P", "P", "A"])!r}'\nassert porcentaje_asistencia(["P", "T"]) == 100.0, "el que llegó tarde vino: 2 de 2"\nassert porcentaje_asistencia(["A", "J"]) == 0.0, "no vino ninguno de los dos días"\nassert porcentaje_asistencia([]) == 0, "sin marcas todavía: 0, y no un error de división"\nr = porcentaje_asistencia(["P", "P", "A"])\nassert round(r, 1) == 66.7, f"con 2 de 3 esperaba 66.7 y salió {r!r}"\nprint("¡Porcentaje OK!")`}
+  pistas={[
+    "Contá cuántas marcas son de las que cuentan como presente, dividí por el total y multiplicá por 100.",
+    "El test de la lista vacía es el que rompe todo si no lo mirás: ¿por cuánto estarías dividiendo?",
+    "No redondees vos: el test ya redondea cuando hace falta. Devolvé el número tal cual sale.",
+  ]}
+>
+Completá `porcentaje_asistencia(marcas)`. Recibe **todas las marcas de un alumno**
+(`["P", "A", "P", "T"]`) y devuelve qué porcentaje de los días vino.
+
+Un alumno con menos del 75% no promociona, así que este número no es decorativo: es el que decide.
+
+Si todavía no tiene ninguna marca, devolvé `0`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Una función que usa a otra"
+  dificultad="🌿"
+  starter={`def vino(estado):\n    return estado in ("P", "T")\n\ndef cuantos_vinieron(marcas):\n    # Usá vino(). No vuelvas a escribir la regla acá.\n    pass`}
+  tests={`assert cuantos_vinieron(["P", "T", "A", "P"]) == 3, "vinieron tres: dos P y una T"\nassert cuantos_vinieron([]) == 0, "sin marcas no vino nadie"\nassert cuantos_vinieron(["A", "J"]) == 0\n\n# Y ahora la prueba de verdad: cambiamos la regla y miramos si acompaña.\n_original = vino\ndef vino(estado):\n    return estado == "P"        # el CFP decidió que el tarde ya no cuenta\ntry:\n    r = cuantos_vinieron(["P", "T", "A", "P"])\n    assert r == 2, f"si cambia vino(), cuantos_vinieron() tiene que dar 2 solo, y dio {r!r}. Eso pasa únicamente si la usás en vez de repetir la regla adentro."\nfinally:\n    vino = _original\nprint("¡Reutilización OK!")`}
+  pistas={[
+    "Recorré las marcas y contá las que <code>vino()</code> diga que sí.",
+    "El último test cambia la definición de <code>vino()</code> y espera que tu función dé otro resultado. Si escribiste <code>estado in (\"P\", \"T\")</code> adentro de <code>cuantos_vinieron</code>, no va a cambiar nada y el test lo detecta.",
+  ]}
+>
+`vino()` ya está escrita. Completá `cuantos_vinieron(marcas)` **usándola**, en vez de volver a
+escribir la regla adentro.
+
+:::note[El test comprueba que la hayas usado, no solo que dé bien]
+Al final, el test **cambia** la definición de `vino()` —como si el CFP hubiera decidido que llegar
+tarde ya no cuenta— y verifica que tu función dé otro número **sola**.
+
+Si copiaste la regla adentro, tu función sigue dando lo mismo y el test se da cuenta. Es la primera
+vez en el curso que un test no revisa el resultado sino **cómo está armado**, y es lo que separa un
+programa que se puede cambiar de uno que hay que reescribir.
+:::
+</EjercicioPython>
+
 ## Más práctica
 
 <EjercicioPython

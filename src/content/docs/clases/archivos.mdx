@@ -189,6 +189,93 @@ toca nada de tu compu. En VS Code, el mismo código escribe archivos posta.
 :::
 
 
+## 🏗️ El sistema: que la lista del día sobreviva a cerrar el programa
+
+Hasta ahora la lista del día vivía en un diccionario, y un diccionario se muere cuando el programa
+termina. Estas tres funciones son las que hacen que **al día siguiente siga estando**.
+
+<EjercicioPython
+  titulo="Guardar la lista del día"
+  dificultad="🌿"
+  starter={`def guardar_dia(ruta, dia):\n    pass`}
+  tests={`guardar_dia("dia1.txt", {"30111222": "P", "28999888": "A"})\nwith open("dia1.txt", encoding="utf-8") as f:\n    contenido = f.read()\nassert contenido == "28999888,A\\n30111222,P\\n", f"el archivo quedó con {contenido!r}"\nguardar_dia("dia1.txt", {"30111222": "T"})\nwith open("dia1.txt", encoding="utf-8") as f:\n    assert f.read() == "30111222,T\\n", "volver a guardar el día REEMPLAZA lo anterior, no lo agrega abajo"\nguardar_dia("dia1.txt", {})\nwith open("dia1.txt", encoding="utf-8") as f:\n    assert f.read() == "", "un día sin nadie marcado deja el archivo vacío, no rompe"\nprint("¡Día guardado!")`}
+  pistas={[
+    "Mirá el primer test: el DNI que en el diccionario está segundo sale primero en el archivo. Los renglones van ordenados por DNI.",
+    "Un diccionario recuerda el orden en que se cargó, no el que vos querés. ¿Con qué recorrés sus claves ordenadas?",
+    "El test espera un salto de línea después del último renglón también.",
+  ]}
+>
+Completá `guardar_dia(ruta, dia)`: escribe un renglón por alumno, `dni,estado`, **ordenados por
+DNI**.
+
+```
+28999888,A
+30111222,P
+```
+
+Si el archivo ya existía, lo que había **se reemplaza**: la lista del día es una sola.
+
+:::note[Por qué ordenados]
+Para que el archivo se pueda **mirar**. Dos días seguidos ordenados igual se comparan de un
+vistazo; dos días en el orden en que cada uno fue marcando, no. Es gratis al escribir y se paga
+solo la primera vez que hay que revisar algo a mano.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Leer la lista, y si no está arrancar vacío"
+  dificultad="🌿"
+  starter={`from pathlib import Path\n\ndef cargar_dia(ruta):\n    pass`}
+  tests={`import os\nif os.path.exists("dia2.txt"):\n    os.remove("dia2.txt")\nassert cargar_dia("dia2.txt") == {}, "si el archivo no existe todavía, el día arranca vacío en vez de reventar"\nwith open("dia2.txt", "w", encoding="utf-8") as f:\n    f.write("30111222,P\\n28999888,T\\n")\nd = cargar_dia("dia2.txt")\nassert d == {"30111222": "P", "28999888": "T"}, f"volvió {d!r}"\nassert d["30111222"] == "P", "el estado no puede volver con el salto de línea pegado"\nwith open("dia2.txt", "w", encoding="utf-8") as f:\n    f.write("")\nassert cargar_dia("dia2.txt") == {}, "un archivo vacío es un día sin marcar, no un error"\nprint("¡Día cargado!")`}
+  pistas={[
+    "Cada renglón viene como <code>\"30111222,P\\n\"</code>. Hay que sacarle el salto de línea y partirlo por la coma.",
+    "Para el archivo que no existe: podés preguntar antes si está, o intentar abrirlo y atajar el error. Las dos valen; la primera se lee mejor.",
+    "Ojo con el archivo vacío: si tu código entra al bucle igual, fijate qué pasa cuando no hay ni un renglón.",
+  ]}
+>
+Completá `cargar_dia(ruta)`: devuelve el diccionario `{dni: estado}` que estaba guardado.
+
+**Si el archivo no existe, devolvé `{}`** — sin romper.
+
+:::caution[Esta es la línea que decide si el sistema arranca]
+El primer día no hay ningún archivo. Si `cargar_dia` revienta cuando el archivo falta, el sistema
+no arranca nunca la primera vez — y eso es exactamente lo que pasa cuando lo instalás en la máquina
+del CFP, delante de todos.
+
+"Si no está, arrancá vacío" no es una excepción rara: es **el caso normal del primer día**.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="La copia de seguridad"
+  dificultad="🌿"
+  starter={`from pathlib import Path\n\ndef respaldar(ruta, fecha):\n    pass`}
+  tests={`with open("asistencia.txt", "w", encoding="utf-8") as f:\n    f.write("30111222,P\\n")\nnombre = respaldar("asistencia.txt", "2026-09-16")\nassert nombre == "asistencia-2026-09-16.txt", f"esperaba 'asistencia-2026-09-16.txt' y devolviste {nombre!r}"\nwith open(nombre, encoding="utf-8") as f:\n    assert f.read() == "30111222,P\\n", "la copia tiene que tener lo mismo que el original"\nwith open("asistencia.txt", encoding="utf-8") as f:\n    assert f.read() == "30111222,P\\n", "el original no se toca"\nnombre2 = respaldar("asistencia.txt", "2026-09-18")\nassert nombre2 == "asistencia-2026-09-18.txt", "otra fecha, otro archivo: las copias no se pisan entre ellas"\nprint("¡Respaldo OK!")`}
+  pistas={[
+    "<code>Path(\"asistencia.txt\").stem</code> te da <code>\"asistencia\"</code> y <code>.suffix</code> te da <code>\".txt\"</code>. Con esas dos piezas armás el nombre nuevo.",
+    "Copiar es leer todo de uno y escribirlo en el otro. No hace falta ninguna librería.",
+    "Fijate que la función además <em>devuelve</em> el nombre que usó: quien la llama necesita saber dónde quedó la copia.",
+  ]}
+>
+Completá `respaldar(ruta, fecha)`: copia el archivo a uno nuevo con la fecha en el nombre, y
+**devuelve** cómo se llamó.
+
+```python
+respaldar("asistencia.txt", "2026-09-16")   # -> "asistencia-2026-09-16.txt"
+```
+
+El original queda intacto.
+
+:::note[La copia que salva el año]
+El sistema va a vivir en una netbook del CFP que se apaga de un tirón. Una copia por día, con la
+fecha en el nombre, es la diferencia entre perder un día y perder el año.
+
+Y por eso el nombre lleva la fecha y no algo como `asistencia-backup.txt`: un solo archivo de
+respaldo se pisa a sí mismo, y el día que te das cuenta de que los datos estaban mal ya lo
+respaldaste tres veces.
+:::
+</EjercicioPython>
+
 ## Más práctica
 
 <EjercicioPython

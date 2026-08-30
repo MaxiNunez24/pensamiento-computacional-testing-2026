@@ -189,6 +189,110 @@ exactamente como se fue**: los diccionarios como diccionarios y las notas como n
 `alumnos` es una lista como `[{"nombre": "Guada", "nota": 10}, ...]`.
 </EjercicioPython>
 
+## 🏗️ El sistema: el curso entero en un archivo
+
+La lista del día en `.txt` alcanzaba mientras eran dos columnas. El curso completo —alumnos con
+varios datos cada uno, y la asistencia de todos los días— es una **estructura**, y ahí el `.txt` ya
+no da. Esto es JSON.
+
+```json
+{
+  "nombre": "Pensamiento Computacional",
+  "alumnos": [
+    {"dni": "30111222", "apellido": "Perez", "nombre": "Ana", "activo": true}
+  ],
+  "asistencia": {
+    "2026-09-16": {"30111222": "P"}
+  }
+}
+```
+
+<EjercicioPython
+  titulo="El curso que sobrevive al apagado"
+  dificultad="🌿"
+  starter={`import json\nfrom pathlib import Path\n\nVACIO = {"nombre": "", "alumnos": [], "asistencia": {}}\n\ndef guardar_curso(ruta, curso):\n    pass\n\ndef cargar_curso(ruta):\n    pass`}
+  tests={`import os\nif os.path.exists("curso.json"):\n    os.remove("curso.json")\nassert cargar_curso("curso.json") == {"nombre": "", "alumnos": [], "asistencia": {}}, "la primera vez no hay archivo: el curso arranca vacío en vez de reventar"\ncurso = {"nombre": "Pensamiento Computacional", "alumnos": [{"dni": "30111222", "apellido": "Perez", "nombre": "Ana", "activo": True}], "asistencia": {"2026-09-16": {"30111222": "P"}}}\nguardar_curso("curso.json", curso)\nvuelta = cargar_curso("curso.json")\nassert vuelta == curso, f"lo que volvió es {vuelta!r}"\nassert vuelta["alumnos"][0]["activo"] is True, "el activo tiene que volver como booleano, no como el texto 'True'"\nassert vuelta["alumnos"][0]["dni"] == "30111222", "y el DNI como texto, con sus ceros si los tuviera"\nc1 = cargar_curso("noexiste1.json")\nc1["alumnos"].append({"dni": "9"})\nc2 = cargar_curso("noexiste2.json")\nassert c2["alumnos"] == [], "dos cursos vacíos distintos no pueden compartir la misma lista: devolvé una COPIA de VACIO, no VACIO"\nguardar_curso("curso.json", {"nombre": "Otro", "alumnos": [], "asistencia": {}})\nassert cargar_curso("curso.json")["nombre"] == "Otro", "guardar de nuevo reemplaza el archivo"\nprint("¡Curso a salvo!")`}
+  pistas={[
+    "Son las dos de siempre: una abre para escribir y usa <code>json.dump</code>, la otra abre para leer y usa <code>json.load</code>.",
+    "Para el archivo que no existe, acordate del <code>if</code> de la agenda. Devolvé una copia del curso vacío, no <code>VACIO</code> a secas.",
+    "Guardalo con <code>indent=2</code> y <code>ensure_ascii=False</code>: el archivo lo va a tener que mirar una persona.",
+  ]}
+>
+Completá las dos funciones.
+
+- `guardar_curso(ruta, curso)` — escribe el curso como JSON.
+- `cargar_curso(ruta)` — lo lee y lo devuelve. **Si el archivo no existe, devuelve un curso vacío**
+  (`{"nombre": "", "alumnos": [], "asistencia": {}}`).
+
+Lo que entra tiene que volver **idéntico**: el `True` como booleano y el DNI como texto.
+
+:::caution[Devolvé una copia, no `VACIO`]
+Si `cargar_curso` devuelve directamente el diccionario `VACIO`, el programa se pone a agregarle
+alumnos… **a la constante**. La segunda vez que arranca sin archivo, el "curso vacío" ya viene con
+gente adentro. Es el mismo problema del alias que viste en listas, y con estructuras anidadas es
+todavía más difícil de ver.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Marcar sin perder lo de antes"
+  dificultad="🌳"
+  starter={`import json\nfrom pathlib import Path\n\ndef marcar_y_guardar(ruta, fecha, dni, estado):\n    pass`}
+  tests={`import os\nif os.path.exists("asis.json"):\n    os.remove("asis.json")\nmarcar_y_guardar("asis.json", "2026-09-16", "30111222", "P")\nwith open("asis.json", encoding="utf-8") as f:\n    a = json.load(f)\nassert a == {"2026-09-16": {"30111222": "P"}}, f"la primera marca dejó el archivo así: {a!r}"\nmarcar_y_guardar("asis.json", "2026-09-16", "28999888", "T")\nwith open("asis.json", encoding="utf-8") as f:\n    a = json.load(f)\nassert a["2026-09-16"] == {"30111222": "P", "28999888": "T"}, f"el segundo borró al primero: quedó {a!r}"\nmarcar_y_guardar("asis.json", "2026-09-18", "30111222", "A")\nwith open("asis.json", encoding="utf-8") as f:\n    a = json.load(f)\nassert len(a) == 2, "un día nuevo se agrega, no reemplaza al anterior"\nassert a["2026-09-16"]["30111222"] == "P", "y el día viejo queda como estaba"\nmarcar_y_guardar("asis.json", "2026-09-16", "30111222", "J")\nwith open("asis.json", encoding="utf-8") as f:\n    a = json.load(f)\nassert a["2026-09-16"]["30111222"] == "J", "corregir una marca la pisa"\nassert len(a["2026-09-16"]) == 2, "y no agrega a nadie"\nprint("¡Sin perder nada!")`}
+  pistas={[
+    "Son tres pasos: leer lo que hay, cambiar lo que hay que cambiar, y volver a escribir TODO.",
+    "El archivo no existe la primera vez, y el día tampoco existe la primera marca de cada día. Los dos casos arrancan vacíos.",
+    "Si abrís el archivo en modo escritura antes de leerlo, ya lo borraste. Leé primero, cerrá, y recién ahí escribí.",
+  ]}
+>
+Completá `marcar_y_guardar(ruta, fecha, dni, estado)`: deja anotada esa marca en el archivo, **sin
+perder nada de lo que ya estaba**.
+
+Si el archivo no existe, se crea. Si ese día todavía no tenía a nadie, se agrega. Si ese alumno ya
+estaba marcado ese día, se corrige.
+
+:::caution[Guardá esta función: la vamos a romper a propósito]
+Lo que acabás de escribir es **leer todo, cambiar una cosa, escribir todo de nuevo**. Funciona
+perfecto mientras haya una sola persona usando el sistema.
+
+El día que la preceptora marque a Ana y el docente marque a Beto **al mismo tiempo**, los dos leen
+el mismo archivo, cada uno le agrega lo suyo, y el que guarda segundo pisa al primero. Una de las
+dos marcas desaparece, sin ningún error y con las dos pantallas diciendo "Guardado ✓".
+
+Es exactamente lo que le pasó al progreso de un compañero en agosto en esta misma plataforma. La
+clase del **30/10** es esa: por qué esto deja de alcanzar y qué se usa en su lugar.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Los que se inscribieron por el formulario"
+  dificultad="🌳"
+  starter={`import json\n\ndef importar(ruta_curso, ruta_nuevos):\n    pass`}
+  tests={`import json, os\ncurso = {"nombre": "PC", "alumnos": [{"dni": "1", "apellido": "Perez", "nombre": "Ana"}], "asistencia": {"2026-09-16": {"1": "P"}}}\nwith open("c.json", "w", encoding="utf-8") as f:\n    json.dump(curso, f)\nnuevos = [{"dni": "1", "apellido": "Perez", "nombre": "Ana Maria"}, {"dni": "2", "apellido": "Gomez", "nombre": "Beto"}]\nwith open("n.json", "w", encoding="utf-8") as f:\n    json.dump(nuevos, f)\nentraron = importar("c.json", "n.json")\nassert entraron == 1, f"tenía que entrar uno solo (el otro ya estaba) y devolviste {entraron!r}"\nwith open("c.json", encoding="utf-8") as f:\n    c = json.load(f)\nassert len(c["alumnos"]) == 2, f"el curso quedó con {len(c['alumnos'])} alumnos"\nassert c["alumnos"][0]["nombre"] == "Ana", "al que ya estaba NO se lo pisa: el formulario no manda sobre lo ya cargado"\nassert c["asistencia"] == {"2026-09-16": {"1": "P"}}, "importar alumnos no tiene que tocar la asistencia que ya estaba"\nassert importar("c.json", "n.json") == 0, "volver a importar el mismo archivo no duplica a nadie"\nprint("¡Importación OK!")`}
+  pistas={[
+    "Son dos archivos JSON que hay que leer, y uno solo que hay que volver a escribir.",
+    "“Ya está” quiere decir que hay un alumno con ese DNI. Armá primero el conjunto de los DNI que ya están y después fijate cuáles de los nuevos no aparecen.",
+    "El último test importa el mismo archivo dos veces seguidas y espera 0 la segunda. Es lo que pasa de verdad cuando alguien baja el formulario y lo importa sin acordarse de que ya lo había hecho.",
+  ]}
+>
+Los inscriptos llegan de un formulario web, en un JSON aparte. Completá
+`importar(ruta_curso, ruta_nuevos)`:
+
+- agrega al curso **los que no estén ya** (por DNI),
+- vuelve a guardar el curso,
+- y **devuelve cuántos entraron**.
+
+A los que ya estaban no se los toca, aunque el formulario traiga el nombre escrito distinto.
+
+:::note[Por qué el formulario no manda]
+Porque en el CFP los datos buenos son los del legajo, no los que alguien tipeó apurado en el
+celular. "Ana" cargada por preceptoría le gana a "Ana Maria" que vino del formulario.
+
+Y devolver **cuántos entraron** no es un detalle: es lo único que le dice a la persona que importó
+si el archivo servía o si acaba de importar el del mes pasado.
+:::
+</EjercicioPython>
+
 ## Más práctica
 
 <EjercicioPython

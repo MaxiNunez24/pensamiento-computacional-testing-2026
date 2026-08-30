@@ -176,6 +176,100 @@ programas por internet. Cuando veamos **JSON** vas a descubrir que ya sabías le
 | recorrés todo de punta a punta | necesitás encontrar uno puntual, rápido |
 
 
+## 🏗️ El sistema: la lista del día
+
+Un diccionario es **exactamente** la forma de la lista del día: para cada DNI, cómo vino. Los
+cuatro ejercicios que siguen son piezas del sistema de asistencias, no ejemplos.
+
+```python
+lista_del_dia = {
+    "30111222": "P",   # Perez, Ana        vino
+    "28999888": "T",   # Gomez, Beto       llegó tarde
+    "27888444": "J",   # Lopez, Caro       falta justificada
+}
+```
+
+<EjercicioPython
+  titulo="El que no está en la lista"
+  dificultad="🌱"
+  starter={`def estado_de(lista_del_dia, dni):\n    pass`}
+  tests={`dia = {"30111222": "P", "28999888": "T", "27888444": "J"}\nassert estado_de(dia, "30111222") == "P", 'el de Ana es "P"'\nassert estado_de(dia, "28999888") == "T", "el que llegó tarde tiene T"\nassert estado_de(dia, "99999999") == "A", "a ese nadie lo marcó: cuenta como ausente"\nassert estado_de({}, "30111222") == "A", "con el día sin empezar, todos ausentes"\nassert dia == {"30111222": "P", "28999888": "T", "27888444": "J"}, "consultar no tiene que MODIFICAR la lista del día"\nprint("¡Consulta OK!")`}
+  pistas={[
+    "Pedir una clave que no está con los corchetes revienta. Hay un método que en vez de reventar devuelve lo que vos le digas.",
+    "Mirá el último test: comprueba que la lista quede igual que antes. Ojo con los métodos que <em>de paso</em> agregan la clave que faltaba.",
+  ]}
+>
+Completá `estado_de(lista_del_dia, dni)`: devuelve cómo vino ese alumno **ese día**.
+
+Si el DNI **no está en la lista**, devolvé `"A"`.
+
+:::note[Por qué el que falta es ausente y no un error]
+En la planilla de papel pasa lo mismo: el renglón vacío quiere decir que no vino. La preceptora
+marca a los que vinieron y no anota nada del resto, y el sistema tiene que entender ese silencio
+igual que ella. Si en vez de eso el programa se cae, alguien tiene que marcar treinta ausentes a
+mano todos los días.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Marcar y corregir"
+  dificultad="🌱"
+  starter={`def marcar(lista_del_dia, dni, estado):\n    pass`}
+  tests={`dia = {}\nmarcar(dia, "30111222", "P")\nassert dia == {"30111222": "P"}, f"después de la primera marca quedó {dia!r}"\nmarcar(dia, "28999888", "A")\nassert len(dia) == 2, "el segundo alumno no tiene que pisar al primero"\nmarcar(dia, "28999888", "T")\nassert dia["28999888"] == "T", "corregir una marca la reemplaza"\nassert len(dia) == 2, "corregir NO agrega un alumno nuevo"\nprint("¡Marcado OK!")`}
+  pistas={[
+    "Marcar por primera vez y corregir una marca son, para un diccionario, la misma operación. Escribila una vez.",
+    "Fijate que la función modifica el diccionario que le pasan. No hace falta devolver nada.",
+  ]}
+>
+Completá `marcar(lista_del_dia, dni, estado)`: deja anotado el estado de ese alumno.
+
+Sirve tanto para marcarlo por primera vez como para **corregir** una marca que estaba mal.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="El resumen del día"
+  dificultad="🌿"
+  starter={`def resumen(lista_del_dia):\n    pass`}
+  tests={`r = resumen({"1": "P", "2": "P", "3": "A", "4": "T"})\nassert r == {"P": 2, "A": 1, "T": 1, "J": 0}, f"salió {r!r}"\nassert resumen({}) == {"P": 0, "A": 0, "T": 0, "J": 0}, "sin nadie marcado, los cuatro tienen que estar y valer 0"\nr2 = resumen({"1": "J", "2": "J"})\nassert r2 == {"P": 0, "A": 0, "T": 0, "J": 2}, f"con dos justificadas salió {r2!r}"\nprint("¡Resumen OK!")`}
+  pistas={[
+    "Arrancá el resultado con los cuatro estados ya puestos en cero, y después recorré las marcas sumando.",
+    "El test del día vacío es el que importa: los cuatro estados tienen que estar SIEMPRE, aunque ninguno haya pasado.",
+  ]}
+>
+Completá `resumen(lista_del_dia)`: devuelve cuántos hay de cada estado.
+
+```python
+resumen({"1": "P", "2": "P", "3": "A", "4": "T"})
+# {"P": 2, "A": 1, "T": 1, "J": 0}
+```
+
+:::caution[Los cuatro van siempre, aunque estén en cero]
+Es tentador armar el diccionario sobre la marcha y que la `J` no aparezca si nadie faltó con aviso.
+El problema llega después: la pantalla que muestra el resumen hace `resumen["J"]` y se cae **justo
+los días en que todo salió bien**. Un contador que a veces no está es peor que uno en cero.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Las marcas del mes"
+  dificultad="🌿"
+  starter={`def marcas_de(mes, dni):\n    pass`}
+  tests={`mes = {\n    "2026-09-04": {"30111222": "P", "28999888": "A"},\n    "2026-09-02": {"30111222": "T"},\n    "2026-09-09": {"30111222": "P", "28999888": "P"},\n}\nassert marcas_de(mes, "30111222") == ["T", "P", "P"], f'esperaba ["T", "P", "P"] (en orden de fecha) y salió {marcas_de(mes, "30111222")!r}'\nassert marcas_de(mes, "28999888") == ["A", "P"], "el día en que no estaba en la lista no suma marca"\nassert marcas_de(mes, "99999999") == [], "un alumno que no aparece nunca no tiene marcas"\nassert marcas_de({}, "30111222") == [], "un mes sin cargar todavía"\nprint("¡Mes OK!")`}
+  pistas={[
+    "El mes es un diccionario de diccionarios: la clave de afuera es la fecha, y el valor es la lista de ese día.",
+    "Los días están cargados en desorden a propósito. Un diccionario los recuerda en el orden en que se agregaron, no por fecha: ¿cómo recorrés las claves ordenadas?",
+    "Con fechas escritas <code>2026-09-04</code>, ordenarlas como texto ya las ordena bien. Por eso el sistema las guarda así y no como <code>4/9/2026</code>.",
+  ]}
+>
+La asistencia de un mes entero es un **diccionario de diccionarios**: para cada fecha, la lista de
+ese día.
+
+Completá `marcas_de(mes, dni)`: devuelve la lista de estados de ese alumno, **en orden de fecha**.
+Los días en que no fue marcado no suman nada.
+
+Es lo que después va a comer `porcentaje_asistencia()`.
+</EjercicioPython>
+
 ## Más práctica
 
 <EjercicioPython
