@@ -1,0 +1,284 @@
+---
+/**
+ * Kit de entrevista para la demo con los stakeholders del CFP.
+ *
+ * Por qué es un kit y no un guion: cuando se escribió esto no se sabía **ni
+ * quién viene ni cuánto se queda**. Un guion lineal se rompe con el primero que
+ * entra fuera de orden; un kit se arma en el momento.
+ *
+ * Tres herramientas, y las tres resuelven un problema concreto del día:
+ *   1. El selector — elegís quién tenés adelante y aparecen SUS preguntas y SU
+ *      pantalla. Sin buscar nada delante de la persona.
+ *   2. El reloj — el rol de ⏱️ Tiempo necesita ver los minutos, no calcularlos.
+ *      Las marcas están en 3', 6' y 9': ese es el núcleo que entra aunque la
+ *      persona diga "tengo diez minutos".
+ *   3. El anotador — cuatro cajas por rol (sirve / falta / sobra / no sirve) y
+ *      un botón que junta todo. Lo que no se anota estructurado, el miércoles
+ *      siguiente no se puede ordenar.
+ *
+ * Todo vive en localStorage del navegador del alumno. No hay servidor: si el
+ * wifi del CFP se cae en el peor momento, el kit sigue andando.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Rol {
+  id: string;
+  emoji: string;
+  nombre: string;
+  /** Qué le duele HOY. Para saber con quién se está hablando. */
+  duele: string;
+  /** Cuánto tiempo es realista pedirle. */
+  tiempo: string;
+  /** Las preguntas, en embudo: de la más abierta a la más cerrada. */
+  preguntas: string[];
+  /** Qué pantalla mostrarle y en qué orden. */
+  pantalla: { nombre: string; hash: string; enCelular?: boolean; noExiste?: boolean };
+  /** Qué NO hay que prometerle a este en particular. */
+  ojo?: string;
+}
+
+const { roles, titulo = 'Kit de entrevista' } = Astro.props as { roles: Rol[]; titulo?: string };
+const id = idEjercicio(titulo);
+
+/* El prototipo vive del lado de MkDocs, que es la otra mitad del sitio: sube un
+   nivel desde /ejercicios/. Con el hash abre directo en la pantalla que hace
+   falta (se lo agregamos para esto). */
+const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/proyecto/sistema-asistencias.html';
+
+const CAJAS = [
+  { id: 'sirve', emoji: '🟢', rotulo: 'Le sirve así como está', ayuda: '¿Qué dijo que ya le resuelve algo?' },
+  { id: 'falta', emoji: '🟡', rotulo: 'Le sirve pero le falta', ayuda: 'Con sus palabras, no con las nuestras' },
+  { id: 'sobra', emoji: '🔵', rotulo: 'Esto no lo usaría', ayuda: 'Vale oro: es trabajo que no hay que hacer' },
+  { id: 'no', emoji: '🔴', rotulo: 'Así no le sirve', ayuda: '¿Por qué? Preguntalo, no lo supongas' },
+];
+---
+
+<section class="ent" id={id} data-entrevista data-prototipo={PROTOTIPO}>
+
+  <div class="ent__reloj" data-reloj>
+    <div class="ent__crono" data-crono>00:00</div>
+    <div class="ent__marcas">
+      <span data-marca="3">3' preguntar</span>
+      <span data-marca="6">6' mostrar</span>
+      <span data-marca="9">9' cerrar</span>
+    </div>
+    <div class="ent__reloj-btns">
+      <button type="button" class="ent__btn ent__btn--ok" data-arrancar>▶ Arrancar</button>
+      <button type="button" class="ent__btn" data-reiniciar>↺ De nuevo</button>
+    </div>
+  </div>
+
+  <p class="ent__quien">¿A quién tenés adelante?</p>
+  <div class="ent__roles">
+    {roles.map((r) => (
+      <button type="button" class="ent__rol" data-rol={r.id}>
+        <span class="ent__rol-emoji">{r.emoji}</span>
+        <span class="ent__rol-nombre">{r.nombre}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="ent__ficha" data-ficha hidden>
+    <header class="ent__ficha-cab">
+      <h3 data-f-nombre></h3>
+      <span class="ent__tiempo" data-f-tiempo></span>
+    </header>
+
+    <p class="ent__duele"><strong>Lo que le duele hoy:</strong> <span data-f-duele></span></p>
+
+    <ol class="ent__preguntas" data-f-preguntas></ol>
+
+    <div class="ent__pantalla">
+      <span data-f-pantalla-txt></span>
+      <a class="ent__btn ent__btn--ok" data-f-pantalla-link target="_blank" rel="noopener">Abrir esa pantalla ↗</a>
+    </div>
+
+    <p class="ent__ojo" data-f-ojo hidden></p>
+
+    <div class="ent__cajas">
+      {CAJAS.map((c) => (
+        <label class="ent__caja" data-caja={c.id}>
+          <span class="ent__caja-rot">{c.emoji} {c.rotulo}</span>
+          <textarea rows="3" data-nota={c.id} placeholder={c.ayuda}></textarea>
+        </label>
+      ))}
+    </div>
+
+    <p class="ent__guardado" data-guardado></p>
+  </div>
+
+  <div class="ent__exportar">
+    <button type="button" class="ent__btn" data-copiar>📋 Copiar todo lo anotado</button>
+    <button type="button" class="ent__btn" data-borrar>🗑️ Empezar de cero</button>
+    <span class="ent__aviso-copia" data-aviso-copia></span>
+  </div>
+
+  <script type="application/json" data-roles set:html={JSON.stringify(roles)}></script>
+</section>
+
+<script>
+  document.querySelectorAll('[data-entrevista]').forEach((ent) => {
+    const ROLES = JSON.parse(ent.querySelector('[data-roles]').textContent);
+    const PROTOTIPO = ent.dataset.prototipo;
+    const CAJAS = ['sirve', 'falta', 'sobra', 'no'];
+    const ROTULOS = { sirve: '🟢 LE SIRVE', falta: '🟡 LE FALTA', sobra: '🔵 NO LO USARÍA', no: '🔴 NO LE SIRVE' };
+    const LS = 'pc_entrevista';
+
+    const ficha = ent.querySelector('[data-ficha]');
+    const guardado = ent.querySelector('[data-guardado]');
+    let actual = null;
+
+    function leer() {
+      try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch { return {}; }
+    }
+    function escribir(datos) {
+      try { localStorage.setItem(LS, JSON.stringify(datos)); } catch { /* sin localStorage: se pierde al cerrar, y no hay nada que hacer */ }
+    }
+
+    // ─────────────────────────────────────────────────────────── el reloj ──
+    let desde = null;
+    let tick = null;
+    const crono = ent.querySelector('[data-crono]');
+
+    function pintarReloj(seg) {
+      const m = String(Math.floor(seg / 60)).padStart(2, '0');
+      const s = String(seg % 60).padStart(2, '0');
+      crono.textContent = `${m}:${s}`;
+      // Verde hasta 9', ámbar hasta 12', rojo después: a los 12 minutos ya
+      // estiraste el tiempo que te dieron, digan lo que digan.
+      crono.className = 'ent__crono' + (seg >= 720 ? ' es-tarde' : seg >= 540 ? ' es-justo' : '');
+      [3, 6, 9].forEach((m) => {
+        ent.querySelector(`[data-marca="${m}"]`).classList.toggle('es-pasada', seg >= m * 60);
+      });
+    }
+
+    ent.querySelector('[data-arrancar]').addEventListener('click', (e) => {
+      const b = e.currentTarget;
+      if (tick) {
+        clearInterval(tick); tick = null;
+        b.textContent = '▶ Seguir';
+        return;
+      }
+      desde = Date.now() - (desde ? Date.now() - desde : 0);
+      const arranque = Date.now() - (parseInt(crono.dataset.seg || '0', 10) * 1000);
+      tick = setInterval(() => {
+        const seg = Math.floor((Date.now() - arranque) / 1000);
+        crono.dataset.seg = String(seg);
+        pintarReloj(seg);
+      }, 250);
+      b.textContent = '⏸ Pausa';
+    });
+
+    ent.querySelector('[data-reiniciar]').addEventListener('click', () => {
+      if (tick) { clearInterval(tick); tick = null; }
+      crono.dataset.seg = '0';
+      pintarReloj(0);
+      ent.querySelector('[data-arrancar]').textContent = '▶ Arrancar';
+    });
+
+    // ──────────────────────────────────────────────────────── la ficha ─────
+    function mostrar(idRol) {
+      const r = ROLES.find((x) => x.id === idRol);
+      if (!r) return;
+      actual = idRol;
+
+      ent.querySelectorAll('[data-rol]').forEach((b) => b.classList.toggle('es-elegido', b.dataset.rol === idRol));
+
+      ficha.querySelector('[data-f-nombre]').textContent = `${r.emoji} ${r.nombre}`;
+      ficha.querySelector('[data-f-tiempo]').textContent = r.tiempo;
+      ficha.querySelector('[data-f-duele]').textContent = r.duele;
+
+      const ol = ficha.querySelector('[data-f-preguntas]');
+      ol.innerHTML = '';
+      r.preguntas.forEach((p) => {
+        const li = document.createElement('li');
+        li.textContent = p;        // textContent: son preguntas, no HTML
+        ol.appendChild(li);
+      });
+
+      const txt = ficha.querySelector('[data-f-pantalla-txt]');
+      const link = ficha.querySelector('[data-f-pantalla-link]');
+      txt.textContent =
+        (r.pantalla.noExiste ? '⚠️ Todavía NO existe: ' : '🖥️ Mostrale ') +
+        r.pantalla.nombre +
+        (r.pantalla.enCelular ? ' — y mostrásela EN EL CELULAR, que es donde la va a usar.' : '');
+      link.href = PROTOTIPO + (r.pantalla.hash ? '#' + r.pantalla.hash : '');
+      link.hidden = false;
+
+      const ojo = ficha.querySelector('[data-f-ojo]');
+      ojo.textContent = r.ojo ? '⚠️ ' + r.ojo : '';
+      ojo.hidden = !r.ojo;
+
+      const datos = leer();
+      CAJAS.forEach((c) => {
+        ficha.querySelector(`[data-nota="${c}"]`).value = (datos[idRol] && datos[idRol][c]) || '';
+      });
+      guardado.textContent = '';
+      ficha.hidden = false;
+    }
+
+    ent.querySelectorAll('[data-rol]').forEach((b) => {
+      b.addEventListener('click', () => mostrar(b.dataset.rol));
+    });
+
+    // Se guarda solo mientras escribe: nadie va a tocar "guardar" con un
+    // preceptor hablando enfrente.
+    let timer = null;
+    ficha.addEventListener('input', (e) => {
+      const t = e.target.closest('[data-nota]');
+      if (!t || !actual) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const datos = leer();
+        datos[actual] = datos[actual] || {};
+        datos[actual][t.dataset.nota] = t.value;
+        escribir(datos);
+        guardado.textContent = 'Guardado en esta compu ✓';
+      }, 400);
+    });
+
+    // ───────────────────────────────────────────────────── juntar todo ─────
+    function armarTexto() {
+      const datos = leer();
+      const partes = ['NOTAS DE LA ENTREVISTA — Sistema de Asistencias CFP 401', ''];
+      ROLES.forEach((r) => {
+        const d = datos[r.id];
+        if (!d || !CAJAS.some((c) => (d[c] || '').trim())) return;
+        partes.push(`=== ${r.emoji} ${r.nombre.toUpperCase()} ===`);
+        CAJAS.forEach((c) => {
+          const v = (d[c] || '').trim();
+          if (v) partes.push(`${ROTULOS[c]}:`, v, '');
+        });
+      });
+      if (partes.length === 2) partes.push('(todavía no hay nada anotado)');
+      return partes.join('\n');
+    }
+
+    ent.querySelector('[data-copiar]').addEventListener('click', async () => {
+      const aviso = ent.querySelector('[data-aviso-copia]');
+      const texto = armarTexto();
+      try {
+        await navigator.clipboard.writeText(texto);
+        aviso.textContent = 'Copiado — pegalo donde lo vayas a guardar ✓';
+      } catch {
+        // Sin permiso de portapapeles (pasa en http y en algunos celulares):
+        // se lo mostramos para que lo copie a mano en vez de dejarlo sin nada.
+        const caja = document.createElement('textarea');
+        caja.className = 'ent__volcado';
+        caja.rows = 14;
+        caja.value = texto;
+        ent.querySelector('[data-copiar]').after(caja);
+        caja.select();
+        aviso.textContent = 'No pude copiarlo solo: seleccionalo y copialo a mano.';
+      }
+    });
+
+    ent.querySelector('[data-borrar]').addEventListener('click', () => {
+      if (!confirm('Esto borra TODO lo anotado en esta compu, de todos los roles. ¿Seguro?')) return;
+      escribir({});
+      if (actual) mostrar(actual);
+    });
+
+    pintarReloj(0);
+  });
+</script>

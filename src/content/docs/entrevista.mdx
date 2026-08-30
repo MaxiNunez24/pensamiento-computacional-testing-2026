@@ -1,0 +1,219 @@
+---
+title: La entrevista del viernes
+description: "El kit para entrevistar a los que van a usar el sistema: qué preguntarle a cada uno, qué pantalla mostrarle y cómo anotar lo que digan."
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Entrevista from '../../components/Entrevista.astro';
+
+El **viernes 4/9** vienen al aula los que van a usar el sistema: preceptoría, dirección, las
+auxiliares, los instructores. Vienen a contarnos qué necesitan y a decirnos si lo que llevamos
+hecho les sirve.
+
+Esta página es la herramienta para ese día. **Se prepara el miércoles 2/9 y se usa el viernes**,
+abierta en la compu, mientras hablan.
+
+:::danger[Lo único que no se puede hacer]
+**No prometas nada.** Ni "sí, se puede", ni "para tal fecha", ni "es fácil".
+
+La respuesta a todo pedido es **"lo anotamos y lo vemos"**. Un sí dicho en una demo se convierte en
+una deuda, y el que la paga sos vos en noviembre.
+:::
+
+---
+
+## ⚡ El núcleo: diez minutos que sirven con cualquiera
+
+No sabemos quién va a entrar ni cuánto se va a quedar. Puede ser el director diciendo "tengo cinco
+minutos" o preceptoría sentándose media hora. Por eso lo primero no es un guion largo: es **un
+núcleo corto que entra siempre**, y todo lo demás se agrega si sobra tiempo.
+
+| Minuto | Qué se hace | Por qué |
+|---|---|---|
+| **0 – 3** | *"Contame cómo hacés esto hoy, de principio a fin."* Y **te callás.** | La gente no sabe decir qué necesita, pero siempre sabe contar cómo trabaja |
+| **3 – 6** | Le mostrás **una sola pantalla**: la suya | Una pantalla concreta saca más feedback que veinte minutos de explicación |
+| **6 – 9** | Las tres de cierre: ¿qué te ahorraría más tiempo? · ¿qué de esto no usarías nunca? · ¿qué tendría que pasar para que digas "esto no me sirve"? | Las tres apuntan a lo que **no** te va a decir solo |
+| **9 – 10** | *"¿Con quién más tendríamos que hablar?"* | Es la pregunta que encuentra a los usuarios que no sabíamos que existían |
+
+:::tip[La regla de oro: el que pregunta no habla]
+Si el alumno que conduce habla más que el entrevistado, la entrevista fracasó. Todos los silencios
+incómodos los llena **el otro**, no vos. Contá hasta tres antes de repreguntar.
+:::
+
+---
+
+## 🧰 El kit
+
+Elegí quién tenés adelante y aparecen sus preguntas, su pantalla y las cajas para anotar. **Todo se
+guarda solo en esta compu** — sin internet y sin cuenta, así que si se cae el wifi del CFP en el
+peor momento, esto sigue andando.
+
+<Entrevista roles={[
+  {
+    id: 'preceptoria', emoji: '📋', nombre: 'Preceptoría',
+    duele: 'A fin de mes rehace a mano una planilla oficial de 50 columnas copiando de un Excel con fórmulas que se rompen. Y otra vez por cada uno de los ~30 cursos.',
+    tiempo: 'Es quien más tiempo puede dar — pero lo necesita una vez por mes, no todos los días.',
+    preguntas: [
+      'Contanos cómo armás la planilla de fin de mes, desde que el docente te pasa la asistencia hasta que la entregás firmada.',
+      '¿Qué parte de todo eso te lleva más tiempo?',
+      '¿Qué pasa cuando te das cuenta de un error después de haberla entregado?',
+    ],
+    pantalla: { nombre: 'la planilla oficial generada sola, y hacé el zoom para que la compare con la de papel.', hash: 'planilla' },
+    ojo: 'Va a pedir los 30 cursos. Anotalo y no digas que sí: multi-curso todavía no está hecho.',
+  },
+  {
+    id: 'direccion', emoji: '🏛️', nombre: 'Dirección',
+    duele: 'No tiene forma de ver cómo viene la asistencia de un curso sin pedírsela a alguien y esperar.',
+    tiempo: 'Un minuto y de parado. Es el que menos tiempo tiene y el que más puede destrabar.',
+    preguntas: [
+      '¿Qué necesitás saber de la asistencia de un curso, y cada cuánto lo necesitás?',
+      'Hoy, ¿a quién se lo pedís y cuánto tardás en tenerlo?',
+      'Si pudieras mirar una sola pantalla por semana, ¿qué tendría que decir?',
+    ],
+    pantalla: { nombre: 'el panel, que es la vista "desde arriba".', hash: 'dashboard' },
+    ojo: 'Si pide que se integre con SiGeS, anotalo y nada más. Eso es otro proyecto entero.',
+  },
+  {
+    id: 'auxiliares', emoji: '🍫', nombre: 'Auxiliares',
+    duele: 'No saben para cuántos preparar la merienda. Preguntan, calculan de memoria, o les sobra.',
+    tiempo: 'Tres segundos por día. Es la pantalla más simple de todo el sistema.',
+    preguntas: [
+      '¿Cómo hacés hoy para saber cuántas meriendas preparar?',
+      '¿A qué hora del día te sirve saberlo?',
+      '¿Te alcanza con un número solo, o necesitás saber de qué cursos sale?',
+    ],
+    pantalla: { nombre: 'una pantalla con un número grande. Mostrale el panel y preguntale si algo así le serviría.', hash: 'dashboard', noExiste: true },
+    ojo: 'Es la única pantalla que todavía NO existe. Decilo de frente: preguntar antes de construir sale mucho más barato que construir mal.',
+  },
+  {
+    id: 'instructores', emoji: '🧑‍🏫', nombre: 'Instructores',
+    duele: 'Toma asistencia en papel y la carga después, de memoria, cuando se acuerda.',
+    tiempo: 'Dos minutos, con el celular en la mano y la clase esperando.',
+    preguntas: [
+      'Contame qué hacés cuando arranca la clase y tenés que tomar asistencia.',
+      '¿En qué momento queda registrada de verdad?',
+      'Si un alumno llega veinte minutos tarde, ¿qué hacés?',
+    ],
+    pantalla: { nombre: 'pasar lista del día, con los cuatro botones por alumno.', hash: 'dia', enCelular: true },
+    ojo: 'Va a preguntar si puede usarlo desde su casa. Hoy la respuesta es no: anda solo en la red del CFP. Contalo como una decisión tomada, no como un olvido.',
+  },
+  {
+    id: 'otro', emoji: '❓', nombre: 'Vino alguien más',
+    duele: 'No lo sabemos. Averiguarlo es exactamente para lo que sirve la entrevista.',
+    tiempo: 'El que te dé. Usá el núcleo de diez minutos.',
+    preguntas: [
+      'Contanos qué hacés vos con la asistencia, de principio a fin.',
+      '¿Qué de todo eso te gustaría no hacer nunca más?',
+      '¿Qué tendría que pasar para que digas "esto no me sirve"?',
+    ],
+    pantalla: { nombre: 'el panel, y de ahí dejá que sea él quien pida ver algo.', hash: 'dashboard' },
+    ojo: 'Antes de que se vaya: "¿con quién más tendríamos que hablar?". Es la pregunta que más usuarios nuevos encuentra.',
+  },
+]} />
+
+---
+
+## 🚦 Por qué las cajas son cuatro y no una
+
+Porque las cuatro respuestas valen distinto, y la que más se pierde es la tercera:
+
+| | Qué es | Qué hacemos con eso |
+|---|---|---|
+| 🟢 **Le sirve así** | Lo que ya resuelve algo | Se defiende: no se toca en las próximas versiones |
+| 🟡 **Le falta** | Lo que pide | Va a la lista, se prioriza el miércoles siguiente |
+| 🔵 **No lo usaría** | Lo que le sobra | **Es trabajo que no hay que hacer.** Vale tanto como lo que pide |
+| 🔴 **Así no le sirve** | Lo que está mal pensado | Es lo más barato de arreglar hoy y lo más caro en noviembre |
+
+:::caution[La azul es la que nadie anota]
+Cuando alguien dice *"esto no lo usaría nunca"*, la reacción natural es defender la pantalla. No la
+defiendas: **anotala**. Cada cosa que sacamos de la lista es una semana que nos queda para hacer
+bien lo que sí importa.
+:::
+
+---
+
+## 🎭 Los cinco roles del equipo
+
+Los mismos que ensayamos. **Cada uno anota el suyo antes de que entre nadie.**
+
+| Rol | Cuántos | Qué hace ese día |
+|---|---|---|
+| 🎤 **Conduce** | 1 | Hace las preguntas. **Es el único que habla.** |
+| ✍️ **Escriba** | 1 | Llena las cajas de esta página. No interpreta: transcribe. |
+| ⏱️ **Tiempo** | 1 | Mira el reloj de arriba. Avisa a los 6' y corta a los 10'. |
+| 👀 **Observador** | 1–2 | No escucha: **mira**. Qué papel toca, dónde duda, qué mira primero en la pantalla. |
+| 🖥️ **Demo** | 1 | Abre la pantalla que corresponde. **Ya la tiene abierta antes de que se lo pidan.** |
+
+:::note[El observador es el que más va a sorprender]
+La gente no cuenta lo que hace: cuenta lo que **cree** que hace. Si el preceptor dice "lo cargo al
+toque" pero mientras habla busca un papel arrugado en el bolsillo, ese papel vale más que la frase.
+
+Lo que anota el observador va en la caja 🟡, con la fórmula: *"dijo X pero hizo Y"*.
+:::
+
+---
+
+## 🔀 Tres formas en que puede salir esto
+
+Todavía no sabemos cómo van a venir. El kit aguanta las tres, pero conviene tenerlas pensadas:
+
+<Tabs>
+<TabItem label="Todos juntos">
+
+Una sola ronda. **El riesgo es que hable el de más jerarquía y los demás asientan** — que es la
+forma más común de perder el requisito de la auxiliar.
+
+Contramedida: el que conduce pregunta **por rol, uno por uno** — *"y vos, que preparás las
+meriendas, ¿cómo lo hacés hoy?"*. Y se muestran dos pantallas nada más: la planilla y pasar lista.
+Con seis personas mirando, la tercera pantalla ya no la registra nadie.
+
+</TabItem>
+<TabItem label="Por rondas">
+
+La mejor de las tres. Se usa el kit tal cual: se elige el rol, se hace el núcleo, se anota, se
+reinicia el reloj y entra el siguiente.
+
+**Entre ronda y ronda, dos minutos** para que el escriba termine de anotar. Anotar con el siguiente
+ya sentado enfrente no funciona: se pierde la mitad.
+
+</TabItem>
+<TabItem label="De a uno, cuando puedan">
+
+La más incómoda y la más probable. Hay que estar listos **todo el tiempo**, sin saber quién entra.
+
+Contramedida: el prototipo abierto en el panel desde el minuto cero, esta página abierta al lado, y
+los roles repartidos aunque todavía no haya venido nadie. Al que cae no se lo hace esperar mientras
+buscamos la pantalla — por eso los enlaces del kit abren directo donde hace falta.
+
+Y si entra alguien que no está en la lista, existe el botón **❓ Vino alguien más**.
+
+</TabItem>
+</Tabs>
+
+---
+
+## ✅ La lista de antes de que entre nadie
+
+- [ ] El prototipo **abierto** en una pestaña, en el panel.
+- [ ] Esta página abierta en otra.
+- [ ] **Un celular** con el prototipo abierto en *pasar lista* — para los instructores.
+- [ ] La planilla de papel de verdad, sobre la mesa, al lado de la pantalla. La comparación se hace sola.
+- [ ] Los cinco roles repartidos y anotados.
+- [ ] El reloj en 00:00.
+
+---
+
+## 🗓️ Qué pasa después
+
+El miércoles siguiente, con las notas en la mano:
+
+1. Se junta todo en **una lista de requerimientos** — que es un SRS en criollo, sin el formato IEEE.
+2. Se separa en **lo que sí / lo que después / lo que no**, y la decisión la toman ustedes y la
+   justifican.
+3. Eso queda como **el enunciado del proyecto, escrito por ustedes**.
+
+:::tip[Por qué esto vale más que un enunciado que les doy yo]
+Porque un cliente que participó del recorte no reclama después por lo que quedó afuera. Y porque el
+día que alguien pregunte "¿por qué el sistema no hace X?", la respuesta no va a ser "no nos dio el
+tiempo" sino **"lo decidimos el 9 de septiembre, y estas fueron las razones"**.
+:::

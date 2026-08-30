@@ -2586,3 +2586,99 @@ body.pc-resizing * {
 @media (max-width: 30rem) {
   .foro__soluciones { grid-template-columns: 1fr; }
 }
+
+/* ---------------------------------------------------------------------------
+   KIT DE ENTREVISTA (demo con los stakeholders del CFP)
+   Se usa EN VIVO, con alguien hablando enfrente. De ahí las decisiones: el
+   reloj grande y legible de lejos, los botones de rol del tamaño de un dedo, y
+   las cajas de notas siempre visibles sin scrollear.
+--------------------------------------------------------------------------- */
+.ent__reloj {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem;
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 0.7rem 0.9rem; margin-bottom: 1.2rem;
+}
+.ent__crono {
+  font-family: var(--sl-font-mono, monospace); font-variant-numeric: tabular-nums;
+  font-size: 2.4rem; line-height: 1; font-weight: 700; color: #7bc47f;
+}
+.ent__crono.es-justo { color: #ffd43b; }
+.ent__crono.es-tarde { color: #ff8787; }
+.ent__marcas { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.78rem; }
+.ent__marcas span { color: var(--sl-color-gray-4); }
+.ent__marcas span.es-pasada { color: var(--sl-color-white); font-weight: 600; }
+.ent__reloj-btns { display: flex; gap: 0.4rem; margin-left: auto; }
+
+.ent__btn {
+  font: inherit; font-size: 0.85rem; cursor: pointer; text-decoration: none;
+  display: inline-block; padding: 0.4rem 0.8rem; border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.ent__btn:hover { border-color: var(--sl-color-accent); }
+.ent__btn--ok { border-color: var(--sl-color-accent); }
+
+.ent__quien { margin: 0 0 0.5rem; font-weight: 600; }
+.ent__roles { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem; }
+.ent__rol {
+  font: inherit; cursor: pointer; display: flex; align-items: center; gap: 0.45rem;
+  padding: 0.55rem 0.85rem; border-radius: 0.5rem; min-height: 2.75rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-black);
+  color: var(--sl-color-white);
+}
+.ent__rol:hover { border-color: var(--sl-color-accent); }
+.ent__rol.es-elegido { border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); }
+.ent__rol-emoji { font-size: 1.15rem; }
+
+.ent__ficha {
+  border: 1px solid var(--sl-color-accent); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 1rem;
+}
+.ent__ficha-cab { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem; }
+.ent__ficha-cab h3 { margin: 0; font-size: 1.15rem; }
+.ent__tiempo { font-size: 0.8rem; color: var(--sl-color-gray-3); }
+.ent__duele { font-size: 0.9rem; line-height: 1.5; margin: 0.6rem 0 0.9rem; }
+
+.ent__preguntas { margin: 0 0 1rem; padding-left: 1.3rem; }
+.ent__preguntas li { margin: 0.35rem 0; line-height: 1.5; }
+/* Las preguntas se leen en voz alta mirando de reojo: van más grandes que el
+   resto y sin nada al lado que distraiga. */
+.ent__preguntas li:first-child { font-size: 1.05rem; font-weight: 600; }
+
+.ent__pantalla {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  border-left: 3px solid var(--sl-color-accent); padding: 0.5rem 0 0.5rem 0.7rem;
+  margin-bottom: 0.8rem; font-size: 0.9rem; line-height: 1.45;
+}
+.ent__ojo {
+  border-left: 3px solid #ffa94d; padding: 0.5rem 0 0.5rem 0.7rem;
+  margin: 0 0 1rem; font-size: 0.85rem; line-height: 1.45; color: var(--sl-color-gray-2);
+}
+
+.ent__cajas {
+  display: grid; gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+.ent__caja { display: flex; flex-direction: column; gap: 0.3rem; }
+.ent__caja-rot { font-size: 0.82rem; font-weight: 600; }
+.ent__caja textarea, .ent__volcado {
+  width: 100%; box-sizing: border-box; resize: vertical; font: inherit; font-size: 0.88rem;
+  line-height: 1.45; padding: 0.5rem; border-radius: 0.4rem;
+  background: var(--sl-color-gray-6); color: var(--sl-color-white);
+  border: 1px solid var(--sl-color-gray-5);
+}
+.ent__caja[data-caja="sirve"] textarea { border-left: 3px solid #7bc47f; }
+.ent__caja[data-caja="falta"] textarea { border-left: 3px solid #ffd43b; }
+.ent__caja[data-caja="sobra"] textarea { border-left: 3px solid #74c0fc; }
+.ent__caja[data-caja="no"] textarea { border-left: 3px solid #ff8787; }
+
+.ent__guardado { margin: 0.6rem 0 0; font-size: 0.75rem; color: var(--sl-color-gray-4); min-height: 1em; }
+
+.ent__exportar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+.ent__aviso-copia { font-size: 0.8rem; color: var(--sl-color-gray-3); }
+.ent__volcado { margin-top: 0.6rem; font-family: var(--sl-font-mono, monospace); font-size: 0.8rem; }
+
+@media (max-width: 30rem) {
+  .ent__crono { font-size: 2rem; }
+  .ent__reloj-btns { margin-left: 0; }
+  .ent__cajas { grid-template-columns: 1fr; }
+}

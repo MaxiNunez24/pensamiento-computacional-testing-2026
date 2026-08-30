@@ -2083,6 +2083,23 @@ currentMonth = new Date();
 currentDay = new Date();
 renderDashboard();
 document.getElementById('sb-course-val').textContent = `Curso ${state.config.curso} — ${state.config.especialidad}`;
+
+/* ══════════════════════════════════════════
+   ENLACES DIRECTOS A UNA PANTALLA  (#dia, #planilla, #alumnos…)
+   ──────────────────────────────────────────
+   Para las demos: delante de alguien que te da diez minutos no se puede gastar
+   uno buscando la pantalla en el menú. Con el hash puesto, el prototipo abre
+   directamente donde hace falta.
+
+   Es aditivo: sin hash, arranca en el panel como siempre.
+══════════════════════════════════════════ */
+function irAlHash() {
+  const id = (location.hash || '').replace('#', '');
+  const item = id && document.querySelector(`.nav-item[data-view="${id}"]`);
+  if (item) goView(id, item);
+}
+irAlHash();
+window.addEventListener('hashchange', irAlHash);
 </script>
 </body>
 </html>

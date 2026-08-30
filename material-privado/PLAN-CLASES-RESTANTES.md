@@ -77,8 +77,8 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 |---|---|---|
 | Mié 19/8 | Resolución de dudas sobre los ejercicios | ✅ |
 | Vie 21/8 | Consulta y resolución de ejercicios | ✅ |
-| Mié 26/8 | Consulta y resolución de ejercicios | ✅ |
-| **Vie 28/8** | **Archivos** | ← la próxima |
+| Mié 26/8 | **Elicitación de requerimientos** + preparación de la demo | ✅ |
+| Vie 28/8 | Consultas sobre el sistema y sobre los ejercicios. Se firmaron el acta del cambio de horario de los viernes y la salida a Nerdearla | ✅ — **Archivos no se dio** |
 
 > 😬 **El atraso es real y hay que mirarlo de frente.** Tres clases seguidas de práctica sin tema
 > nuevo. La puesta al día no se logró y **Archivos y JSON siguen sin darse**, que era lo que
@@ -87,17 +87,23 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 > Esto no es un reproche: el grupo necesitaba la práctica y se le dio. Pero cambia el resto del
 > año, y conviene decirlo ahora y no en octubre.
 
+> 🕐 **Acta del 28/8: los viernes pasaron de 14:00–17:20 a 13:20–16:40**, igual que los
+> miércoles. El total de horas no cambia, pero **se termina 40 minutos antes**: la media
+> hora de gracia del final de los viernes ya no existe. Las clases que venían cerrando
+> justo ahora no cierran.
+
 ### 🍂 Septiembre — arrancar el proyecto de una vez (9 clases)
 
 | Fecha | Clase | Notas |
 |---|---|---|
-| Mié 2/9 | **JSON** | Cierra el Bloque 3. |
-| **Vie 4/9** | 🎪 **Demo a preceptoría** + arranque de **POO** | La demo se lleva la primera hora. Después, POO I. |
-| Mié 9/9 | **POO I** — clases y objetos | |
+| **Mié 2/9** | 🎤 **Ensayo de la entrevista** (70 min) + **Archivos** (105 min) | Run of show en `clase-2026-09-02_preparar-demo.md`. La herramienta es `/entrevista/`. |
+| **Vie 4/9** | 🎪 **La entrevista con los stakeholders** | No se sabe cómo vienen ni cuánto se quedan: el kit aguanta las tres formas. Si hay huecos, se sigue con Archivos. |
+| Mié 9/9 | **POO I** — clases y objetos | ⚠️ **JSON se quedó sin fecha propia.** Entra acá mezclado (el `Alumno` que se guarda en JSON) o se corre POO una clase. Hay que decidirlo el 2/9, no el 9/9. |
 | Vie 11/9 | **POO I** práctica, **con el sistema** | Los ejercicios ya son piezas del proyecto. |
 | Mié 16/9 | **POO II** — métodos, `__init__`, `__str__` | |
 | Vie 18/9 | **POO II** práctica, con el sistema | |
 | Mié 23/9 | **Del prototipo al modelo**: qué clases necesita el sistema | Se decide entre todos: `Alumno`, `Curso`, `Asistencia`. |
+| Jue 24/9 y Sáb 26/9 | 🎉 **Nerdearla** (salida educativa, Konex) | **No cae en día de clase**: el evento va del 22 al 26, el 22 y 23 son online y lo presencial arranca el jueves 24. El 23/9 sigue siendo clase — y es la bisagra del proyecto. Ojo con el viernes 25: es clase al otro día de un día entero afuera. |
 | Vie 25/9 | **Proyecto: alta y listado de alumnos** | Primera pieza que corre de verdad. |
 | Mié 30/9 | **Proyecto: pasar asistencia** + **Eficiencia** | Buscar un alumno recorriendo la lista vs. por DNI en un diccionario. |
 

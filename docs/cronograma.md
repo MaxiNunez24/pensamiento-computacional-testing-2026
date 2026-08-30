@@ -33,7 +33,7 @@
 | ❄️ **22/7 – 1/8** | Receso invernal *(pasado)* |
 | 🔁 **Agosto** | Vuelta del receso: **repaso y práctica** en la plataforma, y cierre de **Archivos y JSON** |
 | 🏗️ **Septiembre** | **POO** y arranque del **Sistema de Asistencias** (primer proyecto, CLI) |
-| 🎉 **21/9** | **Nerdearla** |
+| 🎉 **24 y 26/9** | **Nerdearla** — salida educativa al Ciudad Cultural Konex. (El evento va del 22 al 26; el 22 y 23 son online y lo presencial arranca el jueves 24.) |
 | ✅ **Mié 30/9** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en JSON |
 | 🧪 **Oct** | **Testing** (teoría + `pytest` sobre el proyecto) y migración del sistema a **web (Flask)** |
 | 🚀 **Vie 6/11** | Tercer hito: **el sistema publicado en internet**, usable desde el celular |
@@ -172,6 +172,7 @@
 | Mié 19/8 | Resolución de dudas sobre los ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
 | Vie 21/8 | Consulta y resolución de ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
 | Mié 26/8 | **Elicitación de requerimientos**: lluvia de ideas sobre el sistema y preparación de la demo | [🗺️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/proyecto/) |
+| Vie 28/8 | Consultas sobre el **sistema de asistencias** y sobre los ejercicios de la plataforma. Se firmaron el acta por el **cambio de horario de los viernes** y la autorización de la **salida educativa a Nerdearla**. *(Archivos quedó para más adelante.)* | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.

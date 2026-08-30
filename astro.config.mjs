@@ -69,6 +69,9 @@ export default defineConfig({
         // Va junto al tablero porque son las dos pantallas compartidas:
         // lo que ve toda la clase, no lo que cada uno tiene guardado.
         { label: '💬 Soluciones de la clase', link: '/foro/' },
+        // Arriba mientras dure: se usa el 2/9 para prepararla y el 4/9 en vivo,
+        // con alguien hablando enfrente. Después baja o se saca.
+        { label: '🎤 La entrevista del viernes', link: '/entrevista/' },
         // ⚠️ El orden de acá abajo NO es cosmético: es el orden en que se enseña,
         // y varias clases dependen de que lo anterior ya se haya visto.
         //   · Listas va ANTES que Bucles: `for` necesita algo que recorrer, y
