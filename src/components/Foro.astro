@@ -1,0 +1,353 @@
+---
+/**
+ * Foro de soluciones anónimas.
+ *
+ * Para qué existe: en la plataforma cada uno resuelve solo y nunca ve cómo lo
+ * hizo el resto. Pero el momento en que más se aprende es cuando aparecen tres
+ * soluciones correctas y distintas del mismo ejercicio y hay que discutir cuál
+ * conviene. Eso, con seis personas, no pasa solo: hay que ponerlo en pantalla.
+ *
+ * Por qué anónimo: acá NO se guarda quién escribió cada solución (ver el
+ * comentario largo en worker/tablero.js). Se discute el código, no la persona.
+ * Un alumno que sabe que su nombre va arriba publica lo que cree que se espera;
+ * uno anónimo publica lo que le salió, que es lo que sirve mirar.
+ *
+ * La lista de ejercicios NO está escrita a mano: se saca de los .mdx en tiempo
+ * de compilación, igual que el camino. Un ejercicio nuevo aparece acá solo, y
+ * uno que se borra deja de aparecer — sin que nadie se acuerde de tocar nada.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const fuentes = import.meta.glob('../content/docs/clases/*.mdx', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+/* Solo los ejercicios de código libre. Un multiple choice o un "ordenar los
+   pasos" no tiene solución que comparar: o lo tildaste bien o no. */
+const CON_CODIGO = /<(EjercicioPython|EscribirTest)\b[^>]*?\btitulo="([^"]*)"/g;
+const TITULO_CLASE = /^title:\s*(?:"([^"]*)"|'([^']*)'|(.*))$/m;
+
+/* El orden del selector es el orden en que se enseña, igual que el menú. Si
+   aparece una clase que no está acá, se agrega al final en vez de perderse. */
+const ORDEN = [
+  'como-usar-esto',
+  'print', 'variables', 'input', 'condicionales', 'listas', 'bucles',
+  'cuadernillo-listas', 'mini-parcial',
+  'funciones-1', 'tuplas', 'sets', 'diccionarios', 'funciones-2',
+  'repaso', 'lectura-codigo', 'bingo',
+  'logica-pensar', 'logica-eficiencia', 'logica-desafios',
+  'git-vscode', 'archivos', 'json',
+  'lo-que-python-hace-por-vos',
+  'poo-1', 'poo-2', 'poo-herencia',
+  'testing-1',
+];
+
+interface Ejercicio {
+  /** Clave que viaja al Worker. Estable mientras no cambie el título. */
+  clave: string;
+  titulo: string;
+  enlace: string;
+  /** Clave de localStorage donde el alumno tiene su código de este ejercicio. */
+  guardado: string;
+}
+interface Clase {
+  slug: string;
+  titulo: string;
+  ejercicios: Ejercicio[];
+}
+
+const clases: Clase[] = Object.keys(fuentes)
+  .map((ruta) => {
+    const slug = ruta.split('/').pop()!.replace(/\.mdx$/, '');
+    const src = fuentes[ruta];
+    const m = src.match(TITULO_CLASE);
+    const titulo = ((m && (m[1] ?? m[2] ?? m[3])) || slug).trim();
+    const ejercicios = [...src.matchAll(CON_CODIGO)].map(([, , t]) => ({
+      clave: `${slug}::${idEjercicio(t)}`,
+      titulo: t,
+      enlace: `${base}/clases/${slug}/#${idEjercicio(t)}`,
+      guardado: `pcp:code:${base}/clases/${slug}/::${t}`,
+    }));
+    return { slug, titulo, ejercicios };
+  })
+  .filter((c) => c.ejercicios.length > 0)
+  .sort((a, b) => {
+    const ia = ORDEN.indexOf(a.slug);
+    const ib = ORDEN.indexOf(b.slug);
+    return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib);
+  });
+
+const total = clases.reduce((n, c) => n + c.ejercicios.length, 0);
+
+/* El mapa clave -> datos viaja al cliente como JSON: el script lo necesita para
+   saber a qué localStorage mirar y a dónde enlazar, sin volver a parsear nada. */
+const mapa = Object.fromEntries(
+  clases.flatMap((c) =>
+    c.ejercicios.map((e) => [e.clave, { titulo: e.titulo, clase: c.titulo, enlace: e.enlace, guardado: e.guardado }]),
+  ),
+);
+---
+
+<section class="foro" data-foro>
+  <div class="foro__barra">
+    <label class="foro__elegir">
+      <span>Ejercicio</span>
+      <select data-ejercicio>
+        <option value="">— elegí uno de los {total} —</option>
+        {clases.map((c) => (
+          <optgroup label={c.titulo}>
+            {c.ejercicios.map((e) => <option value={e.clave}>{e.titulo}</option>)}
+          </optgroup>
+        ))}
+      </select>
+    </label>
+    <button type="button" class="foro__btn" data-recargar hidden>↻ Actualizar</button>
+    <label class="foro__modo" title="Muestra el botón para marcar cuál solución va al sistema. Se decide en clase, no cada uno por su cuenta.">
+      <input type="checkbox" data-modo-clase />
+      <span>modo clase</span>
+    </label>
+  </div>
+
+  <p class="foro__estado" data-estado>Elegí un ejercicio para ver las soluciones que hay publicadas.</p>
+
+  <div class="foro__acciones" data-acciones hidden>
+    <button type="button" class="foro__btn foro__btn--publicar" data-abrir-publicar>✍️ Publicar la mía</button>
+    <a class="foro__btn" data-enlace href="#">🔗 Ir al ejercicio</a>
+  </div>
+
+  <div class="foro__publicar" data-publicar hidden>
+    <p class="foro__aviso">
+      ⚠️ Lo que mandes acá <strong>lo ve toda la clase</strong>, sin tu nombre. No pongas datos
+      personales adentro del código.
+    </p>
+    <textarea data-codigo rows="10" spellcheck="false" aria-label="Tu solución"></textarea>
+    <p class="foro__nota" data-origen></p>
+    <div class="foro__publicar-btns">
+      <button type="button" class="foro__btn foro__btn--publicar" data-enviar>Publicar anónimo</button>
+      <button type="button" class="foro__btn" data-cancelar>Cancelar</button>
+    </div>
+  </div>
+
+  <div class="foro__soluciones" data-soluciones></div>
+
+  <script type="application/json" data-mapa set:html={JSON.stringify(mapa)}></script>
+</section>
+
+<script>
+  document.querySelectorAll('[data-foro]').forEach((foro) => {
+    const MAPA = JSON.parse(foro.querySelector('[data-mapa]').textContent);
+    const sel = foro.querySelector('[data-ejercicio]');
+    const estado = foro.querySelector('[data-estado]');
+    const acciones = foro.querySelector('[data-acciones]');
+    const enlace = foro.querySelector('[data-enlace]');
+    const panel = foro.querySelector('[data-publicar]');
+    const area = foro.querySelector('[data-codigo]');
+    const origen = foro.querySelector('[data-origen]');
+    const lista = foro.querySelector('[data-soluciones]');
+    const btnRecargar = foro.querySelector('[data-recargar]');
+    const modoClase = foro.querySelector('[data-modo-clase]');
+
+    /* Tres cosas se recuerdan en ESTE navegador y no salen de acá:
+       - cuál ejercicio estabas mirando (para que recargar no te devuelva al principio),
+       - cuál solución es tuya (el Worker no lo guarda: es anónimo),
+       - a cuál votaste (para poder marcarla y para poder cambiar el voto). */
+    const LS_ULTIMO = 'pc_foro_ultimo';
+    const LS_MIAS = 'pc_foro_mias';
+    const LS_VOTOS = 'pc_foro_votos';
+
+    function leerMapa(clave) {
+      try { return JSON.parse(localStorage.getItem(clave) || '{}'); } catch { return {}; }
+    }
+    function guardarMapa(clave, obj) {
+      try { localStorage.setItem(clave, JSON.stringify(obj)); } catch { /* nada */ }
+    }
+
+    const api = () => window.PC_TABLERO;
+    let actual = '';
+    let soluciones = [];
+
+    function avisar(txt, clase = '') {
+      estado.textContent = txt;
+      estado.className = 'foro__estado' + (clase ? ' ' + clase : '');
+    }
+
+    async function cargar() {
+      if (!actual) return;
+      if (!api()) { avisar('El foro todavía no está configurado.', 'es-mal'); return; }
+      avisar('Buscando soluciones…');
+      try {
+        const r = await api().traerSoluciones(actual);
+        soluciones = r.soluciones || [];
+        pintar();
+      } catch (e) {
+        avisar('No se pudieron traer las soluciones: ' + e.message, 'es-mal');
+      }
+    }
+
+    function pintar() {
+      const mias = leerMapa(LS_MIAS);
+      const votos = leerMapa(LS_VOTOS);
+      lista.innerHTML = '';
+
+      if (soluciones.length === 0) {
+        avisar('Todavía no publicó nadie. Podés ser el primero: nadie va a saber que fuiste vos.');
+        return;
+      }
+      avisar(
+        soluciones.length === 1
+          ? 'Hay 1 solución publicada.'
+          : `Hay ${soluciones.length} soluciones publicadas. Miralas antes de opinar: casi siempre hay más de una que está bien.`,
+      );
+
+      // Más votadas arriba. La elegida por la clase, siempre primera.
+      const orden = soluciones.slice().sort((a, b) => (b.elegida - a.elegida) || (b.votos - a.votos));
+
+      orden.forEach((s, i) => {
+        const tarjeta = document.createElement('article');
+        tarjeta.className = 'foro__sol';
+        if (s.elegida) tarjeta.classList.add('es-elegida');
+        if (mias[actual] === s.id) tarjeta.classList.add('es-mia');
+
+        const cab = document.createElement('header');
+        cab.className = 'foro__sol-cab';
+
+        const num = document.createElement('span');
+        num.className = 'foro__sol-num';
+        num.textContent = 'Solución ' + String.fromCharCode(65 + i);
+        cab.appendChild(num);
+
+        if (s.elegida) {
+          const b = document.createElement('span');
+          b.className = 'foro__sol-badge';
+          b.textContent = '★ la que va al sistema';
+          cab.appendChild(b);
+        }
+        if (mias[actual] === s.id) {
+          const b = document.createElement('span');
+          b.className = 'foro__sol-badge foro__sol-badge--mia';
+          b.textContent = 'esta es la tuya';
+          cab.appendChild(b);
+        }
+
+        const votar = document.createElement('button');
+        votar.type = 'button';
+        votar.className = 'foro__voto';
+        if (votos[actual] === s.id) votar.classList.add('es-votada');
+        votar.dataset.votar = s.id;
+        votar.textContent = `👍 ${s.votos}`;
+        votar.title = votos[actual] === s.id ? 'Tu voto está acá. Tocá otra para cambiarlo.' : 'Votar esta';
+        cab.appendChild(votar);
+
+        tarjeta.appendChild(cab);
+
+        const pre = document.createElement('pre');
+        const cod = document.createElement('code');
+        cod.textContent = s.codigo;   // textContent, nunca innerHTML: es código de otro
+        pre.appendChild(cod);
+        tarjeta.appendChild(pre);
+
+        if (modoClase.checked) {
+          const elegir = document.createElement('button');
+          elegir.type = 'button';
+          elegir.className = 'foro__btn foro__btn--elegir';
+          elegir.dataset.elegir = s.id;
+          elegir.textContent = s.elegida ? '★ elegida' : 'Marcar como la que va al sistema';
+          elegir.disabled = !!s.elegida;
+          tarjeta.appendChild(elegir);
+        }
+
+        lista.appendChild(tarjeta);
+      });
+    }
+
+    function elegirEjercicio(clave) {
+      actual = clave;
+      soluciones = [];
+      lista.innerHTML = '';
+      panel.hidden = true;
+      acciones.hidden = !clave;
+      btnRecargar.hidden = !clave;
+      if (!clave) {
+        avisar('Elegí un ejercicio para ver las soluciones que hay publicadas.');
+        return;
+      }
+      try { localStorage.setItem(LS_ULTIMO, clave); } catch { /* nada */ }
+      enlace.href = MAPA[clave].enlace;
+      cargar();
+    }
+
+    // ---------------------------------------------------------------- publicar
+    foro.querySelector('[data-abrir-publicar]').addEventListener('click', () => {
+      const info = MAPA[actual];
+      let guardado = '';
+      try { guardado = localStorage.getItem(info.guardado) || ''; } catch { /* nada */ }
+      area.value = guardado;
+      origen.textContent = guardado
+        ? 'Traído de lo que tenés escrito en el ejercicio. Podés retocarlo antes de mandarlo.'
+        : 'No encontré nada tuyo guardado en ese ejercicio: pegá acá tu solución.';
+      panel.hidden = false;
+      area.focus();
+    });
+
+    foro.querySelector('[data-cancelar]').addEventListener('click', () => { panel.hidden = true; });
+
+    foro.querySelector('[data-enviar]').addEventListener('click', async () => {
+      const codigo = area.value;
+      if (!codigo.trim()) { avisar('La solución está vacía.', 'es-mal'); return; }
+      try {
+        const r = await api().publicar(actual, codigo);
+        const mias = leerMapa(LS_MIAS);
+        mias[actual] = r.id;          // solo acá: el Worker no guarda de quién es
+        guardarMapa(LS_MIAS, mias);
+        panel.hidden = true;
+        avisar('Publicada ✓');
+        cargar();
+      } catch (e) {
+        avisar('No se pudo publicar: ' + e.message, 'es-mal');
+      }
+    });
+
+    // ------------------------------------------------------------ votar/elegir
+    lista.addEventListener('click', async (e) => {
+      const bv = e.target.closest('[data-votar]');
+      if (bv) {
+        try {
+          await api().votar(actual, bv.dataset.votar);
+          const votos = leerMapa(LS_VOTOS);
+          votos[actual] = bv.dataset.votar;
+          guardarMapa(LS_VOTOS, votos);
+          cargar();
+        } catch (err) {
+          avisar('No se pudo votar: ' + err.message, 'es-mal');
+        }
+        return;
+      }
+      const be = e.target.closest('[data-elegir]');
+      if (be) {
+        if (!confirm('Marcar esta como la solución que va al sistema. ¿La decidió la clase?')) return;
+        try {
+          await api().elegir(actual, be.dataset.elegir);
+          cargar();
+        } catch (err) {
+          avisar('No se pudo marcar: ' + err.message, 'es-mal');
+        }
+      }
+    });
+
+    sel.addEventListener('change', () => elegirEjercicio(sel.value));
+    btnRecargar.addEventListener('click', cargar);
+    modoClase.addEventListener('change', pintar);
+
+    // Volver al ejercicio que estabas mirando: en clase se recarga mucho.
+    let ultimo = '';
+    try { ultimo = localStorage.getItem(LS_ULTIMO) || ''; } catch { /* nada */ }
+    if (ultimo && MAPA[ultimo]) {
+      sel.value = ultimo;
+      elegirEjercicio(ultimo);
+    }
+  });
+</script>

@@ -2486,3 +2486,103 @@ body.pc-resizing * {
 @media (max-width: 30rem) {
   .camino__progreso { width: 100%; justify-content: flex-start; }
 }
+
+/* ---------------------------------------------------------------------------
+   FORO DE SOLUCIONES ANÓNIMAS
+   Las soluciones van en tarjetas de ancho parejo y en grilla, no una debajo de
+   otra: la gracia es verlas LADO A LADO en el proyector. Cada bloque de código
+   scrollea por su cuenta para que una línea larga no ensanche la página.
+--------------------------------------------------------------------------- */
+.foro__barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+  margin-bottom: 0.8rem; font-size: 0.85rem;
+}
+.foro__elegir { display: flex; align-items: center; gap: 0.45rem; flex: 1; min-width: 15rem; }
+.foro__elegir > span { color: var(--sl-color-gray-3); }
+.foro__elegir select {
+  font: inherit; font-size: 0.82rem; padding: 0.3rem 0.4rem; flex: 1; min-width: 0;
+  background: var(--sl-color-black); color: var(--sl-color-white);
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.35rem;
+}
+.foro__modo {
+  display: flex; align-items: center; gap: 0.35rem;
+  color: var(--sl-color-gray-3); cursor: pointer;
+}
+.foro__btn {
+  font: inherit; font-size: 0.82rem; cursor: pointer; text-decoration: none;
+  display: inline-block; padding: 0.3rem 0.7rem; border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.foro__btn:hover { border-color: var(--sl-color-accent); }
+.foro__btn--publicar { border-color: var(--sl-color-accent); }
+.foro__btn--elegir { margin-top: 0.5rem; width: 100%; }
+.foro__btn:disabled { opacity: 0.55; cursor: default; }
+
+.foro__estado { color: var(--sl-color-gray-3); font-size: 0.85rem; margin: 0 0 0.9rem; }
+.foro__estado.es-mal { color: #ffa94d; }
+
+.foro__acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+
+.foro__publicar {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 0.85rem; margin-bottom: 1.2rem;
+}
+/* El aviso no es decoración: lo que se manda de acá lo ve toda la clase, y esa
+   es la única pantalla del sitio donde algo sale del navegador con el código
+   escrito por el alumno. Tiene que leerse antes de tocar el botón. */
+.foro__aviso {
+  margin: 0 0 0.6rem; font-size: 0.82rem; line-height: 1.45;
+  color: var(--sl-color-gray-2);
+  border-left: 3px solid #ffa94d; padding-left: 0.6rem;
+}
+.foro__publicar textarea {
+  width: 100%; box-sizing: border-box; resize: vertical;
+  font-family: var(--sl-font-mono, monospace); font-size: 0.82rem; line-height: 1.5;
+  padding: 0.6rem; border-radius: 0.4rem; tab-size: 4;
+  background: var(--sl-color-gray-6); color: var(--sl-color-white);
+  border: 1px solid var(--sl-color-gray-5);
+}
+.foro__nota { margin: 0.4rem 0 0.6rem; font-size: 0.75rem; color: var(--sl-color-gray-3); }
+.foro__publicar-btns { display: flex; gap: 0.5rem; }
+
+.foro__soluciones {
+  display: grid; gap: 0.9rem;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+.foro__sol {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 0.75rem;
+  display: flex; flex-direction: column;
+}
+.foro__sol.es-elegida { border-color: #7bc47f; }
+.foro__sol.es-mia { border-color: var(--sl-color-accent); }
+.foro__sol-cab {
+  display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.foro__sol-num { font-weight: 600; font-size: 0.9rem; }
+.foro__sol-badge {
+  font-size: 0.7rem; padding: 0.05rem 0.45rem; border-radius: 100px;
+  background: #1b3d20; color: #7bc47f;
+}
+.foro__sol-badge--mia { background: var(--sl-color-gray-6); color: var(--sl-color-gray-2); }
+.foro__voto {
+  margin-left: auto; font: inherit; font-size: 0.78rem; cursor: pointer;
+  padding: 0.15rem 0.5rem; border-radius: 100px;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-gray-2);
+  font-variant-numeric: tabular-nums;
+}
+.foro__voto:hover { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
+.foro__voto.es-votada { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
+.foro__sol pre {
+  margin: 0; overflow-x: auto; flex: 1;
+  background: var(--sl-color-gray-6); border-radius: 0.4rem; padding: 0.6rem;
+}
+.foro__sol pre code {
+  font-family: var(--sl-font-mono, monospace); font-size: 0.8rem; line-height: 1.5;
+  white-space: pre; background: none; padding: 0;
+}
+
+@media (max-width: 30rem) {
+  .foro__soluciones { grid-template-columns: 1fr; }
+}

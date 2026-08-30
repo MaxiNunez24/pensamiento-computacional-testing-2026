@@ -178,11 +178,67 @@ Tres horas y veinte, que es exactamente lo que dura la clase.
 
 ## 7. Qué hay que hacer, en orden
 
-- [ ] **Antes del 9/9** — reescribir los ejercicios de `poo-1` y `poo-2` con `Alumno` y `Curso`.
+- [x] **Antes del 9/9** — reescribir los ejercicios de `poo-1` y `poo-2` con `Alumno` y `Curso`.
+      *Hecho el 29/8.* Ver el detalle abajo.
 - [ ] **Antes del 23/9** — preparar la clase "Del prototipo al modelo": es la bisagra.
-- [ ] **Decidir**: ¿las soluciones se comparan con nombre o anónimas?
-- [ ] **Construir** el endpoint de soluciones en el Worker (media hora) y la página que las muestra.
+- [x] **Decidir**: ¿las soluciones se comparan con nombre o anónimas? → **anónimas**, y el
+      servidor directamente no guarda de quién es cada una (ver `worker/tablero.js`).
+- [x] **Construir** el endpoint de soluciones en el Worker y la página que las muestra.
+      *Hecho el 29/8:* `src/components/Foro.astro` + `/foro/` en el menú.
 - [ ] **Antes de la primera clase con roles** — imprimir las seis tarjetas de rol. Que sean físicas
       y se repartan en la mesa: se rota mucho mejor que con una lista en el pizarrón.
 - [ ] **Re-dirigir** `diccionarios`, `funciones-1/2`, `archivos` y `json` (~37 ejercicios), una
       clase antes de darla.
+
+---
+
+## 8. Lo que se hizo el 29/8
+
+### `poo-1` y `poo-2`, reescritas
+
+Perro, Gato, CuentaBancaria, Producto y Termostato salieron. Entraron **`Alumno`, `Curso` y
+`Asistencia`**, que son las clases que el sistema necesita de verdad. La cuenta de ejercicios no
+cambió (6 y 3): no se agregó trabajo, se cambió el dominio.
+
+| Antes | Ahora | Qué enseña, que es lo que no cambió |
+|---|---|---|
+| Completá la clase `Gato` | Completá la clase `Alumno` | dónde va `self.` |
+| Tu primera clase (`Perro`) | Tu primera clase: `Alumno` (dni, apellido, nombre) | constructor + método que **devuelve** |
+| `CuentaBancaria`: extraer si alcanza | `Curso`: **inscribir si no está repetido** | estado que cambia + una guarda antes de tocarlo |
+| `alumno.py` con notas y promedio | `alumno.py` con **dar de baja sin borrar** | una clase en su propio archivo |
+| `Producto.__str__` | `Alumno.__str__` | `__str__` |
+| `Termostato` (16 a 30 grados) | `Asistencia`: solo `P`, `A`, `T`, `J` | encapsular + validar al entrar |
+| `Alumno` con notas 0–10 | `Alumno` con marcas y `porcentaje()` | la regla del negocio adentro de un método |
+
+Tres cosas que se ganaron en el camino y no estaban en el plan:
+
+- **El DNI va como texto.** Está explicado en una nota y **verificado por un test**
+  (`beto.dni == "27888444"`). Es el error que en un sistema real se paga caro: un documento que
+  empieza con cero, guardado como número, deja de encontrarse.
+- **Dar de baja no borra.** La nota explica por qué con el caso concreto: si un alumno se va en
+  septiembre y lo borrás, se te va la asistencia de marzo a agosto y los números del año dejan de
+  cerrar.
+- **Que la `T` cuente como presente es una decisión del CFP, no técnica.** Queda dicho en la
+  consigna, y queda viviendo en **un** método — que es lo que va a permitir cambiarla el día que
+  preceptoría diga otra cosa.
+
+### El foro de soluciones
+
+`/foro/` — se elige un ejercicio de una lista de **146**, se ve lo que publicó el resto, se vota y
+se marca cuál va al sistema.
+
+- **La lista de ejercicios no está escrita a mano**: sale de los `.mdx` al compilar. Un ejercicio
+  nuevo aparece solo; uno que se borra deja de aparecer. Es el mismo mecanismo del camino, por el
+  mismo motivo: una lista escrita a mano se desactualiza el primer día.
+- **El botón de publicar trae lo que el alumno ya tenía escrito** en ese ejercicio (lo lee de su
+  `localStorage`), así publicar es un click y no un copiar-pegar.
+- **Anónimo de verdad**: el navegador se guarda cuál solución es tuya para poder marcártela y para
+  que volver a publicar reemplace en vez de duplicar. Esa relación **no sale del navegador**.
+- **`modo clase`** es un tilde que muestra el botón de "marcar como la que va al sistema". Está
+  escondido a propósito: esa decisión se toma en el proyector y entre todos, no cada uno por su
+  cuenta.
+
+> ⚠️ El Worker solo acepta pedidos desde `https://maxinunez24.github.io`. En `localhost` el foro
+> carga y la pantalla anda, pero traer y publicar dan error: **hay que probarlo en el sitio
+> publicado**. Es a propósito y es el mismo caso del tablero.
+
