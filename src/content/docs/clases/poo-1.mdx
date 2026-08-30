@@ -227,6 +227,106 @@ Para que esto funcione, primero **ejecutá el ejercicio de arriba** (el que guar
 - Dar de baja ≠ borrar. En un sistema con historia, casi nunca se borra.
 - Una clase puede vivir en su **propio archivo** y otros la **importan** (`from alumno import Alumno`).
 
+## 🧩 Más práctica (opcional)
+
+Estos son los ejercicios con los que arrancó la clase, antes de que `Alumno` y `Curso` los
+reemplazaran. Enseñan **exactamente lo mismo** con ejemplos neutros —un gato, un perro, una cuenta
+bancaria— y por eso siguen acá: cuanta más práctica, mejor, y a veces un ejemplo sin contexto se
+entiende más rápido justamente porque no tiene contexto.
+
+No hacen falta para el proyecto. Hacelos si querés más kilómetros.
+
+<CompletarCodigo
+  titulo="Completá la clase Gato"
+  dificultad="🌱"
+  plantilla={`class Gato:\n    def __init__(self, nombre, edad):\n        self.nombre = nombre\n        self.edad = [[edad]]\n    def describir(self):\n        return f"{self.nombre} tiene {[[self.edad]]} años"`}
+  tests={`g = Gato("Michi", 4)\nassert g.describir() == "Michi tiene 4 años", 'describir() debería dar "Michi tiene 4 años"'\nassert Gato("Tom", 2).describir() == "Tom tiene 2 años"\nprint("¡Gato OK!")`}
+  pistas={[
+    "El parámetro <code>edad</code> existe solo mientras corre el constructor. ¿Qué le falta adelante para que el gato lo siga recordando después?",
+    "Cuando leés un atributo desde adentro de la clase, ¿sobre qué objeto lo estás buscando? ¿Cómo se llama ese objeto ahí adentro?",
+  ]}
+>
+  Esta clase ya está casi lista. Completá los **dos huecos en azul** para que el gato guarde su edad y
+  sepa describirse. (Tocá **✓ Verificar** cuando termines.)
+</CompletarCodigo>
+
+<EjercicioPython
+  titulo="Tu primera clase"
+  dificultad="🌱"
+  starter={`class Perro:\n    # 1) __init__ con nombre y edad\n    # 2) método describir() que DEVUELVA "<nombre> tiene <edad> años"\n    pass`}
+  tests={`p = Perro("Fido", 3)\nassert p.describir() == "Fido tiene 3 años", 'describir() debería devolver "Fido tiene 3 años"'\nassert Perro("Laika", 5).describir() == "Laika tiene 5 años"\nprint("¡Perro OK!")`}
+  pistas={[
+    "¿Cuáles son los datos sin los cuales una persona no existiría en tu programa? Esos son los que tiene que pedir el constructor.",
+    "El test compara el texto que sale del método. ¿Alcanza con mostrarlo en pantalla, o hace falta entregarlo?",
+  ]}
+>
+Definí una clase `Perro` con atributos `nombre` y `edad`, y un método `describir()` que **devuelva**
+`"<nombre> tiene <edad> años"`.
+
+Ejemplo: `Perro("Fido", 3).describir()` → `"Fido tiene 3 años"`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Estado que cambia: la cuenta bancaria"
+  dificultad="🌿"
+  starter={`class CuentaBancaria:\n    def __init__(self, saldo=0):\n        self.saldo = saldo\n    # depositar(monto): suma al saldo\n    # extraer(monto): resta SOLO si alcanza\n    # ver_saldo(): devuelve el saldo`}
+  tests={`c = CuentaBancaria(100)\nc.depositar(50)\nassert c.ver_saldo() == 150, "tras depositar 50 sobre 100, el saldo debería ser 150"\nc.extraer(30)\nassert c.ver_saldo() == 120, "tras extraer 30, el saldo debería ser 120"\nc.extraer(9999)\nassert c.ver_saldo() == 120, "no debería poder extraer más de lo que hay"\nprint("¡Cuenta OK!")`}
+  pistas={[
+    "El saldo no es como el nombre: cambia cada vez que depositás o extraés. ¿Dónde tiene que vivir un dato que cambia durante la vida del objeto?",
+    "¿Qué querés que pase si alguien intenta sacar más plata de la que hay? ¿Qué tendría que revisar el método antes de tocar el saldo?",
+  ]}
+>
+Completá `CuentaBancaria` (ya tiene el constructor). Agregale `depositar(monto)` (suma),
+`extraer(monto)` (resta **solo si hay saldo suficiente**) y `ver_saldo()` (**devuelve** el saldo).
+
+:::note[Es el mismo ejercicio que el curso, con otra ropa]
+"No extraer más de lo que hay" y "no inscribir a alguien que ya está" son el mismo problema: un
+dato que cambia, y una pregunta que hay que hacerse **antes** de tocarlo. Si te salió uno, el otro
+te va a salir.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Definí la clase Alumno con notas"
+  dificultad="🌿"
+  archivo="alumno_notas.py"
+  starter={`class Alumno:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self.notas = []\n    # agregar_nota(nota): agrega una nota a la lista\n    # promedio(): devuelve el promedio (0 si no hay notas)`}
+  tests={`from alumno_notas import Alumno\na = Alumno("Ana")\na.agregar_nota(8); a.agregar_nota(10)\nassert a.promedio() == 9, "el promedio de 8 y 10 debería ser 9"\nassert Alumno("Vacio").promedio() == 0, "sin notas, el promedio debería ser 0"\nprint("¡alumno_notas.py guardado y OK!")`}
+  pistas={[
+    "Las notas van cambiando con el tiempo. Al crear el alumno todavía no rindió nada: ¿con qué valor arranca ese atributo?",
+    "En el promedio, ¿qué pasa si el alumno todavía no tiene ninguna nota? ¿Por cuánto estarías dividiendo?",
+  ]}
+>
+Otro `Alumno`, más simple: solo nombre y notas. Al **Verificar**, este recuadro se guarda como
+**`alumno_notas.py`** (fijate el 📄 arriba) para que el próximo ejercicio lo importe.
+
+:::note[Por qué no se llama `alumno.py`]
+Porque ese nombre ya lo usa la clase del sistema, más arriba. Dos ejercicios que guardan el mismo
+archivo se pisan: el último que ejecutás gana, y el otro deja de andar sin que se entienda por qué.
+Es exactamente el lío que se arma en un proyecto de verdad cuando dos personas llaman igual a dos
+cosas distintas.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Usá la clase de notas desde otro archivo"
+  dificultad="🌱"
+  starter={`from alumno_notas import Alumno\n\n# Creá un Alumno "Beto", agregale las notas 6 y 8,\n# y guardá su promedio en una variable 'prom'.\n`}
+  tests={`assert prom == 7, "el promedio de 6 y 8 debería ser 7"\nprint("¡Importaste y usaste tu clase! 🎉")`}
+  pistas={[
+    "La clase no está definida en este recuadro. ¿De dónde la trae la primera línea?",
+    "¿Ejecutaste ya el ejercicio de arriba? El archivo tiene que existir antes de que este lo pueda importar.",
+  ]}
+>
+Ahora **usá** la clase que definiste en `alumno_notas.py` (ya la importamos por vos). Creá un
+alumno, agregale las notas **6 y 8**, y guardá su promedio en `prom`.
+
+:::note[Importante]
+Para que esto funcione, primero **ejecutá el ejercicio de arriba** (el que guarda
+`alumno_notas.py`).
+:::
+</EjercicioPython>
+
 :::note[Lo que viene]
 En **POO II** hacemos que tus objetos se impriman lindo (`__str__`) y que **no acepten cualquier
 cosa**: una marca de asistencia solo puede ser `P`, `A`, `T` o `J`, y la clase se va a encargar de

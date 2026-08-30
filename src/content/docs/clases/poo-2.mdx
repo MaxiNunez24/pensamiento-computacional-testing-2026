@@ -144,6 +144,61 @@ permite cambiarla el día que cambie.
 - Una regla del negocio (la `T` cuenta como presente) vive en **un** método, no repartida.
 - En el diagrama: `-` privado, `+` público.
 
+## 🧩 Más práctica (opcional)
+
+Los mismos conceptos con los ejemplos con los que arrancó la clase. No hacen falta para el
+proyecto; están porque practicar de más nunca sobró.
+
+<EjercicioPython
+  titulo="Que se imprima lindo"
+  dificultad="🌱"
+  starter={`class Producto:\n    def __init__(self, nombre, precio):\n        self.nombre = nombre\n        self.precio = precio\n    # agregá __str__ para que print(producto) muestre  🛒 <nombre> — $<precio>`}
+  tests={`p = Producto("Yerba", 1500)\nassert str(p) == "🛒 Yerba — $1500", 'print(p) debería mostrar  🛒 Yerba — $1500'\nprint("¡Producto OK!")`}
+  pistas={[
+    "Cuando hacés <code>print(objeto)</code> sin <code>__str__</code>, Python muestra algo tipo <code>&lt;__main__.Producto object at 0x7f...&gt;</code>. ¿Qué información le falta a Python para mostrar algo útil?",
+    "¿El método tiene que imprimir el texto, o entregárselo a Python para que lo imprima él?",
+  ]}
+>
+Agregale `__str__` a `Producto` para que `print(producto)` muestre `🛒 <nombre> — $<precio>`.
+
+Ejemplo: `print(Producto("Yerba", 1500))` → `🛒 Yerba — $1500`.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="El termostato protegido"
+  dificultad="🌿"
+  starter={`class Termostato:\n    def __init__(self):\n        self._temperatura = 20\n    # ajustar(grados): cambia la temperatura, pero SIEMPRE entre 16 y 30\n    # __str__: devuelve  🌡️ <temperatura>°C`}
+  tests={`t = Termostato()\nt.ajustar(50)\nassert str(t) == "🌡️ 30°C", "no debería pasar de 30"\nt.ajustar(10)\nassert str(t) == "🌡️ 16°C", "no debería bajar de 16"\nt.ajustar(22)\nassert str(t) == "🌡️ 22°C"\nprint("¡Termostato OK!")`}
+  pistas={[
+    "Si alguien pide 80 grados y el máximo es 30, ¿qué preferís: que el programa falle, o que se quede en el máximo permitido?",
+    "El guión bajo en <code>_temperatura</code> es un acuerdo entre programadores: “esto no se toca de afuera”. Entonces, ¿cuál debería ser el único camino para cambiar ese valor?",
+  ]}
+>
+Completá `Termostato` (arranca en 20). `ajustar(grados)` cambia la temperatura **manteniéndola entre
+16 y 30** (si te pasás, queda en el límite). Y `__str__` devuelve `🌡️ <temperatura>°C`.
+
+:::note[Se parece a la marca de asistencia, pero no es igual]
+Los dos validan antes de guardar, pero hacen cosas distintas con lo inválido: el termostato lo
+**acomoda** al límite más cercano, y la marca lo **descarta**. Cuál de las dos corresponde no lo
+decide Python: lo decide para qué sirve el dato. 31 grados quiere decir "lo más caliente posible";
+una marca `"Z"` no quiere decir nada.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Alumno a prueba de errores"
+  dificultad="🌿"
+  starter={`class Alumno:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self._notas = []\n    # agregar_nota(nota): SOLO agrega si la nota está entre 0 y 10\n    # promedio(): devuelve el promedio (0 si no hay notas)\n    # __str__: devuelve  <nombre> — promedio <promedio>`}
+  tests={`a = Alumno("Ana")\na.agregar_nota(8)\na.agregar_nota(15)   # inválida: se ignora\na.agregar_nota(10)\nassert str(a) == "Ana — promedio 9.0", 'esperaba "Ana — promedio 9.0" (15 no cuenta)'\nprint("¡Alumno OK!")`}
+  pistas={[
+    "¿Qué notas no tendrían sentido en una libreta? Nombrá el rango de las que sí.",
+    "Si llega una nota inválida, ¿qué preferís: que el programa explote, o que simplemente no la agregue?",
+  ]}
+>
+Mejorá `Alumno`: `agregar_nota(nota)` **solo agrega si la nota está entre 0 y 10** (si no, la
+ignora), `promedio()` devuelve el promedio, y `__str__` devuelve `<nombre> — promedio <promedio>`.
+</EjercicioPython>
+
 :::note[Lo que viene]
 Con `Alumno`, `Curso` y `Asistencia` ya tenés el **modelo** del sistema. Lo que sigue es la clase
 **"Del prototipo al modelo"**, donde se decide entre todos qué queda, qué falta y qué sobra —y de
