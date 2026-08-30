@@ -4,6 +4,7 @@ description: La estructura que más vas a usar. Crear, recorrer y transformar li
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
+import EncontrarElError from '../../../components/EncontrarElError.astro';
 import VolverATeoria from '../../../components/VolverATeoria.astro';
 
 <VolverATeoria ruta="clases/bloque_1_fundamentos/listas/" />
@@ -101,10 +102,51 @@ Agregá `"Brasil"` al final de `equipos` y después mostrá la lista completa.
 Tiene que salir: `['Argentina', 'Francia', 'Brasil']`
 </EjercicioPython>
 
+
+:::note[Cambiar uno que ya está]
+`append` agrega al final. Pero muchas veces lo que hace falta es **reemplazar** el que ya está en
+una posición, y eso se hace con el índice del lado izquierdo del `=`:
+
+```python
+estados = ["P", "P", "A"]
+estados[2] = "J"     # el tercero pasa a justificado
+print(estados)       # ['P', 'P', 'J']
+```
+
+Es lo que hace un sistema de asistencias cada vez que alguien corrige una marca.
+:::
+
+<EjercicioPython
+  titulo="Cambiar el estado de un alumno"
+  dificultad="🌱"
+  datos={`alumnos = ["Ana", "Beto", "Caro", "Dani"]\nestados = ["P", "P", "P", "P"]`}
+  starter={`# Beto llegó tarde y Dani faltó. Cambiá los dos estados\n# y después mostrá la lista 'estados'.\n`}
+  tests={`r = correr().rstrip().splitlines()[-1]\nassert r == "['P', 'T', 'P', 'A']", f"salió {r!r}"\nr2 = correr(estados=["P", "P", "P"]).rstrip().splitlines()[-1]\nassert r2 == "['P', 'T', 'A']", "con tres alumnos el último sigue siendo el último: no lo pidas con un número escrito a mano"\nr3 = correr(estados=["A", "A", "A", "A", "A"]).rstrip().splitlines()[-1]\nassert r3 == "['A', 'T', 'A', 'A', 'A']", "con cinco tiene que acompañar igual"`}
+  pistas={[
+    "Beto es el <em>segundo</em>, así que no está en la posición 2. ¿En cuál está?",
+    "Los tests prueban con listas de tres, cuatro y cinco. Para el último, ¿qué índice sigue apuntando al final aunque cambie el tamaño?",
+  ]}
+>
+Cada posición de `estados` es el estado del alumno que está en esa misma posición de `alumnos`.
+
+Cambiá dos cosas y después mostrá `estados`:
+
+- **Beto** (el segundo) llegó tarde → `"T"`
+- **Dani** (el último) faltó → `"A"`
+
+Tiene que salir:
+
+```
+['P', 'T', 'P', 'A']
+```
+</EjercicioPython>
+
 ## Para llevar
 
 - Lista: `[a, b, c]` — colección ordenada, índice desde `0`.
 - `lista[i]`, `lista[-1]`, `len(lista)`, `lista.append(x)`.
+- `lista[i] = x` **reemplaza** el que estaba en esa posición.
+- `otra = lista` **no copia**: son dos nombres de la misma lista. Para copiar, `lista.copy()`.
 - `sorted(lista)` devuelve una **nueva** ordenada; `lista.sort()` **modifica** la original.
 - Para recorrerla entera se usa `for`, que es la clase que sigue.
 
@@ -128,6 +170,63 @@ Mostrá primero la lista **ordenada** y después la **original sin tocar**:
 [5, 3, 8, 1]
 ```
 </EjercicioPython>
+
+<EjercicioPython
+  titulo="Las dos formas de ordenar"
+  dificultad="🌿"
+  datos={`apellidos = ["Perez", "Gomez", "Alvarez"]`}
+  starter={`# 1) La ordenada, sin tocar la original.\n# 2) La original, que tiene que seguir como estaba.\n# 3) Y ahora sí: ordená la original de verdad y mostrala.\n`}
+  tests={`r = correr().rstrip().splitlines()[-3:]\nesperado = ["['Alvarez', 'Gomez', 'Perez']", "['Perez', 'Gomez', 'Alvarez']", "['Alvarez', 'Gomez', 'Perez']"]\nassert r == esperado, f"salió {r!r}"\nr2 = correr(apellidos=["Ruiz", "Diaz"]).rstrip().splitlines()[-3:]\nassert r2 == ["['Diaz', 'Ruiz']", "['Ruiz', 'Diaz']", "['Diaz', 'Ruiz']"], "con otra lista tiene que acompañar"`}
+  pistas={[
+    "Las dos formas se escriben casi igual. Una es una función suelta que <em>devuelve</em> una lista nueva; la otra es un método de la lista, que la ordena en el lugar y no devuelve nada.",
+    "Si la segunda línea te sale ordenada, es que en la primera usaste la que modifica. ¿Cuál era la otra?",
+  ]}
+>
+Ahora las dos juntas, que es donde se ve la diferencia. Mostrá **tres líneas**:
+
+1. la lista **ordenada**, sin tocar la original;
+2. la **original**, que tiene que seguir desordenada;
+3. la original **ya ordenada de verdad**.
+
+```
+['Alvarez', 'Gomez', 'Perez']
+['Perez', 'Gomez', 'Alvarez']
+['Alvarez', 'Gomez', 'Perez']
+```
+
+:::caution[La que modifica no devuelve nada]
+`apellidos = apellidos.sort()` es de los errores más comunes del curso: te deja `apellidos` en
+`None` y perdés la lista. La que modifica se usa sola, en su propia línea.
+:::
+</EjercicioPython>
+
+<EncontrarElError
+  titulo="El respaldo que se modificó solo"
+  dificultad="🌿"
+  codigo={`notas = [8, 10, 6]\nrespaldo = notas\nnotas.append(4)\nprint("original:", notas)\nprint("respaldo:", respaldo)`}
+  errores={[2]}
+  explicacion="Poner un signo igual entre dos nombres no copia nada: le da un segundo nombre a la MISMA lista. Los dos apuntan al mismo lugar, así que lo que le agregás a uno le aparece al otro. Para tener una lista aparte hay que pedir una copia: notas.copy() (o notas[:])."
+  tests={`assert notas == [8, 10, 6, 4], "la lista original sí tiene que quedar con el 4"\nassert respaldo == [8, 10, 6], f"el respaldo tenía que quedar como estaba antes de agregar el 4, y quedó {respaldo!r}"`}
+  pistas={[
+    "¿Cuál de las cinco líneas es la que <em>debería</em> estar creando el respaldo? Miralá bien: ¿crea algo nuevo, o solo pone otro nombre?",
+    "Buscá el método de las listas que devuelve una copia. Se llama casi igual que en castellano.",
+  ]}
+>
+Este programa guarda un respaldo de las notas **antes** de agregar una nota nueva. Pero al final
+las dos salen iguales:
+
+```
+original: [8, 10, 6, 4]
+respaldo: [8, 10, 6, 4]
+```
+
+El respaldo tendría que haber quedado en `[8, 10, 6]`. Marcá la línea donde está el problema.
+
+:::note[Por qué este bug es tan difícil de ver]
+No hay ningún error de sintaxis, no explota nada y la línea culpable parece la más inofensiva de
+las cinco. El programa hace exactamente lo que dice; lo que está mal es lo que vos creías que decía.
+:::
+</EncontrarElError>
 
 :::note[📦 Tres funciones que ya vienen con Python]
 No hace falta recorrer la lista para sacar estas tres: Python ya las trae.
@@ -158,6 +257,44 @@ Con `[7, 10, 4, 9]` tiene que salir:
 4
 10
 30
+```
+</EjercicioPython>
+
+## 📐 Que las columnas queden derechas
+
+Con las notas guardadas en una lista, lo que sigue siempre es lo mismo: **mostrarlas como una
+planilla**. Y una planilla se lee o no se lee según estén las columnas.
+
+Dentro de una f-string, después de los dos puntos se dice **cuánto ocupa** un valor y **hacia dónde
+se pega**:
+
+| Se escribe | Qué hace |
+|---|---|
+| `f"{nombre:<14}"` | ocupa 14 lugares, pegado a la **izquierda** |
+| `f"{nota:>6}"` | ocupa 6 lugares, pegado a la **derecha** |
+| `f"{nota:.2f}"` | siempre con **2 decimales** — `10` sale `10.00` |
+| `f"{nota:>6.2f}"` | las dos cosas juntas |
+
+<EjercicioPython
+  titulo="La planilla alineada"
+  dificultad="🌿"
+  datos={`alumnos = ["Ana", "Maximiliano", "Beto"]\nnotas = [9.5, 7.25, 10]`}
+  starter={`# Una línea por alumno: el nombre ocupando 14 lugares a la izquierda\n# y la nota ocupando 6 a la derecha, con 2 decimales.\n`}
+  tests={`r = correr().rstrip().splitlines()[-3:]\nesperado = ["Ana             9.50", "Maximiliano     7.25", "Beto           10.00"]\nassert r == esperado, f"salió {r!r}"\nr2 = correr(alumnos=["Yo", "Vos", "El"], notas=[1, 2.5, 100]).rstrip().splitlines()[-3:]\nassert r2 == ["Yo              1.00", "Vos             2.50", "El            100.00"], f"con otros datos salió {r2!r}"`}
+  pistas={[
+    "Son tres líneas casi iguales, cambiando solo el índice. Sí: es repetitivo, y esa incomodidad es justo el motivo de la clase que viene.",
+    "El ancho va antes del punto y los decimales después: <code>:&gt;6.2f</code> es “6 de ancho, 2 decimales”.",
+  ]}
+>
+Mostrá una línea por alumno, con el **nombre ocupando 14 lugares a la izquierda** y la **nota
+ocupando 6 a la derecha, con 2 decimales**.
+
+Tiene que salir exactamente esto (mirá cómo quedan los puntos decimales uno abajo del otro):
+
+```
+Ana             9.50
+Maximiliano     7.25
+Beto           10.00
 ```
 </EjercicioPython>
 

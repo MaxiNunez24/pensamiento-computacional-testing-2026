@@ -68,6 +68,32 @@ apuntando al sistema, que es hacia donde va todo:
 3. *Ordenar sin romper el original* → `sort()` vs `sorted()`
 4. *La columna alineada* → formato, con la planilla como excusa
 
+### ✅ Hechos el 29/8/2026
+
+Los cuatro están en `listas.mdx`, que pasó de **4 a 8 ejercicios**:
+
+| Ejercicio | Concepto | Forma |
+|---|---|---|
+| **Cambiar el estado de un alumno** | `lista[i] = x` y `lista[-1]` | `EjercicioPython`, 🌱 |
+| **Las dos formas de ordenar** | `sort()` **vs** `sorted()`, las dos en el mismo programa | `EjercicioPython`, 🌿 |
+| **El respaldo que se modificó solo** | el alias | `EncontrarElError`, 🌿 — hay que **ubicar** la línea antes de arreglarla |
+| **La planilla alineada** | `:<14`, `:>6.2f` | `EjercicioPython`, 🌿 |
+
+Tres decisiones que vale la pena tener anotadas:
+
+- **El del alias es `EncontrarElError` y no un ejercicio común.** El bug del alias no se resuelve
+  escribiendo: se resuelve *leyendo*. En un editor libre el alumno tantea `.copy()` hasta que pasa
+  el test y no entendió nada. Acá primero tiene que señalar cuál de las cinco líneas es la culpable.
+- **`sort()` vs `sorted()` quedó como ejercicio aparte** del que ya existía. El viejo solo pedía
+  `sorted`; la diferencia no se ve hasta que las dos están en el mismo programa, una debajo de la
+  otra.
+- **El de formato pide tres `print` casi iguales** y eso es a propósito: la consigna dice que es
+  repetitivo, y esa incomodidad es el argumento de la clase siguiente (`for`).
+
+Los ocho pasan con una solución de referencia y —lo que importa más— **rechazan las soluciones
+equivocadas típicas**: el `3` escrito a mano donde iba `-1`, `sort()` donde iba `sorted()`, el bug
+del alias sin arreglar, y las tres líneas de la planilla escritas a mano en vez de calculadas.
+
 ---
 
 ## 3. `imports_y_modulos` sin ejercicios
@@ -98,7 +124,7 @@ Los alumnos ya viven en la plataforma: ahí está su progreso, ahí mandan las c
 sincroniza todo. Abrir dos sitios en clase parte la atención.
 
 Pero eso **obliga a que la plataforma esté completa**, y esta auditoría muestra que no lo estaba
-del todo. Con los cuatro ejercicios de arriba, sí.
+del todo. Con los cuatro ejercicios de arriba, sí — y desde el 29/8 están escritos.
 
 > Cuando se reescriban las clases apuntando al proyecto (ver `REESTRUCTURA-HACIA-EL-PROYECTO.md`),
 > conviene hacer esta misma comprobación por cada clase que se toque: **¿todo lo que explico tiene

@@ -1,6 +1,6 @@
 ---
 title: POO I — Clases y objetos
-description: "Tu primer salto a modelar cosas con datos y comportamiento. Interactivo: definís clases y las ejecutás al instante."
+description: "Tu primer salto a modelar cosas con datos y comportamiento. Interactivo: definís las clases del sistema de asistencias y las ejecutás al instante."
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
@@ -21,17 +21,26 @@ Acá vas a **escribir clases y ejecutarlas en el momento**. Tocá **▶ Ejecutar
 **✓ Verificar** (o `Ctrl/Cmd+Enter`) para que los tests te digan si está bien.
 :::
 
+:::caution[Lo que escribas acá queda]
+Esta clase no usa ejemplos de juguete. `Alumno` y `Curso` son **las clases del sistema de
+asistencias del CFP**: las mismas que van a estar en el proyecto. Si te salen bien acá, ya están
+escritas.
+:::
+
 ## El problema
 
-Querés representar a un alumno: nombre, nota y materias. Con un diccionario:
+El prototipo del sistema guarda a cada alumno en un diccionario:
 
 ```python
-ana = {"nombre": "Ana", "nota": 9}
+ana = {"dni": "30111222", "apellido": "Perez", "nombre": "Ana"}
 ```
 
-Funciona, pero (1) si escribís mal una clave nadie te avisa hasta que explota, y (2) lo que se
-**hace** con un alumno (¿aprobó?, saludar) queda suelto, lejos de los datos. Una **clase** junta los
-**datos** y lo que se **hace** con ellos en una sola cosa.
+Funciona, pero tiene dos problemas que ya nos mordieron. Uno: si en algún lado escribís
+`ana["appellido"]` nadie te avisa hasta que explota, en la mitad de una pantalla. Dos: todo lo que
+se **hace** con un alumno —armar su nombre completo, darlo de baja, calcular su asistencia— queda
+suelto, en funciones lejos de los datos.
+
+Una **clase** junta los **datos** y lo que se **hace** con ellos en una sola cosa.
 
 ## La idea: un molde y sus copias
 
@@ -40,21 +49,28 @@ molde una vez y creás todos los objetos que quieras, cada uno con sus propios d
 
 ```python
 class Alumno:
-    def __init__(self, nombre, nota):   # constructor: corre al crear el objeto
-        self.nombre = nombre            # atributo (dato del objeto)
-        self.nota = nota
+    def __init__(self, dni, apellido, nombre):   # constructor: corre al crear el objeto
+        self.dni = dni                           # atributo (dato del objeto)
+        self.apellido = apellido
+        self.nombre = nombre
 
-ana  = Alumno("Ana", 9)    # crear un objeto
-print(ana.nombre)          # Ana   (acceso con punto, sin comillas)
+ana = Alumno("30111222", "Perez", "Ana")   # crear un objeto
+print(ana.apellido)                        # Perez   (acceso con punto, sin comillas)
 ```
 
 - **`__init__`** es el **constructor**: Python lo ejecuta solo al crear el objeto.
 - **`self`** es "el objeto que se está usando ahora". Adentro de la clase, sus datos son `self.algo`.
 - Un **método** es una función adentro de la clase que opera sobre `self`.
 
+:::note[El DNI va como texto]
+`"30111222"` con comillas, no `30111222` pelado. Un DNI no se suma ni se promedia, y hay documentos
+que empiezan con cero — si lo guardás como número, ese cero desaparece y ya no podés buscar a la
+persona. Es la clase de detalle que en un sistema real se paga caro.
+:::
+
 :::note[Es la caja negra otra vez]
-Cuando hacés `ana.aprobo()`, la usás confiando en lo que devuelve, sin pensar en su interior. Un
-objeto = **datos + sus propias funciones**. Si te marea, repasá la
+Cuando hacés `ana.nombre_completo()`, la usás confiando en lo que devuelve, sin pensar en su
+interior. Un objeto = **datos + sus propias funciones**. Si te marea, repasá la
 <a href={b + 'clases/funciones-1/'}>entrada en calor de funciones</a>.
 :::
 
@@ -72,97 +88,130 @@ Para entrar en confianza, primero **completá** una clase que ya está casi list
 desde cero.
 
 <CompletarCodigo
-  titulo="Completá la clase Gato"
+  titulo="Completá la clase Alumno"
   dificultad="🌱"
-  plantilla={`class Gato:\n    def __init__(self, nombre, edad):\n        self.nombre = nombre\n        self.edad = [[edad]]\n    def describir(self):\n        return f"{self.nombre} tiene {[[self.edad]]} años"`}
-  tests={`g = Gato("Michi", 4)\nassert g.describir() == "Michi tiene 4 años", 'describir() debería dar "Michi tiene 4 años"'\nassert Gato("Tom", 2).describir() == "Tom tiene 2 años"\nprint("¡Gato OK!")`}
+  plantilla={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = [[apellido]]\n        self.nombre = nombre\n    def nombre_completo(self):\n        return f"{[[self.apellido]]}, {self.nombre}"`}
+  tests={`a = Alumno("30111222", "Perez", "Ana")\nassert a.nombre_completo() == "Perez, Ana", 'nombre_completo() debería dar "Perez, Ana"'\nassert Alumno("28999888", "Gomez", "Beto").nombre_completo() == "Gomez, Beto"\nprint("¡Alumno OK!")`}
   pistas={[
-    "El parámetro <code>edad</code> existe solo mientras corre el constructor. ¿Qué le falta adelante para que el gato lo siga recordando después?",
+    "El parámetro <code>apellido</code> existe solo mientras corre el constructor. ¿Qué le falta adelante para que el objeto lo siga recordando después?",
     "Cuando leés un atributo desde adentro de la clase, ¿sobre qué objeto lo estás buscando? ¿Cómo se llama ese objeto ahí adentro?",
   ]}
 >
-  Esta clase ya está casi lista. Completá los **dos huecos en azul** para que el gato guarde su edad y
-  sepa describirse. (Tocá **✓ Verificar** cuando termines.)
+  Esta clase ya está casi lista. Completá los **dos huecos en azul** para que el alumno guarde su
+  apellido y sepa armar su nombre completo. (Tocá **✓ Verificar** cuando termines.)
+
+  En la planilla del CFP el nombre se escribe **`Apellido, Nombre`** — así se ordena alfabéticamente
+  sola.
 </CompletarCodigo>
 
 <EjercicioPython
-  titulo="Tu primera clase"
+  titulo="Tu primera clase: Alumno"
   dificultad="🌱"
-  starter={`class Perro:\n    # 1) __init__ con nombre y edad\n    # 2) método describir() que DEVUELVA "<nombre> tiene <edad> años"\n    pass`}
-  tests={`p = Perro("Fido", 3)\nassert p.describir() == "Fido tiene 3 años", 'describir() debería devolver "Fido tiene 3 años"'\nassert Perro("Laika", 5).describir() == "Laika tiene 5 años"\nprint("¡Perro OK!")`}
+  starter={`class Alumno:\n    # 1) __init__ con dni, apellido y nombre\n    # 2) método nombre_completo() que DEVUELVA "Apellido, Nombre"\n    pass`}
+  tests={`a = Alumno("30111222", "Perez", "Ana")\nassert a.dni == "30111222", "el DNI tiene que quedar guardado en el objeto, tal cual llegó"\nassert a.nombre_completo() == "Perez, Ana", 'nombre_completo() debería devolver "Perez, Ana"'\nassert Alumno("28999888", "Gomez", "Beto").nombre_completo() == "Gomez, Beto"\nprint("¡Alumno OK!")`}
   pistas={[
-    "¿Cuáles son los datos sin los cuales una persona no existiría en tu programa? Esos son los que tiene que pedir el constructor.",
+    "¿Cuáles son los datos sin los cuales un alumno no existiría en el sistema? Esos tres son los que tiene que pedir el constructor.",
     "El test compara el texto que sale del método. ¿Alcanza con mostrarlo en pantalla, o hace falta entregarlo?",
   ]}
 >
-Definí una clase `Perro` con atributos `nombre` y `edad`, y un método `describir()` que **devuelva**
-`"<nombre> tiene <edad> años"`.
+Ahora desde cero. Definí la clase `Alumno` con los atributos `dni`, `apellido` y `nombre`, y un
+método `nombre_completo()` que **devuelva** `"Apellido, Nombre"`.
 
-Ejemplo: `Perro("Fido", 3).describir()` → `"Fido tiene 3 años"`.
+Ejemplo: `Alumno("30111222", "Perez", "Ana").nombre_completo()` → `"Perez, Ana"`.
 </EjercicioPython>
 
 <EjercicioPython
-  titulo="Estado que cambia: la cuenta bancaria"
+  titulo="El curso que no deja repetir"
   dificultad="🌿"
-  starter={`class CuentaBancaria:\n    def __init__(self, saldo=0):\n        self.saldo = saldo\n    # depositar(monto): suma al saldo\n    # extraer(monto): resta SOLO si alcanza\n    # ver_saldo(): devuelve el saldo`}
-  tests={`c = CuentaBancaria(100)\nc.depositar(50)\nassert c.ver_saldo() == 150, "tras depositar 50 sobre 100, el saldo debería ser 150"\nc.extraer(30)\nassert c.ver_saldo() == 120, "tras extraer 30, el saldo debería ser 120"\nc.extraer(9999)\nassert c.ver_saldo() == 120, "no debería poder extraer más de lo que hay"\nprint("¡Cuenta OK!")`}
+  datos={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre`}
+  starter={`class Curso:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self.alumnos = []\n    # inscribir(alumno): lo agrega a la lista, PERO no si ya hay uno con ese DNI\n    # cuantos(): devuelve cuántos alumnos tiene inscriptos`}
+  tests={`c = Curso("Pensamiento Computacional")\nc.inscribir(Alumno("30111222", "Perez", "Ana"))\nc.inscribir(Alumno("28999888", "Gomez", "Beto"))\nassert c.cuantos() == 2, f"inscribí a dos y quedaron {c.cuantos()}"\nc.inscribir(Alumno("30111222", "Perez", "Ana"))\nassert c.cuantos() == 2, "Ana ya estaba inscripta: no tendría que entrar dos veces"\nc.inscribir(Alumno("30111222", "Otro", "Nombre"))\nassert c.cuantos() == 2, "el que manda es el DNI, aunque el apellido venga distinto"\nassert c.alumnos[0].apellido == "Perez", "el primero inscripto tiene que seguir siendo el primero"\nvacio = Curso("Recién abierto")\nassert vacio.cuantos() == 0, "un curso nuevo arranca sin alumnos"\nprint("¡Curso OK!")`}
   pistas={[
-    "El saldo no es como el nombre: cambia cada vez que depositás o extraés. ¿Dónde tiene que vivir un dato que cambia durante la vida del objeto?",
-    "¿Qué querés que pase si alguien intenta sacar más plata de la que hay? ¿Qué tendría que revisar el método antes de tocar el saldo?",
+    "La lista <code>self.alumnos</code> arranca vacía y va creciendo. Es el primer atributo del curso que <em>cambia</em> con el tiempo.",
+    "Antes de agregar, tenés que saber si ese DNI ya está. ¿Cómo revisás uno por uno los alumnos que ya hay?",
+    "Ojo: la lista guarda <em>objetos</em> Alumno, no textos. El DNI de cada uno está en <code>a.dni</code>.",
   ]}
 >
-Completá `CuentaBancaria` (ya tiene el constructor). Agregale `depositar(monto)` (suma),
-`extraer(monto)` (resta **solo si hay saldo suficiente**) y `ver_saldo()` (**devuelve** el saldo).
+Un curso es una cosa con **nombre** y **una lista de alumnos** que va creciendo. La clase ya viene
+con el constructor: completá los dos métodos.
+
+- `inscribir(alumno)` — lo agrega a la lista, **salvo que ya haya uno con ese mismo DNI**.
+- `cuantos()` — **devuelve** cuántos alumnos tiene.
+
+:::caution[Por qué el DNI y no el nombre]
+Porque hay dos "Ana Perez" en el mundo y un solo `30111222`. En el CFP ya pasó: dos legajos de la
+misma persona porque uno se cargó "Ana" y el otro "Ana María". El DNI es el único dato que no se
+escribe de dos formas.
+:::
 </EjercicioPython>
 
 ## 📐 El diagrama de clases
 
 Cuando los programas crecen, conviene dibujar las clases. Un **diagrama de clases** es una cajita con
-tres pisos: nombre, atributos y métodos. El `Alumno` que vas a armar abajo se ve así:
+tres pisos: nombre, atributos y métodos. Las dos que acabás de escribir se ven así:
 
 <Mermaid code={`classDiagram
     class Alumno {
+        +dni
+        +apellido
         +nombre
-        +notas
-        +agregar_nota(nota)
-        +promedio()
-    }`} />
+        +activo
+        +nombre_completo()
+        +dar_de_baja()
+    }
+    class Curso {
+        +nombre
+        +alumnos
+        +inscribir(alumno)
+        +cuantos()
+    }
+    Curso "1" --> "*" Alumno : tiene`} />
 
-El `+` quiere decir "público" (accesible desde afuera). En POO II vas a ver el `-` (privado).
+El `+` quiere decir "público" (accesible desde afuera). En POO II vas a ver el `-` (privado). La
+flecha se lee: **un curso tiene muchos alumnos**.
 
 ## 🗂️ Una clase en su propio archivo
 
 En los programas de verdad, **cada clase suele vivir en su propio archivo** y otros la **importan**.
-Vamos a practicarlo: en el primer recuadro definís la clase en `alumno.py`, y en el segundo la
+Vamos a practicarlo con la de verdad: en el primer recuadro guardás `alumno.py`, y en el segundo la
 **usás importándola**.
 
 <EjercicioPython
-  titulo="Definí la clase Alumno"
+  titulo="La clase Alumno, en su propio archivo"
   dificultad="🌿"
   archivo="alumno.py"
-  starter={`class Alumno:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self.notas = []\n    # agregar_nota(nota): agrega una nota a la lista\n    # promedio(): devuelve el promedio (0 si no hay notas)`}
-  tests={`from alumno import Alumno\na = Alumno("Ana")\na.agregar_nota(8); a.agregar_nota(10)\nassert a.promedio() == 9, "el promedio de 8 y 10 debería ser 9"\nassert Alumno("Vacio").promedio() == 0, "sin notas, el promedio debería ser 0"\nprint("¡alumno.py guardado y OK!")`}
+  starter={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre\n        self.activo = True\n    # nombre_completo(): devuelve "Apellido, Nombre"\n    # dar_de_baja(): deja 'activo' en False (pero NO borra nada)`}
+  tests={`from alumno import Alumno\na = Alumno("30111222", "Perez", "Ana")\nassert a.nombre_completo() == "Perez, Ana", 'nombre_completo() debería dar "Perez, Ana"'\nassert a.activo is True, "un alumno recién inscripto está activo"\na.dar_de_baja()\nassert a.activo is False, "después de la baja, 'activo' tiene que quedar en False"\nassert a.nombre_completo() == "Perez, Ana", "la baja no borra al alumno: sus datos siguen estando"\nprint("¡alumno.py guardado y OK!")`}
   pistas={[
-    "Las notas van cambiando con el tiempo. Al crear el alumno todavía no rindió nada: ¿con qué valor arranca ese atributo?",
-    "En el promedio, ¿qué pasa si el alumno todavía no tiene ninguna nota? ¿Por cuánto estarías dividiendo?",
+    "Es la misma clase de arriba con un atributo más. <code>activo</code> ya viene puesto en el constructor: te falta el método que lo cambia.",
+    "¿Qué tiene que devolver <code>dar_de_baja()</code>? Nada. Su trabajo es cambiar un dato del objeto, no entregar un valor.",
   ]}
 >
-Completá la clase `Alumno`. Al **Verificar**, este recuadro se **guarda como `alumno.py`** (fijate el
-📄 arriba) para que el próximo ejercicio la pueda importar.
+La misma clase, más una cosa que el sistema necesita: **dar de baja sin borrar**.
+
+Al **Verificar**, este recuadro se **guarda como `alumno.py`** (fijate el 📄 arriba) para que el
+próximo ejercicio la pueda importar.
+
+:::note[Por qué no se borra]
+Si un alumno se va en septiembre, borrarlo destruye su asistencia de marzo a agosto: los números
+del año dejan de cerrar y no hay forma de recuperarlos. Dar de baja es **marcarlo como inactivo**;
+sigue estando, deja de aparecer en la lista del día.
+
+Es la misma idea que la papelera de esta plataforma, y por el mismo motivo.
+:::
 </EjercicioPython>
 
 <EjercicioPython
   titulo="Usá la clase desde otro archivo"
   dificultad="🌱"
-  starter={`from alumno import Alumno\n\n# Creá un Alumno "Beto", agregale las notas 6 y 8,\n# y guardá su promedio en una variable 'prom'.\n`}
-  tests={`assert prom == 7, "el promedio de 6 y 8 debería ser 7"\nprint("¡Importaste y usaste tu clase! 🎉")`}
+  starter={`from alumno import Alumno\n\n# Creá al alumno 27888444 / Gomez / Beto en una variable 'beto',\n# dalo de baja, y guardá su nombre completo en 'etiqueta'.\n`}
+  tests={`assert beto.dni == "27888444", "el DNI va como texto, entre comillas: los ceros de adelante importan"\nassert beto.activo is False, "faltó darlo de baja"\nassert etiqueta == "Gomez, Beto", f'etiqueta tendría que ser "Gomez, Beto" y es {etiqueta!r}'\nprint("¡Importaste y usaste tu clase! 🎉")`}
   pistas={[
     "La clase no está definida en este recuadro. ¿De dónde la trae la primera línea?",
     "¿Ejecutaste ya el ejercicio de arriba? El archivo tiene que existir antes de que este lo pueda importar.",
   ]}
 >
-Ahora **usá** la clase `Alumno` que definiste en `alumno.py` (ya la importamos por vos). Creá un
-alumno, agregale las notas **6 y 8**, y guardá su promedio en `prom`.
+Ahora **usá** la clase `Alumno` que guardaste en `alumno.py` (ya la importamos por vos).
 
 :::note[Importante]
 Para que esto funcione, primero **ejecutá el ejercicio de arriba** (el que guarda `alumno.py`).
@@ -173,9 +222,13 @@ Para que esto funcione, primero **ejecutá el ejercicio de arriba** (el que guar
 
 - `class Nombre:` define el molde; `obj = Nombre(...)` crea un objeto.
 - `__init__` = constructor; `self.algo` = atributo; método = función del objeto.
+- Un objeto puede **contener otros objetos**: un `Curso` tiene una lista de `Alumno`.
+- Los datos que **no** se pueden repetir se controlan **antes de agregar**, no después.
+- Dar de baja ≠ borrar. En un sistema con historia, casi nunca se borra.
 - Una clase puede vivir en su **propio archivo** y otros la **importan** (`from alumno import Alumno`).
 
 :::note[Lo que viene]
-En **POO II** hacemos que tus objetos se impriman lindo (`__str__`) y protejan sus datos
-(encapsulamiento).
+En **POO II** hacemos que tus objetos se impriman lindo (`__str__`) y que **no acepten cualquier
+cosa**: una marca de asistencia solo puede ser `P`, `A`, `T` o `J`, y la clase se va a encargar de
+que así sea.
 :::

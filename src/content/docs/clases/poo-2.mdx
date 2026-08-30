@@ -1,6 +1,6 @@
 ---
 title: POO II — Métodos especiales y encapsulamiento
-description: Que tus objetos se impriman lindo y protejan sus datos. Interactivo, con tests al instante.
+description: Que tus objetos se impriman lindo y no acepten cualquier cosa. Interactivo, con tests al instante.
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
@@ -11,13 +11,18 @@ import VolverATeoria from '../../../components/VolverATeoria.astro';
 
 
 :::tip[Clase interactiva]
-Seguimos con clases, pero ahora ejecutando todo. **▶ Ejecutar** prueba, **✓ Verificar** corre los tests.
+Seguimos con las clases del sistema, pero ahora ejecutando todo. **▶ Ejecutar** prueba,
+**✓ Verificar** corre los tests.
 :::
 
 ## Dos molestias que vamos a resolver
 
-1. **Los objetos se imprimen feo:** `print(ana)` muestra `<__main__.Alumno object at 0x...>` 😵.
-2. **Cualquiera rompe los datos:** `cuenta.saldo = -9999` saltea toda tu lógica de `extraer()` 😱.
+Las dos aparecieron solas apenas el `Alumno` de POO I entró al sistema:
+
+1. **Los objetos se imprimen feo:** `print(ana)` muestra `<__main__.Alumno object at 0x...>` 😵. En
+   una lista de veinte alumnos eso es ilegible.
+2. **Cualquiera rompe los datos:** `ana.marcas.append("Z")` mete un estado que no existe. Ese día
+   deja de contar, el porcentaje del año da mal, y nadie se entera hasta que la planilla no cierra.
 
 ## `__str__`: que el objeto se imprima lindo
 
@@ -26,92 +31,123 @@ Seguimos con clases, pero ahora ejecutando todo. **▶ Ejecutar** prueba, **✓ 
 
 ```python
 class Alumno:
-    def __init__(self, nombre, nota):
+    def __init__(self, dni, apellido, nombre):
+        self.dni = dni
+        self.apellido = apellido
         self.nombre = nombre
-        self.nota = nota
     def __str__(self):
-        return f"Alumno: {self.nombre} (nota {self.nota})"
+        return f"{self.dni} — {self.apellido}, {self.nombre}"
 
-print(Alumno("Ana", 9))   # Alumno: Ana (nota 9)
+print(Alumno("30111222", "Perez", "Ana"))   # 30111222 — Perez, Ana
 ```
 
 <EjercicioPython
-  titulo="Que se imprima lindo"
+  titulo="Que el alumno se imprima lindo"
   dificultad="🌱"
-  starter={`class Producto:\n    def __init__(self, nombre, precio):\n        self.nombre = nombre\n        self.precio = precio\n    # agregá __str__ para que print(producto) muestre  🛒 <nombre> — $<precio>`}
-  tests={`p = Producto("Yerba", 1500)\nassert str(p) == "🛒 Yerba — $1500", 'print(p) debería mostrar  🛒 Yerba — $1500'\nprint("¡Producto OK!")`}
+  starter={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre\n    # agregá __str__ para que print(alumno) muestre  30111222 — Perez, Ana`}
+  tests={`a = Alumno("30111222", "Perez", "Ana")\nassert str(a) == "30111222 — Perez, Ana", f'esperaba "30111222 — Perez, Ana" y salió {str(a)!r}'\nassert str(Alumno("28999888", "Gomez", "Beto")) == "28999888 — Gomez, Beto", "con otro alumno tiene que acompañar"\nprint("¡Alumno OK!")`}
   pistas={[
-    "Cuando hacés <code>print(objeto)</code> sin <code>__str__</code>, Python muestra algo tipo <code>&lt;__main__.Producto object at 0x7f...&gt;</code>. ¿Qué información le falta a Python para mostrar algo útil?",
+    "Cuando hacés <code>print(objeto)</code> sin <code>__str__</code>, Python muestra algo tipo <code>&lt;__main__.Alumno object at 0x7f...&gt;</code>. ¿Qué información le falta a Python para mostrar algo útil?",
     "¿El método tiene que imprimir el texto, o entregárselo a Python para que lo imprima él?",
+    "La raya larga (—) la podés copiar de la consigna: no es un guión común.",
   ]}
 >
-Agregale `__str__` a `Producto` para que `print(producto)` muestre `🛒 <nombre> — $<precio>`.
+Agregale `__str__` a `Alumno` para que `print(alumno)` muestre `<dni> — <apellido>, <nombre>`.
 
-Ejemplo: `print(Producto("Yerba", 1500))` → `🛒 Yerba — $1500`.
+Ejemplo: `print(Alumno("30111222", "Perez", "Ana"))` → `30111222 — Perez, Ana`.
+
+:::note[Es la línea de la planilla]
+No es un capricho de formato: ese texto es el que va a salir en el listado del curso y en la
+pantalla de pasar lista. Definirlo una vez, en la clase, es la diferencia entre cambiarlo en un
+lugar o en catorce.
+:::
 </EjercicioPython>
 
-## Encapsulamiento: proteger los datos
+## Encapsulamiento: que los datos no acepten cualquier cosa
 
 **Encapsular** es esconder los datos internos y obligar a tocarlos **solo por métodos controlados**
 (como un cajero: usás los botones, no metés la mano en la caja fuerte). En Python, un atributo que
 arranca con **`_`** señala *"esto es interno, no lo toques de afuera"*.
 
 ```python
-class CuentaBancaria:
-    def __init__(self, saldo=0):
-        self._saldo = saldo            # interno
-    def depositar(self, monto):
-        if monto > 0:
-            self._saldo += monto
-    def ver_saldo(self):
-        return self._saldo
+class Asistencia:
+    def __init__(self, fecha):
+        self.fecha = fecha
+        self._estado = "A"             # interno: solo se cambia por marcar()
+    def marcar(self, estado):
+        if estado in ("P", "A", "T", "J"):
+            self._estado = estado
 ```
+
+Fijate lo que gana el sistema: **no existe forma de que una marca sea `"Z"`**. No hace falta
+revisarlo después en la pantalla, ni en el archivo, ni en el reporte. Se controla en un solo lugar.
 
 En un diagrama, `-` es privado y `+` es público:
 
 <Mermaid code={`classDiagram
-    class CuentaBancaria {
-        -saldo
-        +depositar(monto)
-        +extraer(monto)
-        +ver_saldo()
+    class Asistencia {
+        +fecha
+        -estado
+        +marcar(estado)
     }`} />
 
 <EjercicioPython
-  titulo="El termostato protegido"
+  titulo="La marca que no acepta cualquier cosa"
   dificultad="🌿"
-  starter={`class Termostato:\n    def __init__(self):\n        self._temperatura = 20\n    # ajustar(grados): cambia la temperatura, pero SIEMPRE entre 16 y 30\n    # __str__: devuelve  🌡️ <temperatura>°C`}
-  tests={`t = Termostato()\nt.ajustar(50)\nassert str(t) == "🌡️ 30°C", "no debería pasar de 30"\nt.ajustar(10)\nassert str(t) == "🌡️ 16°C", "no debería bajar de 16"\nt.ajustar(22)\nassert str(t) == "🌡️ 22°C"\nprint("¡Termostato OK!")`}
+  starter={`class Asistencia:\n    def __init__(self, fecha):\n        self.fecha = fecha\n        self._estado = "A"\n    # marcar(estado): SOLO acepta "P", "A", "T" o "J". Cualquier otra cosa se ignora.\n    # __str__: devuelve  <fecha>: <estado>`}
+  tests={`d = Asistencia("2026-09-16")\nassert str(d) == "2026-09-16: A", f'sin marcar todavía, tendría que decir "2026-09-16: A" y dice {str(d)!r}'\nd.marcar("P")\nassert str(d) == "2026-09-16: P", "después de marcar P tiene que quedar en P"\nd.marcar("Z")\nassert str(d) == "2026-09-16: P", "'Z' no es un estado válido: la marca tenía que quedar como estaba"\nd.marcar("")\nassert str(d) == "2026-09-16: P", "una marca vacía tampoco vale"\nd.marcar("J")\nassert str(d) == "2026-09-16: J", "la J (justificada) sí es válida"\nprint("¡Asistencia OK!")`}
   pistas={[
-    "Si alguien pide 80 grados y el máximo es 30, ¿qué preferís: que el programa falle, o que se quede en el máximo permitido?",
-    "El guión bajo en <code>_temperatura</code> es un acuerdo entre programadores: “esto no se toca de afuera”. Entonces, ¿cuál debería ser el único camino para cambiar ese valor?",
+    "Los cuatro estados válidos son <strong>P</strong> (presente), <strong>A</strong> (ausente), <strong>T</strong> (tarde) y <strong>J</strong> (justificada).",
+    "¿Qué querés que pase si llega una marca inválida: que el programa explote, o que simplemente no cambie nada? Para el sistema, lo segundo.",
+    "Hay una sola línea que puede tocar <code>self._estado</code>, y está adentro de un <code>if</code>.",
   ]}
 >
-Completá `Termostato` (arranca en 20). `ajustar(grados)` cambia la temperatura **manteniéndola entre
-16 y 30** (si te pasás, queda en el límite). Y `__str__` devuelve `🌡️ <temperatura>°C`.
+Completá `Asistencia`. Arranca en `"A"`: **hasta que alguien diga lo contrario, el alumno está
+ausente** (es como funciona la planilla de papel).
+
+- `marcar(estado)` — cambia el estado, **solo si es `"P"`, `"A"`, `"T"` o `"J"`**.
+- `__str__` — devuelve `<fecha>: <estado>`.
 </EjercicioPython>
 
 <EjercicioPython
-  titulo="Alumno a prueba de errores"
+  titulo="El alumno que calcula su asistencia"
   dificultad="🌿"
-  starter={`class Alumno:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self._notas = []\n    # agregar_nota(nota): SOLO agrega si la nota está entre 0 y 10\n    # promedio(): devuelve el promedio (0 si no hay notas)\n    # __str__: devuelve  <nombre> — promedio <promedio>`}
-  tests={`a = Alumno("Ana")\na.agregar_nota(8)\na.agregar_nota(15)   # inválida: se ignora\na.agregar_nota(10)\nassert str(a) == "Ana — promedio 9.0", 'esperaba "Ana — promedio 9.0" (15 no cuenta)'\nprint("¡Alumno OK!")`}
+  starter={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre\n        self._marcas = []\n    # marcar(estado): SOLO agrega si es "P", "A", "T" o "J"\n    # porcentaje(): qué porcentaje vino. La "T" cuenta como que vino.\n    #               Si todavía no hay marcas, 0 (y no un error de división).\n    # __str__: devuelve  <Apellido>, <Nombre> — <porcentaje con 1 decimal>%`}
+  tests={`a = Alumno("30111222", "Perez", "Ana")\na.marcar("P")\na.marcar("T")\na.marcar("A")\na.marcar("P")\na.marcar("Z")   # inválida: si entrara, el porcentaje daría 60 en vez de 75\nassert str(a) == "Perez, Ana — 75.0%", f'esperaba "Perez, Ana — 75.0%" y salió {str(a)!r}'\nvacio = Alumno("28999888", "Sin", "Marcas")\nassert vacio.porcentaje() == 0, "sin ninguna marca el porcentaje es 0, no un error"\nassert str(vacio) == "Sin, Marcas — 0.0%", f'con el curso recién empezado tendría que decir "Sin, Marcas — 0.0%" y dice {str(vacio)!r}'\ntodas = Alumno("1", "Siempre", "Vino")\ntodas.marcar("P")\ntodas.marcar("T")\nassert str(todas) == "Siempre, Vino — 100.0%", "el que llegó tarde igual vino: 2 de 2"\nprint("¡Alumno OK!")`}
   pistas={[
-    "¿Qué notas no tendrían sentido en una libreta? Nombrá el rango de las que sí.",
-    "Si llega una nota inválida, ¿qué preferís: que el programa explote, o que simplemente no la agregue?",
+    "Para contar cuántas veces aparece algo en una lista no hace falta recorrerla: las listas tienen un método que cuenta.",
+    "“Vino” son las <code>P</code> más las <code>T</code>. El total son todas las marcas.",
+    "Para el decimal, es el mismo formato que usaste en la planilla de listas: <code>{valor:.1f}</code>.",
   ]}
 >
-Mejorá `Alumno`: `agregar_nota(nota)` **solo agrega si la nota está entre 0 y 10** (si no, la
-ignora), `promedio()` devuelve el promedio, y `__str__` devuelve `<nombre> — promedio <promedio>`.
+La clase entera, junta: guarda sus marcas, no acepta las inválidas, calcula su porcentaje y sabe
+imprimirse.
+
+- `marcar(estado)` — agrega la marca **solo si es válida**.
+- `porcentaje()` — qué porcentaje de los días **vino**. La `"T"` cuenta como que vino (llegó tarde,
+  pero estuvo). Sin marcas, `0`.
+- `__str__` — devuelve `Apellido, Nombre — <porcentaje>%` con **un decimal**.
+
+:::caution[La decisión que hay atrás]
+Que la `T` cuente como presente **no es una cuestión técnica**: es una regla del CFP, y alguien la
+tuvo que decidir. Cuando el sistema esté andando, la primera pregunta de preceptoría va a ser
+exactamente esta. Tenerla escrita en un método —y no repartida en cinco pantallas— es lo que
+permite cambiarla el día que cambie.
+:::
 </EjercicioPython>
 
 ## Para llevar
 
 - `__str__` define cómo se imprime tu objeto (hay más *dunder*: `__repr__`, `__len__`, `__eq__`…).
 - Encapsular = datos internos con `_` + métodos que controlan el acceso (la "puerta").
+- Validar **al entrar** sale más barato que validar en cada lugar donde el dato se usa.
+- Una regla del negocio (la `T` cuenta como presente) vive en **un** método, no repartida.
 - En el diagrama: `-` privado, `+` público.
 
 :::note[Lo que viene]
-En **Herencia y polimorfismo** vas a hacer que una clase reutilice a otra, y vas a **armar un
-diagrama de clases arrastrando** las piezas. 🧩
+Con `Alumno`, `Curso` y `Asistencia` ya tenés el **modelo** del sistema. Lo que sigue es la clase
+**"Del prototipo al modelo"**, donde se decide entre todos qué queda, qué falta y qué sobra —y de
+ahí en adelante lo que escribimos ya es el sistema.
+
+(Si querés seguir con POO por tu cuenta, **Herencia y polimorfismo** quedó como material optativo.)
 :::
