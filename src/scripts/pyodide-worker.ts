@@ -261,13 +261,71 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
             exec(_compilar_tests(tests), ns)
     except SyntaxError as e:
         ok = False
-        donde = "los tests" if e.filename == "los_tests" else "tu código"
-        err = f"Error de sintaxis en {donde}, línea {e.lineno}: {e.msg}"
+        if e.filename in propios:
+            donde = "los tests" if e.filename == "los_tests" else "tu código"
+            err = f"Error de sintaxis en {donde}, línea {e.lineno}: {e.msg}"
+        else:
+            # No viene de compilar código: viene de que los tests intentaron
+            # INTERPRETAR la salida (ast.literal_eval) y no había nada que
+            # interpretar. Decirle "error de sintaxis en tu código" acá lo manda
+            # a buscar un error que no existe.
+            _mostrado = buf.getvalue().rstrip()
+            if not _mostrado.strip():
+                err = ("Tu programa todavía no muestra nada en pantalla.\\n"
+                       "El verificador corrige mirando lo que imprimís: "
+                       "fijate si te falta el print().")
+            else:
+                err = ("El verificador no pudo entender lo que mostraste.\\n"
+                       f"Mostró esto:\\n{_mostrado}")
     except ModuleNotFoundError as e:
         ok = False
         err = (f"No encontré el módulo '{e.name}'.\\n"
                f"¿Ejecutaste primero el ejercicio donde se define ({e.name}.py)? "
                f"Hacelo y volvé a intentar.")
+    except IndexError as e:
+        # Casi todos los ejercicios "de programa" verifican mirando las últimas
+        # líneas de la salida (splitlines()[-1]). Si el alumno todavía no puso
+        # el print, esa lista viene vacía y el corchete revienta DENTRO DEL
+        # TEST. Sin esto, lo que ve es "IndexError: list index out of range"
+        # señalando código nuestro: un error que él no escribió, en un archivo
+        # que no puede abrir.
+        ok = False
+        _tb = traceback.extract_tb(sys.exc_info()[2])
+        # Solo hablamos de "la salida" si la línea que reventó estaba MIRANDO la
+        # salida. Un test que hace c.alumnos[0] también tira IndexError, y ahí
+        # decirle al alumno que le falta un print sería mandarlo al lugar
+        # equivocado.
+        #
+        # OJO al editar este archivo: todo esto vive adentro de un template
+        # literal de TypeScript, así que un acento grave en un comentario Python
+        # CIERRA el literal y rompe el worker entero. El build de Astro pasa
+        # igual; se ve recién en el navegador como "falló el worker de Python".
+        # Se comprueba con:
+        #     npx esbuild src/scripts/pyodide-worker.ts --format=esm --outfile=w.js
+        _linea_test = ""
+        for f in _tb:
+            if f.filename == "los_tests":
+                _linea_test = f.line or ""
+        _sobre_la_salida = "splitlines" in _linea_test or "salida" in _linea_test
+        _mostrado = buf.getvalue().rstrip()
+        if _sobre_la_salida and not _mostrado.strip():
+            err = ("Tu programa todavía no muestra nada en pantalla.\\n"
+                   "El verificador corrige mirando lo que imprimís: "
+                   "fijate si te falta el print().")
+        elif _sobre_la_salida:
+            err = ("Tu programa muestra menos líneas de las que pide el ejercicio.\\n"
+                   f"Mostró esto:\\n{_mostrado}")
+        else:
+            partes = []
+            for f in _tb:
+                if f.filename in propios:
+                    donde = "los tests" if f.filename == "los_tests" else "tu código"
+                    linea = (f.line or "").strip()
+                    partes.append(f"En {donde}, línea {f.lineno}:  {linea}" if linea
+                                  else f"En {donde}, línea {f.lineno}")
+            partes.append(f"IndexError: {e}")
+            partes.append("Estás pidiendo una posición que no existe en esa lista o texto.")
+            err = "\\n".join(partes)
     except Exception as e:
         ok = False
         tb = traceback.extract_tb(sys.exc_info()[2])

@@ -6,7 +6,18 @@
 
 ---
 
-## 0. La decisión que hay que tomar antes de armar la clase
+## 0. La decisión, ya tomada
+
+**La clase va partida** (decidido el 30/8): primero el ensayo de la entrevista, después Archivos, y
+JSON si se llega — que probablemente no.
+
+**Lo que no entre se graba en video.** Eso cambia cómo se da lo que sí entra: el tiempo de clase no
+se gasta en la primera explicación, se gasta en **sacarse las dudas**. Si a las 16:20 Archivos está
+por la mitad, no se corre: se corta ahí y el resto va grabado.
+
+> 💡 No es un premio consuelo. **Un video se pausa y se vuelve a mirar**, que es exactamente lo que
+> le faltó a Archivos cuando se dio el 8/7 con media clase ausente y quedó flojo para todos. Esta
+> vez el que falta o el que se pierde tiene dónde volver.
 
 **La preparación de la entrevista NO se lleva las tres horas y veinte. Se lleva 70 minutos.**
 
@@ -29,12 +40,11 @@ O sea: si el 2/9 se va entero en preparar la entrevista, **Archivos y JSON se qu
 antes de POO**. Y la dependencia está escrita en el plan: *el proyecto guarda datos desde la
 primera versión*, así que POO sin Archivos deja el sistema sin poder guardar nada.
 
-**Propuesta: partir el 2/9.** 70 minutos de ensayo, 105 de Archivos. JSON se corre al 9/9 o entra
-mezclado con POO (que es donde el sistema lo va a necesitar de verdad).
+**Resuelto así:** 70 minutos de ensayo, 105 de Archivos, JSON hasta donde se llegue. Lo que quede
+afuera va en video, y **POO arranca el 9/9 igual**.
 
-> Si igual preferís usar la clase entera para la entrevista, se puede — pero entonces hay que
-> decidir **hoy** de dónde salen Archivos y JSON, y la única respuesta honesta es correr POO una
-> clase.
+Es la única combinación que no rompe nada: correr POO otra vez dejaría la puesta al día sin fecha
+límite por tercera vez, y ya se anunció al grupo que el 9/9 es el corte.
 
 ---
 
@@ -45,8 +55,12 @@ mezclado con POO (que es donde el sistema lo va a necesitar de verdad).
 | 13:20 | Qué pasó el viernes y qué se viene | 5 min |
 | 13:25 | 🎤 **Ensayo de la entrevista con el kit** | 70 min |
 | 14:35 | ☕ Corte | 10 min |
-| 14:45 | 💾 **Archivos** | 105 min |
+| 14:45 | 💾 **Archivos** — y **JSON si sobra** | 105 min |
 | 16:30 | Checklist del viernes: quién trae qué | 10 min |
+
+⚠️ **16:40 es límite duro y ahora en serio.** El acta del 28/8 pasó los viernes a 13:20–16:40, así
+que ya no existe la media hora de gracia del final. Si a las 16:25 falta algo, falta: se anota qué
+quedó y se graba.
 
 ---
 
@@ -117,6 +131,25 @@ al sistema** además de los cinco que ya estaban:
 
 > Los tres son, literalmente, lo que el sistema necesita para que la asistencia sobreviva a cerrar
 > el programa. Decilo así: **lo que escriban hoy es lo que el viernes les van a estar mirando.**
+
+### Si llega a sobrar tiempo: JSON
+
+Poco probable, pero si pasa, el que más rinde es **"El curso que sobrevive al apagado"** — guarda y
+carga el curso entero, y arranca vacío si el archivo no está. Con ese solo ya se entiende para qué
+existe JSON.
+
+### Qué se graba
+
+Lo que quede sin ver, y en este orden de prioridad:
+
+| Orden | Qué | Por qué primero |
+|---|---|---|
+| 1 | Lo que falte de **Archivos** | Sin esto el sistema no guarda nada, y POO empieza el 9/9 |
+| 2 | **JSON**: las cuatro funciones y el ida y vuelta | Es el formato en el que va a vivir el curso entero |
+| 3 | JSON: importar del formulario | Se puede ver más adelante, cuando haga falta de verdad |
+
+Un video corto por tema, no uno largo de todo: el que se perdió una cosa no se va a bancar cuarenta
+minutos para encontrarla. Y decir en clase **cuál** hay que mirar antes del 9/9.
 
 ---
 

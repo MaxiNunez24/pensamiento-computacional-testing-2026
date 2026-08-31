@@ -92,13 +92,22 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 > hora de gracia del final de los viernes ya no existe. Las clases que venían cerrando
 > justo ahora no cierran.
 
+> 🎥 **Lo que no entre, va en video (decidido el 30/8).** El 2/9 se parte: primero el ensayo
+> de la entrevista, después Archivos y **JSON si se llega** —que probablemente no—. Lo que quede
+> afuera se graba y el tiempo de clase se usa para **sacarse las dudas**, no para la primera
+> explicación.
+>
+> Es la única forma de que POO arranque el 9/9 sin dejar el Bloque 3 a medias. Y tiene una ventaja
+> que no es consuelo: **un video se pausa y se vuelve a mirar**, que es justo lo que le faltó a
+> Archivos cuando se dio el 8/7 con media clase ausente y quedó flojo para todos.
+
 ### 🍂 Septiembre — arrancar el proyecto de una vez (9 clases)
 
 | Fecha | Clase | Notas |
 |---|---|---|
 | **Mié 2/9** | 🎤 **Ensayo de la entrevista** (70 min) + **Archivos** (105 min) | Run of show en `clase-2026-09-02_preparar-demo.md`. La herramienta es `/entrevista/`. |
 | **Vie 4/9** | 🎪 **La entrevista con los stakeholders** | No se sabe cómo vienen ni cuánto se quedan: el kit aguanta las tres formas. Si hay huecos, se sigue con Archivos. |
-| Mié 9/9 | **POO I** — clases y objetos | ⚠️ **JSON se quedó sin fecha propia.** Entra acá mezclado (el `Alumno` que se guarda en JSON) o se corre POO una clase. Hay que decidirlo el 2/9, no el 9/9. |
+| Mié 9/9 | **POO I** — clases y objetos | **Decidido:** POO arranca acá igual. Lo que no entre de Archivos y JSON el 2/9 **se graba en video** y se destraba con preguntas en clase. Ver la nota de abajo. |
 | Vie 11/9 | **POO I** práctica, **con el sistema** | Los ejercicios ya son piezas del proyecto. |
 | Mié 16/9 | **POO II** — métodos, `__init__`, `__str__` | |
 | Vie 18/9 | **POO II** práctica, con el sistema | |
@@ -138,7 +147,7 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 | Fecha | Clase | Notas |
 |---|---|---|
 | Mié 4/11 | **SQLite II** + **login**: contraseñas hasheadas, sesiones | Nunca guardar una contraseña en texto plano. |
-| Vie 6/11 | **Deploy**: subir el proyecto a PythonAnywhere | ✅ **Hito: el sistema en internet**, una semana ANTES de la Expo. |
+| Vie 6/11 | **Deploy en la red del CFP**: `flask run --host=0.0.0.0` y entrar por la IP | ✅ **Hito: el sistema andando de verdad**, una semana ANTES de la Expo. Cambió por la decisión del 20/8 (ver PROYECTO-ASISTENCIAS §12): **no va a internet**. Se prueba en el aula ese mismo día, todos entrando desde su celular — que es mejor demo que cualquier dirección pública. |
 | Mié 11/11 | **Armado del stand y ensayo** | Cargar datos de demo, repartir quién dice qué, probar todo en la máquina que va a estar en el stand. |
 | **Vie 13/11** | 🏆 **EXPO CFP 2026** | |
 | Mié 18/11 | **Playwright I** — Bot SiGes | Necesita las fotos del proceso de carga. |
@@ -195,7 +204,7 @@ tema necesita más tiempo, se lo damos** y se recorta del final, no del medio.
 | 23/9 (CLI) | Enunciado del proyecto y el formato de datos acordado |
 | 2/10 (pytest) | Nada nuevo: se testea el código que ya escribieron |
 | 14/10 (Flask) | Las plantillas HTML de la planilla, ya hechas |
-| 11/11 (deploy) | Cuenta de PythonAnywhere **del CFP**, no personal |
+| 6/11 (deploy) | Que la máquina del CFP tenga **IP fija en la red** y que el firewall deje pasar el puerto. Ya no hace falta ninguna cuenta externa. |
 
 ---
 
