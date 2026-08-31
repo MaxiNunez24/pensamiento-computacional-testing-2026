@@ -33,6 +33,20 @@ export default defineConfig({
       // Ojo: la ruta lleva el `base` adelante. Si se deja "/sidebars-resizable.js"
       // a secas, en producción se busca en la raíz del dominio y da 404.
       head: [
+        // ⚠️ Este va PRIMERO y SIN defer, a propósito: aplica el encabezado
+        // plegado antes de que el navegador pinte. Con defer se vería el
+        // encabezado aparecer y desaparecer en cada carga. Es el mismo truco
+        // con el que Starlight evita el parpadeo del tema oscuro.
+        {
+          tag: 'script',
+          content:
+            "try{if(localStorage.getItem('pc:header')==='0')" +
+            "document.documentElement.dataset.pcSinHeader=''}catch(e){}",
+        },
+        {
+          tag: 'script',
+          attrs: { src: `${base}/header-plegable.js`, defer: true },
+        },
         {
           tag: 'script',
           attrs: { src: `${base}/sidebars-resizable.js`, defer: true },
