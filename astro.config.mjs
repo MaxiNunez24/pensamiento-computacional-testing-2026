@@ -59,7 +59,6 @@ export default defineConfig({
       sidebar: [
         { label: '🏠 Inicio', link: '/' },
         { label: '👋 Cómo usar esta plataforma', link: '/clases/como-usar-esto/' },
-        { label: '🧪 Probador libre', link: '/probador/' },
         // Arriba de todo a propósito: es lo que hay que mirar primero mientras
         // el grupo esté atrasado. Se tilda sola leyendo el progreso guardado.
         { label: '🧭 Por dónde empezar', link: '/camino/' },
@@ -68,7 +67,6 @@ export default defineConfig({
         { label: '📋 Tablero del proyecto', link: '/tablero/' },
         // Va junto al tablero porque son las dos pantallas compartidas:
         // lo que ve toda la clase, no lo que cada uno tiene guardado.
-        { label: '💬 Soluciones de la clase', link: '/foro/' },
         // Arriba mientras dure: se usa el 2/9 para prepararla y el 4/9 en vivo,
         // con alguien hablando enfrente. Después baja o se saca.
         { label: '🎤 La entrevista del viernes', link: '/entrevista/' },
@@ -148,6 +146,8 @@ export default defineConfig({
             { label: '🧪 Testing I — probar en serio', link: '/clases/testing-1/' },
           ],
         },
+        { label: '🧪 Probador libre', link: '/probador/' },
+        { label: '💬 Soluciones de la clase', link: '/foro/' },
       ],
     }),
   ],
