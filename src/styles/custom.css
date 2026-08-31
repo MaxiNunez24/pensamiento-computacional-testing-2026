@@ -2698,6 +2698,15 @@ body.pc-resizing * {
   display: none;
 }
 
+/* La barra de progreso se pliega junto con el encabezado. Mide 112px —más que
+   el encabezado— y proyectada no aporta nada: el avance de la máquina del profe
+   no le dice nada a la clase. Y de paso desaparece "Empezar esta clase de
+   nuevo", que es el botón que uno menos quiere tener a mano compartiendo
+   pantalla. */
+:root[data-pc-sin-header] #pcp-resumen {
+  display: none;
+}
+
 /* El botón vive abajo a la derecha, la esquina que menos se mira mientras se
    explica. Va POR ENCIMA del botón de sincronizar (z-index 80): con el
    encabezado plegado, en celular este es el único camino de vuelta al menú. */
