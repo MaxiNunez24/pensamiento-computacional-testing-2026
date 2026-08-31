@@ -23,10 +23,17 @@ export const editorTheme = EditorView.theme({
   // 1rem (16px) y no menos: Safari en iOS hace zoom automático al enfocar un
   // campo con tipografía menor a 16px, y la página queda corrida.
   '&': { fontSize: '1rem', maxHeight: '22rem' },
-  // Aire abajo del código. NO es estético: es para que el cartel de sugerencias
-  // tenga dónde aparecer cuando el alumno escribe en la última línea. Sin este
-  // espacio, CodeMirror lo da vuelta y lo pone encima de lo que está tecleando.
+  // Aire abajo del código, para que el cartel de sugerencias caiga sobre espacio
+  // vacío y no sobre el párrafo siguiente cuando se escribe en la última línea.
   '.cm-content': { paddingBottom: '7rem' },
+  /* El tope de alto del cartel de sugerencias, atado al alto de la PANTALLA.
+     CodeMirror da vuelta el cartel —y lo pone encima de la consigna— cuando no
+     entra entre el cursor y el borde de la ventana. El `max-height: 10em` que
+     trae de fábrica está en `em`, así que dando clase con el zoom al 150% el
+     cartel crece igual que la letra y deja de entrar siempre.
+     Con `vh` nunca pasa de un cuarto de la pantalla, tenga la letra el tamaño
+     que tenga; y en el peor caso, si igual se da vuelta, tapa mucho menos. */
+  '.cm-tooltip-autocomplete > ul': { maxHeight: 'min(10em, 25vh)' },
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
   },
@@ -432,7 +439,7 @@ export function conectarEnvio(
    se acuerda de cómo se llamaba la variable. Ahora se la ofrece el editor.
 */
 import { autocompletion, completeFromList, type Completion } from '@codemirror/autocomplete';
-import { pythonLanguage } from '@codemirror/lang-python';
+import { localCompletionSource } from '@codemirror/lang-python';
 
 /** Saca los nombres que define un bloque de `datos`: `precio = 1500` → precio. */
 export function variablesDe(datos: string): string[] {
@@ -465,6 +472,33 @@ const BASICOS: Completion[] = [
   { label: 'type', type: 'function', detail: 'de qué tipo es' },
 ];
 
+/* Las palabras del lenguaje. Están acá porque al reemplazar la fuente del
+   paquete de Python se fueron junto con los builtins que molestaban, y estas sí
+   sirven. Solo las del curso: nada de `lambda`, `yield`, `global` ni `assert`
+   —esa última la escribimos nosotros en los tests, no ellos—. */
+const PALABRAS: Completion[] = [
+  { label: 'def', type: 'keyword', detail: 'definir una función' },
+  { label: 'return', type: 'keyword', detail: 'devolver un valor' },
+  { label: 'if', type: 'keyword', detail: 'si se cumple…' },
+  { label: 'elif', type: 'keyword', detail: 'si no, y además…' },
+  { label: 'else', type: 'keyword', detail: 'si no…' },
+  { label: 'for', type: 'keyword', detail: 'repetir por cada uno' },
+  { label: 'while', type: 'keyword', detail: 'repetir mientras…' },
+  { label: 'in', type: 'keyword', detail: '¿está adentro?' },
+  { label: 'not', type: 'keyword', detail: 'lo contrario' },
+  { label: 'and', type: 'keyword', detail: 'las dos cosas' },
+  { label: 'or', type: 'keyword', detail: 'una o la otra' },
+  { label: 'break', type: 'keyword', detail: 'cortar el bucle' },
+  { label: 'continue', type: 'keyword', detail: 'saltar a la vuelta siguiente' },
+  { label: 'True', type: 'keyword', detail: 'verdadero' },
+  { label: 'False', type: 'keyword', detail: 'falso' },
+  { label: 'None', type: 'keyword', detail: 'ningún valor' },
+  { label: 'import', type: 'keyword', detail: 'traer un módulo' },
+  { label: 'from', type: 'keyword', detail: 'traer algo de un módulo' },
+  { label: 'class', type: 'keyword', detail: 'definir una clase' },
+  { label: 'self', type: 'keyword', detail: 'el objeto que se está usando' },
+];
+
 /**
  * Extensiones de autocompletado para un editor de ejercicio.
  * `datos` es el bloque de variables que el ejercicio inyecta (puede ir vacío).
@@ -479,15 +513,24 @@ export function autocompletado(datos = '') {
   }));
 
   return [
-    pythonLanguage.data.of({
-      autocomplete: completeFromList([...delEjercicio, ...BASICOS]),
-    }),
     autocompletion({
+      /* `override` reemplaza TODAS las fuentes, y eso es lo importante acá.
+         Sin él, el paquete de Python suma los builtins enteros: `eval`,
+         `globals`, `locals`, `callable`, `ValueError`… Tres problemas a la vez:
+         son ruido para quien recién empieza, `eval` es lo último que uno quiere
+         sugerirle a nadie, y sobre todo hacen un cartel de ocho renglones que
+         tapa la consigna.
+
+         Quedan dos fuentes: la lista curada del curso, y los nombres que el
+         alumno definió en su propio código (esa sí la queremos: completar la
+         función que acaba de escribir). */
+      override: [completeFromList([...delEjercicio, ...BASICOS, ...PALABRAS]), localCompletionSource],
       // Sin esto, el cartel se cierra al tocar afuera y en el celular eso pasa
       // con cualquier scroll.
       closeOnBlur: true,
-      // Una lista corta se lee; una larga se ignora.
-      maxRenderedOptions: 8,
+      // Seis y no ocho: el cartel tiene que caber DEBAJO del cursor, porque si
+      // no CodeMirror lo da vuelta y lo pone encima de lo que se está leyendo.
+      maxRenderedOptions: 6,
     }),
   ];
 }
