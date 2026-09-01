@@ -4,6 +4,7 @@ description: Tu primera caja de herramientas reutilizable. Aprendé a definir fu
 ---
 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
+import EncontrarElError from '../../../components/EncontrarElError.astro';
 import VolverATeoria from '../../../components/VolverATeoria.astro';
 
 <VolverATeoria ruta="clases/bloque_2_funciones_y_colecciones/funciones_1/" />
@@ -263,6 +264,39 @@ reglas:
 - Al menos **un número**
 - **Sin espacios**
 </EjercicioPython>
+
+<EncontrarElError
+  titulo="La mayúscula que no era"
+  dificultad="🌿"
+  codigo={`def tiene_mayuscula(password):\n    for carac in password:\n        if carac.upper() == carac:\n            return True\n    return False\n\nprint(tiene_mayuscula("Python123"))\nprint(tiene_mayuscula("python123"))`}
+  errores={[3]}
+  explicacion="carac.upper() == carac no pregunta '¿es mayúscula?'. Pregunta '¿pasarlo a mayúscula lo deja igual?', y eso es verdad para TODO lo que no sea una letra minúscula: los números, los espacios y los símbolos también pasan. Con '1' da True. El método que pregunta lo que queríamos preguntar es carac.isupper()."
+  tests={`assert tiene_mayuscula("Python123") is True, "'Python123' sí tiene una mayúscula"\nassert tiene_mayuscula("python123") is False, "'python123' no tiene ninguna: los números no cuentan como mayúsculas"\nassert tiene_mayuscula("12345678") is False, "una contraseña sin una sola letra no puede tener una mayúscula"\nassert tiene_mayuscula("hola mundo") is False, "el espacio tampoco es una mayúscula"\nassert tiene_mayuscula("a") is False\nassert tiene_mayuscula("A") is True\nprint("¡Ahora sí!")`}
+  pistas={[
+    "Probá vos mismo en el probador: ¿qué contesta <code>\"1\".upper() == \"1\"</code>? ¿Y <code>\" \".upper() == \" \"</code>?",
+    "La condición no es falsa: es <em>otra</em> pregunta. Dice “pasarlo a mayúscula lo deja igual”, que no es lo mismo que “es una mayúscula”.",
+    "Buscás el método que <em>pregunta</em> en vez del que <em>transforma</em>. En inglés, “es mayúscula”.",
+  ]}
+>
+Este programa tendría que decir si una contraseña tiene **al menos una mayúscula**. Con
+`"Python123"` contesta bien, pero con `"python123"` también dice `True`:
+
+```
+True
+True     ← acá está el problema: "python123" no tiene ninguna mayúscula
+```
+
+Marcá la línea donde está el error.
+
+:::note[Este salió de un intento real]
+No es un error inventado para el ejercicio: es de una solución que se escribió en clase y que
+*parecía* correcta. Falla solo con los casos que uno no prueba — y la contraseña `12345678`, que no
+tiene una sola letra, pasaba el control de "tiene mayúscula".
+
+Por eso los tests de acá abajo prueban con números, con espacios y con una sola letra. **Los casos
+raros no son un capricho: son los únicos que encuentran esta clase de error.**
+:::
+</EncontrarElError>
 
 :::note[¿Qué sigue?]
 En **Funciones II** vamos a ver el *scope* (dónde "viven" las variables), los valores por defecto y

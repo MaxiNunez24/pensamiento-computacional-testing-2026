@@ -277,6 +277,7 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
             else:
                 err = ("El verificador no pudo entender lo que mostraste.\\n"
                        f"Mostró esto:\\n{_mostrado}")
+            # (mismo criterio que el IndexError de más abajo)
     except ModuleNotFoundError as e:
         ok = False
         err = (f"No encontré el módulo '{e.name}'.\\n"
@@ -302,11 +303,14 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
         # igual; se ve recién en el navegador como "falló el worker de Python".
         # Se comprueba con:
         #     npx esbuild src/scripts/pyodide-worker.ts --format=esm --outfile=w.js
-        _linea_test = ""
-        for f in _tb:
-            if f.filename == "los_tests":
-                _linea_test = f.line or ""
-        _sobre_la_salida = "splitlines" in _linea_test or "salida" in _linea_test
+        # La señal no es la línea que reventó sino QUÉ MIRA el ejercicio para
+        # corregir. Un test que usa correr(), salida o splitlines corrige por lo
+        # que el alumno imprime; ahí, sin salida, lo que falta es el print. Uno
+        # que no los usa es de escribir una función, nadie espera un print, y un
+        # que revienta en un c.alumnos[0] es otra cosa completamente.
+        _en_test = any(f.filename == "los_tests" for f in _tb)
+        _mira_la_salida = "correr(" in tests or "salida" in tests or "splitlines" in tests
+        _sobre_la_salida = _en_test and _mira_la_salida
         _mostrado = buf.getvalue().rstrip()
         if _sobre_la_salida and not _mostrado.strip():
             err = ("Tu programa todavía no muestra nada en pantalla.\\n"

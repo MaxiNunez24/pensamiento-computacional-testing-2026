@@ -71,6 +71,21 @@ jobs:
       - name: Verificar el render del HTML
         run: python3 scripts/verificar_render.py site/ejercicios
 
+      # Un alumno escribió bien su código pero le faltó el print, y en vez de
+      # decírselo la plataforma le mostró un IndexError de NUESTROS tests. Pasaba
+      # en 41 de 178 ejercicios. Esto corre todos con el editor vacío y falla si
+      # alguno vuelve a mostrar un error que el alumno no escribió.
+      - name: Verificar los mensajes de error de los ejercicios
+        run: python3 scripts/verificar_ejercicios.py
+
+      # El intérprete de Python del navegador es un programa Python entero
+      # adentro de un template literal de TypeScript. Un solo acento grave en un
+      # comentario CIERRA el literal y rompe el worker: la página carga bien, el
+      # build pasa en verde, y recién en el navegador aparece "falló el worker de
+      # Python". Ya pasó dos veces. esbuild lo caza en 5 milisegundos.
+      - name: Verificar que el worker de Python compile
+        run: npx esbuild src/scripts/pyodide-worker.ts --format=esm --outfile=/tmp/worker-check.js
+
       # ---------- Publicar ----------
 
       - name: Publicar en gh-pages

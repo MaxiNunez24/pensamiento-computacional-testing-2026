@@ -343,6 +343,65 @@ for i in range(len(nombres)):
     print(nombres[i], notas[i])
 ```
 
+### `any` y `all` — ¿alguno? ¿todos?
+
+```python
+tiene_mayuscula = any(c.isupper() for c in password)
+cumple_todo     = all([largo_ok, tiene_mayus, tiene_num, sin_espacios])
+```
+
+Sin ellos:
+
+```python
+tiene_mayuscula = False
+for c in password:
+    if c.isupper():
+        tiene_mayuscula = True
+
+cumple_todo = largo_ok and tiene_mayus and tiene_num and sin_espacios
+```
+
+**En el sistema:** *"¿algún día del mes quedó sin cargar?"* es un `any`. *"¿todos los alumnos
+tienen DNI?"* es un `all`.
+
+:::caution[Con la lista vacía contestan al revés de lo que uno espera]
+`any([])` da **False** y `all([])` da **True**. Suena raro, pero es lo único coherente: si no hay
+ninguno, no hay ninguno que cumpla (`any` → False) y no hay ninguno que falle (`all` → True).
+
+Es el mismo caso borde de siempre: **el curso sin alumnos, el mes sin cargar, la lista vacía.**
+:::
+
+<EjercicioPython
+  titulo="Escribí any() vos mismo"
+  dificultad="🟡"
+  starter={`def hay_alguno(condiciones):
+    # Devolvé True si AL MENOS UNO de la lista es True.
+    # Sin usar any(): con un for, a lo bruto.
+    pass
+`}
+  tests={`casos = [[], [False], [True], [False, False, True], [True, False], [False, False, False], [True, True]]
+for c in casos:
+    mio, python = hay_alguno(c), any(c)
+    assert mio == python, f"con {c!r}: any() da {python} y el tuyo {mio}"
+assert hay_alguno([]) is False, "con la lista vacía tiene que dar False (el valor, no algo que se le parezca)"
+print("Hace exactamente lo mismo que any() 🎉")`}
+  pistas={[
+    "¿Con qué valor arranca la respuesta ANTES de mirar el primer elemento? Si no miraste ninguno, ¿ya encontraste alguno?",
+    "En cuanto encontrás uno verdadero, ¿hace falta seguir mirando el resto?",
+    "El test compara contra <code>any()</code> de verdad, incluida la lista vacía. Si tu versión y la de Python contestan distinto en algún caso, te dice en cuál.",
+  ]}
+>
+`any()` no es magia: son cuatro líneas. Escribilas.
+
+El test corre **tu versión y la de Python con los mismos casos** y compara. Si dan distinto en
+alguno, te muestra cuál.
+
+:::tip[Por qué vale la pena hacerlo]
+Porque después de escribirlo no te vas a olvidar más de lo que hace — ni de que con la lista vacía
+da `False`. Es la diferencia entre saber que existe y saber usarlo.
+:::
+</EjercicioPython>
+
 <EjercicioPython
   titulo="La lista numerada"
   dificultad="🟢"
