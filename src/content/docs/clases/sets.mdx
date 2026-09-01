@@ -102,6 +102,95 @@ Resultado esperado: `gano` debería ser `True` (los tres están entre los sortea
 - `a & b` intersección · `a - b` diferencia · `a.issubset(b)` (o `a <= b`) ¿está contenido?
 - Es la estructura natural del Bingo: cartón, sorteados y la condición de victoria.
 
+## 🏗️ El sistema: los DNI, sin repetidos y sin recorrer
+
+Un DNI no se puede repetir en un curso, y las preguntas que el CFP hace todo el tiempo son de
+conjuntos: *¿quiénes faltan por marcar?*, *¿alguno se anotó dos veces?*, *¿quiénes están en los dos
+talleres?*. Con listas eso son bucles adentro de bucles. Con sets es **una línea**.
+
+<EjercicioPython
+  titulo="El formulario trae repetidos"
+  dificultad="🌱"
+  datos={`inscriptos = ["30111222", "28999888", "30111222", "27888444", "28999888", "30111222"]`}
+  starter={`def cuantos_distintos(dnis):\n    # ¿Cuántas PERSONAS distintas hay en esa lista?\n    pass`}
+  tests={`assert cuantos_distintos(inscriptos) == 3, f"hay 3 personas distintas y contaste {cuantos_distintos(inscriptos)}"\nassert cuantos_distintos([]) == 0, "sin inscriptos, cero"\nassert cuantos_distintos(["1", "1", "1"]) == 1, "el mismo tres veces es una sola persona"\nassert cuantos_distintos(["1", "2", "3"]) == 3, "sin repetidos, son todos"\nprint("¡Contados!")`}
+  pistas={[
+    "Un conjunto no puede tener dos veces el mismo elemento. Si convertís la lista en uno, ¿qué pasa con los repetidos?",
+    "Se resuelve en una línea, sin ningún <code>for</code> y sin ningún <code>if</code>.",
+  ]}
+>
+La gente se anota al curso por un formulario web, y **se anota más de una vez**: se olvidan, no les
+llegó el mail, prueban de nuevo. La lista que baja tiene repetidos.
+
+Completá `cuantos_distintos(dnis)`: cuántas **personas** hay realmente.
+
+:::note[Es un caso real, no un ejemplo]
+De la lista de arriba, `30111222` aparece **tres veces**. Si el sistema cuenta filas en vez de
+personas, el curso arranca diciendo que tiene 6 inscriptos cuando tiene 3 — y esa es la cifra que
+después va a la planilla.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Quiénes faltan por marcar"
+  dificultad="🌿"
+  datos={`del_curso = ["30111222", "28999888", "27888444", "26777333"]\nya_marcados = ["28999888", "26777333"]`}
+  starter={`def faltan_por_marcar(del_curso, ya_marcados):\n    # Devolvé el CONJUNTO de los que todavía nadie marcó.\n    pass`}
+  tests={`r = faltan_por_marcar(del_curso, ya_marcados)\nassert r == {"30111222", "27888444"}, f"devolviste {r!r}"\nassert isinstance(r, set), "devolvé un conjunto"\nassert faltan_por_marcar(del_curso, del_curso) == set(), "si están todos marcados, no falta nadie"\nassert faltan_por_marcar(del_curso, []) == set(del_curso), "si no se marcó a nadie, faltan todos"\nassert faltan_por_marcar([], ["1"]) == set(), "un curso sin alumnos"\nassert faltan_por_marcar(["1"], ["1", "9"]) == set(), "un DNI marcado que ya no está en el curso no aparece de la nada"\nprint("¡Los que faltan, OK!")`}
+  pistas={[
+    "Es una resta: los del curso <em>menos</em> los ya marcados. Los conjuntos entienden el signo menos.",
+    "Ojo: te llegan dos LISTAS. Antes de restarlas hay que convertirlas.",
+    "Mirá el último test: hay un DNI marcado que no pertenece al curso. Una resta lo ignora sola — probá que tu solución también.",
+  ]}
+>
+Completá `faltan_por_marcar(del_curso, ya_marcados)`: devuelve el **conjunto** de los que todavía
+nadie marcó.
+
+```python
+faltan_por_marcar(["1", "2", "3"], ["2"])   # -> {"1", "3"}
+```
+
+:::tip[Comparalo con hacerlo a mano]
+Sin conjuntos sería recorrer los del curso y, por cada uno, recorrer los marcados a ver si está:
+dos bucles anidados. Con conjuntos es `set(del_curso) - set(ya_marcados)`.
+
+**No es solo más corto: es más difícil de escribir mal.** El bucle anidado tiene tres formas de
+salir mal (el `break` que falta, la bandera que no se reinicia, el `else` mal indentado). La resta
+tiene cero.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Los que ya estaban"
+  dificultad="🌿"
+  datos={`ya_en_el_curso = ["30111222", "28999888"]\ndel_formulario = ["28999888", "27888444", "26777333"]`}
+  starter={`def separar(ya_en_el_curso, del_formulario):\n    # Devolvé (los_nuevos, los_repetidos), los dos como conjuntos.\n    pass`}
+  tests={`nuevos, repetidos = separar(ya_en_el_curso, del_formulario)\nassert nuevos == {"27888444", "26777333"}, f"los nuevos salieron {nuevos!r}"\nassert repetidos == {"28999888"}, f"los repetidos salieron {repetidos!r}"\nn, r = separar([], ["1", "2"])\nassert n == {"1", "2"} and r == set(), "curso vacío: entran todos y no se repite ninguno"\nn, r = separar(["1", "2"], ["1", "2"])\nassert n == set() and r == {"1", "2"}, "importar dos veces el mismo archivo no agrega a nadie"\nprint("¡Separados!")`}
+  pistas={[
+    "Son las dos operaciones del mismo par de conjuntos: los que están en uno y no en el otro, y los que están en los dos.",
+    "La segunda tiene nombre propio en castellano y en Python: <em>intersección</em>.",
+    "Se devuelven las dos juntas. ¿Con qué se devuelven dos valores de una sola función?",
+  ]}
+>
+Cuando llega la lista del formulario hay que separarla en dos: **los que entran** y **los que ya
+estaban**.
+
+Completá `separar(...)` para que devuelva las dos cosas:
+
+```python
+separar(["1", "2"], ["2", "3"])   # -> ({"3"}, {"2"})
+```
+
+:::note[El mismo problema que ya resolviste en JSON]
+En la clase de JSON vas a escribir `importar()`, que hace esto mismo recorriendo la lista y
+preguntando por cada uno si ya está. **Las dos soluciones son correctas.**
+
+Vale la pena poner las dos al lado y discutir cuál preferimos: la de conjuntos es más corta y más
+difícil de romper; la del bucle es más fácil de leer para quien recién arranca. Cuál gana no lo
+decide Python, lo decide quién va a mantener el código.
+:::
+</EjercicioPython>
+
 ## Más práctica
 
 <EjercicioPython

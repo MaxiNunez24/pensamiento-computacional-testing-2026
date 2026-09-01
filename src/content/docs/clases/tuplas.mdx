@@ -202,6 +202,92 @@ distancias = {("Buenos Aires", "Córdoba"): 700}
 :::
 
 
+## 🏗️ El sistema: la marca que no se toca
+
+Una marca de asistencia es **un DNI y un estado, juntos**: `("30111222", "P")`. Y es el ejemplo
+perfecto de tupla, porque esos dos datos **no tienen sentido por separado** y porque, una vez
+puesta, la marca no se edita en el lugar: se reemplaza entera.
+
+La lista del día es entonces una **lista de tuplas**:
+
+```python
+marcas = [("30111222", "P"), ("28999888", "A"), ("27888444", "T")]
+```
+
+<EjercicioPython
+  titulo="Una marca de asistencia"
+  dificultad="🌱"
+  starter={`def marcar(dni, estado):\n    # Devolvé la marca: el DNI y el estado, juntos.\n    pass`}
+  tests={`m = marcar("30111222", "P")\nassert m == ("30111222", "P"), f"devolviste {m!r}"\nassert isinstance(m, tuple), "tiene que ser una TUPLA, no una lista: una marca no se edita, se reemplaza"\ntry:\n    m[1] = "A"\n    assert False, "si se pudo cambiar, no era una tupla"\nexcept TypeError:\n    pass\nassert marcar("1", "J") == ("1", "J")\nprint("¡Marca OK!")`}
+  pistas={[
+    "Los paréntesis son opcionales al crearla, pero conviene ponerlos: dejan claro que es una sola cosa y no dos.",
+    "Uno de los tests intenta cambiarle un valor y espera que Python <em>no lo deje</em>. ¿Qué estructura no se puede modificar después de creada?",
+  ]}
+>
+Completá `marcar(dni, estado)`: devuelve la marca de ese alumno ese día.
+
+```python
+marcar("30111222", "P")   # -> ("30111222", "P")
+```
+
+:::note[Por qué tupla y no lista]
+Porque **una marca no se corrige a pedacitos**. Si preceptoría se equivocó, no cambia el estado
+adentro de la marca: pone la marca de nuevo, entera. Usar una tupla no es un detalle de estilo —
+es el programa diciendo *"esto viaja junto y no se edita"*, y Python lo hace cumplir.
+
+Uno de los tests de acá arriba comprueba justamente eso: intenta cambiarla y espera que falle.
+:::
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Desempaquetar en el for"
+  dificultad="🌿"
+  datos={`marcas = [("30111222", "P"), ("28999888", "A"), ("27888444", "T"), ("26777333", "J")]`}
+  starter={`def los_que_vinieron(marcas):\n    # Devolvé la lista de DNI de los que vinieron.\n    # La "T" cuenta como que vino.\n    pass`}
+  tests={`r = los_que_vinieron(marcas)\nassert r == ["30111222", "27888444"], f"devolviste {r!r}"\nassert los_que_vinieron([]) == [], "sin marcas todavía, la lista vacía"\nassert los_que_vinieron([("1", "A"), ("2", "J")]) == [], "si no vino nadie, la lista vacía"\nassert los_que_vinieron([("9", "T")]) == ["9"], "el que llegó tarde vino"\nprint("¡Desempaquetado OK!")`}
+  pistas={[
+    "El <code>for</code> puede sacar las dos partes de la tupla de una: <code>for dni, estado in marcas:</code>",
+    "Si escribís <code>for m in marcas</code> vas a tener que andar con <code>m[0]</code> y <code>m[1]</code>. Anda igual, pero dentro de tres meses nadie se acuerda cuál era cuál.",
+  ]}
+>
+Completá `los_que_vinieron(marcas)`: devuelve **solo los DNI** de los que estuvieron en clase (la
+`"T"` cuenta como que vino).
+
+Es la lista que después usa la pantalla de la merienda.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="El pie de la pantalla"
+  dificultad="🌿"
+  datos={`marcas = [("30111222", "P"), ("28999888", "A"), ("27888444", "T"), ("26777333", "J")]`}
+  starter={`def resumen(marcas, total_del_curso):\n    # Devolvé (vinieron, faltaron, sin_marcar).\n    pass`}
+  tests={`r = resumen(marcas, 10)\nassert r == (2, 2, 6), f"devolviste {r!r}"\nassert isinstance(r, tuple), "devolvé una tupla con los tres números"\nvinieron, faltaron, sin_marcar = resumen(marcas, 10)\nassert (vinieron, faltaron, sin_marcar) == (2, 2, 6), "los tres tienen que poder desempaquetarse"\nassert resumen([], 20) == (0, 0, 20), "un día sin empezar: nadie marcado, faltan los 20"\nassert resumen([("1", "P")], 1) == (1, 0, 0), "curso de uno, y vino"\nprint("¡Resumen OK!")`}
+  pistas={[
+    "Son tres cuentas sobre las mismas marcas: los que vinieron (P y T), los que no (A y J) y los que todavía nadie tocó.",
+    "Los que faltan por marcar no están en la lista: son los que hay en el curso menos los que ya tienen marca.",
+    "Para devolver los tres, ponelos separados por coma. Los paréntesis los pone Python solo.",
+  ]}
+>
+Al pie de la pantalla de pasar lista van tres números: **vinieron · faltaron · sin marcar**.
+
+Completá `resumen(marcas, total_del_curso)` para que los devuelva **los tres juntos**:
+
+```python
+resumen(marcas, 10)   # -> (2, 2, 6)
+```
+
+:::tip[Es la razón por la que existen las tuplas]
+Una función devuelve **un** valor. Cuando hacen falta tres que van siempre juntos, la opción no es
+escribir tres funciones que recorran la misma lista tres veces: es devolver una tupla.
+
+Y del otro lado se desempaqueta en una línea:
+
+```python
+vinieron, faltaron, sin_marcar = resumen(marcas, 30)
+```
+:::
+</EjercicioPython>
+
 ## Más práctica
 
 <EjercicioPython
