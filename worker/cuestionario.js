@@ -136,6 +136,12 @@ export default {
       const { keys } = await env.CUESTIONARIO.list({ prefix: 'r:', limit: 1000 });
       // A propósito devuelve el número y NADA más. Se puede mostrar en el aula
       // con los alumnos mirando sin que se lea una sola respuesta.
+      //
+      // ⚠️ El número LLEGA TARDE, hasta como un minuto. `list()` de KV es
+      // eventualmente consistente: la respuesta ya está guardada (un `get` de
+      // esa clave la trae) pero todavía no figura en el listado. Medido: 0 justo
+      // después de escribir, 1 al minuto siguiente. No es un error, no hay nada
+      // que arreglar, y vale lo mismo para /respuestas, que también lista.
       return json({ cuantas: keys.length }, cabeceras);
     }
 

@@ -210,6 +210,12 @@ personal del CFP y opiniones sobre cómo funciona su propio trabajo. Por eso:
 `/cuantas` existe para poder **proyectar en el aula cuántas van** con los alumnos mirando, sin que
 se lea una sola respuesta. Está probado que no filtra ni nombres ni roles ni texto.
 
+> ⏱️ **El número llega tarde, hasta como un minuto.** `list()` de KV es eventualmente consistente:
+> la respuesta ya está guardada, pero todavía no figura en el listado. Medido contra el Worker en
+> producción: `0` justo después de escribir, `1` al minuto siguiente. Vale lo mismo para
+> `/respuestas`. No es un error y no hay nada que arreglar — pero si alguien contesta y vas a
+> mirar en el acto, esperá un minuto antes de asustarte.
+
 ### Instalación
 
 1. **KV:** Storage & Databases → KV → *Create instance*, nombre `cuestionario-cfp`.

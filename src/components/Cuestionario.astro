@@ -71,10 +71,25 @@ const {
 
 const id = idEjercicio(titulo);
 
-/* ⚠️ Pegar acá la URL del Worker una vez creado (ver worker/README.md).
-   Mientras esté vacía, el formulario funciona igual pero en modo "copiar y
-   mandar por WhatsApp" en vez de enviar solo. No se rompe nada. */
-const WORKER = '';
+/* URL del Worker (ver worker/README.md). Si se deja vacía, el formulario
+   funciona igual pero en modo "copiar y mandar por WhatsApp". */
+const WORKER = 'https://cuestionario.maxinunez434.workers.dev';
+
+/* ⚠️ ESTA CLAVE ES PÚBLICA Y ESTÁ BIEN QUE LO SEA. No confundirla con
+   CLAVE_DOCENTE, que es el secreto del Worker y NO vive acá.
+
+   Es la misma `cfp401` de public/tablero.js. Sirve para ESCRIBIR, y tiene que
+   viajar en el JavaScript del sitio porque es el navegador el que la manda: no
+   hay forma de que el navegador mande algo que el usuario no pueda leer. Lo
+   único que hace es que alguien que pase por el sitio público no mande
+   respuestas de mentira por diversión.
+
+   Ponerla en un .env NO la haría secreta: Astro hornea esas variables en el
+   bundle al compilar, así que terminaría igual de visible en el JavaScript —
+   pero pareciendo secreta, que es peor.
+
+   Lo que SÍ es secreto es LEER las respuestas, y eso está del lado del Worker
+   con CLAVE_DOCENTE, que solo existe en Cloudflare. */
 const CLAVE = 'cfp401';
 ---
 
@@ -170,7 +185,10 @@ const CLAVE = 'cfp401';
 
     const bloques = leerJSON('[data-bloques]');
     const roles = leerJSON('[data-roles]');
-    const WORKER = raiz.getAttribute('data-worker') || '';
+    /* Sin la barra del final: si la URL se pega con `/` al copiarla del panel
+       de Cloudflare, `WORKER + '/respuesta'` queda con `//` y el Worker
+       contesta 404 sin decir por qué. Un carácter, media hora de misterio. */
+    const WORKER = (raiz.getAttribute('data-worker') || '').replace(/\/+$/, '');
     const CLAVE = raiz.getAttribute('data-clave') || '';
 
     const LS = 'pc_cuestionario';
