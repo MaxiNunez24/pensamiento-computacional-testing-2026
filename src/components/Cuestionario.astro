@@ -1,0 +1,362 @@
+---
+/**
+ * Cuestionario de relevamiento del CFP 401.
+ *
+ * La idea es de un alumno del curso: que el equipo del CFP conteste algo corto
+ * ANTES de la entrevista del 4/9, para que ese día se pregunte *sobre lo que ya
+ * escribieron* en vez de arrancar de cero. Sus palabras: «el cuestionario es el
+ * primer paso que cumple el cliente para luego atender su demanda».
+ *
+ * ⚠️ VA DE USTED, a propósito. El resto del sitio habla de vos porque le habla a
+ * los alumnos; esto le habla a dirección y a la inspección. Si algún día se
+ * cambia, se cambia ENTERO: mezclar los dos tratamientos queda peor que
+ * cualquiera de los dos.
+ *
+ * Se contesta DESDE EL CELULAR, por gente que no es del curso y que lo va a
+ * abrir una sola vez. Eso manda sobre todas las decisiones de acá:
+ *
+ *   · UN SOLO CAMPO OBLIGATORIO (el rol). Todo lo demás es opcional. Un
+ *     formulario que te reta porque te falta algo es un formulario que se
+ *     abandona, y media respuesta sirve mucho más que ninguna.
+ *   · EL NOMBRE ES OPCIONAL Y SE DICE POR QUÉ. Quien quiera contestar con
+ *     franqueza sobre su propio trabajo tiene que poder hacerlo sin firmar.
+ *   · SE GUARDA SOLO MIENTRAS ESCRIBE. Si se corta, si suena el teléfono o si
+ *     cierra sin querer, al volver está todo. En un celular esto no es un lujo.
+ *   · SI EL ENVÍO FALLA, NO SE PIERDE NADA. Aparece el texto armado para
+ *     copiar y mandar por WhatsApp. Diez minutos de alguien no se tiran porque
+ *     se cayó un servidor.
+ *
+ * Sin WORKER configurado abajo, el formulario anda igual en modo "copiar y
+ * mandar". Así la página se puede publicar antes de que el Worker exista.
+ *
+ * El Worker vive en worker/cuestionario.js.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Rol {
+  id: string;
+  emoji: string;
+  nombre: string;
+  /** Se le muestra al que elige, para que sepa que eligió bien. */
+  aclaracion?: string;
+}
+
+interface Campo {
+  id: string;
+  etiqueta: string;
+  ayuda?: string;
+  /** Alto de la caja. Las de listar cosas necesitan menos que las de contar. */
+  filas?: number;
+  ejemplo?: string;
+}
+
+interface Bloque {
+  id: string;
+  /** El número que se muestra. Los del alumno conservan su numeración. */
+  numero: string;
+  titulo: string;
+  /** De dónde salió: cambia el sellito que se muestra al costado. */
+  de?: 'alumno' | 'clase';
+  ayuda?: string;
+  campos: Campo[];
+  /** Si está, el bloque solo aparece para esos roles. */
+  soloRoles?: string[];
+}
+
+const {
+  roles,
+  bloques,
+  titulo = 'Cuestionario del CFP 401',
+} = Astro.props as { roles: Rol[]; bloques: Bloque[]; titulo?: string };
+
+const id = idEjercicio(titulo);
+
+/* ⚠️ Pegar acá la URL del Worker una vez creado (ver worker/README.md).
+   Mientras esté vacía, el formulario funciona igual pero en modo "copiar y
+   mandar por WhatsApp" en vez de enviar solo. No se rompe nada. */
+const WORKER = '';
+const CLAVE = 'cfp401';
+---
+
+<section class="cue" id={id} data-cuestionario data-worker={WORKER} data-clave={CLAVE}>
+
+  <!-- ── PASO 1: quién sos ──────────────────────────────────────────── -->
+  <div class="cue__paso" data-paso="rol">
+    <h3 class="cue__paso-tit">¿En qué trabaja en el CFP?</h3>
+    <p class="cue__paso-sub">Toque la opción que más se parezca. Con eso alcanza.</p>
+    <div class="cue__roles">
+      {roles.map((r) => (
+        <button type="button" class="cue__rol" data-rol={r.id} data-aclaracion={r.aclaracion || ''}>
+          <span class="cue__rol-emoji">{r.emoji}</span>
+          <span>{r.nombre}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- ── PASO 2: el cuestionario ────────────────────────────────────── -->
+  <div class="cue__form" data-form hidden>
+
+    <div class="cue__elegido" data-elegido></div>
+
+    <div class="cue__nombre-caja">
+      <label class="cue__etiqueta" for={id + '-nombre'}>Su nombre <span class="cue__opt">(opcional)</span></label>
+      <input class="cue__input" type="text" id={id + '-nombre'} data-nombre autocomplete="name"
+             placeholder="Ej.: Ana, de preceptoría" />
+      <p class="cue__ayuda">
+        Sirve para poder repreguntarle el viernes. Si prefiere contestar sin poner su nombre,
+        déjelo vacío — la respuesta vale igual.
+      </p>
+    </div>
+
+    {bloques.map((b) => (
+      <div class="cue__bloque" data-bloque={b.id} data-solo-roles={(b.soloRoles || []).join(',')}>
+        <div class="cue__bloque-cab">
+          <span class="cue__num">{b.numero}</span>
+          <h3 class="cue__bloque-tit">{b.titulo}</h3>
+          {b.de === 'alumno' && <span class="cue__sello" title="Pregunta propuesta por un alumno del curso">✍️ un alumno</span>}
+          {b.de === 'clase' && <span class="cue__sello cue__sello--clase" title="Salió de la clase del miércoles">💡 la clase</span>}
+        </div>
+        {b.ayuda && <p class="cue__bloque-ayuda" set:html={b.ayuda} />}
+        {b.campos.map((c) => (
+          <div class="cue__campo">
+            <label class="cue__etiqueta" for={id + '-' + c.id}>{c.etiqueta}</label>
+            {c.ayuda && <p class="cue__ayuda" set:html={c.ayuda} />}
+            <textarea class="cue__area" id={id + '-' + c.id} data-campo={c.id}
+                      rows={c.filas || 3} placeholder={c.ejemplo || ''}></textarea>
+          </div>
+        ))}
+      </div>
+    ))}
+
+    <div class="cue__enviar">
+      <button type="button" class="cue__btn cue__btn--ok" data-enviar>Enviar mis respuestas</button>
+      <span class="cue__estado" data-estado></span>
+      <p class="cue__ayuda cue__ayuda--pie">
+        Se guarda solo mientras escribe: si cierra y vuelve a entrar, está todo acá.
+        Y si se acuerda de algo después, puede volver y corregirlo.
+      </p>
+    </div>
+
+    <!-- Plan B: si el envío falla, esto aparece con todo listo para copiar. -->
+    <div class="cue__plan-b" data-plan-b hidden>
+      <p class="cue__plan-b-tit">📋 Copie esto y mándeselo a Maxi por WhatsApp</p>
+      <textarea class="cue__area cue__area--plan-b" data-plan-b-texto rows="10" readonly></textarea>
+      <button type="button" class="cue__btn" data-copiar>Copiar todo</button>
+    </div>
+  </div>
+
+  <!-- ── PASO 3: gracias ────────────────────────────────────────────── -->
+  <div class="cue__gracias" data-gracias hidden>
+    <p class="cue__gracias-tit">✅ ¡Listo! Llegó perfecto.</p>
+    <p>
+      Muchas gracias por el tiempo. Lo que escribió lo vamos a leer <strong>antes</strong> del
+      viernes, así ese día podemos preguntarle sobre esto en vez de arrancar de cero.
+    </p>
+    <button type="button" class="cue__btn" data-corregir>Quiero corregir algo</button>
+  </div>
+
+  <script type="application/json" data-bloques set:html={JSON.stringify(bloques)}></script>
+  <script type="application/json" data-roles set:html={JSON.stringify(roles)}></script>
+</section>
+
+<script>
+  document.querySelectorAll('[data-cuestionario]').forEach((raiz) => {
+    const $ = (sel: string) => raiz.querySelector(sel) as HTMLElement | null;
+    const leerJSON = (sel: string) => {
+      try { return JSON.parse((raiz.querySelector(sel) as HTMLElement)?.textContent || '[]'); }
+      catch { return []; }
+    };
+
+    const bloques = leerJSON('[data-bloques]');
+    const roles = leerJSON('[data-roles]');
+    const WORKER = raiz.getAttribute('data-worker') || '';
+    const CLAVE = raiz.getAttribute('data-clave') || '';
+
+    const LS = 'pc_cuestionario';
+    const LS_ID = 'pc_cuestionario_id';
+
+    /* Identificador de ESTE navegador. No dice quién es nadie: sirve para que
+       si la persona vuelve, su respuesta se CORRIJA en vez de quedar duplicada. */
+    function miId() {
+      let v = '';
+      try { v = localStorage.getItem(LS_ID) || ''; } catch {}
+      if (!v) {
+        v = Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 6);
+        try { localStorage.setItem(LS_ID, v); } catch {}
+      }
+      return v;
+    }
+
+    const cargar = () => {
+      try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch { return {}; }
+    };
+    const guardar = (d: any) => {
+      // Sin localStorage (modo privado de algunos navegadores) se pierde al
+      // cerrar y no hay nada que hacer. No es motivo para romper el formulario.
+      try { localStorage.setItem(LS, JSON.stringify(d)); } catch {}
+    };
+
+    let estado = cargar();
+    if (!estado.respuestas) estado.respuestas = {};
+
+    const cajaForm = $('[data-form]')!;
+    const cajaRol = raiz.querySelector('[data-paso="rol"]') as HTMLElement;
+    const cajaGracias = $('[data-gracias]')!;
+    const elegido = $('[data-elegido]')!;
+    const estadoTxt = $('[data-estado]')!;
+    const planB = $('[data-plan-b]')!;
+
+    /* Los bloques con `soloRoles` aparecen solo para quien corresponde. Es la
+       diferencia entre un formulario de 9 preguntas y uno de 6: cada uno ve
+       las suyas. */
+    function aplicarRol(rolId: string) {
+      estado.rol = rolId;
+      guardar(estado);
+
+      raiz.querySelectorAll('[data-rol]').forEach((b) => {
+        b.classList.toggle('es-elegido', b.getAttribute('data-rol') === rolId);
+      });
+
+      const rol = roles.find((r: any) => r.id === rolId);
+      if (rol) {
+        elegido.innerHTML =
+          '<span class="cue__elegido-emoji">' + rol.emoji + '</span> ' +
+          '<strong>' + rol.nombre + '</strong>' +
+          (rol.aclaracion ? ' <span class="cue__elegido-acl">— ' + rol.aclaracion + '</span>' : '');
+      }
+
+      raiz.querySelectorAll('[data-bloque]').forEach((b) => {
+        const solo = (b.getAttribute('data-solo-roles') || '').split(',').filter(Boolean);
+        (b as HTMLElement).hidden = solo.length > 0 && !solo.includes(rolId);
+      });
+
+      cajaForm.hidden = false;
+      cajaGracias.hidden = true;
+    }
+
+    raiz.querySelectorAll('[data-rol]').forEach((b) => {
+      b.addEventListener('click', () => {
+        aplicarRol(b.getAttribute('data-rol') || '');
+        cajaForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // ── Recuperar lo que ya había escrito ────────────────────────────
+    const inputNombre = $('[data-nombre]') as HTMLInputElement;
+    if (estado.nombre) inputNombre.value = estado.nombre;
+    inputNombre.addEventListener('input', () => {
+      estado.nombre = inputNombre.value;
+      guardar(estado);
+    });
+
+    raiz.querySelectorAll('[data-campo]').forEach((ta) => {
+      const campo = ta.getAttribute('data-campo') || '';
+      const area = ta as HTMLTextAreaElement;
+      if (estado.respuestas[campo]) area.value = estado.respuestas[campo];
+      area.addEventListener('input', () => {
+        estado.respuestas[campo] = area.value;
+        guardar(estado);
+        estadoTxt.textContent = '';
+      });
+    });
+
+    if (estado.rol) aplicarRol(estado.rol);
+    if (estado.enviado) {
+      cajaForm.hidden = true;
+      cajaGracias.hidden = false;
+    }
+
+    // ── Armar el texto plano (plan B y también para copiar) ──────────
+    function armarTexto() {
+      const rol = roles.find((r: any) => r.id === estado.rol);
+      const lineas = [
+        'CUESTIONARIO CFP 401',
+        'Rol: ' + (rol ? rol.nombre : '(sin elegir)'),
+        'Nombre: ' + (estado.nombre || '(prefirió no ponerlo)'),
+        '',
+      ];
+      bloques.forEach((b: any) => {
+        const solo = b.soloRoles || [];
+        if (solo.length && !solo.includes(estado.rol)) return;
+        const conAlgo = b.campos.filter((c: any) => (estado.respuestas[c.id] || '').trim());
+        if (!conAlgo.length) return;
+        lineas.push('── ' + b.numero + '. ' + b.titulo);
+        conAlgo.forEach((c: any) => {
+          lineas.push(c.etiqueta + ':');
+          lineas.push(estado.respuestas[c.id].trim());
+          lineas.push('');
+        });
+      });
+      return lineas.join('\n');
+    }
+
+    function mostrarPlanB() {
+      const ta = $('[data-plan-b-texto]') as HTMLTextAreaElement;
+      ta.value = armarTexto();
+      planB.hidden = false;
+      planB.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    $('[data-copiar]')!.addEventListener('click', async () => {
+      const ta = $('[data-plan-b-texto]') as HTMLTextAreaElement;
+      try {
+        await navigator.clipboard.writeText(ta.value);
+        ($('[data-copiar]') as HTMLElement).textContent = '¡Copiado!';
+      } catch {
+        // En http:// y en algunos navegadores de celular no hay portapapeles.
+        // Seleccionar el texto deja al usuario a un "copiar" de distancia.
+        ta.focus();
+        ta.select();
+      }
+    });
+
+    // ── Enviar ───────────────────────────────────────────────────────
+    $('[data-enviar]')!.addEventListener('click', async () => {
+      const algo = Object.values(estado.respuestas).some((v: any) => (v || '').trim());
+      if (!algo) {
+        estadoTxt.textContent = 'Conteste aunque sea una, y ya sirve 🙂';
+        return;
+      }
+
+      if (!WORKER) {
+        // Todavía no está el Worker: se manda por WhatsApp y listo.
+        estadoTxt.textContent = '';
+        mostrarPlanB();
+        return;
+      }
+
+      estadoTxt.textContent = 'Enviando…';
+      try {
+        const r = await fetch(WORKER + '/respuesta', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            clave: CLAVE,
+            id: miId(),
+            rol: estado.rol,
+            nombre: estado.nombre || '',
+            respuestas: estado.respuestas,
+          }),
+        });
+        if (!r.ok) throw new Error('respuesta ' + r.status);
+        estado.enviado = true;
+        guardar(estado);
+        cajaForm.hidden = true;
+        cajaGracias.hidden = false;
+        cajaGracias.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch {
+        estadoTxt.textContent = 'No se pudo enviar — pero no perdiste nada:';
+        mostrarPlanB();
+      }
+    });
+
+    $('[data-corregir]')!.addEventListener('click', () => {
+      estado.enviado = false;
+      guardar(estado);
+      cajaGracias.hidden = true;
+      cajaForm.hidden = false;
+      cajaForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>

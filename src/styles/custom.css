@@ -2749,3 +2749,115 @@ body.pc-resizing * {
 @media print {
   .pc-header-toggle { display: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   CUESTIONARIO DE RELEVAMIENTO (lo contesta el equipo del CFP)
+   Lo abre gente que NO es del curso, UNA sola vez, DESDE EL CELULAR. De ahí:
+   botones del tamaño de un dedo, texto de 16px (menos que eso hace que iOS
+   haga zoom solo al tocar un campo) y todo en una columna sin excepciones.
+--------------------------------------------------------------------------- */
+.cue { margin: 1.5rem 0; }
+
+.cue__paso-tit { margin: 0 0 0.3rem; font-size: 1.2rem; }
+.cue__paso-sub { margin: 0 0 1rem; font-size: 0.9rem; color: var(--sl-color-gray-3); }
+
+.cue__roles { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem; }
+.cue__rol {
+  font: inherit; font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1rem; border-radius: 0.6rem; min-height: 3rem; flex: 1 1 13rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-black);
+  color: var(--sl-color-white); text-align: left;
+}
+.cue__rol:hover { border-color: var(--sl-color-accent); }
+.cue__rol.es-elegido {
+  border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); font-weight: 600;
+}
+.cue__rol-emoji { font-size: 1.3rem; }
+
+.cue__elegido {
+  padding: 0.7rem 0.9rem; margin-bottom: 1.2rem; border-radius: 0.5rem;
+  border: 1px solid var(--sl-color-accent); background: var(--sl-color-black);
+}
+.cue__elegido-emoji { font-size: 1.15rem; }
+.cue__elegido-acl { font-size: 0.85rem; color: var(--sl-color-gray-3); }
+
+.cue__nombre-caja { margin-bottom: 1.6rem; }
+.cue__opt { font-weight: 400; font-size: 0.85rem; color: var(--sl-color-gray-3); }
+
+.cue__bloque {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 1rem; margin-bottom: 1.2rem;
+}
+.cue__bloque-cab {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;
+}
+.cue__num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.7rem; height: 1.7rem; border-radius: 50%; flex: none;
+  background: var(--sl-color-accent); color: var(--sl-color-black);
+  font-weight: 700; font-size: 0.9rem;
+}
+.cue__bloque-tit { margin: 0; font-size: 1.05rem; flex: 1 1 12rem; }
+.cue__sello {
+  font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 1rem;
+  border: 1px solid var(--sl-color-gray-5); color: var(--sl-color-gray-3); white-space: nowrap;
+}
+.cue__sello--clase { border-color: var(--sl-color-accent-low); }
+.cue__bloque-ayuda {
+  margin: 0 0 0.9rem; font-size: 0.88rem; line-height: 1.5; color: var(--sl-color-gray-2);
+}
+
+.cue__campo { margin-bottom: 1rem; }
+.cue__campo:last-child { margin-bottom: 0; }
+.cue__etiqueta { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.cue__ayuda { margin: 0 0 0.4rem; font-size: 0.82rem; line-height: 1.45; color: var(--sl-color-gray-3); }
+.cue__ayuda--pie { margin: 0.6rem 0 0; }
+
+/* Dos cosas que parecen detalle y no lo son, las dos por el celular:
+   · 16px clavado. Con menos, iOS hace zoom solo al tocar el campo y la persona
+     queda perdida en una página gigante que no pidió.
+   · gray-6 y NO `--sl-color-bg`. En el tema oscuro de Starlight `--sl-color-bg`
+     y `--sl-color-black` son el MISMO color, así que el campo quedaba idéntico
+     a la tarjeta que lo contiene y no se leía como algo para tocar. gray-6 va
+     un escalón aparte, y la relación se mantiene también en el tema claro. */
+.cue__input, .cue__area {
+  width: 100%; font: inherit; font-size: 16px; line-height: 1.5;
+  padding: 0.6rem 0.7rem; border-radius: 0.45rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-6);
+  color: var(--sl-color-white); resize: vertical;
+}
+.cue__input:focus, .cue__area:focus { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+.cue__area--plan-b { font-family: var(--sl-font-mono, monospace); font-size: 0.8rem; }
+
+.cue__enviar { margin-top: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem; }
+.cue__enviar .cue__ayuda--pie { flex: 1 1 100%; }
+.cue__btn {
+  font: inherit; font-size: 1rem; cursor: pointer; min-height: 3rem;
+  padding: 0.7rem 1.3rem; border-radius: 0.5rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.cue__btn:hover { border-color: var(--sl-color-accent); }
+.cue__btn--ok {
+  border-color: var(--sl-color-accent); background: var(--sl-color-accent);
+  color: var(--sl-color-black); font-weight: 600;
+}
+.cue__estado { font-size: 0.88rem; color: var(--sl-color-text-accent); }
+
+.cue__plan-b {
+  margin-top: 1.5rem; padding: 1rem; border-radius: 0.6rem;
+  border: 1px solid var(--sl-color-accent); background: var(--sl-color-black);
+}
+.cue__plan-b-tit { margin: 0 0 0.6rem; font-weight: 600; }
+.cue__plan-b .cue__btn { margin-top: 0.6rem; }
+
+.cue__gracias {
+  padding: 1.2rem; border-radius: 0.6rem;
+  border: 1px solid var(--sl-color-accent); background: var(--sl-color-black);
+}
+.cue__gracias-tit { margin: 0 0 0.6rem; font-size: 1.2rem; font-weight: 700; }
+
+@media (max-width: 30rem) {
+  .cue__rol { flex: 1 1 100%; }
+  .cue__enviar .cue__btn--ok { width: 100%; }
+}

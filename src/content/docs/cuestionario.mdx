@@ -1,0 +1,197 @@
+---
+title: Cuestionario para el equipo del CFP
+description: "Cinco minutos para contarnos de qué se ocupa y qué información necesita para su trabajo. Es el paso previo a la reunión del viernes."
+---
+
+import Cuestionario from '../../components/Cuestionario.astro';
+
+Somos el curso de **Pensamiento Computacional y Testing de Aplicaciones** del CFP 401. Estamos
+armando un **sistema de asistencias** para el instituto, y antes de escribir una sola línea más
+queremos entender cómo trabajan ustedes hoy.
+
+Este cuestionario **lleva unos cinco minutos** y se puede contestar desde el celular.
+
+:::tip[Por qué se lo mandamos antes de la reunión]
+Porque el viernes tenemos un rato con cada uno, y sería una lástima gastarlo en preguntas que se
+pueden contestar tranquilo desde casa. Si llegamos habiendo leído esto, ese rato lo usamos para
+**repreguntar sobre lo que ya escribió** y mostrarle las pantallas.
+
+La idea del cuestionario la propuso **un alumno del curso**. En sus palabras: *el cuestionario es el
+primer paso que cumple el cliente para luego atender su demanda.*
+:::
+
+## Antes de empezar, tres aclaraciones
+
+- **Ninguna pregunta es obligatoria.** Conteste lo que le salga. Media respuesta nos sirve muchísimo
+  más que ninguna.
+- **No hay respuestas equivocadas.** No estamos evaluando a nadie: estamos aprendiendo cómo funciona
+  el CFP para no construir algo que después no le sirva a nadie.
+- **Se guarda solo mientras escribe.** Si se le corta, si lo llaman o si cierra sin querer, cuando
+  vuelva a entrar está todo. Y si se acuerda de algo después, puede volver y corregirlo.
+
+---
+
+<Cuestionario
+  roles={[
+    { id: 'direccion', emoji: '🏛️', nombre: 'Dirección', aclaracion: 'dirección o vicedirección' },
+    { id: 'preceptoria', emoji: '📋', nombre: 'Preceptoría' },
+    { id: 'instructores', emoji: '🧑‍🏫', nombre: 'Instructor/a', aclaracion: 'doy clases en algún curso' },
+    { id: 'auxiliares', emoji: '🧰', nombre: 'Auxiliar' },
+    { id: 'otro', emoji: '❓', nombre: 'Otra función', aclaracion: 'cuéntenos cuál en la pregunta 1' },
+  ]}
+  bloques={[
+    {
+      id: 'responsable',
+      numero: '1',
+      titulo: '¿De qué es responsable?',
+      de: 'alumno',
+      ayuda: 'Sin detallar: solo los <strong>verbos</strong> que describen su trabajo.',
+      campos: [
+        {
+          id: 'verbos',
+          etiqueta: 'Los verbos de su trabajo',
+          ayuda: 'Uno atrás del otro, como se le vengan a la cabeza.',
+          ejemplo: 'Ej.: redactar, copiar, transcribir, investigar, controlar, ordenar, archivar, atender…',
+          filas: 3,
+        },
+      ],
+    },
+    {
+      id: 'reporta',
+      numero: '2',
+      titulo: '¿A quién le reporta los resultados de su trabajo?',
+      de: 'alumno',
+      campos: [
+        {
+          id: 'reporta',
+          etiqueta: '¿A quién?',
+          ayuda: 'Puede ser más de uno, y puede ser alguien de afuera del CFP.',
+          ejemplo: 'Ej.: a dirección, y una vez por mes a la región',
+          filas: 2,
+        },
+      ],
+    },
+    {
+      id: 'circuito',
+      numero: '3',
+      titulo: 'La información: qué le llega y a dónde va',
+      de: 'clase',
+      ayuda:
+        'Se parece a la 2, pero no es lo mismo: ahí preguntamos a quién le <em>rinde cuentas</em>. ' +
+        'Acá queremos dibujar <strong>por dónde circula la información</strong> — qué entra, qué sale.',
+      campos: [
+        {
+          id: 'entra',
+          etiqueta: '¿Qué información necesita para poder trabajar, y quién se la da?',
+          ayuda: 'Y sobre todo: <strong>¿cómo le llega?</strong> En papel, por mail, por WhatsApp, se lo dicen…',
+          ejemplo: 'Ej.: las planillas de asistencia que me deja cada instructor en papel, a fin de semana',
+          filas: 4,
+        },
+        {
+          id: 'sale',
+          etiqueta: 'Cuando termina, ¿a dónde va eso que hizo y para qué se usa?',
+          ayuda: '¿Quién lo recibe y qué hace con eso?',
+          ejemplo: 'Ej.: se lo paso a dirección, que lo firma y lo manda a la región',
+          filas: 4,
+        },
+      ],
+    },
+    {
+      id: 'datos',
+      numero: '4',
+      titulo: 'Administración de datos e información',
+      de: 'alumno',
+      ayuda: 'La parte del trabajo que es cargar, copiar, controlar o buscar datos.',
+      campos: [
+        {
+          id: 'que_hace',
+          etiqueta: '¿Qué hace?',
+          ejemplo: 'Ej.: paso a mano las asistencias del papel a una planilla de Excel',
+          filas: 3,
+        },
+        {
+          id: 'cuanto_tiempo',
+          etiqueta: '¿Cuánto tiempo le dedica?',
+          ayuda: 'Aunque sea a ojo: por día, por semana o por mes.',
+          ejemplo: 'Ej.: dos días enteros a fin de mes',
+          filas: 2,
+        },
+        {
+          id: 'propuesta',
+          etiqueta: '¿Qué necesitaría, y qué propondría para hacerlo más rápido?',
+          ayuda: 'Esta es la más importante de todo el cuestionario. Sin filtro, aunque parezca imposible.',
+          ejemplo: 'Ej.: que no tuviera que copiar dos veces lo mismo',
+          filas: 4,
+        },
+      ],
+    },
+    {
+      id: 'planillas',
+      numero: '5',
+      titulo: 'Las planillas e informes que completa',
+      de: 'alumno',
+      ayuda:
+        'Los <strong>nombres</strong>, como los llaman ustedes. No hace falta describirlos: ' +
+        'con la lista alcanza, después le preguntamos.',
+      campos: [
+        {
+          id: 'planillas',
+          etiqueta: 'Nombres de las planillas, informes, actas…',
+          ayuda: 'Los que completa usted solo/a y también los que se completan entre varios.',
+          ejemplo: 'Ej.: planilla mensual de asistencia, acta de reunión, libro de temas…',
+          filas: 4,
+        },
+      ],
+    },
+    {
+      id: 'inspector',
+      numero: '6',
+      titulo: 'La inspección',
+      de: 'clase',
+      soloRoles: ['direccion', 'preceptoria'],
+      ayuda: 'Esta se la hacemos porque cambió el inspector y queremos entender qué se le va a pedir al CFP.',
+      campos: [
+        {
+          id: 'inspector',
+          etiqueta: '¿Qué información necesita la inspección para evaluar al CFP?',
+          ayuda: '¿Y cada cuánto la pide? Si cambió algo con el inspector nuevo, cuéntenos qué.',
+          ejemplo: 'Ej.: matrícula y asistencia por curso, todos los meses',
+          filas: 4,
+        },
+      ],
+    },
+    {
+      id: 'libre',
+      numero: '7',
+      titulo: '¿Qué no le preguntamos?',
+      de: 'clase',
+      ayuda: 'La última, y suele ser la que más sirve.',
+      campos: [
+        {
+          id: 'libre',
+          etiqueta: 'Algo que deberíamos haber preguntado y no se nos ocurrió',
+          ayuda: 'También vale: “esto que están haciendo no me sirve para nada”. Preferimos saberlo ahora.',
+          filas: 4,
+        },
+      ],
+    },
+  ]}
+/>
+
+---
+
+## ¿Qué hacemos con lo que escriba?
+
+Lo leemos los del curso, y lo usamos para dos cosas: **preparar las preguntas del viernes** y armar
+la lista de lo que el sistema tiene que hacer.
+
+No se publica en ningún lado. Si prefiere contestar sin poner su nombre, deje ese campo vacío y
+listo.
+
+:::note[Y de paso, algo que quizás no se nota]
+Este formulario que está usando **está hecho por el curso**, en la misma plataforma donde los
+alumnos hacen los ejercicios. No es un Google Forms.
+
+Lo decimos porque es exactamente lo que queremos mostrarles el viernes: si un formulario como este
+se puede hacer, **una inscripción online al CFP también**. Pero eso lo charlamos ese día 😄
+:::

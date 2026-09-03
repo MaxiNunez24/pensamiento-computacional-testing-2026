@@ -1,9 +1,12 @@
-Hay **dos** Workers, independientes entre sí:
+Hay **cuatro** Workers, independientes entre sí a propósito. Si uno se rompe, los otros
+tres siguen andando.
 
 | Archivo | Para qué |
 |---|---|
 | `consultas-discord.js` | El botón *Enviar a mi profe* publica la consulta en #Consultas |
 | `sync-progreso.js` | El botón *Sincronizar* sube y baja el avance entre dispositivos |
+| `tablero.js` | El tablero del proyecto y el foro de soluciones anónimas |
+| `cuestionario.js` | El cuestionario que contesta el equipo del CFP |
 
 ---
 
@@ -174,3 +177,75 @@ node worker/pruebas/tablero.test.mjs
 
 18 casos: el control de versión del tablero, que republicar reemplace, que votar dos veces cambie
 el voto en vez de sumarlo, y que **nunca se devuelva quién escribió ni quién votó**.
+
+---
+
+## Worker 4: el cuestionario del CFP (`cuestionario.js`)
+
+Lo contesta el **equipo del CFP** —dirección, preceptoría, auxiliares, instructores— desde el
+celular, antes de la entrevista. La idea es de un alumno del curso: que llegue todo escrito, para
+que el día de la entrevista se pregunte *sobre lo que ya contestaron* en vez de arrancar de cero.
+
+### ⚠️ Este es distinto a los otros tres
+
+En los otros no hay datos de personas: hay ejercicios, tarjetas y código. **Acá sí**: nombres del
+personal del CFP y opiniones sobre cómo funciona su propio trabajo. Por eso:
+
+- **Leer las respuestas está cerrado de verdad**, con un *secreto* del Worker que solo tenés vos.
+  No con la `CLAVE_CURSO` que viaja en el JavaScript del sitio (esa la puede leer cualquiera).
+- **Si el secreto no está configurado, no se lee nada.** Falla cerrado. Un olvido de configuración
+  no puede dejar esto abierto.
+- **Las respuestas NO van al repo.** El repo es público. Ni siquiera a `material-privado/`, que
+  está excluido del sitio pero igual se sube a GitHub. Si exportás las respuestas, que queden fuera
+  de la carpeta del proyecto.
+
+### Rutas
+
+| Ruta | Quién puede | Para qué |
+|---|---|---|
+| `POST /respuesta` | Cualquiera desde el sitio | Guardar o **corregir** una respuesta |
+| `GET /cuantas` | Cualquiera desde el sitio | **Solo el número** de respuestas, sin nada del contenido |
+| `GET /respuestas` | Solo con el secreto | Todas, completas |
+
+`/cuantas` existe para poder **proyectar en el aula cuántas van** con los alumnos mirando, sin que
+se lea una sola respuesta. Está probado que no filtra ni nombres ni roles ni texto.
+
+### Instalación
+
+1. **KV:** Storage & Databases → KV → *Create instance*, nombre `cuestionario-cfp`.
+2. **Worker:** Workers & Pages → Create → Hello World → Deploy. Ponele `cuestionario`.
+3. **Edit code**, pegá `worker/cuestionario.js`, **Deploy**.
+4. **Bindings** → Add → KV namespace:
+   - Variable name: **`CUESTIONARIO`** ← exactamente así
+   - KV namespace: `cuestionario-cfp`
+5. **Variables and Secrets** → Add:
+   - Tipo: **Secret** (no "Text")
+   - Nombre: **`CLAVE_DOCENTE`**
+   - Valor: una frase larga que te inventes. **No la pongas en el repo.**
+6. **Deploy** de nuevo para que tome el binding y el secreto.
+7. Copiá la URL del Worker a `src/components/Cuestionario.astro`, en la constante `WORKER`.
+
+> Mientras `WORKER` esté vacía el formulario **anda igual**, pero en modo "copiar y mandar por
+> WhatsApp": la persona toca Enviar y le aparece el texto armado para pegar en un mensaje. Así la
+> página se puede publicar antes de que el Worker exista.
+
+### Cómo leer las respuestas
+
+Desde una terminal, con tu secreto:
+
+```bash
+curl -H "Origin: https://maxinunez24.github.io" -H "X-Clave: TU-SECRETO" https://cuestionario.TU-SUBDOMINIO.workers.dev/respuestas
+```
+
+La clave va por **cabecera y no en la URL** a propósito: las URLs quedan en el historial del
+navegador, en los logs del servidor y en el `Referer`. Una clave en la barra de direcciones no es
+una clave.
+
+### Pruebas
+
+```bash
+node worker/pruebas/cuestionario.test.mjs
+```
+
+23 casos. La mitad prueban lo que **no** tiene que pasar: que la clave del curso no alcance para
+leer, que sin el secreto configurado falle cerrado, y que `/cuantas` no deje escapar ni un nombre.
