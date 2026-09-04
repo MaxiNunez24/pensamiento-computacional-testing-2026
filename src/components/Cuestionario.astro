@@ -113,6 +113,7 @@ const CLAVE = 'cfp401';
   <div class="cue__form" data-form hidden>
 
     <div class="cue__elegido" data-elegido></div>
+    <p class="cue__multi" data-multi></p>
 
     <div class="cue__nombre-caja">
       <label class="cue__etiqueta" for={id + '-nombre'}>Su nombre <span class="cue__opt">(opcional)</span></label>
@@ -168,6 +169,12 @@ const CLAVE = 'cfp401';
       Muchas gracias por el tiempo. Lo que escribió lo vamos a leer <strong>antes</strong> del
       viernes, así ese día podemos preguntarle sobre esto en vez de arrancar de cero.
     </p>
+    <p class="cue__gracias-otro">
+      <strong>¿Se desempeña en más de un rol?</strong> Por ejemplo, si además de su cargo da clases
+      en algún curso. Si es así, puede volver arriba, elegir ese otro rol y completar el
+      cuestionario de nuevo pensando en <em>ese</em> trabajo. Las dos respuestas quedan por
+      separado: la segunda no pisa a la primera.
+    </p>
     <button type="button" class="cue__btn" data-corregir>Quiero corregir algo</button>
   </div>
 
@@ -215,21 +222,39 @@ const CLAVE = 'cfp401';
       try { localStorage.setItem(LS, JSON.stringify(d)); } catch {}
     };
 
+    /* El estado va POR ROL, no uno solo por navegador.
+       Nuestra Secretaría también es instructora, y la Regenta también da clases.
+       Con un solo cajón, contestar como Secretaría y después como Instructora
+       hacía que la segunda pisara a la primera — mismo id en el Worker y mismos
+       campos acá. Ahora cada rol tiene lo suyo, y en el Worker el id lleva el
+       rol pegado, así son dos respuestas distintas y cada una se puede corregir
+       por separado. */
     let estado = cargar();
-    if (!estado.respuestas) estado.respuestas = {};
+    if (!estado.porRol) estado.porRol = {};
+
+    function datosDe(rolId: string) {
+      if (!estado.porRol[rolId]) {
+        estado.porRol[rolId] = { nombre: '', respuestas: {}, enviado: false };
+      }
+      return estado.porRol[rolId];
+    }
+
+    let actual: any = null;
 
     const cajaForm = $('[data-form]')!;
-    const cajaRol = raiz.querySelector('[data-paso="rol"]') as HTMLElement;
     const cajaGracias = $('[data-gracias]')!;
     const elegido = $('[data-elegido]')!;
+    const multi = $('[data-multi]')!;
     const estadoTxt = $('[data-estado]')!;
     const planB = $('[data-plan-b]')!;
+    const inputNombre = $('[data-nombre]') as HTMLInputElement;
 
     /* Los bloques con `soloRoles` aparecen solo para quien corresponde. Es la
        diferencia entre un formulario de 9 preguntas y uno de 6: cada uno ve
        las suyas. */
     function aplicarRol(rolId: string) {
-      estado.rol = rolId;
+      estado.rolActual = rolId;
+      actual = datosDe(rolId);
       guardar(estado);
 
       raiz.querySelectorAll('[data-rol]').forEach((b) => {
@@ -244,65 +269,76 @@ const CLAVE = 'cfp401';
           (rol.aclaracion ? ' <span class="cue__elegido-acl">— ' + rol.aclaracion + '</span>' : '');
       }
 
+      // Cuántos roles ya contestó desde este navegador, para el aviso de abajo.
+      const yaEnviados = Object.keys(estado.porRol)
+        .filter((k) => estado.porRol[k].enviado && k !== rolId)
+        .map((k) => (roles.find((r: any) => r.id === k) || {}).nombre)
+        .filter(Boolean);
+      multi.innerHTML = yaEnviados.length
+        ? '✅ Ya nos mandó sus respuestas como <strong>' + yaEnviados.join('</strong> y <strong>') +
+          '</strong>. Estas van aparte, no pisan aquellas.'
+        : '';
+
       raiz.querySelectorAll('[data-bloque]').forEach((b) => {
         const solo = (b.getAttribute('data-solo-roles') || '').split(',').filter(Boolean);
         (b as HTMLElement).hidden = solo.length > 0 && !solo.includes(rolId);
       });
 
-      cajaForm.hidden = false;
-      cajaGracias.hidden = true;
+      // Traer lo que haya escrito ANTES en ESTE rol (y vaciar lo del otro).
+      inputNombre.value = actual.nombre || '';
+      raiz.querySelectorAll('[data-campo]').forEach((ta) => {
+        (ta as HTMLTextAreaElement).value = actual.respuestas[ta.getAttribute('data-campo') || ''] || '';
+      });
+
+      planB.hidden = true;
+      estadoTxt.textContent = '';
+      cajaForm.hidden = !!actual.enviado;
+      cajaGracias.hidden = !actual.enviado;
     }
 
     raiz.querySelectorAll('[data-rol]').forEach((b) => {
       b.addEventListener('click', () => {
         aplicarRol(b.getAttribute('data-rol') || '');
-        cajaForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        (actual.enviado ? cajaGracias : cajaForm)
+          .scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
-    // ── Recuperar lo que ya había escrito ────────────────────────────
-    const inputNombre = $('[data-nombre]') as HTMLInputElement;
-    if (estado.nombre) inputNombre.value = estado.nombre;
     inputNombre.addEventListener('input', () => {
-      estado.nombre = inputNombre.value;
+      actual.nombre = inputNombre.value;
       guardar(estado);
     });
 
     raiz.querySelectorAll('[data-campo]').forEach((ta) => {
       const campo = ta.getAttribute('data-campo') || '';
       const area = ta as HTMLTextAreaElement;
-      if (estado.respuestas[campo]) area.value = estado.respuestas[campo];
       area.addEventListener('input', () => {
-        estado.respuestas[campo] = area.value;
+        actual.respuestas[campo] = area.value;
         guardar(estado);
         estadoTxt.textContent = '';
       });
     });
 
-    if (estado.rol) aplicarRol(estado.rol);
-    if (estado.enviado) {
-      cajaForm.hidden = true;
-      cajaGracias.hidden = false;
-    }
+    if (estado.rolActual) aplicarRol(estado.rolActual);
 
     // ── Armar el texto plano (plan B y también para copiar) ──────────
     function armarTexto() {
-      const rol = roles.find((r: any) => r.id === estado.rol);
+      const rol = roles.find((r: any) => r.id === estado.rolActual);
       const lineas = [
         'CUESTIONARIO CFP 401',
         'Rol: ' + (rol ? rol.nombre : '(sin elegir)'),
-        'Nombre: ' + (estado.nombre || '(prefirió no ponerlo)'),
+        'Nombre: ' + (actual.nombre || '(prefirió no ponerlo)'),
         '',
       ];
       bloques.forEach((b: any) => {
         const solo = b.soloRoles || [];
-        if (solo.length && !solo.includes(estado.rol)) return;
-        const conAlgo = b.campos.filter((c: any) => (estado.respuestas[c.id] || '').trim());
+        if (solo.length && !solo.includes(estado.rolActual)) return;
+        const conAlgo = b.campos.filter((c: any) => (actual.respuestas[c.id] || '').trim());
         if (!conAlgo.length) return;
         lineas.push('── ' + b.numero + '. ' + b.titulo);
         conAlgo.forEach((c: any) => {
           lineas.push(c.etiqueta + ':');
-          lineas.push(estado.respuestas[c.id].trim());
+          lineas.push(actual.respuestas[c.id].trim());
           lineas.push('');
         });
       });
@@ -331,14 +367,13 @@ const CLAVE = 'cfp401';
 
     // ── Enviar ───────────────────────────────────────────────────────
     $('[data-enviar]')!.addEventListener('click', async () => {
-      const algo = Object.values(estado.respuestas).some((v: any) => (v || '').trim());
+      const algo = Object.values(actual.respuestas).some((v: any) => (v || '').trim());
       if (!algo) {
         estadoTxt.textContent = 'Conteste aunque sea una, y ya sirve 🙂';
         return;
       }
 
       if (!WORKER) {
-        // Todavía no está el Worker: se manda por WhatsApp y listo.
         estadoTxt.textContent = '';
         mostrarPlanB();
         return;
@@ -351,30 +386,34 @@ const CLAVE = 'cfp401';
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             clave: CLAVE,
-            id: miId(),
-            rol: estado.rol,
-            nombre: estado.nombre || '',
-            respuestas: estado.respuestas,
+            // El rol va pegado al id: una misma persona con dos roles manda dos
+            // respuestas distintas, y cada una se corrige por separado.
+            id: miId() + '-' + estado.rolActual,
+            rol: estado.rolActual,
+            nombre: actual.nombre || '',
+            respuestas: actual.respuestas,
           }),
         });
         if (!r.ok) throw new Error('respuesta ' + r.status);
-        estado.enviado = true;
+        actual.enviado = true;
         guardar(estado);
         cajaForm.hidden = true;
         cajaGracias.hidden = false;
+        aplicarRol(estado.rolActual);
         cajaGracias.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } catch {
-        estadoTxt.textContent = 'No se pudo enviar — pero no perdiste nada:';
+        estadoTxt.textContent = 'No se pudo enviar — pero no perdió nada:';
         mostrarPlanB();
       }
     });
 
     $('[data-corregir]')!.addEventListener('click', () => {
-      estado.enviado = false;
+      actual.enviado = false;
       guardar(estado);
       cajaGracias.hidden = true;
       cajaForm.hidden = false;
       cajaForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+
   });
 </script>

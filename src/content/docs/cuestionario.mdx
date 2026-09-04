@@ -20,7 +20,7 @@ La idea del cuestionario la propuso **un alumno del curso**. En sus palabras: *e
 primer paso que cumple el cliente para luego atender su demanda.*
 :::
 
-## Antes de empezar, tres aclaraciones
+## Antes de empezar, cuatro aclaraciones
 
 - **Ninguna pregunta es obligatoria.** Conteste lo que le salga. Media respuesta nos sirve muchísimo
   más que ninguna.
@@ -28,12 +28,19 @@ primer paso que cumple el cliente para luego atender su demanda.*
   el CFP para no construir algo que después no le sirva a nadie.
 - **Se guarda solo mientras escribe.** Si se le corta, si lo llaman o si cierra sin querer, cuando
   vuelva a entrar está todo. Y si se acuerda de algo después, puede volver y corregirlo.
+- **Si cumple más de un rol, puede contestarlo dos veces.** Varios del equipo tienen su cargo y
+  además dan clases en algún curso. Si es su caso, conteste primero pensando en uno y después
+  vuelva, elija el otro y conteste pensando en ese. **Las dos respuestas quedan por separado**, y
+  nos sirven las dos: lo que necesita para llevar la secretaría no es lo mismo que lo que necesita
+  para dar clase.
 
 ---
 
 <Cuestionario
   roles={[
-    { id: 'direccion', emoji: '🏛️', nombre: 'Dirección', aclaracion: 'dirección o vicedirección' },
+    { id: 'direccion', emoji: '🏛️', nombre: 'Dirección' },
+    { id: 'regencia', emoji: '📐', nombre: 'Regencia' },
+    { id: 'secretaria', emoji: '🗂️', nombre: 'Secretaría' },
     { id: 'preceptoria', emoji: '📋', nombre: 'Preceptoría' },
     { id: 'instructores', emoji: '🧑‍🏫', nombre: 'Instructor/a', aclaracion: 'doy clases en algún curso' },
     { id: 'auxiliares', emoji: '🧰', nombre: 'Auxiliar' },
@@ -148,7 +155,7 @@ primer paso que cumple el cliente para luego atender su demanda.*
       numero: '6',
       titulo: 'La inspección',
       de: 'clase',
-      soloRoles: ['direccion', 'preceptoria'],
+      soloRoles: ['direccion', 'regencia', 'secretaria', 'preceptoria'],
       ayuda: 'Esta se la hacemos porque cambió el inspector y queremos entender qué se le va a pedir al CFP.',
       campos: [
         {

@@ -1,10 +1,10 @@
 /**
  * Worker de Cloudflare: el cuestionario de relevamiento del CFP 401.
  *
- * Lo contesta el equipo del CFP (dirección, preceptoría, auxiliares,
- * instructores) desde el celular, antes de la entrevista del 4/9. La idea es de
- * Rodolfo: que llegue todo escrito, y que el viernes se pregunte SOBRE lo que
- * ya contestaron en vez de arrancar de cero.
+ * Lo contesta el equipo del CFP (dirección, regencia, secretaría, preceptoría,
+ * auxiliares e instructores) desde el celular, antes de la entrevista del 4/9.
+ * La idea es de un alumno del curso: que llegue todo escrito, y que el viernes
+ * se pregunte SOBRE lo que ya contestaron en vez de arrancar de cero.
  *
  * ⚠️ ES UN WORKER APARTE, igual que el del tablero, y por el mismo motivo: el
  * de sincronización guarda meses de trabajo de los alumnos y el del tablero se
@@ -95,7 +95,10 @@ export default {
       // El id lo genera el navegador y queda en su localStorage. Sirve para que
       // alguien pueda volver y CORREGIR lo que puso, en vez de que le queden
       // dos respuestas distintas. No identifica a nadie por sí solo.
-      const id = texto(datos.id, 40).replace(/[^a-z0-9]/gi, '');
+      // Se permite el guion: el id viene como <navegador>-<rol>, para que una
+      // misma persona con dos roles (la Secretaría también es instructora)
+      // mande dos respuestas distintas en vez de pisar la primera.
+      const id = texto(datos.id, 60).replace(/[^a-z0-9-]/gi, '');
       if (!id) return json({ error: 'falta el id' }, cabeceras, 400);
 
       const rol = texto(datos.rol, 60);

@@ -2857,6 +2857,16 @@ body.pc-resizing * {
 }
 .cue__gracias-tit { margin: 0 0 0.6rem; font-size: 1.2rem; font-weight: 700; }
 
+.cue__multi {
+  margin: -0.6rem 0 1.2rem; font-size: 0.85rem; line-height: 1.5;
+  color: var(--sl-color-text-accent);
+}
+.cue__multi:empty { display: none; }
+.cue__gracias-otro {
+  margin: 1rem 0; padding: 0.8rem 0.9rem; border-radius: 0.5rem;
+  background: var(--sl-color-gray-6); font-size: 0.9rem; line-height: 1.55;
+}
+
 @media (max-width: 30rem) {
   .cue__rol { flex: 1 1 100%; }
   .cue__enviar .cue__btn--ok { width: 100%; }
