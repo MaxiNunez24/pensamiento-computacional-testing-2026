@@ -1,0 +1,49 @@
+---
+title: Respuestas del cuestionario
+description: "Lo que contestó el equipo del CFP. Pide la clave de lectura."
+# Igual que /cuestionario/: fuera del menú, fuera del buscador y sin indexar.
+# Pero acá eso no es lo que protege nada — lo que protege es que sin la clave
+# el Worker no devuelve una sola respuesta.
+pagefind: false
+head:
+  - tag: meta
+    attrs:
+      name: robots
+      content: noindex, nofollow
+---
+
+import Respuestas from '../../components/Respuestas.astro';
+
+Lo que fue contestando el equipo del CFP. **Pide la clave de lectura** (`CLAVE_DOCENTE`, el secreto
+del Worker).
+
+:::caution[Acá hay datos de personas]
+Nombres del personal del CFP y lo que opinan de su propio trabajo. **No se proyecta esta pantalla
+en el aula** y no se exporta a ningún archivo dentro del repo, que es público.
+
+Para mostrarle a la clase cuántas respuestas van sin que se lea ninguna, está
+[`/cuantas`](https://cuestionario.maxinunez434.workers.dev/cuantas) del Worker, que devuelve el
+número y nada más.
+:::
+
+<Respuestas />
+
+---
+
+## Cosas que conviene saber
+
+**La clave no se guarda.** Ni en el navegador ni en ningún lado: se escribe cada vez y se va al
+cerrar la pestaña. Es a propósito — un secreto guardado en la máquina del aula deja de ser un
+secreto. El botón **🔒 Cerrar** la borra junto con todo lo traído.
+
+**Esto solo funciona desde el sitio publicado.** El Worker acepta pedidos que vengan de
+`maxinunez24.github.io` y nada más, así que desde `localhost` el navegador los frena por CORS. Si
+pasa eso, la página lo avisa: no es que la clave esté mal.
+
+**El listado tarda hasta un minuto.** El Worker lista las respuestas con `list()` de KV, que es
+eventualmente consistente: alguien puede contestar y aparecer recién al minuto siguiente. Si
+falta una, esperá y tocá 🔄 **Actualizar** antes de preocuparte.
+
+**Si alguien contestó dos veces con dos roles distintos**, aparecen como dos respuestas separadas —
+que es lo correcto: lo que necesita para llevar la secretaría no es lo mismo que lo que necesita
+para dar clase.

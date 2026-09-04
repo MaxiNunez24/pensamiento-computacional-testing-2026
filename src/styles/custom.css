@@ -2897,3 +2897,78 @@ body.pc-resizing * {
   .cue__rol { flex: 1 1 100%; }
   .cue__enviar .cue__btn--ok { width: 100%; }
 }
+
+/* ---------------------------------------------------------------------------
+   LECTOR DE RESPUESTAS (/respuestas/)
+   Se abre desde el celular, minutos antes de la entrevista. De ahí que el
+   campo de la clave y los botones sean grandes, y que el texto de cada
+   respuesta se lea cómodo: es lo que hay que leer, no decorado.
+--------------------------------------------------------------------------- */
+.resp__aviso {
+  border: 1px solid #ffd43b; border-radius: 0.5rem; background: var(--sl-color-black);
+  padding: 0.7rem 0.9rem; margin-bottom: 1rem; font-size: 0.9rem; line-height: 1.55;
+}
+.resp__entrar {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 1rem; margin: 1.2rem 0;
+}
+.resp__etiqueta { display: block; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.25rem; }
+.resp__ayuda { margin: 0 0 0.7rem; font-size: 0.9rem; line-height: 1.5; color: var(--sl-color-gray-3); }
+.resp__fila { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.resp__input {
+  flex: 1 1 16rem; font: inherit; font-size: 17px; padding: 0.7rem 0.8rem;
+  border-radius: 0.45rem; border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-6); color: var(--sl-color-white);
+}
+.resp__input:focus { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+.resp__btn {
+  font: inherit; font-size: 0.95rem; cursor: pointer; min-height: 2.9rem;
+  padding: 0.6rem 1rem; border-radius: 0.45rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.resp__btn:hover { border-color: var(--sl-color-accent); }
+.resp__btn--ok {
+  border-color: var(--sl-color-accent); background: var(--sl-color-accent);
+  color: var(--sl-color-black); font-weight: 600;
+}
+.resp__estado { margin: 0.6rem 0 0; font-size: 0.9rem; color: var(--sl-color-text-accent); }
+
+.resp__barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  margin-bottom: 1rem; padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--sl-color-gray-6);
+}
+.resp__cuantas { font-weight: 600; margin-right: auto; }
+
+.resp__ficha {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 1rem; margin-bottom: 1rem;
+}
+.resp__ficha-cab {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem;
+  padding-bottom: 0.6rem; margin-bottom: 0.6rem;
+  border-bottom: 1px solid var(--sl-color-gray-6);
+}
+.resp__quien { color: var(--sl-color-gray-3); }
+.resp__fecha { margin-left: auto; font-size: 0.8rem; color: var(--sl-color-gray-4); }
+.resp__bloque {
+  margin: 1rem 0 0.4rem; font-size: 0.78rem; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--sl-color-gray-4);
+}
+.resp__campo { margin: 0.6rem 0 0.15rem; font-weight: 600; font-size: 0.95rem; }
+.resp__texto {
+  margin: 0; padding: 0.6rem 0.8rem; border-radius: 0.4rem;
+  background: var(--sl-color-gray-6); white-space: pre-wrap;
+  font-size: 1rem; line-height: 1.6;
+}
+.resp__vacio { color: var(--sl-color-gray-3); }
+.resp__export {
+  width: 100%; margin-top: 0.8rem; font-family: var(--sl-font-mono, monospace);
+  font-size: 0.8rem; padding: 0.6rem; border-radius: 0.4rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+}
+
+@media (max-width: 30rem) {
+  .resp__fila .resp__btn { width: 100%; }
+}

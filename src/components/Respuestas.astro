@@ -1,0 +1,241 @@
+---
+/**
+ * Lector de las respuestas del cuestionario del CFP.
+ *
+ * Existe porque leerlas con `curl` desde una terminal no sirve cuando estás en
+ * el CFP con el celular en la mano diez minutos antes de la entrevista.
+ *
+ * ─────────────────────────── SOBRE LA CLAVE ─────────────────────────────────
+ *
+ * Pide CLAVE_DOCENTE, que es el secreto del Worker, y la manda por cabecera
+ * `X-Clave`. Tres decisiones al respecto:
+ *
+ *   · NO SE GUARDA. Ni en localStorage ni en sessionStorage: vive en una
+ *     variable y se va al cerrar la pestaña. Un secreto guardado en el
+ *     navegador de una máquina compartida deja de ser un secreto.
+ *   · NO VA EN LA URL. Las URLs quedan en el historial, en los logs y en el
+ *     Referer. Por eso el Worker la pide por cabecera y no por query string.
+ *   · EL CAMPO ES type="password", para que no quede a la vista si esto se
+ *     está proyectando.
+ *
+ * La página no se indexa ni aparece en el menú, pero eso no es lo que la
+ * protege: lo que la protege es que sin la clave el Worker no devuelve nada.
+ *
+ * ⚠️ Solo funciona desde el sitio publicado. El Worker acepta pedidos con
+ * Origin de github.io y nada más, así que en localhost el navegador lo frena
+ * por CORS. La página lo detecta y lo avisa antes de que nadie se pelee con
+ * una clave que estaba bien.
+ */
+import { roles, bloques } from '../data/cuestionario';
+
+const WORKER = 'https://cuestionario.maxinunez434.workers.dev';
+const ORIGEN_OK = 'https://maxinunez24.github.io';
+---
+
+<section class="resp" data-respuestas data-worker={WORKER} data-origen={ORIGEN_OK}>
+
+  <p class="resp__aviso" data-aviso-origen hidden></p>
+
+  <form class="resp__entrar" data-entrar>
+    <label class="resp__etiqueta" for="resp-clave">Clave de lectura</label>
+    <p class="resp__ayuda">
+      Es <code>CLAVE_DOCENTE</code>, el secreto del Worker. <strong>No se guarda</strong>: hay que
+      escribirla cada vez, y se va al cerrar la pestaña.
+    </p>
+    <div class="resp__fila">
+      <input class="resp__input" type="password" id="resp-clave" data-clave
+             autocomplete="off" placeholder="la frase que pusiste en Cloudflare" />
+      <button class="resp__btn resp__btn--ok" type="submit" data-ver>Ver respuestas</button>
+    </div>
+    <p class="resp__estado" data-estado></p>
+  </form>
+
+  <div class="resp__resultado" data-resultado hidden>
+    <div class="resp__barra">
+      <span class="resp__cuantas" data-cuantas></span>
+      <button type="button" class="resp__btn" data-copiar>📋 Copiar todo</button>
+      <button type="button" class="resp__btn" data-refrescar>🔄 Actualizar</button>
+      <button type="button" class="resp__btn" data-salir>🔒 Cerrar</button>
+    </div>
+    <div data-lista></div>
+    <textarea class="resp__export" data-export rows="10" readonly hidden></textarea>
+  </div>
+
+  <script type="application/json" data-roles set:html={JSON.stringify(roles)}></script>
+  <script type="application/json" data-bloques set:html={JSON.stringify(bloques)}></script>
+</section>
+
+<script>
+  document.querySelectorAll('[data-respuestas]').forEach((raiz) => {
+    const $ = (s: string) => raiz.querySelector(s) as HTMLElement | null;
+    const leer = (s: string) => {
+      try { return JSON.parse((raiz.querySelector(s) as HTMLElement)?.textContent || '[]'); }
+      catch { return []; }
+    };
+    const roles = leer('[data-roles]');
+    const bloques = leer('[data-bloques]');
+    const WORKER = (raiz.getAttribute('data-worker') || '').replace(/\/+$/, '');
+    const ORIGEN_OK = raiz.getAttribute('data-origen') || '';
+
+    /* La clave vive acá y en ningún otro lado. Cerrar la pestaña la borra. */
+    let clave = '';
+    let ultimas: any[] = [];
+
+    // ── El aviso de que esto no anda en localhost ────────────────────
+    if (location.origin !== ORIGEN_OK) {
+      const aviso = $('[data-aviso-origen]')!;
+      aviso.hidden = false;
+      aviso.innerHTML =
+        '⚠️ Esto solo funciona desde el <strong>sitio publicado</strong>. El Worker acepta pedidos ' +
+        'de <code>' + ORIGEN_OK + '</code> y nada más, así que desde <code>' + location.origin +
+        '</code> el navegador los frena por CORS. No es la clave: es el origen.';
+    }
+
+    const nombreRol = (id: string) => {
+      const r = roles.find((x: any) => x.id === id);
+      return r ? r.emoji + ' ' + r.nombre : id;
+    };
+
+    /* El rótulo de cada campo sale de la misma definición que usa el
+       formulario, así no se desincronizan. */
+    const etiquetaDe = (campoId: string) => {
+      for (const b of bloques) {
+        for (const c of b.campos) if (c.id === campoId) return c.etiqueta;
+      }
+      return campoId;
+    };
+    const bloqueDe = (campoId: string) => {
+      for (const b of bloques) {
+        for (const c of b.campos) if (c.id === campoId) return b.titulo;
+      }
+      return '';
+    };
+
+    const cuando = (iso: string) => {
+      try { return new Date(iso).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }); }
+      catch { return iso; }
+    };
+
+    async function traer() {
+      const est = $('[data-estado]')!;
+      est.textContent = 'Buscando…';
+      try {
+        const r = await fetch(WORKER + '/respuestas', { headers: { 'X-Clave': clave } });
+        if (r.status === 401) { est.textContent = 'Esa clave no es. Probá de nuevo.'; return false; }
+        if (r.status === 503) { est.textContent = 'El Worker no tiene CLAVE_DOCENTE configurada.'; return false; }
+        if (!r.ok) { est.textContent = 'El Worker contestó ' + r.status + '.'; return false; }
+        const datos = await r.json();
+        ultimas = datos.respuestas || [];
+        est.textContent = '';
+        pintar();
+        return true;
+      } catch {
+        est.textContent = location.origin !== ORIGEN_OK
+          ? 'Bloqueado por CORS: hay que abrir esto desde el sitio publicado.'
+          : 'No se pudo conectar con el Worker.';
+        return false;
+      }
+    }
+
+    function pintar() {
+      const lista = $('[data-lista]')!;
+      lista.innerHTML = '';
+      $('[data-cuantas]')!.textContent =
+        ultimas.length === 1 ? '1 respuesta' : ultimas.length + ' respuestas';
+
+      if (!ultimas.length) {
+        lista.innerHTML = '<p class="resp__vacio">Todavía no contestó nadie. ' +
+          'Ojo que el listado del Worker tarda hasta un minuto en reflejar una respuesta nueva.</p>';
+        return;
+      }
+
+      ultimas.forEach((p: any) => {
+        const div = document.createElement('div');
+        div.className = 'resp__ficha';
+        const quien = p.nombre ? p.nombre : '(prefirió no poner su nombre)';
+        div.innerHTML =
+          '<div class="resp__ficha-cab"><strong>' + nombreRol(p.rol) + '</strong>' +
+          '<span class="resp__quien">' + quien + '</span>' +
+          '<span class="resp__fecha">' + cuando(p.primera || p.fecha) + '</span></div>';
+
+        let bloqueActual = '';
+        Object.entries(p.respuestas || {}).forEach(([campo, texto]) => {
+          const t = String(texto || '').trim();
+          if (!t) return;
+          const b = bloqueDe(campo);
+          if (b !== bloqueActual) {
+            bloqueActual = b;
+            const h = document.createElement('p');
+            h.className = 'resp__bloque';
+            h.textContent = b;
+            div.appendChild(h);
+          }
+          const et = document.createElement('p');
+          et.className = 'resp__campo';
+          et.textContent = etiquetaDe(campo);
+          div.appendChild(et);
+          // textContent y no innerHTML: esto lo escribió otra persona.
+          const val = document.createElement('p');
+          val.className = 'resp__texto';
+          val.textContent = t;
+          div.appendChild(val);
+        });
+
+        lista.appendChild(div);
+      });
+    }
+
+    function armarTexto() {
+      const l: string[] = ['RESPUESTAS DEL CUESTIONARIO — CFP 401', ''];
+      ultimas.forEach((p: any) => {
+        l.push('═══ ' + nombreRol(p.rol) + '  ·  ' + (p.nombre || 'sin nombre'));
+        Object.entries(p.respuestas || {}).forEach(([campo, texto]) => {
+          const t = String(texto || '').trim();
+          if (!t) return;
+          l.push('  ' + etiquetaDe(campo));
+          l.push('  ' + t.replace(/\n/g, '\n  '));
+          l.push('');
+        });
+        l.push('');
+      });
+      return l.join('\n');
+    }
+
+    ($('[data-entrar]') as HTMLFormElement).addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clave = ($('[data-clave]') as HTMLInputElement).value.trim();
+      if (!clave) return;
+      if (await traer()) {
+        ($('[data-entrar]') as HTMLElement).hidden = true;
+        $('[data-resultado]')!.hidden = false;
+      }
+    });
+
+    $('[data-refrescar]')!.addEventListener('click', () => traer());
+
+    $('[data-copiar]')!.addEventListener('click', async () => {
+      const ta = $('[data-export]') as HTMLTextAreaElement;
+      ta.value = armarTexto();
+      try {
+        await navigator.clipboard.writeText(ta.value);
+        ($('[data-copiar]') as HTMLElement).textContent = '¡Copiado!';
+      } catch {
+        ta.hidden = false;
+        ta.focus();
+        ta.select();
+      }
+    });
+
+    /* Cerrar borra la clave Y lo traído. Si esto queda abierto en la máquina
+       del aula, que no baste con volver atrás para leer las respuestas. */
+    $('[data-salir]')!.addEventListener('click', () => {
+      clave = '';
+      ultimas = [];
+      ($('[data-clave]') as HTMLInputElement).value = '';
+      $('[data-lista]')!.innerHTML = '';
+      $('[data-resultado]')!.hidden = true;
+      ($('[data-entrar]') as HTMLElement).hidden = false;
+      ($('[data-copiar]') as HTMLElement).textContent = '📋 Copiar todo';
+    });
+  });
+</script>
