@@ -147,8 +147,8 @@ def domicilio_sospechoso(domicilio, dni):
 def partir_direccion(domicilio):
     """El SiGeS pide Calle y Altura por separado.
 
-    '***REMOVED***'          -> calle='Hernández',          altura='629'
-    '***REMOVED***' -> calle='5 entre 8 y 10 bis', altura='s/n'
+    'Belgrano 629'          -> calle='Hernández',          altura='629'
+    '31 entre 40 y 42 bis s/n' -> calle='5 entre 8 y 10 bis', altura='s/n'
 
     Ante la duda va todo a Calle y la altura queda 's/n': es lo que hizo la
     preceptora a mano, y es preferible a inventar un número.
