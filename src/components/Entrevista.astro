@@ -55,7 +55,8 @@ interface Rol {
   preguntas: string[];
   /** Qué pantalla mostrarle y en qué orden. */
   pantalla: { nombre: string; hash: string; enCelular?: boolean; enVivo?: boolean };
-  /** Qué NO hay que prometerle a este en particular. */
+  /** Lo que conviene tener presente con esta persona. Se muestra en pantalla,
+      así que va escrito para que se sostenga si lo lee. */
   ojo?: string;
 }
 
@@ -88,7 +89,7 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
   <p class="ent__aviso" data-aviso-mic hidden></p>
 
   <!-- ── PASO 1: quién entró ──────────────────────────────────────────── -->
-  <p class="ent__quien">¿Quién tenés enfrente?</p>
+  <p class="ent__quien">¿Con quién estamos hablando?</p>
   <div class="ent__roles">
     {roles.map((r) => (
       <button type="button" class="ent__rol" data-rol={r.id}>
@@ -120,9 +121,9 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
     <div class="ent__reloj">
       <div class="ent__crono" data-crono>00:00</div>
       <div class="ent__marcas-reloj">
-        <span data-m3>3' — dejalo hablar</span>
-        <span data-m6>6' — mostrale la pantalla</span>
-        <span data-m9>9' — las de cierre</span>
+        <span data-m3>3' — escuchar</span>
+        <span data-m6>6' — la pantalla</span>
+        <span data-m9>9' — el cierre</span>
       </div>
       <div class="ent__reloj-btns">
         <button type="button" class="ent__btn ent__btn--ok" data-empezar>▶ Empezar</button>
@@ -269,7 +270,9 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
 
       const ojo = $('[data-f-ojo]')!;
       ojo.hidden = !r.ojo;
-      if (r.ojo) ojo.innerHTML = '<strong>Ojo:</strong> ' + r.ojo;
+      /* "Para tener en cuenta" y no "Ojo": la página está abierta en la
+         pantalla con alguien sentado enfrente, y puede leerla. */
+      if (r.ojo) ojo.innerHTML = '<strong>Para tener en cuenta:</strong> ' + r.ojo;
 
       $('[data-ficha]')!.hidden = false;
       $('[data-estudio]')!.hidden = false;

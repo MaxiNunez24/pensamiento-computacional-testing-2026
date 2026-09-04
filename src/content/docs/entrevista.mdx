@@ -12,11 +12,15 @@ que llevamos hecho les sirve.
 
 Esta página es la herramienta para ese día. **Se usa abierta en la compu, mientras hablan.**
 
-:::danger[Lo único que no se puede hacer]
-**No prometas nada.** Ni "sí, se puede", ni "para tal fecha", ni "es fácil".
+:::caution[La regla que sostiene todo lo demás]
+**Todo lo que pidan se anota. Nada se promete en el momento.**
 
-La respuesta a todo pedido es **"lo anotamos y lo vemos"**. Un sí dicho en una demo se convierte en
-una deuda, y el que la paga sos vos en noviembre.
+No es una evasiva, es al revés: es la única forma de que lo que sí prometamos se cumpla. Un "sí"
+dicho rápido en una reunión se convierte en una deuda que en noviembre termina pagando la persona
+que iba a usar el sistema.
+
+La respuesta honesta a un pedido nuevo es **"lo anotamos y lo miramos contra el resto de la
+lista"** — y después se decide, con ellos.
 :::
 
 ---
@@ -58,14 +62,16 @@ núcleo corto que entra siempre**, y todo lo demás se agrega si sobra tiempo.
 
 | Minuto | Qué se hace | Por qué |
 |---|---|---|
-| **0 – 3** | *"Contame cómo hacés esto hoy, de principio a fin."* Y **te callás.** | La gente no sabe decir qué necesita, pero siempre sabe contar cómo trabaja |
+| **0 – 3** | *"Contame cómo hacés esto hoy, de principio a fin."* Y **escuchar sin interrumpir.** | Nadie tiene por qué saber qué software necesita. Pero todos saben contar cómo trabajan |
 | **3 – 6** | Le mostrás **una sola pantalla**: la suya | Una pantalla concreta saca más feedback que veinte minutos de explicación |
 | **6 – 9** | Las tres de cierre: ¿qué te ahorraría más tiempo? · ¿qué de esto no usarías nunca? · ¿qué tendría que pasar para que digas "esto no me sirve"? | Las tres apuntan a lo que **no** te va a decir solo |
 | **9 – 10** | *"¿Con quién más tendríamos que hablar?"* | Es la pregunta que encuentra a los usuarios que no sabíamos que existían |
 
-:::tip[La regla de oro: el que pregunta no habla]
-Si el alumno que conduce habla más que el entrevistado, la entrevista fracasó. Todos los silencios
-incómodos los llena **el otro**, no vos. Contá hasta tres antes de repreguntar.
+:::tip[La regla de oro: el que pregunta escucha]
+Si el que conduce habla más que la persona entrevistada, la charla no sirvió.
+
+Ante un silencio, contá hasta tres antes de repreguntar. Lo que viene **después** del silencio suele
+ser lo más valioso de toda la entrevista.
 :::
 
 :::note[Si contestaron el cuestionario, cambia el minuto 0]
@@ -86,7 +92,7 @@ reloj y la grabadora juntos.
 <Entrevista roles={[
   {
     id: 'preceptoria', emoji: '📋', nombre: 'Preceptoría',
-    duele: 'Carga la misma información en varios lugares a la vez: los datos de cada alumno, el curso, los horarios. Cada planilla nueva es la anterior duplicada y vuelta a completar a mano, y otra vez por cada uno de los ~30 cursos.',
+    duele: 'Hoy la misma información se carga en varios lugares: los datos de cada alumno, el curso, los horarios. Cada planilla parte de la anterior y se completa a mano, y eso se repite por cada uno de los ~30 cursos.',
     tiempo: 'Es quien más tiempo puede dar — pero lo necesita una vez por mes, no todos los días.',
     preguntas: [
       'Contanos cómo armás la planilla de fin de mes, desde que el instructor te pasa la asistencia hasta que la entregás firmada.',
@@ -94,11 +100,11 @@ reloj y la grabadora juntos.
       '¿Qué pasa cuando te das cuenta de un error después de haberla entregado?',
     ],
     pantalla: { nombre: 'la planilla oficial generada sola, y hacé el zoom para que la compare con la de papel.', hash: 'planilla' },
-    ojo: 'Va a pedir los 30 cursos. Anotalo y no digas que sí: multi-curso todavía no está hecho.',
+    ojo: 'Es probable que pida los 30 cursos. Se anota. Multi-curso todavía no está hecho, y conviene decirlo con esa misma franqueza en vez de prometerlo.',
   },
   {
     id: 'direccion', emoji: '🏛️', nombre: 'Dirección',
-    duele: 'No tiene forma de ver cómo viene la asistencia de un curso sin pedírsela a alguien y esperar.',
+    duele: 'Hoy, para saber cómo viene la asistencia de un curso, hay que pedírsela a alguien y esperar a que la prepare.',
     tiempo: 'Un minuto y de parado. Es el que menos tiempo tiene y el que más puede destrabar.',
     preguntas: [
       '¿Qué necesitás saber de la asistencia de un curso, y cada cuánto lo necesitás?',
@@ -106,11 +112,11 @@ reloj y la grabadora juntos.
       'Si pudieras mirar una sola pantalla por semana, ¿qué tendría que decir?',
     ],
     pantalla: { nombre: 'el panel, que es la vista "desde arriba".', hash: 'dashboard' },
-    ojo: 'Si pide que se integre con SiGeS, anotalo y nada más. Eso es otro proyecto entero.',
+    ojo: 'Si pide que se integre con el SiGeS, se anota. Es un proyecto en sí mismo y queda fuera del alcance de este año — decirlo es más útil que dejarlo abierto.',
   },
   {
     id: 'regencia', emoji: '📐', nombre: 'Regencia',
-    duele: 'Todavía no lo sabemos con precisión — y además da clases, así que vive las dos puntas del circuito.',
+    duele: 'Todavía no lo sabemos con precisión, y es parte de lo que venimos a preguntar. Además da clases, así que ve las dos puntas del circuito.',
     tiempo: 'A definir. Preguntale cuánto tiene antes de arrancar.',
     preguntas: [
       'Contanos de qué te ocupás con la asistencia y la matrícula, de principio a fin.',
@@ -118,11 +124,11 @@ reloj y la grabadora juntos.
       '¿Qué información te piden a vos, y quién te la pide?',
     ],
     pantalla: { nombre: 'el panel primero, y si tiene tiempo mostrale pasar lista.', hash: 'dashboard' },
-    ojo: 'Cumple dos roles. Preguntale por los dos por separado o vas a mezclar dos circuitos distintos.',
+    ojo: 'Cumple dos roles. Conviene preguntar por cada uno por separado: son dos circuitos distintos y mezclarlos confunde el mapa.',
   },
   {
     id: 'secretaria', emoji: '🗂️', nombre: 'Secretaría',
-    duele: 'Es donde se cargan los datos que después todos copian. Si algo entra mal acá, se propaga a todos lados.',
+    duele: 'Es donde se cargan los datos que después usa todo el resto del circuito. Lo que se defina acá ordena todo lo demás.',
     tiempo: 'A definir. También da clases, igual que regencia.',
     preguntas: [
       'Cuando se inscribe alguien nuevo, contame todo lo que hacés desde que llega hasta que queda cargado.',
@@ -130,11 +136,11 @@ reloj y la grabadora juntos.
       '¿Qué pasa cuando alguien se anota con los datos mal?',
     ],
     pantalla: { nombre: 'la pantalla de inscripción y la de alumnos.', hash: 'alumnos' },
-    ojo: 'Acá arranca el circuito de datos entero. Lo que cuente esta persona ordena todo lo demás.',
+    ojo: 'Acá arranca el circuito de datos entero. Lo que se cuente en esta charla ordena todas las demás.',
   },
   {
     id: 'instructores', emoji: '🧑‍🏫', nombre: 'Instructores',
-    duele: 'Toma asistencia en papel y la carga después, de memoria, cuando se acuerda.',
+    duele: 'Hoy la asistencia se toma en papel durante la clase y se pasa al sistema más tarde, cuando hay un momento libre.',
     tiempo: 'Dos minutos, con el celular en la mano y la clase esperando.',
     preguntas: [
       'Contame qué hacés cuando arranca la clase y tenés que tomar asistencia.',
@@ -142,11 +148,11 @@ reloj y la grabadora juntos.
       'Si un alumno llega veinte minutos tarde, ¿qué hacés?',
     ],
     pantalla: { nombre: 'pasar lista del día, con los cuatro botones por alumno.', hash: 'dia', enCelular: true },
-    ojo: 'Va a preguntar si puede usarlo desde su casa. Hoy la respuesta es no: anda solo en la red del CFP. Contalo como una decisión tomada, no como un olvido.',
+    ojo: 'Puede preguntar si se usa desde casa. Hoy no: funciona solo dentro de la red del CFP. Es una decisión tomada para cuidar los datos de los alumnos, no algo pendiente.',
   },
   {
     id: 'auxiliares', emoji: '🧰', nombre: 'Auxiliares',
-    duele: 'No saben para cuántos preparar la merienda. Preguntan, calculan de memoria, o les sobra.',
+    duele: 'Hoy, saber cuántas meriendas preparar depende de preguntar o de estimar, porque el número de presentes no está a mano en ningún lado.',
     tiempo: 'Tres segundos por día. Es la pantalla más simple de todo el sistema.',
     preguntas: [
       '¿Cómo hacés hoy para saber cuántas meriendas preparar?',
@@ -154,11 +160,11 @@ reloj y la grabadora juntos.
       '¿Te alcanza con un número solo, o necesitás saber de qué cursos sale?',
     ],
     pantalla: { nombre: 'la pantalla de la merienda: un número grande y nada más.', hash: 'dashboard', enVivo: true },
-    ojo: 'Esta pantalla YA FUNCIONA en Flask (localhost:5000/merienda). Mostrala corriendo de verdad, no el prototipo: es la demo más contundente que tenés y la más fácil de que diga "sí, eso me sirve".',
+    ojo: 'Esta pantalla ya funciona de verdad en Flask (localhost:5000/merienda). Conviene mostrarla corriendo y no el prototipo: es la más simple de todo el sistema y la que mejor se entiende de un vistazo.',
   },
   {
     id: 'otro', emoji: '❓', nombre: 'Vino alguien más',
-    duele: 'No lo sabemos. Averiguarlo es exactamente para lo que sirve la entrevista.',
+    duele: 'Todavía no lo sabemos: averiguarlo es justamente para lo que sirve esta charla.',
     tiempo: 'El que te dé. Usá el núcleo de diez minutos.',
     preguntas: [
       'Contanos qué hacés vos con la asistencia, de principio a fin.',
@@ -166,7 +172,7 @@ reloj y la grabadora juntos.
       '¿Qué tendría que pasar para que digas "esto no me sirve"?',
     ],
     pantalla: { nombre: 'el panel, y de ahí dejá que sea él quien pida ver algo.', hash: 'dashboard' },
-    ojo: 'Antes de que se vaya: "¿con quién más tendríamos que hablar?". Es la pregunta que más usuarios nuevos encuentra.',
+    ojo: 'Antes de terminar: "¿con quién más tendríamos que hablar?". Es la pregunta que más gente relevante suele encontrar.',
   },
 ]} />
 
@@ -188,12 +194,14 @@ Ese rol existía para anotar, y anotar es justamente lo que no vamos a hacer. La
 libera se suma a **observar**, que es donde más falta hace.
 :::
 
-:::tip[El observador es el que más va a sorprender]
-La gente no cuenta lo que hace: cuenta lo que **cree** que hace. Si el preceptor dice "lo cargo al
-toque" pero mientras habla busca un papel arrugado en el bolsillo, ese papel vale más que la frase.
+:::tip[Por qué alguien mira en vez de escuchar]
+Lo que uno hace todos los días se vuelve automático, y por eso es dificilísimo de describir con
+palabras. No es que la gente cuente mal: es que nadie narra bien su propia rutina.
 
-Cuando el observador ve algo así, **le avisa al de las marcas** para que lo marque. La fórmula es
-*"dijo X pero hizo Y"*.
+Por eso además de escuchar, miramos. Si mientras alguien explica un paso saca un papel del bolsillo,
+ese papel **también es parte del proceso** — y suele ser justo el dato que faltaba.
+
+Cuando el observador ve algo así, le avisa al de las marcas para que quede marcado.
 :::
 
 ---
@@ -212,12 +220,12 @@ siguiente ya sentado enfrente no se hace.
 </TabItem>
 <TabItem label="Todos juntos">
 
-Una sola ronda. **El riesgo es que hable el de más jerarquía y los demás asientan** — que es la
-forma más común de perder el requisito de la auxiliar.
+Una sola ronda. **En grupo, las voces con más cargo tienden a ocupar más lugar**, y necesidades muy
+concretas —como las de las auxiliares— se pierden. No es mala intención de nadie: pasa siempre.
 
-Contramedida: el que conduce pregunta **por rol, uno por uno** — *"y vos, que preparás las
-meriendas, ¿cómo lo hacés hoy?"*. Y se muestran dos pantallas nada más: la planilla y pasar lista.
-Con seis personas mirando, la tercera pantalla ya no la registra nadie.
+Cómo se compensa: el que conduce pregunta **por rol, uno por uno** — *"y usted, que prepara las
+meriendas, ¿cómo lo hace hoy?"*. Y se muestran dos pantallas nada más: la planilla y pasar lista.
+Con seis personas mirando, la tercera ya no la registra nadie.
 
 </TabItem>
 <TabItem label="De a uno, cuando puedan">
