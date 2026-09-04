@@ -2623,6 +2623,7 @@ body.pc-resizing * {
 .ent__reloj > *,
 .ent__reloj-btns > *,
 .cue__roles > *,
+.cue__opciones > *,
 .resp__barra > * {
   margin-top: 0;
 }
@@ -2863,6 +2864,35 @@ body.pc-resizing * {
 .cue__sello--clase { border-color: var(--sl-color-accent-low); }
 .cue__bloque-ayuda {
   margin: 0 0 0.9rem; font-size: 1rem; line-height: 1.6; color: var(--sl-color-gray-2);
+}
+
+/* Multiple choice: DOS por fila. Nueve opciones en una sola columna hacen una
+   lista larguísima en un celular y obligan a scrollear para compararlas; de a
+   dos entran de un vistazo. En pantalla angosta vuelve a una sola columna,
+   porque partir "Alrededor de una hora" en dos renglones es peor que scrollear. */
+.cue__opciones {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem;
+}
+/* Toda la caja es el <label>, así que se toca en cualquier lado: en un celular,
+   apuntarle al puntito del radio es una pelea. */
+.cue__opcion {
+  display: flex; align-items: center; gap: 0.55rem; cursor: pointer;
+  padding: 0.7rem 0.8rem; border-radius: 0.45rem; min-height: 3rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-6);
+  font-size: 1rem; line-height: 1.3;
+}
+.cue__opcion:hover { border-color: var(--sl-color-accent); }
+.cue__opcion.es-elegida {
+  border-color: var(--sl-color-accent); background: var(--sl-color-accent-low); font-weight: 600;
+}
+.cue__opcion input[type="radio"] {
+  width: 1.15rem; height: 1.15rem; flex: none; margin: 0;
+  accent-color: var(--sl-color-accent);
+}
+.cue__opcion:focus-within { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+
+@media (max-width: 30rem) {
+  .cue__opciones { grid-template-columns: 1fr; }
 }
 
 .cue__campo { margin-bottom: 1rem; }

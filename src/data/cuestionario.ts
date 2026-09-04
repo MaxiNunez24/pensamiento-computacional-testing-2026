@@ -18,6 +18,10 @@ export interface Campo {
   id: string;
   etiqueta: string;
   ayuda?: string;
+  /** Por defecto es una caja de texto. 'opciones' lo vuelve multiple choice. */
+  tipo?: 'texto' | 'opciones';
+  /** Solo con tipo 'opciones'. Se muestran de a dos por fila. */
+  opciones?: string[];
   filas?: number;
   ejemplo?: string;
 }
@@ -114,9 +118,26 @@ export const bloques: Bloque[] = [
         },
         {
           id: 'cuanto_tiempo',
-          etiqueta: '¿Cuánto tiempo le dedica?',
-          ayuda: 'Aunque sea a ojo: por día, por semana o por mes.',
-          ejemplo: 'Ej.: dos días enteros a fin de mes',
+          etiqueta: '¿Cuánto tiempo le lleva cada vez?',
+          ayuda: 'La opción más cercana alcanza. Si varía mucho, piense en un día normal.',
+          tipo: 'opciones',
+          opciones: [
+            'Segundos',
+            '1 a 5 minutos',
+            '5 a 10 minutos',
+            '10 a 15 minutos',
+            '15 a 30 minutos',
+            'Más de media hora',
+            'Alrededor de una hora',
+            'Menos de dos horas',
+            'Más de dos horas',
+          ],
+        },
+        {
+          id: 'cada_cuanto',
+          etiqueta: '¿Y cada cuánto lo hace?',
+          ayuda: 'Sin esto lo de arriba no dice mucho: cinco minutos por día y cinco minutos por mes no son el mismo problema.',
+          ejemplo: 'Ej.: todos los días / una vez por semana / a fin de mes',
           filas: 2,
         },
         {

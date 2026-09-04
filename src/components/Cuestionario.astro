@@ -45,6 +45,9 @@ interface Campo {
   id: string;
   etiqueta: string;
   ayuda?: string;
+  /** Por defecto es una caja de texto. 'opciones' lo vuelve multiple choice. */
+  tipo?: 'texto' | 'opciones';
+  opciones?: string[];
   /** Alto de la caja. Las de listar cosas necesitan menos que las de contar. */
   filas?: number;
   ejemplo?: string;
@@ -136,10 +139,29 @@ const CLAVE = 'cfp401';
         {b.ayuda && <p class="cue__bloque-ayuda" set:html={b.ayuda} />}
         {b.campos.map((c) => (
           <div class="cue__campo">
-            <label class="cue__etiqueta" for={id + '-' + c.id}>{c.etiqueta}</label>
+            {/* Con opciones el rótulo NO es un <label for>: apuntaría a un solo
+                radio de los nueve. Va como texto y el grupo se ata con
+                role="radiogroup" + aria-label. */}
+            {c.tipo === 'opciones' ? (
+              <p class="cue__etiqueta">{c.etiqueta}</p>
+            ) : (
+              <label class="cue__etiqueta" for={id + '-' + c.id}>{c.etiqueta}</label>
+            )}
             {c.ayuda && <p class="cue__ayuda" set:html={c.ayuda} />}
-            <textarea class="cue__area" id={id + '-' + c.id} data-campo={c.id}
-                      rows={c.filas || 3} placeholder={c.ejemplo || ''}></textarea>
+            {c.tipo === 'opciones' ? (
+              <div class="cue__opciones" role="radiogroup" aria-label={c.etiqueta}
+                   data-campo-opciones={c.id}>
+                {(c.opciones || []).map((o) => (
+                  <label class="cue__opcion">
+                    <input type="radio" name={id + '-' + c.id} value={o} />
+                    <span>{o}</span>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <textarea class="cue__area" id={id + '-' + c.id} data-campo={c.id}
+                        rows={c.filas || 3} placeholder={c.ejemplo || ''}></textarea>
+            )}
           </div>
         ))}
       </div>
@@ -299,6 +321,14 @@ const CLAVE = 'cfp401';
       raiz.querySelectorAll('[data-campo]').forEach((ta) => {
         (ta as HTMLTextAreaElement).value = actual.respuestas[ta.getAttribute('data-campo') || ''] || '';
       });
+      raiz.querySelectorAll('[data-campo-opciones]').forEach((g) => {
+        const guardado = actual.respuestas[g.getAttribute('data-campo-opciones') || ''] || '';
+        g.querySelectorAll('input[type="radio"]').forEach((r) => {
+          const radio = r as HTMLInputElement;
+          radio.checked = radio.value === guardado;
+          (radio.closest('.cue__opcion') as HTMLElement).classList.toggle('es-elegida', radio.checked);
+        });
+      });
 
       planB.hidden = true;
       estadoTxt.textContent = '';
@@ -324,6 +354,22 @@ const CLAVE = 'cfp401';
       const area = ta as HTMLTextAreaElement;
       area.addEventListener('input', () => {
         actual.respuestas[campo] = area.value;
+        guardar(estado);
+        estadoTxt.textContent = '';
+      });
+    });
+
+    /* El recuadro elegido se marca con una clase y no con :has(), que en
+       teléfonos viejos no existe. Y toda la caja es clickeable porque es un
+       <label>: en un celular, apuntarle al puntito del radio es una pelea. */
+    raiz.querySelectorAll('[data-campo-opciones]').forEach((g) => {
+      const campo = g.getAttribute('data-campo-opciones') || '';
+      g.addEventListener('change', () => {
+        g.querySelectorAll('input[type="radio"]').forEach((r) => {
+          const radio = r as HTMLInputElement;
+          (radio.closest('.cue__opcion') as HTMLElement).classList.toggle('es-elegida', radio.checked);
+          if (radio.checked) actual.respuestas[campo] = radio.value;
+        });
         guardar(estado);
         estadoTxt.textContent = '';
       });
