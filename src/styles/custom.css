@@ -2602,6 +2602,76 @@ body.pc-resizing * {
 }
 
 /* ---------------------------------------------------------------------------
+   ENCABEZADO PLEGABLE (para proyectar y para clases virtuales)
+   Starlight calcula todo el layout desde --sl-nav-height y
+   --sl-mobile-toc-height. Poniéndolas en cero, los sidebars y el contenido
+   suben solos: no hay que reposicionar nada a mano.
+
+   ⚠️ Este bloque se borró sin querer al reescribir los estilos del kit de
+   entrevista: el reemplazo iba de un comentario al siguiente y se llevó puesto
+   lo que había en el medio. El botón desapareció y no lo notó nadie hasta que
+   se lo fue a usar. Si hay que mover esto, moverlo entero.
+--------------------------------------------------------------------------- */
+:root[data-pc-sin-header] {
+  --sl-nav-height: 0rem;
+  --sl-mobile-toc-height: 0rem;
+}
+:root[data-pc-sin-header] .page > header.header,
+:root[data-pc-sin-header] mobile-starlight-toc {
+  display: none;
+}
+
+/* La barra de progreso se pliega junto con el encabezado. Mide 112px —más que
+   el encabezado— y proyectada no aporta nada: el avance de la máquina del profe
+   no le dice nada a la clase. Y de paso desaparece "Empezar esta clase de
+   nuevo", que es el botón que uno menos quiere tener a mano compartiendo
+   pantalla. */
+:root[data-pc-sin-header] #pcp-resumen {
+  display: none;
+}
+
+/* El botón vive abajo a la derecha, la esquina que menos se mira mientras se
+   explica. Va POR ENCIMA del botón de sincronizar (z-index 80): con el
+   encabezado plegado, en celular este es el único camino de vuelta al menú. */
+.pc-header-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 90;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-bg-nav, var(--sl-color-black));
+  color: var(--sl-color-gray-3);
+  opacity: 0.45;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+/* Discreto mientras se da la clase, visible cuando se lo busca. */
+.pc-header-toggle:hover,
+.pc-header-toggle:focus-visible {
+  opacity: 1;
+  color: var(--sl-color-white);
+  border-color: var(--sl-color-accent);
+}
+/* En celular el botón de sincronizar ya ocupa esa esquina: este se apoya
+   arriba de aquel en vez de taparlo. */
+@media (max-width: 50rem) {
+  .pc-header-toggle {
+    bottom: 4.4rem;
+  }
+}
+/* Al imprimir no va: la planilla y los apuntes salen sin botones. */
+@media print {
+  .pc-header-toggle { display: none; }
+}
+
+/* ---------------------------------------------------------------------------
    FILAS FLEX DENTRO DEL CONTENIDO MARKDOWN
    Starlight le pone `margin-top: 1rem` a cada hermano dentro de
    .sl-markdown-content. En una columna de texto eso es lo que se quiere; en una
