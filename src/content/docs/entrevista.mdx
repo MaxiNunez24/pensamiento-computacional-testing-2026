@@ -1,6 +1,6 @@
 ---
 title: La entrevista del viernes
-description: "Nuestro plan para entrevistar a quienes van a usar el sistema: qué le preguntamos a cada uno, qué pantalla le mostramos y cómo registramos lo que nos digan."
+description: "Nuestro plan para el día que vienen los que van a usar el sistema: qué preparamos antes, qué le preguntamos a cada uno y qué pantalla le mostramos."
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
@@ -10,7 +10,8 @@ El **viernes 4/9** vienen al aula quienes van a usar el sistema: dirección, reg
 preceptoría, las auxiliares, los instructores. Vienen a contarnos qué necesitan y a decirnos si lo
 que llevamos hecho les sirve.
 
-Esta página es nuestro plan para ese día, y la tenemos abierta mientras conversamos.
+Esta página es nuestro plan para ese día. **La leemos entera antes de que entre nadie**, y después
+la dejamos abierta en *Comienza la entrevista*, que es lo que van a ver ellos al entrar.
 
 :::caution[La regla que sostiene todo lo demás]
 **Todo lo que nos pidan lo anotamos. No prometemos nada en el momento.**
@@ -21,6 +22,32 @@ que iba a usar el sistema.
 
 Nuestra respuesta honesta a un pedido nuevo es **"lo anotamos y lo miramos contra el resto de la
 lista"** — y después se decide, con ellos.
+:::
+
+---
+
+## ✅ La lista de antes de que entre nadie
+
+- [ ] **Probar la grabadora**: Empezar, hablar diez segundos, Terminar, y escuchar que se oiga.
+- [ ] **Probar el micrófono con alguien sentado donde se va a sentar la visita.** El de una notebook agarra bien a quien la usa y mal a quien está del otro lado de la mesa.
+- [ ] **El celular grabando también**, como respaldo. Los dos arrancan con el mismo Empezar.
+- [ ] Esta página abierta **en `https://` o en `localhost`** — por `http://` el micrófono no funciona.
+- [ ] **Sin extensiones de modo oscuro** en el navegador que proyecta: invierten los colores de las pantallas.
+- [ ] La computadora **configurada para no suspenderse**.
+- [ ] El prototipo abierto en una pestaña, en el panel.
+- [ ] El cuestionario abierto en otra.
+- [ ] **Flask corriendo** (`python material-privado/taller-flask/app.py`) para mostrar `/merienda` y `/lista/2026-09-04` de verdad.
+- [ ] **El bot listo** (`cd material-privado/bot-siges && python bot.py --lento`), por si hay tiempo de mostrarlo.
+- [ ] **Un celular** con el prototipo abierto en *pasar lista* — para los instructores.
+- [ ] La planilla de papel de verdad, sobre la mesa, al lado de la pantalla. La comparación se hace sola.
+
+:::tip[Cómo trabajamos ese día]
+No hay roles fijos: **es una charla entre todos**. Cualquiera pregunta, cualquiera repregunta y
+cualquiera puede tocar 🔖 Marcar cuando escucha algo que importa.
+
+Dos cosas conviene que alguien tenga en la cabeza, aunque sea sin cargo formal: **el reloj**, para
+que el núcleo de diez minutos entre completo, y **las pantallas**, para tenerlas abiertas antes de
+que las pidan.
 :::
 
 ---
@@ -60,17 +87,73 @@ que entra siempre**, y el resto se agrega si sobra tiempo.
 
 | Minuto | Qué hacemos | Por qué |
 |---|---|---|
-| **0 – 3** | *"¿Cómo hace esto hoy, de principio a fin?"* Y escuchamos sin interrumpir | Nadie tiene por qué saber qué software necesita. Pero todos saben contar cómo trabajan |
+| **0 – 3** | *"¿Cómo hace esto hoy, de principio a fin?"* Y escuchamos | Nadie tiene por qué saber qué software necesita. Pero todos saben contar cómo trabajan |
 | **3 – 6** | Le mostramos **una sola pantalla**: la suya | Una pantalla concreta genera más conversación que veinte minutos de explicación |
 | **6 – 9** | Las tres de cierre: ¿qué le ahorraría más tiempo? · ¿qué de esto no usaría nunca? · ¿qué tendría que pasar para que no le sirva? | Las tres apuntan a lo que no suele surgir solo |
 | **9 – 10** | *"¿Con quién más tendríamos que hablar?"* | Es la pregunta que nos encuentra usuarios que no sabíamos que existían |
 
-:::tip[La regla de oro: quien pregunta, escucha]
-Si el que conduce habla más que la persona entrevistada, la charla no sirvió.
-
-Ante un silencio, contamos hasta tres antes de repreguntar. Lo que viene **después** del silencio
-suele ser lo más valioso de toda la entrevista.
+:::tip[Ante un silencio, contamos hasta tres]
+Es incómodo, pero **lo que viene después del silencio suele ser lo más valioso de toda la
+entrevista**. Si lo llenamos nosotros, nos lo perdemos.
 :::
+
+---
+
+## 🔀 Cómo puede darse el día
+
+<Tabs>
+<TabItem label="Por rondas (la mejor)">
+
+Usamos el kit tal cual: se elige el rol, **▶ Empezar**, el núcleo, **⏹ Terminar**, y entra la
+siguiente persona. Cada entrevista queda como una grabación aparte con sus propias marcas.
+
+**Entre ronda y ronda, dos minutos** para ponerle nombre a las marcas mientras está fresco. Con la
+siguiente persona ya sentada enfrente no se hace.
+
+</TabItem>
+<TabItem label="Todos juntos">
+
+Una sola ronda. **En grupo, las voces con más cargo tienden a ocupar más lugar**, y necesidades muy
+concretas —como las de las auxiliares— se pierden. No es mala intención de nadie: pasa siempre.
+
+Cómo lo compensamos: preguntamos **por rol, uno por uno** — *"y usted, que prepara las meriendas,
+¿cómo lo hace hoy?"*. Y mostramos dos pantallas nada más: la planilla y pasar lista. Con seis
+personas mirando, la tercera ya no la registra nadie.
+
+</TabItem>
+<TabItem label="De a uno, cuando puedan">
+
+La más incómoda. Hay que estar listos **todo el tiempo**, sin saber quién entra.
+
+Cómo lo compensamos: el prototipo abierto en una pestaña, esta página en otra, el cuestionario en
+una tercera. A quien caiga no lo hacemos esperar mientras buscamos una pantalla — por eso los
+enlaces del kit abren directo donde hace falta.
+
+Y si entra alguien que no está en la lista, existe el botón **❓ Vino alguien más**.
+
+</TabItem>
+</Tabs>
+
+### 🔗 Y al final, todos juntos: el circuito
+
+Salga como salga lo de arriba, **el día cierra con todos en la misma sala.** Y esto va al final,
+nunca al principio.
+
+La pregunta 3 del cuestionario le pidió a cada uno **su mitad del circuito**: qué información le
+llega y a dónde va. Vamos a terminar el día con seis mitades sueltas.
+
+1. Dibujamos el flujo en el pizarrón con lo que contó cada uno.
+2. Preguntamos, de a un tramo: *"acá nos dijeron que esto se manda a tal lado — ¿llega?"*
+3. Anotamos cada desacuerdo.
+
+:::tip[Los desacuerdos son el premio]
+Ahí aparecen las cosas que alguien manda y nadie recibe, las que dos personas cargan por separado
+sin saberlo, y las que todos suponen que hace otro. **Eso no sale en una entrevista individual**:
+sale solo cuando están los dos extremos del tramo escuchándose.
+:::
+
+**Por qué al final:** necesitamos la versión de cada uno *antes* de que escuchen la de los demás. Si
+empezamos todos juntos, la primera respuesta condiciona a todas las que siguen.
 
 ---
 
@@ -86,17 +169,17 @@ genérica y una que arranca directamente en lo importante.
 **Si no lo contestaron**, usamos las preguntas del kit tal cual están. Son las mismas del
 cuestionario, hechas en voz alta.
 
-:::note[Conviene tener el cuestionario abierto en otra pestaña]
-Así, si alguien no lo completó, se lo podemos mostrar mientras conversamos — y si lo completó,
-podemos leer su respuesta y repreguntar sobre ella sin buscar nada.
+:::note[Por eso el cuestionario va abierto en otra pestaña]
+Si alguien no lo completó, se lo podemos mostrar mientras conversamos. Y si lo completó, podemos
+leer su respuesta y repreguntar sobre ella sin buscar nada.
 :::
 
 ---
 
-## 🧰 El kit
+## 🎬 Comienza la entrevista
 
-Elegimos quién está sentado enfrente y aparecen sus preguntas y su pantalla. Después **▶ Empezar**
-arranca el reloj y la grabadora juntos.
+**Esta es la pantalla que queda abierta cuando entran.** Elegimos quién está sentado enfrente y
+aparecen sus preguntas y su pantalla. Después **▶ Empezar** arranca el reloj y la grabadora juntos.
 
 <Entrevista roles={[
   {
@@ -187,114 +270,9 @@ arranca el reloj y la grabadora juntos.
 
 ---
 
-## 🎭 Los cuatro roles del equipo
-
-Cada uno anota el suyo antes de que entre nadie.
-
-| Rol | Cuántos | Qué hace ese día |
-|---|---|---|
-| 🎤 **Conduce** | 1 | Hace las preguntas. Es el único que habla |
-| ⏱️ **Reloj y marcas** | 1 | Mira el cronómetro y toca 🔖 Marcar cada vez que se dice algo importante |
-| 👀 **Observador** | 1–2 | No escucha: **mira**. Qué papel se toca, dónde se duda, qué se mira primero en la pantalla |
-| 🖥️ **Demo** | 1 | Abre la pantalla que corresponde, y la tiene abierta **antes** de que se la pidan |
-
-:::tip[Por qué alguien mira en vez de escuchar]
-Lo que uno hace todos los días se vuelve automático, y por eso es dificilísimo de describir con
-palabras. No es que la gente cuente mal: es que nadie narra bien su propia rutina.
-
-Por eso además de escuchar, miramos. Si mientras alguien explica un paso saca un papel del bolsillo,
-ese papel **también es parte del proceso** — y suele ser justo el dato que faltaba.
-
-Cuando el observador ve algo así, le avisa a quien maneja las marcas para que quede registrado.
-:::
-
----
-
-## 🔀 Tres formas en que puede salir esto
-
-<Tabs>
-<TabItem label="Por rondas (la mejor)">
-
-Usamos el kit tal cual: se elige el rol, **▶ Empezar**, el núcleo, **⏹ Terminar**, y entra la
-siguiente persona. Cada entrevista queda como una grabación aparte con sus propias marcas.
-
-**Entre ronda y ronda, dos minutos** para ponerle nombre a las marcas mientras está fresco. Con la
-siguiente persona ya sentada enfrente no se hace.
-
-</TabItem>
-<TabItem label="Todos juntos">
-
-Una sola ronda. **En grupo, las voces con más cargo tienden a ocupar más lugar**, y necesidades muy
-concretas —como las de las auxiliares— se pierden. No es mala intención de nadie: pasa siempre.
-
-Cómo lo compensamos: preguntamos **por rol, uno por uno** — *"y usted, que prepara las meriendas,
-¿cómo lo hace hoy?"*. Y mostramos dos pantallas nada más: la planilla y pasar lista. Con seis
-personas mirando, la tercera ya no la registra nadie.
-
-</TabItem>
-<TabItem label="De a uno, cuando puedan">
-
-La más incómoda. Hay que estar listos **todo el tiempo**, sin saber quién entra.
-
-Cómo lo compensamos: el prototipo abierto en una pestaña, esta página en otra, el cuestionario en
-una tercera, y los roles repartidos aunque todavía no haya venido nadie. A quien caiga no lo
-hacemos esperar mientras buscamos una pantalla — por eso los enlaces del kit abren directo donde
-hace falta.
-
-Y si entra alguien que no está en la lista, existe el botón **❓ Vino alguien más**.
-
-</TabItem>
-</Tabs>
-
----
-
-## 🔗 Y al final, todos juntos: el circuito
-
-**Esto va después de las individuales, nunca antes.**
-
-La pregunta 3 del cuestionario le pidió a cada uno **su mitad del circuito**: qué información le
-llega y a dónde va. Vamos a terminar el día con seis mitades sueltas.
-
-El momento de juntarlas es con todos en la misma sala:
-
-1. Dibujamos el flujo en el pizarrón con lo que contó cada uno.
-2. Preguntamos, de a un tramo: *"acá nos dijeron que esto se manda a tal lado — ¿llega?"*
-3. Anotamos cada desacuerdo.
-
-:::tip[Los desacuerdos son el premio]
-Ahí aparecen las cosas que alguien manda y nadie recibe, las que dos personas cargan por separado
-sin saberlo, y las que todos suponen que hace otro. **Eso no sale en una entrevista individual**:
-sale solo cuando están los dos extremos del tramo escuchándose.
-:::
-
-**Por qué al final y no al principio:** necesitamos la versión de cada uno *antes* de que escuchen
-la de los demás. Si empezamos todos juntos, la primera respuesta condiciona a todas las que siguen.
-
----
-
-## ✅ La lista de antes de que entre nadie
-
-- [ ] **Probar la grabadora**: Empezar, hablar diez segundos, Terminar, y escuchar que se oiga.
-- [ ] **El celular grabando también**, como respaldo. Los dos arrancan con el mismo Empezar.
-- [ ] Esta página abierta **en `https://` o en `localhost`** — por `http://` el micrófono no funciona.
-- [ ] La computadora **configurada para no suspenderse**.
-- [ ] **Sin extensiones de modo oscuro** en el navegador que proyecta: invierten los colores de las pantallas.
-- [ ] El prototipo abierto en una pestaña, en el panel.
-- [ ] El cuestionario abierto en otra.
-- [ ] **Flask corriendo** (`python material-privado/taller-flask/app.py`) para mostrar `/merienda` y `/lista/2026-09-04` de verdad.
-- [ ] **Un celular** con el prototipo abierto en *pasar lista* — para los instructores.
-- [ ] La planilla de papel de verdad, sobre la mesa, al lado de la pantalla. La comparación se hace sola.
-- [ ] Los cuatro roles repartidos y anotados.
-
-:::caution[Lo que más se olvida]
-**Probar el micrófono con alguien sentado donde se va a sentar la persona entrevistada.** El
-micrófono de una notebook agarra bien a quien la usa y mal a quien está del otro lado de la mesa.
-Diez segundos de prueba ahora evitan una hora de audio inservible.
-:::
-
----
-
 ## 🗓️ Qué pasa después
+
+Esto lo comentamos **una sola vez, al final, con todos juntos.**
 
 El miércoles siguiente, con las marcas y los audios:
 
