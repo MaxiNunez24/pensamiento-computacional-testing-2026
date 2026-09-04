@@ -2891,7 +2891,19 @@ body.pc-resizing * {
 }
 .cue__opcion:focus-within { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
 
+/* Dos columnas también en el celular, que es donde más se agradece: con las
+   etiquetas cortas entran, y son 4 filas en vez de 8.
+
+   Medido partiendo la caja a mano: con 143px por columna no se parte ninguna
+   etiqueta; con 133px se parten cuatro. El límite cae justo en los teléfonos
+   de 360px de ancho, que son muchísimos, así que en pantalla angosta se
+   achican el padding y el gap para comprar esos milímetros de más. Recién por
+   debajo de 22rem se pasa a una sola columna. */
 @media (max-width: 30rem) {
+  .cue__opciones { gap: 0.4rem; }
+  .cue__opcion { padding: 0.7rem 0.55rem; gap: 0.4rem; }
+}
+@media (max-width: 22rem) {
   .cue__opciones { grid-template-columns: 1fr; }
 }
 

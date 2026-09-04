@@ -121,16 +121,26 @@ export const bloques: Bloque[] = [
           etiqueta: '¿Cuánto tiempo le lleva cada vez?',
           ayuda: 'La opción más cercana alcanza. Si varía mucho, piense en un día normal.',
           tipo: 'opciones',
+          /* Etiquetas cortas: entran de a dos por fila sin partirse en dos
+             renglones, que era lo que descuadraba la grilla.
+
+             Y sin solaparse. La lista original iba "más de media hora /
+             alrededor de una hora / menos de dos horas": algo de 45 minutos
+             entraba en las tres, y esa ambigüedad rompe justo lo que el
+             multiple choice viene a resolver, que es poder comparar respuestas
+             entre sí. Cada tramo empieza donde termina el anterior.
+
+             Son OCHO y no nueve a propósito: cuatro filas exactas de a dos, sin
+             una opción huérfana al final. */
           opciones: [
             'Segundos',
-            '1 a 5 minutos',
-            '5 a 10 minutos',
-            '10 a 15 minutos',
-            '15 a 30 minutos',
-            'Más de media hora',
-            'Alrededor de una hora',
-            'Menos de dos horas',
-            'Más de dos horas',
+            '1 a 5 min',
+            '5 a 10 min',
+            '10 a 15 min',
+            '15 a 30 min',
+            '30 a 60 min',
+            '1 a 2 hs',
+            'Más de 2 hs',
           ],
         },
         {
