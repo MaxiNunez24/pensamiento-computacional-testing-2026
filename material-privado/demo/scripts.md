@@ -2,7 +2,7 @@
 
 ## Flask 
 ### Flask - Una vez
-pip install -r material-privado/demo/requirements.txt
+pip install -r material-privado/taller-flask/requirements.txt
 
 ### Flask - Cada vez
 python3 material-privado/taller-flask/sembrar_demo.py
