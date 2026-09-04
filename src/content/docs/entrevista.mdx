@@ -1,23 +1,51 @@
 ---
 title: La entrevista del viernes
-description: "El kit para entrevistar a los que van a usar el sistema: qué preguntarle a cada uno, qué pantalla mostrarle y cómo anotar lo que digan."
+description: "El kit para entrevistar a los que van a usar el sistema: qué preguntarle a cada uno, qué pantalla mostrarle y cómo grabar sin perder nada."
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import Entrevista from '../../components/Entrevista.astro';
 
-El **viernes 4/9** vienen al aula los que van a usar el sistema: preceptoría, dirección, las
-auxiliares, los instructores. Vienen a contarnos qué necesitan y a decirnos si lo que llevamos
-hecho les sirve.
+El **viernes 4/9** vienen al aula los que van a usar el sistema: dirección, regencia, secretaría,
+preceptoría, las auxiliares, los instructores. Vienen a contarnos qué necesitan y a decirnos si lo
+que llevamos hecho les sirve.
 
-Esta página es la herramienta para ese día. **Se prepara el miércoles 2/9 y se usa el viernes**,
-abierta en la compu, mientras hablan.
+Esta página es la herramienta para ese día. **Se usa abierta en la compu, mientras hablan.**
 
 :::danger[Lo único que no se puede hacer]
 **No prometas nada.** Ni "sí, se puede", ni "para tal fecha", ni "es fácil".
 
 La respuesta a todo pedido es **"lo anotamos y lo vemos"**. Un sí dicho en una demo se convierte en
 una deuda, y el que la paga sos vos en noviembre.
+:::
+
+---
+
+## 🎙️ Nadie anota. Se graba y se marca.
+
+Esta es la decisión más importante del día, y va contra el instinto.
+
+**El que anota, no escucha.** Y el que no escucha, no repregunta — que es donde está todo el valor
+de una entrevista. Por eso ninguno de ustedes va a estar escribiendo mientras alguien habla.
+
+Pero grabar **a secas** tampoco alcanza: cinco entrevistas son tres horas de audio que nadie va a
+escuchar nunca. El miércoles siguiente, cuando haya que armar la lista de requerimientos, nadie va
+a rebobinar tres horas para encontrar el momento en que la preceptora contó lo de las planillas
+duplicadas.
+
+Por eso está el botón **🔖 Marcar**: cuando alguien dice algo que importa, un toque guarda el
+minuto exacto. Después le ponés tres palabras, o ninguna. Al final, tocás la marca y el audio salta
+justo ahí.
+
+:::tip[Marcar no es anotar]
+Anotar te saca de la conversación. Marcar es **un botón**. Se puede tocar sin dejar de mirar a la
+persona a los ojos, que es justamente lo que queremos.
+:::
+
+:::caution[El permiso se pide siempre, y antes]
+Grabar a alguien sin avisarle no se hace. En la página está la frase escrita para leer tal cual
+antes de empezar. **Si dicen que no, se apaga la grabadora y listo** — el reloj y las marcas
+funcionan igual.
 :::
 
 ---
@@ -40,13 +68,20 @@ Si el alumno que conduce habla más que el entrevistado, la entrevista fracasó.
 incómodos los llena **el otro**, no vos. Contá hasta tres antes de repreguntar.
 :::
 
+:::note[Si contestaron el cuestionario, cambia el minuto 0]
+A los que ya escribieron, no les preguntes de cero. **Preguntales sobre lo que pusieron:** *"acá
+escribiste que cargás lo mismo en tres lugares — mostrame cuáles."*
+
+Es la diferencia entre una entrevista genérica y una que ya arranca en lo importante. Para eso
+mandamos el cuestionario antes.
+:::
+
 ---
 
 ## 🧰 El kit
 
-Elegí quién tenés adelante y aparecen sus preguntas, su pantalla y las cajas para anotar. **Todo se
-guarda solo en esta compu** — sin internet y sin cuenta, así que si se cae el wifi del CFP en el
-peor momento, esto sigue andando.
+Elegí quién tenés adelante y aparecen sus preguntas y su pantalla. Después **▶ Empezar** arranca el
+reloj y la grabadora juntos.
 
 <Entrevista roles={[
   {
@@ -54,8 +89,8 @@ peor momento, esto sigue andando.
     duele: 'Carga la misma información en varios lugares a la vez: los datos de cada alumno, el curso, los horarios. Cada planilla nueva es la anterior duplicada y vuelta a completar a mano, y otra vez por cada uno de los ~30 cursos.',
     tiempo: 'Es quien más tiempo puede dar — pero lo necesita una vez por mes, no todos los días.',
     preguntas: [
-      'Contanos cómo armás la planilla de fin de mes, desde que el docente te pasa la asistencia hasta que la entregás firmada.',
-      '¿Qué parte de todo eso te lleva más tiempo?',
+      'Contanos cómo armás la planilla de fin de mes, desde que el instructor te pasa la asistencia hasta que la entregás firmada.',
+      '¿Qué información tenés que volver a escribir en más de un lado?',
       '¿Qué pasa cuando te das cuenta de un error después de haberla entregado?',
     ],
     pantalla: { nombre: 'la planilla oficial generada sola, y hacé el zoom para que la compare con la de papel.', hash: 'planilla' },
@@ -74,16 +109,28 @@ peor momento, esto sigue andando.
     ojo: 'Si pide que se integre con SiGeS, anotalo y nada más. Eso es otro proyecto entero.',
   },
   {
-    id: 'auxiliares', emoji: '🍫', nombre: 'Auxiliares',
-    duele: 'No saben para cuántos preparar la merienda. Preguntan, calculan de memoria, o les sobra.',
-    tiempo: 'Tres segundos por día. Es la pantalla más simple de todo el sistema.',
+    id: 'regencia', emoji: '📐', nombre: 'Regencia',
+    duele: 'Todavía no lo sabemos con precisión — y además da clases, así que vive las dos puntas del circuito.',
+    tiempo: 'A definir. Preguntale cuánto tiene antes de arrancar.',
     preguntas: [
-      '¿Cómo hacés hoy para saber cuántas meriendas preparar?',
-      '¿A qué hora del día te sirve saberlo?',
-      '¿Te alcanza con un número solo, o necesitás saber de qué cursos sale?',
+      'Contanos de qué te ocupás con la asistencia y la matrícula, de principio a fin.',
+      'Como también das clases: ¿qué te llega distinto de un lado y del otro?',
+      '¿Qué información te piden a vos, y quién te la pide?',
     ],
-    pantalla: { nombre: 'una pantalla con un número grande. Mostrale el panel y preguntale si algo así le serviría.', hash: 'dashboard', noExiste: true },
-    ojo: 'Es la única pantalla que todavía NO existe. Decilo de frente: preguntar antes de construir sale mucho más barato que construir mal.',
+    pantalla: { nombre: 'el panel primero, y si tiene tiempo mostrale pasar lista.', hash: 'dashboard' },
+    ojo: 'Cumple dos roles. Preguntale por los dos por separado o vas a mezclar dos circuitos distintos.',
+  },
+  {
+    id: 'secretaria', emoji: '🗂️', nombre: 'Secretaría',
+    duele: 'Es donde se cargan los datos que después todos copian. Si algo entra mal acá, se propaga a todos lados.',
+    tiempo: 'A definir. También da clases, igual que regencia.',
+    preguntas: [
+      'Cuando se inscribe alguien nuevo, contame todo lo que hacés desde que llega hasta que queda cargado.',
+      '¿En cuántos lugares distintos termina ese mismo dato?',
+      '¿Qué pasa cuando alguien se anota con los datos mal?',
+    ],
+    pantalla: { nombre: 'la pantalla de inscripción y la de alumnos.', hash: 'alumnos' },
+    ojo: 'Acá arranca el circuito de datos entero. Lo que cuente esta persona ordena todo lo demás.',
   },
   {
     id: 'instructores', emoji: '🧑‍🏫', nombre: 'Instructores',
@@ -96,6 +143,18 @@ peor momento, esto sigue andando.
     ],
     pantalla: { nombre: 'pasar lista del día, con los cuatro botones por alumno.', hash: 'dia', enCelular: true },
     ojo: 'Va a preguntar si puede usarlo desde su casa. Hoy la respuesta es no: anda solo en la red del CFP. Contalo como una decisión tomada, no como un olvido.',
+  },
+  {
+    id: 'auxiliares', emoji: '🧰', nombre: 'Auxiliares',
+    duele: 'No saben para cuántos preparar la merienda. Preguntan, calculan de memoria, o les sobra.',
+    tiempo: 'Tres segundos por día. Es la pantalla más simple de todo el sistema.',
+    preguntas: [
+      '¿Cómo hacés hoy para saber cuántas meriendas preparar?',
+      '¿A qué hora del día te sirve saberlo?',
+      '¿Te alcanza con un número solo, o necesitás saber de qué cursos sale?',
+    ],
+    pantalla: { nombre: 'la pantalla de la merienda: un número grande y nada más.', hash: 'dashboard', enVivo: true },
+    ojo: 'Esta pantalla YA FUNCIONA en Flask (localhost:5000/merienda). Mostrala corriendo de verdad, no el prototipo: es la demo más contundente que tenés y la más fácil de que diga "sí, eso me sirve".',
   },
   {
     id: 'otro', emoji: '❓', nombre: 'Vino alguien más',
@@ -113,51 +172,44 @@ peor momento, esto sigue andando.
 
 ---
 
-## 🚦 Por qué las cajas son cuatro y no una
+## 🎭 Los cuatro roles del equipo
 
-Porque las cuatro respuestas valen distinto, y la que más se pierde es la tercera:
-
-| | Qué es | Qué hacemos con eso |
-|---|---|---|
-| 🟢 **Le sirve así** | Lo que ya resuelve algo | Se defiende: no se toca en las próximas versiones |
-| 🟡 **Le falta** | Lo que pide | Va a la lista, se prioriza el miércoles siguiente |
-| 🔵 **No lo usaría** | Lo que le sobra | **Es trabajo que no hay que hacer.** Vale tanto como lo que pide |
-| 🔴 **Así no le sirve** | Lo que está mal pensado | Es lo más barato de arreglar hoy y lo más caro en noviembre |
-
-:::caution[La azul es la que nadie anota]
-Cuando alguien dice *"esto no lo usaría nunca"*, la reacción natural es defender la pantalla. No la
-defiendas: **anotala**. Cada cosa que sacamos de la lista es una semana que nos queda para hacer
-bien lo que sí importa.
-:::
-
----
-
-## 🎭 Los cinco roles del equipo
-
-Los mismos que ensayamos. **Cada uno anota el suyo antes de que entre nadie.**
+**Cada uno anota el suyo antes de que entre nadie.**
 
 | Rol | Cuántos | Qué hace ese día |
 |---|---|---|
 | 🎤 **Conduce** | 1 | Hace las preguntas. **Es el único que habla.** |
-| ✍️ **Escriba** | 1 | Llena las cajas de esta página. No interpreta: transcribe. |
-| ⏱️ **Tiempo** | 1 | Mira el reloj de arriba. Avisa a los 6' y corta a los 10'. |
-| 👀 **Observador** | 1–2 | No escucha: **mira**. Qué papel toca, dónde duda, qué mira primero en la pantalla. |
+| ⏱️ **Reloj y marcas** | 1 | Mira el cronómetro y **toca 🔖 Marcar** cada vez que se dice algo importante |
+| 👀 **Observador** | 1–2 | No escucha: **mira**. Qué papel toca, dónde duda, qué mira primero en la pantalla |
 | 🖥️ **Demo** | 1 | Abre la pantalla que corresponde. **Ya la tiene abierta antes de que se lo pidan.** |
 
-:::note[El observador es el que más va a sorprender]
+:::note[Antes eran cinco: se fue el escriba]
+Ese rol existía para anotar, y anotar es justamente lo que no vamos a hacer. La persona que se
+libera se suma a **observar**, que es donde más falta hace.
+:::
+
+:::tip[El observador es el que más va a sorprender]
 La gente no cuenta lo que hace: cuenta lo que **cree** que hace. Si el preceptor dice "lo cargo al
 toque" pero mientras habla busca un papel arrugado en el bolsillo, ese papel vale más que la frase.
 
-Lo que anota el observador va en la caja 🟡, con la fórmula: *"dijo X pero hizo Y"*.
+Cuando el observador ve algo así, **le avisa al de las marcas** para que lo marque. La fórmula es
+*"dijo X pero hizo Y"*.
 :::
 
 ---
 
 ## 🔀 Tres formas en que puede salir esto
 
-Todavía no sabemos cómo van a venir. El kit aguanta las tres, pero conviene tenerlas pensadas:
-
 <Tabs>
+<TabItem label="Por rondas (la mejor)">
+
+Se usa el kit tal cual: se elige el rol, **▶ Empezar**, se hace el núcleo, **⏹ Terminar**, y entra
+el siguiente. Cada entrevista queda como una grabación aparte con sus propias marcas.
+
+**Entre ronda y ronda, dos minutos** para ponerle nombre a las marcas mientras está fresco. Con el
+siguiente ya sentado enfrente no se hace.
+
+</TabItem>
 <TabItem label="Todos juntos">
 
 Una sola ronda. **El riesgo es que hable el de más jerarquía y los demás asientan** — que es la
@@ -168,22 +220,13 @@ meriendas, ¿cómo lo hacés hoy?"*. Y se muestran dos pantallas nada más: la p
 Con seis personas mirando, la tercera pantalla ya no la registra nadie.
 
 </TabItem>
-<TabItem label="Por rondas">
-
-La mejor de las tres. Se usa el kit tal cual: se elige el rol, se hace el núcleo, se anota, se
-reinicia el reloj y entra el siguiente.
-
-**Entre ronda y ronda, dos minutos** para que el escriba termine de anotar. Anotar con el siguiente
-ya sentado enfrente no funciona: se pierde la mitad.
-
-</TabItem>
 <TabItem label="De a uno, cuando puedan">
 
-La más incómoda y la más probable. Hay que estar listos **todo el tiempo**, sin saber quién entra.
+La más incómoda. Hay que estar listos **todo el tiempo**, sin saber quién entra.
 
-Contramedida: el prototipo abierto en el panel desde el minuto cero, esta página abierta al lado, y
-los roles repartidos aunque todavía no haya venido nadie. Al que cae no se lo hace esperar mientras
-buscamos la pantalla — por eso los enlaces del kit abren directo donde hace falta.
+Contramedida: el prototipo abierto en una pestaña, esta página en otra, y los roles repartidos
+aunque todavía no haya venido nadie. Al que cae no se lo hace esperar mientras buscamos la
+pantalla — por eso los enlaces del kit abren directo donde hace falta.
 
 Y si entra alguien que no está en la lista, existe el botón **❓ Vino alguien más**.
 
@@ -192,20 +235,53 @@ Y si entra alguien que no está en la lista, existe el botón **❓ Vino alguien
 
 ---
 
+## 🔗 Y al final, todos juntos: el circuito
+
+**Esto va después de las individuales, nunca antes.**
+
+La pregunta 3 del cuestionario le pidió a cada uno **su mitad del circuito**: qué información le
+llega y a dónde va. Vas a terminar el día con seis mitades sueltas.
+
+El momento de juntarlas es con todos en la misma sala:
+
+1. Dibujás el flujo en el pizarrón con lo que dijo cada uno.
+2. Preguntás, de a un tramo: *"vos decís que le mandás esto a X — X, ¿te llega?"*
+3. Anotás cada desacuerdo.
+
+:::tip[Los desacuerdos son el premio]
+Ahí aparecen las cosas que alguien manda y nadie recibe, las que dos personas cargan por separado
+sin saberlo, y las que todos creen que hace otro. **Eso no sale en una entrevista individual**:
+sale solo cuando están los dos extremos del tramo escuchándose.
+:::
+
+**Por qué al final y no al principio:** si arrancás con todos juntos, habla el de más jerarquía y el
+resto asiente. Necesitás la versión de cada uno *antes* de que escuchen la de los demás.
+
+---
+
 ## ✅ La lista de antes de que entre nadie
 
+- [ ] **Probar la grabadora.** Empezar, hablar diez segundos, Terminar, y **escuchar que se oiga**.
+- [ ] **El celular grabando también**, como respaldo. Se arrancan los dos con el mismo Empezar.
+- [ ] Esta página abierta **en `https://` o en `localhost`** — por `http://` el micrófono no funciona.
+- [ ] La computadora **configurada para no suspenderse**.
 - [ ] El prototipo **abierto** en una pestaña, en el panel.
-- [ ] Esta página abierta en otra.
+- [ ] **Flask corriendo** (`python material-privado/taller-flask/app.py`) para mostrar `/merienda` y `/lista/2026-09-04` de verdad.
 - [ ] **Un celular** con el prototipo abierto en *pasar lista* — para los instructores.
 - [ ] La planilla de papel de verdad, sobre la mesa, al lado de la pantalla. La comparación se hace sola.
-- [ ] Los cinco roles repartidos y anotados.
-- [ ] El reloj en 00:00.
+- [ ] Los cuatro roles repartidos y anotados.
+
+:::caution[Lo que más se olvida]
+**Probar el micrófono con alguien sentado donde se va a sentar el entrevistado.** El micrófono de
+una notebook agarra bien a quien la usa y mal al que está del otro lado de la mesa. Diez segundos
+de prueba ahora evitan una hora de audio inservible.
+:::
 
 ---
 
 ## 🗓️ Qué pasa después
 
-El miércoles siguiente, con las notas en la mano:
+El miércoles siguiente, con las marcas y los audios:
 
 1. Se junta todo en **una lista de requerimientos** — que es un SRS en criollo, sin el formato IEEE.
 2. Se separa en **lo que sí / lo que después / lo que no**, y la decisión la toman ustedes y la

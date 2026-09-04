@@ -2590,32 +2590,24 @@ body.pc-resizing * {
 /* ---------------------------------------------------------------------------
    KIT DE ENTREVISTA (demo con los stakeholders del CFP)
    Se usa EN VIVO, con alguien hablando enfrente. De ahí las decisiones: el
-   reloj grande y legible de lejos, los botones de rol del tamaño de un dedo, y
-   las cajas de notas siempre visibles sin scrollear.
+   reloj grande y legible de lejos, y el botón de Marcar enorme — es lo único
+   que se toca durante la entrevista, y hay que poder darle sin mirar.
 --------------------------------------------------------------------------- */
-.ent__reloj {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem;
-  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
-  background: var(--sl-color-black); padding: 0.7rem 0.9rem; margin-bottom: 1.2rem;
+.ent__permiso {
+  border: 1px solid var(--sl-color-accent); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 0.8rem 1rem; margin-bottom: 1rem;
 }
-.ent__crono {
-  font-family: var(--sl-font-mono, monospace); font-variant-numeric: tabular-nums;
-  font-size: 2.4rem; line-height: 1; font-weight: 700; color: #7bc47f;
+.ent__permiso summary { cursor: pointer; font-weight: 600; }
+.ent__permiso-texto {
+  margin: 0.8rem 0 0.6rem; padding: 0.8rem; border-radius: 0.4rem;
+  background: var(--sl-color-gray-6); font-size: 1rem; line-height: 1.6;
 }
-.ent__crono.es-justo { color: #ffd43b; }
-.ent__crono.es-tarde { color: #ff8787; }
-.ent__marcas { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.78rem; }
-.ent__marcas span { color: var(--sl-color-gray-4); }
-.ent__marcas span.es-pasada { color: var(--sl-color-white); font-weight: 600; }
-.ent__reloj-btns { display: flex; gap: 0.4rem; margin-left: auto; }
+.ent__permiso-nota { margin: 0; font-size: 0.85rem; color: var(--sl-color-gray-3); }
 
-.ent__btn {
-  font: inherit; font-size: 0.85rem; cursor: pointer; text-decoration: none;
-  display: inline-block; padding: 0.4rem 0.8rem; border-radius: 0.35rem;
-  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+.ent__aviso {
+  border: 1px solid #ffd43b; border-radius: 0.5rem; background: var(--sl-color-black);
+  padding: 0.7rem 0.9rem; margin-bottom: 1rem; font-size: 0.9rem; line-height: 1.55;
 }
-.ent__btn:hover { border-color: var(--sl-color-accent); }
-.ent__btn--ok { border-color: var(--sl-color-accent); }
 
 .ent__quien { margin: 0 0 0.5rem; font-weight: 600; }
 .ent__roles { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem; }
@@ -2627,127 +2619,126 @@ body.pc-resizing * {
 }
 .ent__rol:hover { border-color: var(--sl-color-accent); }
 .ent__rol.es-elegido { border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); }
+.ent__rol:disabled { opacity: 0.45; cursor: not-allowed; }
 .ent__rol-emoji { font-size: 1.15rem; }
 
 .ent__ficha {
   border: 1px solid var(--sl-color-accent); border-radius: 0.6rem;
-  background: var(--sl-color-black); padding: 1rem;
+  background: var(--sl-color-black); padding: 1rem; margin-bottom: 1.2rem;
 }
 .ent__ficha-cab { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem; }
 .ent__ficha-cab h3 { margin: 0; font-size: 1.15rem; }
 .ent__tiempo { font-size: 0.8rem; color: var(--sl-color-gray-3); }
 .ent__duele { font-size: 0.9rem; line-height: 1.5; margin: 0.6rem 0 0.9rem; }
-
-.ent__preguntas { margin: 0 0 1rem; padding-left: 1.3rem; }
-.ent__preguntas li { margin: 0.35rem 0; line-height: 1.5; }
-/* Las preguntas se leen en voz alta mirando de reojo: van más grandes que el
-   resto y sin nada al lado que distraiga. */
-.ent__preguntas li:first-child { font-size: 1.05rem; font-weight: 600; }
-
-.ent__pantalla {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
-  border-left: 3px solid var(--sl-color-accent); padding: 0.5rem 0 0.5rem 0.7rem;
-  margin-bottom: 0.8rem; font-size: 0.9rem; line-height: 1.45;
+.ent__sub {
+  margin: 0.9rem 0 0.4rem; font-size: 0.78rem; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--sl-color-gray-3);
 }
+.ent__sub--titulo { font-size: 0.95rem; text-transform: none; letter-spacing: 0; color: var(--sl-color-white); }
+.ent__preguntas { margin: 0 0 0.5rem; padding-left: 1.2rem; line-height: 1.6; }
+.ent__pantalla { margin: 0; line-height: 1.7; }
 .ent__ojo {
-  border-left: 3px solid #ffa94d; padding: 0.5rem 0 0.5rem 0.7rem;
-  margin: 0 0 1rem; font-size: 0.85rem; line-height: 1.45; color: var(--sl-color-gray-2);
+  margin: 0.9rem 0 0; padding: 0.6rem 0.8rem; border-radius: 0.4rem;
+  background: var(--sl-color-gray-6); font-size: 0.88rem; line-height: 1.5;
 }
 
-.ent__cajas {
-  display: grid; gap: 0.7rem;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+/* ── El reloj ─────────────────────────────────────────────────────── */
+.ent__reloj {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem;
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 0.7rem 0.9rem; margin-bottom: 0.9rem;
 }
-.ent__caja { display: flex; flex-direction: column; gap: 0.3rem; }
-.ent__caja-rot { font-size: 0.82rem; font-weight: 600; }
-.ent__caja textarea, .ent__volcado {
-  width: 100%; box-sizing: border-box; resize: vertical; font: inherit; font-size: 0.88rem;
-  line-height: 1.45; padding: 0.5rem; border-radius: 0.4rem;
+.ent__crono {
+  font-family: var(--sl-font-mono, monospace); font-variant-numeric: tabular-nums;
+  font-size: 2.4rem; line-height: 1; font-weight: 700; color: #7bc47f;
+}
+.ent__crono.es-justo { color: #ffd43b; }
+.ent__crono.es-tarde { color: #ff8787; }
+.ent__marcas-reloj { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.78rem; }
+.ent__marcas-reloj span { color: var(--sl-color-gray-4); }
+.ent__marcas-reloj span.es-pasada { color: var(--sl-color-white); font-weight: 600; }
+.ent__reloj-btns { display: flex; gap: 0.4rem; margin-left: auto; }
+
+.ent__btn {
+  font: inherit; font-size: 0.85rem; cursor: pointer; text-decoration: none;
+  display: inline-block; padding: 0.4rem 0.8rem; border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.ent__btn:hover { border-color: var(--sl-color-accent); }
+.ent__btn--ok { border-color: var(--sl-color-accent); }
+.ent__btn--stop { border-color: #ff8787; color: #ff8787; }
+.ent__btn--pantalla { margin-left: 0.3rem; }
+
+.ent__grabando {
+  margin: 0 0 0.9rem; padding: 0.55rem 0.8rem; border-radius: 0.4rem;
+  background: var(--sl-color-gray-6); font-size: 0.9rem;
+}
+
+/* ── El botón que se toca durante la entrevista ───────────────────── */
+/* Enorme a propósito: hay que poder darle sin mirar, mientras se escucha. */
+.ent__marcar {
+  width: 100%; font: inherit; font-size: 1.25rem; font-weight: 600; cursor: pointer;
+  padding: 1.1rem; border-radius: 0.6rem; min-height: 4rem;
+  border: 2px solid var(--sl-color-accent); background: var(--sl-color-accent);
+  color: var(--sl-color-black);
+}
+.ent__marcar:hover:not(:disabled) { filter: brightness(1.12); }
+.ent__marcar:disabled {
+  opacity: 0.35; cursor: not-allowed;
+  background: transparent; color: var(--sl-color-gray-3);
+}
+.ent__marcar-ayuda {
+  margin: 0.4rem 0 1rem; font-size: 0.82rem; line-height: 1.45; color: var(--sl-color-gray-3);
+}
+
+.ent__lista-marcas { list-style: none; padding: 0; margin: 0; }
+.ent__lista-marcas li {
+  display: flex; align-items: center; gap: 0.6rem; padding: 0.35rem 0;
+  border-bottom: 1px solid var(--sl-color-gray-6);
+}
+.ent__marca-t {
+  font-family: var(--sl-font-mono, monospace); font-variant-numeric: tabular-nums;
+  color: var(--sl-color-text-accent); font-size: 0.9rem; flex: none;
+}
+.ent__marca-txt {
+  flex: 1; font: inherit; font-size: 16px; padding: 0.4rem 0.55rem;
+  border-radius: 0.35rem; border: 1px solid var(--sl-color-gray-5);
   background: var(--sl-color-gray-6); color: var(--sl-color-white);
-  border: 1px solid var(--sl-color-gray-5);
 }
-.ent__caja[data-caja="sirve"] textarea { border-left: 3px solid #7bc47f; }
-.ent__caja[data-caja="falta"] textarea { border-left: 3px solid #ffd43b; }
-.ent__caja[data-caja="sobra"] textarea { border-left: 3px solid #74c0fc; }
-.ent__caja[data-caja="no"] textarea { border-left: 3px solid #ff8787; }
+.ent__marca-txt:focus { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
 
-.ent__guardado { margin: 0.6rem 0 0; font-size: 0.75rem; color: var(--sl-color-gray-4); min-height: 1em; }
-
-.ent__exportar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1rem; }
-.ent__aviso-copia { font-size: 0.8rem; color: var(--sl-color-gray-3); }
-.ent__volcado { margin-top: 0.6rem; font-family: var(--sl-font-mono, monospace); font-size: 0.8rem; }
+/* ── Lo grabado ──────────────────────────────────────────────────── */
+.ent__sesiones { margin-top: 1.5rem; }
+.ent__sesion {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 0.9rem; margin-bottom: 0.9rem;
+}
+.ent__sesion-cab { display: flex; align-items: baseline; gap: 0.7rem; margin-bottom: 0.6rem; }
+.ent__sesion-dur {
+  font-family: var(--sl-font-mono, monospace); font-size: 0.85rem;
+  color: var(--sl-color-gray-3); margin-left: auto;
+}
+.ent__sesion audio { width: 100%; margin-bottom: 0.6rem; }
+.ent__lista-marcas--repro li { border-bottom: none; padding: 0.15rem 0; }
+.ent__marca-ir {
+  font: inherit; font-size: 0.9rem; cursor: pointer; text-align: left; width: 100%;
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.4rem 0.6rem; border-radius: 0.35rem;
+  border: 1px solid transparent; background: transparent; color: var(--sl-color-white);
+}
+.ent__marca-ir:hover { border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); }
+.ent__sin-audio { margin: 0; font-size: 0.85rem; color: var(--sl-color-gray-3); }
+.ent__export {
+  width: 100%; margin-top: 0.6rem; font-family: var(--sl-font-mono, monospace);
+  font-size: 0.8rem; padding: 0.6rem; border-radius: 0.4rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+}
 
 @media (max-width: 30rem) {
-  .ent__crono { font-size: 2rem; }
-  .ent__reloj-btns { margin-left: 0; }
-  .ent__cajas { grid-template-columns: 1fr; }
-}
-
-/* ---------------------------------------------------------------------------
-   ENCABEZADO PLEGABLE (para proyectar y para clases virtuales)
-   Starlight calcula todo el layout desde --sl-nav-height y
-   --sl-mobile-toc-height. Poniéndolas en cero, los sidebars y el contenido
-   suben solos: no hay que reposicionar nada a mano.
---------------------------------------------------------------------------- */
-:root[data-pc-sin-header] {
-  --sl-nav-height: 0rem;
-  --sl-mobile-toc-height: 0rem;
-}
-:root[data-pc-sin-header] .page > header.header,
-:root[data-pc-sin-header] mobile-starlight-toc {
-  display: none;
-}
-
-/* La barra de progreso se pliega junto con el encabezado. Mide 112px —más que
-   el encabezado— y proyectada no aporta nada: el avance de la máquina del profe
-   no le dice nada a la clase. Y de paso desaparece "Empezar esta clase de
-   nuevo", que es el botón que uno menos quiere tener a mano compartiendo
-   pantalla. */
-:root[data-pc-sin-header] #pcp-resumen {
-  display: none;
-}
-
-/* El botón vive abajo a la derecha, la esquina que menos se mira mientras se
-   explica. Va POR ENCIMA del botón de sincronizar (z-index 80): con el
-   encabezado plegado, en celular este es el único camino de vuelta al menú. */
-.pc-header-toggle {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 90;
-  width: 2.1rem;
-  height: 2.1rem;
-  padding: 0;
-  font: inherit;
-  font-size: 0.8rem;
-  line-height: 1;
-  cursor: pointer;
-  border-radius: 50%;
-  border: 1px solid var(--sl-color-gray-5);
-  background: var(--sl-color-bg-nav, var(--sl-color-black));
-  color: var(--sl-color-gray-3);
-  opacity: 0.45;
-  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
-}
-/* Discreto mientras se da la clase, visible cuando se lo busca. */
-.pc-header-toggle:hover,
-.pc-header-toggle:focus-visible {
-  opacity: 1;
-  color: var(--sl-color-white);
-  border-color: var(--sl-color-accent);
-}
-
-/* En celular el botón de sincronizar ya ocupa esa esquina: este se apoya
-   arriba de aquel en vez de taparlo. */
-@media (max-width: 50rem) {
-  .pc-header-toggle {
-    bottom: 4.4rem;
-  }
-}
-
-/* Al imprimir no va: la planilla y los apuntes salen sin botones. */
-@media print {
-  .pc-header-toggle { display: none; }
+  .ent__reloj-btns { margin-left: 0; width: 100%; }
+  .ent__reloj-btns .ent__btn { flex: 1; }
+  .ent__rol { flex: 1 1 100%; }
 }
 
 /* ---------------------------------------------------------------------------

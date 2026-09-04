@@ -2,22 +2,44 @@
 /**
  * Kit de entrevista para la demo con los stakeholders del CFP.
  *
- * Por qué es un kit y no un guion: cuando se escribió esto no se sabía **ni
- * quién viene ni cuánto se queda**. Un guion lineal se rompe con el primero que
- * entra fuera de orden; un kit se arma en el momento.
+ * ─────────────────────────── POR QUÉ NO SE ANOTA ────────────────────────────
  *
- * Tres herramientas, y las tres resuelven un problema concreto del día:
- *   1. El selector — elegís quién tenés adelante y aparecen SUS preguntas y SU
- *      pantalla. Sin buscar nada delante de la persona.
- *   2. El reloj — el rol de ⏱️ Tiempo necesita ver los minutos, no calcularlos.
- *      Las marcas están en 3', 6' y 9': ese es el núcleo que entra aunque la
- *      persona diga "tengo diez minutos".
- *   3. El anotador — cuatro cajas por rol (sirve / falta / sobra / no sirve) y
- *      un botón que junta todo. Lo que no se anota estructurado, el miércoles
- *      siguiente no se puede ordenar.
+ * La versión anterior tenía un rol de "escriba" y cuatro cajas de notas. Se
+ * sacaron a pedido del profe, y con razón: el que anota no escucha, y el que no
+ * escucha no repregunta. Ahora se **graba** y se **marca**.
  *
- * Todo vive en localStorage del navegador del alumno. No hay servidor: si el
- * wifi del CFP se cae en el peor momento, el kit sigue andando.
+ * Pero grabar a secas no alcanza. Cinco entrevistas son tres horas de audio que
+ * nadie va a escuchar: el miércoles siguiente, cuando haya que armar la lista
+ * de requerimientos, nadie rebobina tres horas para encontrar el momento en que
+ * la preceptora contó lo de la planilla. Por eso está el botón **Marcar**: un
+ * toque guarda el minuto exacto y tres palabras. Después se va derecho ahí.
+ *
+ * Marcar no es anotar. Anotar te saca de la conversación; marcar es un botón.
+ *
+ * ──────────────────────────── LAS DOS CAPAS ─────────────────────────────────
+ *
+ * 1. RELOJ Y MARCAS — andan SIEMPRE. En cualquier navegador, con micrófono o
+ *    sin él, en http o en https. Es la capa que no puede fallar.
+ * 2. LA GRABADORA — encima. Si el navegador la deja, graba y después se puede
+ *    tocar una marca y saltar a ese minuto del audio.
+ *
+ * La 2 depende de la 1 y no al revés, a propósito. Si el micrófono falla, si
+ * alguien no da permiso o si el navegador no acompaña, **las marcas siguen
+ * sirviendo**: se graba con el celular y los minutos son los mismos, porque los
+ * dos relojes arrancan con el mismo botón. El peor caso deja de ser "perdimos
+ * la entrevista" y pasa a ser "grabamos con el celular".
+ *
+ * ─────────────────────────── DOS TRAMPAS CONOCIDAS ──────────────────────────
+ *
+ * · EL MICRÓFONO SOLO ANDA EN https:// O EN localhost. En `http://192.168.x.x`
+ *   el navegador lo bloquea sin excepción y sin explicación. Por eso la página
+ *   lo detecta y lo dice ANTES, no cuando ya hay alguien sentado enfrente.
+ * · EL AUDIO SE GUARDA EN PEDACITOS, en IndexedDB, cada 5 segundos. Si se
+ *   cierra la pestaña se pierden segundos, no la entrevista. Guardarlo todo en
+ *   memoria hasta el final es la forma más fácil de perder una hora de trabajo.
+ *
+ * Cada entrevista es su propia SESIÓN, con su audio y sus marcas. Cinco
+ * personas son cinco grabaciones separadas, no una de tres horas.
  */
 import { idEjercicio } from '../scripts/id-ejercicio';
 
@@ -32,7 +54,7 @@ interface Rol {
   /** Las preguntas, en embudo: de la más abierta a la más cerrada. */
   preguntas: string[];
   /** Qué pantalla mostrarle y en qué orden. */
-  pantalla: { nombre: string; hash: string; enCelular?: boolean; noExiste?: boolean };
+  pantalla: { nombre: string; hash: string; enCelular?: boolean; enVivo?: boolean };
   /** Qué NO hay que prometerle a este en particular. */
   ojo?: string;
 }
@@ -44,241 +66,482 @@ const id = idEjercicio(titulo);
    nivel desde /ejercicios/. Con el hash abre directo en la pantalla que hace
    falta (se lo agregamos para esto). */
 const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/proyecto/sistema-asistencias.html';
-
-const CAJAS = [
-  { id: 'sirve', emoji: '🟢', rotulo: 'Le sirve así como está', ayuda: '¿Qué dijo que ya le resuelve algo?' },
-  { id: 'falta', emoji: '🟡', rotulo: 'Le sirve pero le falta', ayuda: 'Con sus palabras, no con las nuestras' },
-  { id: 'sobra', emoji: '🔵', rotulo: 'Esto no lo usaría', ayuda: 'Vale oro: es trabajo que no hay que hacer' },
-  { id: 'no', emoji: '🔴', rotulo: 'Así no le sirve', ayuda: '¿Por qué? Preguntalo, no lo supongas' },
-];
 ---
 
 <section class="ent" id={id} data-entrevista data-prototipo={PROTOTIPO}>
 
-  <div class="ent__reloj" data-reloj>
-    <div class="ent__crono" data-crono>00:00</div>
-    <div class="ent__marcas">
-      <span data-marca="3">3' preguntar</span>
-      <span data-marca="6">6' mostrar</span>
-      <span data-marca="9">9' cerrar</span>
-    </div>
-    <div class="ent__reloj-btns">
-      <button type="button" class="ent__btn ent__btn--ok" data-arrancar>▶ Arrancar</button>
-      <button type="button" class="ent__btn" data-reiniciar>↺ De nuevo</button>
-    </div>
-  </div>
+  <!-- ── El permiso. Va primero porque va primero en la vida real. ────── -->
+  <details class="ent__permiso" data-permiso>
+    <summary>🎙️ Antes de grabar: lo que hay que decir</summary>
+    <p class="ent__permiso-texto">
+      «Antes de empezar: ¿le molesta si grabamos la charla? Es para no tener que estar anotando
+      mientras habla y no perdernos nada. <strong>La usamos solo nosotros, para armar el sistema</strong>,
+      y no sale del curso. Si prefiere que no, la apagamos y anotamos, no hay problema.»
+    </p>
+    <p class="ent__permiso-nota">
+      Se pregunta <strong>siempre</strong> y <strong>antes</strong> de tocar Empezar. Si dice que no,
+      se apaga la grabadora y se usan las marcas igual: el reloj anda sin micrófono.
+    </p>
+  </details>
 
-  <p class="ent__quien">¿A quién tenés adelante?</p>
+  <!-- ── Aviso si el navegador no va a dejar grabar ───────────────────── -->
+  <p class="ent__aviso" data-aviso-mic hidden></p>
+
+  <!-- ── PASO 1: quién entró ──────────────────────────────────────────── -->
+  <p class="ent__quien">¿Quién tenés enfrente?</p>
   <div class="ent__roles">
     {roles.map((r) => (
       <button type="button" class="ent__rol" data-rol={r.id}>
         <span class="ent__rol-emoji">{r.emoji}</span>
-        <span class="ent__rol-nombre">{r.nombre}</span>
+        <span>{r.nombre}</span>
       </button>
     ))}
   </div>
 
+  <!-- ── La ficha del rol elegido ─────────────────────────────────────── -->
   <div class="ent__ficha" data-ficha hidden>
-    <header class="ent__ficha-cab">
+    <div class="ent__ficha-cab">
       <h3 data-f-nombre></h3>
       <span class="ent__tiempo" data-f-tiempo></span>
-    </header>
+    </div>
+    <p class="ent__duele" data-f-duele></p>
 
-    <p class="ent__duele"><strong>Lo que le duele hoy:</strong> <span data-f-duele></span></p>
-
+    <p class="ent__sub">Las preguntas, en este orden</p>
     <ol class="ent__preguntas" data-f-preguntas></ol>
 
-    <div class="ent__pantalla">
-      <span data-f-pantalla-txt></span>
-      <a class="ent__btn ent__btn--ok" data-f-pantalla-link target="_blank" rel="noopener">Abrir esa pantalla ↗</a>
-    </div>
-
+    <p class="ent__sub">Qué pantalla mostrarle</p>
+    <p class="ent__pantalla" data-f-pantalla></p>
     <p class="ent__ojo" data-f-ojo hidden></p>
-
-    <div class="ent__cajas">
-      {CAJAS.map((c) => (
-        <label class="ent__caja" data-caja={c.id}>
-          <span class="ent__caja-rot">{c.emoji} {c.rotulo}</span>
-          <textarea rows="3" data-nota={c.id} placeholder={c.ayuda}></textarea>
-        </label>
-      ))}
-    </div>
-
-    <p class="ent__guardado" data-guardado></p>
   </div>
 
-  <div class="ent__exportar">
-    <button type="button" class="ent__btn" data-copiar>📋 Copiar todo lo anotado</button>
-    <button type="button" class="ent__btn" data-borrar>🗑️ Empezar de cero</button>
-    <span class="ent__aviso-copia" data-aviso-copia></span>
+  <!-- ── PASO 2: el reloj, la grabadora y las marcas ──────────────────── -->
+  <div class="ent__estudio" data-estudio hidden>
+
+    <div class="ent__reloj">
+      <div class="ent__crono" data-crono>00:00</div>
+      <div class="ent__marcas-reloj">
+        <span data-m3>3' — dejalo hablar</span>
+        <span data-m6>6' — mostrale la pantalla</span>
+        <span data-m9>9' — las de cierre</span>
+      </div>
+      <div class="ent__reloj-btns">
+        <button type="button" class="ent__btn ent__btn--ok" data-empezar>▶ Empezar</button>
+        <button type="button" class="ent__btn ent__btn--stop" data-terminar hidden>⏹ Terminar</button>
+      </div>
+    </div>
+
+    <p class="ent__grabando" data-grabando hidden></p>
+
+    <!-- El botón grande. Es lo único que se toca durante la entrevista. -->
+    <button type="button" class="ent__marcar" data-marcar disabled>
+      🔖 Marcar este momento
+    </button>
+    <p class="ent__marcar-ayuda">
+      Tocalo apenas alguien dice algo que importa. Guarda el minuto al instante — el nombre se lo
+      ponés después, con calma, o nunca.
+    </p>
+
+    <ul class="ent__lista-marcas" data-marcas></ul>
+  </div>
+
+  <!-- ── PASO 3: lo grabado ───────────────────────────────────────────── -->
+  <div class="ent__sesiones" data-sesiones hidden>
+    <h3 class="ent__sub ent__sub--titulo">Lo que llevamos grabado</h3>
+    <div data-lista-sesiones></div>
+    <button type="button" class="ent__btn" data-exportar>📋 Copiar todas las marcas</button>
+    <textarea class="ent__export" data-export-texto rows="8" readonly hidden></textarea>
   </div>
 
   <script type="application/json" data-roles set:html={JSON.stringify(roles)}></script>
 </section>
 
 <script>
-  document.querySelectorAll('[data-entrevista]').forEach((ent) => {
-    const ROLES = JSON.parse(ent.querySelector('[data-roles]').textContent);
-    const PROTOTIPO = ent.dataset.prototipo;
-    const CAJAS = ['sirve', 'falta', 'sobra', 'no'];
-    const ROTULOS = { sirve: '🟢 LE SIRVE', falta: '🟡 LE FALTA', sobra: '🔵 NO LO USARÍA', no: '🔴 NO LE SIRVE' };
-    const LS = 'pc_entrevista';
+  document.querySelectorAll('[data-entrevista]').forEach((raiz) => {
+    const $ = (s: string) => raiz.querySelector(s) as HTMLElement | null;
+    const PROTOTIPO = raiz.getAttribute('data-prototipo') || '';
+    let roles: any[] = [];
+    try {
+      roles = JSON.parse((raiz.querySelector('[data-roles]') as HTMLElement)?.textContent || '[]');
+    } catch { /* sin roles no hay kit, pero tampoco hay que romper la página */ }
 
-    const ficha = ent.querySelector('[data-ficha]');
-    const guardado = ent.querySelector('[data-guardado]');
-    let actual = null;
+    const LS = 'pc_entrevista_sesiones';
+    const DB_NOMBRE = 'pc-entrevistas';
+    const TROZOS = 'trozos';
 
-    function leer() {
-      try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch { return {}; }
+    // ── Estado ───────────────────────────────────────────────────────
+    let sesiones: any[] = [];
+    try { sesiones = JSON.parse(localStorage.getItem(LS) || '[]'); } catch {}
+    const guardar = () => {
+      try { localStorage.setItem(LS, JSON.stringify(sesiones)); } catch {}
+    };
+
+    let rolActual: any = null;
+    let sesion: any = null;          // la que está corriendo
+    let t0 = 0;                      // cuándo arrancó, en ms
+    let tick: any = null;
+    let grabadora: MediaRecorder | null = null;
+    let pista: MediaStream | null = null;
+
+    const dosCifras = (n: number) => String(n).padStart(2, '0');
+    const reloj = (seg: number) => dosCifras(Math.floor(seg / 60)) + ':' + dosCifras(Math.floor(seg % 60));
+    const ahora = () => (Date.now() - t0) / 1000;
+
+    // ── IndexedDB: el audio en pedacitos ─────────────────────────────
+    /* Se guarda cada 5 segundos en vez de acumular todo en memoria. Si se
+       cierra la pestaña a la mitad de una entrevista de 40 minutos, se pierden
+       los últimos segundos y no los 40 minutos. */
+    function abrirDB(): Promise<IDBDatabase | null> {
+      return new Promise((res) => {
+        try {
+          const p = indexedDB.open(DB_NOMBRE, 1);
+          p.onupgradeneeded = () => {
+            const db = p.result;
+            if (!db.objectStoreNames.contains(TROZOS)) {
+              db.createObjectStore(TROZOS, { autoIncrement: true }).createIndex('sesion', 'sesion');
+            }
+          };
+          p.onsuccess = () => res(p.result);
+          p.onerror = () => res(null);
+        } catch { res(null); }
+      });
     }
-    function escribir(datos) {
-      try { localStorage.setItem(LS, JSON.stringify(datos)); } catch { /* sin localStorage: se pierde al cerrar, y no hay nada que hacer */ }
+    let db: IDBDatabase | null = null;
+    abrirDB().then((d) => { db = d; });
+
+    function guardarTrozo(idSesion: string, blob: Blob) {
+      if (!db) return;
+      try {
+        db.transaction(TROZOS, 'readwrite').objectStore(TROZOS).add({ sesion: idSesion, blob });
+      } catch { /* si el disco dijo que no, la entrevista sigue igual */ }
     }
 
-    // ─────────────────────────────────────────────────────────── el reloj ──
-    let desde = null;
-    let tick = null;
-    const crono = ent.querySelector('[data-crono]');
-
-    function pintarReloj(seg) {
-      const m = String(Math.floor(seg / 60)).padStart(2, '0');
-      const s = String(seg % 60).padStart(2, '0');
-      crono.textContent = `${m}:${s}`;
-      // Verde hasta 9', ámbar hasta 12', rojo después: a los 12 minutos ya
-      // estiraste el tiempo que te dieron, digan lo que digan.
-      crono.className = 'ent__crono' + (seg >= 720 ? ' es-tarde' : seg >= 540 ? ' es-justo' : '');
-      [3, 6, 9].forEach((m) => {
-        ent.querySelector(`[data-marca="${m}"]`).classList.toggle('es-pasada', seg >= m * 60);
+    function trozosDe(idSesion: string): Promise<Blob[]> {
+      return new Promise((res) => {
+        if (!db) return res([]);
+        try {
+          const p = db.transaction(TROZOS, 'readonly').objectStore(TROZOS).index('sesion').getAll(idSesion);
+          p.onsuccess = () => res((p.result || []).map((x: any) => x.blob));
+          p.onerror = () => res([]);
+        } catch { res([]); }
       });
     }
 
-    ent.querySelector('[data-arrancar]').addEventListener('click', (e) => {
-      const b = e.currentTarget;
-      if (tick) {
-        clearInterval(tick); tick = null;
-        b.textContent = '▶ Seguir';
+    // ── ¿Se puede grabar en este navegador? ──────────────────────────
+    /* Se avisa ANTES, no cuando ya hay alguien sentado enfrente. El micrófono
+       está bloqueado en http:// que no sea localhost, sin excepción. */
+    const seguro = window.isSecureContext;
+    const hayMic = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+    const puedeGrabar = seguro && hayMic;
+    const avisoMic = $('[data-aviso-mic]')!;
+    if (!puedeGrabar) {
+      avisoMic.hidden = false;
+      avisoMic.innerHTML = !seguro
+        ? '⚠️ <strong>Acá no se va a poder grabar</strong> porque la página está abierta por ' +
+          '<code>http://</code>. El micrófono solo funciona en <code>https://</code> o en ' +
+          '<code>localhost</code>. <strong>El reloj y las marcas andan igual</strong>: grabá con el ' +
+          'celular y tocá Empezar al mismo tiempo.'
+        : '⚠️ <strong>Este navegador no deja grabar.</strong> El reloj y las marcas andan igual: ' +
+          'grabá con el celular y tocá Empezar al mismo tiempo.';
+    }
+
+    function elegirFormato() {
+      const opciones = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', ''];
+      for (const o of opciones) {
+        if (!o) return '';
+        try { if (MediaRecorder.isTypeSupported(o)) return o; } catch {}
+      }
+      return '';
+    }
+
+    // ── Elegir el rol ────────────────────────────────────────────────
+    function pintarFicha(r: any) {
+      $('[data-f-nombre]')!.textContent = r.emoji + ' ' + r.nombre;
+      $('[data-f-tiempo]')!.textContent = r.tiempo;
+      $('[data-f-duele]')!.textContent = r.duele;
+      $('[data-f-preguntas]')!.innerHTML = r.preguntas.map((p: string) => '<li>' + p + '</li>').join('');
+
+      const enlace = PROTOTIPO + '#' + r.pantalla.hash;
+      const extra = r.pantalla.enCelular ? ' <em>(mostrásela en el celular)</em>'
+        : r.pantalla.enVivo ? ' <em>(esta anda de verdad — mostrala corriendo)</em>' : '';
+      $('[data-f-pantalla]')!.innerHTML =
+        r.pantalla.nombre + extra +
+        ' <a class="ent__btn ent__btn--pantalla" href="' + enlace + '" target="_blank" rel="noopener">Abrir esa pantalla ↗</a>';
+
+      const ojo = $('[data-f-ojo]')!;
+      ojo.hidden = !r.ojo;
+      if (r.ojo) ojo.innerHTML = '<strong>Ojo:</strong> ' + r.ojo;
+
+      $('[data-ficha]')!.hidden = false;
+      $('[data-estudio]')!.hidden = false;
+    }
+
+    raiz.querySelectorAll('[data-rol]').forEach((b) => {
+      b.addEventListener('click', () => {
+        /* Con una entrevista corriendo los botones ya están `disabled`, así que
+           acá no llega ni el clic. Queda como red por si algún día se cambia
+           esa lógica: cambiar de rol a mitad de una entrevista mezclaría las
+           marcas de dos personas. Sin alert a propósito — un cartel del
+           navegador con alguien hablando enfrente es lo último que hace falta. */
+        if (sesion) return;
+        const idRol = b.getAttribute('data-rol');
+        rolActual = roles.find((r) => r.id === idRol);
+        raiz.querySelectorAll('[data-rol]').forEach((o) => o.classList.toggle('es-elegido', o === b));
+        if (rolActual) pintarFicha(rolActual);
+      });
+    });
+
+    // ── El reloj ─────────────────────────────────────────────────────
+    const crono = $('[data-crono]')!;
+    function latir() {
+      const s = ahora();
+      crono.textContent = reloj(s);
+      crono.classList.toggle('es-justo', s >= 9 * 60 && s < 12 * 60);
+      crono.classList.toggle('es-tarde', s >= 12 * 60);
+      [[3, '[data-m3]'], [6, '[data-m6]'], [9, '[data-m9]']].forEach(([m, sel]: any) => {
+        $(sel)!.classList.toggle('es-pasada', s >= m * 60);
+      });
+    }
+
+    // ── Empezar: el reloj Y la grabadora, con el mismo botón ─────────
+    /* Un solo botón a propósito. Si la grabadora arranca 40 segundos antes que
+       el reloj, TODAS las marcas quedan corridas 40 segundos y no sirven para
+       nada. Un botón, los dos relojes juntos. */
+    $('[data-empezar]')!.addEventListener('click', async () => {
+      if (!rolActual) { alert('Elegí primero quién tenés enfrente.'); return; }
+
+      sesion = {
+        id: 'e' + Date.now().toString(36),
+        rol: rolActual.id,
+        rolNombre: rolActual.emoji + ' ' + rolActual.nombre,
+        cuando: new Date().toISOString(),
+        marcas: [],
+        conAudio: false,
+      };
+      t0 = Date.now();
+      latir();
+      tick = setInterval(latir, 250);
+
+      ($('[data-empezar]') as HTMLElement).hidden = true;
+      ($('[data-terminar]') as HTMLElement).hidden = false;
+      ($('[data-marcar]') as HTMLButtonElement).disabled = false;
+      raiz.querySelectorAll('[data-rol]').forEach((o) => ((o as HTMLButtonElement).disabled = true));
+
+      const aviso = $('[data-grabando]')!;
+      if (!puedeGrabar) {
+        aviso.hidden = false;
+        aviso.innerHTML = '⏱️ <strong>Reloj corriendo, sin grabar.</strong> Poné a grabar el celular ahora.';
         return;
       }
-      desde = Date.now() - (desde ? Date.now() - desde : 0);
-      const arranque = Date.now() - (parseInt(crono.dataset.seg || '0', 10) * 1000);
-      tick = setInterval(() => {
-        const seg = Math.floor((Date.now() - arranque) / 1000);
-        crono.dataset.seg = String(seg);
-        pintarReloj(seg);
-      }, 250);
-      b.textContent = '⏸ Pausa';
-    });
 
-    ent.querySelector('[data-reiniciar]').addEventListener('click', () => {
-      if (tick) { clearInterval(tick); tick = null; }
-      crono.dataset.seg = '0';
-      pintarReloj(0);
-      ent.querySelector('[data-arrancar]').textContent = '▶ Arrancar';
-    });
-
-    // ──────────────────────────────────────────────────────── la ficha ─────
-    function mostrar(idRol) {
-      const r = ROLES.find((x) => x.id === idRol);
-      if (!r) return;
-      actual = idRol;
-
-      ent.querySelectorAll('[data-rol]').forEach((b) => b.classList.toggle('es-elegido', b.dataset.rol === idRol));
-
-      ficha.querySelector('[data-f-nombre]').textContent = `${r.emoji} ${r.nombre}`;
-      ficha.querySelector('[data-f-tiempo]').textContent = r.tiempo;
-      ficha.querySelector('[data-f-duele]').textContent = r.duele;
-
-      const ol = ficha.querySelector('[data-f-preguntas]');
-      ol.innerHTML = '';
-      r.preguntas.forEach((p) => {
-        const li = document.createElement('li');
-        li.textContent = p;        // textContent: son preguntas, no HTML
-        ol.appendChild(li);
-      });
-
-      const txt = ficha.querySelector('[data-f-pantalla-txt]');
-      const link = ficha.querySelector('[data-f-pantalla-link]');
-      txt.textContent =
-        (r.pantalla.noExiste ? '⚠️ Todavía NO existe: ' : '🖥️ Mostrale ') +
-        r.pantalla.nombre +
-        (r.pantalla.enCelular ? ' — y mostrásela EN EL CELULAR, que es donde la va a usar.' : '');
-      link.href = PROTOTIPO + (r.pantalla.hash ? '#' + r.pantalla.hash : '');
-      link.hidden = false;
-
-      const ojo = ficha.querySelector('[data-f-ojo]');
-      ojo.textContent = r.ojo ? '⚠️ ' + r.ojo : '';
-      ojo.hidden = !r.ojo;
-
-      const datos = leer();
-      CAJAS.forEach((c) => {
-        ficha.querySelector(`[data-nota="${c}"]`).value = (datos[idRol] && datos[idRol][c]) || '';
-      });
-      guardado.textContent = '';
-      ficha.hidden = false;
-    }
-
-    ent.querySelectorAll('[data-rol]').forEach((b) => {
-      b.addEventListener('click', () => mostrar(b.dataset.rol));
-    });
-
-    // Se guarda solo mientras escribe: nadie va a tocar "guardar" con un
-    // preceptor hablando enfrente.
-    let timer = null;
-    ficha.addEventListener('input', (e) => {
-      const t = e.target.closest('[data-nota]');
-      if (!t || !actual) return;
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        const datos = leer();
-        datos[actual] = datos[actual] || {};
-        datos[actual][t.dataset.nota] = t.value;
-        escribir(datos);
-        guardado.textContent = 'Guardado en esta compu ✓';
-      }, 400);
-    });
-
-    // ───────────────────────────────────────────────────── juntar todo ─────
-    function armarTexto() {
-      const datos = leer();
-      const partes = ['NOTAS DE LA ENTREVISTA — Sistema de Asistencias CFP 401', ''];
-      ROLES.forEach((r) => {
-        const d = datos[r.id];
-        if (!d || !CAJAS.some((c) => (d[c] || '').trim())) return;
-        partes.push(`=== ${r.emoji} ${r.nombre.toUpperCase()} ===`);
-        CAJAS.forEach((c) => {
-          const v = (d[c] || '').trim();
-          if (v) partes.push(`${ROTULOS[c]}:`, v, '');
-        });
-      });
-      if (partes.length === 2) partes.push('(todavía no hay nada anotado)');
-      return partes.join('\n');
-    }
-
-    ent.querySelector('[data-copiar]').addEventListener('click', async () => {
-      const aviso = ent.querySelector('[data-aviso-copia]');
-      const texto = armarTexto();
       try {
-        await navigator.clipboard.writeText(texto);
-        aviso.textContent = 'Copiado — pegalo donde lo vayas a guardar ✓';
-      } catch {
-        // Sin permiso de portapapeles (pasa en http y en algunos celulares):
-        // se lo mostramos para que lo copie a mano en vez de dejarlo sin nada.
-        const caja = document.createElement('textarea');
-        caja.className = 'ent__volcado';
-        caja.rows = 14;
-        caja.value = texto;
-        ent.querySelector('[data-copiar]').after(caja);
-        caja.select();
-        aviso.textContent = 'No pude copiarlo solo: seleccionalo y copialo a mano.';
+        pista = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mime = elegirFormato();
+        grabadora = new MediaRecorder(pista, mime ? { mimeType: mime, audioBitsPerSecond: 32000 } : undefined);
+        sesion.mime = grabadora.mimeType || mime || 'audio/webm';
+        grabadora.ondataavailable = (e) => {
+          if (e.data && e.data.size) guardarTrozo(sesion.id, e.data);
+        };
+        grabadora.start(5000);   // un pedacito cada 5 segundos
+        sesion.conAudio = true;
+        aviso.hidden = false;
+        aviso.innerHTML = '🔴 <strong>Grabando.</strong> Se guarda solo cada 5 segundos.';
+      } catch (e) {
+        // Permiso denegado, micrófono ocupado, o el navegador dijo que no.
+        // La entrevista sigue: las marcas no dependen de esto.
+        aviso.hidden = false;
+        aviso.innerHTML = '⏱️ <strong>No se pudo grabar</strong> (¿no se dio permiso al micrófono?). ' +
+          'El reloj y las marcas andan igual — grabá con el celular.';
       }
     });
 
-    ent.querySelector('[data-borrar]').addEventListener('click', () => {
-      if (!confirm('Esto borra TODO lo anotado en esta compu, de todos los roles. ¿Seguro?')) return;
-      escribir({});
-      if (actual) mostrar(actual);
+    // ── Marcar ───────────────────────────────────────────────────────
+    /* El segundo se captura al TOCAR, no al terminar de escribir. Si se
+       capturara al escribir, la marca quedaría treinta segundos después del
+       momento que importa. */
+    $('[data-marcar]')!.addEventListener('click', () => {
+      if (!sesion) return;
+      const marca = { t: Math.max(0, ahora() - 3), texto: '' };
+      //                                      ^^^ tres segundos antes: para
+      // cuando uno toca el botón, la frase que importa ya empezó.
+      sesion.marcas.push(marca);
+      pintarMarcas();
+      const ultimo = raiz.querySelector('[data-marcas] li:last-child input') as HTMLInputElement;
+      if (ultimo) ultimo.focus();
     });
 
-    pintarReloj(0);
+    function pintarMarcas() {
+      const ul = $('[data-marcas]')!;
+      ul.innerHTML = '';
+      if (!sesion) return;
+      sesion.marcas.forEach((m: any, i: number) => {
+        const li = document.createElement('li');
+        li.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span>';
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'ent__marca-txt';
+        inp.placeholder = 'tres palabras, o nada';
+        inp.value = m.texto;
+        inp.addEventListener('input', () => { sesion.marcas[i].texto = inp.value; });
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') inp.blur(); });
+        li.appendChild(inp);
+        ul.appendChild(li);
+      });
+    }
+
+    // ── Terminar ─────────────────────────────────────────────────────
+    $('[data-terminar]')!.addEventListener('click', async () => {
+      if (!sesion) return;
+      sesion.duracion = ahora();
+      clearInterval(tick);
+
+      if (grabadora && grabadora.state !== 'inactive') {
+        await new Promise<void>((res) => {
+          grabadora!.onstop = () => res();
+          grabadora!.stop();
+        });
+      }
+      if (pista) pista.getTracks().forEach((t) => t.stop());
+      grabadora = null;
+      pista = null;
+
+      sesiones.push(sesion);
+      guardar();
+      const terminada = sesion;
+      sesion = null;
+
+      crono.textContent = '00:00';
+      crono.classList.remove('es-justo', 'es-tarde');
+      ($('[data-empezar]') as HTMLElement).hidden = false;
+      ($('[data-terminar]') as HTMLElement).hidden = true;
+      ($('[data-marcar]') as HTMLButtonElement).disabled = true;
+      ($('[data-grabando]') as HTMLElement).hidden = true;
+      $('[data-marcas]')!.innerHTML = '';
+      raiz.querySelectorAll('[data-rol]').forEach((o) => {
+        (o as HTMLButtonElement).disabled = false;
+        o.classList.remove('es-elegido');
+      });
+      $('[data-ficha]')!.hidden = true;
+      $('[data-estudio]')!.hidden = true;
+
+      await pintarSesiones(terminada.id);
+    });
+
+    // ── Las sesiones grabadas ────────────────────────────────────────
+    /* El audio del navegador viene sin metadatos de duración, así que
+       `audio.currentTime = 90` no hace nada hasta que el navegador sabe cuánto
+       dura. El truco es pedirle que salte a un número absurdo: al chocar contra
+       el final, calcula la duración y a partir de ahí se puede buscar. Es la
+       solución conocida a un bug conocido de MediaRecorder. */
+    function arreglarDuracion(audio: HTMLAudioElement): Promise<void> {
+      return new Promise((res) => {
+        if (audio.duration !== Infinity && !isNaN(audio.duration)) return res();
+        const alSaltar = () => {
+          audio.removeEventListener('timeupdate', alSaltar);
+          audio.currentTime = 0;
+          res();
+        };
+        audio.addEventListener('timeupdate', alSaltar);
+        audio.currentTime = 1e101;
+      });
+    }
+
+    async function pintarSesiones(abrir?: string) {
+      const caja = $('[data-sesiones]')!;
+      const lista = $('[data-lista-sesiones]')!;
+      if (!sesiones.length) { caja.hidden = true; return; }
+      caja.hidden = false;
+      lista.innerHTML = '';
+
+      for (const s of sesiones) {
+        const div = document.createElement('div');
+        div.className = 'ent__sesion';
+        div.innerHTML =
+          '<div class="ent__sesion-cab"><strong>' + s.rolNombre + '</strong>' +
+          '<span class="ent__sesion-dur">' + reloj(s.duracion || 0) + '</span></div>';
+
+        if (s.conAudio) {
+          const trozos = await trozosDe(s.id);
+          if (trozos.length) {
+            const blob = new Blob(trozos, { type: s.mime || 'audio/webm' });
+            const url = URL.createObjectURL(blob);
+            const audio = document.createElement('audio');
+            audio.controls = true;
+            audio.preload = 'metadata';
+            audio.src = url;
+            div.appendChild(audio);
+
+            const baja = document.createElement('a');
+            baja.className = 'ent__btn';
+            baja.href = url;
+            baja.download = 'entrevista-' + s.rol + '-' + s.id + '.webm';
+            baja.textContent = '⬇ Descargar el audio';
+            div.appendChild(baja);
+
+            // Las marcas, clickeables: saltan a ese minuto del audio.
+            if (s.marcas.length) {
+              const ul = document.createElement('ul');
+              ul.className = 'ent__lista-marcas ent__lista-marcas--repro';
+              s.marcas.forEach((m: any) => {
+                const li = document.createElement('li');
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'ent__marca-ir';
+                b.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
+                  (m.texto || '<em>sin nombre</em>');
+                b.addEventListener('click', async () => {
+                  await arreglarDuracion(audio);
+                  audio.currentTime = m.t;
+                  audio.play();
+                });
+                li.appendChild(b);
+                ul.appendChild(li);
+              });
+              div.appendChild(ul);
+            }
+          } else {
+            div.innerHTML += '<p class="ent__sin-audio">No quedó audio guardado de esta.</p>';
+          }
+        } else if (s.marcas.length) {
+          const ul = document.createElement('ul');
+          ul.className = 'ent__lista-marcas';
+          s.marcas.forEach((m: any) => {
+            const li = document.createElement('li');
+            li.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
+              (m.texto || '<em>sin nombre</em>');
+            ul.appendChild(li);
+          });
+          div.appendChild(ul);
+        }
+
+        lista.appendChild(div);
+      }
+      if (abrir) caja.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ── Exportar todas las marcas ────────────────────────────────────
+    $('[data-exportar]')!.addEventListener('click', async () => {
+      const lineas: string[] = ['MARCAS DE LAS ENTREVISTAS', ''];
+      sesiones.forEach((s) => {
+        lineas.push('── ' + s.rolNombre + '  (' + reloj(s.duracion || 0) + ')');
+        if (!s.marcas.length) lineas.push('   (sin marcas)');
+        s.marcas.forEach((m: any) => {
+          lineas.push('   ' + reloj(m.t) + '  ' + (m.texto || '(sin nombre)'));
+        });
+        lineas.push('');
+      });
+      const texto = lineas.join('\n');
+      const ta = $('[data-export-texto]') as HTMLTextAreaElement;
+      ta.value = texto;
+      try {
+        await navigator.clipboard.writeText(texto);
+        ($('[data-exportar]') as HTMLElement).textContent = '¡Copiado!';
+      } catch {
+        ta.hidden = false;
+        ta.focus();
+        ta.select();
+      }
+    });
+
+    pintarSesiones();
   });
 </script>
