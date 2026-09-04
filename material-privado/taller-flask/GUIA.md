@@ -85,6 +85,40 @@ las cinco cosas.
 
 ---
 
+## Para correr el que YA está hecho
+
+Lo de abajo explica cómo construirlo desde cero. Pero si lo que se quiere es levantar el que ya
+está en esta carpeta — por ejemplo, para mostrarlo — son tres comandos:
+
+```bash
+pip install -r material-privado/taller-flask/requirements.txt
+```
+
+```bash
+python material-privado/taller-flask/sembrar_demo.py
+```
+
+```bash
+python material-privado/taller-flask/app.py
+```
+
+Queda en `http://localhost:5000`, con dos pantallas:
+
+| | |
+|---|---|
+| `/lista/2026-09-04` | Pasar lista, con los cuatro estados por alumno |
+| `/merienda` | El número grande para las auxiliares |
+
+> ⚠️ **El del medio es el que se olvida.** `datos.json` está gitignoreado, así que en una máquina
+> nueva el sistema arranca **vacío** y parece roto. `sembrar_demo.py` carga seis alumnos inventados
+> y ocho días de asistencia, con porcentajes que dan distinto entre sí para que se vea que el
+> cálculo hace algo.
+
+`app.py` levanta con `host="0.0.0.0"`, así que también se llega desde otra máquina de la red con
+`http://<la-ip-de-esta-compu>:5000`. Es el ensayo del sistema andando en la red del CFP.
+
+---
+
 ## Antes de arrancar (20 minutos)
 
 ```bash
