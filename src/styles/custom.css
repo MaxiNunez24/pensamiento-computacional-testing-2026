@@ -2255,7 +2255,7 @@ body.pc-resizing * {
 }
 .mapa__pieza:hover { transform: translateY(-2px); }
 .mapa__pieza.is-abierta { background: var(--sl-color-gray-6); border-color: var(--sl-color-accent); }
-.mapa__pieza-emoji { font-size: 1.3rem; }
+.mapa__pieza-emoji { font-size: 1.3rem; line-height: 1; }
 .mapa__pieza-nombre { font-weight: 600; font-size: 0.95rem; line-height: 1.25; }
 .mapa__pieza-quien { font-size: 0.74rem; color: var(--sl-color-gray-3); }
 
@@ -2629,12 +2629,17 @@ body.pc-resizing * {
   font: inherit; cursor: pointer; display: flex; align-items: center; gap: 0.45rem;
   padding: 0.55rem 0.85rem; border-radius: 0.5rem; min-height: 2.75rem;
   border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-black);
-  color: var(--sl-color-white);
+  color: var(--sl-color-white); line-height: 1.3;
 }
 .ent__rol:hover { border-color: var(--sl-color-accent); }
 .ent__rol.es-elegido { border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); }
 .ent__rol:disabled { opacity: 0.45; cursor: not-allowed; }
-.ent__rol-emoji { font-size: 1.15rem; }
+/* line-height: 1 en el emoji. Sin esto la caja de línea del glifo (32px) es más
+   alta que la del texto (28px) e infla el botón — y como cada emoji puede
+   resolverse con una fuente distinta, unos botones quedan más altos que otros.
+   Fijándolo, la altura la manda el padding y no la tipografía que le toque.
+   Es la misma solución que .ejercicio__btn, ver más arriba. */
+.ent__rol-emoji { font-size: 1.15rem; line-height: 1; }
 
 .ent__ficha {
   border: 1px solid var(--sl-color-accent); border-radius: 0.6rem;
@@ -2793,19 +2798,19 @@ body.pc-resizing * {
   display: flex; align-items: center; gap: 0.5rem;
   padding: 0.8rem 1rem; border-radius: 0.6rem; min-height: 3rem; flex: 1 1 13rem;
   border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-black);
-  color: var(--sl-color-white); text-align: left;
+  color: var(--sl-color-white); text-align: left; line-height: 1.3;
 }
 .cue__rol:hover { border-color: var(--sl-color-accent); }
 .cue__rol.es-elegido {
   border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); font-weight: 600;
 }
-.cue__rol-emoji { font-size: 1.3rem; }
+.cue__rol-emoji { font-size: 1.3rem; line-height: 1; }
 
 .cue__elegido {
   padding: 0.7rem 0.9rem; margin-bottom: 1.2rem; border-radius: 0.5rem;
   border: 1px solid var(--sl-color-accent); background: var(--sl-color-black);
 }
-.cue__elegido-emoji { font-size: 1.15rem; }
+.cue__elegido-emoji { font-size: 1.15rem; line-height: 1; }
 .cue__elegido-acl { font-size: 0.85rem; color: var(--sl-color-gray-3); }
 
 .cue__nombre-caja { margin-bottom: 1.6rem; }
