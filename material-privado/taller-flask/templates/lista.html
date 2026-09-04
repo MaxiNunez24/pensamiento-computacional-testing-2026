@@ -5,7 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pasar lista — {{ curso.nombre }}</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 16px; }
+    /* El navegador del que abra esto puede estar en modo oscuro. Si el body no
+       declara fondo, queda transparente: el navegador pinta su canvas oscuro y
+       este texto negro encima no se lee. `color-scheme: light` le avisa que la
+       página es clara; el fondo y el color explícitos son el cinturón además
+       de los tirantes. Una pantalla que se proyecta tiene que verse igual en
+       cualquier máquina. */
+    :root { color-scheme: light; }
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 16px;
+           background: #fff; color: #111; }
     h1 { font-size: 20px; }
     .dia { color: #555; }
     ul { list-style: none; padding: 0; }

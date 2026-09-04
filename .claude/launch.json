@@ -7,6 +7,12 @@
       "runtimeArgs": ["pnpm", "run", "dev"],
       "port": 4321,
       "autoPort": true
+    },
+    {
+      "name": "taller-flask",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["material-privado/taller-flask/app.py"],
+      "port": 5000
     }
   ]
 }
