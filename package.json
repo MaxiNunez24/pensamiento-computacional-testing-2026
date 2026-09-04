@@ -23,5 +23,8 @@
     "codemirror": "^6.0.2",
     "mermaid": "^11.15.0",
     "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }

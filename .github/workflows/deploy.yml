@@ -83,8 +83,13 @@ jobs:
       # comentario CIERRA el literal y rompe el worker: la página carga bien, el
       # build pasa en verde, y recién en el navegador aparece "falló el worker de
       # Python". Ya pasó dos veces. esbuild lo caza en 5 milisegundos.
+      # `pnpm exec` y no `npx`: pnpm NO hoistea las dependencias transitivas a
+      # node_modules/.bin. En la maquina de uno esbuild esta ahi porque lo deja
+      # Astro, asi que `npx esbuild` anda; en CI con --frozen-lockfile no existe
+      # y el paso muere con "esbuild: not found" (exit 127). Por eso esbuild
+      # ahora es devDependency explicita.
       - name: Verificar que el worker de Python compile
-        run: npx esbuild src/scripts/pyodide-worker.ts --format=esm --outfile=/tmp/worker-check.js
+        run: pnpm exec esbuild src/scripts/pyodide-worker.ts --format=esm --outfile=/tmp/worker-check.js
 
       # ---------- Publicar ----------
 
