@@ -128,7 +128,7 @@ const CLAVE = 'cfp401';
     {bloques.map((b) => (
       <div class="cue__bloque" data-bloque={b.id} data-solo-roles={(b.soloRoles || []).join(',')}>
         <div class="cue__bloque-cab">
-          <span class="cue__num">{b.numero}</span>
+          <span class="cue__num" data-num>{b.numero}</span>
           <h3 class="cue__bloque-tit">{b.titulo}</h3>
           {b.de === 'alumno' && <span class="cue__sello" title="Pregunta propuesta por un alumno del curso">✍️ un alumno</span>}
           {b.de === 'clase' && <span class="cue__sello cue__sello--clase" title="Salió de la clase del miércoles">💡 la clase</span>}
@@ -279,9 +279,19 @@ const CLAVE = 'cfp401';
           '</strong>. Estas van aparte, no pisan aquellas.'
         : '';
 
+      /* Se renumera sobre las preguntas VISIBLES. Antes los números venían
+         fijos del .mdx, así que a quien no le tocaba la pregunta 6 le quedaba
+         "1, 2, 3, 4, 5, 7" y parecía que faltaba una. */
+      let n = 0;
       raiz.querySelectorAll('[data-bloque]').forEach((b) => {
         const solo = (b.getAttribute('data-solo-roles') || '').split(',').filter(Boolean);
-        (b as HTMLElement).hidden = solo.length > 0 && !solo.includes(rolId);
+        const oculto = solo.length > 0 && !solo.includes(rolId);
+        (b as HTMLElement).hidden = oculto;
+        if (!oculto) {
+          n += 1;
+          const num = b.querySelector('[data-num]');
+          if (num) num.textContent = String(n);
+        }
       });
 
       // Traer lo que haya escrito ANTES en ESTE rol (y vaciar lo del otro).
@@ -335,7 +345,7 @@ const CLAVE = 'cfp401';
         if (solo.length && !solo.includes(estado.rolActual)) return;
         const conAlgo = b.campos.filter((c: any) => (actual.respuestas[c.id] || '').trim());
         if (!conAlgo.length) return;
-        lineas.push('── ' + b.numero + '. ' + b.titulo);
+        lineas.push('── ' + b.titulo);
         conAlgo.forEach((c: any) => {
           lineas.push(c.etiqueta + ':');
           lineas.push(actual.respuestas[c.id].trim());

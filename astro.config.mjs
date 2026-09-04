@@ -67,6 +67,13 @@ export default defineConfig({
           tag: 'script',
           attrs: { src: `${base}/tablero.js`, defer: true },
         },
+        // Markdown renderiza `- [ ]` como checkbox DESHABILITADO. La lista de
+        // "antes de que entre nadie" existe para tildarla mientras se prepara
+        // la sala, así que esto las habilita y recuerda lo tildado.
+        {
+          tag: 'script',
+          attrs: { src: `${base}/checklist.js`, defer: true },
+        },
       ],
       // El buscador (Pagefind), el dark mode y el botón de copiar código
       // vienen de fábrica con Starlight.

@@ -2769,6 +2769,13 @@ body.pc-resizing * {
   .ent__rol { flex: 1 1 100%; }
 }
 
+/* Listas de tareas tildables (public/checklist.js las habilita) */
+.sl-markdown-content li > input[type="checkbox"] {
+  width: 1.15rem; height: 1.15rem; margin-right: 0.15rem; vertical-align: -0.15rem;
+  accent-color: var(--sl-color-accent);
+}
+.sl-markdown-content li.es-hecho { color: var(--sl-color-gray-3); text-decoration: line-through; }
+
 /* ---------------------------------------------------------------------------
    CUESTIONARIO DE RELEVAMIENTO (lo contesta el equipo del CFP)
    Lo abre gente que NO es del curso, UNA sola vez, DESDE EL CELULAR. De ahí:
@@ -2777,8 +2784,8 @@ body.pc-resizing * {
 --------------------------------------------------------------------------- */
 .cue { margin: 1.5rem 0; }
 
-.cue__paso-tit { margin: 0 0 0.3rem; font-size: 1.2rem; }
-.cue__paso-sub { margin: 0 0 1rem; font-size: 0.9rem; color: var(--sl-color-gray-3); }
+.cue__paso-tit { margin: 0 0 0.3rem; font-size: 1.35rem; }
+.cue__paso-sub { margin: 0 0 1rem; font-size: 1rem; color: var(--sl-color-gray-3); }
 
 .cue__roles { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem; }
 .cue__rol {
@@ -2817,20 +2824,20 @@ body.pc-resizing * {
   background: var(--sl-color-accent); color: var(--sl-color-black);
   font-weight: 700; font-size: 0.9rem;
 }
-.cue__bloque-tit { margin: 0; font-size: 1.05rem; flex: 1 1 12rem; }
+.cue__bloque-tit { margin: 0; font-size: 1.2rem; flex: 1 1 12rem; }
 .cue__sello {
   font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 1rem;
   border: 1px solid var(--sl-color-gray-5); color: var(--sl-color-gray-3); white-space: nowrap;
 }
 .cue__sello--clase { border-color: var(--sl-color-accent-low); }
 .cue__bloque-ayuda {
-  margin: 0 0 0.9rem; font-size: 0.88rem; line-height: 1.5; color: var(--sl-color-gray-2);
+  margin: 0 0 0.9rem; font-size: 1rem; line-height: 1.6; color: var(--sl-color-gray-2);
 }
 
 .cue__campo { margin-bottom: 1rem; }
 .cue__campo:last-child { margin-bottom: 0; }
-.cue__etiqueta { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
-.cue__ayuda { margin: 0 0 0.4rem; font-size: 0.82rem; line-height: 1.45; color: var(--sl-color-gray-3); }
+.cue__etiqueta { display: block; font-weight: 600; font-size: 1.08rem; margin-bottom: 0.3rem; }
+.cue__ayuda { margin: 0 0 0.5rem; font-size: 0.95rem; line-height: 1.5; color: var(--sl-color-gray-3); }
 .cue__ayuda--pie { margin: 0.6rem 0 0; }
 
 /* Dos cosas que parecen detalle y no lo son, las dos por el celular:
@@ -2841,8 +2848,8 @@ body.pc-resizing * {
      a la tarjeta que lo contiene y no se leía como algo para tocar. gray-6 va
      un escalón aparte, y la relación se mantiene también en el tema claro. */
 .cue__input, .cue__area {
-  width: 100%; font: inherit; font-size: 16px; line-height: 1.5;
-  padding: 0.6rem 0.7rem; border-radius: 0.45rem;
+  width: 100%; font: inherit; font-size: 17px; line-height: 1.6;
+  padding: 0.7rem 0.8rem; border-radius: 0.45rem;
   border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-6);
   color: var(--sl-color-white); resize: vertical;
 }
