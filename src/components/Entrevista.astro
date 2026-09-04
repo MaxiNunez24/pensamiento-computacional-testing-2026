@@ -138,8 +138,8 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
       🔖 Marcar este momento
     </button>
     <p class="ent__marcar-ayuda">
-      Tocalo apenas alguien dice algo que importa. Guarda el minuto al instante — el nombre se lo
-      ponés después, con calma, o nunca.
+      Se toca apenas alguien dice algo que importa. Guarda el minuto al instante — el nombre se le
+      pone después, con calma, o nunca.
     </p>
 
     <ul class="ent__lista-marcas" data-marcas></ul>
@@ -166,6 +166,11 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
     } catch { /* sin roles no hay kit, pero tampoco hay que romper la página */ }
 
     const LS = 'pc_entrevista_sesiones';
+    /* La entrevista EN CURSO se guarda aparte y en cada tecla. Antes las marcas
+       vivían solo en memoria hasta tocar Terminar: si se cerraba la pestaña a
+       los 40 minutos, el audio sobrevivía (va a IndexedDB cada 5 segundos) pero
+       las marcas se perdían enteras — justo lo que hace navegable ese audio. */
+    const LS_ENCURSO = 'pc_entrevista_encurso';
     const DB_NOMBRE = 'pc-entrevistas';
     const TROZOS = 'trozos';
 
@@ -174,6 +179,12 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
     try { sesiones = JSON.parse(localStorage.getItem(LS) || '[]'); } catch {}
     const guardar = () => {
       try { localStorage.setItem(LS, JSON.stringify(sesiones)); } catch {}
+    };
+    const guardarEnCurso = () => {
+      try {
+        if (sesion) localStorage.setItem(LS_ENCURSO, JSON.stringify(sesion));
+        else localStorage.removeItem(LS_ENCURSO);
+      } catch {}
     };
 
     let rolActual: any = null;
@@ -310,7 +321,7 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
        el reloj, TODAS las marcas quedan corridas 40 segundos y no sirven para
        nada. Un botón, los dos relojes juntos. */
     $('[data-empezar]')!.addEventListener('click', async () => {
-      if (!rolActual) { alert('Elegí primero quién tenés enfrente.'); return; }
+      if (!rolActual) { alert('Falta elegir con quién estamos hablando.'); return; }
 
       sesion = {
         id: 'e' + Date.now().toString(36),
@@ -321,6 +332,7 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
         conAudio: false,
       };
       t0 = Date.now();
+      guardarEnCurso();
       latir();
       tick = setInterval(latir, 250);
 
@@ -367,6 +379,7 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
       //                                      ^^^ tres segundos antes: para
       // cuando uno toca el botón, la frase que importa ya empezó.
       sesion.marcas.push(marca);
+      guardarEnCurso();
       pintarMarcas();
       const ultimo = raiz.querySelector('[data-marcas] li:last-child input') as HTMLInputElement;
       if (ultimo) ultimo.focus();
@@ -384,9 +397,28 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
         inp.className = 'ent__marca-txt';
         inp.placeholder = 'tres palabras, o nada';
         inp.value = m.texto;
-        inp.addEventListener('input', () => { sesion.marcas[i].texto = inp.value; });
+        /* En cada tecla, no al apretar Enter. Nadie se acuerda de confirmar una
+           marca mientras escucha a otra persona hablar. */
+        inp.addEventListener('input', () => {
+          sesion.marcas[i].texto = inp.value;
+          guardarEnCurso();
+        });
         inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') inp.blur(); });
         li.appendChild(inp);
+
+        const borrar = document.createElement('button');
+        borrar.type = 'button';
+        borrar.className = 'ent__marca-borrar';
+        borrar.title = 'Borrar esta marca';
+        borrar.setAttribute('aria-label', 'Borrar esta marca');
+        borrar.textContent = '✕';
+        borrar.addEventListener('click', () => {
+          sesion.marcas.splice(i, 1);
+          guardarEnCurso();
+          pintarMarcas();
+        });
+        li.appendChild(borrar);
+
         ul.appendChild(li);
       });
     }
@@ -411,6 +443,7 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
       guardar();
       const terminada = sesion;
       sesion = null;
+      guardarEnCurso();   // ya no hay sesion en curso
 
       crono.textContent = '00:00';
       crono.classList.remove('es-justo', 'es-tarde');
@@ -460,7 +493,29 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
         div.className = 'ent__sesion';
         div.innerHTML =
           '<div class="ent__sesion-cab"><strong>' + s.rolNombre + '</strong>' +
+          (s.rescatada ? '<span class="ent__rescatada">rescatada</span>' : '') +
           '<span class="ent__sesion-dur">' + reloj(s.duracion || 0) + '</span></div>';
+
+        const tirar = document.createElement('button');
+        tirar.type = 'button';
+        tirar.className = 'ent__btn ent__btn--tirar';
+        tirar.textContent = '🗑 Borrar esta entrevista';
+        tirar.addEventListener('click', async () => {
+          if (!confirm('¿Borrar la entrevista de ' + s.rolNombre + '? Se va también el audio.')) return;
+          // Primero los trozos de audio, que ocupan; después la ficha.
+          try {
+            if (db) {
+              const tx = db.transaction(TROZOS, 'readwrite');
+              const st = tx.objectStore(TROZOS);
+              const p = st.index('sesion').getAllKeys(s.id);
+              p.onsuccess = () => (p.result || []).forEach((k: any) => st.delete(k));
+            }
+          } catch {}
+          sesiones = sesiones.filter((x) => x.id !== s.id);
+          guardar();
+          await pintarSesiones();
+        });
+        div.appendChild(tirar);
 
         if (s.conAudio) {
           const trozos = await trozosDe(s.id);
@@ -544,6 +599,19 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
         ta.select();
       }
     });
+
+    /* Si la pestaña se cerró con una entrevista a medias, sus marcas están
+       guardadas. Se rescatan como una sesión más en vez de perderlas. */
+    try {
+      const colgada = JSON.parse(localStorage.getItem(LS_ENCURSO) || 'null');
+      if (colgada && colgada.marcas && colgada.marcas.length) {
+        colgada.rescatada = true;
+        colgada.duracion = colgada.duracion || colgada.marcas[colgada.marcas.length - 1].t;
+        sesiones.push(colgada);
+        guardar();
+      }
+      localStorage.removeItem(LS_ENCURSO);
+    } catch {}
 
     pintarSesiones();
   });
