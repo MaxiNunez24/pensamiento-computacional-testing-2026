@@ -2602,6 +2602,32 @@ body.pc-resizing * {
 }
 
 /* ---------------------------------------------------------------------------
+   FILAS FLEX DENTRO DEL CONTENIDO MARKDOWN
+   Starlight le pone `margin-top: 1rem` a cada hermano dentro de
+   .sl-markdown-content. En una columna de texto eso es lo que se quiere; en una
+   FILA flex rompe todo: el primer hijo no tiene hermano anterior, así que no
+   lleva margen, y los demás sí. Resultado: el primer botón queda 16px más alto
+   que los otros y la fila queda desalineada.
+
+   Medido: en la fila de roles del kit, [0]=0px y [1..6]=16px, con el primer
+   botón en 60px contra 44px de los demás.
+
+   Ojo que Starlight excluye span, input, a, code y algunos más, así que solo
+   pasa en las filas cuyos hijos son button o div — por eso la lista es esta y
+   no todos los contenedores. Para encontrar nuevos casos: recorrer los
+   elementos con display:flex y comparar el margin-top computado de sus hijos.
+
+   No se toca .cue__enviar: ahí la diferencia es un margen nuestro, a propósito.
+--------------------------------------------------------------------------- */
+.ent__roles > *,
+.ent__reloj > *,
+.ent__reloj-btns > *,
+.cue__roles > *,
+.resp__barra > * {
+  margin-top: 0;
+}
+
+/* ---------------------------------------------------------------------------
    KIT DE ENTREVISTA (demo con los stakeholders del CFP)
    Se usa EN VIVO, con alguien hablando enfrente. De ahí las decisiones: el
    reloj grande y legible de lejos, y el botón de Marcar enorme — es lo único
