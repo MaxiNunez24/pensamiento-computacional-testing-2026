@@ -57,6 +57,7 @@ la asistencia cinco veces, una por cada forma de mirarla.
 <MapaProyecto piezas={[
   {
     id: 'inscripcion', nombre: 'Inscripción', emoji: '📝', capa: 'entra', estado: 'hecho',
+    pantalla: { hash: 'alumnos' },
     quien: ['alumno'],
     queHace: 'Recibe los datos del alumno cuando se anota: nombre, DNI, domicilio, teléfono.',
     queNecesita: 'Hoy es un formulario de Google. Más adelante puede ser una pantalla del sistema.',
@@ -100,6 +101,7 @@ la asistencia cinco veces, una por cada forma de mirarla.
   },
   {
     id: 'pasar-lista', nombre: 'Pasar lista', emoji: '✅', capa: 'entra', estado: 'hecho',
+    pantalla: { hash: 'dia' },
     quien: ['docente'],
     queHace: 'Muestra la lista del día y permite marcar presente, ausente, tarde o justificado. También corregir lo que marcó el alumno en la puerta.',
     queNecesita: 'La lista de alumnos del curso y saber qué días hay clase.',
@@ -157,6 +159,7 @@ la asistencia cinco veces, una por cada forma de mirarla.
   },
   {
     id: 'planilla', nombre: 'Planilla oficial', emoji: '🖨️', capa: 'sale', estado: 'hecho',
+    pantalla: { hash: 'planilla' },
     quien: ['preceptor'],
     queHace: 'Genera el formulario del Ministerio, con sus 50 columnas y su logo, listo para imprimir en Oficio.',
     queNecesita: 'La asistencia del mes y los datos del curso.',
@@ -187,7 +190,8 @@ la asistencia cinco veces, una por cada forma de mirarla.
     saberes: ['f-strings', 'Bucles para generar las filas', '<strong>No hace falta</strong> saber HTML ni CSS: el molde viene resuelto'],
   },
   {
-    id: 'merienda', nombre: 'Pantalla de la merienda', emoji: '🍫', capa: 'sale', estado: 'despues',
+    id: 'merienda', nombre: 'Pantalla de la merienda', emoji: '🍫', capa: 'sale', estado: 'hecho',
+    pantalla: { enVivo: 'Esta ya funciona: corre en la computadora del curso. Pedinos que te la mostremos.' },
     quien: ['auxiliares'],
     queHace: 'Muestra un número: cuántos alumnos hay hoy en el edificio.',
     queNecesita: 'La asistencia del día. Nada más.',

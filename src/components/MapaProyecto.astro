@@ -31,12 +31,24 @@ interface Pieza {
   tecnologias?: string[];
   /** Qué hay que saber ANTES de poder construirla. */
   saberes?: string[];
+  /**
+   * Dónde se puede VER esta pieza.
+   *   hash   → pantalla del prototipo, que está publicado: se linkea.
+   *   enVivo → ya funciona de verdad, pero corre en la máquina del curso.
+   *            Se muestra como aviso y NO como enlace: un link a localhost
+   *            desde el celular de un directivo es un callejón sin salida.
+   */
+  pantalla?: { hash?: string; enVivo?: string };
 }
 
 const { piezas, titulo = 'El sistema, por partes' } = Astro.props as {
   piezas: Pieza[];
   titulo?: string;
 };
+
+/* El prototipo vive del lado de MkDocs, la otra mitad del sitio: sube un nivel
+   desde /ejercicios/. Con el hash abre directo en la pantalla que corresponde. */
+const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/proyecto/sistema-asistencias.html';
 
 const CAPAS = [
   {
@@ -66,7 +78,7 @@ const ESTADOS: Record<string, { texto: string; clase: string }> = {
 const id = idEjercicio(titulo);
 ---
 
-<section class="mapa" id={id}>
+<section class="mapa" data-prototipo={PROTOTIPO} id={id}>
   <div class="mapa__leyenda">
     {Object.entries(ESTADOS).map(([k, v]) => (
       <span class={'mapa__chip ' + v.clase}>{v.texto}</span>
@@ -109,6 +121,7 @@ const id = idEjercicio(titulo);
         <p class="mapa__d-campo"><strong>Quién lo usa:</strong> <span data-d-quien></span></p>
         <p class="mapa__d-campo"><strong>Qué necesita para funcionar:</strong> <span data-d-necesita></span></p>
         <p class="mapa__d-campo"><strong>Cuándo lo construimos:</strong> <span data-d-etapa></span></p>
+        <p class="mapa__d-ver" data-d-ver hidden></p>
         <p class="mapa__d-nota" data-d-nota hidden></p>
 
         <details class="mapa__conque" data-d-conque hidden>
@@ -174,6 +187,16 @@ const id = idEjercicio(titulo);
         q('[data-d-quien]').textContent = p.quien.join(', ');
         q('[data-d-necesita]').textContent = p.queNecesita;
         q('[data-d-etapa]').textContent = p.etapa;
+
+        const ver = q('[data-d-ver]');
+        ver.hidden = !p.pantalla;
+        if (p.pantalla) {
+          const proto = mapa.getAttribute('data-prototipo') || '';
+          ver.innerHTML = p.pantalla.hash
+            ? '<a class="mapa__btn-ver" href="' + proto + '#' + p.pantalla.hash +
+              '" target="_blank" rel="noopener">👁️ Ver esta pantalla ↗</a>'
+            : '<span class="mapa__ya-anda">✅ ' + p.pantalla.enVivo + '</span>';
+        }
 
         const nota = q('[data-d-nota]');
         nota.hidden = !p.nota;

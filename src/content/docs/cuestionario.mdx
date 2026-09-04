@@ -1,6 +1,16 @@
 ---
 title: Cuestionario para el equipo del CFP
 description: "Cinco minutos para contarnos de qué se ocupa y qué información necesita para su trabajo. Es el paso previo a la reunión con el curso."
+# Se llega solo por el link que se les manda: no está en el menú, no sale
+# en el buscador del sitio y se le pide a Google que no la indexe. No es
+# secreto (quien tenga la URL entra) pero no tiene por qué aparecerle a
+# un alumno que está buscando una clase.
+pagefind: false
+head:
+  - tag: meta
+    attrs:
+      name: robots
+      content: noindex, nofollow
 ---
 
 import Cuestionario from '../../components/Cuestionario.astro';

@@ -2274,6 +2274,20 @@ body.pc-resizing * {
 .mapa__d-cuerpo { display: grid; gap: 1.2rem; grid-template-columns: 1fr auto; align-items: start; }
 .mapa__d-campo { margin: 0 0 0.45rem; font-size: 0.9rem; line-height: 1.5; }
 .mapa__d-campo strong { color: var(--sl-color-white); }
+.mapa__d-ver { margin: 0.7rem 0; }
+.mapa__btn-ver {
+  display: inline-block; font-size: 0.9rem; text-decoration: none;
+  padding: 0.5rem 0.9rem; border-radius: 0.4rem;
+  border: 1px solid var(--sl-color-accent); background: var(--sl-color-accent);
+  color: var(--sl-color-black); font-weight: 600;
+}
+.mapa__btn-ver:hover { filter: brightness(1.12); }
+.mapa__ya-anda {
+  display: inline-block; font-size: 0.88rem; line-height: 1.5;
+  padding: 0.5rem 0.8rem; border-radius: 0.4rem;
+  background: var(--sl-color-gray-6); border: 1px solid var(--sl-color-accent-low);
+}
+
 .mapa__d-nota {
   margin: 0.9rem 0 0; padding: 0.6rem 0.8rem; font-size: 0.86rem; line-height: 1.55;
   border-left: 3px solid #ffa94d; background: var(--sl-color-gray-6); border-radius: 0.3rem;

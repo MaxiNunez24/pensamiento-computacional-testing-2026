@@ -84,10 +84,11 @@ export default defineConfig({
         // Arriba mientras dure: se usa el 2/9 para prepararla y el 4/9 en vivo,
         // con alguien hablando enfrente. Después baja o se saca.
         { label: '🎤 La entrevista del viernes', link: '/entrevista/' },
-        // Lo contesta el equipo del CFP, no los alumnos: es la única página del
-        // sitio cuyo destinatario es de afuera del curso. Va arriba porque el
-        // link se manda por WhatsApp y tiene que encontrarse sin buscar.
-        { label: '📝 Cuestionario del CFP', link: '/cuestionario/' },
+        // El cuestionario del CFP (/cuestionario/) NO va acá a propósito: se
+        // llega solo por el link que se les manda. No es secreto —cualquiera
+        // que tenga la URL entra— pero no tiene por qué aparecerle a un alumno
+        // buscando una clase. La página además se excluye del buscador y le
+        // pide a Google que no la indexe.
         // ⚠️ El orden de acá abajo NO es cosmético: es el orden en que se enseña,
         // y varias clases dependen de que lo anterior ya se haya visto.
         //   · Listas va ANTES que Bucles: `for` necesita algo que recorrer, y
