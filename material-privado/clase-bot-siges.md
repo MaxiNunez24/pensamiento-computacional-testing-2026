@@ -41,10 +41,10 @@ domicilio. Dejar que lo vean. *"Esto lo escribieron treinta personas distintas."
 
 ```
 ⛔ FRENADOS, los tiene que mirar una persona: 3
-   fila   3  ***REMOVED***, ***REMOVED***
+   fila   3  Ledesma, Marta Elena
             · la fecha "13/10/2072" está en el futuro
    fila   8  Gutierrez, Amanda
-            · el domicilio dice "***REMOVED***", que parece un DNI
+            · el domicilio dice "40000010", que parece un DNI
 ```
 
 Este paso es el que más impresiona y **es Python puro, sin navegador**: `csv`, `re`, `datetime`,

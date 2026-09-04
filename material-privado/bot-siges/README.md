@@ -63,7 +63,7 @@ tienen de todo:
 |---|---|
 | `Argentino`, `Argentina`, `Arg`, `argentina` | Cuatro formas de escribir lo mismo |
 | Provincia: `Ensenada` | Es una localidad, no una provincia |
-| Domicilio: `***REMOVED***` | Alguien pegó el DNI en la columna equivocada |
+| Domicilio: `40000010` | Alguien pegó el DNI en la columna equivocada |
 | Fecha: `13/10/2072` | Todavía no nació |
 | Edad: `Completar` | Nunca lo completaron |
 

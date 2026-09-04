@@ -112,7 +112,7 @@ Esta es la etapa que más se subestima y la más importante. Acá van las **clas
 Escribí `modelo.py` de esta carpeta. Mientras lo hacés, prestá atención a tres cosas:
 
 1. **`Curso` guarda la asistencia como un diccionario de diccionarios**:
-   `{"2026-08-21": {"***REMOVED***": "P"}}`. Día → alumno → estado. Que elijan ellos esta estructura es
+   `{"2026-08-21": {"40000001": "P"}}`. Día → alumno → estado. Que elijan ellos esta estructura es
    un ejercicio buenísimo: si la eligen mal, todo lo demás se complica y **lo van a sentir**.
 2. **`presentes()` cuenta `P` y `T` juntos.** El que llegó tarde vino. Es una *regla del negocio*,
    no una decisión técnica, y es el ejemplo perfecto de por qué hay que preguntarle al cliente.
@@ -206,7 +206,7 @@ Acá aparecen los dos conceptos que hay que entender de verdad:
 ```
 
 **`request.form`** trae lo que el usuario tocó, con el `name` de cada control. Por eso los radios
-del template se llaman `estado-***REMOVED***`: así el código sabe de quién es cada respuesta.
+del template se llaman `estado-40000001`: así el código sabe de quién es cada respuesta.
 
 Y una trampa que conviene conocer antes de pisarla:
 

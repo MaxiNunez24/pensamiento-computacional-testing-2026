@@ -206,7 +206,7 @@ class Alumno:
         self.dni = dni
         self.apellido = apellido
 
-a = Alumno("***REMOVED***", "***REMOVED***")
+a = Alumno("40000001", "Gómez")
 print(a.apellido)
 ```
 
@@ -218,7 +218,7 @@ Lo mismo, con un diccionario:
 def crear_alumno(dni, apellido):
     return {"dni": dni, "apellido": apellido}
 
-a = crear_alumno("***REMOVED***", "***REMOVED***")
+a = crear_alumno("40000001", "Gómez")
 print(a["apellido"])
 ```
 
@@ -405,13 +405,13 @@ da `False`. Es la diferencia entre saber que existe y saber usarlo.
 <EjercicioPython
   titulo="La lista numerada"
   dificultad="🟢"
-  datos={`alumnos = ["Alvarez", "Benitez", "Cabrera"]`}
+  datos={`alumnos = ["Paz", "Benitez", "Cabrera"]`}
   starter={`# Mostrá la lista numerada, empezando en 1:
-# 1 - Alvarez
+# 1 - Paz
 # 2 - Benitez
 # 3 - Cabrera
 `}
-  tests={`assert salida.strip() == "1 - Alvarez\\n2 - Benitez\\n3 - Cabrera", f'salió {salida.strip()!r}'`}
+  tests={`assert salida.strip() == "1 - Paz\\n2 - Benitez\\n3 - Cabrera", f'salió {salida.strip()!r}'`}
   pistas={[
     "<code>enumerate(alumnos, start=1)</code> te da el número y el nombre juntos en cada vuelta.",
     "El <code>for</code> puede recibir dos variables: <code>for n, a in enumerate(...)</code>",

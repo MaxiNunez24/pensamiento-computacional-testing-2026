@@ -388,7 +388,7 @@ Cosas a resolver antes de construirlo:
 
 | | |
 |---|---|
-| 🔒 **Privacidad en la pantalla** | Mostrar "¿Sos ***REMOVED*** Soledad González?" en la entrada significa que **cualquiera que pase ve quién llegó**. Mejor solo nombre e inicial ("¿Sos ***REMOVED*** G.?"). |
+| 🔒 **Privacidad en la pantalla** | Mostrar "¿Sos Lucía Belén Gómez?" en la entrada significa que **cualquiera que pase ve quién llegó**. Mejor solo nombre e inicial ("¿Sos Lucía G.?"). |
 | 🕵️ **El DNI no es secreto** | Cualquiera que sepa el DNI de otro puede marcarlo presente. Por eso la confirmación del docente **no es opcional**: es lo que hace confiable al sistema. Ya lo pensaron bien. |
 | 🔌 **Si el sistema se cae, la entrada se cae** | Hace falta plan B en papel, y que el sistema **no bloquee la entrada** de nadie. |
 | 🖥️ **Qué aparato** | Una compu vieja con teclado numérico alcanza. No hace falta hardware especial. |

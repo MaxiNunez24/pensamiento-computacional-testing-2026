@@ -31,7 +31,7 @@ class Curso:
         self.nombre = nombre
         self.dias_cursada = dias_cursada     # [2, 4] = miércoles y viernes
         self.alumnos = []
-        # { "2026-08-21": { "***REMOVED***": "P" } }
+        # { "2026-08-21": { "40000001": "P" } }
         self.asistencia = {}
 
     # ---------- alumnos ----------

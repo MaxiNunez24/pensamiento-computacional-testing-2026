@@ -110,7 +110,7 @@ Misma dirección, dos funciones distintas, según cómo se pida.
 ```python
 from flask import request
 
-estado = request.form.get("estado-***REMOVED***", "")
+estado = request.form.get("estado-40000001", "")
 ```
 
 - `request` es el **pedido que está llegando ahora**. Flask lo pone a mano; no hay que pasarlo.

@@ -12,8 +12,8 @@ formulario están escritos por 30 personas distintas y tienen de todo:
     Nacionalidad: "Argentino", "Argentina", "Arg", "argentina"
     Provincia:    "Buenos Aires", "Bs as", "buenos aires", "Ensenada" (¡es una
                   localidad, no una provincia!)
-    Celular:      "***REMOVED***" y "***REMOVED***"
-    Domicilio:    "***REMOVED***"  ← alguien puso el DNI en el campo del domicilio
+    Celular:      "2215550001" y "221 555 0010"
+    Domicilio:    "40000010"  ← alguien puso el DNI en el campo del domicilio
     Fecha:        "13/10/2072" ← todavía no nació
     Edad:         "Completar"
 
@@ -38,7 +38,7 @@ EDAD_MAXIMA = 100
 
 
 def sin_acentos(texto):
-    """'***REMOVED***' -> 'Acuna'. Sirve para comparar, no para mostrar."""
+    """'Muñoz' -> 'Munoz'. Sirve para comparar, no para mostrar."""
     return ''.join(
         c for c in unicodedata.normalize('NFD', texto)
         if unicodedata.category(c) != 'Mn'
@@ -51,7 +51,7 @@ def limpiar(texto):
 
 
 def titulo(texto):
-    """'MARIA DEVORA' y 'maria devora' -> '***REMOVED***'."""
+    """'SOFIA BEATRIZ' y 'sofia beatriz' -> 'Sofia Beatriz'."""
     return limpiar(texto).title()
 
 
