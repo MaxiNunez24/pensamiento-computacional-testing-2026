@@ -2857,6 +2857,30 @@ body.pc-resizing * {
   border: 1px solid transparent; background: transparent; color: var(--sl-color-white);
 }
 .ent__marca-ir:hover { border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); }
+.ent__lista-marcas--edit li { gap: 0.5rem; padding: 0.3rem 0; }
+.ent__marca-t--ir {
+  font: inherit; font-family: var(--sl-font-mono, monospace);
+  font-variant-numeric: tabular-nums; font-size: 0.85rem; cursor: pointer;
+  flex: none; padding: 0.35rem 0.5rem; border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent;
+  color: var(--sl-color-text-accent);
+}
+.ent__marca-t--ir:hover { border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); }
+.ent__agregar {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+  margin-top: 0.7rem; padding-top: 0.7rem;
+  border-top: 1px dashed var(--sl-color-gray-5);
+}
+.ent__agregar > * { margin-top: 0; }
+.ent__agregar-t {
+  flex: none; width: 5.5rem; font: inherit;
+  font-family: var(--sl-font-mono, monospace); font-size: 16px;
+  padding: 0.4rem 0.55rem; border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-6); color: var(--sl-color-white);
+}
+.ent__agregar .ent__marca-txt { flex: 1 1 10rem; }
+
 .ent__sin-audio { margin: 0; font-size: 0.85rem; color: var(--sl-color-gray-3); }
 .ent__export {
   width: 100%; margin-top: 0.6rem; font-family: var(--sl-font-mono, monospace);

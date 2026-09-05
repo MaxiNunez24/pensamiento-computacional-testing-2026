@@ -554,32 +554,105 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
            mostraban, y se perdían las dos cosas juntas. Las marcas son lo que
            más cuesta recuperar — el audio se puede haber grabado con el celular
            en paralelo, las marcas no. */
-        if (s.marcas.length) {
-          const ul = document.createElement('ul');
-          ul.className = 'ent__lista-marcas' + (audio ? ' ent__lista-marcas--repro' : '');
-          s.marcas.forEach((m: any) => {
-            const li = document.createElement('li');
-            if (audio) {
-              // Con audio, la marca es un botón que salta a ese minuto.
-              const b = document.createElement('button');
-              b.type = 'button';
-              b.className = 'ent__marca-ir';
-              b.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
-                (m.texto || '<em>sin nombre</em>');
-              b.addEventListener('click', async () => {
-                await arreglarDuracion(audio!);
-                audio!.currentTime = m.t;
-                audio!.play();
-              });
-              li.appendChild(b);
-            } else {
-              li.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
-                (m.texto || '<em>sin nombre</em>');
-            }
-            ul.appendChild(li);
+        /* Las marcas de una entrevista TERMINADA se pueden editar. Durante la
+           charla solo se toca el botón; el nombre se le pone después, con
+           calma y escuchando. Dejarlas de solo lectura era al revés de como se
+           trabaja. */
+        const ul = document.createElement('ul');
+        ul.className = 'ent__lista-marcas ent__lista-marcas--edit';
+
+        const pintarUnaMarca = (m: any, i: number) => {
+          const li = document.createElement('li');
+
+          // El minuto: botón que salta al audio si lo hay, texto si no.
+          if (audio) {
+            const ir = document.createElement('button');
+            ir.type = 'button';
+            ir.className = 'ent__marca-t ent__marca-t--ir';
+            ir.title = 'Escuchar desde acá';
+            ir.textContent = '▶ ' + reloj(m.t);
+            ir.addEventListener('click', async () => {
+              await arreglarDuracion(audio!);
+              audio!.currentTime = m.t;
+              audio!.play();
+            });
+            li.appendChild(ir);
+          } else {
+            const t = document.createElement('span');
+            t.className = 'ent__marca-t';
+            t.textContent = reloj(m.t);
+            li.appendChild(t);
+          }
+
+          const inp = document.createElement('input');
+          inp.type = 'text';
+          inp.className = 'ent__marca-txt';
+          inp.placeholder = 'qué se dijo acá';
+          inp.value = m.texto || '';
+          inp.addEventListener('input', () => {
+            s.marcas[i].texto = inp.value;
+            guardar();
           });
-          div.appendChild(ul);
-        }
+          li.appendChild(inp);
+
+          const borrar = document.createElement('button');
+          borrar.type = 'button';
+          borrar.className = 'ent__marca-borrar';
+          borrar.title = 'Borrar esta marca';
+          borrar.setAttribute('aria-label', 'Borrar esta marca');
+          borrar.textContent = '✕';
+          borrar.addEventListener('click', async () => {
+            s.marcas.splice(i, 1);
+            guardar();
+            await pintarSesiones();
+          });
+          li.appendChild(borrar);
+
+          ul.appendChild(li);
+        };
+
+        s.marcas.forEach(pintarUnaMarca);
+        div.appendChild(ul);
+
+        /* Agregar una a mano. El viernes el audio bueno estaba en el celular
+           del profe y las marcas en la notebook de una alumna: pasarlas a mano
+           es exactamente lo que hay que poder hacer. Y sirve igual para el
+           "me olvidé de marcar el minuto 12". */
+        const agregar = document.createElement('div');
+        agregar.className = 'ent__agregar';
+        const cuando = document.createElement('input');
+        cuando.type = 'text';
+        cuando.className = 'ent__agregar-t';
+        cuando.placeholder = 'mm:ss';
+        cuando.setAttribute('aria-label', 'Minuto de la marca nueva');
+        const que = document.createElement('input');
+        que.type = 'text';
+        que.className = 'ent__marca-txt';
+        que.placeholder = 'qué se dijo';
+        que.setAttribute('aria-label', 'Texto de la marca nueva');
+        const ok = document.createElement('button');
+        ok.type = 'button';
+        ok.className = 'ent__btn';
+        ok.textContent = '➕ Agregar marca';
+        ok.addEventListener('click', async () => {
+          const partes = cuando.value.trim().split(':');
+          const min = parseInt(partes[0], 10);
+          const seg = partes.length > 1 ? parseInt(partes[1], 10) : 0;
+          if (isNaN(min) || isNaN(seg)) {
+            cuando.focus();
+            cuando.placeholder = '¿mm:ss?';
+            return;
+          }
+          s.marcas.push({ t: min * 60 + seg, texto: que.value.trim() });
+          // Siempre ordenadas por minuto, se agreguen en el orden que se agreguen.
+          s.marcas.sort((a: any, b: any) => a.t - b.t);
+          guardar();
+          await pintarSesiones();
+        });
+        agregar.appendChild(cuando);
+        agregar.appendChild(que);
+        agregar.appendChild(ok);
+        div.appendChild(agregar);
 
         lista.appendChild(div);
       }
