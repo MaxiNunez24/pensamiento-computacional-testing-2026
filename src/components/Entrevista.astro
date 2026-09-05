@@ -491,7 +491,7 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
       caja.hidden = false;
       lista.innerHTML = '';
 
-      for (const s of sesiones) {
+      for (const [indice, s] of sesiones.entries()) {
         const div = document.createElement('div');
         div.className = 'ent__sesion';
         div.innerHTML =
@@ -595,6 +595,17 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
           });
           li.appendChild(inp);
 
+          /* De quién es la marca. Solo aparece en las importadas: las propias no
+             necesitan aclaración. Es lo único que valía la pena de la idea del
+             Worker — cuando tres personas marcaron el mismo minuto, ese minuto
+             es el que importa, y sin el autor no se nota. */
+          if (m.de) {
+            const quien = document.createElement('span');
+            quien.className = 'ent__marca-de';
+            quien.textContent = m.de;
+            li.appendChild(quien);
+          }
+
           const borrar = document.createElement('button');
           borrar.type = 'button';
           borrar.className = 'ent__marca-borrar';
@@ -654,6 +665,110 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
         agregar.appendChild(ok);
         div.appendChild(agregar);
 
+        /* Pegar las marcas de otra persona. La sincronización es el grupo de
+           WhatsApp: el otro toca "Copiar todas las marcas", las manda, y acá se
+           pegan. Sin servidor, sin internet y sin conflictos que resolver. */
+        const pegar = document.createElement('details');
+        pegar.className = 'ent__pegar';
+        const resumen = document.createElement('summary');
+        resumen.textContent = '📥 Pegar las marcas de otra persona';
+        pegar.appendChild(resumen);
+
+        const deQuien = document.createElement('input');
+        deQuien.type = 'text';
+        deQuien.className = 'ent__agregar-t ent__pegar-de';
+        deQuien.placeholder = '¿de quién?';
+        deQuien.setAttribute('aria-label', 'Nombre de quien hizo estas marcas');
+
+        const caja = document.createElement('textarea');
+        caja.className = 'ent__pegar-caja';
+        caja.rows = 6;
+        caja.placeholder = '00:45  las planillas duplicadas\n05:30  lo del celular';
+        caja.setAttribute('aria-label', 'Marcas a importar');
+
+        const importar = document.createElement('button');
+        importar.type = 'button';
+        importar.className = 'ent__btn ent__btn--ok';
+        importar.textContent = 'Importar';
+
+        const dice = document.createElement('p');
+        dice.className = 'ent__pegar-estado';
+
+        importar.addEventListener('click', async () => {
+          /* Acepta el formato del export propio y también lo escrito a mano:
+             "5:30 algo", "05:30 - algo", "05:30 — algo", con o sin sangría, y
+             con horas si alguna entrevista pasa de los 60 minutos. Las líneas
+             que no empiezan con un tiempo se ignoran solas, así se puede pegar
+             el export entero con sus encabezados. */
+          const re = /^\s*(?:(\d{1,2}):)?(\d{1,3}):(\d{2})\s*[-—–|.]?\s*(.*)$/;
+          const nombre = deQuien.value.trim();
+          let sumadas = 0;
+          let repetidas = 0;
+
+          /* Si el texto pegado trae los encabezados del export, solo se
+             importan las marcas de ESTA entrevista. Sin esto, pegar el export
+             completo metía en preceptoría las marcas del instructor: el error
+             más fácil de cometer y el más difícil de notar después. Sin
+             encabezados (una lista escrita a mano) entra todo. */
+          const lineas = caja.value.split('\n');
+          const hayEncabezados = lineas.some((l) => l.trim().startsWith('──'));
+          let enEstaEntrevista = !hayEncabezados;
+          let salteadasDeOtra = 0;
+          const soloNombre = String(s.rolNombre).replace(/^\S+\s*/, '').trim();
+
+          lineas.forEach((linea) => {
+            if (linea.trim().startsWith('──')) {
+              enEstaEntrevista = linea.includes(soloNombre);
+              return;
+            }
+            const m = re.exec(linea);
+            if (!m) return;
+            if (!enEstaEntrevista) { salteadasDeOtra++; return; }
+            const hs = m[1] ? parseInt(m[1], 10) : 0;
+            const t = hs * 3600 + parseInt(m[2], 10) * 60 + parseInt(m[3], 10);
+            let texto = (m[4] || '').trim();
+            if (texto === '(sin nombre)') texto = '';
+
+            // Doble pegado: si ya está la misma marca del mismo autor, se saltea.
+            const yaEsta = s.marcas.some((x: any) =>
+              Math.abs(x.t - t) < 1.5 && (x.texto || '') === texto && (x.de || '') === nombre);
+            if (yaEsta) { repetidas++; return; }
+
+            s.marcas.push(nombre ? { t, texto, de: nombre } : { t, texto });
+            sumadas++;
+          });
+
+          if (!sumadas && !repetidas) {
+            dice.textContent = salteadasDeOtra
+              ? 'Ahí no hay marcas de esta entrevista (sí ' + salteadasDeOtra + ' de otras).'
+              : 'No encontré ninguna línea que empiece con un tiempo tipo 05:30.';
+            return;
+          }
+          s.marcas.sort((a: any, b: any) => a.t - b.t);
+          guardar();
+          const resumenTxt = [
+            sumadas ? sumadas + (sumadas > 1 ? ' marcas importadas' : ' marca importada') : '',
+            repetidas ? repetidas + (repetidas > 1 ? ' ya estaban' : ' ya estaba') : '',
+            salteadasDeOtra ? salteadasDeOtra + ' de otras entrevistas' : '',
+          ].filter(Boolean).join(' · ');
+          caja.value = '';
+          await pintarSesiones();
+          /* pintarSesiones rehace el DOM entero, así que el aviso se pone
+             DESPUÉS y sobre el elemento nuevo, no sobre el que ya no existe. */
+          const nuevoDice = document.querySelectorAll('.ent__pegar-estado')[indice] as HTMLElement;
+          if (nuevoDice) {
+            nuevoDice.textContent = '✅ ' + resumenTxt;
+            const det = nuevoDice.closest('details') as HTMLDetailsElement;
+            if (det) det.open = true;
+          }
+        });
+
+        pegar.appendChild(deQuien);
+        pegar.appendChild(caja);
+        pegar.appendChild(importar);
+        pegar.appendChild(dice);
+        div.appendChild(pegar);
+
         lista.appendChild(div);
       }
       if (abrir) caja.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -666,7 +781,8 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
         lineas.push('── ' + s.rolNombre + '  (' + reloj(s.duracion || 0) + ')');
         if (!s.marcas.length) lineas.push('   (sin marcas)');
         s.marcas.forEach((m: any) => {
-          lineas.push('   ' + reloj(m.t) + '  ' + (m.texto || '(sin nombre)'));
+          lineas.push('   ' + reloj(m.t) + '  ' + (m.texto || '(sin nombre)') +
+            (m.de ? '   [' + m.de + ']' : ''));
         });
         lineas.push('');
       });
