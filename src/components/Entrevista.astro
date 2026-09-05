@@ -218,7 +218,10 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
       });
     }
     let db: IDBDatabase | null = null;
-    abrirDB().then((d) => { db = d; });
+    /* Se guarda la promesa, no solo el resultado: hay que poder ESPERARLA antes
+       de pintar. Antes esto era un .then() suelto y el pintado del arranque
+       corría con db en null, así que el audio de IndexedDB no se leía nunca. */
+    const dbLista = abrirDB().then((d) => { db = d; return d; });
 
     function guardarTrozo(idSesion: string, blob: Blob) {
       if (!db) return;
@@ -517,12 +520,14 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
         });
         div.appendChild(tirar);
 
+        // Declarado afuera: las marcas de más abajo necesitan saber si hay audio.
+        let audio: HTMLAudioElement | null = null;
         if (s.conAudio) {
           const trozos = await trozosDe(s.id);
           if (trozos.length) {
             const blob = new Blob(trozos, { type: s.mime || 'audio/webm' });
             const url = URL.createObjectURL(blob);
-            const audio = document.createElement('audio');
+            audio = document.createElement('audio');
             audio.controls = true;
             audio.preload = 'metadata';
             audio.src = url;
@@ -534,38 +539,43 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
             baja.download = 'entrevista-' + s.rol + '-' + s.id + '.webm';
             baja.textContent = '⬇ Descargar el audio';
             div.appendChild(baja);
-
-            // Las marcas, clickeables: saltan a ese minuto del audio.
-            if (s.marcas.length) {
-              const ul = document.createElement('ul');
-              ul.className = 'ent__lista-marcas ent__lista-marcas--repro';
-              s.marcas.forEach((m: any) => {
-                const li = document.createElement('li');
-                const b = document.createElement('button');
-                b.type = 'button';
-                b.className = 'ent__marca-ir';
-                b.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
-                  (m.texto || '<em>sin nombre</em>');
-                b.addEventListener('click', async () => {
-                  await arreglarDuracion(audio);
-                  audio.currentTime = m.t;
-                  audio.play();
-                });
-                li.appendChild(b);
-                ul.appendChild(li);
-              });
-              div.appendChild(ul);
-            }
           } else {
-            div.innerHTML += '<p class="ent__sin-audio">No quedó audio guardado de esta.</p>';
+            /* appendChild y no innerHTML +=: reasignar innerHTML recrea los
+               hijos y le vuela el listener al botón de borrar. */
+            const aviso = document.createElement('p');
+            aviso.className = 'ent__sin-audio';
+            aviso.textContent = 'No se encontró el audio de esta entrevista. Las marcas de abajo siguen sirviendo contra la grabación del celular.';
+            div.appendChild(aviso);
           }
-        } else if (s.marcas.length) {
+        }
+
+        /* ⚠️ LAS MARCAS SE PINTAN SIEMPRE, fuera del if del audio.
+           Antes vivían adentro: si el audio no aparecía, las marcas tampoco se
+           mostraban, y se perdían las dos cosas juntas. Las marcas son lo que
+           más cuesta recuperar — el audio se puede haber grabado con el celular
+           en paralelo, las marcas no. */
+        if (s.marcas.length) {
           const ul = document.createElement('ul');
-          ul.className = 'ent__lista-marcas';
+          ul.className = 'ent__lista-marcas' + (audio ? ' ent__lista-marcas--repro' : '');
           s.marcas.forEach((m: any) => {
             const li = document.createElement('li');
-            li.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
-              (m.texto || '<em>sin nombre</em>');
+            if (audio) {
+              // Con audio, la marca es un botón que salta a ese minuto.
+              const b = document.createElement('button');
+              b.type = 'button';
+              b.className = 'ent__marca-ir';
+              b.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
+                (m.texto || '<em>sin nombre</em>');
+              b.addEventListener('click', async () => {
+                await arreglarDuracion(audio!);
+                audio!.currentTime = m.t;
+                audio!.play();
+              });
+              li.appendChild(b);
+            } else {
+              li.innerHTML = '<span class="ent__marca-t">' + reloj(m.t) + '</span> ' +
+                (m.texto || '<em>sin nombre</em>');
+            }
             ul.appendChild(li);
           });
           div.appendChild(ul);
@@ -613,6 +623,9 @@ const PROTOTIPO = import.meta.env.BASE_URL.replace(/\/ejercicios\/?$/, '') + '/p
       localStorage.removeItem(LS_ENCURSO);
     } catch {}
 
-    pintarSesiones();
+    /* `await` de verdad: si se pinta antes de que la base esté abierta, las
+       grabaciones existen pero no se muestran. Fue exactamente el bug que se
+       comió el audio y las marcas de las entrevistas del 5/9. */
+    dbLista.then(() => pintarSesiones());
   });
 </script>
