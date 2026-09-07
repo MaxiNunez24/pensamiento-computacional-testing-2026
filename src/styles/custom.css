@@ -3126,6 +3126,45 @@ body.pc-resizing * {
 }
 .resp__cuantas { font-weight: 600; margin-right: auto; }
 
+.resp__controles {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.7rem;
+}
+.resp__controles > * { margin-top: 0; }
+.resp__vistas { display: flex; border: 1px solid var(--sl-color-gray-5); border-radius: 0.45rem; overflow: hidden; }
+.resp__vista {
+  font: inherit; font-size: 0.9rem; cursor: pointer; padding: 0.5rem 0.9rem;
+  border: none; background: transparent; color: var(--sl-color-gray-3); min-height: 2.6rem;
+}
+.resp__vista.es-activa { background: var(--sl-color-accent); color: var(--sl-color-black); font-weight: 600; }
+.resp__buscar {
+  flex: 1 1 12rem; font: inherit; font-size: 16px; padding: 0.55rem 0.7rem;
+  border-radius: 0.45rem; border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-6); color: var(--sl-color-white);
+}
+.resp__roles { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.resp__roles > * { margin-top: 0; }
+.resp__chip {
+  font: inherit; font-size: 0.85rem; cursor: pointer; padding: 0.4rem 0.75rem;
+  border-radius: 1rem; border: 1px solid var(--sl-color-gray-5);
+  background: transparent; color: var(--sl-color-gray-3); min-height: 2.2rem;
+}
+.resp__chip:hover { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
+.resp__chip.es-activo {
+  background: var(--sl-color-accent); border-color: var(--sl-color-accent);
+  color: var(--sl-color-black); font-weight: 600;
+}
+.resp__quien-linea {
+  margin: 0.8rem 0 0.15rem; font-size: 0.82rem; font-weight: 600;
+  color: var(--sl-color-text-accent);
+}
+.resp__dist { list-style: none; padding: 0; margin: 0.6rem 0 0.4rem; }
+.resp__dist li { display: flex; align-items: center; gap: 0.6rem; padding: 0.15rem 0; }
+.resp__dist-op { flex: none; width: 7rem; font-size: 0.85rem; }
+.resp__dist-barra {
+  height: 0.75rem; border-radius: 0.2rem; background: var(--sl-color-accent); min-width: 0.5rem;
+}
+.resp__dist-n { font-size: 0.85rem; color: var(--sl-color-gray-3); }
+
 .resp__ficha {
   border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
   background: var(--sl-color-black); padding: 1rem; margin-bottom: 1rem;

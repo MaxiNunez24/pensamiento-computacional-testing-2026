@@ -57,6 +57,21 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
       <button type="button" class="resp__btn" data-refrescar>🔄 Actualizar</button>
       <button type="button" class="resp__btn" data-salir>🔒 Cerrar</button>
     </div>
+
+    <div class="resp__controles">
+      {/* Por pregunta es la vista que sirve para PREPARAR: se lee una pregunta
+          y se ve qué contestaron todos, uno abajo del otro. Ahí aparecen los
+          patrones y las contradicciones entre roles. Por persona sirve para
+          conocer a alguien, que es otra cosa. */}
+      <div class="resp__vistas" role="tablist">
+        <button type="button" class="resp__vista es-activa" data-vista="persona" role="tab">Por persona</button>
+        <button type="button" class="resp__vista" data-vista="pregunta" role="tab">Por pregunta</button>
+      </div>
+      <input type="search" class="resp__buscar" data-buscar
+             placeholder="🔍 buscar en las respuestas…" aria-label="Buscar en las respuestas" />
+    </div>
+
+    <div class="resp__roles" data-filtro-roles></div>
     <div data-lista></div>
     <textarea class="resp__export" data-export rows="10" readonly hidden></textarea>
   </div>
@@ -137,19 +152,136 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
       }
     }
 
+    let vista: 'persona' | 'pregunta' = 'persona';
+    let rolFiltro = '';
+    let busqueda = '';
+
+    /** Las que hay que mostrar según el filtro de rol y el buscador. */
+    function visibles() {
+      const q = busqueda.trim().toLowerCase();
+      return ultimas.filter((p: any) => {
+        if (rolFiltro && p.rol !== rolFiltro) return false;
+        if (!q) return true;
+        const todo = [p.nombre || '', nombreRol(p.rol),
+          ...Object.values(p.respuestas || {})].join(' ').toLowerCase();
+        return todo.includes(q);
+      });
+    }
+
+    /** Los chips de rol, con cuántas respuestas tiene cada uno. */
+    function pintarFiltro() {
+      const caja = $('[data-filtro-roles]')!;
+      caja.innerHTML = '';
+      const cuenta: Record<string, number> = {};
+      ultimas.forEach((p: any) => { cuenta[p.rol] = (cuenta[p.rol] || 0) + 1; });
+
+      const chip = (id: string, texto: string) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'resp__chip' + (rolFiltro === id ? ' es-activo' : '');
+        b.textContent = texto;
+        b.addEventListener('click', () => { rolFiltro = id; pintar(); });
+        caja.appendChild(b);
+      };
+      chip('', 'Todos (' + ultimas.length + ')');
+      // Solo los roles que efectivamente contestaron: filtrar por uno vacío
+      // no le sirve a nadie.
+      roles.forEach((r: any) => {
+        if (cuenta[r.id]) chip(r.id, r.emoji + ' ' + r.nombre + ' (' + cuenta[r.id] + ')');
+      });
+    }
+
+    /** Un bloque etiqueta + texto, que usan las dos vistas. */
+    function parRespuesta(etiqueta: string, texto: string, padre: HTMLElement) {
+      const et = document.createElement('p');
+      et.className = 'resp__campo';
+      et.textContent = etiqueta;
+      padre.appendChild(et);
+      const val = document.createElement('p');
+      val.className = 'resp__texto';
+      // textContent y no innerHTML: esto lo escribió otra persona.
+      val.textContent = texto;
+      padre.appendChild(val);
+    }
+
+    /* ── VISTA POR PREGUNTA ────────────────────────────────────────── */
+    function pintarPorPregunta(lista: HTMLElement, gente: any[]) {
+      bloques.forEach((b: any) => {
+        b.campos.forEach((c: any) => {
+          const conRespuesta = gente.filter((p: any) => (p.respuestas || {})[c.id]);
+          if (!conRespuesta.length) return;
+
+          const div = document.createElement('div');
+          div.className = 'resp__ficha';
+          const h = document.createElement('div');
+          h.className = 'resp__ficha-cab';
+          h.innerHTML = '<strong>' + c.etiqueta + '</strong>' +
+            '<span class="resp__fecha">' + conRespuesta.length + ' de ' + gente.length + '</span>';
+          div.appendChild(h);
+
+          /* En las de opciones, la distribución. Quién tarda más salta a la
+             vista sin leer una sola respuesta. */
+          if (c.tipo === 'opciones') {
+            const cuenta: Record<string, number> = {};
+            conRespuesta.forEach((p: any) => {
+              const v = p.respuestas[c.id];
+              cuenta[v] = (cuenta[v] || 0) + 1;
+            });
+            const maximo = Math.max(...Object.values(cuenta));
+            const ul = document.createElement('ul');
+            ul.className = 'resp__dist';
+            (c.opciones || []).forEach((o: string) => {
+              if (!cuenta[o]) return;
+              const li = document.createElement('li');
+              li.innerHTML =
+                '<span class="resp__dist-op">' + o + '</span>' +
+                '<span class="resp__dist-barra" style="width:' +
+                  Math.round((cuenta[o] / maximo) * 100) + '%"></span>' +
+                '<span class="resp__dist-n">' + cuenta[o] + '</span>';
+              ul.appendChild(li);
+            });
+            div.appendChild(ul);
+          }
+
+          conRespuesta.forEach((p: any) => {
+            const quien = document.createElement('p');
+            quien.className = 'resp__quien-linea';
+            quien.textContent = nombreRol(p.rol) + (p.nombre ? ' · ' + p.nombre : '');
+            div.appendChild(quien);
+            const val = document.createElement('p');
+            val.className = 'resp__texto';
+            val.textContent = String(p.respuestas[c.id]).trim();
+            div.appendChild(val);
+          });
+
+          lista.appendChild(div);
+        });
+      });
+    }
+
     function pintar() {
       const lista = $('[data-lista]')!;
       lista.innerHTML = '';
+      pintarFiltro();
+
+      const gente = visibles();
       $('[data-cuantas]')!.textContent =
-        ultimas.length === 1 ? '1 respuesta' : ultimas.length + ' respuestas';
+        gente.length === ultimas.length
+          ? (ultimas.length === 1 ? '1 respuesta' : ultimas.length + ' respuestas')
+          : gente.length + ' de ' + ultimas.length;
 
       if (!ultimas.length) {
         lista.innerHTML = '<p class="resp__vacio">Todavía no contestó nadie. ' +
           'Ojo que el listado del Worker tarda hasta un minuto en reflejar una respuesta nueva.</p>';
         return;
       }
+      if (!gente.length) {
+        lista.innerHTML = '<p class="resp__vacio">Ninguna respuesta coincide con eso.</p>';
+        return;
+      }
+      if (vista === 'pregunta') { pintarPorPregunta(lista, gente); return; }
 
-      ultimas.forEach((p: any) => {
+      gente.forEach((p: any) => {
         const div = document.createElement('div');
         div.className = 'resp__ficha';
         const quien = p.nombre ? p.nombre : '(prefirió no poner su nombre)';
@@ -185,9 +317,25 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
       });
     }
 
+    raiz.querySelectorAll('[data-vista]').forEach((b) => {
+      b.addEventListener('click', () => {
+        vista = b.getAttribute('data-vista') as any;
+        raiz.querySelectorAll('[data-vista]').forEach((o) =>
+          o.classList.toggle('es-activa', o === b));
+        pintar();
+      });
+    });
+
+    ($('[data-buscar]') as HTMLInputElement).addEventListener('input', (e) => {
+      busqueda = (e.target as HTMLInputElement).value;
+      pintar();
+    });
+
     function armarTexto() {
       const l: string[] = ['RESPUESTAS DEL CUESTIONARIO — CFP 401', ''];
-      ultimas.forEach((p: any) => {
+      // Lo que se copia es lo que se está viendo, no todo: si alguien filtró
+      // por preceptoría, quiere las de preceptoría.
+      visibles().forEach((p: any) => {
         l.push('═══ ' + nombreRol(p.rol) + '  ·  ' + (p.nombre || 'sin nombre'));
         Object.entries(p.respuestas || {}).forEach(([campo, texto]) => {
           const t = String(texto || '').trim();
