@@ -1,0 +1,16 @@
+# Transcripción local de las entrevistas.
+#
+#     pip install -r material-privado/transcribir/requirements.txt
+#
+# Todo corre en esta máquina: faster-whisper baja el modelo una vez y no manda
+# nada a ningún servidor. Los audios son gente del CFP hablando de su trabajo,
+# así que eso no es un detalle.
+#
+# ⚠️ Hace falta ffmpeg APARTE. Es lo que sabe abrir el .webm que graba el
+# navegador, y no viene con pip:
+#
+#     winget install Gyan.FFmpeg        (Windows)
+#
+# Sin ffmpeg el script muere con un error que no menciona a ffmpeg por ningún
+# lado, así que si algo falla al abrir el audio, empezar por ahí.
+faster-whisper==1.2.0

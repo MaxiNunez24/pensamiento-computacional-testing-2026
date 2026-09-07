@@ -1,0 +1,14 @@
+# Los audios de las entrevistas y sus transcripciones NO van al repo: es
+# público, y son personal del CFP hablando de su trabajo. Mismo criterio que
+# capturas_bot/.
+#
+# Se versiona el script y nada más.
+*.webm
+*.mp3
+*.m4a
+*.wav
+*.ogg
+*.opus
+*.md
+!README.md
+__pycache__/
