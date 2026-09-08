@@ -1,28 +1,43 @@
 ---
 /**
- * Mapa de casos de uso: qué hace cada rol, de principio a fin.
+ * Mapa de casos de uso: qué hace cada rol, de principio a fin, y EDITABLE.
  *
- * Lo diseñó el profe escuchando las entrevistas, y sin saberlo llegó a la
- * estructura de un **caso de uso**, que es el artefacto estándar para esto:
- * precondiciones, entradas, proceso, actores y salidas.
+ * La estructura la diseñó el profe escuchando las entrevistas, y sin saberlo
+ * llegó a la de un **caso de uso**, que es el artefacto estándar para esto:
  *
  *     Precondiciones → Entra → Proceso → Intercambio → Sale
  *
  * ─────────────────────── PARA QUÉ EXISTE ESTA PÁGINA ────────────────────────
  *
- * Para la reunión con todos. La idea NO es presentarlo: es **que lo corrijan**.
- * Por eso cada caso dice de dónde salió, y los que inventamos nosotros van
- * marcados como supuestos. Un mapa que no distingue lo que nos dijeron de lo
- * que adivinamos es un mapa que nadie puede corregir.
+ * Para la reunión con todos. La idea NO es presentarla: es **que la corrijan**.
+ * Por eso cada caso dice de dónde salió, lo que inventamos nosotros va marcado
+ * como supuesto, y todo se puede editar en el momento.
  *
- * Y por eso también se dibuja acá y no en el pizarrón a las apuradas: dibujarlo
- * en vivo se come veinte minutos de una reunión que tiene una hora.
+ * ──────────────────── LO EDITADO NO PISA EL ORIGINAL ────────────────────────
+ *
+ * Los casos llegan por props desde el .mdx y **nunca se tocan**. Lo que se
+ * edita vive como una CAPA encima, en localStorage:
+ *
+ *     { <id>: {campos cambiados}, _nuevos: [], _borrados: [], _banderas: {} }
+ *
+ * Así cada caso tiene su "volver al original" gratis —se borra su entrada en la
+ * capa— y dos personas pueden editar en paralelo en sus máquinas sin pisarse.
+ * Al final, cada uno exporta y se fusiona a mano, que con este volumen es más
+ * simple y más seguro que sincronizar.
+ *
+ * ───────────────────────── LAS BANDERITAS 🚩 ────────────────────────────────
+ *
+ * No todo desacuerdo se puede escribir en el momento. Cuando alguien dice "no,
+ * eso no es así" y arranca una discusión de tres minutos, tipear la conclusión
+ * mientras hablan es perderse la mitad. La banderita es un clic, sin escribir:
+ * marca la etapa y se resuelve después, con el audio.
+ *
+ * Es la misma idea que el botón Marcar del kit de entrevista, aplicada acá.
  *
  * ────────────────────────── POR QUÉ ES OTRO COMPONENTE ──────────────────────
  *
- * MapaProyecto muestra el sistema por CAPAS (entra / núcleo / sale): es una
- * lección de arquitectura. Esto muestra el TRABAJO DE UNA PERSONA de punta a
- * punta. Meterlos en el mismo componente habría mezclado dos cosas distintas y
+ * MapaProyecto muestra el sistema por CAPAS: es una lección de arquitectura.
+ * Esto muestra el TRABAJO DE UNA PERSONA de punta a punta. Mezclarlos habría
  * arriesgado el que ya se usa en clase.
  */
 import { idEjercicio } from '../scripts/id-ejercicio';
@@ -31,26 +46,17 @@ interface Caso {
   id: string;
   nombre: string;
   emoji: string;
-  /** El rol que lo hace. Los chips de arriba filtran por esto. */
-  rol: string;
-  /** Cada cuánto ocurre. Cambia por completo cuánto duele. */
+  /** VARIOS actores: un mismo trabajo le puede servir a más de un rol. */
+  roles: string[];
   frecuencia?: string;
-  /** Qué tiene que ser verdad ANTES de que esto pueda empezar. */
   precondiciones: string[];
-  /** La información con la que arranca. */
   entradas: string[];
-  /** Qué se hace con ella: la lógica que vamos a programar. */
   proceso: string[];
-  /** De quién viene y a quién va. El circuito entre personas. */
   intercambio: string[];
-  /** En qué termina: pantalla, planilla, papel, otro sistema. */
   salidas: string[];
-  /**
-   * De dónde salió. Sin esto, en dos semanas nadie sabe si algo lo dijo
-   * preceptoría o se le ocurrió a alguien del curso.
-   */
+  /** De dónde salió. Sin esto nadie sabe si lo dijeron o lo inventamos. */
   fuente?: string;
-  /** true = lo supusimos nosotros. Se marca en amarillo, para que lo corrijan. */
+  /** true = lo supusimos nosotros. Se marca, para que lo corrijan. */
   supuesto?: boolean;
 }
 
@@ -60,8 +66,8 @@ const { casos, titulo = 'Cómo trabaja cada uno' } = Astro.props as {
 };
 const id = idEjercicio(titulo);
 
-/* Las cinco etapas, en orden. Son las que planteó el profe: se conservan sus
-   nombres porque son los que va a usar en la reunión. */
+/* Las cinco etapas, con los nombres que puso el profe: son los que va a usar
+   en la reunión. */
 const ETAPAS = [
   { id: 'precondiciones', emoji: '🔑', nombre: 'Antes de empezar',
     ayuda: 'Qué tiene que estar hecho para que esto pueda arrancar' },
@@ -78,26 +84,22 @@ const ETAPAS = [
 
 <section class="casos" id={id} data-casos>
 
-  <div class="casos__roles" data-filtro></div>
+  <div class="casos__barra">
+    <span class="casos__cuantos" data-cuantos></span>
+    <button type="button" class="casos__btn casos__btn--ok" data-nuevo>➕ Caso nuevo</button>
+    <button type="button" class="casos__btn" data-copiar-todos>📋 Copiar todos</button>
+    <button type="button" class="casos__btn" data-banderas>🚩 Ver banderitas</button>
+  </div>
 
+  <div class="casos__roles" data-filtro></div>
   <div class="casos__grilla" data-grilla></div>
 
-  <p class="casos__vacio" data-vacio>👆 Tocá un caso para ver cómo funciona de punta a punta.</p>
+  <p class="casos__vacio" data-vacio>👆 Tocá un caso para verlo y editarlo.</p>
 
-  <div class="casos__detalle" data-detalle hidden>
-    <button type="button" class="casos__cerrar" data-cerrar aria-label="Cerrar">✕</button>
-    <div class="casos__cab">
-      <h3 data-d-nombre></h3>
-      <span class="casos__rol" data-d-rol></span>
-      <span class="casos__frec" data-d-frec></span>
-    </div>
-    <p class="casos__supuesto" data-d-supuesto hidden>
-      ⚠️ <strong>Esto lo supusimos nosotros.</strong> No salió de ninguna entrevista todavía —
-      es justamente lo que necesitamos que nos corrijan.
-    </p>
-    <div class="casos__cadena" data-d-cadena></div>
-    <p class="casos__fuente" data-d-fuente hidden></p>
-  </div>
+  <div class="casos__detalle" data-detalle hidden></div>
+
+  <textarea class="casos__export" data-export rows="12" readonly hidden
+            aria-label="Casos para pegar en el .mdx"></textarea>
 
   <script type="application/json" data-json set:html={JSON.stringify({ casos, ETAPAS })}></script>
 </section>
@@ -105,19 +107,64 @@ const ETAPAS = [
 <script>
   document.querySelectorAll('[data-casos]').forEach((raiz) => {
     const $ = (s: string) => raiz.querySelector(s) as HTMLElement | null;
-    let casos: any[] = [], ETAPAS: any[] = [];
+    let BASE: any[] = [], ETAPAS: any[] = [];
     try {
       const d = JSON.parse((raiz.querySelector('[data-json]') as HTMLElement).textContent || '{}');
-      casos = d.casos || []; ETAPAS = d.ETAPAS || [];
+      BASE = d.casos || []; ETAPAS = d.ETAPAS || [];
     } catch { /* sin datos no hay mapa, pero la página no se rompe */ }
 
+    const LS = 'pc_casos_editado';
+    let capa: any = { _nuevos: [], _borrados: [], _banderas: {} };
+    try {
+      const g = JSON.parse(localStorage.getItem(LS) || 'null');
+      if (g) capa = { _nuevos: [], _borrados: [], _banderas: {}, ...g };
+    } catch {}
+    const guardar = () => {
+      try { localStorage.setItem(LS, JSON.stringify(capa)); } catch {}
+    };
+
+    let abierto = '';
     let rolFiltro = '';
 
-    const roles = [...new Set(casos.map((c) => c.rol))];
+    /* ── El original + la capa ─────────────────────────────────────── */
+    function efectivos() {
+      const base = BASE
+        .filter((c) => !capa._borrados.includes(c.id))
+        .map((c) => ({ ...c, ...(capa[c.id] || {}) }));
+      return base.concat(capa._nuevos.filter((n: any) => !capa._borrados.includes(n.id)));
+    }
+    const buscar = (id: string) => efectivos().find((c: any) => c.id === id);
+    const esNuevo = (id: string) => capa._nuevos.some((n: any) => n.id === id);
+    const fueEditado = (id: string) => !!capa[id] || esNuevo(id);
 
+    /** Cambia un campo del caso: en la capa si es del original, in situ si es nuevo. */
+    function editar(id: string, campo: string, valor: any) {
+      const nuevo = capa._nuevos.find((n: any) => n.id === id);
+      if (nuevo) { nuevo[campo] = valor; } else {
+        capa[id] = capa[id] || {};
+        capa[id][campo] = valor;
+      }
+      guardar();
+    }
+
+    function volverAlOriginal(id: string) {
+      delete capa[id];
+      delete capa._banderas[id];
+      guardar();
+    }
+
+    // ── Todos los actores que existen, para el filtro y el selector ──
+    function todosLosRoles() {
+      const s = new Set<string>();
+      efectivos().forEach((c: any) => (c.roles || []).forEach((r: string) => s.add(r)));
+      return [...s].sort();
+    }
+
+    /* ── Filtro por actor ──────────────────────────────────────────── */
     function pintarFiltro() {
       const caja = $('[data-filtro]')!;
       caja.innerHTML = '';
+      const lista = efectivos();
       const chip = (v: string, txt: string) => {
         const b = document.createElement('button');
         b.type = 'button';
@@ -126,96 +173,364 @@ const ETAPAS = [
         b.addEventListener('click', () => { rolFiltro = v; pintar(); });
         caja.appendChild(b);
       };
-      chip('', 'Todos (' + casos.length + ')');
-      roles.forEach((r) => chip(r, r + ' (' + casos.filter((c) => c.rol === r).length + ')'));
+      chip('', 'Todos (' + lista.length + ')');
+      todosLosRoles().forEach((r) =>
+        chip(r, r + ' (' + lista.filter((c: any) => (c.roles || []).includes(r)).length + ')'));
     }
 
+    /* ── La grilla ─────────────────────────────────────────────────── */
     function pintar() {
       pintarFiltro();
+      const lista = efectivos().filter((c: any) => !rolFiltro || (c.roles || []).includes(rolFiltro));
+      $('[data-cuantos]')!.textContent =
+        lista.length === efectivos().length
+          ? lista.length + (lista.length === 1 ? ' caso' : ' casos')
+          : lista.length + ' de ' + efectivos().length;
+
       const g = $('[data-grilla]')!;
       g.innerHTML = '';
-      casos
-        .filter((c) => !rolFiltro || c.rol === rolFiltro)
-        .forEach((c) => {
-          const b = document.createElement('button');
-          b.type = 'button';
-          b.className = 'casos__caso' + (c.supuesto ? ' es-supuesto' : '');
-          b.setAttribute('data-caso', c.id);
-          b.innerHTML =
-            '<span class="casos__caso-emoji">' + c.emoji + '</span>' +
-            '<span class="casos__caso-nombre">' + c.nombre + '</span>' +
-            '<span class="casos__caso-rol">' + c.rol + '</span>';
-          b.addEventListener('click', () => abrir(c, b));
-          g.appendChild(b);
-        });
+      lista.forEach((c: any) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'casos__caso'
+          + (c.supuesto ? ' es-supuesto' : '')
+          + (abierto === c.id ? ' es-abierto' : '');
+        b.setAttribute('data-caso', c.id);
+        const banderas = Object.keys(capa._banderas[c.id] || {}).length;
+        b.innerHTML =
+          '<span class="casos__caso-emoji">' + (c.emoji || '📄') + '</span>' +
+          '<span class="casos__caso-nombre"></span>' +
+          '<span class="casos__caso-rol"></span>' +
+          (banderas ? '<span class="casos__caso-banderas">🚩 ' + banderas + '</span>' : '') +
+          (fueEditado(c.id) ? '<span class="casos__caso-editado">editado</span>' : '');
+        // textContent: el nombre lo pueden haber escrito ellos en la reunión
+        (b.querySelector('.casos__caso-nombre') as HTMLElement).textContent = c.nombre;
+        (b.querySelector('.casos__caso-rol') as HTMLElement).textContent =
+          (c.roles || []).join(' · ');
+        b.addEventListener('click', () => { abierto = c.id; pintar(); pintarDetalle(); });
+        g.appendChild(b);
+      });
+
+      if (abierto && !buscar(abierto)) abierto = '';
+      $('[data-vacio]')!.hidden = !!abierto;
+      $('[data-detalle]')!.hidden = !abierto;
     }
 
-    function abrir(c: any, boton: HTMLElement) {
-      raiz.querySelectorAll('[data-caso]').forEach((o) =>
-        o.classList.toggle('es-abierto', o === boton));
+    /** Un input de texto que guarda en cada tecla. */
+    function campoTexto(valor: string, ph: string, alGuardar: (v: string) => void, clase = '') {
+      const i = document.createElement('input');
+      i.type = 'text';
+      i.className = 'casos__input ' + clase;
+      i.placeholder = ph;
+      i.value = valor || '';
+      i.addEventListener('input', () => alGuardar(i.value));
+      return i;
+    }
 
-      $('[data-d-nombre]')!.textContent = c.emoji + ' ' + c.nombre;
-      $('[data-d-rol]')!.textContent = c.rol;
-      const frec = $('[data-d-frec]')!;
-      frec.textContent = c.frecuencia || '';
-      frec.hidden = !c.frecuencia;
+    /* ── El detalle, editable ──────────────────────────────────────── */
+    function pintarDetalle() {
+      const det = $('[data-detalle]')!;
+      const c = buscar(abierto);
+      det.innerHTML = '';
+      if (!c) { det.hidden = true; return; }
+      det.hidden = false;
 
-      $('[data-d-supuesto]')!.hidden = !c.supuesto;
+      const cerrar = document.createElement('button');
+      cerrar.type = 'button';
+      cerrar.className = 'casos__cerrar';
+      cerrar.setAttribute('aria-label', 'Cerrar');
+      cerrar.textContent = '✕';
+      cerrar.addEventListener('click', () => { abierto = ''; pintar(); });
+      det.appendChild(cerrar);
 
-      /* La cadena de las cinco etapas. Se dibujan TODAS, aunque estén vacías:
-         un hueco es información — significa que eso todavía no lo preguntamos,
-         y en la reunión es exactamente lo que hay que llenar. */
-      const cadena = $('[data-d-cadena]')!;
-      cadena.innerHTML = '';
-      ETAPAS.forEach((e: any, i: number) => {
+      // ── Cabecera: emoji, nombre, frecuencia ──────────────────────
+      const cab = document.createElement('div');
+      cab.className = 'casos__cab';
+      cab.appendChild(campoTexto(c.emoji, '📄', (v) => { editar(c.id, 'emoji', v); pintar(); }, 'casos__input--emoji'));
+      cab.appendChild(campoTexto(c.nombre, 'Nombre del caso', (v) => { editar(c.id, 'nombre', v); pintar(); }, 'casos__input--nombre'));
+      det.appendChild(cab);
+
+      const frec = document.createElement('div');
+      frec.className = 'casos__linea';
+      const etFrec = document.createElement('span');
+      etFrec.className = 'casos__et';
+      etFrec.textContent = 'Cada cuánto';
+      frec.appendChild(etFrec);
+      frec.appendChild(campoTexto(c.frecuencia || '', 'una vez por mes…', (v) => editar(c.id, 'frecuencia', v)));
+      det.appendChild(frec);
+
+      // ── Actores: varios ──────────────────────────────────────────
+      const act = document.createElement('div');
+      act.className = 'casos__linea casos__actores';
+      const etAct = document.createElement('span');
+      etAct.className = 'casos__et';
+      etAct.textContent = 'Actores';
+      act.appendChild(etAct);
+      (c.roles || []).forEach((r: string, i: number) => {
+        const chip = document.createElement('span');
+        chip.className = 'casos__actor';
+        chip.textContent = r;
+        const x = document.createElement('button');
+        x.type = 'button';
+        x.className = 'casos__actor-x';
+        x.setAttribute('aria-label', 'Quitar ' + r);
+        x.textContent = '✕';
+        x.addEventListener('click', () => {
+          const nu = [...c.roles]; nu.splice(i, 1);
+          editar(c.id, 'roles', nu); pintar(); pintarDetalle();
+        });
+        chip.appendChild(x);
+        act.appendChild(chip);
+      });
+      /* Datalist con los actores que ya existen: escribir "Instructores" dos
+         veces distinto partiría el filtro en dos. */
+      const nuevoActor = document.createElement('input');
+      nuevoActor.type = 'text';
+      nuevoActor.className = 'casos__input casos__input--actor';
+      nuevoActor.placeholder = '+ actor';
+      nuevoActor.setAttribute('list', 'casos-roles');
+      nuevoActor.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' || !nuevoActor.value.trim()) return;
+        editar(c.id, 'roles', [...(c.roles || []), nuevoActor.value.trim()]);
+        pintar(); pintarDetalle();
+      });
+      act.appendChild(nuevoActor);
+      const dl = document.createElement('datalist');
+      dl.id = 'casos-roles';
+      todosLosRoles().forEach((r) => {
+        const o = document.createElement('option'); o.value = r; dl.appendChild(o);
+      });
+      act.appendChild(dl);
+      det.appendChild(act);
+
+      // ── El sello de supuesto ─────────────────────────────────────
+      if (c.supuesto) {
+        const sup = document.createElement('p');
+        sup.className = 'casos__supuesto';
+        sup.innerHTML = '⚠️ <strong>Esto lo supusimos nosotros.</strong> No salió de ninguna ' +
+          'entrevista todavía — es justamente lo que necesitamos que nos corrijan. ';
+        const ok = document.createElement('button');
+        ok.type = 'button';
+        ok.className = 'casos__btn casos__btn--chico';
+        ok.textContent = '✅ Nos lo confirmaron';
+        ok.addEventListener('click', () => { editar(c.id, 'supuesto', false); pintar(); pintarDetalle(); });
+        sup.appendChild(ok);
+        det.appendChild(sup);
+      }
+
+      // ── Las cinco etapas ─────────────────────────────────────────
+      const cadena = document.createElement('div');
+      cadena.className = 'casos__cadena';
+      ETAPAS.forEach((e: any, idx: number) => {
+        const items: string[] = c[e.id] || [];
         const paso = document.createElement('div');
-        paso.className = 'casos__paso';
-        const items = (c[e.id] || []) as string[];
-        paso.innerHTML =
-          '<div class="casos__paso-cab">' +
-            '<span class="casos__paso-emoji">' + e.emoji + '</span>' +
-            '<strong>' + e.nombre + '</strong>' +
-          '</div>' +
-          '<p class="casos__paso-ayuda">' + e.ayuda + '</p>';
-        if (items.length) {
-          const ul = document.createElement('ul');
-          items.forEach((t) => {
-            const li = document.createElement('li');
-            li.textContent = t;   // lo escribieron ellos: nunca innerHTML
-            ul.appendChild(li);
+        const marcada = !!(capa._banderas[c.id] || {})[e.id];
+        paso.className = 'casos__paso' + (marcada ? ' es-marcada' : '');
+
+        const cabP = document.createElement('div');
+        cabP.className = 'casos__paso-cab';
+        cabP.innerHTML = '<span class="casos__paso-emoji">' + e.emoji + '</span>' +
+          '<strong>' + e.nombre + '</strong>';
+        const bandera = document.createElement('button');
+        bandera.type = 'button';
+        bandera.className = 'casos__bandera' + (marcada ? ' es-activa' : '');
+        bandera.title = marcada ? 'Sacar la banderita' : 'Acá está mal — para revisar después';
+        bandera.textContent = '🚩';
+        bandera.addEventListener('click', () => {
+          capa._banderas[c.id] = capa._banderas[c.id] || {};
+          if (marcada) delete capa._banderas[c.id][e.id];
+          else capa._banderas[c.id][e.id] = true;
+          if (!Object.keys(capa._banderas[c.id]).length) delete capa._banderas[c.id];
+          guardar(); pintar(); pintarDetalle();
+        });
+        cabP.appendChild(bandera);
+        paso.appendChild(cabP);
+
+        const ayuda = document.createElement('p');
+        ayuda.className = 'casos__paso-ayuda';
+        ayuda.textContent = e.ayuda;
+        paso.appendChild(ayuda);
+
+        const ul = document.createElement('ul');
+        ul.className = 'casos__items';
+        items.forEach((it, i) => {
+          const li = document.createElement('li');
+          li.appendChild(campoTexto(it, '', (v) => {
+            const nu = [...items]; nu[i] = v; editar(c.id, e.id, nu);
+          }));
+          const x = document.createElement('button');
+          x.type = 'button';
+          x.className = 'casos__item-x';
+          x.setAttribute('aria-label', 'Borrar este punto');
+          x.textContent = '✕';
+          x.addEventListener('click', () => {
+            const nu = [...items]; nu.splice(i, 1);
+            editar(c.id, e.id, nu); pintarDetalle();
           });
-          paso.appendChild(ul);
-        } else {
+          li.appendChild(x);
+          ul.appendChild(li);
+        });
+        paso.appendChild(ul);
+
+        if (!items.length) {
           const falta = document.createElement('p');
           falta.className = 'casos__falta';
           falta.textContent = '— esto todavía no lo preguntamos —';
           paso.appendChild(falta);
         }
+
+        const mas = document.createElement('button');
+        mas.type = 'button';
+        mas.className = 'casos__btn casos__btn--chico';
+        mas.textContent = '+ agregar';
+        mas.addEventListener('click', () => {
+          editar(c.id, e.id, [...items, '']);
+          pintarDetalle();
+          const ultimo = det.querySelectorAll('.casos__items input');
+          const foco = [...ultimo].filter((n) => (n as HTMLInputElement).value === '').pop();
+          (foco as HTMLInputElement | undefined)?.focus();
+        });
+        paso.appendChild(mas);
+
         cadena.appendChild(paso);
-        if (i < ETAPAS.length - 1) {
-          const flecha = document.createElement('div');
-          flecha.className = 'casos__flecha';
-          flecha.textContent = '↓';
-          flecha.setAttribute('aria-hidden', 'true');
-          cadena.appendChild(flecha);
+        if (idx < ETAPAS.length - 1) {
+          const f = document.createElement('div');
+          f.className = 'casos__flecha';
+          f.setAttribute('aria-hidden', 'true');
+          f.textContent = '↓';
+          cadena.appendChild(f);
         }
       });
+      det.appendChild(cadena);
 
-      const f = $('[data-d-fuente]')!;
-      f.hidden = !c.fuente;
-      if (c.fuente) f.textContent = '📍 ' + c.fuente;
+      if (c.fuente) {
+        const f = document.createElement('p');
+        f.className = 'casos__fuente';
+        f.textContent = '📍 ' + c.fuente;
+        det.appendChild(f);
+      }
 
-      $('[data-detalle]')!.hidden = false;
-      $('[data-vacio]')!.hidden = true;
-      $('[data-detalle]')!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // ── Acciones del caso ────────────────────────────────────────
+      const pie = document.createElement('div');
+      pie.className = 'casos__pie';
+
+      const copiar = document.createElement('button');
+      copiar.type = 'button';
+      copiar.className = 'casos__btn';
+      copiar.textContent = '📋 Copiar este caso';
+      copiar.addEventListener('click', () => volcar(serializar([c]), copiar));
+      pie.appendChild(copiar);
+
+      if (fueEditado(c.id) && !esNuevo(c.id)) {
+        const volver = document.createElement('button');
+        volver.type = 'button';
+        volver.className = 'casos__btn';
+        volver.textContent = '↩ Volver al original';
+        volver.addEventListener('click', () => {
+          if (!confirm('¿Descartar los cambios de este caso y volver al original?')) return;
+          volverAlOriginal(c.id); pintar(); pintarDetalle();
+        });
+        pie.appendChild(volver);
+      }
+
+      const borrar = document.createElement('button');
+      borrar.type = 'button';
+      borrar.className = 'casos__btn casos__btn--peligro';
+      borrar.textContent = '🗑 Borrar caso';
+      borrar.addEventListener('click', () => {
+        if (!confirm('¿Borrar "' + c.nombre + '"?')) return;
+        /* Un caso NUEVO se saca de la capa y listo. Anotarlo además en
+           _borrados dejaría un fantasma que se acumula si en la reunión alguien
+           crea y borra varias veces. Uno del original sí va a _borrados, que es
+           lo que lo oculta sin tocar el .mdx. */
+        if (esNuevo(c.id)) {
+          capa._nuevos = capa._nuevos.filter((n: any) => n.id !== c.id);
+        } else {
+          capa._borrados.push(c.id);
+          delete capa[c.id];
+        }
+        delete capa._banderas[c.id];
+        guardar(); abierto = ''; pintar();
+      });
+      pie.appendChild(borrar);
+
+      det.appendChild(pie);
+      det.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    $('[data-cerrar]')!.addEventListener('click', () => {
-      $('[data-detalle]')!.hidden = true;
-      $('[data-vacio]')!.hidden = false;
-      raiz.querySelectorAll('[data-caso]').forEach((o) => o.classList.remove('es-abierto'));
+    /* ── Exportar: el bloque listo para pegar en el .mdx ───────────── */
+    const txt = (s: string) => "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+    const lista = (a: string[]) =>
+      !a || !a.length ? '[]' : '[\n' + a.map((x) => '      ' + txt(x) + ',').join('\n') + '\n    ]';
+
+    function serializar(cs: any[]) {
+      const uno = (c: any) => [
+        '  {',
+        '    id: ' + txt(c.id) + ',',
+        '    nombre: ' + txt(c.nombre) + ',',
+        '    emoji: ' + txt(c.emoji || '📄') + ',',
+        '    roles: ' + lista(c.roles) + ',',
+        c.frecuencia ? '    frecuencia: ' + txt(c.frecuencia) + ',' : '',
+        '    precondiciones: ' + lista(c.precondiciones) + ',',
+        '    entradas: ' + lista(c.entradas) + ',',
+        '    proceso: ' + lista(c.proceso) + ',',
+        '    intercambio: ' + lista(c.intercambio) + ',',
+        '    salidas: ' + lista(c.salidas) + ',',
+        c.supuesto ? '    supuesto: true,' : '',
+        c.fuente ? '    fuente: ' + txt(c.fuente) + ',' : '',
+        '  },',
+      ].filter(Boolean).join('\n');
+      return '<MapaCasos casos={[\n' + cs.map(uno).join('\n') + '\n]} />';
+    }
+
+    async function volcar(texto: string, boton: HTMLElement) {
+      const ta = $('[data-export]') as HTMLTextAreaElement;
+      ta.value = texto;
+      const antes = boton.textContent;
+      try {
+        await navigator.clipboard.writeText(texto);
+        boton.textContent = '¡Copiado!';
+        setTimeout(() => { boton.textContent = antes; }, 1800);
+      } catch {
+        ta.hidden = false; ta.focus(); ta.select();
+      }
+    }
+
+    /* ── La barra de arriba ────────────────────────────────────────── */
+    $('[data-copiar-todos]')!.addEventListener('click', (e) =>
+      volcar(serializar(efectivos()), e.currentTarget as HTMLElement));
+
+    $('[data-nuevo]')!.addEventListener('click', () => {
+      const c = {
+        id: 'caso' + Date.now().toString(36),
+        nombre: 'Caso nuevo', emoji: '📄',
+        roles: rolFiltro ? [rolFiltro] : [],
+        precondiciones: [], entradas: [], proceso: [], intercambio: [], salidas: [],
+        supuesto: true,
+        fuente: 'Creado durante la reunión',
+      };
+      capa._nuevos.push(c);
+      guardar(); abierto = c.id; pintar(); pintarDetalle();
+      (raiz.querySelector('.casos__input--nombre') as HTMLInputElement)?.select();
+    });
+
+    /* Las banderitas juntas: es la agenda de lo que quedó por resolver. */
+    $('[data-banderas]')!.addEventListener('click', (e) => {
+      const l: string[] = ['LO QUE QUEDÓ MARCADO PARA REVISAR', ''];
+      let hay = 0;
+      efectivos().forEach((c: any) => {
+        const b = capa._banderas[c.id];
+        if (!b || !Object.keys(b).length) return;
+        hay++;
+        l.push('── ' + (c.emoji || '') + ' ' + c.nombre);
+        ETAPAS.forEach((et: any) => { if (b[et.id]) l.push('   🚩 ' + et.nombre); });
+        l.push('');
+      });
+      if (!hay) l.push('(ninguna todavía)');
+      volcar(l.join('\n'), e.currentTarget as HTMLElement);
     });
 
     pintar();
+    if (abierto) pintarDetalle();
   });
 </script>

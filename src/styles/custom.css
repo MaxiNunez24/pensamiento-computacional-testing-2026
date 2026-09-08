@@ -2699,7 +2699,13 @@ body.pc-resizing * {
 .resp__roles > *,
 .resp__vistas > *,
 .casos__roles > *,
-.casos__grilla > * {
+.casos__grilla > *,
+.casos__barra > *,
+.casos__cab > *,
+.casos__linea > *,
+.casos__actores > *,
+.casos__items li > *,
+.casos__pie > * {
   margin-top: 0;
 }
 
@@ -3240,6 +3246,100 @@ body.pc-resizing * {
 .casos__caso-emoji { font-size: 1.4rem; line-height: 1; }
 .casos__caso-nombre { font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
 .casos__caso-rol { font-size: 0.75rem; color: var(--sl-color-gray-3); }
+
+/* ── El mapa, editable ─────────────────────────────────────────────── */
+.casos__barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  margin-bottom: 0.9rem; padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--sl-color-gray-6);
+}
+.casos__cuantos { font-weight: 600; margin-right: auto; }
+.casos__btn {
+  font: inherit; font-size: 0.9rem; cursor: pointer; min-height: 2.6rem;
+  padding: 0.5rem 0.9rem; border-radius: 0.45rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.casos__btn:hover { border-color: var(--sl-color-accent); }
+.casos__btn--ok {
+  border-color: var(--sl-color-accent); background: var(--sl-color-accent);
+  color: var(--sl-color-black); font-weight: 600;
+}
+.casos__btn--chico { font-size: 0.82rem; min-height: 2.1rem; padding: 0.35rem 0.7rem; }
+.casos__btn--peligro { border-color: var(--sl-color-gray-5); color: var(--sl-color-gray-3); }
+.casos__btn--peligro:hover { border-color: #ff8787; color: #ff8787; }
+
+.casos__caso-banderas {
+  font-size: 0.72rem; color: #ffd43b;
+}
+.casos__caso-editado {
+  font-size: 0.68rem; color: var(--sl-color-gray-4);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* Los campos: se ven como campos, pero sin ruido. La caja aparece al pasar
+   por encima o al escribir — con veinte inputs a la vez, marcarlos todos
+   todo el tiempo convierte la pantalla en un formulario ilegible. */
+.casos__input {
+  font: inherit; font-size: 0.95rem; width: 100%;
+  padding: 0.4rem 0.55rem; border-radius: 0.35rem;
+  border: 1px solid transparent; background: transparent; color: var(--sl-color-white);
+}
+.casos__input:hover { border-color: var(--sl-color-gray-5); background: var(--sl-color-black); }
+.casos__input:focus {
+  outline: none; border-color: var(--sl-color-accent); background: var(--sl-color-black);
+}
+.casos__input--emoji { width: 3rem; flex: none; font-size: 1.4rem; text-align: center; }
+.casos__input--nombre { font-size: 1.15rem; font-weight: 700; flex: 1 1 12rem; }
+.casos__input--actor { width: 7rem; flex: none; font-size: 0.85rem; }
+
+.casos__linea { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+.casos__et {
+  flex: none; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--sl-color-gray-4); width: 6rem;
+}
+.casos__actores { align-items: center; }
+.casos__actor {
+  display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem;
+  padding: 0.25rem 0.4rem 0.25rem 0.6rem; border-radius: 1rem;
+  border: 1px solid var(--sl-color-gray-5); color: var(--sl-color-gray-2);
+}
+.casos__actor-x {
+  font: inherit; font-size: 0.7rem; line-height: 1; cursor: pointer;
+  width: 1.2rem; height: 1.2rem; border-radius: 50%;
+  border: none; background: transparent; color: var(--sl-color-gray-4);
+}
+.casos__actor-x:hover { color: #ff8787; }
+
+/* La banderita: discreta apagada, imposible de no ver prendida. */
+.casos__bandera {
+  font: inherit; font-size: 0.9rem; line-height: 1; cursor: pointer; margin-left: auto;
+  width: 2rem; height: 2rem; border-radius: 0.35rem;
+  border: 1px solid transparent; background: transparent;
+  filter: grayscale(1); opacity: 0.35;
+}
+.casos__bandera:hover { opacity: 0.8; filter: none; }
+.casos__bandera.es-activa { opacity: 1; filter: none; border-color: #ffd43b; }
+.casos__paso.es-marcada { border-color: #ffd43b; }
+
+.casos__items { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.casos__items li { display: flex; align-items: center; gap: 0.3rem; }
+.casos__item-x {
+  font: inherit; font-size: 0.85rem; line-height: 1; cursor: pointer; flex: none;
+  width: 1.8rem; height: 1.8rem; border-radius: 0.3rem;
+  border: 1px solid transparent; background: transparent; color: var(--sl-color-gray-4);
+}
+.casos__item-x:hover { border-color: #ff8787; color: #ff8787; }
+
+.casos__pie {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem;
+  padding-top: 0.9rem; border-top: 1px solid var(--sl-color-gray-6);
+}
+.casos__export {
+  width: 100%; margin-top: 0.8rem; font-family: var(--sl-font-mono, monospace);
+  font-size: 0.78rem; padding: 0.6rem; border-radius: 0.4rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+}
 
 .casos__vacio { color: var(--sl-color-gray-3); font-size: 0.9rem; }
 

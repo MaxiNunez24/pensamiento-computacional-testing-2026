@@ -14,6 +14,18 @@ No la armamos para presentarla: la armamos **para que nos digan dónde nos equiv
 Lo que está marcado con borde amarillo lo **supusimos nosotros** — no salió de ninguna
 entrevista todavía. Y donde dice *"esto todavía no lo preguntamos"* hay un hueco de verdad: son
 justamente las cosas que hay que llenar cuando estemos todos juntos.
+
+**Todo esto se puede editar acá mismo**, en el momento. Lo editado queda guardado en esta
+computadora y **no toca el original**: cada caso tiene su *"volver al original"*.
+:::
+
+:::tip[La banderita 🚩 es para lo que no se puede escribir en el momento]
+Cuando alguien dice *"no, eso no es así"* y arranca una discusión de tres minutos, ponerse a
+tipear la conclusión mientras hablan es perderse la mitad. **Un clic en la 🚩 de esa etapa** y se
+resuelve después, escuchando el audio.
+
+Es la misma idea que el botón *Marcar* del kit de entrevista. Al final, **🚩 Ver banderitas** junta
+todas: esa lista es la agenda de lo que quedó pendiente.
 :::
 
 ## Las cinco etapas
@@ -37,7 +49,7 @@ exactamente esto.
     id: 'planilla-mes',
     nombre: 'Armar la planilla de fin de mes',
     emoji: '📋',
-    rol: 'Preceptoría',
+    roles: ['Preceptoría'],
     frecuencia: 'Una vez por mes, por cada uno de los ~30 cursos',
     precondiciones: [
       'El curso tiene que estar dado de alta, con su número y su nombre',
@@ -67,7 +79,7 @@ exactamente esto.
     id: 'pasar-lista',
     nombre: 'Pasar lista en la clase',
     emoji: '✅',
-    rol: 'Instructores',
+    roles: ['Instructores'],
     frecuencia: 'Cada clase',
     precondiciones: [
       'Tiene que existir la lista de alumnos del curso',
@@ -91,7 +103,7 @@ exactamente esto.
     id: 'acompanar',
     nombre: 'Saber a quién acompañar',
     emoji: '🎓',
-    rol: 'Maestras de apoyo',
+    roles: ['Maestras de apoyo'],
     precondiciones: [
       'Los alumnos tienen que estar cargados con su nivel de estudios',
     ],
@@ -110,9 +122,9 @@ exactamente esto.
   },
   {
     id: 'cumpleanos',
-    nombre: 'Saludar los cumpleaños',
+    nombre: 'Que no se pase ningún cumpleaños',
     emoji: '🎂',
-    rol: 'Maestras de apoyo',
+    roles: ['Maestras de apoyo', 'Instructores'],
     precondiciones: [
       'Tiene que estar cargada la fecha de nacimiento de cada alumno',
     ],
@@ -135,7 +147,7 @@ exactamente esto.
     id: 'ver-curso',
     nombre: 'Ver cómo viene un curso',
     emoji: '🏛️',
-    rol: 'Dirección',
+    roles: ['Dirección'],
     frecuencia: 'Por semana',
     precondiciones: [],
     entradas: [],
