@@ -1,0 +1,158 @@
+---
+title: Cómo trabaja cada uno
+description: "El circuito de trabajo de cada rol del CFP, de principio a fin. Lo armamos escuchando las entrevistas, para que ellos lo corrijan."
+---
+
+import MapaCasos from '../../components/MapaCasos.astro';
+
+Esto es lo que entendimos de cómo trabaja cada persona del CFP, armado con lo que
+nos contaron en las entrevistas.
+
+:::caution[Esta página existe para que la corrijan]
+No la armamos para presentarla: la armamos **para que nos digan dónde nos equivocamos.**
+
+Lo que está marcado con borde amarillo lo **supusimos nosotros** — no salió de ninguna
+entrevista todavía. Y donde dice *"esto todavía no lo preguntamos"* hay un hueco de verdad: son
+justamente las cosas que hay que llenar cuando estemos todos juntos.
+:::
+
+## Las cinco etapas
+
+Cada caso se cuenta siempre igual, en cinco pasos. Es la estructura que salió de las entrevistas —
+y resulta que tiene nombre: es un **caso de uso**, el artefacto que se usa en la industria para
+exactamente esto.
+
+| | Etapa | La pregunta que contesta |
+|---|---|---|
+| 🔑 | **Antes de empezar** | ¿Qué tiene que estar hecho para que esto pueda arrancar? |
+| 📥 | **Con qué arranca** | ¿Qué información necesita? |
+| ⚙️ | **Qué se hace con eso** | ¿Qué va a tener que saber hacer el sistema? |
+| 🔄 | **Con quién** | ¿De quién viene y a quién le llega? |
+| 📤 | **En qué termina** | ¿Pantalla, planilla, papel, otro sistema? |
+
+---
+
+<MapaCasos casos={[
+  {
+    id: 'planilla-mes',
+    nombre: 'Armar la planilla de fin de mes',
+    emoji: '📋',
+    rol: 'Preceptoría',
+    frecuencia: 'Una vez por mes, por cada uno de los ~30 cursos',
+    precondiciones: [
+      'El curso tiene que estar dado de alta, con su número y su nombre',
+      'Los alumnos tienen que estar inscriptos en ese curso',
+      'Tienen que estar cargados los días y horarios en que se dicta',
+    ],
+    entradas: [
+      'Las planillas en papel que deja cada instructor',
+      'Los datos de cada alumno: nombre, DNI',
+      'El número y el nombre del curso, y las horas cátedra',
+    ],
+    proceso: [
+      'Pasar la asistencia de cada día del mes',
+      'Volver a escribir los mismos datos en más de una planilla',
+    ],
+    intercambio: [
+      'Le llega: las planillas de los instructores',
+      'Le entrega: a dirección, que la firma',
+    ],
+    salidas: [
+      'La planilla oficial del Ministerio',
+      'Una planilla de secretaría, que es otra distinta',
+    ],
+    fuente: 'Preceptoría · entrevista del 4/9 · marcas 00:59, 04:29, 05:55',
+  },
+  {
+    id: 'pasar-lista',
+    nombre: 'Pasar lista en la clase',
+    emoji: '✅',
+    rol: 'Instructores',
+    frecuencia: 'Cada clase',
+    precondiciones: [
+      'Tiene que existir la lista de alumnos del curso',
+    ],
+    entradas: [
+      'La lista del curso',
+      'Quién está presente en el aula',
+    ],
+    proceso: [
+      'Marcar presente, ausente, tarde o justificado',
+    ],
+    intercambio: [
+      'Le entrega: a preceptoría, en papel',
+    ],
+    salidas: [
+      'La planilla en papel, que se carga más tarde',
+    ],
+    fuente: 'Instructores · entrevista del 4/9 · marcas 00:41, 03:07, 04:33',
+  },
+  {
+    id: 'acompanar',
+    nombre: 'Saber a quién acompañar',
+    emoji: '🎓',
+    rol: 'Maestras de apoyo',
+    precondiciones: [
+      'Los alumnos tienen que estar cargados con su nivel de estudios',
+    ],
+    entradas: [
+      'Nivel de estudios de cada alumno: primario, secundario, terciario, y en qué estado',
+      'Sacramentos: bautismo, confirmación, comunión',
+    ],
+    proceso: [
+      'Filtrar la lista de todos los alumnos del CFP por esos criterios',
+    ],
+    intercambio: [],
+    salidas: [
+      'Una pantalla con todos los alumnos y de qué curso es cada uno',
+    ],
+    fuente: 'Las dos maestras de apoyo lo pidieron POR SEPARADO, sin hablarse entre ellas',
+  },
+  {
+    id: 'cumpleanos',
+    nombre: 'Saludar los cumpleaños',
+    emoji: '🎂',
+    rol: 'Maestras de apoyo',
+    precondiciones: [
+      'Tiene que estar cargada la fecha de nacimiento de cada alumno',
+    ],
+    entradas: [
+      'Las fechas de nacimiento',
+      'Los días en que se dicta cada curso',
+    ],
+    proceso: [
+      'Ver quién cumple hoy — y quién cumplió desde la clase anterior',
+    ],
+    intercambio: [],
+    salidas: [
+      'Un aviso al pasar lista, sobre el alumno que cumple',
+      'Un calendario de cumpleaños',
+    ],
+    supuesto: true,
+    fuente: 'Sugerido por una maestra de apoyo que todavía NO entrevistamos. Ella ya lleva un calendario a mano: hay que preguntarle cómo lo usa.',
+  },
+  {
+    id: 'ver-curso',
+    nombre: 'Ver cómo viene un curso',
+    emoji: '🏛️',
+    rol: 'Dirección',
+    frecuencia: 'Por semana',
+    precondiciones: [],
+    entradas: [],
+    proceso: [],
+    intercambio: [],
+    salidas: [],
+    supuesto: true,
+    fuente: 'Todavía no entrevistamos a dirección. Este caso está vacío a propósito: es de los que hay que llenar el miércoles.',
+  },
+]} />
+
+---
+
+## Qué hacemos con esto
+
+Lo llevamos a la reunión con todos y lo recorremos caso por caso. Cada vez que
+alguien diga *"no, eso no es así"*, ganamos.
+
+Cuando esté corregido, esto **es el enunciado del proyecto**: la lista de lo que el
+sistema tiene que hacer, escrita con las palabras de quienes lo van a usar.

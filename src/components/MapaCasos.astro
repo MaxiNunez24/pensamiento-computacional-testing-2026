@@ -1,0 +1,221 @@
+---
+/**
+ * Mapa de casos de uso: qué hace cada rol, de principio a fin.
+ *
+ * Lo diseñó el profe escuchando las entrevistas, y sin saberlo llegó a la
+ * estructura de un **caso de uso**, que es el artefacto estándar para esto:
+ * precondiciones, entradas, proceso, actores y salidas.
+ *
+ *     Precondiciones → Entra → Proceso → Intercambio → Sale
+ *
+ * ─────────────────────── PARA QUÉ EXISTE ESTA PÁGINA ────────────────────────
+ *
+ * Para la reunión con todos. La idea NO es presentarlo: es **que lo corrijan**.
+ * Por eso cada caso dice de dónde salió, y los que inventamos nosotros van
+ * marcados como supuestos. Un mapa que no distingue lo que nos dijeron de lo
+ * que adivinamos es un mapa que nadie puede corregir.
+ *
+ * Y por eso también se dibuja acá y no en el pizarrón a las apuradas: dibujarlo
+ * en vivo se come veinte minutos de una reunión que tiene una hora.
+ *
+ * ────────────────────────── POR QUÉ ES OTRO COMPONENTE ──────────────────────
+ *
+ * MapaProyecto muestra el sistema por CAPAS (entra / núcleo / sale): es una
+ * lección de arquitectura. Esto muestra el TRABAJO DE UNA PERSONA de punta a
+ * punta. Meterlos en el mismo componente habría mezclado dos cosas distintas y
+ * arriesgado el que ya se usa en clase.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Caso {
+  id: string;
+  nombre: string;
+  emoji: string;
+  /** El rol que lo hace. Los chips de arriba filtran por esto. */
+  rol: string;
+  /** Cada cuánto ocurre. Cambia por completo cuánto duele. */
+  frecuencia?: string;
+  /** Qué tiene que ser verdad ANTES de que esto pueda empezar. */
+  precondiciones: string[];
+  /** La información con la que arranca. */
+  entradas: string[];
+  /** Qué se hace con ella: la lógica que vamos a programar. */
+  proceso: string[];
+  /** De quién viene y a quién va. El circuito entre personas. */
+  intercambio: string[];
+  /** En qué termina: pantalla, planilla, papel, otro sistema. */
+  salidas: string[];
+  /**
+   * De dónde salió. Sin esto, en dos semanas nadie sabe si algo lo dijo
+   * preceptoría o se le ocurrió a alguien del curso.
+   */
+  fuente?: string;
+  /** true = lo supusimos nosotros. Se marca en amarillo, para que lo corrijan. */
+  supuesto?: boolean;
+}
+
+const { casos, titulo = 'Cómo trabaja cada uno' } = Astro.props as {
+  casos: Caso[];
+  titulo?: string;
+};
+const id = idEjercicio(titulo);
+
+/* Las cinco etapas, en orden. Son las que planteó el profe: se conservan sus
+   nombres porque son los que va a usar en la reunión. */
+const ETAPAS = [
+  { id: 'precondiciones', emoji: '🔑', nombre: 'Antes de empezar',
+    ayuda: 'Qué tiene que estar hecho para que esto pueda arrancar' },
+  { id: 'entradas', emoji: '📥', nombre: 'Con qué arranca',
+    ayuda: 'La información que necesita para trabajar' },
+  { id: 'proceso', emoji: '⚙️', nombre: 'Qué se hace con eso',
+    ayuda: 'Lo que el sistema va a tener que saber hacer' },
+  { id: 'intercambio', emoji: '🔄', nombre: 'Con quién',
+    ayuda: 'De quién viene y a quién le llega' },
+  { id: 'salidas', emoji: '📤', nombre: 'En qué termina',
+    ayuda: 'Pantalla, planilla, papel u otro sistema' },
+];
+---
+
+<section class="casos" id={id} data-casos>
+
+  <div class="casos__roles" data-filtro></div>
+
+  <div class="casos__grilla" data-grilla></div>
+
+  <p class="casos__vacio" data-vacio>👆 Tocá un caso para ver cómo funciona de punta a punta.</p>
+
+  <div class="casos__detalle" data-detalle hidden>
+    <button type="button" class="casos__cerrar" data-cerrar aria-label="Cerrar">✕</button>
+    <div class="casos__cab">
+      <h3 data-d-nombre></h3>
+      <span class="casos__rol" data-d-rol></span>
+      <span class="casos__frec" data-d-frec></span>
+    </div>
+    <p class="casos__supuesto" data-d-supuesto hidden>
+      ⚠️ <strong>Esto lo supusimos nosotros.</strong> No salió de ninguna entrevista todavía —
+      es justamente lo que necesitamos que nos corrijan.
+    </p>
+    <div class="casos__cadena" data-d-cadena></div>
+    <p class="casos__fuente" data-d-fuente hidden></p>
+  </div>
+
+  <script type="application/json" data-json set:html={JSON.stringify({ casos, ETAPAS })}></script>
+</section>
+
+<script>
+  document.querySelectorAll('[data-casos]').forEach((raiz) => {
+    const $ = (s: string) => raiz.querySelector(s) as HTMLElement | null;
+    let casos: any[] = [], ETAPAS: any[] = [];
+    try {
+      const d = JSON.parse((raiz.querySelector('[data-json]') as HTMLElement).textContent || '{}');
+      casos = d.casos || []; ETAPAS = d.ETAPAS || [];
+    } catch { /* sin datos no hay mapa, pero la página no se rompe */ }
+
+    let rolFiltro = '';
+
+    const roles = [...new Set(casos.map((c) => c.rol))];
+
+    function pintarFiltro() {
+      const caja = $('[data-filtro]')!;
+      caja.innerHTML = '';
+      const chip = (v: string, txt: string) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'casos__chip' + (rolFiltro === v ? ' es-activo' : '');
+        b.textContent = txt;
+        b.addEventListener('click', () => { rolFiltro = v; pintar(); });
+        caja.appendChild(b);
+      };
+      chip('', 'Todos (' + casos.length + ')');
+      roles.forEach((r) => chip(r, r + ' (' + casos.filter((c) => c.rol === r).length + ')'));
+    }
+
+    function pintar() {
+      pintarFiltro();
+      const g = $('[data-grilla]')!;
+      g.innerHTML = '';
+      casos
+        .filter((c) => !rolFiltro || c.rol === rolFiltro)
+        .forEach((c) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'casos__caso' + (c.supuesto ? ' es-supuesto' : '');
+          b.setAttribute('data-caso', c.id);
+          b.innerHTML =
+            '<span class="casos__caso-emoji">' + c.emoji + '</span>' +
+            '<span class="casos__caso-nombre">' + c.nombre + '</span>' +
+            '<span class="casos__caso-rol">' + c.rol + '</span>';
+          b.addEventListener('click', () => abrir(c, b));
+          g.appendChild(b);
+        });
+    }
+
+    function abrir(c: any, boton: HTMLElement) {
+      raiz.querySelectorAll('[data-caso]').forEach((o) =>
+        o.classList.toggle('es-abierto', o === boton));
+
+      $('[data-d-nombre]')!.textContent = c.emoji + ' ' + c.nombre;
+      $('[data-d-rol]')!.textContent = c.rol;
+      const frec = $('[data-d-frec]')!;
+      frec.textContent = c.frecuencia || '';
+      frec.hidden = !c.frecuencia;
+
+      $('[data-d-supuesto]')!.hidden = !c.supuesto;
+
+      /* La cadena de las cinco etapas. Se dibujan TODAS, aunque estén vacías:
+         un hueco es información — significa que eso todavía no lo preguntamos,
+         y en la reunión es exactamente lo que hay que llenar. */
+      const cadena = $('[data-d-cadena]')!;
+      cadena.innerHTML = '';
+      ETAPAS.forEach((e: any, i: number) => {
+        const paso = document.createElement('div');
+        paso.className = 'casos__paso';
+        const items = (c[e.id] || []) as string[];
+        paso.innerHTML =
+          '<div class="casos__paso-cab">' +
+            '<span class="casos__paso-emoji">' + e.emoji + '</span>' +
+            '<strong>' + e.nombre + '</strong>' +
+          '</div>' +
+          '<p class="casos__paso-ayuda">' + e.ayuda + '</p>';
+        if (items.length) {
+          const ul = document.createElement('ul');
+          items.forEach((t) => {
+            const li = document.createElement('li');
+            li.textContent = t;   // lo escribieron ellos: nunca innerHTML
+            ul.appendChild(li);
+          });
+          paso.appendChild(ul);
+        } else {
+          const falta = document.createElement('p');
+          falta.className = 'casos__falta';
+          falta.textContent = '— esto todavía no lo preguntamos —';
+          paso.appendChild(falta);
+        }
+        cadena.appendChild(paso);
+        if (i < ETAPAS.length - 1) {
+          const flecha = document.createElement('div');
+          flecha.className = 'casos__flecha';
+          flecha.textContent = '↓';
+          flecha.setAttribute('aria-hidden', 'true');
+          cadena.appendChild(flecha);
+        }
+      });
+
+      const f = $('[data-d-fuente]')!;
+      f.hidden = !c.fuente;
+      if (c.fuente) f.textContent = '📍 ' + c.fuente;
+
+      $('[data-detalle]')!.hidden = false;
+      $('[data-vacio]')!.hidden = true;
+      $('[data-detalle]')!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    $('[data-cerrar]')!.addEventListener('click', () => {
+      $('[data-detalle]')!.hidden = true;
+      $('[data-vacio]')!.hidden = false;
+      raiz.querySelectorAll('[data-caso]').forEach((o) => o.classList.remove('es-abierto'));
+    });
+
+    pintar();
+  });
+</script>

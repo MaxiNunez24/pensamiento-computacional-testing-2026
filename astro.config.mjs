@@ -91,6 +91,10 @@ export default defineConfig({
         // Arriba mientras dure: se usa el 2/9 para prepararla y el 4/9 en vivo,
         // con alguien hablando enfrente. Después baja o se saca.
         { label: '🎤 La entrevista del viernes', link: '/entrevista/' },
+        // El mapa de casos de uso: lo que entendimos de como trabaja cada
+        // rol. Va junto a la entrevista porque es su producto: se arma con
+        // lo que sale de ahi y se lleva a la reunion para que lo corrijan.
+        { label: '🗺️ Cómo trabaja cada uno', link: '/casos/' },
         // El cuestionario del CFP (/cuestionario/) NO va acá a propósito: se
         // llega solo por el link que se les manda. No es secreto —cualquiera
         // que tenga la URL entra— pero no tiene por qué aparecerle a un alumno

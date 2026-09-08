@@ -3197,3 +3197,104 @@ body.pc-resizing * {
 @media (max-width: 30rem) {
   .resp__fila .resp__btn { width: 100%; }
 }
+
+/* ---------------------------------------------------------------------------
+   MAPA DE CASOS DE USO
+   Se proyecta en una reunión con seis personas mirando, y la idea es que LO
+   CORRIJAN. De ahí las decisiones: los casos como botones grandes, la cadena
+   de etapas en vertical (que se lee de un vistazo y no obliga a scrollear al
+   costado) y lo que supusimos nosotros marcado en amarillo, para que salte.
+--------------------------------------------------------------------------- */
+.casos { margin: 1.5rem 0; }
+
+.casos__roles { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.casos__roles > * { margin-top: 0; }
+.casos__chip {
+  font: inherit; font-size: 0.85rem; cursor: pointer; padding: 0.45rem 0.8rem;
+  border-radius: 1rem; border: 1px solid var(--sl-color-gray-5);
+  background: transparent; color: var(--sl-color-gray-3); min-height: 2.3rem;
+}
+.casos__chip:hover { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
+.casos__chip.es-activo {
+  background: var(--sl-color-accent); border-color: var(--sl-color-accent);
+  color: var(--sl-color-black); font-weight: 600;
+}
+
+.casos__grilla {
+  display: grid; gap: 0.6rem; margin-bottom: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+}
+.casos__grilla > * { margin-top: 0; }
+.casos__caso {
+  font: inherit; cursor: pointer; text-align: left;
+  display: flex; flex-direction: column; gap: 0.25rem;
+  padding: 0.8rem 0.9rem; border-radius: 0.6rem; min-height: 4.5rem;
+  border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-black);
+  color: var(--sl-color-white); transition: transform 0.12s ease;
+}
+.casos__caso:hover { border-color: var(--sl-color-accent); transform: translateY(-2px); }
+.casos__caso.es-abierto { border-color: var(--sl-color-accent); background: var(--sl-color-gray-6); }
+/* Lo que supusimos nosotros, en amarillo: es lo que hay que ir a corregir. */
+.casos__caso.es-supuesto { border-style: dashed; border-color: #ffd43b; }
+.casos__caso-emoji { font-size: 1.4rem; line-height: 1; }
+.casos__caso-nombre { font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
+.casos__caso-rol { font-size: 0.75rem; color: var(--sl-color-gray-3); }
+
+.casos__vacio { color: var(--sl-color-gray-3); font-size: 0.9rem; }
+
+.casos__detalle {
+  position: relative; padding: 1.2rem;
+  border: 1px solid var(--sl-color-accent); border-radius: 0.6rem;
+  background: var(--sl-color-black);
+}
+.casos__cerrar {
+  position: absolute; top: 0.6rem; right: 0.6rem;
+  font: inherit; font-size: 1rem; line-height: 1; cursor: pointer;
+  width: 2rem; height: 2rem; border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent;
+  color: var(--sl-color-gray-3);
+}
+.casos__cerrar:hover { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
+.casos__cab { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem; padding-right: 2.5rem; }
+.casos__cab h3 { margin: 0; font-size: 1.2rem; }
+.casos__rol {
+  font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 1rem;
+  border: 1px solid var(--sl-color-gray-5); color: var(--sl-color-gray-3);
+}
+.casos__frec { font-size: 0.8rem; color: var(--sl-color-gray-3); }
+
+.casos__supuesto {
+  margin: 0.9rem 0 0; padding: 0.7rem 0.9rem; border-radius: 0.45rem;
+  border: 1px solid #ffd43b; background: var(--sl-color-gray-6);
+  font-size: 0.9rem; line-height: 1.55;
+}
+
+/* La cadena. En vertical a propósito: en horizontal, con cinco etapas, o se
+   scrollea al costado o no entra el texto. */
+.casos__cadena { margin-top: 1rem; }
+.casos__paso {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.5rem;
+  background: var(--sl-color-gray-6); padding: 0.8rem 0.9rem;
+}
+.casos__paso-cab { display: flex; align-items: center; gap: 0.5rem; }
+.casos__paso-emoji { font-size: 1.15rem; line-height: 1; }
+.casos__paso-ayuda {
+  margin: 0.2rem 0 0; font-size: 0.8rem; line-height: 1.45; color: var(--sl-color-gray-3);
+}
+.casos__paso ul { margin: 0.6rem 0 0; padding-left: 1.2rem; line-height: 1.6; }
+.casos__paso li { margin-top: 0.2rem; }
+.casos__falta {
+  margin: 0.6rem 0 0; font-size: 0.85rem; font-style: italic; color: var(--sl-color-gray-4);
+}
+.casos__flecha {
+  text-align: center; font-size: 1.2rem; line-height: 1;
+  color: var(--sl-color-accent); padding: 0.3rem 0;
+}
+.casos__fuente {
+  margin: 1rem 0 0; padding-top: 0.7rem; font-size: 0.82rem;
+  color: var(--sl-color-gray-3); border-top: 1px solid var(--sl-color-gray-6);
+}
+
+@media (max-width: 30rem) {
+  .casos__grilla { grid-template-columns: 1fr; }
+}

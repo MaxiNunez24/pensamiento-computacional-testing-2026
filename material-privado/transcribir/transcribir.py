@@ -33,8 +33,10 @@ INSTALACIÓN
 -----------
     pip install -r requirements.txt
 
-Y ffmpeg, que es lo que sabe abrir el .webm que graba el navegador:
-    winget install Gyan.FFmpeg        (Windows)
+Y nada más: NO hace falta ffmpeg instalado. faster-whisper 1.x decodifica con
+PyAV, que trae las librerías de ffmpeg adentro.
+
+⚠️ En esta máquina hay dos Python 3.14 distintos. Usar `python`, no `python3`.
 """
 
 import argparse

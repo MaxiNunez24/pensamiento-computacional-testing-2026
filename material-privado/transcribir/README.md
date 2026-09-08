@@ -11,16 +11,27 @@ minuto**, para no tener que escuchar tres horas de nuevo.
 pip install -r material-privado/transcribir/requirements.txt
 ```
 
-```bash
-winget install Gyan.FFmpeg
-```
+Y nada más. **No hace falta instalar ffmpeg**: faster-whisper 1.x decodifica con
+PyAV, que trae las librerías de ffmpeg adentro. Verificado generando un
+`.webm/opus` como el que graba el navegador y abriéndolo con ffmpeg **no**
+instalado en el sistema.
 
-**El segundo no es opcional.** ffmpeg es lo que sabe abrir el `.webm` que graba
-el navegador, y no viene con pip. Si el script falla al abrir el audio, empezar
-por ahí — el error no menciona a ffmpeg por ningún lado.
+> ⚠️ **Ojo con cuál `python`.** En esta máquina hay dos Python 3.14 distintos, y
+> faster-whisper quedó instalado en uno solo:
+>
+> | Comando | Intérprete | ¿Tiene faster-whisper? |
+> |---|---|---|
+> | `python` | `C:\Python314\python.exe` | ✅ sí |
+> | `python3` | `...\pythoncore-3.14-64\python.exe` | ❌ no |
+>
+> Usar siempre **`python`**. Con `python3` va a decir que falta el módulo, y el
+> error no da ninguna pista de que el problema es el intérprete.
 
 > La primera corrida baja el modelo (`large-v3` son unos 3 GB). Después queda
 > cacheado y no se vuelve a bajar.
+
+**La GPU anda de fábrica.** Probado: `WhisperModel('tiny', device='cuda',
+compute_type='float16')` levanta sin instalar nada de CUDA aparte.
 
 ---
 

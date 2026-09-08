@@ -6,11 +6,10 @@
 # nada a ningún servidor. Los audios son gente del CFP hablando de su trabajo,
 # así que eso no es un detalle.
 #
-# ⚠️ Hace falta ffmpeg APARTE. Es lo que sabe abrir el .webm que graba el
-# navegador, y no viene con pip:
+# NO hace falta instalar ffmpeg aparte: faster-whisper 1.x decodifica con PyAV,
+# que se instala como dependencia y trae las librerías de ffmpeg adentro.
+# Verificado abriendo un .webm/opus con ffmpeg NO instalado en el sistema.
 #
-#     winget install Gyan.FFmpeg        (Windows)
-#
-# Sin ffmpeg el script muere con un error que no menciona a ffmpeg por ningún
-# lado, así que si algo falla al abrir el audio, empezar por ahí.
+# ⚠️ En esta máquina hay dos Python 3.14 distintos. Usar `python`, no `python3`,
+# o va a decir que falta el módulo.
 faster-whisper==1.2.0
