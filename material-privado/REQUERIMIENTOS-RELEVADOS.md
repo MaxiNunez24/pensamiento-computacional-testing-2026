@@ -89,10 +89,13 @@ que para responder "¿quiénes terminaron el secundario?" hay que abrir todas.
 Sugerido por una maestra de apoyo a la que **no llegamos a entrevistar** — se lo
 preguntamos igual, resumiéndole lo que llevábamos.
 
-> 📌 **Dato importante:** el profe ya arma todos los años un calendario de
-> Google Calendar con esto. O sea que **el sistema no está inventando un
-> proceso: está reemplazando uno que ya existe a mano.** Eso es lo que hay que
-> preguntarle a esa maestra cuando se la pueda entrevistar: cómo lo usa hoy.
+> 📌 **Dato importante:** el calendario de Google Calendar con los cumpleaños
+> **lo arma el profe**, todos los años, a mano. La maestra no sabía que existía
+> y llegó a la misma necesidad por su cuenta.
+>
+> Eso hace el pedido más fuerte, no más débil: **dos personas distintas
+> necesitan lo mismo y cada una se lo resolvió por separado.** El sistema no
+> inventa un proceso — unifica dos que ya existen.
 
 ### 🟡 Avisar el cumpleaños al pasar lista
 
@@ -138,5 +141,5 @@ hay que poder sostenerlo.
 
 - **Dirección, regencia, secretaría y auxiliares** — quedaron para el miércoles
 - **La reunión con todos** — para cerrar el circuito de la información
-- **La maestra de apoyo del calendario** — cómo usa hoy el Google Calendar
+- **La maestra de apoyo que sugirió el calendario** — no llegamos a entrevistarla
 - **SiGeS con el preceptor** — se ofreció a mostrar el proceso completo

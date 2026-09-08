@@ -2694,7 +2694,12 @@ body.pc-resizing * {
 .ent__reloj-btns > *,
 .cue__roles > *,
 .cue__opciones > *,
-.resp__barra > * {
+.resp__barra > *,
+.resp__controles > *,
+.resp__roles > *,
+.resp__vistas > *,
+.casos__roles > *,
+.casos__grilla > * {
   margin-top: 0;
 }
 
@@ -3129,7 +3134,6 @@ body.pc-resizing * {
 .resp__controles {
   display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.7rem;
 }
-.resp__controles > * { margin-top: 0; }
 .resp__vistas { display: flex; border: 1px solid var(--sl-color-gray-5); border-radius: 0.45rem; overflow: hidden; }
 .resp__vista {
   font: inherit; font-size: 0.9rem; cursor: pointer; padding: 0.5rem 0.9rem;
@@ -3142,7 +3146,6 @@ body.pc-resizing * {
   background: var(--sl-color-gray-6); color: var(--sl-color-white);
 }
 .resp__roles { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-.resp__roles > * { margin-top: 0; }
 .resp__chip {
   font: inherit; font-size: 0.85rem; cursor: pointer; padding: 0.4rem 0.75rem;
   border-radius: 1rem; border: 1px solid var(--sl-color-gray-5);
@@ -3208,7 +3211,6 @@ body.pc-resizing * {
 .casos { margin: 1.5rem 0; }
 
 .casos__roles { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-.casos__roles > * { margin-top: 0; }
 .casos__chip {
   font: inherit; font-size: 0.85rem; cursor: pointer; padding: 0.45rem 0.8rem;
   border-radius: 1rem; border: 1px solid var(--sl-color-gray-5);
@@ -3224,7 +3226,6 @@ body.pc-resizing * {
   display: grid; gap: 0.6rem; margin-bottom: 1.2rem;
   grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
 }
-.casos__grilla > * { margin-top: 0; }
 .casos__caso {
   font: inherit; cursor: pointer; text-align: left;
   display: flex; flex-direction: column; gap: 0.25rem;
