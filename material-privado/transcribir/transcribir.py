@@ -44,6 +44,16 @@ import pathlib
 import re
 import sys
 
+# La consola de Windows es cp1252 y no sabe escribir el emoji del marcador.
+# Sin esto, el script termina de escribir el .md y RECIEN AHI se cae con
+# UnicodeEncodeError, con todo el trabajo hecho: parece que fallo y no fallo.
+# Con errors='replace' lo que no entra sale como '?' y nunca tumba la corrida.
+try:
+    sys.stdout.reconfigure(errors='replace')
+    sys.stderr.reconfigure(errors='replace')
+except Exception:
+    pass  # En una consola que ya es UTF-8 no hace falta y da igual.
+
 # ─────────────────────────── Las marcas ────────────────────────────────
 
 # "   00:47  planillas" y también "0:47 - planillas" o "1:02:30  algo"

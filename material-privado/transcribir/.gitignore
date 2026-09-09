@@ -11,4 +11,5 @@
 *.opus
 *.md
 !README.md
+!PASO-A-PASO.md
 __pycache__/

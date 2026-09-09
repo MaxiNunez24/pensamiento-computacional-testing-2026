@@ -3,6 +3,10 @@
 Convierte los audios de las entrevistas en texto **con las marcas metidas en su
 minuto**, para no tener que escuchar tres horas de nuevo.
 
+> **¿Primera vez?** Empezá por **[PASO-A-PASO.md](PASO-A-PASO.md)**: va desde
+> sacar los audios del celular hasta la primera corrida. Este README es la
+> referencia del script, no el camino.
+
 ---
 
 ## 1. Instalación (una vez)
