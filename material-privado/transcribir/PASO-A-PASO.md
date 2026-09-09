@@ -76,10 +76,10 @@ haya salido bien. Es la única copia que hay.
 
 ## Paso 2 — Dónde guardarlos
 
-**Fuera del repositorio.** Creá esta carpeta:
+**Fuera del repositorio.** Hoy están acá:
 
 ```
-D:\Entrevistas-CFP\
+E:\Ex Disco D\CFP\desarrollo_sistema_gestion_de_alumnos\interview_recordings\
 ```
 
 Podría ir adentro de `material-privado/transcribir/`, porque el `.gitignore` de
@@ -88,16 +88,19 @@ Pero después de lo del `datos_ejemplo.csv`, la regla que vale es otra: **lo que
 no puede subirse al repo, que no esté en la carpeta del repo**. Un `.gitignore`
 es una regla que puede fallar; una carpeta en otro lado no.
 
-D: tiene 317 GB libres, así que espacio sobra.
+E: tiene 416 GB libres, así que espacio sobra.
+
+> **Ojo con las comillas.** Esa ruta tiene espacios (`Ex Disco D`). Sin comillas
+> la terminal la parte en tres argumentos y Python dice que el archivo no
+> existe, que despista bastante.
 
 ### Cómo nombrarlos
 
 ```
-D:\Entrevistas-CFP\
-    2026-09-04_preceptoria.m4a
-    2026-09-04_maestra-de-apoyo.m4a
-    2026-09-04_instructor.m4a
-    marcas_2026-09-04.txt
+2026-09-04_preceptoria.m4a
+2026-09-04_maestra-de-apoyo.m4a
+2026-09-04_instructor.m4a
+marcas_2026-09-04.txt
 ```
 
 Fecha adelante (así se ordenan solos) y el **rol**, no el nombre de la persona.
@@ -130,22 +133,31 @@ La primera vez que uses un modelo, se baja solo. Por defecto va a:
 C:\Users\maxin\.cache\huggingface\hub
 ```
 
-Y `C:` está al **92%** (19 GB libres). `large-v3` pesa unos 3 GB. Entra, pero
-queda al filo.
+Y `C:` está al **93%**. `large-v3` pesa unos 3 GB. Entra, pero queda al filo.
 
-Para que caiga en D:, definí la variable `HF_HOME` **antes** de correr. En
-PowerShell:
+Ya está resuelto: el cache vive en **`F:\cache\huggingface`**. Se hizo así:
 
 ```powershell
-$env:HF_HOME = "D:\modelos-whisper"
+Move-Item "C:\Users\maxin\.cache\huggingface" "F:\cache\huggingface"
 ```
 
-Eso vale para esa ventana de terminal nada más. Si querés que quede fijo:
-*Inicio* → "variables de entorno" → *Variables de usuario* → *Nueva* →
-nombre `HF_HOME`, valor `D:\modelos-whisper`.
+```powershell
+[Environment]::SetEnvironmentVariable('HF_HOME','F:\cache\huggingface','User')
+```
 
-> Ya están bajados `tiny` y `small`, de las pruebas. Si movés `HF_HOME` se
-> vuelven a bajar en el lugar nuevo — son chicos, no importa.
+> 🚨 **Esto es lo que muerde.** `SetEnvironmentVariable` afecta a las terminales
+> que se abran **de ahí en adelante**. Una ventana ya abierta sigue con el
+> entorno viejo, no encuentra el cache en F:, y **vuelve a bajar el modelo a
+> C:** sin avisar. Pasó de verdad: 464 MB duplicados.
+>
+> Después de definirla, **cerrá y abrí la terminal**. Y comprobalo:
+
+```powershell
+python -c "import huggingface_hub.constants as k; print(k.HF_HUB_CACHE)"
+```
+
+Tiene que decir `F:\cache\huggingface\hub`. Si dice `C:\Users\...`, esa
+ventana todavía no tomó la variable.
 
 ---
 
@@ -155,36 +167,53 @@ Empezá con **una** entrevista y con el modelo chico, para ver que todo el camin
 funciona antes de esperar media hora:
 
 ```bash
-python material-privado/transcribir/transcribir.py "D:\Entrevistas-CFP\2026-09-04_preceptoria.m4a" --modelo small
+python material-privado/transcribir/transcribir.py "E:\Ex Disco D\CFP\desarrollo_sistema_gestion_de_alumnos\interview_recordings\NOMBRE.m4a" --modelo small --cpu
 ```
 
 Tendría que verse algo así:
 
 ```
-Transcribiendo 2026-09-04_preceptoria.m4a con el modelo small…
-  usando GPU (float16)
-  duración detectada: 34:12
-  transcribiendo… 34:12
-Listo: D:\Entrevistas-CFP\2026-09-04_preceptoria.md
+Transcribiendo NOMBRE.m4a con el modelo small…
+  intentando con CPU (int8) — más lento
+  duración detectada: 14:59
+  transcribiendo… 14:59
+Listo: E:\...\NOMBRE.md
 ```
 
 Las dos líneas que importan:
 
-- **`usando GPU (float16)`** — anda la placa. Si dice `usando CPU (int8)`, va a
-  funcionar igual pero unas 10 veces más lento.
-- **`duración detectada`** — si esto no coincide con lo que dura el audio,
-  el archivo se copió mal del celular.
+- **`duración detectada`** — si no coincide con lo que dura el audio de verdad,
+  el archivo se copió mal.
+- **`transcribiendo…`** — el contador va por el audio. Mirándolo diez segundos
+  ya sabés a qué velocidad va.
 
-Si eso salió bien, ahora sí la buena, con el modelo grande y las marcas:
+Después le sumás las marcas:
 
 ```bash
-python material-privado/transcribir/transcribir.py "D:\Entrevistas-CFP\2026-09-04_preceptoria.m4a" --marcas "D:\Entrevistas-CFP\marcas_2026-09-04.txt" --seccion "Preceptoría"
+python material-privado/transcribir/transcribir.py "E:\...\NOMBRE.m4a" --marcas "E:\...\marcas.txt" --seccion "Preceptoría" --cpu
 ```
 
-Sin `--modelo` usa `large-v3`, que es el mejor.
+**Cuánto tarda en CPU.** Medido: 24 segundos de audio con `small` tardaron 7
+segundos de reloj, incluyendo cargar el modelo. Una entrevista de 15 minutos
+sale en **2 a 4 minutos**. Con `large-v3` es bastante más lento en CPU.
 
-**Cuánto tarda.** En la 2060 SUPER, con `large-v3`, una entrevista de 30 minutos
-sale en unos 2 a 4 minutos. La primera corrida suma la bajada del modelo (3 GB).
+### ¿Y la placa de video?
+
+**Todavía no anda, y hace falta instalar cosas.** `ctranslate2` necesita cuBLAS
+y cuDNN de CUDA 12, que en esta máquina no están: no hay CUDA Toolkit ni
+paquetes `nvidia-*` en pip. El síntoma es este, y aparece **después** de
+detectar la duración:
+
+```
+RuntimeError: Library cublas64_12.dll is not found or cannot be loaded
+```
+
+Sin `--cpu` el script lo intenta igual, se da cuenta y **sigue solo en CPU**.
+La bandera `--cpu` sirve para saltear el intento y no esperar de gusto.
+
+Para que la placa funcione hay que instalar `nvidia-cublas-cu12` y
+`nvidia-cudnn-cu12`, que son ~1 GB y por defecto van a `site-packages` en C:.
+Conviene hacerlo dentro de un entorno virtual en otro disco.
 
 Después repetís lo mismo con los otros dos audios. Son corridas independientes:
 cada una deja su `.md` al lado de su audio.
@@ -238,7 +267,8 @@ algo": no lo dice ninguna marca sola, sale de ordenarlas por tiempo.
 |---|---|
 | `ModuleNotFoundError: faster_whisper` | Corriste `python3`. Usá `python`. |
 | `No existe: ...` | La ruta. Si tiene espacios, va entre comillas. |
-| `usando CPU (int8)` | No levantó CUDA. Funciona igual, tarda ~10x. |
+| `Library cublas64_12.dll is not found` | Faltan las librerías de CUDA. El script sigue solo en CPU; con `--cpu` te ahorrás el intento. |
+| Baja el modelo aunque ya lo tengas en F: | Esa terminal se abrió antes de definir `HF_HOME`. Cerrala y abrí otra. |
 | Se queda en `transcribiendo… 00:00` largo rato | La primera vez está bajando el modelo. Los 3 GB no muestran barra de progreso. |
 | Termina bien pero con letras raras (`Busc? ?`) | La consola de Windows es cp1252 y no sabe dibujar los acentos ni el emoji. **El `.md` sale perfecto igual**, se escribe en UTF-8 aparte. |
 | Sale con muchos `[Música]` o repite frases | Hay tramos de silencio o ruido. Probá `--modelo medium`, a veces alucina menos. |

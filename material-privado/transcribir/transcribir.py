@@ -152,22 +152,17 @@ def _dibujar(grupo):
 
 # ─────────────────────────── La transcripción ──────────────────────────
 
-def transcribir(audio, modelo, idioma):
-    try:
-        from faster_whisper import WhisperModel
-    except ImportError:
-        sys.exit('Falta faster-whisper.  pip install -r requirements.txt')
+def _una_pasada(audio, modelo, idioma, device, compute_type):
+    """Una corrida entera: construir el modelo, transcribir y CONSUMIR todo.
 
-    # GPU si la hay. En la máquina del profe hay una RTX 2060 SUPER, que con
-    # float16 hace una entrevista de 30 minutos en un par de minutos. Si CUDA
-    # no está, se cae a CPU con int8, que anda igual pero tarda ~10x.
-    try:
-        m = WhisperModel(modelo, device='cuda', compute_type='float16')
-        print('  usando GPU (float16)')
-    except Exception:
-        m = WhisperModel(modelo, device='cpu', compute_type='int8')
-        print('  usando CPU (int8) — va a tardar bastante más')
+    Que el generador se consuma acá adentro es el punto de esta función.
+    m.transcribe() devuelve un generador perezoso: no calcula nada hasta que
+    alguien lo itera. Si el consumo quedara afuera, el error de verdad pasaría
+    fuera del try de quien nos llama — que es exactamente el bug que tenía esto.
+    """
+    from faster_whisper import WhisperModel
 
+    m = WhisperModel(modelo, device=device, compute_type=compute_type)
     segmentos, info = m.transcribe(
         str(audio),
         language=idioma,
@@ -187,6 +182,42 @@ def transcribir(audio, modelo, idioma):
     return tramos
 
 
+def transcribir(audio, modelo, idioma, forzar_cpu=False):
+    """Intenta con la placa y, si no puede, sigue en CPU.
+
+    Construir el modelo en 'cuda' funciona aunque falten las librerías de CUDA:
+    lo único que comprueba es que haya una placa. La cuenta real pasa después,
+    en encode(). Por eso el intento tiene que envolver la pasada COMPLETA y no
+    solo el constructor.
+    """
+    try:
+        import faster_whisper  # noqa: F401
+    except ImportError:
+        sys.exit('Falta faster-whisper.  pip install -r requirements.txt')
+
+    # La RTX 2060 SUPER con float16 hace 30 minutos de audio en un par de
+    # minutos. En CPU con int8 sale igual de bien, pero tarda ~10x.
+    planes = []
+    if not forzar_cpu:
+        planes.append(('cuda', 'float16', 'GPU (float16)'))
+    planes.append(('cpu', 'int8', 'CPU (int8) — más lento'))
+
+    for i, (device, compute_type, etiqueta) in enumerate(planes):
+        # "intentando", no "usando": decirlo antes de que funcione fue
+        # justamente lo que hizo perder una hora buscando el error donde no era.
+        print(f'  intentando con {etiqueta}')
+        try:
+            return _una_pasada(audio, modelo, idioma, device, compute_type)
+        except Exception as e:
+            if i == len(planes) - 1:
+                print(f'\n  no se pudo transcribir: {e}')
+                raise
+            print(f'\n  la placa no pudo: {e}')
+            if any(x in str(e).lower() for x in ('cublas', 'cudnn', 'cuda')):
+                print('  faltan las librerías de CUDA — ver PASO-A-PASO.md')
+            print('  sigo en CPU, que no las necesita…')
+
+
 def main():
     ap = argparse.ArgumentParser(description='Transcribe una entrevista y le mete las marcas.')
     ap.add_argument('audio', help='el archivo de audio (.webm, .mp3, .m4a, .wav…)')
@@ -195,6 +226,8 @@ def main():
     ap.add_argument('--modelo', default='large-v3',
                     help='large-v3 (mejor) · medium · small (más rápido). Por defecto large-v3')
     ap.add_argument('--idioma', default='es')
+    ap.add_argument('--cpu', action='store_true',
+                    help='ni intentar con la placa: directo a CPU')
     args = ap.parse_args()
 
     audio = pathlib.Path(args.audio)
@@ -207,7 +240,7 @@ def main():
         print(f'  {len(marcas)} marcas leídas')
 
     print(f'Transcribiendo {audio.name} con el modelo {args.modelo}…')
-    tramos = transcribir(audio, args.modelo, args.idioma)
+    tramos = transcribir(audio, args.modelo, args.idioma, forzar_cpu=args.cpu)
 
     cuerpo = entretejer(tramos, marcas)
     destino = audio.with_suffix('.md')

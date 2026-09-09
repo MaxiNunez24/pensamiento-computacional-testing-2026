@@ -34,8 +34,12 @@ instalado en el sistema.
 > La primera corrida baja el modelo (`large-v3` son unos 3 GB). Después queda
 > cacheado y no se vuelve a bajar.
 
-**La GPU anda de fábrica.** Probado: `WhisperModel('tiny', device='cuda',
-compute_type='float16')` levanta sin instalar nada de CUDA aparte.
+> ⚠️ **La GPU todavía no anda, y la prueba que decía que sí estaba mal hecha.**
+> Construir el modelo en `cuda` funciona aunque falten las librerías de CUDA:
+> lo único que comprueba es que exista una placa. La cuenta real pasa después y
+> muere con `Library cublas64_12.dll is not found`. Hasta que se instalen
+> cuBLAS y cuDNN, esto corre en CPU — que anda bien, solo más lento.
+> El detalle está en [PASO-A-PASO.md](PASO-A-PASO.md).
 
 ---
 
