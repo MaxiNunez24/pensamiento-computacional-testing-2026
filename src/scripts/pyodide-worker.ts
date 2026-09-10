@@ -215,12 +215,43 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
     ns = {}
     ok = True
     err = ""
+
+    # Con qué variables lo reprobó el test la última vez, y de qué tamaño eran
+    # las originales. Sirve para poder decirle al alumno "lo probamos con una
+    # lista más chica" en vez de dejarlo adivinando por qué su código, que se ve
+    # bien, falla. Se llenan más abajo; van acá porque el except los necesita.
+    _ultima_corrida = [None]
+    _tam_base = {}
+
+    def _describir(variables):
+        partes = []
+        for nombre, valor in variables.items():
+            try:
+                n = len(valor)
+            except TypeError:
+                partes.append(nombre + " = " + repr(valor))
+                continue
+            m = _tam_base.get(nombre)
+            if m is None or m == n:
+                partes.append(nombre + " con " + str(n) + " elementos")
+            else:
+                cual = "más chica" if n < m else "más grande"
+                partes.append(nombre + " " + cual + ": " + str(n) + " en vez de " + str(m))
+        return ", ".join(partes)
+
     try:
         # 'datos' son las variables que el ejercicio le REGALA al alumno (por
         # ejemplo, una edad ya cargada). Se ejecutan antes que su código, así el
         # botón Ejecutar funciona sin que él tenga que definirlas.
         if datos:
             exec(compile(datos, "los_datos", "exec"), ns)
+            # Los tamaños se anotan ACÁ y no después, porque el código del
+            # alumno puede hacer append y correrlos.
+            for _n, _v in ns.items():
+                try:
+                    _tam_base[_n] = len(_v)
+                except TypeError:
+                    pass
         ns["input"] = _mk_input(list(_entradas))
         if archivo:
             importlib.import_module(mod_name)   # valida que el archivo del alumno cargue bien
@@ -241,6 +272,9 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
             ns["salida"] = buf.getvalue()
 
             def _correr(entradas=None, **variables):
+                # Queda anotado para el except: si el código del alumno revienta
+                # acá adentro, poder decirle CON QUÉ datos lo reprobamos.
+                _ultima_corrida[0] = variables
                 _ns = {}
                 if datos:
                     exec(compile(datos, "los_datos", "exec"), _ns)
@@ -308,7 +342,12 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
         # que el alumno imprime; ahí, sin salida, lo que falta es el print. Uno
         # que no los usa es de escribir una función, nadie espera un print, y un
         # que revienta en un c.alumnos[0] es otra cosa completamente.
-        _en_test = any(f.filename == "los_tests" for f in _tb)
+        # El ÚLTIMO frame propio, no si hay alguno: correr() se llama DESDE el
+        # test, así que siempre hay un frame de los_tests en la pila aunque la
+        # excepción haya explotado en el código del alumno. Con any() todo
+        # IndexError del alumno se reportaba como "te falta el print".
+        _propios_tb = [f for f in _tb if f.filename in propios]
+        _en_test = bool(_propios_tb) and _propios_tb[-1].filename == "los_tests"
         _mira_la_salida = "correr(" in tests or "salida" in tests or "splitlines" in tests
         _sobre_la_salida = _en_test and _mira_la_salida
         _mostrado = buf.getvalue().rstrip()
@@ -328,7 +367,16 @@ def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
                     partes.append(f"En {donde}, línea {f.lineno}:  {linea}" if linea
                                   else f"En {donde}, línea {f.lineno}")
             partes.append(f"IndexError: {e}")
-            partes.append("Estás pidiendo una posición que no existe en esa lista o texto.")
+            if _ultima_corrida[0]:
+                # El test lo reprobó con otros datos. Decirlo es la mitad del
+                # ejercicio: su código anda con la lista que él ve y se rompe
+                # con otra, que es justamente lo que se está enseñando.
+                partes.insert(0, "Al probarlo con una lista de otro tamaño ("
+                              + _describir(_ultima_corrida[0]) + "), "
+                              "tu código usa un índice que no existe.")
+                partes.insert(1, "")
+            else:
+                partes.append("Estás pidiendo una posición que no existe en esa lista o texto.")
             err = "\\n".join(partes)
     except Exception as e:
         ok = False
