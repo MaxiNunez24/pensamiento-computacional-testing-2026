@@ -12,6 +12,7 @@
   var RECESO_HASTA = '2026-08-01';
   var FERIADOS = [
     '2026-07-10', // feriado (viernes)
+    '2026-09-11', // asueto por el día del profesional de la educación (viernes)
     // agregá acá otros feriados que caigan en miércoles o viernes...
   ];
 

@@ -33,6 +33,7 @@
 | ❄️ **22/7 – 1/8** | Receso invernal *(pasado)* |
 | 🔁 **Agosto** | Vuelta del receso: **repaso y práctica** en la plataforma, y cierre de **Archivos y JSON** |
 | 🏗️ **Septiembre** | **POO** y arranque del **Sistema de Asistencias** (primer proyecto, CLI) |
+| 🗺️ **Vie 18/9** | **Entrevistas con Directivos y Auxiliares** + reunión con **todos juntos**: se les presenta la planificación del sistema |
 | 🎉 **24 y 26/9** | **Nerdearla** — salida educativa al Ciudad Cultural Konex. (El evento va del 22 al 26; el 22 y 23 son online y lo presencial arranca el jueves 24.) |
 | ✅ **Mié 30/9** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en JSON |
 | 🧪 **Oct** | **Testing** (teoría + `pytest` sobre el proyecto) y migración del sistema a **web (Flask)** |
@@ -173,6 +174,21 @@
 | Vie 21/8 | Consulta y resolución de ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
 | Mié 26/8 | **Elicitación de requerimientos**: lluvia de ideas sobre el sistema y preparación de la demo | [🗺️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/proyecto/) |
 | Vie 28/8 | Consultas sobre el **sistema de asistencias** y sobre los ejercicios de la plataforma. Se firmaron el acta por el **cambio de horario de los viernes** y la autorización de la **salida educativa a Nerdearla**. *(Archivos quedó para más adelante.)* | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
+
+### 🗺️ Relevamiento del Sistema de Asistencias
+
+!!! tip "Acá el curso sale del aula"
+    Estas clases son el **relevamiento de requerimientos** del primer proyecto: preparar las
+    preguntas, entrevistar al personal del CFP y ordenar lo que contaron. Es la parte del oficio
+    que no se puede practicar con un ejercicio inventado, porque del otro lado hay gente de verdad
+    con un trabajo de verdad.
+
+| Fecha | Tema | |
+|-------|------|--|
+| Mié 2/9 | Preparación de la demo: cómo afrontarla, y consultas sobre los ejercicios | [🗺️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/proyecto/) |
+| Vie 4/9 | **Entrevistas con Instructor, Maestras de apoyo y Preceptores del CFP** | [🎤](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/entrevista/) |
+| Mié 9/9 | Resolución y corrección del **Mini Parcial** de los dos alumnos presentes, y charla sobre el mercado informático actual | [📄](./clases/bloque_1_fundamentos/mini_parcial.md) |
+| Vie 11/9 | 🚫 Sin clases (asueto por el **Día del Profesional de la Educación**) | |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.

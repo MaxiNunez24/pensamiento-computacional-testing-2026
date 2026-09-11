@@ -1,7 +1,7 @@
 # ✅ Ponerse al día
 
 !!! warning "Hasta acá tenemos que estar todos"
-    Arrancamos **POO** el **miércoles 9 de septiembre**, y es el tema más grande del año. Para
+    Arrancamos **POO** la **semana del 23 de septiembre**, y es el tema más grande del año. Para
     aprovecharlo hay que llegar con lo anterior firme: POO no se entiende sin soltura con
     variables, condicionales, listas y bucles.
 
@@ -27,5 +27,5 @@ el final. 🐢
     con lo que probaste. **Preguntar no es hacer trampa: es lo que hace un programador.**
 
 !!! note "Si no llegás"
-    Avisá. Es mil veces mejor un "no llegué con bucles" que aparecer el 9/9 y que POO no se
+    Avisá. Es mil veces mejor un "no llegué con bucles" que aparecer el 23/9 y que POO no se
     entienda. Si se te complica el tiempo, lo acomodamos — pero hay que avisar. 🙋
