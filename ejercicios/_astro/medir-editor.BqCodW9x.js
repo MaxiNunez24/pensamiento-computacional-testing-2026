@@ -1,0 +1,1 @@
+function o(e){let t=!document.fonts||document.fonts.status==="loaded";if(document.fonts?.ready.then(()=>{t=!0,e.requestMeasure()}).catch(()=>{}),typeof IntersectionObserver!="function"){e.requestMeasure();return}const s=new IntersectionObserver(n=>{n.some(r=>r.isIntersecting)&&(e.requestMeasure(),t&&s.disconnect())});s.observe(e.dom)}export{o as m};

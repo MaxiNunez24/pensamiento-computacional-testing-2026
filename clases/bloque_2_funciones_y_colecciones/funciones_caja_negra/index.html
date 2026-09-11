@@ -1,0 +1,2394 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Maximiliano Nuñez">
+      
+      
+        <link rel="canonical" href="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/clases/bloque_2_funciones_y_colecciones/funciones_caja_negra/">
+      
+      
+        <link rel="prev" href="../como_encarar_ejercicios/">
+      
+      
+        <link rel="next" href="../tuplas_sets/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>🔥 Entrada en calor: Funciones como caja negra - Pensamiento Computacional y Testing de Aplicaciones 2026</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#entrada-en-calor-funciones-como-caja-negra" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-header__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pensamiento Computacional y Testing de Aplicaciones 2026
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🔥 Entrada en calor: Funciones como caja negra
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-nav__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    Pensamiento Computacional y Testing de Aplicaciones 2026
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🏠​ Inicio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cronograma/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📅 Cronograma del curso
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧪 Ejercicios interactivos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📚 Clases
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            📚 Clases
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../clases/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Índice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduccion/01_introduccion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍🏫 Introducción
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduccion/02_que_es_programar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍💻 ¿Qué es programar?
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🐍 Python Básico
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            🐍 Python Básico
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_1" id="__nav_4_4_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔰 Introducción
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            🔰 Introducción
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/historia_caracteristicas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📜 Historía y características
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/archivos_python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📁 Archivos de Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/ejecutar_programa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ▶️ Ejecutar el programa
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2" id="__nav_4_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    💽​ Instalación
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            💽​ Instalación
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/instalacion_herramientas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    💻 Instalando las herramientas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/instalar_python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🐍 Instalando Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/instalar_vscode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍💻 Instalando VS Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_3" id="__nav_4_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📊 Variables y Tipos
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Variables y Tipos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/funcion_print/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🖨️ La función print()
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/variables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📊 Variables
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/formato_strings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📐 Formato de strings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/funcion_input/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ⌨️ La función input()
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_4" id="__nav_4_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔀 Condicionales
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            🔀 Condicionales
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/if_else/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔀 If - Else
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_5" id="__nav_4_4_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📋 Listas
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            📋 Listas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/listas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📋 Listas en Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_6" id="__nav_4_4_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔁 Bucles
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            🔁 Bucles
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/while/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔄 While
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/for/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔁 For
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/ejercicios_estructuras_control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧮​ Ejercicios Estructuras de Control
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_7" id="__nav_4_4_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📒 Práctica de Listas
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            📒 Práctica de Listas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/cuadernillo_listas_finde/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📒 Cuadernillo de ejercicios sobre Listas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/mini_parcial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Mini Parcial
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📦 Funciones I
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            📦 Funciones I
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funciones_1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Funciones I
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧠 Cómo encarar un ejercicio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    🔥 Entrada en calor: Funciones como caja negra
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    🔥 Entrada en calor: Funciones como caja negra
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spoiler-ya-venis-usando-cajas-negras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spoiler: ya venís usando cajas negras
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-contrato-de-una-funcion" class="md-nav__link">
+    <span class="md-ellipsis">
+      El contrato de una función
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-1-leer-el-contrato-no-el-cuerpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Ejercicio 1 — Leer el contrato, no el cuerpo 🌱
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-2-usar-una-caja-negra-ajena" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Ejercicio 2 — Usar una caja negra ajena 🌿
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-3-escribirla-una-vez-usarla-muchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Ejercicio 3 — Escribirla una vez, usarla muchas 🌿
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#y-esto-que-tiene-que-ver-con-el-bingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Y esto, ¿qué tiene que ver con el Bingo?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-lectura-y-correccion-de-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⬅️ Anterior: Lectura y corrección de código
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Índice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-bingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ➡️ Siguiente: Bingo
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_9" id="__nav_4_4_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🗂️ Colecciones
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            🗂️ Colecciones
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tuplas_sets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎲 Tuplas y Sets
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diccionarios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🗝️ Diccionarios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_10" id="__nav_4_4_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📦 Funciones II
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_10">
+            <span class="md-nav__icon md-icon"></span>
+            📦 Funciones II
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funciones_2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Funciones II
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../imports_y_modulos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Anexo: Importar módulos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_11" id="__nav_4_4_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🧠 Práctica e integradores
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_11">
+            <span class="md-nav__icon md-icon"></span>
+            🧠 Práctica e integradores
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../repaso/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔁 Repaso general
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectura_codigo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔍 Lectura y corrección de código
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../del_enunciado_al_programa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧠 Del enunciado al programa
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎲 Bingo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_12" id="__nav_4_4_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    💾 Persistencia
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_12">
+            <span class="md-nav__icon md-icon"></span>
+            💾 Persistencia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/git_github/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🐙 Git y GitHub
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/archivos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📁 Archivos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📄 JSON
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_13" id="__nav_4_4_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🏗️ POO
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            🏗️ POO
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧬 POO I — Clases y objetos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🛡️ POO II — Métodos especiales y encapsulamiento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_herencia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔗 Herencia y polimorfismo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../al_dia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ✅ Ponerse al día
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔭 Adelanto del proyecto
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🗃️​ Material de apoyo
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            🗃️​ Material de apoyo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/material_apoyo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Índice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/glosario/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📖 Glosario de Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/libros/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📚 Libros
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/videos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎥 Videos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spoiler-ya-venis-usando-cajas-negras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spoiler: ya venís usando cajas negras
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-contrato-de-una-funcion" class="md-nav__link">
+    <span class="md-ellipsis">
+      El contrato de una función
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-1-leer-el-contrato-no-el-cuerpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Ejercicio 1 — Leer el contrato, no el cuerpo 🌱
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-2-usar-una-caja-negra-ajena" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Ejercicio 2 — Usar una caja negra ajena 🌿
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-3-escribirla-una-vez-usarla-muchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Ejercicio 3 — Escribirla una vez, usarla muchas 🌿
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#y-esto-que-tiene-que-ver-con-el-bingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Y esto, ¿qué tiene que ver con el Bingo?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-lectura-y-correccion-de-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⬅️ Anterior: Lectura y corrección de código
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Índice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-bingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ➡️ Siguiente: Bingo
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="entrada-en-calor-funciones-como-caja-negra">🔥 Entrada en calor: Funciones como caja negra</h1>
+<div class="admonition tip">
+<p class="admonition-title">Antes de armar el Bingo</p>
+<p>En el Bingo vas a tener que <strong>escribir funciones y después usarlas</strong> dentro de un <code>while</code>. Si eso
+todavía te marea un poco, esta entrada en calor es para vos. Si ya te sentís cómodo con funciones,
+saltala tranquilo y andá directo al <a href="../bingo/">🎲 Bingo</a>.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">🎯 Qué vas a sacar de acá</p>
+<ul>
+<li>Entender que una función es una <strong>caja negra</strong>: te importa <strong>qué hace</strong>, no <strong>cómo lo hace</strong>.</li>
+<li>Poder <strong>usar</strong> una función confiando en su "contrato", sin releer su interior cada vez.</li>
+<li>Llegar al Bingo sabiendo que <code>verificar_ganador(...)</code> es tu amiga, no tu enemiga. 🤝</li>
+</ul>
+</div>
+<hr />
+<h2 id="spoiler-ya-venis-usando-cajas-negras">Spoiler: ya venís usando cajas negras</h2>
+<p>Desde la primera clase usás funciones que <strong>vos no escribiste</strong> y que <strong>nunca viste por dentro</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;hola&quot;</span><span class="p">)</span>              <span class="c1"># 4     ¿sabés CÓMO cuenta las letras? No. ¿Importa? Tampoco.</span>
+<span class="nb">sorted</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>        <span class="c1"># [1, 2, 3]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Hola!&quot;</span><span class="p">)</span>          <span class="c1"># muestra texto en pantalla</span>
+<span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> <span class="c1"># un número al azar</span>
+</code></pre></div>
+<p>Confiás en <strong>qué hacen</strong> sin tener idea de <strong>cómo lo hacen</strong>. Eso es una <strong>caja negra</strong>: metés algo,
+sale algo, y el "cómo" está tapado adentro. <strong>Tus propias funciones funcionan exactamente igual.</strong></p>
+<div class="admonition note">
+<p class="admonition-title">🍔 La analogía del microondas</p>
+<p>Para calentar la comida apretás <em>1 minuto</em> y listo. No necesitás saber qué es un magnetrón ni
+cómo genera las microondas. <strong>Apretás (entrada) → sale comida caliente (salida).</strong> Una función es
+tu microondas: la usás por lo que hace, no por cómo está hecha por dentro.</p>
+</div>
+<hr />
+<h2 id="el-contrato-de-una-funcion">El contrato de una función</h2>
+<p>Para <strong>usar</strong> una función solo necesitás tres cosas — su <strong>contrato</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">precio_con_iva</span><span class="p">(</span><span class="n">precio</span><span class="p">):</span>      <span class="c1"># 1) NOMBRE: precio_con_iva</span>
+    <span class="k">return</span> <span class="n">precio</span> <span class="o">*</span> <span class="mf">1.21</span>         <span class="c1"># 2) QUÉ RECIBE: un precio   3) QUÉ DEVUELVE: ese precio + 21%</span>
+</code></pre></div>
+<ul>
+<li><strong>Nombre</strong> → cómo la llamás.</li>
+<li><strong>Qué recibe</strong> (parámetros) → qué le tenés que dar.</li>
+<li><strong>Qué devuelve</strong> (<code>return</code>) → qué te entrega de vuelta.</li>
+</ul>
+<p>El <strong>cuerpo</strong> (la línea de adentro, el <em>cómo</em>) te importa cuando la <strong>escribís</strong>. Pero cuando la
+<strong>usás</strong>, lo podés "olvidar" y confiar en el contrato:</p>
+<div class="highlight"><pre><span></span><code><span class="n">total</span> <span class="o">=</span> <span class="n">precio_con_iva</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>   <span class="c1"># confío en que me devuelve 121.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>                  <span class="c1"># 121.0</span>
+</code></pre></div>
+<div class="admonition success">
+<p class="admonition-title">La idea clave</p>
+<p><strong>Escribir</strong> una función = pensar en el <em>cómo</em>. <strong>Usar</strong> una función = confiar en el <em>qué</em>.
+Son dos sombreros distintos. Cuando la llamás, no estás "entrando" a la función: le pasás datos y
+esperás el resultado.</p>
+</div>
+<hr />
+<h2 id="ejercicio-1-leer-el-contrato-no-el-cuerpo">🎮 Ejercicio 1 — Leer el contrato, no el cuerpo 🌱</h2>
+<p>Tenés esta función:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">es_mayor_de_edad</span><span class="p">(</span><span class="n">edad</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span>
+</code></pre></div>
+<p>Sin ejecutar nada en la compu, decí qué devuelve cada llamada:</p>
+<div class="highlight"><pre><span></span><code><span class="n">es_mayor_de_edad</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">es_mayor_de_edad</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">es_mayor_de_edad</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>No necesitás "entrar" a la función línea por línea. Leé el nombre y el <code>return</code>: <em>devuelve si la
+edad es mayor o igual a 18</em>. Aplicá esa idea a cada número.</p>
+</details>
+<details class="success">
+<summary>✅ Respuesta</summary>
+<p><div class="highlight"><pre><span></span><code><span class="n">es_mayor_de_edad</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>   <span class="c1"># True   (20 &gt;= 18)</span>
+<span class="n">es_mayor_de_edad</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>   <span class="c1"># False  (15 &gt;= 18 es falso)</span>
+<span class="n">es_mayor_de_edad</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>   <span class="c1"># True   (18 &gt;= 18, el &gt;= incluye al 18)</span>
+</code></pre></div>
+Fijate que para responder <strong>no hiciste la cuenta de cómo funciona por dentro</strong>: confiaste en lo
+que el nombre y el <code>return</code> te prometen. Eso es leer el contrato.</p>
+</details>
+<hr />
+<h2 id="ejercicio-2-usar-una-caja-negra-ajena">🎮 Ejercicio 2 — Usar una caja negra ajena 🌿</h2>
+<p>Imaginá que un compañero ya escribió esta función (vos <strong>no ves el código de adentro</strong>, solo te
+cuenta el contrato):</p>
+<blockquote>
+<p><code>descuento(precio, porcentaje)</code> → devuelve el precio <strong>ya con el descuento aplicado</strong>.
+Por ejemplo, <code>descuento(100, 10)</code> devuelve <code>90.0</code>.</p>
+</blockquote>
+<p>Sin saber cómo está hecha por dentro, <strong>usala</strong> para resolver esto:</p>
+<blockquote>
+<p>Una campera cuesta $50.000 y está al 30% off. Imprimí cuánto pagás.</p>
+</blockquote>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>No tenés que escribir <code>descuento</code> — ya existe. Tu única tarea es <strong>llamarla</strong> con los datos
+correctos y mostrar el resultado. ¿Qué dos cosas recibe? ¿Qué te devuelve?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<p><div class="highlight"><pre><span></span><code><span class="n">a_pagar</span> <span class="o">=</span> <span class="n">descuento</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pagás $</span><span class="si">{</span><span class="n">a_pagar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+No te hizo falta saber si por dentro hace <code>precio - precio * porcentaje / 100</code> o cualquier otra
+cuenta. <strong>Confiaste en el contrato</strong> y la usaste. Así se trabaja con funciones (propias o ajenas).</p>
+</details>
+<hr />
+<h2 id="ejercicio-3-escribirla-una-vez-usarla-muchas">🎮 Ejercicio 3 — Escribirla una vez, usarla muchas 🌿</h2>
+<p>Acá te toca ponerte el otro sombrero (el de <em>escribir</em>). Definí una función <code>area_triangulo(base, altura)</code>
+que <strong>devuelva</strong> el área (base por altura dividido 2). Después, <strong>usala 3 veces</strong> para imprimir el
+área de tres triángulos distintos.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ejemplo de salida esperada:</span>
+<span class="c1"># Área 1: 10.0</span>
+<span class="c1"># Área 2: 6.0</span>
+<span class="c1"># Área 3: 25.0</span>
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Primero el contrato: recibe <code>base</code> y <code>altura</code>, devuelve <code>base * altura / 2</code> con <code>return</code>.
+Después la llamás tres veces con números distintos. Definís <strong>una vez</strong>, usás <strong>las que quieras</strong>.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<p><div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">area_triangulo</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">altura</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">base</span> <span class="o">*</span> <span class="n">altura</span> <span class="o">/</span> <span class="mi">2</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Área 1: </span><span class="si">{</span><span class="n">area_triangulo</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># 10.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Área 2: </span><span class="si">{</span><span class="n">area_triangulo</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># 6.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Área 3: </span><span class="si">{</span><span class="n">area_triangulo</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 25.0</span>
+</code></pre></div>
+Esa es la <strong>potencia</strong> de las funciones: escribís la lógica <strong>una sola vez</strong> y la reusás todas las
+veces que necesites, sin copiar y pegar.</p>
+</details>
+<hr />
+<h2 id="y-esto-que-tiene-que-ver-con-el-bingo">🎯 Y esto, ¿qué tiene que ver con el Bingo?</h2>
+<p>En el Bingo vas a escribir una función así:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">carton</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">sorteados</span><span class="p">)</span>
+</code></pre></div>
+<p>Y después la vas a <strong>usar</strong> dentro del bucle del juego:</p>
+<div class="highlight"><pre><span></span><code><span class="k">while</span> <span class="ow">not</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+    <span class="c1"># seguir sorteando...</span>
+</code></pre></div>
+<p>Cuando llegues a esa línea, <strong>no necesitás recordar cómo <code>verificar_ganador</code> decide si ganaste</strong>.
+Solo confiás en su contrato: <em>le doy el cartón y lo sorteado, me devuelve <code>True</code> o <code>False</code></em>. El
+<code>while</code> la usa como caja negra — igual que vos usás <code>len()</code> sin pensarlo.</p>
+<div class="admonition success">
+<p class="admonition-title">Si esto te hizo clic…</p>
+<p>…ya estás listo para el Bingo. 🎰 Y si todavía no del todo, no pasa nada: lo vamos a armar
+<strong>entre todos</strong>, paso a paso.</p>
+</div>
+<hr />
+<h2 id="anterior-lectura-y-correccion-de-codigo"><a href="../lectura_codigo/">⬅️ Anterior: Lectura y corrección de código</a></h2>
+<h2 id="indice"><a href="../../clases/#colecciones">📚 Índice</a></h2>
+<h2 id="siguiente-bingo"><a href="../bingo/">➡️ Siguiente: Bingo</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../../javascripts/clases-restantes.js"></script>
+      
+    
+  </body>
+</html>

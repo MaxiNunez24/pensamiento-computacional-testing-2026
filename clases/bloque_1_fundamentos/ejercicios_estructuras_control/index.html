@@ -1,0 +1,3309 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Maximiliano Nuñez">
+      
+      
+        <link rel="canonical" href="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/clases/bloque_1_fundamentos/ejercicios_estructuras_control/">
+      
+      
+        <link rel="prev" href="../for/">
+      
+      
+        <link rel="next" href="../cuadernillo_listas_finde/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>🧮​ Ejercicios Estructuras de Control - Pensamiento Computacional y Testing de Aplicaciones 2026</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#estructuras-de-control-practica-integradora" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-header__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pensamiento Computacional y Testing de Aplicaciones 2026
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🧮​ Ejercicios Estructuras de Control
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-nav__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    Pensamiento Computacional y Testing de Aplicaciones 2026
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🏠​ Inicio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cronograma/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📅 Cronograma del curso
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧪 Ejercicios interactivos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📚 Clases
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            📚 Clases
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../clases/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Índice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduccion/01_introduccion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍🏫 Introducción
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduccion/02_que_es_programar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍💻 ¿Qué es programar?
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🐍 Python Básico
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            🐍 Python Básico
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_1" id="__nav_4_4_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔰 Introducción
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            🔰 Introducción
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../historia_caracteristicas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📜 Historía y características
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archivos_python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📁 Archivos de Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ejecutar_programa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ▶️ Ejecutar el programa
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2" id="__nav_4_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    💽​ Instalación
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            💽​ Instalación
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instalacion_herramientas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    💻 Instalando las herramientas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instalar_python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🐍 Instalando Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instalar_vscode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍💻 Instalando VS Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_3" id="__nav_4_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📊 Variables y Tipos
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Variables y Tipos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funcion_print/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🖨️ La función print()
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../variables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📊 Variables
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formato_strings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📐 Formato de strings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funcion_input/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ⌨️ La función input()
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_4" id="__nav_4_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔀 Condicionales
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            🔀 Condicionales
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../if_else/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔀 If - Else
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_5" id="__nav_4_4_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📋 Listas
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            📋 Listas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../listas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📋 Listas en Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_6" id="__nav_4_4_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔁 Bucles
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            🔁 Bucles
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../while/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔄 While
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../for/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔁 For
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    🧮​ Ejercicios Estructuras de Control
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    🧮​ Ejercicios Estructuras de Control
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#if-elif-else-condicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔀 If / Elif / Else — Condicionales
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔀 If / Elif / Else — Condicionales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-clasificador-de-notas-extendido" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ Clasificador de notas extendido
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-puedo-entrar-al-boliche" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ ¿Puedo entrar al boliche?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-calculadora-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Calculadora básica
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-categoria-de-imc" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Categoría de IMC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-ano-bisiesto" class="md-nav__link">
+    <span class="md-ellipsis">
+      5️⃣ Año bisiesto
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desafio" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Desafío
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#while-repeticion-con-condicion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔁 While — Repetición con condición
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔁 While — Repetición con condición">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicios_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-validacion-de-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ Validación de contraseña 🌱
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-menu-de-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ Menú de opciones 🌱
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-contador-de-intentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Contador de intentos 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-mini-banco" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Mini banco 🌶️
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#for-repeticion-con-rango" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔂 For — Repetición con rango
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔂 For — Repetición con rango">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicios_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-fizzbuzz" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ FizzBuzz 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-detector-de-parimpar-en-rango" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ Detector de par/impar en rango 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-suma-de-digitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Suma de dígitos 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-numeros-primos-en-un-rango" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Números primos en un rango 🌶️
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios-libres-elegi-la-estructura-vos" class="md-nav__link">
+    <span class="md-ellipsis">
+      🆓 Ejercicios Libres — Elegí la estructura vos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🆓 Ejercicios Libres — Elegí la estructura vos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-conversor-de-temperatura" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ Conversor de temperatura 🌱
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-contador-de-vocales" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ Contador de vocales 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-tabla-de-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Tabla de conversión 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-piramide-invertida" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Pirámide invertida 🌶️
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⬅️ Anterior: For
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Índice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-listas-en-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      ➡️ Siguiente: Listas en Python
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_7" id="__nav_4_4_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📒 Práctica de Listas
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            📒 Práctica de Listas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cuadernillo_listas_finde/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📒 Cuadernillo de ejercicios sobre Listas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mini_parcial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Mini Parcial
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📦 Funciones I
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            📦 Funciones I
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/funciones_1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Funciones I
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧠 Cómo encarar un ejercicio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/funciones_caja_negra/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔥 Entrada en calor: Funciones como caja negra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_9" id="__nav_4_4_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🗂️ Colecciones
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            🗂️ Colecciones
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/tuplas_sets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎲 Tuplas y Sets
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/diccionarios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🗝️ Diccionarios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_10" id="__nav_4_4_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📦 Funciones II
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_10">
+            <span class="md-nav__icon md-icon"></span>
+            📦 Funciones II
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/funciones_2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Funciones II
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/imports_y_modulos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Anexo: Importar módulos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_11" id="__nav_4_4_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🧠 Práctica e integradores
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_11">
+            <span class="md-nav__icon md-icon"></span>
+            🧠 Práctica e integradores
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/repaso/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔁 Repaso general
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/lectura_codigo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔍 Lectura y corrección de código
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/del_enunciado_al_programa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧠 Del enunciado al programa
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_2_funciones_y_colecciones/bingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎲 Bingo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_12" id="__nav_4_4_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    💾 Persistencia
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_12">
+            <span class="md-nav__icon md-icon"></span>
+            💾 Persistencia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/git_github/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🐙 Git y GitHub
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/archivos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📁 Archivos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📄 JSON
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_13" id="__nav_4_4_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🏗️ POO
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            🏗️ POO
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧬 POO I — Clases y objetos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🛡️ POO II — Métodos especiales y encapsulamiento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_herencia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔗 Herencia y polimorfismo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../al_dia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ✅ Ponerse al día
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔭 Adelanto del proyecto
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🗃️​ Material de apoyo
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            🗃️​ Material de apoyo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/material_apoyo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Índice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/glosario/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📖 Glosario de Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/libros/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📚 Libros
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/videos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎥 Videos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#if-elif-else-condicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔀 If / Elif / Else — Condicionales
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔀 If / Elif / Else — Condicionales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-clasificador-de-notas-extendido" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ Clasificador de notas extendido
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-puedo-entrar-al-boliche" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ ¿Puedo entrar al boliche?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-calculadora-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Calculadora básica
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-categoria-de-imc" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Categoría de IMC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-ano-bisiesto" class="md-nav__link">
+    <span class="md-ellipsis">
+      5️⃣ Año bisiesto
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desafio" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Desafío
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#while-repeticion-con-condicion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔁 While — Repetición con condición
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔁 While — Repetición con condición">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicios_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-validacion-de-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ Validación de contraseña 🌱
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-menu-de-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ Menú de opciones 🌱
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-contador-de-intentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Contador de intentos 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-mini-banco" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Mini banco 🌶️
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#for-repeticion-con-rango" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔂 For — Repetición con rango
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔂 For — Repetición con rango">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicios_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Ejercicios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-fizzbuzz" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ FizzBuzz 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-detector-de-parimpar-en-rango" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ Detector de par/impar en rango 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-suma-de-digitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Suma de dígitos 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-numeros-primos-en-un-rango" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Números primos en un rango 🌶️
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios-libres-elegi-la-estructura-vos" class="md-nav__link">
+    <span class="md-ellipsis">
+      🆓 Ejercicios Libres — Elegí la estructura vos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🆓 Ejercicios Libres — Elegí la estructura vos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-conversor-de-temperatura" class="md-nav__link">
+    <span class="md-ellipsis">
+      1️⃣ Conversor de temperatura 🌱
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-contador-de-vocales" class="md-nav__link">
+    <span class="md-ellipsis">
+      2️⃣ Contador de vocales 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-tabla-de-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      3️⃣ Tabla de conversión 🌿
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-piramide-invertida" class="md-nav__link">
+    <span class="md-ellipsis">
+      4️⃣ Pirámide invertida 🌶️
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⬅️ Anterior: For
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Índice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-listas-en-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      ➡️ Siguiente: Listas en Python
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="estructuras-de-control-practica-integradora">🧠 Estructuras de Control — Práctica Integradora</h1>
+<p>En esta práctica vas a trabajar con las tres estructuras de control fundamentales de Python:</p>
+<ul>
+<li>🔀 <strong><code>if / elif / else</code></strong> → tomar decisiones</li>
+<li>🔁 <strong><code>while</code></strong> → repetir mientras se cumpla una condición</li>
+<li>🔂 <strong><code>for</code></strong> → repetir una cantidad conocida de veces</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Consejo antes de arrancar</p>
+<p>Leé el enunciado completo antes de escribir código. Identificá <strong>qué datos entran</strong>, <strong>qué debe hacer el programa</strong> y <strong>qué debe mostrar</strong>.</p>
+</div>
+<hr />
+<h2 id="if-elif-else-condicionales">🔀 If / Elif / Else — Condicionales</h2>
+<p>Estos ejercicios trabajan la toma de decisiones: distintas respuestas según distintas condiciones.</p>
+<h3 id="ejercicios">🧪 Ejercicios</h3>
+<hr />
+<h3 id="1-clasificador-de-notas-extendido">1️⃣ Clasificador de notas extendido</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Pedí una nota entre 0 y 10. Según el valor, mostrá la categoría correspondiente:</p>
+<table>
+<thead>
+<tr>
+<th>Rango</th>
+<th>Categoría</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 – 3</td>
+<td>❌ Insuficiente</td>
+</tr>
+<tr>
+<td>4 – 5</td>
+<td>⚠️ Regular</td>
+</tr>
+<tr>
+<td>6 – 7</td>
+<td>✅ Aprobado</td>
+</tr>
+<tr>
+<td>8 – 9</td>
+<td>⭐ Bueno</td>
+</tr>
+<tr>
+<td>10</td>
+<td>🏆 Excelente</td>
+</tr>
+</tbody>
+</table>
+<p>Si el número está fuera del rango 0–10, mostrá un mensaje de error.</p>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Vas a necesitar varios <code>elif</code>. ¿Qué pasa si el usuario escribe <code>11</code> o <code>-1</code>?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">nota</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá una nota entre 0 y 10: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">nota</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">nota</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Nota fuera de rango.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Insuficiente&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Regular&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">7</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Aprobado&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">nota</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⭐ Bueno&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🏆 Excelente&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="2-puedo-entrar-al-boliche">2️⃣ ¿Puedo entrar al boliche?</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Un boliche permite entrar si la persona tiene <strong>18 años o más</strong> Y además <strong>tiene entrada</strong>.</p>
+<p>Pedí los siguientes datos:</p>
+<ul>
+<li><code>edad</code> → número entero</li>
+<li><code>tiene_entrada</code> → el usuario escribe <code>"si"</code> o <code>"no"</code></li>
+</ul>
+<p>Mostrá si puede ingresar o no, y explicá el motivo si no puede.</p>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Combiná condiciones con <code>and</code>. Pensá también en los casos donde solo falla una de las dos condiciones.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">edad</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Cuántos años tenés? &quot;</span><span class="p">))</span>
+<span class="n">tiene_entrada</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Tenés entrada? (si/no): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">edad</span> <span class="o">&gt;=</span> <span class="mi">18</span> <span class="ow">and</span> <span class="n">tiene_entrada</span> <span class="o">==</span> <span class="s2">&quot;si&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Podés ingresar.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">edad</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Sos menor de edad.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ No tenés entrada.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="3-calculadora-basica">3️⃣ Calculadora básica</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Pedí dos números y una operación (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>). Realizá la operación y mostrá el resultado.</p>
+<p>Tené en cuenta estos casos especiales:</p>
+<ul>
+<li>Si la operación ingresada <strong>no es válida</strong>, mostrá un mensaje de error.</li>
+<li>Si se intenta <strong>dividir por cero</strong>, avisale al usuario.</li>
+</ul>
+<p><strong>Ejemplo de salida esperada:</strong></p>
+<div class="highlight"><pre><span></span><code>Ingresá el primer número: 10
+Ingresá el segundo número: 0
+Operación: /
+⚠️ Error: no se puede dividir por cero.
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Primero verificá si la operación es válida. Dentro de la rama <code>/</code>, verificá por separado si el divisor es cero antes de operar.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá el primer número: &quot;</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá el segundo número: &quot;</span><span class="p">))</span>
+<span class="n">op</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Operación (+, -, *, /): &quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;+&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Error: no se puede dividir por cero.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado: </span><span class="si">{</span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Operación no válida.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="4-categoria-de-imc">4️⃣ Categoría de IMC</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Pedí el peso (en kg) y la altura (en metros) del usuario. Calculá el IMC con la fórmula:</p>
+<div class="highlight"><pre><span></span><code>IMC = peso / (altura ** 2)
+</code></pre></div>
+<p>Luego mostrá la categoría:</p>
+<table>
+<thead>
+<tr>
+<th>IMC</th>
+<th>Categoría</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Menor a 18.5</td>
+<td>🔵 Bajo peso</td>
+</tr>
+<tr>
+<td>18.5 – 24.9</td>
+<td>🟢 Normal</td>
+</tr>
+<tr>
+<td>25 – 29.9</td>
+<td>🟡 Sobrepeso</td>
+</tr>
+<tr>
+<td>30 o más</td>
+<td>🔴 Obesidad</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atención</p>
+<p>No validamos si los valores son médicamente correctos, pero sí que sean números mayores a 0.</p>
+</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Primero calculá el IMC con la fórmula. Después usá <code>elif</code> para cada rango — ¿en qué orden conviene poner las condiciones?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">peso</span>   <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Peso en kg: &quot;</span><span class="p">))</span>
+<span class="n">altura</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Altura en metros: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">peso</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">altura</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Valores inválidos.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">imc</span> <span class="o">=</span> <span class="n">peso</span> <span class="o">/</span> <span class="p">(</span><span class="n">altura</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tu IMC es: </span><span class="si">{</span><span class="n">imc</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">imc</span> <span class="o">&lt;</span> <span class="mf">18.5</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔵 Bajo peso&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">imc</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🟢 Normal&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">imc</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🟡 Sobrepeso&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔴 Obesidad&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="5-ano-bisiesto">5️⃣ Año bisiesto</h3>
+<p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
+<p>Pedí un año e indicá si es <strong>bisiesto</strong> o no. Un año es bisiesto si:</p>
+<ul>
+<li>Es divisible por <strong>4</strong>, <strong>pero no</strong> por 100</li>
+<li><strong>O</strong> es divisible por <strong>400</strong></li>
+</ul>
+<p><strong>Ejemplo de salida esperada:</strong></p>
+<div class="highlight"><pre><span></span><code>Ingresá un año: 2000
+✅ 2000 es bisiesto.
+
+Ingresá un año: 1900
+❌ 1900 no es bisiesto.
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Desafío extra</p>
+<p>¿Podés hacerlo en una sola condición usando <code>and</code> y <code>or</code>?</p>
+</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>La regla es: bisiesto si (<code>divisible por 4</code> Y <code>no divisible por 100</code>) O (<code>divisible por 400</code>). Escribila tal cual con <code>and</code> y <code>or</code>.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">año</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá un año: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">año</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">año</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">año</span> <span class="o">%</span> <span class="mi">400</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ </span><span class="si">{</span><span class="n">año</span><span class="si">}</span><span class="s2"> es bisiesto.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ </span><span class="si">{</span><span class="n">año</span><span class="si">}</span><span class="s2"> no es bisiesto.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="desafio">🚀 Desafío</h3>
+<p>Creá un programa que simule el acceso a un sistema. El usuario debe ingresar su <strong>nombre de usuario</strong> y su <strong>contraseña</strong>. Según lo que ingrese, mostrá:</p>
+<ul>
+<li><code>"✅ Bienvenido, [nombre]"</code> si ambos son correctos</li>
+<li><code>"❌ Contraseña incorrecta"</code> si el usuario existe pero la clave no coincide</li>
+<li><code>"❌ Usuario no encontrado"</code> si el usuario no existe</li>
+</ul>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Podés hardcodear un único usuario válido con su contraseña. No hace falta una lista.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">USUARIO_VALIDO</span>   <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+<span class="n">CONTRASENA_VALIDA</span> <span class="o">=</span> <span class="s2">&quot;1234&quot;</span>
+
+<span class="n">usuario</span>    <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Usuario: &quot;</span><span class="p">)</span>
+<span class="n">contrasena</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Contraseña: &quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">usuario</span> <span class="o">==</span> <span class="n">USUARIO_VALIDO</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">contrasena</span> <span class="o">==</span> <span class="n">CONTRASENA_VALIDA</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Bienvenido, </span><span class="si">{</span><span class="n">usuario</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Contraseña incorrecta&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Usuario no encontrado&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="while-repeticion-con-condicion">🔁 While — Repetición con condición</h2>
+<p>Estos ejercicios repiten una acción <strong>mientras se cumpla una condición</strong>. El número de repeticiones no se conoce de antemano.</p>
+<h3 id="ejercicios_1">🧪 Ejercicios</h3>
+<hr />
+<h3 id="1-validacion-de-contrasena">1️⃣ Validación de contraseña 🌱</h3>
+<p><strong>Dificultad:</strong> 🌱 Básico</p>
+<p>El programa tiene una contraseña correcta: <code>"python2025"</code>. Pedile al usuario que la ingrese. Si no coincide, volvé a pedirla.</p>
+<p>Reglas:</p>
+<ul>
+<li>El usuario tiene <strong>máximo 3 intentos</strong>.</li>
+<li>Si acierta → mostrá <code>"✅ Acceso concedido"</code>.</li>
+<li>Si se agotan los intentos → mostrá <code>"🚫 Cuenta bloqueada"</code>.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>Contraseña: hola
+❌ Incorrecto. Te quedan 2 intentos.
+Contraseña: python2025
+✅ Acceso concedido.
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>¿Con qué variable llevás la cuenta de los intentos? ¿Cuándo tiene que terminar el <code>while</code>: cuando aciertan O cuando se agotan los intentos?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">CONTRASENA</span> <span class="o">=</span> <span class="s2">&quot;python2025&quot;</span>
+<span class="n">intentos</span>   <span class="o">=</span> <span class="mi">0</span>
+<span class="n">max_intentos</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">while</span> <span class="n">intentos</span> <span class="o">&lt;</span> <span class="n">max_intentos</span><span class="p">:</span>
+    <span class="n">ingresada</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Contraseña: &quot;</span><span class="p">)</span>
+    <span class="n">intentos</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">ingresada</span> <span class="o">==</span> <span class="n">CONTRASENA</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Acceso concedido.&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">restantes</span> <span class="o">=</span> <span class="n">max_intentos</span> <span class="o">-</span> <span class="n">intentos</span>
+        <span class="k">if</span> <span class="n">restantes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Incorrecto. Te quedan </span><span class="si">{</span><span class="n">restantes</span><span class="si">}</span><span class="s2"> intentos.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🚫 Cuenta bloqueada.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="2-menu-de-opciones">2️⃣ Menú de opciones 🌱</h3>
+<p><strong>Dificultad:</strong> 🌱 Básico</p>
+<p>Mostrá un menú con las siguientes opciones:</p>
+<div class="highlight"><pre><span></span><code>1 - Saludar
+2 - Mostrar año actual
+3 - Salir
+</code></pre></div>
+<p>El programa debe seguir mostrando el menú hasta que el usuario elija <strong>Salir</strong>. Si elige una opción que no existe, avisale con un mensaje de error y volvé a mostrar el menú.</p>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p><code>while True</code> es una buena base para un menú que se repite. ¿Cuándo usás <code>break</code> para salir del bucle?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">1 - Saludar&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Mostrar año actual&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Salir&quot;</span><span class="p">)</span>
+    <span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elegí una opción: &quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Hola!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Año actual: 2026&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Hasta luego!&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Opción no válida. Intentá de nuevo.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="3-contador-de-intentos">3️⃣ Contador de intentos 🌿</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>El programa le hace una pregunta de cultura general al usuario (podés elegir cualquiera). El usuario puede intentar responderla hasta que acierte o hasta que se agoten <strong>5 intentos</strong>.</p>
+<p>Mostrá en cada intento si la respuesta es correcta o no. Al finalizar, mostrá cuántos intentos usó.</p>
+<p><strong>Ejemplo de salida esperada:</strong></p>
+<div class="highlight"><pre><span></span><code>¿Cuál es la capital de Australia? Londres
+❌ Incorrecto, intentá de nuevo. (Intento 1 de 5)
+¿Cuál es la capital de Australia? Sídney
+❌ Incorrecto, intentá de nuevo. (Intento 2 de 5)
+¿Cuál es la capital de Australia? Canberra
+✅ ¡Correcto! Lo lograste en 3 intentos.
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Necesitás un contador de intentos. ¿Cuándo termina el bucle: cuando el usuario acierta, o cuando llega al límite, o ambas cosas?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">RESPUESTA_CORRECTA</span> <span class="o">=</span> <span class="s2">&quot;Canberra&quot;</span>
+<span class="n">max_intentos</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">intento</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">while</span> <span class="n">intento</span> <span class="o">&lt;</span> <span class="n">max_intentos</span><span class="p">:</span>
+    <span class="n">intento</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">respuesta</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Cuál es la capital de Australia? &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">respuesta</span> <span class="o">==</span> <span class="n">RESPUESTA_CORRECTA</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ ¡Correcto! Lo lograste en </span><span class="si">{</span><span class="n">intento</span><span class="si">}</span><span class="s2"> intento(s).&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Incorrecto, intentá de nuevo. (Intento </span><span class="si">{</span><span class="n">intento</span><span class="si">}</span><span class="s2"> de </span><span class="si">{</span><span class="n">max_intentos</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🚫 Se agotaron los intentos. La respuesta era: </span><span class="si">{</span><span class="n">RESPUESTA_CORRECTA</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="4-mini-banco">4️⃣ Mini banco 🌶️</h3>
+<p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
+<p>Simulá una cuenta bancaria con saldo inicial de <code>$1000</code>. El programa muestra un menú con estas operaciones:</p>
+<div class="highlight"><pre><span></span><code>1 - Depositar
+2 - Retirar
+3 - Ver saldo
+4 - Salir
+</code></pre></div>
+<p>Reglas:</p>
+<ul>
+<li><strong>Depositar</strong>: el monto debe ser mayor a 0.</li>
+<li><strong>Retirar</strong>: no se puede retirar más de lo que hay en la cuenta.</li>
+<li>El programa <strong>continúa</strong> hasta que el usuario elija Salir.</li>
+<li>Mostrá el saldo actualizado después de cada operación.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Desafío extra</p>
+<p>¿Podrías llevar un registro de todas las operaciones realizadas y mostrarlo al salir?</p>
+</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Usá <code>while True</code> con <code>break</code> para salir. Dentro del menú, cada opción modifica el saldo. ¿Qué verificás antes de permitir un retiro?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">saldo</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Saldo actual: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Depositar&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Retirar&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Ver saldo&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Salir&quot;</span><span class="p">)</span>
+    <span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elegí: &quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+        <span class="n">monto</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Monto a depositar: &quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">monto</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">saldo</span> <span class="o">+=</span> <span class="n">monto</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Depositaste $</span><span class="si">{</span><span class="n">monto</span><span class="si">}</span><span class="s2">. Saldo: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ El monto debe ser mayor a 0.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+        <span class="n">monto</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Monto a retirar: &quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">monto</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ El monto debe ser mayor a 0.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">monto</span> <span class="o">&gt;</span> <span class="n">saldo</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Saldo insuficiente.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">saldo</span> <span class="o">-=</span> <span class="n">monto</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Retiraste $</span><span class="si">{</span><span class="n">monto</span><span class="si">}</span><span class="s2">. Saldo: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tu saldo es: $</span><span class="si">{</span><span class="n">saldo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Hasta luego!&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Opción no válida.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="for-repeticion-con-rango">🔂 For — Repetición con rango</h2>
+<p>Estos ejercicios repiten una acción una <strong>cantidad conocida de veces</strong>, usando <code>range()</code> o recorriendo una secuencia.</p>
+<h3 id="ejercicios_2">🧪 Ejercicios</h3>
+<hr />
+<h3 id="1-fizzbuzz">1️⃣ FizzBuzz 🌿</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Mostrá los números del 1 al 50, pero con estas reglas:</p>
+<ul>
+<li>Si el número es divisible por <strong>3</strong> → mostrá <code>Fizz</code></li>
+<li>Si el número es divisible por <strong>5</strong> → mostrá <code>Buzz</code></li>
+<li>Si es divisible por <strong>ambos</strong> → mostrá <code>FizzBuzz</code></li>
+<li>Si no cumple ninguna → mostrá el número normalmente</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">¡Ojo con el orden!</p>
+<p>El orden en que escribís los <code>if</code> importa. ¿Por cuál condición conviene chequear primero?</p>
+</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Si un número es divisible por 15 (que es 3×5), es FizzBuzz. ¿Esa condición tiene que ir antes o después de las otras?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">15</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FizzBuzz&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fizz&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Buzz&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="2-detector-de-parimpar-en-rango">2️⃣ Detector de par/impar en rango 🌿</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Pedí dos números: <code>inicio</code> y <code>fin</code>. Recorrelos y mostrá cuáles son pares y cuáles impares. Al final, mostrá cuántos pares y cuántos impares hay en ese rango.</p>
+<p>Validaciones:</p>
+<ul>
+<li>El <code>inicio</code> debe ser <strong>menor que el fin</strong>.</li>
+<li>Si no lo es, mostrá un mensaje de error.</li>
+</ul>
+<p><strong>Ejemplo de salida esperada:</strong></p>
+<div class="highlight"><pre><span></span><code>2 → par
+3 → impar
+4 → par
+...
+📊 Pares: 5 | Impares: 4
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Verificá que <code>inicio &lt; fin</code> antes de arrancar el <code>for</code>. Usá dos contadores (uno para pares, otro para impares) que se incrementan dentro del bucle.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">inicio</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Inicio: &quot;</span><span class="p">))</span>
+<span class="n">fin</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Fin: &quot;</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">inicio</span> <span class="o">&gt;=</span> <span class="n">fin</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ El inicio debe ser menor que el fin.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">pares</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">impares</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inicio</span><span class="p">,</span> <span class="n">fin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> → par&quot;</span><span class="p">)</span>
+            <span class="n">pares</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> → impar&quot;</span><span class="p">)</span>
+            <span class="n">impares</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Pares: </span><span class="si">{</span><span class="n">pares</span><span class="si">}</span><span class="s2"> | Impares: </span><span class="si">{</span><span class="n">impares</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="3-suma-de-digitos">3️⃣ Suma de dígitos 🌿</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Pedile al usuario un número entero positivo. Calculá la <strong>suma de sus dígitos</strong> recorriéndolos con <code>for</code>.</p>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight"><pre><span></span><code>Ingresá un número: 1234
+Suma de dígitos: 10
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Podés convertir el número a <code>str</code> para recorrer cada carácter. ¿Cómo convertís cada carácter de vuelta a número para sumarlo?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">numero</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá un número: &quot;</span><span class="p">)</span>
+<span class="n">suma</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">digito</span> <span class="ow">in</span> <span class="n">numero</span><span class="p">:</span>
+    <span class="n">suma</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">digito</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Suma de dígitos: </span><span class="si">{</span><span class="n">suma</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="4-numeros-primos-en-un-rango">4️⃣ Números primos en un rango 🌶️</h3>
+<p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
+<p>Pedí dos números: <code>inicio</code> y <code>fin</code>. Mostrá todos los números <strong>primos</strong> que hay en ese rango.</p>
+<p>Un número es primo si solo es divisible por 1 y por sí mismo.</p>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight"><pre><span></span><code>Inicio: 1
+Fin: 20
+Primos: 2, 3, 5, 7, 11, 13, 17, 19
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Para cada número del rango, necesitás saber si es primo. ¿Cómo chequeás eso? Un número es primo si ningún número entre 2 y él mismo lo divide exactamente.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">inicio</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Inicio: &quot;</span><span class="p">))</span>
+<span class="n">fin</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Fin: &quot;</span><span class="p">))</span>
+<span class="n">primos</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">inicio</span><span class="p">),</span> <span class="n">fin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">es_primo</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">divisor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">es_primo</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="n">es_primo</span><span class="p">:</span>
+        <span class="n">primos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Primos: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">primos</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h2 id="ejercicios-libres-elegi-la-estructura-vos">🆓 Ejercicios Libres — Elegí la estructura vos</h2>
+<div class="admonition info">
+<p class="admonition-title">¿Qué significa «libre»?</p>
+<p>En estos ejercicios <strong>no se indica qué estructura usar</strong>. Analizá el problema, decidí cuál es la más adecuada y justificá tu elección. En algunos casos vas a necesitar <strong>combinar más de una</strong>.</p>
+</div>
+<hr />
+<h3 id="1-conversor-de-temperatura">1️⃣ Conversor de temperatura 🌱</h3>
+<p><strong>Dificultad:</strong> 🌱 Básico</p>
+<p>Pedí una temperatura y la unidad en que está expresada (<code>C</code> para Celsius, <code>F</code> para Fahrenheit). Convertila a la otra unidad y mostrá el resultado.</p>
+<p>Fórmulas:</p>
+<div class="highlight"><pre><span></span><code>°F = °C × 9/5 + 32
+°C = (°F - 32) × 5/9
+</code></pre></div>
+<p>Si la unidad ingresada no es válida, mostrá un mensaje de error.</p>
+<div class="highlight"><pre><span></span><code>Temperatura: 100
+Unidad (C/F): C
+→ 212.0°F
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>¿Qué estructura usás para elegir entre dos casos? ¿Qué pasa si la unidad no es ni <code>C</code> ni <code>F</code>?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">temp</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Temperatura: &quot;</span><span class="p">))</span>
+<span class="n">unidad</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Unidad (C/F): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">unidad</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">*</span> <span class="mi">9</span><span class="o">/</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;→ </span><span class="si">{</span><span class="n">resultado</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">°F&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">unidad</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="o">/</span><span class="mi">9</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;→ </span><span class="si">{</span><span class="n">resultado</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">°C&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Unidad no válida. Usá C o F.&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="2-contador-de-vocales">2️⃣ Contador de vocales 🌿</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Pedile al usuario una palabra o frase. Contá cuántas vocales tiene (considerá mayúsculas y minúsculas) y mostrá el resultado.</p>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight"><pre><span></span><code>Ingresá una frase: Hola Mundo
+Vocales encontradas: 4
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Podés definir una variable <code>vocales = "aeiouAEIOU"</code> y chequear si cada carácter está en ella.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">frase</span>  <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá una frase: &quot;</span><span class="p">)</span>
+<span class="n">vocales</span> <span class="o">=</span> <span class="s2">&quot;aeiouAEIOU&quot;</span>
+<span class="n">conteo</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">frase</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">vocales</span><span class="p">:</span>
+        <span class="n">conteo</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vocales encontradas: </span><span class="si">{</span><span class="n">conteo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="3-tabla-de-conversion">3️⃣ Tabla de conversión 🌿</h3>
+<p><strong>Dificultad:</strong> 🌿 Intermedio</p>
+<p>Generá una tabla que muestre la conversión de <strong>kilómetros a millas</strong> para valores del 0 al 100, de 10 en 10.</p>
+<p>La fórmula es: <code>millas = km × 0.621371</code></p>
+<p><strong>Ejemplo de salida esperada:</strong></p>
+<div class="highlight"><pre><span></span><code>km    | millas
+------|-------
+0     | 0.0
+10    | 6.21
+20    | 12.43
+...
+</code></pre></div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p><code>range(0, 101, 10)</code> te da los valores de 0 a 100 de 10 en 10. ¿Cómo formateás el resultado para que los números queden alineados?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;km&#39;</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;millas&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">km</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">millas</span> <span class="o">=</span> <span class="n">km</span> <span class="o">*</span> <span class="mf">0.621371</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">km</span><span class="si">:</span><span class="s2">&lt;6</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">millas</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<hr />
+<h3 id="4-piramide-invertida">4️⃣ Pirámide invertida 🌶️</h3>
+<p><strong>Dificultad:</strong> 🌶️ Avanzado</p>
+<p>Pedí un número <code>n</code> e imprimí una pirámide <strong>invertida</strong> de asteriscos de <code>n</code> filas.</p>
+<p><strong>Ejemplo con <code>n = 5</code>:</strong></p>
+<div class="highlight"><pre><span></span><code>*****
+****
+***
+**
+*
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Desafío extra</p>
+<p>¿Podés hacer que la pirámide esté <strong>centrada</strong>? Para eso vas a necesitar agregar espacios antes de cada fila.</p>
+</div>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>Si <code>n = 5</code>, la primera fila tiene 5 asteriscos, la segunda 4, la tercera 3... ¿Cómo expresás eso con <code>range(n, 0, -1)</code> y <code>"*" * cantidad</code>?</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="highlight"><pre><span></span><code><span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Ingresá el tamaño: &quot;</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<h2 id="anterior-for"><a href="../for/">⬅️ Anterior: For</a></h2>
+<h2 id="indice"><a href="../../clases/#estructuras-de-control">📚 Índice</a></h2>
+<h2 id="siguiente-listas-en-python"><a href="../listas/">➡️ Siguiente: Listas en Python</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../../javascripts/clases-restantes.js"></script>
+      
+    
+  </body>
+</html>
