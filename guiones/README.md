@@ -2,6 +2,44 @@
 
 Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para grabar.
 
+## ✍️ Cómo se escribe un guion
+
+Los cuatro bloques que tiene cada sección, en este orden:
+
+| Bloque | Qué es |
+|---|---|
+| ```` ```python ```` | **Lo que se escribe en pantalla.** Se copia y pega, o se tipea en vivo |
+| Texto en `>` | **Lo que se dice, ya redactado.** Se lee tal cual |
+| 📌 **Y esto queda escrito** | El resumen **en comentarios de Python**, para pegar en pantalla *después* de explicar |
+| 💡 **Nuevo** | Algo que **no se vio en el curso** y hay que aclarar |
+
+### Por qué cada uno
+
+**La narración va escrita entera, no resumida.** Un guion con las ideas sueltas
+obliga a improvisar la explicación, y eso se va por las ramas y revienta la
+duración que dice el título. Si está redactado, se lee y sale.
+
+**El resumen va DESPUÉS de la explicación, nunca antes.** Al revés, leen el
+resumen y dejan de escuchar.
+
+**El resumen va como comentarios de Python** porque se pega en el mismo editor
+donde se está programando, sin cambiar de ventana ni romper el hilo. Y así los
+que toman apuntes lo tienen a la vista para copiar.
+
+**Lo nuevo se avisa.** Si un ejemplo usa algo que el curso todavía no dio, va un
+💡 **Nuevo** explicándolo, y si se puede se ata con lo que sí vieron. Ejemplo
+real: `ljust()` nunca se dio, pero la alineación con f-strings (`<`, `>`, `^`)
+sí — mostrar las dos juntas cierra el círculo en vez de abrir un agujero.
+
+### La duración se mide, no se estima
+
+La narración a ritmo de explicar con calma son **~150 palabras por minuto**.
+Contá las palabras de las líneas `>`, dividí por 150 y sumale las pausas de
+escribir y ejecutar. Que el número del título coincida con la suma de las
+secciones.
+
+---
+
 ## 📼 Qué hay grabado
 
 Inventario del Drive al **14/9/2026**: **18 videos, 819 MB**.
