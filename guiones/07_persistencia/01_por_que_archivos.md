@@ -3,6 +3,9 @@
 **Serie:** Archivos y Persistencia
 **Duración estimada:** ~5 minutos
 
+> ⚠️ **Grabar después del repaso de Funciones.** Este video no usa `def`, pero **los ejercicios de
+> Archivos sí**: los ocho arrancan con una función a completar.
+
 ---
 
 ## INTRO (~20 segundos)

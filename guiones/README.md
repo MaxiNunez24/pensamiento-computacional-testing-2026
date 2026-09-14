@@ -2,6 +2,19 @@
 
 Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para grabar.
 
+> ### 🎬 Orden de grabación
+>
+> **Funciones va antes que Archivos.** Los 8 ejercicios de Archivos arrancan con `def`
+> (`guardar(ruta, items)`, `contar_lineas(ruta)`, `agregar(ruta, linea)`…), así que sin funciones
+> no se puede resolver ninguno.
+>
+> Los guiones de Archivos no usan `def` —muestran la mecánica suelta, para no resolver los
+> ejercicios— así que el video se entiende igual. El choque aparece recién al sentarse a practicar,
+> que es el peor momento para descubrir que falta un tema.
+>
+> 1. [Funciones — repaso completo](./07_funciones/00_repaso_completo.md)
+> 2. [Archivos, videos 1 a 4](./07_persistencia/)
+
 ---
 
 ## 01 — Variables y Tipos de Datos (7 videos)
