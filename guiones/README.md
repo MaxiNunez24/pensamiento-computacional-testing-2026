@@ -130,6 +130,26 @@ Inventario del Drive al **14/9/2026**: **18 videos, 819 MB**.
 
 ---
 
+## 🔖 Capítulos para YouTube
+
+Los marcadores que se ponen con el atajo de OBS salen del video y se convierten
+en la lista de la descripción con:
+
+```bash
+python guiones/capitulos.py video.mp4 guiones/04_funciones/00_repaso_completo.md
+```
+
+Empareja **la marca N con la sección N del guion**, así que hay que apretar el
+atajo al empezar cada sección, en orden y **desde la segunda** — la primera la
+pone OBS sola en 0:00.
+
+Deja un `_capitulos.txt` al lado del video: **copiá desde ahí y no desde la
+terminal**, que en Windows es cp1252 y rompe los acentos.
+
+Requiere grabar en **MP4 híbrido**; en MKV los marcadores no existen.
+
+---
+
 ## 08 — Archivos y Persistencia (4 videos)
 
 Carpeta: `08_persistencia/`
