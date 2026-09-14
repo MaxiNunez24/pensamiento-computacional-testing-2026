@@ -2,6 +2,31 @@
 
 Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para grabar.
 
+## 📼 Qué hay grabado
+
+Inventario del Drive al **14/9/2026**: **18 videos, 819 MB**.
+
+| Orden | Serie | Videos | Estado |
+|---|---|---|---|
+| 1 | Variables y Tipos | 7 | ✅ |
+| 2 | Estructuras de Control | 4 | ✅ |
+| 3 | Listas | 8 | ⚠️ **7 de 8** — falta *Buenas prácticas* |
+| 4 | **Funciones — repaso completo** | 1 | ⬜ |
+| 5 | Tuplas | 4 | ⬜ *(carpeta creada y vacía en Drive)* |
+| 6 | Sets | 5 | ⬜ |
+| 7 | Diccionarios | 5 | ⬜ |
+| 8 | **Archivos y Persistencia** | 4 | ⬜ |
+
+> ⚠️ **El orden de arriba NO es el número de carpeta.** Las carpetas conservan su numeración
+> histórica (`04_tuplas`, `07_funciones`…), que quedó de cuando se escribieron. **El orden que vale
+> es el de esta tabla**, porque es el de la plataforma: en el sidebar, **Funciones I va antes que
+> Tuplas, Sets y Diccionarios**. Como ahora Funciones se graba en un solo video de repaso, ese
+> video ocupa el lugar de Funciones I.
+>
+> Renumerar las carpetas para que coincidan es una decisión pendiente.
+
+---
+
 > ### 🎬 Orden de grabación
 >
 > **Funciones va antes que Archivos.** Los 8 ejercicios de Archivos arrancan con `def`
