@@ -69,7 +69,7 @@ Inventario del Drive al **14/9/2026**: **18 videos, 819 MB**.
 | 5 | Tuplas | 4 | ⬜ *(carpeta creada y vacía en Drive)* |
 | 6 | Sets | 5 | ⬜ |
 | 7 | Diccionarios | 5 | ⬜ |
-| 8 | **Archivos y Persistencia** | 4 | ⬜ |
+| 8 | **Archivos y Persistencia** | 5 | ⬜ |
 
 > ✅ **El número de carpeta es el orden de estudio.** Se renumeraron el 14/9 para que coincidan:
 > en la plataforma **Funciones I va antes que Tuplas, Sets y Diccionarios**, y como ahora Funciones
@@ -204,7 +204,7 @@ Requiere grabar en **MP4 híbrido**; en MKV los marcadores no existen.
 
 ---
 
-## 08 — Archivos y Persistencia (4 videos)
+## 08 — Archivos y Persistencia (5 videos)
 
 Carpeta: `08_persistencia/`
 
@@ -214,9 +214,17 @@ Carpeta: `08_persistencia/`
 | 2 | [02_with_y_leer.md](./08_persistencia/02_with_y_leer.md) | Por qué `close()` falla, `with`, `encoding`, `read`/`readlines`/`for`, `strip()` |
 | 3 | [03_escribir.md](./08_persistencia/03_escribir.md) | `write` vs `print(file=)`, el `\n`, y el modo `"a"` para sumar sin borrar |
 | 4 | [04_rutas_y_pathlib.md](./08_persistencia/04_rutas_y_pathlib.md) | `FileNotFoundError`, `Path.cwd()`, relativas vs absolutas, `exists()`, `mkdir` |
+| 5 | [05_el_sistema.md](./08_persistencia/05_el_sistema.md) | ⭐ Guardar y recuperar un **diccionario**, `split(",")`, el primer día sin archivo, respaldo con fecha |
+
+> ⚠️ **El 5 necesita Diccionarios visto**, y es el que conecta Archivos con el **proyecto del
+> año**: ahí aparece el patrón que hace que el sistema arranque el primer día sin romperse.
+>
+> Es el mismo motivo por el que **los ejercicios 4 y 5 de Archivos piden diccionarios**
+> (`guardar_dia` recibe uno y `cargar_dia` devuelve uno). Los tres primeros no, así que se puede
+> empezar Archivos sin Diccionarios — pero no terminarlo.
 
 *(En esa carpeta está además `setup_git_github_videos.md`, que no es un guion de repaso.)*
 
 ---
 
-**Total: 45 videos · ~224 minutos de contenido**
+**Total: 46 videos · ~252 minutos de contenido**
