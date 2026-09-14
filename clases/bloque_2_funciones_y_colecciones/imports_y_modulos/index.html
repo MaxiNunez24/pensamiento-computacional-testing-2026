@@ -1,0 +1,2621 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Maximiliano Nuñez">
+      
+      
+        <link rel="canonical" href="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/clases/bloque_2_funciones_y_colecciones/imports_y_modulos/">
+      
+      
+        <link rel="prev" href="../funciones_2/">
+      
+      
+        <link rel="next" href="../repaso/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>📦 Anexo: Importar módulos - Pensamiento Computacional y Testing de Aplicaciones 2026</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#anexo-importar-modulos" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-header__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pensamiento Computacional y Testing de Aplicaciones 2026
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              📦 Anexo: Importar módulos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Pensamiento Computacional y Testing de Aplicaciones 2026" class="md-nav__button md-logo" aria-label="Pensamiento Computacional y Testing de Aplicaciones 2026" data-md-component="logo">
+      
+  <img src="../../../assets/images/favicon.ico" alt="logo">
+
+    </a>
+    Pensamiento Computacional y Testing de Aplicaciones 2026
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🏠​ Inicio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cronograma/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📅 Cronograma del curso
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧪 Ejercicios interactivos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📚 Clases
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            📚 Clases
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../clases/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Índice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduccion/01_introduccion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍🏫 Introducción
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduccion/02_que_es_programar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍💻 ¿Qué es programar?
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🐍 Python Básico
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            🐍 Python Básico
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_1" id="__nav_4_4_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔰 Introducción
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            🔰 Introducción
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/historia_caracteristicas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📜 Historía y características
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/archivos_python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📁 Archivos de Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/ejecutar_programa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ▶️ Ejecutar el programa
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_2" id="__nav_4_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    💽​ Instalación
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            💽​ Instalación
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/instalacion_herramientas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    💻 Instalando las herramientas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/instalar_python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🐍 Instalando Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/instalar_vscode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧑‍💻 Instalando VS Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_3" id="__nav_4_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📊 Variables y Tipos
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Variables y Tipos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/funcion_print/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🖨️ La función print()
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/variables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📊 Variables
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/formato_strings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📐 Formato de strings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/funcion_input/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ⌨️ La función input()
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_4" id="__nav_4_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔀 Condicionales
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            🔀 Condicionales
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/if_else/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔀 If - Else
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_5" id="__nav_4_4_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📋 Listas
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            📋 Listas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/listas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📋 Listas en Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_6" id="__nav_4_4_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🔁 Bucles
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            🔁 Bucles
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/while/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔄 While
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/for/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔁 For
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/ejercicios_estructuras_control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧮​ Ejercicios Estructuras de Control
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_7" id="__nav_4_4_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📒 Práctica de Listas
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            📒 Práctica de Listas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/cuadernillo_listas_finde/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📒 Cuadernillo de ejercicios sobre Listas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_1_fundamentos/mini_parcial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Mini Parcial
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📦 Funciones I
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            📦 Funciones I
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funciones_1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Funciones I
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../como_encarar_ejercicios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧠 Cómo encarar un ejercicio
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funciones_caja_negra/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔥 Entrada en calor: Funciones como caja negra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_9" id="__nav_4_4_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🗂️ Colecciones
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            🗂️ Colecciones
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tuplas_sets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎲 Tuplas y Sets
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diccionarios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🗝️ Diccionarios
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_10" id="__nav_4_4_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    📦 Funciones II
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4_10">
+            <span class="md-nav__icon md-icon"></span>
+            📦 Funciones II
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funciones_2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📦 Funciones II
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    📦 Anexo: Importar módulos
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    📦 Anexo: Importar módulos
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-un-modulo-es-un-archivo-py" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Un módulo es un archivo .py
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-import-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. import modulo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-from-modulo-import-nombre" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. from modulo import nombre
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-el-caso-del-bingo-repartir-el-juego-en-varios-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. El caso del Bingo: repartir el juego en varios archivos
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tu-codigo-vs-la-libreria-estandar" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Tu código vs. la librería estándar
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Ejercicios
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Ejercicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-1-tu-primer-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌱 Ejercicio 1 — Tu primer módulo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-2-reparti-el-bingo-en-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌿 Ejercicio 2 — Repartí el Bingo en módulos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-bingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⬅️ Anterior: Bingo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Índice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-git-y-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      ➡️ Siguiente: Git y GitHub
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_11" id="__nav_4_4_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🧠 Práctica e integradores
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_11">
+            <span class="md-nav__icon md-icon"></span>
+            🧠 Práctica e integradores
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../repaso/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔁 Repaso general
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectura_codigo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔍 Lectura y corrección de código
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../del_enunciado_al_programa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧠 Del enunciado al programa
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎲 Bingo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_12" id="__nav_4_4_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    💾 Persistencia
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_12">
+            <span class="md-nav__icon md-icon"></span>
+            💾 Persistencia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/git_github/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🐙 Git y GitHub
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/archivos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📁 Archivos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_3_persistencia/json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📄 JSON
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_13" id="__nav_4_4_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🏗️ POO
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            🏗️ POO
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🧬 POO I — Clases y objetos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🛡️ POO II — Métodos especiales y encapsulamiento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bloque_4_poo/poo_herencia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔗 Herencia y polimorfismo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../al_dia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ✅ Ponerse al día
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../proyecto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🔭 Adelanto del proyecto
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    🗃️​ Material de apoyo
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            🗃️​ Material de apoyo
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/material_apoyo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📝 Índice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/glosario/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📖 Glosario de Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/libros/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    📚 Libros
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../material_apoyo/videos/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    🎥 Videos
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-un-modulo-es-un-archivo-py" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Un módulo es un archivo .py
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-import-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. import modulo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-from-modulo-import-nombre" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. from modulo import nombre
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-el-caso-del-bingo-repartir-el-juego-en-varios-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. El caso del Bingo: repartir el juego en varios archivos
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tu-codigo-vs-la-libreria-estandar" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Tu código vs. la librería estándar
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Ejercicios
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Ejercicios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-1-tu-primer-modulo" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌱 Ejercicio 1 — Tu primer módulo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ejercicio-2-reparti-el-bingo-en-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌿 Ejercicio 2 — Repartí el Bingo en módulos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anterior-bingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⬅️ Anterior: Bingo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Índice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siguiente-git-y-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      ➡️ Siguiente: Git y GitHub
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="anexo-importar-modulos">📦 Anexo: Importar módulos</h1>
+<p>Hasta ahora cada programa que escribiste vivía en <strong>un solo archivo</strong>. Pero cuando un programa crece
+—como el <strong>Bingo</strong>— ese archivo se vuelve largo y difícil de manejar. La solución es <strong>repartir el
+código en varios archivos</strong> y que se <strong>llamen entre sí</strong>. Eso es lo que hacés con <code>import</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">🧩 Ya lo viste en clase</p>
+<p>En la última clase movimos una función del Bingo (<code>generar_carton()</code>) a un archivo aparte
+<code>bingo.py</code> y la llamamos desde <code>main.py</code>. Este anexo explica <strong>por qué</strong> y <strong>cómo</strong> funciona eso,
+para que lo puedas hacer solo/a.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">🎯 Objetivos de la clase</p>
+<p>Al terminar deberías poder:</p>
+<ul>
+<li>Entender que <strong>cada archivo <code>.py</code> es un módulo</strong> que se puede importar.</li>
+<li>Usar <code>import modulo</code> y <code>from modulo import nombre</code>.</li>
+<li>Reconocer que <code>random</code>, <code>os</code> o <code>json</code> se importan <strong>igual</strong> que tu propio código.</li>
+<li><strong>Repartir</strong> un programa grande (el Bingo) en varios archivos que se llaman entre sí.</li>
+</ul>
+</div>
+<hr />
+<h2 id="1-un-modulo-es-un-archivo-py">1. Un módulo es un archivo <code>.py</code></h2>
+<p>Un <strong>módulo</strong> no es nada raro: es simplemente <strong>un archivo <code>.py</code></strong>. El <strong>nombre del módulo</strong> es el
+nombre del archivo <strong>sin la extensión</strong>.</p>
+<ul>
+<li>El archivo <code>bingo.py</code> → el módulo se llama <code>bingo</code>.</li>
+<li>El archivo <code>carton.py</code> → el módulo se llama <code>carton</code>.</li>
+</ul>
+<p>Cuando un archivo <code>importa</code> a otro, <strong>los dos tienen que estar en la misma carpeta</strong> (por ahora; más
+adelante vas a ver cómo organizarlos en subcarpetas).</p>
+<div class="admonition note">
+<p class="admonition-title">💡 La idea de fondo</p>
+<p>Importar es como decir: <em>"che, en este archivo quiero usar una función que está escrita en aquel
+otro"</em>. Python va, la busca, y te la deja lista para usar.</p>
+</div>
+<hr />
+<h2 id="2-import-modulo">2. <code>import modulo</code></h2>
+<p>La forma más básica: <code>import</code> seguido del <strong>nombre del módulo</strong> (sin <code>.py</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="n">carton</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">),</span> <span class="mi">15</span><span class="p">)</span>
+</code></pre></div>
+<p>Fijate que para usar algo del módulo escribís <code>modulo.cosa()</code>: primero el nombre del módulo, un punto,
+y después la función. <strong>Esto ya lo venías haciendo en el Bingo</strong> sin darte cuenta:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="c1"># función sample, del módulo random</span>
+<span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="c1"># función choice, del módulo random</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;clear&quot;</span><span class="p">)</span>   <span class="c1"># función system, del módulo os</span>
+</code></pre></div>
+<p><code>import random</code> ES importar un módulo. La única diferencia con tu propio código es que <code>random</code> viene
+<strong>incluido con Python</strong> y <code>bingo.py</code> lo escribís vos.</p>
+<hr />
+<h2 id="3-from-modulo-import-nombre">3. <code>from modulo import nombre</code></h2>
+<p>A veces escribir <code>modulo.cosa()</code> todo el tiempo es engorroso. Con <code>from ... import ...</code> traés
+<strong>directamente</strong> lo que necesitás y lo usás <strong>sin el prefijo</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">sample</span>
+
+<span class="n">carton</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">),</span> <span class="mi">15</span><span class="p">)</span>   <span class="c1"># sin &quot;random.&quot; adelante</span>
+</code></pre></div>
+<p>Con tu propio código es igual. Si <code>generar_carton()</code> está en <code>bingo.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bingo</span><span class="w"> </span><span class="kn">import</span> <span class="n">generar_carton</span>
+
+<span class="n">carton</span> <span class="o">=</span> <span class="n">generar_carton</span><span class="p">()</span>
+</code></pre></div>
+<p>Podés traer <strong>varias cosas</strong> a la vez separándolas con comas:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bingo</span><span class="w"> </span><span class="kn">import</span> <span class="n">jugar_individual</span><span class="p">,</span> <span class="n">jugar_multijugador</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">🚫 Evitá <code>from modulo import *</code></p>
+<p><code>from bingo import *</code> trae <strong>todo</strong> de golpe. Parece cómodo, pero te llena el archivo de nombres
+que no sabés de dónde salieron y es fácil que se pisen entre sí. Importá <strong>solo lo que vas a
+usar</strong>.</p>
+</div>
+<details class="note">
+<summary>✨ Bonus: <code>import ... as</code> (apodo)</summary>
+<p>Si un nombre es muy largo, podés ponerle un apodo con <code>as</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rnd</span>
+<span class="n">rnd</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</code></pre></div>
+<p>Lo vas a ver mucho en librerías de datos (<code>import pandas as pd</code>). Por ahora no lo necesitás, pero
+cuando lo veas, ya sabés qué es.</p>
+</details>
+<hr />
+<h2 id="4-el-caso-del-bingo-repartir-el-juego-en-varios-archivos">4. El caso del Bingo: repartir el juego en varios archivos</h2>
+<p>Esta es la parte importante. El Bingo tiene muchas funciones; meterlas <strong>todas</strong> en un solo <code>main.py</code>
+lo vuelve un archivo enorme. Mejor lo <strong>repartimos</strong> y dejamos <code>main.py</code> lo más <strong>chiquito</strong> posible:
+que solo <strong>elija</strong> qué jugar y llame a la función correspondiente.</p>
+<p>La estructura que vamos a armar:</p>
+<div class="highlight"><pre><span></span><code>📁 bingo/
+ ├── carton.py   →  generar y mostrar el cartón
+ ├── sorteo.py   →  sacar números y verificar al ganador
+ ├── bingo.py    →  arma el juego (usa carton.py y sorteo.py)
+ └── main.py     →  el menú: solo llama a jugar
+</code></pre></div>
+<p>Fijate la cadena de imports: <code>main.py</code> importa de <code>bingo.py</code>, y <code>bingo.py</code> a su vez importa de
+<code>carton.py</code> y <code>sorteo.py</code>. <strong>Los imports se encadenan.</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">carton.py</label><label for="__tabbed_1_2">sorteo.py</label><label for="__tabbed_1_3">bingo.py</label><label for="__tabbed_1_4">main.py</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generar_carton</span><span class="p">(</span><span class="n">cantidad</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">maximo</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maximo</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">cantidad</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+    <span class="n">marcados</span>   <span class="o">=</span> <span class="n">carton</span> <span class="o">&amp;</span> <span class="n">sorteados</span>
+    <span class="n">pendientes</span> <span class="o">=</span> <span class="n">carton</span> <span class="o">-</span> <span class="n">sorteados</span>
+
+    <span class="n">fila</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">carton</span><span class="p">):</span>
+        <span class="n">marca</span> <span class="o">=</span> <span class="s2">&quot;✓&quot;</span> <span class="k">if</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">sorteados</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">fila</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}{</span><span class="n">marca</span><span class="si">}</span><span class="s2">  &quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fila</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Marcados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">marcados</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">carton</span><span class="p">)</span><span class="si">}</span><span class="s2">  |  Faltan: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pendientes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">):</span>
+    <span class="n">numero</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bolillero</span><span class="p">))</span>
+    <span class="n">bolillero</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numero</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">carton</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">sorteados</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># bingo.py usa funciones que viven en OTROS archivos: las importa.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">carton</span><span class="w"> </span><span class="kn">import</span> <span class="n">generar_carton</span><span class="p">,</span> <span class="n">mostrar_carton</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sorteo</span><span class="w"> </span><span class="kn">import</span> <span class="n">sortear_numero</span><span class="p">,</span> <span class="n">verificar_ganador</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">jugar_individual</span><span class="p">():</span>
+    <span class="n">carton</span>    <span class="o">=</span> <span class="n">generar_carton</span><span class="p">()</span>
+    <span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+    <span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">turnos</span>    <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;¡Empieza el juego!&quot;</span><span class="p">)</span>
+    <span class="n">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">)</span>
+    <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Presioná Enter para empezar...&quot;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">):</span>
+        <span class="n">numero</span> <span class="o">=</span> <span class="n">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">)</span>
+        <span class="n">sorteados</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+        <span class="n">turnos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">numero</span> <span class="ow">in</span> <span class="n">carton</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎱 Salió el </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2"> — ¡está en tu cartón!&quot;</span><span class="p">)</span>
+            <span class="n">mostrar_carton</span><span class="p">(</span><span class="n">carton</span><span class="p">,</span> <span class="n">sorteados</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Salió el </span><span class="si">{</span><span class="n">numero</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎉 ¡BINGO! Ganaste en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">turnos</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">jugar_multijugador</span><span class="p">(</span><span class="n">nombres</span><span class="p">):</span>
+    <span class="n">jugadores</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;nombre&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span> <span class="s2">&quot;carton&quot;</span><span class="p">:</span> <span class="n">generar_carton</span><span class="p">()}</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nombres</span><span class="p">]</span>
+    <span class="n">bolillero</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">91</span><span class="p">))</span>
+    <span class="n">sorteados</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">turnos</span>    <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">numero</span> <span class="o">=</span> <span class="n">sortear_numero</span><span class="p">(</span><span class="n">bolillero</span><span class="p">)</span>
+        <span class="n">sorteados</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">numero</span><span class="p">)</span>
+        <span class="n">turnos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">ganadores</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jugadores</span>
+                     <span class="k">if</span> <span class="n">verificar_ganador</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="s2">&quot;carton&quot;</span><span class="p">],</span> <span class="n">sorteados</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">ganadores</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🏆 Ganó/Ganaron: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ganadores</span><span class="p">)</span><span class="si">}</span><span class="s2"> en </span><span class="si">{</span><span class="n">turnos</span><span class="si">}</span><span class="s2"> turnos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ganadores</span><span class="p">,</span> <span class="n">turnos</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="c1"># main.py NO sabe cómo funciona el juego por dentro: solo lo ejecuta.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bingo</span><span class="w"> </span><span class="kn">import</span> <span class="n">jugar_individual</span><span class="p">,</span> <span class="n">jugar_multijugador</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎰 BINGO&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1) Un jugador&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2) Varios jugadores&quot;</span><span class="p">)</span>
+<span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elegí (1/2): &quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+    <span class="n">jugar_individual</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">jugar_multijugador</span><span class="p">([</span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="s2">&quot;Beto&quot;</span><span class="p">,</span> <span class="s2">&quot;Cami&quot;</span><span class="p">])</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">👀 Mirá qué corto quedó <code>main.py</code></p>
+<p>Toda la lógica del juego está repartida en <code>carton.py</code>, <code>sorteo.py</code> y <code>bingo.py</code>. <code>main.py</code> solo
+<strong>elige</strong> y <strong>llama</strong>. Si mañana cambia cómo se sortea un número, tocás <code>sorteo.py</code> y <strong>nada más</strong>:
+los otros archivos ni se enteran. Eso es lo que ganás al separar el código.</p>
+</div>
+<hr />
+<h2 id="5-tu-codigo-vs-la-libreria-estandar">5. Tu código vs. la librería estándar</h2>
+<p><code>random</code>, <code>os</code>, <code>json</code>, <code>math</code>… son <strong>módulos que vienen con Python</strong> (la "librería estándar"): no hay
+que instalar nada, solo importarlos. Tu <code>bingo.py</code> o tu <code>carton.py</code> son módulos que <strong>escribís vos</strong>.
+Pero para Python <strong>son todos lo mismo</strong>: archivos con código que podés importar.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>De dónde sale</th>
+<th>Cómo se usa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>import random</code></td>
+<td>Viene con Python</td>
+<td><code>random.choice(...)</code></td>
+</tr>
+<tr>
+<td><code>import json</code></td>
+<td>Viene con Python</td>
+<td><code>json.dumps(...)</code></td>
+</tr>
+<tr>
+<td><code>from carton import generar_carton</code></td>
+<td>Lo escribiste vos</td>
+<td><code>generar_carton()</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">🔭 Para saber más (lo vemos completo más adelante)</p>
+<ul>
+<li><strong>Ojo con importar un archivo que ejecuta código:</strong> si tu <code>main.py</code> tiene <code>print(...)</code>,
+  <code>input(...)</code> o el juego al nivel de arriba (sin estar dentro de una función), ese código
+  <strong>se ejecuta apenas lo importás</strong>. Para evitarlo se usa una línea especial,
+  <code>if __name__ == "__main__":</code>, que vamos a ver en su propia clase.</li>
+<li><strong>Carpetas y paquetes</strong> (organizar muchos módulos en subcarpetas) y <strong>entornos virtuales</strong>
+  (<code>venv</code>, para aislar las librerías de cada proyecto) también tienen su clase aparte. Son el
+  siguiente escalón cuando tus proyectos crezcan.</li>
+</ul>
+</div>
+<hr />
+<h2 id="ejercicios">🛠️ Ejercicios</h2>
+<div class="admonition tip">
+<p class="admonition-title">Cómo trabajar</p>
+<p>Creá los archivos en una misma carpeta y ejecutá siempre el que tiene el menú/uso (<code>main.py</code> o el
+que diga la consigna). Acordate: el nombre del módulo es el nombre del archivo <strong>sin</strong> <code>.py</code>.</p>
+</div>
+<h3 id="ejercicio-1-tu-primer-modulo">🌱 Ejercicio 1 — Tu primer módulo</h3>
+<p>Creá dos archivos en la misma carpeta:</p>
+<ul>
+<li><code>saludos.py</code>: con una función <code>saludar(nombre)</code> que <strong>devuelva</strong> <code>"¡Hola, &lt;nombre&gt;!"</code>.</li>
+<li><code>main.py</code>: que <strong>importe</strong> <code>saludar</code> desde <code>saludos</code> y la use con tu nombre.</li>
+</ul>
+<details class="tip">
+<summary>💡 Pista</summary>
+<p>En <code>main.py</code>, la primera línea es <code>from saludos import saludar</code>. Después la usás como cualquier
+función: <code>print(saludar("Ana"))</code>.</p>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">saludos.py</label><label for="__tabbed_2_2">main.py</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">saludar</span><span class="p">(</span><span class="n">nombre</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;¡Hola, </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">!&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">saludos</span><span class="w"> </span><span class="kn">import</span> <span class="n">saludar</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">saludar</span><span class="p">(</span><span class="s2">&quot;Ana&quot;</span><span class="p">))</span>
+<span class="c1"># ¡Hola, Ana!</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+</details>
+<h3 id="ejercicio-2-reparti-el-bingo-en-modulos">🌿 Ejercicio 2 — Repartí el Bingo en módulos</h3>
+<p>Tomá tu Bingo (el de la clase anterior) y <strong>repartilo</strong> en estos archivos, todos en la misma carpeta:</p>
+<ul>
+<li><code>carton.py</code> → <code>generar_carton()</code> y <code>mostrar_carton()</code>.</li>
+<li><code>sorteo.py</code> → <code>sortear_numero()</code> y <code>verificar_ganador()</code>.</li>
+<li><code>bingo.py</code> → <strong>importa</strong> de <code>carton</code> y <code>sorteo</code>, y define <code>jugar_individual()</code> y
+  <code>jugar_multijugador()</code>.</li>
+<li><code>main.py</code> → <strong>solo</strong> importa <code>jugar_individual</code> y <code>jugar_multijugador</code> de <code>bingo</code> y, según un menú,
+  llama a una de las dos.</li>
+</ul>
+<p>La meta: que <code>main.py</code> no tenga <strong>nada</strong> de la lógica del juego, solo el menú y las llamadas.</p>
+<details class="tip">
+<summary>💡 Pistas</summary>
+<ul>
+<li>Empezá por <code>carton.py</code> y <code>sorteo.py</code> (no importan nada tuyo, solo <code>random</code>).</li>
+<li>En <code>bingo.py</code>, arriba de todo:
+  <code>from carton import generar_carton, mostrar_carton</code> y
+  <code>from sorteo import sortear_numero, verificar_ganador</code>.</li>
+<li>Ejecutá <strong><code>main.py</code></strong>. Si Python dice <code>ModuleNotFoundError: No module named 'carton'</code>, fijate que
+  los archivos estén <strong>en la misma carpeta</strong> y bien escritos los nombres.</li>
+</ul>
+</details>
+<details class="success">
+<summary>✅ Solución</summary>
+<p>Es exactamente la estructura de la sección 4: mirá las pestañas <strong>carton.py</strong>, <strong>sorteo.py</strong>,
+<strong>bingo.py</strong> y <strong>main.py</strong> de arriba. Esa repartición es la solución del ejercicio.</p>
+<p>La clave es que <code>main.py</code> queda así de corto:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bingo</span><span class="w"> </span><span class="kn">import</span> <span class="n">jugar_individual</span><span class="p">,</span> <span class="n">jugar_multijugador</span>
+
+<span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Elegí (1) individual o (2) multijugador: &quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+    <span class="n">jugar_individual</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">jugar_multijugador</span><span class="p">([</span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span> <span class="s2">&quot;Beto&quot;</span><span class="p">,</span> <span class="s2">&quot;Cami&quot;</span><span class="p">])</span>
+</code></pre></div>
+</details>
+<hr />
+<div class="admonition success">
+<p class="admonition-title">🎯 Lo que te llevás</p>
+<ul>
+<li>Un <strong>módulo</strong> es un archivo <code>.py</code>; lo importás por su nombre <strong>sin</strong> <code>.py</code>.</li>
+<li><code>import modulo</code> → usás <code>modulo.cosa()</code>. <code>from modulo import cosa</code> → usás <code>cosa()</code> directo.</li>
+<li><code>random</code>/<code>os</code>/<code>json</code> se importan <strong>igual</strong> que tu propio código.</li>
+<li>Repartir un programa grande en módulos lo hace <strong>más ordenado y fácil de cambiar</strong>: cada archivo
+  hace una cosa, y <code>main.py</code> solo orquesta.</li>
+</ul>
+</div>
+<h2 id="anterior-bingo"><a href="../bingo/">⬅️ Anterior: Bingo</a></h2>
+<h2 id="indice"><a href="../../clases/#colecciones">📚 Índice</a></h2>
+<h2 id="siguiente-git-y-github"><a href="../../bloque_3_persistencia/git_github/">➡️ Siguiente: Git y GitHub</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../../javascripts/clases-restantes.js"></script>
+      
+    
+  </body>
+</html>
