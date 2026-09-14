@@ -11,7 +11,7 @@ Los cuatro bloques que tiene cada sección, en este orden:
 | ```` ```python ```` | **Lo que se escribe en pantalla.** Se copia y pega, o se tipea en vivo |
 | Texto en `>` | **Lo que se dice, ya redactado.** Se lee tal cual |
 | 📌 **Y esto queda escrito** | El resumen **en comentarios de Python**, para pegar en pantalla *después* de explicar |
-| 💡 **Nuevo** | Algo que **no se vio en el curso** y hay que aclarar |
+| *(entre paréntesis)* | **Acotaciones para quien graba**, que no se leen: *(Ejecutar con SOLO esto)*, *(💡 Nuevo: …)* |
 
 ### Por qué cada uno
 
@@ -26,10 +26,26 @@ resumen y dejan de escuchar.
 donde se está programando, sin cambiar de ventana ni romper el hilo. Y así los
 que toman apuntes lo tienen a la vista para copiar.
 
-**Lo nuevo se avisa.** Si un ejemplo usa algo que el curso todavía no dio, va un
-💡 **Nuevo** explicándolo, y si se puede se ata con lo que sí vieron. Ejemplo
-real: `ljust()` nunca se dio, pero la alineación con f-strings (`<`, `>`, `^`)
-sí — mostrar las dos juntas cierra el círculo en vez de abrir un agujero.
+**Lo nuevo se avisa dos veces, y en dos lugares distintos.** Si un ejemplo usa
+algo que el curso todavía no dio:
+
+1. Una **acotación entre paréntesis** para quien graba: *(💡 Nuevo: `ljust()` no
+   se dio en el curso.)* Eso **no se lee**.
+2. Y la explicación **dentro de la narración**, dicha al alumno como cualquier
+   otra cosa.
+
+Lo que **no** va es escribir la explicación en el bloque `>` en modo "acordate de
+aclarar esto": ahí el texto le habla a quien graba en medio de lo que tiene que
+leer en voz alta, y le corta el hilo. Pasó con `ljust()` en el primer guion.
+
+Y cuando se pueda, **atar lo nuevo con lo que sí vieron**. `ljust()` nunca se
+dio, pero la alineación con f-strings (`<`, `>`, `^`) sí: son equivalentes
+exactas, y decirlo convierte un tema nuevo en uno que ya sabían escrito de otra
+forma.
+
+**Se le habla a UNA persona, de vos.** El video lo mira alguien solo, no un aula:
+*"fijate"*, *"acordate"*, *"te va a pasar"*. Nunca *"fíjense"* ni *"anoten"*. Es
+fácil que se escape, porque dar clase sale en plural.
 
 ### La duración se mide, no se estima
 

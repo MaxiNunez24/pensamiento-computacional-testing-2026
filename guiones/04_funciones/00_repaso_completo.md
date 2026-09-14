@@ -307,8 +307,8 @@ print(total_carrito([1500, 2300, 890]))
 > entera sola**. La regla sigue viviendo en un solo lugar, aunque ahora la usen dos funciones
 > distintas.
 >
-> Esto les va a pasar todo el tiempo: van a estar escribiendo una función y se van a dar cuenta de
-> que esa cuenta ya la escribieron antes, en otro lado. Cuando les pase, **no la copien: llámenla.**
+> Esto te va a pasar todo el tiempo: vas a estar escribiendo una función y te vas a dar cuenta de
+> que esa cuenta ya la escribiste antes, en otro lado. Cuando te pase, **no la copies: llamala.**
 
 📌 **Y esto queda escrito:**
 
@@ -380,7 +380,7 @@ print(mensaje)
 > de afuera: **creó una variable nueva**, local, que también se llama `mensaje` y que murió cuando
 > la función terminó.
 >
-> Y acá va la regla que les va a servir todo el año, para todo lo que viene:
+> Y acá va la regla que te va a servir todo el año, para todo lo que viene:
 >
 > **Lo que la función necesita, entra por parámetro. Lo que produce, sale por `return`.**
 >
@@ -429,18 +429,23 @@ print(etiqueta("Yerba", 10, "-"))
 print(etiqueta("Yerba", relleno="*"))
 ```
 
-> 💡 **Nuevo:** `ljust()` no lo vimos en el curso. Vale la pena aclararlo en voz alta, y de paso
-> atarlo con lo que sí vieron:
->
-> - `"Yerba".ljust(20, ".")` deja el texto **a la izquierda** y rellena hasta llegar a 20
->   caracteres. *Left justify*, justificado a la izquierda.
-> - Tiene dos hermanas: **`rjust()`** empuja a la derecha, y **`center()`** centra.
-> - Y esto **ya lo saben con otra forma**: es lo mismo que `f"{texto:.<20}"` del video de formato
->   de f-strings, donde `<` era a la izquierda, `>` a la derecha y `^` centrado. Dos maneras de
->   hacer lo mismo. Mostrar las dos juntas les cierra el círculo.
+*(💡 **Nuevo:** `ljust()` no se dio en el curso. La explicación va acá abajo, en la narración.)*
 
-> Vamos con la función. `etiqueta` recibe un texto y lo rellena hasta un ancho fijo — sirve para
-> alinear cosas en una lista, tipo un menú de precios.
+> Antes de mirar la función, una cosa nueva que aparece ahí: **`ljust`**.
+>
+> `"Yerba".ljust(20, ".")` agarra el texto, lo deja pegado a la izquierda y rellena con puntos
+> hasta completar veinte caracteres. El nombre viene de *left justify*: justificar a la izquierda.
+>
+> Y tiene dos hermanas: **`rjust`** hace lo mismo pero empuja el texto **a la derecha**, y
+> **`center`** lo deja **en el medio**.
+>
+> Ahora, ¿te suena de algo? Porque esto ya lo hicimos, escrito de otra manera. Cuando vimos formato
+> de f-strings usábamos `f"{texto:.<20}"`, donde el `<` era a la izquierda, el `>` a la derecha y
+> el `^` al centro. **Es exactamente lo mismo.** Dos formas de escribir la misma idea, y las dos se
+> usan por ahí, así que está bueno reconocer las dos.
+
+> Vamos ahora sí con la función. `etiqueta` recibe un texto y lo rellena hasta un ancho fijo —
+> sirve para alinear cosas en una lista, tipo un menú de precios.
 >
 > Fijate en los parámetros: `ancho` tiene un **igual veinte**, y `relleno` un **igual punto**. Eso
 > es un **valor por defecto**: si no se lo paso, usa ese.
@@ -453,16 +458,16 @@ print(etiqueta("Yerba", relleno="*"))
 > `ancho`. Eso se llama **argumento por palabra clave**, y sirve exactamente para esto: cuando
 > querés cambiar solo uno de los de atrás sin tener que escribir todos los del medio.
 
-> Dos reglas que vale la pena que anoten:
+> Dos reglas para anotar:
 >
 > La primera: los parámetros **con** valor por defecto van **después** de los que no tienen. Si lo
 > hacés al revés, Python te tira error, porque no tendría forma de saber a cuál le estás pasando
 > qué.
 >
-> Y la segunda, que es más rara pero les va a morder alguna vez: **nunca pongan una lista o un
+> Y la segunda, que es más rara pero alguna vez te va a morder: **nunca pongas una lista o un
 > diccionario como valor por defecto**. Es de esas cosas que parecen razonables y no lo son: ese
-> valor **se comparte entre todas las llamadas**, así que lo que agregues en una llamada aparece
-> en la siguiente. Si necesitás eso, el valor por defecto va `None` y la lista la creás adentro.
+> valor **se comparte entre todas las llamadas**, así que lo que agregues en una llamada te aparece
+> en la siguiente. Si lo necesitás, el valor por defecto va `None` y la lista la creás adentro.
 
 📌 **Y esto queda escrito:**
 
@@ -542,7 +547,7 @@ describir(nombre="Yerba", peso=500, origen="Misiones")
 📌 **Y esto queda escrito:**
 
 ```python
-# Para cuando NO SABÉS CUÁNTOS te van a pasar
+# Para cuando NO SABÉS CUÁNTOS argumentos te van a pasar
 
 def juntar(*palabras):          # UN asterisco
     print(type(palabras))       # <class 'tuple'>   -> los junta en una TUPLA
@@ -574,7 +579,7 @@ ejemplo(1)
 ejemplo(1, x=10)
 ejemplo(1, 3, x=10)
 ejemplo(1, 3, 4, x=10)
-ejemplo(1, 3, 4, 5, x=10, y=20)
+ejemplo(1, 3, 4, 5, x=10, y=20) 
 ```
 
 > Para cerrar: cuando tenés los cuatro tipos juntos, **el orden no es opcional**. Python los
