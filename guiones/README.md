@@ -83,6 +83,7 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 
 | # | Archivo | Tema |
 |---|---------|------|
+| **0** | [**00_repaso_completo.md**](./07_funciones/00_repaso_completo.md) | ⭐ **Funciones I y II en un solo video (~9 min).** El resto son el desarrollo largo |
 | 1 | [01_que_es_y_como_se_define.md](./07_funciones/01_que_es_y_como_se_define.md) | def, anatomía, definición vs llamada |
 | 2 | [02_parametros_y_argumentos.md](./07_funciones/02_parametros_y_argumentos.md) | Parámetros, argumentos, valores por defecto, keyword args |
 | 3 | [03_return.md](./07_funciones/03_return.md) | return vs print, early return, múltiples valores |
@@ -93,4 +94,19 @@ Videos cortos (~5 min) por tema. Cada archivo es un guión completo listo para g
 
 ---
 
-**Total: 40 videos · ~196 minutos de contenido**
+## 08 — Archivos y Persistencia (4 videos)
+
+Carpeta: `07_persistencia/`
+
+| # | Archivo | Tema |
+|---|---------|------|
+| 1 | [01_por_que_archivos.md](./07_persistencia/01_por_que_archivos.md) | RAM vs disco, `open()`, los cuatro modos, por qué `"w"` borra sin preguntar |
+| 2 | [02_with_y_leer.md](./07_persistencia/02_with_y_leer.md) | Por qué `close()` falla, `with`, `encoding`, `read`/`readlines`/`for`, `strip()` |
+| 3 | [03_escribir.md](./07_persistencia/03_escribir.md) | `write` vs `print(file=)`, el `\n`, y el modo `"a"` para sumar sin borrar |
+| 4 | [04_rutas_y_pathlib.md](./07_persistencia/04_rutas_y_pathlib.md) | `FileNotFoundError`, `Path.cwd()`, relativas vs absolutas, `exists()`, `mkdir` |
+
+*(En esa carpeta está además `setup_git_github_videos.md`, que no es un guion de repaso.)*
+
+---
+
+**Total: 45 videos · ~224 minutos de contenido**
