@@ -85,10 +85,37 @@
     por un test, y las pruebas de la app web. El **E2E con Playwright** cierra el bloque y se
     engancha con el Bot SiGes.
 
-!!! note "📊 Optativo — Análisis de datos (pandas / numpy)"
-    Si el tiempo alcanza: `pandas` para sacar **reportes de la propia planilla de asistencia** que
-    generamos en el proyecto (porcentajes, faltas, estadísticas). Es contenido lindo, pero va
-    después de terminar bien el proyecto y el testing.
+!!! note "🎁 Bloque optativo — Para dónde sigue esto"
+    **Esto no entra en el año, y está bien que no entre.** Son las puertas que quedan abiertas con
+    lo que ya saben: si aprendiste variables, bucles, funciones y objetos, **todo lo de acá abajo
+    está a un tutorial de distancia**. La idea no es darlo, es que sepan que existe y que les
+    pertenece.
+
+    Si sobra tiempo después del proyecto y del testing, elegimos uno o dos entre todos.
+
+    **🧬 Herencia y polimorfismo.** Quedaron afuera del proyecto **a propósito**: en el CFP una
+    misma persona es preceptora *y* instructora, o maestra de apoyo *y* catequista, así que el rol
+    es un **dato** de la persona y no una subclase. Forzar una jerarquía ahí sería modelar mal.
+    Pero herencia existe, se usa muchísimo, y van a chocarla apenas abran el código de cualquier
+    librería.
+
+    **📊 pandas y numpy.** Sacar reportes de **la propia planilla de asistencia** que genera el
+    proyecto: porcentajes, faltas por mes, quién está por debajo del 85%. Es la continuación
+    natural del sistema, no un ejercicio inventado.
+
+    **📈 Datos del mundo real (yfinance y otras APIs).** Bajar precios de acciones, cotizaciones o
+    el clima con tres líneas y graficarlos. Es la forma más rápida de ver que Python sale de la
+    consola y toca el mundo.
+
+    **📉 matplotlib.** Los gráficos. Va de la mano con lo anterior: primero los datos, después la
+    imagen que los cuenta.
+
+    **📋 openpyxl.** Leer y escribir **planillas de Excel** desde Python. Para el CFP esto es oro:
+    media institución vive en planillas, y automatizarlas es la puerta de entrada más concreta que
+    hay.
+
+    **🧹 Otras que valen la pena.** Expresiones regulares (buscar patrones en texto), `datetime`
+    en serio, generar PDFs, y automatizar tareas repetitivas de la compu.
 
 !!! info "🤖 Bloque 7 — IA y Proyecto Final"
     Qué es una **API de IA** y cómo consumirla desde Python; integrar modelos de lenguaje o visión.
