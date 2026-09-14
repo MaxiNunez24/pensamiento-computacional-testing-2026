@@ -17,13 +17,11 @@ Inventario del Drive al **14/9/2026**: **18 videos, 819 MB**.
 | 7 | Diccionarios | 5 | ⬜ |
 | 8 | **Archivos y Persistencia** | 4 | ⬜ |
 
-> ⚠️ **El orden de arriba NO es el número de carpeta.** Las carpetas conservan su numeración
-> histórica (`04_tuplas`, `07_funciones`…), que quedó de cuando se escribieron. **El orden que vale
-> es el de esta tabla**, porque es el de la plataforma: en el sidebar, **Funciones I va antes que
-> Tuplas, Sets y Diccionarios**. Como ahora Funciones se graba en un solo video de repaso, ese
-> video ocupa el lugar de Funciones I.
+> ✅ **El número de carpeta es el orden de estudio.** Se renumeraron el 14/9 para que coincidan:
+> en la plataforma **Funciones I va antes que Tuplas, Sets y Diccionarios**, y como ahora Funciones
+> se graba en un solo video de repaso, ese video ocupa el lugar de Funciones I.
 >
-> Renumerar las carpetas para que coincidan es una decisión pendiente.
+> **Subí a YouTube en este orden**, no por fecha de grabación, y la playlist queda derecha sola.
 
 ---
 
@@ -37,8 +35,8 @@ Inventario del Drive al **14/9/2026**: **18 videos, 819 MB**.
 > ejercicios— así que el video se entiende igual. El choque aparece recién al sentarse a practicar,
 > que es el peor momento para descubrir que falta un tema.
 >
-> 1. [Funciones — repaso completo](./07_funciones/00_repaso_completo.md)
-> 2. [Archivos, videos 1 a 4](./07_persistencia/)
+> 1. [Funciones — repaso completo](./04_funciones/00_repaso_completo.md)
+> 2. [Archivos, videos 1 a 4](./08_persistencia/)
 
 ---
 
@@ -82,66 +80,66 @@ Inventario del Drive al **14/9/2026**: **18 videos, 819 MB**.
 
 ---
 
-## 04 — Tuplas (4 videos)
+## 05 — Tuplas (4 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
-| 1 | [01_que_es_y_como_se_crea.md](./04_tuplas/01_que_es_y_como_se_crea.md) | Inmutabilidad, creación, trampa del elemento único |
-| 2 | [02_desempaquetado.md](./04_tuplas/02_desempaquetado.md) | Desempaquetado, intercambio de variables, for, funciones con múltiples retornos |
-| 3 | [03_metodos_y_usos.md](./04_tuplas/03_metodos_y_usos.md) | count(), index(), claves de diccionario, cuándo usar tupla |
-| 4 | [04_zip.md](./04_tuplas/04_zip.md) | zip(), iterar colecciones en paralelo, transponer matriz |
+| 1 | [01_que_es_y_como_se_crea.md](./05_tuplas/01_que_es_y_como_se_crea.md) | Inmutabilidad, creación, trampa del elemento único |
+| 2 | [02_desempaquetado.md](./05_tuplas/02_desempaquetado.md) | Desempaquetado, intercambio de variables, for, funciones con múltiples retornos |
+| 3 | [03_metodos_y_usos.md](./05_tuplas/03_metodos_y_usos.md) | count(), index(), claves de diccionario, cuándo usar tupla |
+| 4 | [04_zip.md](./05_tuplas/04_zip.md) | zip(), iterar colecciones en paralelo, transponer matriz |
 
 ---
 
-## 05 — Sets (5 videos)
+## 06 — Sets (5 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
-| 1 | [01_que_es_y_como_se_crea.md](./05_sets/01_que_es_y_como_se_crea.md) | Sin duplicados, sin orden, trampa del set vacío, búsqueda con in |
-| 2 | [02_agregar_y_eliminar.md](./05_sets/02_agregar_y_eliminar.md) | add(), update(), remove(), discard(), pop(), clear() |
-| 3 | [03_operaciones_de_conjuntos.md](./05_sets/03_operaciones_de_conjuntos.md) | Unión, intersección, diferencia, diferencia simétrica, issubset/issuperset |
-| 4 | [04_cuando_usar_sets.md](./05_sets/04_cuando_usar_sets.md) | Casos de uso, cuándo no usar, tabla resumen |
-| 5 | [05_set_comprehensions.md](./05_sets/05_set_comprehensions.md) | Set comprehensions, filtro con if, eliminar duplicados |
+| 1 | [01_que_es_y_como_se_crea.md](./06_sets/01_que_es_y_como_se_crea.md) | Sin duplicados, sin orden, trampa del set vacío, búsqueda con in |
+| 2 | [02_agregar_y_eliminar.md](./06_sets/02_agregar_y_eliminar.md) | add(), update(), remove(), discard(), pop(), clear() |
+| 3 | [03_operaciones_de_conjuntos.md](./06_sets/03_operaciones_de_conjuntos.md) | Unión, intersección, diferencia, diferencia simétrica, issubset/issuperset |
+| 4 | [04_cuando_usar_sets.md](./06_sets/04_cuando_usar_sets.md) | Casos de uso, cuándo no usar, tabla resumen |
+| 5 | [05_set_comprehensions.md](./06_sets/05_set_comprehensions.md) | Set comprehensions, filtro con if, eliminar duplicados |
 
 ---
 
-## 06 — Diccionarios (5 videos)
+## 07 — Diccionarios (5 videos)
 
 | # | Archivo | Tema |
 |---|---------|------|
-| 1 | [01_que_es_y_como_se_crea.md](./06_diccionarios/01_que_es_y_como_se_crea.md) | Pares clave-valor, sintaxis, claves únicas |
-| 2 | [02_acceso_y_modificacion.md](./06_diccionarios/02_acceso_y_modificacion.md) | [], .get(), in, agregar, del, .pop(), .clear() |
-| 3 | [03_metodos_principales.md](./06_diccionarios/03_metodos_principales.md) | keys(), values(), items(), update(), setdefault() |
-| 4 | [04_comprehensions_y_patrones.md](./06_diccionarios/04_comprehensions_y_patrones.md) | Dict comprehensions, patrón contador, patrón agrupar |
-| 5 | [05_cuando_usar_y_buenas_practicas.md](./06_diccionarios/05_cuando_usar_y_buenas_practicas.md) | Cuándo usar diccionario, errores comunes, buenas prácticas |
+| 1 | [01_que_es_y_como_se_crea.md](./07_diccionarios/01_que_es_y_como_se_crea.md) | Pares clave-valor, sintaxis, claves únicas |
+| 2 | [02_acceso_y_modificacion.md](./07_diccionarios/02_acceso_y_modificacion.md) | [], .get(), in, agregar, del, .pop(), .clear() |
+| 3 | [03_metodos_principales.md](./07_diccionarios/03_metodos_principales.md) | keys(), values(), items(), update(), setdefault() |
+| 4 | [04_comprehensions_y_patrones.md](./07_diccionarios/04_comprehensions_y_patrones.md) | Dict comprehensions, patrón contador, patrón agrupar |
+| 5 | [05_cuando_usar_y_buenas_practicas.md](./07_diccionarios/05_cuando_usar_y_buenas_practicas.md) | Cuándo usar diccionario, errores comunes, buenas prácticas |
 
 ---
 
-## 07 — Funciones (7 videos)
+## 04 — Funciones (7 videos + el repaso)
 
 | # | Archivo | Tema |
 |---|---------|------|
-| **0** | [**00_repaso_completo.md**](./07_funciones/00_repaso_completo.md) | ⭐ **Funciones I y II en un solo video (~9 min).** El resto son el desarrollo largo |
-| 1 | [01_que_es_y_como_se_define.md](./07_funciones/01_que_es_y_como_se_define.md) | def, anatomía, definición vs llamada |
-| 2 | [02_parametros_y_argumentos.md](./07_funciones/02_parametros_y_argumentos.md) | Parámetros, argumentos, valores por defecto, keyword args |
-| 3 | [03_return.md](./07_funciones/03_return.md) | return vs print, early return, múltiples valores |
-| 4 | [04_scope.md](./07_funciones/04_scope.md) | Variables locales y globales, regla de oro del scope |
-| 5 | [05_args_kwargs.md](./07_funciones/05_args_kwargs.md) | *args (tupla), **kwargs (dict), orden de parámetros |
-| 6 | [06_buenas_practicas.md](./07_funciones/06_buenas_practicas.md) | Nombres, una responsabilidad, return vs print, tamaño |
-| 7 | [07_funciones_builtin.md](./07_funciones/07_funciones_builtin.md) | print/input, conversión de tipos, sum/min/max/sorted/enumerate/zip, any/all |
+| **0** | [**00_repaso_completo.md**](./04_funciones/00_repaso_completo.md) | ⭐ **Funciones I y II en un solo video (~9 min).** El resto son el desarrollo largo |
+| 1 | [01_que_es_y_como_se_define.md](./04_funciones/01_que_es_y_como_se_define.md) | def, anatomía, definición vs llamada |
+| 2 | [02_parametros_y_argumentos.md](./04_funciones/02_parametros_y_argumentos.md) | Parámetros, argumentos, valores por defecto, keyword args |
+| 3 | [03_return.md](./04_funciones/03_return.md) | return vs print, early return, múltiples valores |
+| 4 | [04_scope.md](./04_funciones/04_scope.md) | Variables locales y globales, regla de oro del scope |
+| 5 | [05_args_kwargs.md](./04_funciones/05_args_kwargs.md) | *args (tupla), **kwargs (dict), orden de parámetros |
+| 6 | [06_buenas_practicas.md](./04_funciones/06_buenas_practicas.md) | Nombres, una responsabilidad, return vs print, tamaño |
+| 7 | [07_funciones_builtin.md](./04_funciones/07_funciones_builtin.md) | print/input, conversión de tipos, sum/min/max/sorted/enumerate/zip, any/all |
 
 ---
 
 ## 08 — Archivos y Persistencia (4 videos)
 
-Carpeta: `07_persistencia/`
+Carpeta: `08_persistencia/`
 
 | # | Archivo | Tema |
 |---|---------|------|
-| 1 | [01_por_que_archivos.md](./07_persistencia/01_por_que_archivos.md) | RAM vs disco, `open()`, los cuatro modos, por qué `"w"` borra sin preguntar |
-| 2 | [02_with_y_leer.md](./07_persistencia/02_with_y_leer.md) | Por qué `close()` falla, `with`, `encoding`, `read`/`readlines`/`for`, `strip()` |
-| 3 | [03_escribir.md](./07_persistencia/03_escribir.md) | `write` vs `print(file=)`, el `\n`, y el modo `"a"` para sumar sin borrar |
-| 4 | [04_rutas_y_pathlib.md](./07_persistencia/04_rutas_y_pathlib.md) | `FileNotFoundError`, `Path.cwd()`, relativas vs absolutas, `exists()`, `mkdir` |
+| 1 | [01_por_que_archivos.md](./08_persistencia/01_por_que_archivos.md) | RAM vs disco, `open()`, los cuatro modos, por qué `"w"` borra sin preguntar |
+| 2 | [02_with_y_leer.md](./08_persistencia/02_with_y_leer.md) | Por qué `close()` falla, `with`, `encoding`, `read`/`readlines`/`for`, `strip()` |
+| 3 | [03_escribir.md](./08_persistencia/03_escribir.md) | `write` vs `print(file=)`, el `\n`, y el modo `"a"` para sumar sin borrar |
+| 4 | [04_rutas_y_pathlib.md](./08_persistencia/04_rutas_y_pathlib.md) | `FileNotFoundError`, `Path.cwd()`, relativas vs absolutas, `exists()`, `mkdir` |
 
 *(En esa carpeta está además `setup_git_github_videos.md`, que no es un guion de repaso.)*
 
