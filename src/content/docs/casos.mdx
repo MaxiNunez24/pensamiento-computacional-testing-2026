@@ -6,14 +6,14 @@ description: "El circuito de trabajo de cada rol del CFP, de principio a fin. Lo
 import MapaCasos from '../../components/MapaCasos.astro';
 
 Esto es lo que entendimos de cómo trabaja cada persona del CFP, armado con lo que
-nos contaron en las entrevistas.
+nos contaron en las entrevistas del **viernes 4/9**.
 
 :::caution[Esta página existe para que la corrijan]
 No la armamos para presentarla: la armamos **para que nos digan dónde nos equivocamos.**
 
 Lo que está marcado con borde amarillo lo **supusimos nosotros** — no salió de ninguna
-entrevista todavía. Y donde dice *"esto todavía no lo preguntamos"* hay un hueco de verdad: son
-justamente las cosas que hay que llenar cuando estemos todos juntos.
+entrevista todavía. Y donde un caso está casi vacío hay un hueco de verdad: son justamente las
+cosas que hay que llenar el **miércoles 16/9** y el **viernes 18/9**.
 
 **Todo esto se puede editar acá mismo**, en el momento. Lo editado queda guardado en esta
 computadora y **no toca el original**: cada caso tiene su *"volver al original"*.
@@ -27,6 +27,23 @@ resuelve después, escuchando el audio.
 Es la misma idea que el botón *Marcar* del kit de entrevista. Al final, **🚩 Ver banderitas** junta
 todas: esa lista es la agenda de lo que quedó pendiente.
 :::
+
+## A quién escuchamos y a quién no
+
+Esto es lo primero que hay que mirar, porque explica por qué unos casos están llenos y otros
+vacíos. **Un caso vacío no es un olvido: es una entrevista que falta.**
+
+| Rol | ¿Lo escuchamos? |
+|---|---|
+| Instructores | ✅ Sí — 4/9 |
+| Preceptoría | ✅ Sí — 4/9, los cuatro juntos |
+| Maestras de apoyo | ✅ Dos de ellas, por separado. Una tercera quedó afuera |
+| Dirección | 🔴 Falta — **16/9** |
+| Regencia | 🔴 Falta — **16/9** |
+| Secretaría | 🔴 Falta — **16/9** |
+| Auxiliares | 🟡 Sabemos lo que necesitan (cuántas meriendas), falta el detalle — **16/9** |
+| Alumnos | 🟡 Son los del curso: los tenemos a mano todos los días |
+| Inspección | 🔴 No la vamos a entrevistar, pero **pone una condición** (ver *Cerrar el curso*) |
 
 ## Las cinco etapas
 
@@ -42,9 +59,265 @@ exactamente esto.
 | 🔄 | **Con quién** | ¿De quién viene y a quién le llega? |
 | 📤 | **En qué termina** | ¿Pantalla, planilla, papel, otro sistema? |
 
+:::note[Usá los chips de arriba de la grilla]
+Son muchos casos. En la reunión conviene recorrerlos **rol por rol**: se toca el chip del rol y
+quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos.
+:::
+
 ---
 
 <MapaCasos casos={[
+  {
+    id: 'marcar-llegada',
+    nombre: 'Marcar la llegada con el DNI',
+    emoji: '🪪',
+    roles: ['Alumnos'],
+    frecuencia: 'Cada clase, a la entrada del CFP',
+    precondiciones: [
+      'El alumno tiene que estar inscripto en un curso que se dicte ese día',
+      'El tótem tiene que estar prendido y en la red del CFP',
+      'Tienen que estar cargados los días y horarios de cada curso',
+    ],
+    entradas: [
+      'El DNI, tecleado por el alumno. Nada más: sin usuario y sin contraseña',
+      'La hora del momento',
+    ],
+    proceso: [
+      'Buscar ese DNI entre todos los alumnos del CFP',
+      'Ver a qué curso va, y si ese curso tiene clase ahora',
+      'Guardar la llegada con la hora',
+      'Decidir si eso es presente o tarde',
+    ],
+    intercambio: [
+      'Le llega: nada. El alumno se identifica solo',
+      'Le entrega: al instructor, que encuentra la lista ya marcada',
+    ],
+    salidas: [
+      'El alumno ve su nombre y que quedó registrado',
+      'La lista del día de ese curso, ya marcada',
+    ],
+    fuente: 'Shorsh (instructor) · 4/9 · marca 13:29. Rechazó las contraseñas de entrada: "el DNI ya es único y todos se lo saben". ⚠️ A qué hora deja de ser presente y pasa a tarde NO lo preguntamos: es la primera pregunta del miércoles.',
+  },
+  {
+    id: 'pasar-lista',
+    nombre: 'Pasar lista en la clase',
+    emoji: '✅',
+    roles: ['Instructores'],
+    frecuencia: 'Cada clase. Le lleva entre 1 y 5 minutos',
+    precondiciones: [
+      'Tiene que existir la lista de alumnos del curso, ordenada',
+      'La preceptora le tiene que haber traído la planilla oficial impresa',
+    ],
+    entradas: [
+      'La planilla oficial impresa, que le trae la preceptora',
+      'Quién está presente en el aula',
+    ],
+    proceso: [
+      'Marcar presente, ausente, tarde o justificado',
+      'A veces delegarlo: "no la paso porque no tengo tiempo y le digo a algún alumno"',
+      'Registrarla más tarde: unas dos horas después de empezar, o al final de la clase',
+    ],
+    intercambio: [
+      'Le llega: la planilla impresa, de preceptoría',
+      'Le entrega: la planilla completada, otra vez a preceptoría',
+    ],
+    salidas: [
+      'La planilla en papel, que después alguien tiene que cargar',
+    ],
+    fuente: 'Shorsh (instructor) · 4/9 · marcas 04:40 y 07:24',
+  },
+  {
+    id: 'como-voy',
+    nombre: 'Contestar «¿cómo voy con asistencia?»',
+    emoji: '📊',
+    roles: ['Instructores', 'Alumnos'],
+    frecuencia: 'Se lo preguntan seguido, en medio de la clase',
+    precondiciones: [
+      'Tiene que estar cargada TODA la asistencia del alumno, no solo la del mes',
+      'Tiene que estar cargada la cantidad de clases que ya se dieron',
+    ],
+    entradas: [
+      'El alumno que pregunta',
+      'Todas sus asistencias y ausencias del curso',
+      'El total de clases dadas hasta hoy',
+    ],
+    proceso: [
+      'Contar sus presentes sobre el total de clases dadas',
+      'Compararlo contra el 85% que se exige para poder aprobar',
+      'Contestarle en el momento, sin ir a buscar planillas',
+    ],
+    intercambio: [
+      'Le llega: la pregunta del alumno, en el aula',
+      'Le entrega: la respuesta, ahí mismo',
+    ],
+    salidas: [
+      'Un número y un semáforo: ¿llega al 85% o no?',
+    ],
+    fuente: '🔑 Shorsh · 4/9 · marcas 10:52 (el 85% es regla dura para aprobar) y 11:05 ("los alumnos me preguntan cómo van"). Es la regla más fuerte que apareció en todo el relevamiento: el sistema la tiene que vigilar.',
+  },
+  {
+    id: 'alerta-85',
+    nombre: 'Enterarse de que un alumno está por quedar libre',
+    emoji: '🚨',
+    roles: ['Instructores', 'Preceptoría', 'Maestras de apoyo'],
+    frecuencia: 'Sin que nadie pregunte: cuando pasa',
+    precondiciones: [
+      'Lo mismo que el caso anterior: la asistencia completa y el total de clases',
+      'Y algo que no tenemos: a partir de qué porcentaje hay que avisar',
+    ],
+    entradas: [
+      'La asistencia de todos los alumnos del curso',
+      'Las clases que faltan hasta el final del curso',
+    ],
+    proceso: [
+      'Ver quién todavía puede llegar al 85% y quién ya no',
+      'Avisar mientras se pueda hacer algo, no en el cierre',
+    ],
+    intercambio: [
+      'Le entrega: al instructor y a la maestra de apoyo, que son los que hablan con el alumno',
+    ],
+    salidas: [
+      'Un aviso, en algún lado que alguien mire',
+    ],
+    supuesto: true,
+    fuente: '⚠️ ESTO LO PROPONEMOS NOSOTROS. Shorsh pidió poder CONTESTAR cuando le preguntan (11:05); que el sistema avise solo, sin que nadie pregunte, no lo pidió nadie. Preguntar si sirve o si es una alarma más que nadie mira.',
+  },
+  {
+    id: 'boletin-actitud',
+    nombre: 'Poner la nota de actitud del cuatrimestre',
+    emoji: '📝',
+    roles: ['Instructores'],
+    frecuencia: 'Dos veces al año, un cuatrimestre cada una',
+    precondiciones: [
+      'Hay que tener los 10 ítems que evalúa — y no los tenemos',
+    ],
+    entradas: [
+      'Los ítems que sabemos: puntualidad, uso de las herramientas, limpieza, responsabilidad',
+      'Los otros seis, que todavía no sabemos cuáles son',
+      'Lo que el instructor vio del alumno a lo largo del cuatrimestre',
+    ],
+    proceso: [
+      'Puntuar cada ítem, alumno por alumno, cuatrimestre por cuatrimestre',
+    ],
+    intercambio: [
+      'Hoy no se lo entrega a nadie: es suyo, no es un boletín oficial',
+    ],
+    salidas: [
+      'Un boletín no oficial que le da al alumno',
+    ],
+    supuesto: true,
+    fuente: 'Shorsh · 4/9 · marca 05:01. Su "Proyecto evaluativo": lo armó él, no es oficial, y OFRECIÓ TRAERLO. ⚠️ Pedírselo el miércoles: sin ese papel, seis de los diez ítems los estamos adivinando.',
+  },
+  {
+    id: 'firmar-libro',
+    nombre: 'Firmar la entrada y la salida (los profes)',
+    emoji: '✍️',
+    roles: ['Instructores', 'Regencia'],
+    frecuencia: 'Cada clase, dos veces',
+    precondiciones: [
+      'Tienen que estar cargados los profes y sus horarios',
+    ],
+    entradas: [
+      'Quién es, y la hora exacta',
+    ],
+    proceso: [
+      'Registrar la firma con la hora, no solo el día',
+    ],
+    intercambio: [
+      'Le entrega: a regencia, que es quien lleva el libro hoy',
+    ],
+    salidas: [
+      'El libro de firmas, hoy en papel',
+    ],
+    supuesto: true,
+    fuente: 'Shorsh lo extendió él solo (14:02): "lo mismo para los profes, digitalizar el libro de firmas con la hora". Todo lo demás —quién lo controla, para qué se usa, qué pasa si alguien no firma— lo pusimos nosotros. ⚠️ Regencia lo tiene que confirmar el miércoles.',
+  },
+  {
+    id: 'ver-mis-horarios',
+    nombre: 'Ver los horarios de mi curso',
+    emoji: '🕒',
+    roles: ['Alumnos'],
+    frecuencia: 'Cuando hay un cambio, que es cuando más importa',
+    precondiciones: [
+      'Tienen que estar cargados los días y horas de cada curso',
+      'Y los cambios tienen que entrar al sistema CUANDO pasan, no después',
+    ],
+    entradas: [
+      'El curso al que va el alumno',
+      'Los días y horas de ese curso, y los cambios si hubo',
+    ],
+    proceso: [
+      'Mostrarle los horarios de su curso',
+      'Y dejar claro cuál es el cambio, cuando hay uno',
+    ],
+    intercambio: [
+      'Le llega: de quien decide los cambios de horario — que todavía no sabemos quién es',
+    ],
+    salidas: [
+      'La pantalla del tótem, o el acceso directo en el celular',
+    ],
+    fuente: 'Shorsh · 4/9 · marca 14:31: que los alumnos puedan ver los horarios de su curso, por si cambian. ⚠️ Choca con la decisión de que el sistema no salga de la red del CFP: si es solo LAN, el alumno lo ve acá y no desde su casa. Está en las decisiones abiertas, abajo.',
+  },
+  {
+    id: 'inscribir-alumno',
+    nombre: 'Inscribir a un alumno',
+    emoji: '📝',
+    roles: ['Preceptoría'],
+    frecuencia: 'Al principio del ciclo, y durante todo el año',
+    precondiciones: [
+      'El curso tiene que existir y tener cupo',
+      'El formulario de inscripción tiene que estar publicado — hoy, un Google Forms',
+    ],
+    entradas: [
+      'Los datos personales, y la fecha de nacimiento',
+      'El DNI, de donde sale el domicilio legal',
+      'El domicilio REAL, que puede no ser el del DNI',
+      'Salud, condición laboral y condición educativa',
+    ],
+    proceso: [
+      'El alumno completa el formulario',
+      'Tomarlo como declaración jurada: se firma y se guarda firmada',
+      'Guardar el domicilio real aparte del domicilio del DNI: son dos datos, no uno',
+      '⚠️ Y después cargar esos mismos datos A MANO en el sistema de gestión, en la ficha del curso y en la de asistencia',
+    ],
+    intercambio: [
+      'Le llega: el alumno, con su DNI',
+      'Le entrega: la ficha firmada, al legajo',
+    ],
+    salidas: [
+      'Una planilla de cálculo con todos los inscriptos',
+      'La ficha de inscripción, firmada',
+      'El alumno cargado, y ya contando para el cupo del curso',
+    ],
+    fuente: 'Preceptoría · 4/9 · marcas 01:19 (el domicilio del DNI puede no ser el real) y 02:13 (Google Forms, salud, condición laboral y educativa, declaración jurada firmada). 🔑 El formulario deja una planilla, y de ahí en adelante todo se vuelve a escribir a mano: ese es el trabajo que el sistema viene a sacar.',
+  },
+  {
+    id: 'migrar-inscripciones',
+    nombre: 'Tener la lista de mis alumnos sin volver a escribirla',
+    emoji: '📥',
+    roles: ['Preceptoría'],
+    frecuencia: 'Una vez por curso, al armarlo — y cada vez que entra alguien nuevo',
+    precondiciones: [
+      'Las inscripciones tienen que estar en el Drive, que es donde YA están: el Google Forms las deja ahí',
+    ],
+    entradas: [
+      'La planilla que dejó el formulario de inscripción, tal como viene: desordenada, en el orden en que se fueron anotando',
+    ],
+    proceso: [
+      'Traerla sola, sin que nadie copie y pegue',
+      'Ordenarla alfabéticamente: eso lo hace el sistema, no la persona',
+      'Y que de ahí salga todo lo demás, en vez de volver a escribirlo en cada planilla',
+    ],
+    intercambio: [
+      'Le llega: del formulario de inscripción',
+      'Le entrega: a todo lo demás. De esta lista salen las otras cuatro planillas',
+    ],
+    salidas: [
+      'La lista del curso, ordenada y lista para usarse',
+      '🔑 Y de ahí salen: ficha de curso, asistencia mensual, evaluación de módulos y acta de examen',
+    ],
+    fuente: '🔑 Preceptoría · 4/9 · marcas 01:46 y 19:08. Es LO QUE CONTESTARON cuando les preguntamos qué faltaba. La planilla unificada de Google Spreadsheets es, en la práctica, el modelo de datos del sistema: todo lo demás se deriva de ella.',
+  },
   {
     id: 'planilla-mes',
     nombre: 'Armar la planilla de fin de mes',
@@ -55,14 +328,19 @@ exactamente esto.
       'El curso tiene que estar dado de alta, con su número y su nombre',
       'Los alumnos tienen que estar inscriptos en ese curso',
       'Tienen que estar cargados los días y horarios en que se dicta',
+      'Tienen que estar todas las planillas de papel de los instructores del mes',
     ],
     entradas: [
       'Las planillas en papel que deja cada instructor',
       'Los datos de cada alumno: nombre, DNI',
       'El número y el nombre del curso, y las horas cátedra',
+      'Los temas que se dieron en el mes',
+      'Las bajas del mes',
     ],
     proceso: [
       'Pasar la asistencia de cada día del mes',
+      'Anotar los temas tratados y los que están en tratamiento',
+      'Anotar las bajas del mes',
       'Volver a escribir los mismos datos en más de una planilla',
     ],
     intercambio: [
@@ -70,63 +348,184 @@ exactamente esto.
       'Le entrega: a dirección, que la firma',
     ],
     salidas: [
-      'La planilla oficial del Ministerio',
+      'La planilla oficial del Ministerio, firmada por dirección',
       'Una planilla de secretaría, que es otra distinta',
     ],
-    fuente: 'Preceptoría · entrevista del 4/9 · marcas 00:59, 04:29, 05:55',
+    fuente: 'Preceptoría · 4/9 · marcas 04:04, 05:49 y 07:51 (temas tratados, en tratamiento y bajas del mes)',
   },
   {
-    id: 'pasar-lista',
-    nombre: 'Pasar lista en la clase',
-    emoji: '✅',
-    roles: ['Instructores'],
-    frecuencia: 'Cada clase',
+    id: 'planilla-secretaria',
+    nombre: 'La planilla mensual de secretaría',
+    emoji: '🗂️',
+    roles: ['Preceptoría', 'Secretaría'],
+    frecuencia: 'Una vez por mes',
     precondiciones: [
-      'Tiene que existir la lista de alumnos del curso',
+      'La asistencia del mes tiene que estar cerrada',
+      'Cada alumno tiene que tener cargado su género',
     ],
     entradas: [
-      'La lista del curso',
-      'Quién está presente en el aula',
+      'La asistencia del mes',
+      'El género de cada alumno',
     ],
     proceso: [
-      'Marcar presente, ausente, tarde o justificado',
+      'Contar cuántos varones y cuántas mujeres hay, por curso',
+      'Subirla al Drive',
     ],
     intercambio: [
-      'Le entrega: a preceptoría, en papel',
+      'Le entrega: a secretaría, por Drive',
     ],
     salidas: [
-      'La planilla en papel, que se carga más tarde',
+      'Una planilla distinta de la del Ministerio, en el Drive',
     ],
-    fuente: 'Instructores · entrevista del 4/9 · marcas 00:41, 03:07, 04:33',
+    fuente: 'Preceptoría · 4/9 · marcas 03:27 y 04:04. Es OTRA planilla, no la del Ministerio: son dos salidas de los mismos datos. ⚠️ A secretaría no la entrevistamos todavía: falta saber qué hace con ella después.',
+  },
+  {
+    id: 'cargar-siges',
+    nombre: 'Cargar los alumnos en el SiGeS',
+    emoji: '🤖',
+    roles: ['Preceptoría'],
+    frecuencia: 'Por curso, y cada vez que entra o sale alguien',
+    precondiciones: [
+      'Los alumnos tienen que estar cargados y ordenados en el sistema',
+      'Una persona tiene que entrar al SiGeS: el bot NO se loguea solo',
+    ],
+    entradas: [
+      'La lista del curso, ya ordenada',
+      'Las pantallas del SiGeS, que son las que son y no las elegimos nosotros',
+    ],
+    proceso: [
+      'Llenar los campos del SiGeS con datos que YA están cargados en el sistema',
+      'Mostrar lo que va a hacer y esperar el OK de una persona antes de enviar',
+    ],
+    intercambio: [
+      'Le entrega: al SiGeS, que es del Ministerio y no es nuestro',
+    ],
+    salidas: [
+      'Los alumnos cargados en el SiGeS, sin volver a tipearlos uno por uno',
+    ],
+    fuente: '🔑 Preceptoría · 4/9 · marca 19:08: lo pidieron ellos, junto con la migración desde el Drive. ⚠️ Es un PROYECTO APARTE —el bot, ya prototipado—, no una parte del sistema de asistencias. Está en este mapa porque el trabajo de la persona es uno solo, aunque nosotros lo partamos en dos.',
+  },
+  {
+    id: 'seguir-ausencias',
+    nombre: 'Darse cuenta de que alguien dejó de venir',
+    emoji: '🫂',
+    roles: ['Preceptoría', 'Maestras de apoyo'],
+    frecuencia: 'Todas las semanas',
+    precondiciones: [
+      'La asistencia tiene que estar cargada al día, no a fin de mes',
+      'Tiene que haber un teléfono o un contacto del alumno',
+    ],
+    entradas: [
+      'Las ausencias de las últimas clases, de todos los cursos',
+      'El contacto del alumno',
+    ],
+    proceso: [
+      'Ver quién viene faltando seguido, sin revisar planilla por planilla',
+      'Preguntarle qué le pasa, para poder apoyarlo',
+    ],
+    intercambio: [
+      'Le llega: la asistencia que cargan los instructores',
+      'Le entrega: a la maestra de apoyo, que es la que acompaña',
+    ],
+    salidas: [
+      'Una lista corta de a quién llamar esta semana',
+    ],
+    fuente: '🔑 Preceptoría · 4/9 · marca 04:46: "si alguien deja de venir, preguntamos por qué, para poder apoyarlo". Esto cambia el sentido de todo el sistema: la asistencia no es solo el 85% para aprobar, es la señal de que alguien necesita ayuda.',
+  },
+  {
+    id: 'cupos-espera',
+    nombre: 'Manejar el cupo y la lista de espera',
+    emoji: '🎫',
+    roles: ['Preceptoría'],
+    frecuencia: 'En cada inscripción, y cada vez que alguien deja el curso',
+    precondiciones: [
+      'Cada curso tiene que tener su cupo cargado, que sale de la capacidad del aula',
+    ],
+    entradas: [
+      'La capacidad del aula',
+      'Los que ya están inscriptos',
+      'Los que quedaron afuera',
+    ],
+    proceso: [
+      'No dejar inscribir más gente de la que entra en el aula',
+      'Anotar en lista de espera al que no entró',
+      'Cuando alguien se da de baja, ofrecerle el lugar al que sigue',
+    ],
+    intercambio: [
+      'Le llega: el que quiere inscribirse',
+      'Le entrega: el aviso al que estaba esperando',
+    ],
+    salidas: [
+      'La lista de espera, que hoy se lleva a mano',
+      '📊 Y un dato para estadística: cuánta gente quedó afuera de cada curso',
+    ],
+    fuente: '🔑 Preceptoría · 4/9 · marca 23:00. NO estaba en ninguna de nuestras preguntas: salió solo, al final. Ya lo llevan a mano, y les sirve para estadística.',
+  },
+  {
+    id: 'cerrar-curso',
+    nombre: 'Cerrar el curso',
+    emoji: '🎓',
+    roles: ['Preceptoría', 'Dirección', 'Inspección'],
+    frecuencia: 'Una vez, al final de cada curso',
+    precondiciones: [
+      'Toda la asistencia del curso tiene que estar cargada, de todos los meses',
+      'Las bajas tienen que estar registradas CUANDO pasaron, no al final',
+    ],
+    entradas: [
+      'La ficha del curso',
+      'El acta de examen',
+      'La cantidad de títulos a emitir',
+    ],
+    proceso: [
+      '🔑 Que los tres números coincidan: ficha, acta y títulos',
+      'Y si no coinciden, encontrar la diferencia ANTES de que la encuentre el inspector',
+    ],
+    intercambio: [
+      'Le llega: de los instructores y de las fichas de inscripción',
+      'Le entrega: al inspector, que certifica que la cantidad cuadre',
+    ],
+    salidas: [
+      'El acta de examen',
+      'Los títulos',
+      'La certificación del inspector',
+    ],
+    fuente: '🔑 Preceptoría · 4/9 · marca 06:02. Es el control final del año: si algo no cuadra, se descubre acá y ya es tarde. Por eso importa tanto que las bajas se carguen cuando pasan.',
   },
   {
     id: 'acompanar',
     nombre: 'Saber a quién acompañar',
     emoji: '🎓',
     roles: ['Maestras de apoyo'],
+    frecuencia: 'Cuando entra gente nueva, y después cuando hace falta',
     precondiciones: [
       'Los alumnos tienen que estar cargados con su nivel de estudios',
+      'Y eso tiene que salir de la ficha de inscripción, no de preguntarle a cada uno',
     ],
     entradas: [
       'Nivel de estudios de cada alumno: primario, secundario, terciario, y en qué estado',
       'Sacramentos: bautismo, confirmación, comunión',
     ],
     proceso: [
-      'Filtrar la lista de todos los alumnos del CFP por esos criterios',
+      'Filtrar la lista de TODOS los alumnos del CFP por esos criterios',
+      'No por curso: la pregunta es del CFP entero',
     ],
-    intercambio: [],
+    intercambio: [
+      'Le llega: de la ficha de inscripción, donde ese dato ya se pide',
+    ],
     salidas: [
       'Una pantalla con todos los alumnos y de qué curso es cada uno',
     ],
-    fuente: 'Las dos maestras de apoyo lo pidieron POR SEPARADO, sin hablarse entre ellas',
+    fuente: '🔑 Las dos maestras de apoyo lo pidieron POR SEPARADO, sin hablarse entre ellas. Que dos personas lleguen a lo mismo sin coordinarse es la señal más fuerte que hay.',
   },
   {
     id: 'cumpleanos',
     nombre: 'Que no se pase ningún cumpleaños',
     emoji: '🎂',
     roles: ['Maestras de apoyo', 'Instructores'],
+    frecuencia: 'Todas las clases',
     precondiciones: [
       'Tiene que estar cargada la fecha de nacimiento de cada alumno',
+      'Y los días en que se dicta cada curso',
     ],
     entradas: [
       'Las fechas de nacimiento',
@@ -141,7 +540,7 @@ exactamente esto.
       'Un calendario de cumpleaños',
     ],
     supuesto: true,
-    fuente: 'Sugerido por una maestra de apoyo que todavía NO entrevistamos. Y el profe ya arma todos los años un calendario de cumpleaños a mano: dos personas llegaron a la misma necesidad por separado.',
+    fuente: 'Lo sugirió una maestra de apoyo que todavía NO entrevistamos. Y el profe ya arma todos los años un calendario de cumpleaños a mano: dos personas llegaron a la misma necesidad por separado. ⚠️ Con clases dos veces por semana, la mayoría de los cumpleaños caen en días sin clase: si avisa solo el día exacto, no avisa casi nunca.',
   },
   {
     id: 'ver-curso',
@@ -155,16 +554,185 @@ exactamente esto.
     intercambio: [],
     salidas: [],
     supuesto: true,
-    fuente: 'Todavía no entrevistamos a dirección. Este caso está vacío a propósito: es de los que hay que llenar el miércoles.',
+    fuente: 'Todavía no entrevistamos a dirección. Este caso está vacío a propósito: es de los que hay que llenar el miércoles 16/9. Las preguntas están al final de esta página.',
+  },
+  {
+    id: 'firmar-planilla',
+    nombre: 'Firmar la planilla del mes',
+    emoji: '🖊️',
+    roles: ['Dirección'],
+    frecuencia: 'Una vez por mes, por cada curso',
+    precondiciones: [],
+    entradas: [
+      'La planilla del mes que le trae preceptoría',
+    ],
+    proceso: [],
+    intercambio: [
+      'Le llega: de preceptoría',
+    ],
+    salidas: [
+      'La planilla firmada',
+    ],
+    supuesto: true,
+    fuente: 'Lo único que sabemos es que dirección FIRMA la planilla, y lo sabemos porque lo dijo preceptoría — no dirección. Qué mira antes de firmar, y qué haría si algo no le cierra, es la pregunta del miércoles.',
+  },
+  {
+    id: 'regencia-pendiente',
+    nombre: 'Controlar que los profes estén',
+    emoji: '📌',
+    roles: ['Regencia'],
+    precondiciones: [],
+    entradas: [],
+    proceso: [],
+    intercambio: [],
+    salidas: [],
+    supuesto: true,
+    fuente: 'Vacío a propósito: no entrevistamos a regencia. Sabemos que existe el libro de firmas de los profes porque lo trajo Shorsh (14:02), pero no sabemos quién lo controla ni para qué se usa. Miércoles 16/9.',
+  },
+  {
+    id: 'secretaria-pendiente',
+    nombre: 'Lo que secretaría hace con las planillas',
+    emoji: '🗄️',
+    roles: ['Secretaría'],
+    precondiciones: [],
+    entradas: [],
+    proceso: [],
+    intercambio: [],
+    salidas: [],
+    supuesto: true,
+    fuente: 'Vacío a propósito. Sabemos que le llega una planilla mensual al Drive con la cantidad de varones y mujeres (preceptoría, 03:27 y 04:04), y no sabemos qué hace con ella ni a quién se la manda. Miércoles 16/9.',
+  },
+  {
+    id: 'meriendas',
+    nombre: 'Saber cuántas meriendas preparar',
+    emoji: '🍎',
+    roles: ['Auxiliares'],
+    frecuencia: 'Todos los días, antes de la merienda',
+    precondiciones: [
+      '⚠️ La asistencia del día tiene que estar tomada ANTES de la merienda, no al final de la clase',
+    ],
+    entradas: [
+      'Cuántos alumnos vinieron hoy, en todo el CFP',
+    ],
+    proceso: [
+      'Contar los presentes de todos los cursos que están cursando ahora',
+      'Es un solo número, del CFP entero: no hace falta saber quiénes son',
+    ],
+    intercambio: [
+      'Le llega: de la asistencia que se toma en la entrada',
+    ],
+    salidas: [
+      'Un número grande en una pantalla',
+    ],
+    fuente: '🔑 El caso más simple del sistema y el que más tensiona todo lo demás: si la lista se registra dos horas después de empezar (Shorsh, 07:24), el número llega tarde para la merienda. Marcar el DNI en la entrada lo resuelve solo — el dato queda al momento en que entran.',
   },
 ]} />
 
 ---
 
+## 🎯 Las preguntas del miércoles 16/9
+
+Los casos vacíos de arriba son los que hay que llenar. Estas son las preguntas, **por rol**, para
+no improvisarlas en el momento.
+
+### 🏛️ Dirección
+
+1. Cuando le llega la planilla del mes, **¿qué mira antes de firmarla?**
+2. ¿Qué necesita saber de un curso, semana a semana?
+3. ¿Qué pasa cuando un curso se queda con muy pocos alumnos? ¿Quién decide?
+4. El 85% de asistencia: ¿lo mira por curso, por alumno, o se entera en el cierre?
+5. El **cupo** de cada curso: ¿sale de la capacidad del aula, del Ministerio, o de otra cosa?
+
+### 📌 Regencia
+
+1. El **libro de firmas** de los profes: ¿quién lo controla, y para qué se usa después?
+2. ¿Qué hace cuando un profe falta? ¿Cómo se consigue el reemplazo?
+3. Los **cambios de horario**: ¿quién los decide y cómo se les avisa hoy a los alumnos?
+   *(Shorsh pidió justamente que los alumnos los puedan ver.)*
+
+### 🗄️ Secretaría
+
+1. La planilla mensual que le llega al Drive: **¿qué hace con ella y a quién se la manda?**
+2. Los **títulos**: ¿quién los emite, y con qué datos?
+3. ¿Qué dato del alumno necesita que esté perfecto, porque va impreso en el título?
+
+### 🧹 Auxiliares
+
+1. **¿A qué hora necesitan saber cuántas meriendas preparar?** De esa hora depende cuándo tiene
+   que estar tomada la asistencia, y eso cambia el sistema entero.
+2. ¿Cómo lo saben hoy? ¿Preguntan, cuentan, o calculan siempre lo mismo?
+3. ¿Qué pasa cuando sobran o cuando faltan?
+
+### 🤝 Y en la reunión de todos
+
+1. Seguir **un solo dato** de punta a punta: de la ficha de inscripción hasta el título. ¿Cuántas
+   veces se escribe lo mismo?
+2. Los tótems: **¿uno, dos, o el instructor lo pasa desde el aula?** (abajo)
+3. ¿Qué pasa el día que el sistema no arranque? Porque va a pasar.
+
+:::tip[Lo que hay que pedir, no preguntar]
+El **"Proyecto evaluativo"** de Shorsh: el boletín no oficial de 10 ítems que armó él. Ofreció
+traerlo. Sin ese papel, seis de los diez ítems los estamos inventando.
+:::
+
+## ⚖️ Las decisiones que quedan abiertas
+
+Estas no son huecos de información: son cosas que **hay que decidir con ellos**. Anotarlas es parte
+del trabajo — un requerimiento que se decide solo, en la cabeza del que programa, es un
+requerimiento que después nadie reconoce.
+
+### 1. Los tótems y la congestión de la entrada
+
+Si todos marcan el DNI al entrar, y todos entran a la misma hora, se hace cola.
+
+| Opción | Qué implica |
+|---|---|
+| **Dos tótems** | Más hardware, la mitad de cola |
+| **Excepción: que suban** | El instructor pasa lista desde el aula, con la app. Más simple ahora que el sistema es una pantalla y no un papel |
+
+**Sin decidir.** Y no es solo nuestra: la tienen que decidir ellos, porque es su entrada.
+
+### 2. El sistema no sale del CFP, pero el alumno quiere ver sus horarios
+
+Preceptoría aprobó que el sistema **ande solo en la red del CFP, sin internet** (marca 18:31) — y
+lo aprobaron sabiendo que eso significa no poder entrar desde afuera.
+
+Pero Shorsh pidió que **los alumnos vean los horarios de su curso** (14:31). Si el sistema es solo
+LAN, eso lo ven en el tótem o en el aula, no desde el celular en la casa.
+
+**Las dos cosas se pueden**, pero hay que decir cuál gana dónde.
+
+### 3. Si la llave es el DNI, ¿qué se puede hacer con un DNI?
+
+Shorsh rechazó las contraseñas y tiene un buen motivo: **el DNI ya es único y todos se lo saben**
+(13:29). El costo es que *todos se lo saben* vale también para el DNI del compañero.
+
+Entonces hay que separar:
+
+| Con solo tipear un DNI | Con una persona del CFP adelante |
+|---|---|
+| Marcar la llegada | Ver o cambiar la ficha de un alumno |
+| Ver cómo voy con asistencia | Cargar o corregir asistencia de otro |
+| Ver los horarios de mi curso | Ver la lista completa del curso |
+
+**Sin decidir.** Es la primera vez en el curso que aparece esto: la seguridad no es una función que
+se agrega, es una consecuencia de una decisión de diseño que ya tomamos.
+
+### 4. El bot del SiGeS es otro proyecto, y es el que sigue
+
+Lo pidieron ellos (19:08) y **ya está prototipado**. Pero no es parte del sistema de asistencias:
+es **el proyecto que arranca apenas termine este**, y se alimenta de él — carga en el SiGeS los
+datos que el sistema ya tiene.
+
+Conviene decirlo en voz alta en la reunión: no para bajarle el precio, sino al revés. Es lo que
+más trabajo manual les saca, y por eso va primero en la fila de lo que viene después.
+
+---
+
 ## Qué hacemos con esto
 
-Lo llevamos a la reunión con todos y lo recorremos caso por caso. Cada vez que
-alguien diga *"no, eso no es así"*, ganamos.
+Lo llevamos a la reunión con todos y lo recorremos **rol por rol**, con los chips de arriba. Cada
+vez que alguien diga *"no, eso no es así"*, ganamos.
 
-Cuando esté corregido, esto **es el enunciado del proyecto**: la lista de lo que el
-sistema tiene que hacer, escrita con las palabras de quienes lo van a usar.
+Cuando esté corregido, esto **es el enunciado del proyecto**: la lista de lo que el sistema tiene
+que hacer, escrita con las palabras de quienes lo van a usar.
