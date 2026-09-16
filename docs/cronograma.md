@@ -197,10 +197,10 @@
 | Vie 7/8 | Práctica en la plataforma: `print`, variables, `input` y condicionales | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/) |
 | Mié 12/8 | Práctica en la plataforma: listas y condicionales + **Mini Parcial** | [📄](./clases/bloque_1_fundamentos/mini_parcial.md) |
 | Vie 14/8 | Práctica en la plataforma: **bucles** (`while` y `for`) | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bucles/) |
-| Mié 19/8 | Resolución de dudas sobre los ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
-| Vie 21/8 | Consulta y resolución de ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
+| Mié 19/8 | Resolución de dudas sobre los ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/) |
+| Vie 21/8 | Consulta y resolución de ejercicios | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/) |
 | Mié 26/8 | **Elicitación de requerimientos**: lluvia de ideas sobre el sistema y preparación de la demo | [🗺️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/proyecto/) |
-| Vie 28/8 | Consultas sobre el **sistema de asistencias** y sobre los ejercicios de la plataforma. Se firmaron el acta por el **cambio de horario de los viernes** y la autorización de la **salida educativa a Nerdearla**. *(Archivos quedó para más adelante.)* | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/al-dia/) |
+| Vie 28/8 | Consultas sobre el **sistema de asistencias** y sobre los ejercicios de la plataforma. Se firmaron el acta por el **cambio de horario de los viernes** y la autorización de la **salida educativa a Nerdearla**. *(Archivos quedó para más adelante.)* | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/) |
 
 ### 🗺️ Relevamiento del Sistema de Asistencias
 

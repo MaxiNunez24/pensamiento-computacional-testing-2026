@@ -11,10 +11,20 @@ hero:
     # como sí hace con el sidebar. Un "/clases/..." acá apunta a la raíz del
     # dominio y da 404 en producción. En el cuerpo de la página, en cambio, se
     # usa `import.meta.env.BASE_URL` (constante `b` más abajo).
-    - text: Empezar acá
-      link: /pensamiento-computacional-testing-2026/ejercicios/clases/como-usar-esto/
+    # El botón grande es el camino: contesta "¿por dónde sigo?", que es lo que
+    # viene a buscar el que ya sabe usar la plataforma. Para el que entra por
+    # primera vez está el de al lado, y además el :::tip del final.
+    #
+    # Los textos de los botones son el TÍTULO de la página a la que van, para
+    # que el que hace clic caiga en algo que se llama igual a lo que tocó.
+    - text: Seguir el camino
+      link: /pensamiento-computacional-testing-2026/ejercicios/camino/
       icon: right-arrow
       variant: primary
+    - text: Cómo usar esta plataforma
+      link: /pensamiento-computacional-testing-2026/ejercicios/clases/como-usar-esto/
+      icon: open-book
+      variant: minimal
     - text: Ver la teoría
       link: /pensamiento-computacional-testing-2026/
       icon: open-book
@@ -40,7 +50,8 @@ teoría; si querés **practicarlo**, estás en el lugar correcto.
   <Card title="🎮 La práctica (acá)">
     Los ejercicios de cada clase, con Python que corre en esta misma página.
 
-    <a href={b + 'clases/como-usar-esto/'}>Cómo usar la plataforma →</a>
+    <a href={b + 'camino/'}>🧭 Por dónde empezar →</a>
+    <br /><a href={b + 'clases/como-usar-esto/'}>Cómo usar la plataforma →</a>
     <br /><a href={b + 'probador/'}>🧪 Probador libre →</a>
   </Card>
 </CardGrid>

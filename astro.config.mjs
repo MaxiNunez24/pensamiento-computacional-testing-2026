@@ -80,10 +80,15 @@ export default defineConfig({
       sidebar: [
         { label: '🏠 Inicio', link: '/' },
         { label: '👋 Cómo usar esta plataforma', link: '/clases/como-usar-esto/' },
-        // Arriba de todo a propósito: es lo que hay que mirar primero mientras
-        // el grupo esté atrasado. Se tilda sola leyendo el progreso guardado.
+        // Arriba de todo a propósito: es la vista del curso en el orden en que
+        // se da, y se tilda sola leyendo el progreso guardado.
+        //
+        // Acá abajo estaba "✅ Ponerse al día" (el plan de los 27 ejercicios
+        // mínimos hasta el 4/9). Se sacó el 15/9: el grupo llegó al día, así
+        // que la página quedó sin nadie a quien servirle. Lo que contestaba
+        // —"¿por dónde sigo?"— lo contesta el camino, y mejor, porque son
+        // TODAS las clases y no un recorte con fecha de vencimiento.
         { label: '🧭 Por dónde empezar', link: '/camino/' },
-        { label: '✅ Ponerse al día', link: '/al-dia/' },
         { label: '🗺️ El proyecto, por partes', link: '/proyecto/' },
         { label: '📋 Tablero del proyecto', link: '/tablero/' },
         // Va junto al tablero porque son las dos pantallas compartidas:

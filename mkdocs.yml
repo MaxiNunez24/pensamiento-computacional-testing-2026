@@ -39,9 +39,11 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  # Casillas "- [ ]" de verdad, para la página de puesta al día.
+  # Casillas "- [ ]" de verdad, en cualquier página que las use.
   # clickable_checkbox: se pueden tildar en pantalla (no se guardan al recargar,
-  # pero sirven para ir marcando mientras se resuelve).
+  # pero sirven para ir marcando mientras se trabaja).
+  # (Nació para la página de puesta al día, que se sacó el 15/9 cuando el grupo
+  #  llegó al día. La extensión queda: no cuesta nada y las casillas se usan.)
   - pymdownx.tasklist:
       custom_checkbox: true
       clickable_checkbox: true
@@ -58,6 +60,10 @@ plugins:
   # evita romperle el link a alguien que lo tenía guardado.
   - redirects:
       redirect_maps:
+        # "Ponerse al día" se sacó el 15/9 (el grupo llegó al día). No tiene
+        # reemplazo de este lado —lo que contestaba, "¿por dónde sigo?", vive en
+        # la plataforma de ejercicios—, así que el link viejo cae en la home.
+        'al_dia.md': 'index.md'
         'clases/01_introduccion.md': 'clases/introduccion/01_introduccion.md'
         'clases/02_que_es_programar.md': 'clases/introduccion/02_que_es_programar.md'
         'clases/instalacion/instalacion_herramientas.md': 'clases/bloque_1_fundamentos/instalacion_herramientas.md'
@@ -101,7 +107,7 @@ nav:
   # Sitio hermano: la plataforma interactiva (Astro), publicada en /ejercicios/
   # del mismo GitHub Pages. Va como link absoluto porque no es una página de MkDocs.
   - 🧪 Ejercicios interactivos: https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/
-  - 📚 Clases: 
+  - 📚 Clases:
     - 📝 Índice: clases/clases.md
     - 🧑‍🏫 Introducción: clases/introduccion/01_introduccion.md
     - 🧑‍💻 ¿Qué es programar?: clases/introduccion/02_que_es_programar.md
@@ -163,7 +169,6 @@ nav:
         - 🔗 Herencia y polimorfismo: clases/bloque_4_poo/poo_herencia.md
   # Adelanto del proyecto: el prototipo es un .html suelto que MkDocs copia tal
   # cual al sitio (solo procesa los .md). Vive en docs/proyecto/.
-  - ✅ Ponerse al día: al_dia.md
   - 🔭 Adelanto del proyecto: proyecto/index.md
   - 🗃️​ Material de apoyo:
     - 📝 Índice: material_apoyo/material_apoyo.md
