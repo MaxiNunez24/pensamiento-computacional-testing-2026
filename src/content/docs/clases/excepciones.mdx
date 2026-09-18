@@ -1,0 +1,300 @@
+---
+title: Excepciones — cuando algo sale mal
+description: "Qué es una excepción, cómo atajarla con try/except para que el programa no se caiga, y cómo levantar las tuyas con raise para que un Alumno con el DNI roto directamente no pueda existir."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+## El programa se cae
+
+Esto ya te pasó muchas veces:
+
+```python
+edad = int("doce")
+```
+
+```text
+Traceback (most recent call last):
+  File "main.py", line 1, in <module>
+ValueError: invalid literal for int() with base 10: 'doce'
+```
+
+El programa se frena ahí, en esa línea, y no sigue. Lo que Python está diciendo es: **"me pediste
+algo que no puedo hacer"**. Eso se llama una **excepción**.
+
+Hasta ahora, cuando aparecía una, la solución era arreglar el código. Pero en el sistema del CFP
+los datos **no los escribimos nosotros**: los escriben treinta personas en un formulario, y alguna
+va a poner *"doce"* donde iba un número. El programa no puede caerse cada vez que pasa eso.
+
+## Las que ya conocés
+
+Cada excepción tiene **un nombre**, y el nombre ya te dice qué pasó:
+
+| Excepción | Cuándo aparece | Ejemplo |
+|---|---|---|
+| `ValueError` | El tipo está bien, pero **el valor no sirve** | `int("doce")` |
+| `TypeError` | Mezclaste **tipos** que no van juntos | `"Tenés " + 3` |
+| `KeyError` | Esa **clave** no está en el diccionario | `alumno["apelido"]` |
+| `IndexError` | Esa **posición** no existe en la lista | `[1, 2, 3][10]` |
+| `ZeroDivisionError` | Dividiste por **cero** | `presentes / 0` |
+
+<OpcionMultiple titulo="Chequeo: ¿cuál es?" opciones={[
+  { texto: "KeyError", correcta: true, explicacion: "Eso: le pediste al diccionario una clave que no tiene. Fijate que es un error de tipeo: 'apelido' con una sola l." },
+  { texto: "ValueError", explicacion: "ValueError es cuando un valor no sirve, como int('doce'). Acá el problema es que la clave no existe." },
+  { texto: "IndexError", explicacion: "IndexError es de las listas, cuando la posición no existe. En un diccionario, lo que no existe es la clave." },
+]}>
+`alumno = {"dni": "30111222", "apellido": "Perez"}` y después `alumno["apelido"]`. ¿Qué excepción aparece?
+</OpcionMultiple>
+
+## Atajarla: try y except
+
+`try` quiere decir *"intentá"*. Se pone alrededor de lo que puede salir mal, y abajo, en `except`,
+lo que hay que hacer **si sale mal**:
+
+```python
+texto = "doce"
+try:
+    edad = int(texto)
+    print("Tiene", edad, "años")
+except ValueError:
+    print("Eso no es un número")
+```
+
+Si `int()` puede, se sigue normal y el `except` no se ejecuta. Si no puede, **Python salta directo
+al `except`** —lo que quedaba del `try` no se ejecuta— y el programa **sigue vivo**.
+
+<EjercicioPython
+  titulo="Intentar, y si no se puede, None"
+  dificultad="🌱"
+  starter={`def a_numero(texto):
+    # devolvé el número entero que dice el texto,
+    # o None si el texto no es un número
+    pass
+`}
+  tests={`assert a_numero("25") == 25, "'25' es un número: tendría que devolver 25, el número, no el texto"
+assert a_numero("hola") is None, "'hola' no es un número: tendría que devolver None"
+assert a_numero("") is None, "un texto vacío tampoco es un número"
+assert a_numero("-3") == -3, "'-3' también es un número entero. Si usaste .isdigit(), por eso falla: el guion no es un dígito. Es justo el caso en que conviene INTENTAR la conversión con try, en vez de preguntar antes"
+print("¡Bien! Probás, y si Python dice que no, te quedás con None.")
+`}
+  pistas={[
+    'Adentro del <code>try</code> va lo que puede salir mal: <code>int(texto)</code>.',
+    'Si <code>int()</code> no puede, tira un <code>ValueError</code>. En el <code>except ValueError:</code> devolvés <code>None</code>.',
+  ]}
+>
+Completá `a_numero(texto)`: que devuelva **el número entero** que dice el texto, o **`None`** si no
+es un número. Que no se caiga nunca.
+</EjercicioPython>
+
+:::note[¿Por qué no preguntar antes con .isdigit()?]
+Porque `"-3".isdigit()` da `False`: el guion no es un dígito. Y sin embargo `int("-3")` anda
+perfecto. Preguntar antes te obliga a adivinar **todos** los casos; intentar le deja la pregunta a
+quien sabe la respuesta, que es el propio `int()`.
+:::
+
+## Nunca un except solo
+
+Se puede escribir `except:` sin nombre, y ataja **cualquier** excepción. Parece más cómodo. No lo es:
+
+```python
+def a_numero(texto):
+    try:
+        return int(textto)      # ← un error de tipeo: "textto"
+    except:
+        return None
+```
+
+Esa función **siempre** devuelve `None`, para cualquier texto. El error de tipeo tira un `NameError`,
+el `except:` lo ataja callado, y nadie se entera de que el programa está roto.
+
+<OpcionMultiple titulo="Chequeo: except con nombre" opciones={[
+  { texto: "Porque un except solo también ataja tus propios errores, y los esconde.", correcta: true, explicacion: "Tal cual. Nombrando la excepción (except ValueError:) atajás lo que esperabas, y cualquier otra cosa sigue avisando como siempre." },
+  { texto: "Porque except solo da error.", explicacion: "No da error: anda. Ese es justamente el problema, que anda demasiado bien y se come todo." },
+  { texto: "Es lo mismo, es por prolijidad.", explicacion: "No es lo mismo: el except sin nombre escondió un error de tipeo que hacía que la función no sirviera nunca." },
+]}>
+¿Por qué conviene escribir `except ValueError:` y no `except:` solo?
+</OpcionMultiple>
+
+## Levantar las tuyas: raise
+
+Hasta acá **atajaste** excepciones. Ahora al revés: las vas a **levantar** vos.
+
+En la clase del bot, el `Alumno` decía si estaba listo con `problemas()`. Pero hay datos que están
+tan rotos que el alumno **no debería ni existir**: un DNI con letras no es un alumno a medio cargar,
+es un error. Para eso está `raise`:
+
+```python
+class Alumno:
+    def __init__(self, dni, apellido, nombre):
+        if not dni.isdigit():
+            raise ValueError("el DNI tiene que ser solo números")
+        self.dni = dni
+```
+
+`raise` **corta el `__init__` ahí mismo**. El objeto no llega a crearse, y quien lo quiso crear
+recibe un `ValueError` con tu mensaje. Es la misma excepción que tira `int("doce")`, porque es el
+mismo problema: el valor no sirve.
+
+<EjercicioPython
+  titulo="El Alumno que no acepta cualquier DNI"
+  dificultad="🌿"
+  starter={`class Alumno:
+    def __init__(self, dni, apellido, nombre):
+        # si el DNI no es solo números, o no tiene 7 u 8,
+        # que NO se cree el alumno: levantá un ValueError con un mensaje que diga DNI
+        self.dni = dni
+        self.apellido = apellido
+        self.nombre = nombre
+`}
+  tests={`a = Alumno("30111222", "Perez", "Ana")
+assert a.dni == "30111222", "con un DNI bien escrito, el alumno se tiene que crear normalmente"
+try:
+    Alumno("30.111.222", "Perez", "Ana")
+    raise AssertionError("con el DNI '30.111.222' el alumno se creó igual. Si avisaste con print, el aviso sale pero el programa sigue como si nada: raise es lo que FRENA la creación")
+except ValueError as e:
+    assert "DNI" in str(e), f"el mensaje del error tiene que decir DNI, para que quien lo lea sepa qué dato estaba mal. Dijo: {e}"
+except AssertionError:
+    raise
+except Exception as e:
+    raise AssertionError(f"levantaste {type(e).__name__}: conviene ValueError, que es la que se usa cuando un VALOR no sirve. Así quien la ataje sabe qué pasó")
+try:
+    Alumno("1234", "Gomez", "Beto")
+    raise AssertionError("un DNI de 4 números tampoco sirve: los DNI tienen 7 u 8")
+except ValueError:
+    pass
+Alumno("1234567", "Paz", "Mateo")
+print("¡Listo! Con raise, un Alumno con el DNI roto directamente no puede existir.")
+`}
+  pistas={[
+    'Es el mismo control del DNI de la clase del bot. Lo que cambia es qué hacés si falla: en vez de anotarlo en una lista, frenás todo.',
+    '<code>raise ValueError("el mensaje")</code> corta el <code>__init__</code> ahí mismo: el alumno no llega a crearse.',
+  ]}
+>
+Hacé que el `Alumno` **no se pueda crear** con un DNI roto: si no es solo números, o no tiene 7 u
+8, levantá un **`ValueError`** con un mensaje que diga **DNI**.
+</EjercicioPython>
+
+## Atajar, anotar y seguir
+
+Con el `Alumno` que ya no acepta cualquier cosa, falta lo último: que **un alumno roto no frene a
+los demás**. Es lo que hace el bot: los que están bien se cargan, y los rotos quedan anotados con su
+motivo para que los mire una persona.
+
+El truco es `except ... as e`: además de atajar la excepción, **te la guarda** en `e`, con su
+mensaje adentro.
+
+```python
+try:
+    alumno = Alumno("40.000.010", "Sosa", "Camila")
+except ValueError as e:
+    print("No se pudo:", e)     # No se pudo: el DNI tiene que ser solo números
+```
+
+<EjercicioPython
+  titulo="Que uno roto no frene a todos"
+  dificultad="🌿"
+  datos={`class Alumno:
+    def __init__(self, dni, apellido, nombre):
+        if not dni.isdigit() or len(dni) not in (7, 8):
+            raise ValueError(f'el DNI "{dni}" tiene que ser solo números, 7 u 8')
+        self.dni = dni
+        self.apellido = apellido
+        self.nombre = nombre
+`}
+  starter={`def inscribir_todos(filas):
+    """filas es una lista de tuplas (dni, apellido, nombre).
+    Devolvé dos listas: los Alumno que se pudieron crear,
+    y los mensajes de error de los que no."""
+    inscriptos = []
+    errores = []
+    for dni, apellido, nombre in filas:
+        # creá el Alumno; si levanta ValueError, guardá el mensaje y seguí
+        pass
+    return inscriptos, errores
+`}
+  tests={`filas = [("30111222", "Perez", "Ana"), ("40.000.010", "Sosa", "Camila"), ("28999888", "Gomez", "Beto")]
+try:
+    inscriptos, errores = inscribir_todos(filas)
+except ValueError:
+    raise AssertionError("tu función se frenó en Camila, la del DNI con puntos, y Beto nunca se inscribió. Atrapá el error ADENTRO del for, así uno roto no frena a los demás")
+assert len(inscriptos) == 2, f"se tendrían que haber inscripto 2 (Ana y Beto), y hay {len(inscriptos)}"
+assert all(isinstance(a, Alumno) for a in inscriptos), "en inscriptos van objetos Alumno"
+assert [a.apellido for a in inscriptos] == ["Perez", "Gomez"], "los inscriptos tienen que ser Perez y Gomez, en ese orden"
+assert len(errores) == 1, f"hubo un solo alumno roto, y la lista de errores tiene {len(errores)}"
+assert "DNI" in str(errores[0]), f"en errores va el mensaje de lo que pasó, el que trae la excepción: {errores[0]!r}"
+print("¡Eso! Igual que el bot: los que están bien se inscriben, y los rotos quedan anotados con su motivo.")
+`}
+  pistas={[
+    'El <code>try</code> va <strong>adentro</strong> del <code>for</code>, alrededor de crear el alumno. Si fuera afuera, el primer error cortaría el <code>for</code> entero.',
+    '<code>except ValueError as e:</code> te deja el error en <code>e</code>. Su mensaje es <code>str(e)</code>.',
+  ]}
+>
+Completá `inscribir_todos(filas)`: que cree un `Alumno` por fila, y que **uno roto no frene a los
+demás**. Los que se pudieron crear van a `inscriptos`; el mensaje de los que no, a `errores`.
+
+El `Alumno` que levanta `ValueError` ya está hecho (es el del ejercicio anterior).
+</EjercicioPython>
+
+## La base también dice que no
+
+En la clase de SQLite, para no repetir un DNI, **buscabas antes** de insertar. Hay otra forma:
+**intentar el `INSERT`** y que la base te diga que no. Cuando algo rompe una regla de la tabla —como
+repetir un `PRIMARY KEY`—, `sqlite3` levanta **`sqlite3.IntegrityError`**.
+
+<EjercicioPython
+  titulo="Que la base diga que no"
+  dificultad="🌿"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT)")
+    return con
+`}
+  starter={`import sqlite3
+
+def agregar(con, dni, apellido, nombre):
+    # intentá el INSERT. Si el DNI ya estaba, la base levanta
+    # sqlite3.IntegrityError: atrapala y devolvé False. Si entró, True.
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES (?, ?, ?)",
+                (dni, apellido, nombre))
+`}
+  tests={`import sqlite3
+con = base_nueva()
+assert agregar(con, "30111222", "Perez", "Ana") is True, "el primero tiene que entrar y devolver True"
+try:
+    otra = agregar(con, "30111222", "Perez", "Ana")
+except sqlite3.IntegrityError:
+    raise AssertionError("el DNI ya estaba, la base levantó IntegrityError y nadie la atajó. Rodeá el INSERT con try y atrapá sqlite3.IntegrityError")
+assert otra is False, "el repetido tiene que devolver False"
+assert con.execute("SELECT COUNT(*) FROM alumnos").fetchone()[0] == 1, "en la tabla tiene que haber uno solo"
+print("¡Bien! En la clase de SQLite buscabas antes de insertar. Esta es la otra forma: intentar, y que la base diga que no.")
+`}
+  pistas={[
+    'El <code>INSERT</code> va adentro del <code>try</code>, y si sale bien, <code>return True</code> justo después.',
+    'La excepción se llama <code>sqlite3.IntegrityError</code>: es la que levanta la base cuando algo rompe una regla de la tabla, como repetir un <code>PRIMARY KEY</code>.',
+  ]}
+>
+Completá `agregar(con, dni, apellido, nombre)`: que **intente** el `INSERT` y devuelva `True` si
+entró, o `False` si la base dijo que no porque el DNI ya estaba.
+</EjercicioPython>
+
+<OpcionMultiple titulo="Chequeo: buscar antes, o intentar" opciones={[
+  { texto: "Intentar: entre que buscás y que insertás, otra preceptora pudo haber insertado al mismo alumno.", correcta: true, explicacion: "Eso. Con dos personas usando el sistema a la vez, 'no estaba cuando busqué' no garantiza que 'no esté cuando inserto'. La base, en cambio, controla en el momento justo. Es el mismo argumento de por qué usamos una base y no archivos." },
+  { texto: "Buscar antes, porque es más prolijo.", explicacion: "Con una sola persona anda bien. Con dos a la vez, entre tu búsqueda y tu INSERT la otra pudo haber insertado al mismo alumno." },
+  { texto: "Da igual.", explicacion: "Con una persona sola sí, casi. Con dos a la vez, no: buscar antes deja un hueco." },
+]}>
+En el CFP van a cargar alumnos varias personas al mismo tiempo. ¿Qué conviene para no repetir un DNI?
+</OpcionMultiple>
+
+## Para llevar
+
+- Una **excepción** es Python diciendo *"no puedo hacer esto"*. Su **nombre** dice qué pasó.
+- **`try`** alrededor de lo que puede fallar; **`except NombreDelError:`** con lo que hay que hacer si
+  falla. El programa sigue vivo.
+- **Nunca `except:` solo**: se come tus propios errores y los esconde.
+- **`raise ValueError("...")`** frena todo cuando un dato no sirve. Un `Alumno` con el DNI roto no
+  llega a existir.
+- **`except ... as e`** te guarda la excepción: con eso anotás el motivo y seguís con el siguiente.
+- La base también levanta las suyas: **`sqlite3.IntegrityError`** cuando se rompe una regla de la tabla.
