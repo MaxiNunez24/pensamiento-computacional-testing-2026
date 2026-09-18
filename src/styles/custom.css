@@ -838,6 +838,10 @@ body.pc-resizing * {
   font-size: 0.88rem;
   display: flex; flex-direction: column; gap: 0.45rem;
 }
+/* Sin esto, el display:flex de arriba le gana al atributo hidden y el panel
+   queda siempre a la vista: "Cancelar" lo escondía en el JS pero no en la
+   pantalla. Es el mismo arreglo que .ejercicio__aviso-datos[hidden]. */
+.ejercicio__asistente[hidden] { display: none; }
 .ejercicio .ejercicio__asistente > *,
 .ejercicio .ejercicio__asistente-acciones > * { margin-top: 0; }
 .ejercicio__asistente p { margin: 0; line-height: 1.5; }
