@@ -68,33 +68,45 @@
 
 ---
 
-## 🛠️ Bloque 3 — Persistencia y Versionado *(en curso)* { #persistencia }
+## 🛠️ Bloque 3 — Versionado ✅ { #persistencia }
 
 - [🌳 Git y GitHub](./bloque_3_persistencia/git_github.md)
-- [💾 Manejo de archivos](./bloque_3_persistencia/archivos.md)
-- [📋 JSON](./bloque_3_persistencia/json.md)
+
+!!! note "Archivos y JSON pasaron a optativos"
+    Están abajo, en **🎁 Para ir más allá**. Lo que sí hace falta de archivos —leer la planilla del
+    formulario— se ve con el bot del SiGeS, cuando lo necesitamos.
 
 ---
 
-## 🏗️ Bloque 4 — POO y Primer Proyecto *(próximamente)*
+## 🏗️ Bloque 4 — POO y Primer Proyecto *(en curso)*
 
 - [🧬 POO I — Clases, objetos, atributos y métodos](./bloque_4_poo/poo_1.md)
 - [🛡️ POO II — Encapsulamiento y métodos especiales](./bloque_4_poo/poo_2.md)
-- [🔗 Herencia y polimorfismo](./bloque_4_poo/poo_herencia.md)
-- 🚀 Sistema de Asistencias del CFP (CLI con persistencia JSON)
+- [🤖 El bot del SiGeS](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/){ target=_blank } — el `Alumno` decide quién se carga · VS Code y entorno virtual
+- 🗃️ SQLite: guardar los datos en una base de datos
+- 🚀 Sistema de Asistencias del CFP (CLI, guardando en SQLite)
 
 ---
 
 ## 🌐 Bloque 5 — Web y Segundo Proyecto *(segundo semestre)*
 
 - 🌐 Cómo funciona la web
-- 🍶 Flask I, II y III
+- 🍶 Flask I, II y III — con Jinja, y accesible desde el primer template
 - 🚀 Migración del Sistema de Asistencias a web
-- 🤖 Bot de carga en SiGes con Playwright (segundo proyecto)
+- 🤖 El bot del SiGeS, completo: contra el sistema real y con los datos del sistema
 
 ---
 
-## 🤖 Bloque 6 — IA y Proyecto Final *(segundo semestre)*
+## 🧪 Bloque 6 — Testing *(segundo semestre)*
+
+- Testing con `pytest`: unitarias, de integración y E2E
+- Tests unitarios, fixtures y parametrización
+- Edge cases y debugging
+- ♿ Probar la accesibilidad: teclado, zoom, WAVE y Lighthouse
+
+---
+
+## 🤖 Bloque 7 — IA y Proyecto Final *(segundo semestre)*
 
 - 🤖 Introducción a IA y modelos de lenguaje
 - 🔌 Consumir APIs de IA desde Python
@@ -102,8 +114,14 @@
 
 ---
 
-## 🧪 Testing *(integrado con los proyectos)*
+## 🎁 Para ir más allá
 
-- Testing con `pytest`
-- Tests unitarios, fixtures y parametrización
-- Edge cases y debugging
+Las optativas: no hacen falta para el proyecto, y **están buenas igual**. Van en el mismo orden
+en que se darían en el curso. [Qué hay y por qué](./para_ir_mas_alla/index.md).
+
+- [💾 Manejo de archivos](./bloque_3_persistencia/archivos.md)
+- [📋 JSON](./bloque_3_persistencia/json.md)
+- [🔗 Herencia y polimorfismo](./bloque_4_poo/poo_herencia.md)
+- 🧠 Lógica y eficiencia — [en la plataforma](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/logica-pensar/){ target=_blank }
+- [📊 Aplicaciones de Python](./para_ir_mas_alla/aplicaciones.md) 🚧 *en preparación*
+- [🔗 Referencias](./para_ir_mas_alla/referencias.md)

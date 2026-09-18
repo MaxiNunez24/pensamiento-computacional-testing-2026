@@ -141,24 +141,12 @@ export default defineConfig({
             { label: '🎰 Bingo — integrador', link: '/clases/bingo/' },
           ],
         },
-        // Va acá y no antes: los ejercicios de eficiencia se resuelven con
-        // funciones, listas, sets y diccionarios — o sea, todo el Bloque 2. Es
-        // el primer momento del curso en que se puede comparar DOS soluciones
-        // correctas y discutir cuál conviene.
+        // Archivos y JSON pasaron a "Para ir más allá" el 18/9: el sistema
+        // guarda en SQLite desde el principio. Leer un CSV se ve con el bot.
         {
-          label: '🧠 Lógica y eficiencia',
-          items: [
-            { label: '✏️ Pensar antes de escribir', link: '/clases/logica-pensar/' },
-            { label: '⏱️ Eficiencia', link: '/clases/logica-eficiencia/' },
-            { label: '🏁 Desafíos de optimización', link: '/clases/logica-desafios/' },
-          ],
-        },
-        {
-          label: '🛠️ Bloque 3 — Persistencia',
+          label: '🛠️ Bloque 3 — Versionado',
           items: [
             { label: '🐙 Git desde VS Code', link: '/clases/git-vscode/' },
-            { label: '💾 Manejo de archivos', link: '/clases/archivos/' },
-            { label: '📋 JSON', link: '/clases/json/' },
           ],
         },
         {
@@ -172,7 +160,6 @@ export default defineConfig({
           items: [
             { label: '🧬 POO I — Clases y objetos', link: '/clases/poo-1/' },
             { label: '🛡️ POO II — Encapsulamiento', link: '/clases/poo-2/' },
-            { label: '🔗 Herencia y polimorfismo', link: '/clases/poo-herencia/' },
           ],
         },
         // Va pegado a POO a propósito: el Alumno que carga el bot es la misma
@@ -187,6 +174,24 @@ export default defineConfig({
           label: '🧪 Testing',
           items: [
             { label: '🧪 Testing I — probar en serio', link: '/clases/testing-1/' },
+          ],
+        },
+        // 🎁 Las optativas: abajo de todo y PLEGADAS, para que no distraigan
+        // del proyecto. En el orden en que se darían en el curso. Una optativa
+        // nueva es una página más y una línea acá.
+        {
+          label: '🎁 Para ir más allá',
+          collapsed: true,
+          items: [
+            { label: '📝 Qué hay acá', link: '/mas-alla/' },
+            { label: '💾 Manejo de archivos', link: '/clases/archivos/' },
+            { label: '📋 JSON', link: '/clases/json/' },
+            { label: '🔗 Herencia y polimorfismo', link: '/clases/poo-herencia/' },
+            { label: '✏️ Pensar antes de escribir', link: '/clases/logica-pensar/' },
+            { label: '⏱️ Eficiencia', link: '/clases/logica-eficiencia/' },
+            { label: '🏁 Desafíos de optimización', link: '/clases/logica-desafios/' },
+            { label: '📊 Aplicaciones de Python', link: '/mas-alla/aplicaciones/', badge: { text: 'en preparación', variant: 'caution' } },
+            { label: '🔗 Referencias', link: '/mas-alla/referencias/' },
           ],
         },
         { label: '🧪 Probador libre', link: '/probador/' },

@@ -250,9 +250,11 @@ Pero para Python **son todos lo mismo**: archivos con código que podés importa
       `input(...)` o el juego al nivel de arriba (sin estar dentro de una función), ese código
       **se ejecuta apenas lo importás**. Para evitarlo se usa una línea especial,
       `if __name__ == "__main__":`, que vamos a ver en su propia clase.
-    - **Carpetas y paquetes** (organizar muchos módulos en subcarpetas) y **entornos virtuales**
-      (`venv`, para aislar las librerías de cada proyecto) también tienen su clase aparte. Son el
-      siguiente escalón cuando tus proyectos crezcan.
+    - **Carpetas y paquetes** (organizar muchos módulos en subcarpetas) son el siguiente escalón
+      cuando tus proyectos crezcan.
+    - Los **entornos virtuales** (`venv`, para aislar las librerías de cada proyecto) los usamos
+      de verdad en la clase del [bot del SiGeS](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/#el-entorno-virtual){ target=_blank },
+      que es la primera vez que instalamos una librería que no viene con Python.
 
 ---
 

@@ -1,0 +1,35 @@
+---
+title: Para ir más allá
+description: "Las optativas del curso: no hacen falta para el proyecto, y están buenas igual. En el orden en que se darían en el curso."
+---
+
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+:::tip[Las optativas]
+**No hacen falta para el proyecto, y están buenas igual.** Si aprendiste variables, bucles,
+funciones y objetos, todo lo que hay acá está a una clase de distancia.
+:::
+
+Van **en el mismo orden en que se darían en el curso**, así cada una usa lo de la anterior.
+
+<CardGrid>
+  <LinkCard title="💾 Manejo de archivos" href={b + 'clases/archivos/'} description="Que los datos no se pierdan al cerrar el programa." />
+  <LinkCard title="📋 JSON" href={b + 'clases/json/'} description="Guardar diccionarios y listas enteros, con su forma. Es además el idioma de las APIs." />
+  <LinkCard title="🔗 Herencia y polimorfismo" href={b + 'clases/poo-herencia/'} description="Clases que reciben lo de otra y lo cambian." />
+  <LinkCard title="✏️ Pensar antes de escribir" href={b + 'clases/logica-pensar/'} description="Cómo encarar un ejercicio que no sabés resolver." />
+  <LinkCard title="⏱️ Eficiencia" href={b + 'clases/logica-eficiencia/'} description="Dos soluciones correctas, y cuál conviene." />
+  <LinkCard title="🏁 Desafíos de optimización" href={b + 'clases/logica-desafios/'} description="Para quien quiera medirse." />
+  <LinkCard title="📊 Aplicaciones de Python 🚧" href={b + 'mas-alla/aplicaciones/'} description="numpy, pandas, matplotlib, yfinance y openpyxl. En preparación." />
+  <LinkCard title="🔗 Referencias" href={b + 'mas-alla/referencias/'} description="Adónde seguir por tu cuenta. Todo gratis." />
+</CardGrid>
+
+:::note[¿Por qué Archivos y JSON están acá, si antes eran clases del curso?]
+Porque el sistema de asistencias guarda los datos en una **base de datos** desde el principio.
+Pasar primero por archivos era un desvío que después había que deshacer.
+
+Lo único de archivos que el proyecto sí necesita —**leer la planilla del formulario de
+inscripción**, que es un CSV— lo vemos con <a href={b + 'clases/bot-siges/'}>el bot del SiGeS</a>,
+justo cuando hace falta.
+:::

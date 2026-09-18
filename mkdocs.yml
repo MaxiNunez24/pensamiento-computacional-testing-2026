@@ -159,14 +159,23 @@ nav:
         - 🔍 Lectura y corrección de código: clases/bloque_2_funciones_y_colecciones/lectura_codigo.md
         - 🧠 Del enunciado al programa: clases/bloque_2_funciones_y_colecciones/del_enunciado_al_programa.md
         - 🎲 Bingo: clases/bloque_2_funciones_y_colecciones/bingo.md
-      - 💾 Persistencia:
+      - 🐙 Versionado:
         - 🐙 Git y GitHub: clases/bloque_3_persistencia/git_github.md
-        - 📁 Archivos: clases/bloque_3_persistencia/archivos.md
-        - 📄 JSON: clases/bloque_3_persistencia/json.md
       - 🏗️ POO:
         - 🧬 POO I — Clases y objetos: clases/bloque_4_poo/poo_1.md
         - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/bloque_4_poo/poo_2.md
-        - 🔗 Herencia y polimorfismo: clases/bloque_4_poo/poo_herencia.md
+        - "🤖 El bot del SiGeS": https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/
+    # Las optativas, al mismo nivel que "Python Básico". Archivos, JSON y
+    # Herencia se MOVIERON acá el 18/9 (no están duplicadas). Una optativa
+    # nueva es un .md en clases/para_ir_mas_alla/ más una línea acá.
+    - 🎁 Para ir más allá:
+      - 📝 Qué hay acá: clases/para_ir_mas_alla/index.md
+      - 📁 Archivos: clases/bloque_3_persistencia/archivos.md
+      - 📄 JSON: clases/bloque_3_persistencia/json.md
+      - 🔗 Herencia y polimorfismo: clases/bloque_4_poo/poo_herencia.md
+      - "🧠 Lógica y eficiencia": https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/logica-pensar/
+      - 📊 Aplicaciones de Python: clases/para_ir_mas_alla/aplicaciones.md
+      - 🔗 Referencias: clases/para_ir_mas_alla/referencias.md
   # Adelanto del proyecto: el prototipo es un .html suelto que MkDocs copia tal
   # cual al sitio (solo procesa los .md). Vive en docs/proyecto/.
   - 🔭 Adelanto del proyecto: proyecto/index.md

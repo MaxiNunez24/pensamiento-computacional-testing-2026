@@ -31,11 +31,12 @@
 | Fecha | Hito |
 |-------|------|
 | ❄️ **22/7 – 1/8** | Receso invernal *(pasado)* |
-| 🔁 **Agosto** | Vuelta del receso: **repaso y práctica** en la plataforma, y cierre de **Archivos y JSON** |
-| 🏗️ **Septiembre** | **POO** y arranque del **Sistema de Asistencias** (primer proyecto, CLI) |
-| 🗺️ **Vie 18/9** | **Entrevistas con Directivos y Auxiliares** + reunión con **todos juntos**: se les presenta la planificación del sistema |
+| 🔁 **Agosto** | Vuelta del receso: **repaso y práctica** en la plataforma |
+| 🏗️ **Septiembre** | **POO**, el **bot del SiGeS** y el arranque del **Sistema de Asistencias**, todo en **VS Code y GitHub** |
+| 🗺️ **Vie 18/9** | **El equipo directivo**, 15 minutos: avalar lo relevado y cerrar el camino de la información. La **reunión con todos** queda para cuando haya algo andando para mostrar |
+| 🤖 **Mié 23/9** | **Demo del bot del SiGeS con un alumno real**, junto con preceptoría |
 | 🎉 **24 y 26/9** | **Nerdearla** — salida educativa al Ciudad Cultural Konex. (El evento va del 22 al 26; el 22 y 23 son online y lo presencial arranca el jueves 24.) |
-| ✅ **Mié 30/9** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en JSON |
+| ✅ **Fecha a confirmar** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en **SQLite** |
 | 🧪 **Oct** | **Testing** (teoría + `pytest` sobre el proyecto) y migración del sistema a **web (Flask)** |
 | 🚀 **Vie 6/11** | Tercer hito: **el sistema andando en la red del CFP**, usable desde el celular de cualquiera conectado al wifi del centro |
 | 🏆 **Vie 13/11** | **Expo CFP 2026** — presentamos el **Sistema de Asistencias** 🎪 |
@@ -56,23 +57,39 @@
     Modularización con **funciones** (parámetros, retorno, scope, `*args`/`**kwargs` a nivel
     concepto). Clases puente de repaso y lectura de código, e integrador (**Bingo**).
 
-!!! info "🛠️ Bloque 3 — Persistencia y Versionado"
-    Guardar y leer datos entre ejecuciones con **archivos y JSON**. Workflow básico de **Git y
-    GitHub** (init/add/commit/status/log/push/clone/pull) para versionar el código y continuarlo en
-    casa. Se introduce antes del primer proyecto.
+!!! info "🛠️ Bloque 3 — Versionado"
+    Workflow básico de **Git y GitHub** (init/add/commit/status/log/push/clone/pull) para versionar
+    el código y continuarlo en casa. Se introduce antes del primer proyecto.
+
+    **Archivos y JSON pasaron a optativos** (18/9). El sistema guarda en una base de datos desde el
+    principio, así que pasar primero por archivos era un desvío que después había que deshacer. Lo
+    que sí hace falta de archivos, **leer la planilla del formulario (un CSV)**, se ve con el bot del
+    SiGeS, justo cuando lo necesitan.
 
 !!! info "🏗️ Bloque 4 — POO y Primer Proyecto: Sistema de Asistencias"
-    **POO**: clases, objetos, atributos, métodos, `__init__`, encapsulamiento, `__str__`/`__repr__`,
-    herencia y polimorfismo. Primer **proyecto real**: el **Sistema de Asistencias del CFP**, que
-    reemplaza el flujo actual (formulario → planilla a mano). Se construye primero en **CLI** (para
-    clavar el dominio) y respeta el **formato oficial** del centro. **Testing con `pytest`** sobre
-    código propio, entrelazado con el proyecto.
+    **POO**: clases, objetos, atributos, métodos, `__init__`, encapsulamiento, `__str__`/`__repr__`.
+    *(Herencia y polimorfismo pasaron a optativos: en el CFP el rol es un dato de la persona, no una
+    subclase.)*
+
+    **El bot del SiGeS**: el `Alumno` de POO aprende a decir si está listo para cargarse. Se lee la
+    planilla de inscripción, se escriben los controles y el bot carga solo en un simulador. Se
+    trabaja en **VS Code**, con **entorno virtual** y librerías instaladas con `pip`.
+
+    Primer **proyecto real**: el **Sistema de Asistencias del CFP**, que reemplaza el flujo actual
+    (formulario → planilla a mano). Se construye primero en **CLI** (para clavar el dominio), guarda
+    en **SQLite** —que viene adentro de Python, no se instala— y respeta el **formato oficial** del
+    centro. Para practicar SQL, [aprendesql.dev](https://aprendesql.dev){ target=_blank }, de
+    midudev. **Testing con `pytest`** sobre código propio, entrelazado con el proyecto.
 
     👉 El prototipo del sistema ya se puede **[ver y probar](./proyecto/index.md)**.
 
 !!! info "🌐 Bloque 5 — Web y Segundo Proyecto: Bot SiGes"
     Cómo funciona la web (HTTP, request/response, rutas) y **Flask** (Jinja2, formularios). Se
-    **migra el Sistema de Asistencias a web**, refactorizando código propio. Después, el segundo
+    **migra el Sistema de Asistencias a web**, refactorizando código propio.
+
+    **Accesibilidad desde el primer template**: HTML con etiquetas que dicen qué es cada cosa, un
+    `<label>` en cada campo, contraste, y que la pantalla se pueda usar con **Tab**. No es un
+    agregado: el tótem de la entrada lo va a usar todo el CFP. Después, el segundo
     proyecto: un **Bot que automatiza la carga de alumnos en SiGes** con **Playwright**, tomando los
     datos ya cargados en Asistencias. Playwright sirve además para **testing E2E** — engancha con el
     módulo de Testing.
@@ -85,41 +102,36 @@
     por un test, y las pruebas de la app web. El **E2E con Playwright** cierra el bloque y se
     engancha con el Bot SiGes.
 
-!!! note "🎁 Bloque optativo — Para dónde sigue esto"
-    **Esto no entra en el año, y está bien que no entre.** Son las puertas que quedan abiertas con
-    lo que ya saben: si aprendiste variables, bucles, funciones y objetos, **todo lo de acá abajo
-    está a un tutorial de distancia**. La idea no es darlo, es que sepan que existe y que les
-    pertenece.
-
-    Si sobra tiempo después del proyecto y del testing, elegimos uno o dos entre todos.
-
-    **🧬 Herencia y polimorfismo.** Quedaron afuera del proyecto **a propósito**: en el CFP una
-    misma persona es preceptora *y* instructora, o maestra de apoyo *y* catequista, así que el rol
-    es un **dato** de la persona y no una subclase. Forzar una jerarquía ahí sería modelar mal.
-    Pero herencia existe, se usa muchísimo, y van a chocarla apenas abran el código de cualquier
-    librería.
-
-    **📊 pandas y numpy.** Sacar reportes de **la propia planilla de asistencia** que genera el
-    proyecto: porcentajes, faltas por mes, quién está por debajo del 85%. Es la continuación
-    natural del sistema, no un ejercicio inventado.
-
-    **📈 Datos del mundo real (yfinance y otras APIs).** Bajar precios de acciones, cotizaciones o
-    el clima con tres líneas y graficarlos. Es la forma más rápida de ver que Python sale de la
-    consola y toca el mundo.
-
-    **📉 matplotlib.** Los gráficos. Va de la mano con lo anterior: primero los datos, después la
-    imagen que los cuenta.
-
-    **📋 openpyxl.** Leer y escribir **planillas de Excel** desde Python. Para el CFP esto es oro:
-    media institución vive en planillas, y automatizarlas es la puerta de entrada más concreta que
-    hay.
-
-    **🧹 Otras que valen la pena.** Expresiones regulares (buscar patrones en texto), `datetime`
-    en serio, generar PDFs, y automatizar tareas repetitivas de la compu.
+    **La accesibilidad también se prueba**: recorrer la app solo con el teclado, con zoom al 200%,
+    y con **WAVE**, **Lighthouse** y el validador del W3C. Es un tipo de prueba más, con un criterio
+    que se puede verificar: la [Ley 26.653](http://servicios.infoleg.gob.ar/infolegInternet/anexos/175000-179999/175694/norma.htm){ target=_blank }
+    y las pautas **WCAG**.
 
 !!! info "🤖 Bloque 7 — IA y Proyecto Final"
     Qué es una **API de IA** y cómo consumirla desde Python; integrar modelos de lenguaje o visión.
     **Proyecto final original** a elección de cada alumno o equipo, presentado en la **Expo CFP**.
+
+!!! note "🎁 Para ir más allá — las optativas"
+    **No hacen falta para el proyecto, y están buenas igual.** Son las puertas que quedan abiertas
+    con lo que ya saben: si aprendiste variables, bucles, funciones y objetos, todo lo de acá está a
+    una clase de distancia. Van **en el orden en que se darían en el curso**, así cada una usa lo
+    de la anterior.
+
+    1. **💾 Archivos** — guardar y leer datos entre una ejecución y otra.
+    2. **📋 JSON** — guardar diccionarios y listas enteros, con su forma.
+    3. **🔗 Herencia y polimorfismo** — quedaron afuera del proyecto **a propósito**: en el CFP una
+       misma persona es preceptora *y* instructora, así que el rol es un **dato** de la persona y no
+       una subclase. Pero se usan muchísimo, y van a chocarlas apenas abran cualquier librería.
+    4. **🧠 Lógica y eficiencia** — pensar antes de escribir, y medir cuánto le cuesta a tu
+       solución.
+    5. **📊 Aplicaciones de Python** *(en preparación)* — **numpy** y **pandas** sobre la propia
+       planilla de asistencia del proyecto, **matplotlib** para los gráficos, **yfinance** para
+       datos del mundo real y **openpyxl** para las planillas de Excel, que es de lo que vive media
+       institución.
+    6. **🔗 Referencias** — roadmap.sh, y tres recursos gratis de midudev: aprendesql.dev,
+       alg0.dev e itsfree.dev.
+
+    Si sobra tiempo después del proyecto, elegimos una o dos entre todos.
 
 ---
 
@@ -216,6 +228,7 @@
 | Vie 4/9 | **Entrevistas con Instructor, Maestras de apoyo y Preceptores del CFP** | [🎤](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/entrevista/) |
 | Mié 9/9 | Resolución y corrección del **Mini Parcial** de los dos alumnos presentes, y charla sobre el mercado informático actual | [📄](./clases/bloque_1_fundamentos/mini_parcial.md) |
 | Vie 11/9 | 🚫 Sin clases (asueto por el **Día del Profesional de la Educación**) | |
+| Mié 16/9 | **POO I**: la clase como molde y los objetos como copias, `__init__`, `self`, métodos y `__str__`. Se resolvieron los dos primeros ejercicios de la clase. **Clase grabada en video** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/poo-1/) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.
