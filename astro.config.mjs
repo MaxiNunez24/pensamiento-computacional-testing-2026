@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightSidebarTopics from 'starlight-sidebar-topics';
 
 // Las dos mitades del curso comparten un mismo GitHub Pages:
 //   /pensamiento-computacional-testing-2026/            → MkDocs (teoría)
@@ -77,7 +78,20 @@ export default defineConfig({
       ],
       // El buscador (Pagefind), el dark mode y el botón de copiar código
       // vienen de fábrica con Starlight.
-      sidebar: [
+      // 🧭 El menú en dos temas (rama optativas-menu, para verlo antes de
+      // publicarlo): "El curso" con el sidebar de siempre, y "Para ir más
+      // allá" con las optativas en su propio menú. Arriba del sidebar se elige
+      // el tema. Plugin starlight-sidebar-topics 0.8.0: la 0.9 pide Starlight
+      // 0.42 y Astro 7, y acá estamos en 0.39 y 6.4.
+      plugins: [
+        starlightSidebarTopics(
+          [
+            {
+              id: 'curso',
+              label: 'El curso',
+              link: '/',
+              icon: 'open-book',
+              items: [
         { label: '🏠 Inicio', link: '/' },
         { label: '👋 Cómo usar esta plataforma', link: '/clases/como-usar-esto/' },
         // Arriba de todo a propósito: es la vista del curso en el orden en que
@@ -176,13 +190,16 @@ export default defineConfig({
             { label: '🧪 Testing I — probar en serio', link: '/clases/testing-1/' },
           ],
         },
-        // 🎁 Las optativas: abajo de todo y PLEGADAS, para que no distraigan
-        // del proyecto. En el orden en que se darían en el curso. Una optativa
-        // nueva es una página más y una línea acá.
-        {
-          label: '🎁 Para ir más allá',
-          collapsed: true,
-          items: [
+        { label: '🧪 Probador libre', link: '/probador/' },
+        { label: '💬 Soluciones de la clase', link: '/foro/' },
+              ],
+            },
+            {
+              id: 'mas-alla',
+              label: 'Para ir más allá',
+              link: '/mas-alla/',
+              icon: 'rocket',
+              items: [
             { label: '📝 Qué hay acá', link: '/mas-alla/' },
             { label: '💾 Manejo de archivos', link: '/clases/archivos/' },
             { label: '📋 JSON', link: '/clases/json/' },
@@ -192,10 +209,15 @@ export default defineConfig({
             { label: '🏁 Desafíos de optimización', link: '/clases/logica-desafios/' },
             { label: '📊 Aplicaciones de Python', link: '/mas-alla/aplicaciones/', badge: { text: 'en preparación', variant: 'caution' } },
             { label: '🔗 Referencias', link: '/mas-alla/referencias/' },
+              ],
+            },
           ],
-        },
-        { label: '🧪 Probador libre', link: '/probador/' },
-        { label: '💬 Soluciones de la clase', link: '/foro/' },
+          {
+            // Las páginas que no van en ningún menú a propósito: se llega por
+            // un link que se manda (el cuestionario) o son del profe.
+            exclude: ['/cuestionario', '/respuestas'],
+          },
+        ),
       ],
     }),
   ],
