@@ -122,6 +122,39 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
       data-enviar
       title="Enviar tu código al profe por email"
     >✉️ Enviar a mi profe</button>
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--asistente"
+      data-asistente
+      title="Abre el asistente del curso (Claude) con tu ejercicio"
+    >🤖 Asistente</button>
+  </div>
+
+  {/* El asistente: un panel y no un prompt(), para que el clic en "Copiar y
+      abrir" sea un gesto nuevo y el navegador deje abrir la ventana. Ver
+      scripts/asistente.ts. */}
+  <div class="ejercicio__asistente" data-asistente-panel hidden>
+    <p>
+      Esto abre <strong>Claude</strong> en una ventana nueva y <strong>copia un mensaje</strong> con
+      las instrucciones del asistente del curso. Allá, <strong>pegalo con Ctrl+V</strong> y mandalo.
+      El asistente te guía con pistas: no te da la respuesta hecha.
+    </p>
+    <label><input type="checkbox" data-a-codigo checked /> Mandarle la consigna y mi código</label>
+    <label><input type="checkbox" data-a-salida checked /> Mandarle lo último que me mostró (el error o la salida)</label>
+    <label class="ejercicio__asistente-q">
+      <span>¿Qué le querés preguntar? <em>(podés dejarlo vacío)</em></span>
+      <textarea data-a-pregunta rows="2" placeholder="Por ejemplo: no entiendo por qué me da este error"></textarea>
+    </label>
+    <div class="ejercicio__asistente-acciones">
+      <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-a-abrir>📋 Copiar y abrir Claude</button>
+      <button type="button" class="ejercicio__btn" data-a-cerrar>Cancelar</button>
+    </div>
+    <p class="ejercicio__asistente-listo" data-a-listo hidden>
+      ✓ <strong>Copiado.</strong> En la ventana de Claude, pegá con <strong>Ctrl+V</strong> y mandalo.
+      Si la ventana no se abrió, entrá vos a <strong>claude.ai</strong> y pegalo ahí.
+    </p>
+    <textarea class="ejercicio__asistente-respaldo" data-a-respaldo rows="6" readonly hidden
+              aria-label="El mensaje para el asistente: copialo con Ctrl+C"></textarea>
   </div>
 
   {/* Plan B del envío: si el celular o la PC no tienen app de correo, el mailto:

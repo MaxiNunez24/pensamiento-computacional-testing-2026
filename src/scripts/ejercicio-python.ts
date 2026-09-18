@@ -28,6 +28,7 @@ import {
   conectarEnvio,
   autocompletado,
 } from './editor-comun';
+import { conectarAsistente } from './asistente';
 
 // ---------- Un ejercicio ----------
 
@@ -151,6 +152,7 @@ function initEjercicio(el: HTMLElement): void {
   });
 
   conectarEnvio(el, getCode, leerEntradas);
+  conectarAsistente(el, getCode);
 
   // Barra de símbolos: siempre en pantallas angostas, opcional en escritorio.
   conectarTeclas(el, view);
