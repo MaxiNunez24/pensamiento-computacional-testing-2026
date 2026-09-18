@@ -9,6 +9,12 @@
       "autoPort": true
     },
     {
+      "name": "astro-preview",
+      "runtimeExecutable": "corepack",
+      "runtimeArgs": ["pnpm", "exec", "astro", "preview", "--port", "4322"],
+      "port": 4322
+    },
+    {
       "name": "taller-flask",
       "runtimeExecutable": "python",
       "runtimeArgs": ["material-privado/taller-flask/app.py"],

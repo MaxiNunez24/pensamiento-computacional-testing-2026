@@ -170,6 +170,14 @@ export default defineConfig({
             { label: '🤖 El bot del SiGeS', link: '/clases/bot-siges/' },
           ],
         },
+        // SQLite va con el proyecto y no con Archivos: el sistema guarda en la
+        // base desde el principio (decidido el 18/9).
+        {
+          label: '🗃️ Proyecto: el sistema de asistencias',
+          items: [
+            { label: '🗃️ SQLite — los datos en una base', link: '/clases/sqlite/' },
+          ],
+        },
         {
           label: '🧪 Testing',
           items: [
