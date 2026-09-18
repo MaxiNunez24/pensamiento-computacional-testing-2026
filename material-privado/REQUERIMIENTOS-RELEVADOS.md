@@ -11,8 +11,9 @@ junta, después se ordena.
 > ⚠️ **Sin nombres.** El repositorio es público. Acá va el **rol** y la **marca
 > de tiempo** del audio, que es lo que hace falta para volver a escucharlo.
 
-**Última actualización:** la noche del martes 15/9/2026, repasando las tres
-entrevistas del 4/9 — o sea, la víspera de las que faltan.
+**Última actualización:** viernes 18/9/2026, con las respuestas del **cuestionario**
+(seis respuestas: dos de preceptoría, secretaría, dirección, auxiliares y una maestra de
+apoyo). Antes: las tres entrevistas del 4/9.
 
 ---
 
@@ -84,7 +85,12 @@ Lo pidió explícitamente (13:29): **el DNI ya es único y todos se lo saben**. 
 de usuario y contraseña para entrar.
 
 Tiene razón en el diagnóstico, y tiene un costo: *todos se lo saben* también vale
-para el DNI del compañero. **Hay que decidir qué se puede hacer con solo un DNI.**
+para el DNI del compañero.
+
+**Cómo se resuelve (propuesta del curso, 18/9):** el DNI marca la **llegada**, no la
+asistencia. El tótem registra a qué hora llegó —a horario o tarde— y el profe lo ve
+**distinguido** cuando entra a pasar lista, con un aviso, y es él quien confirma. Si alguien
+marca por un compañero que no vino, el profe lo ve en el aula.
 
 ### El boletín de actitud
 
@@ -258,7 +264,79 @@ que estar cargada la asistencia, y eso condiciona todo el diseño.
 
 ---
 
-## 7. Lo que dijimos que no
+## 7. Lo que trajo el cuestionario (18/9)
+
+Seis respuestas. Lo más importante: **tres roles distintos pidieron lo mismo con otras
+palabras** — preceptoría *"unificar cargas"*, secretaría *"que no se repita la carga"*, y
+otra preceptora *"que los formatos de las planillas sean los mismos, así copiar y pegar es
+más fácil"*. Es el proyecto entero, dicho por ellos.
+
+### 🏛️ Dirección
+
+| Estado | Qué |
+|---|---|
+| 🟡 | **Registros *on line* de matrícula y cursos** — ⚠️ hay que aclarar si *on line* quiere decir desde afuera del CFP (choca con la decisión de que el sistema ande solo en la red del centro) o solo *en una computadora y no en papel* |
+| 🟡 | Los números que pide la inspección: **matrícula y porcentaje de egresados** |
+
+Carga planillas de Excel, formularios y relevamientos **casi todos los días, entre 1 y 2
+horas**. Le llega todo por mail y WhatsApp, y lo manda a la Dirección de Formación
+Profesional. Papeles que nombró: **Registro federal, COPRET, salidas y relevamientos**.
+
+### 🗂️ Secretaría
+
+| Estado | Qué |
+|---|---|
+| 🟡 | **Que no se repita la carga** |
+| 🟡 | Los números para la inspección: **POFA y POF mensual** |
+
+Carga datos en el Drive y en los sistemas de la DGCyE **todos los días o día por medio**,
+de 1 a 5 minutos cada vez. Le llega por Drive, WhatsApp, correo o de palabra, y le entrega
+a dirección y regencia, a la jefatura distrital, al inspector y al consejo escolar.
+
+Papeles que nombró: **relevamiento, POF, novedades, PDD, control de matrícula, rendición y
+asistencia media**.
+
+> 💡 **Su propia sugerencia, que no se nos había ocurrido:** preguntar cuáles de sus tareas
+> tienen que ver con la carga de asistencias. La *asistencia media* y el *control de
+> matrícula* salen, casi seguro, de la asistencia: el sistema los podría dar hechos.
+
+### 📋 Preceptoría (lo que agregó el cuestionario)
+
+- Carga manual de datos en planillas: **más de 2 horas, cada semana**.
+- Hay cargas **diarias, mensuales y cuatrimestrales**, y titulaciones cuatrimestrales o anuales.
+- **El certificado viaja**: se completa, pasa a dirección, después a inspección, vuelve al
+  CFP y se entrega al egresado.
+- Papeles que nombraron: **ficha de curso, planilla de asistencia, acta de examen, fichas de
+  examen, planilla de retiros, planilla extra con el número de egresados, listados de
+  cursos**. Además de Word, Excel, el Drive y el SiGeS.
+
+### 🫂 Maestras de apoyo (lo que agregó el cuestionario)
+
+- **Filtrar a los alumnos con tramos pedagógicos sin finalizar.** Es la tercera vez que
+  aparece el pedido del nivel de estudios con filtro (sección 3): las dos entrevistas y
+  ahora el cuestionario.
+- Lo hace dos veces por semana, con un relevamiento cada 15 días, a partir de la planilla
+  oficial de asistencias y la de inscripción.
+
+### 🧹 Auxiliares
+
+La información les llega **de palabra, del equipo directivo**, y no necesitan nada del
+sistema para su trabajo: *"las herramientas necesarias para hacer mi labor"*. Y un
+comentario que vale citar: *"está bueno el sistema que proponen"*.
+
+> Lo de las meriendas (sección 6) no salió del cuestionario: salió del curso. Hay que
+> confirmarlo con ellas.
+
+### 📜 Los papeles, todos juntos
+
+Entre las entrevistas y el cuestionario aparecieron **más de quince** nombres de planillas,
+actas y relevamientos. **Hay que pedir un modelo en blanco de cada uno**, y saber cuáles
+tienen un formato oficial que no se puede cambiar: esos son los que el sistema tiene que
+imprimir *iguales*.
+
+---
+
+## 8. Lo que dijimos que no
 
 Tan importante como la lista de arriba. Cada uno de estos se dijo en voz alta y
 hay que poder sostenerlo.
@@ -289,9 +367,10 @@ Son cuatro, y **viven en la página `/casos/`**, al final. No se copian acá a
 propósito: dos copias de lo mismo terminan diciendo cosas distintas en dos
 semanas.
 
-Resumidas en una línea cada una: los tótems (uno o dos), LAN contra los horarios
-que el alumno quiere ver, qué se puede hacer con solo un DNI, y que el bot del
-SiGeS es otro proyecto.
+Resumidas en una línea cada una: los tótems (uno o dos), solo en el CFP o también
+desde afuera (ahora son tres pedidos: preceptoría, un instructor y dirección), el
+DNI que marca la llegada y no la asistencia, y que el bot del SiGeS es otro
+proyecto.
 
 ---
 
@@ -299,8 +378,9 @@ SiGeS es otro proyecto.
 
 | Quién | Cuándo |
 |---|---|
-| Dirección, regencia, secretaría y auxiliares | **miércoles 16/9** |
-| La reunión con todos, para cerrar el circuito | **viernes 18/9** |
+| El equipo directivo, 15 minutos: avalar lo relevado y cerrar el circuito | **viernes 18/9** |
+| Regencia: no respondió el cuestionario ni la entrevistamos | sin fecha |
+| La reunión con todos | **cuando haya algo andando para mostrar** |
 | La maestra de apoyo que sugirió el calendario | sin fecha |
 | El SiGeS con el preceptor — se ofreció a mostrar el proceso completo | sin fecha |
 
