@@ -4,16 +4,17 @@ description: "El circuito de trabajo de cada rol del CFP, de principio a fin. Lo
 ---
 
 import MapaCasos from '../../components/MapaCasos.astro';
+import CircuitoInfo from '../../components/CircuitoInfo.astro';
 
 Esto es lo que entendimos de cómo trabaja cada persona del CFP, armado con lo que
-nos contaron en las entrevistas del **viernes 4/9**.
+nos contaron en las entrevistas del **viernes 4/9** y en el **cuestionario**.
 
 :::caution[Esta página existe para que la corrijan]
 No la armamos para presentarla: la armamos **para que nos digan dónde nos equivocamos.**
 
 Lo que está marcado con borde amarillo lo **supusimos nosotros** — no salió de ninguna
 entrevista todavía. Y donde un caso está casi vacío hay un hueco de verdad: son justamente las
-cosas que hay que llenar el **miércoles 16/9** y el **viernes 18/9**.
+cosas que todavía nos falta preguntar.
 
 **Todo esto se puede editar acá mismo**, en el momento. Lo editado queda guardado en esta
 computadora y **no toca el original**: cada caso tiene su *"volver al original"*.
@@ -33,17 +34,152 @@ todas: esa lista es la agenda de lo que quedó pendiente.
 Esto es lo primero que hay que mirar, porque explica por qué unos casos están llenos y otros
 vacíos. **Un caso vacío no es un olvido: es una entrevista que falta.**
 
-| Rol | ¿Lo escuchamos? |
-|---|---|
-| Instructores | ✅ Sí — 4/9 |
-| Preceptoría | ✅ Sí — 4/9, los cuatro juntos |
-| Maestras de apoyo | ✅ Dos de ellas, por separado. Una tercera quedó afuera |
-| Dirección | 🔴 Falta — **16/9** |
-| Regencia | 🔴 Falta — **16/9** |
-| Secretaría | 🔴 Falta — **16/9** |
-| Auxiliares | 🟡 Sabemos lo que necesitan (cuántas meriendas), falta el detalle — **16/9** |
-| Alumnos | 🟡 Son los del curso: los tenemos a mano todos los días |
-| Inspección | 🔴 No la vamos a entrevistar, pero **pone una condición** (ver *Cerrar el curso*) |
+| Rol | Entrevista | Cuestionario |
+|---|---|---|
+| Instructores | ✅ 4/9 | — |
+| Preceptoría | ✅ 4/9, los cuatro juntos | ✅ dos respuestas |
+| Maestras de apoyo | ✅ dos, por separado | ✅ una respuesta |
+| Dirección | 🟡 **hoy, 18/9**, 15 minutos | ✅ |
+| Secretaría | 🟡 **hoy, 18/9** | ✅ |
+| Regencia | 🔴 falta | 🔴 falta |
+| Auxiliares | — | ✅ |
+| Alumnos | 🟡 Son los del curso: los tenemos a mano todos los días | — |
+| Inspección | No la vamos a entrevistar, pero **pone condiciones** (ver *Cerrar el curso* y *Los certificados*) | — |
+
+## 🔗 El viaje de un dato
+
+Los casos de abajo cuentan el trabajo de **una persona**. Esto cuenta otra cosa: el viaje de **un
+dato**, desde que el alumno se inscribe hasta que se lleva el certificado, pasando por todas las
+manos del CFP.
+
+:::tip[Lo que hay que mirar: el borde rojo]
+Los pasos con el **borde rojo a la izquierda** son los lugares donde **se vuelve a escribir algo que
+ya estaba escrito** en otro lado. Arriba del todo está la cuenta. Ese número es, en una sola cifra,
+lo que el sistema viene a sacar.
+:::
+
+Se edita igual que los casos: se puede mover un paso para arriba o para abajo, agregar uno en el
+medio, marcarlo con la 🚩 o confirmar lo que supusimos.
+
+<CircuitoInfo pasos={[
+  {
+    id: 'inscripcion',
+    emoji: '📝',
+    que: 'El alumno completa el formulario de inscripción',
+    quien: 'Alumno',
+    donde: 'Google Forms → queda una planilla en el Drive',
+    documentos: ['Ficha de inscripción (declaración jurada)', 'Fotocopia del DNI'],
+    frecuencia: 'Al principio del ciclo y durante todo el año',
+    fuente: 'Preceptoría · entrevista del 4/9 (01:19 y 02:13) y cuestionario',
+  },
+  {
+    id: 'carga-inicial',
+    emoji: '✍️',
+    que: 'Preceptoría vuelve a cargar esos datos a mano',
+    quien: 'Preceptoría',
+    donde: 'SiGeS, ficha de curso, planilla de asistencia, listado de cursos',
+    documentos: ['Ficha de curso', 'Listado de cursos'],
+    frecuencia: 'Cada semana, más de dos horas',
+    repite: true,
+    fuente: 'Cuestionario de preceptoría: "carga manual de datos en planillas" y "unificar cargas"',
+  },
+  {
+    id: 'planilla-impresa',
+    emoji: '🖨️',
+    que: 'Preceptoría imprime la planilla y se la lleva al instructor',
+    quien: 'Preceptoría',
+    donde: 'Papel',
+    documentos: ['Planilla de asistencia'],
+    frecuencia: 'Cada clase',
+    fuente: 'Un instructor · entrevista del 4/9 (04:40)',
+  },
+  {
+    id: 'pasar-lista-papel',
+    emoji: '✅',
+    que: 'El instructor pasa lista en el papel',
+    quien: 'Instructores',
+    donde: 'Papel',
+    frecuencia: 'Cada clase: entre 1 y 5 minutos, y se completa unas dos horas después de empezar',
+    fuente: 'Un instructor · entrevista del 4/9 (04:40 y 07:24)',
+  },
+  {
+    id: 'asistencia-a-planilla',
+    emoji: '⌨️',
+    que: 'Preceptoría pasa la asistencia del papel a la planilla',
+    quien: 'Preceptoría',
+    donde: 'Planilla de asistencia en el Drive',
+    documentos: ['Planilla de asistencia'],
+    frecuencia: 'Hay cargas diarias y semanales',
+    repite: true,
+    fuente: 'Cuestionario de preceptoría',
+  },
+  {
+    id: 'seguimiento',
+    emoji: '🫂',
+    que: 'La maestra de apoyo revisa la asistencia y decide a quién acompañar',
+    quien: 'Maestras de apoyo',
+    donde: 'La planilla de asistencia y la de inscripción',
+    documentos: ['Planilla oficial de asistencias', 'Planilla de inscripción'],
+    frecuencia: 'Dos veces por semana, y un relevamiento cada 15 días',
+    fuente: 'Cuestionario de una maestra de apoyo: pide "filtrar los alumnos con tramos pedagógicos sin finalizar"',
+  },
+  {
+    id: 'planilla-mensual',
+    emoji: '📋',
+    que: 'Se arma la planilla del mes y la firma dirección',
+    quien: 'Preceptoría y Dirección',
+    donde: 'Papel firmado, y una copia distinta para secretaría en el Drive',
+    documentos: ['Planilla oficial de asistencia (temas tratados, en tratamiento y bajas)', 'Planilla de retiros'],
+    frecuencia: 'Una vez por mes, por cada curso',
+    repite: true,
+    fuente: 'Preceptoría · entrevista del 4/9 (04:04 y 07:51) y cuestionario',
+  },
+  {
+    id: 'secretaria-dgcye',
+    emoji: '🗂️',
+    que: 'Secretaría carga los números en el Drive y en los sistemas de la DGCyE',
+    quien: 'Secretaría',
+    donde: 'Drive y sistemas de la DGCyE',
+    documentos: ['Relevamiento', 'POF', 'Novedades', 'PDD', 'Control de matrícula', 'Rendición', 'Asistencia media'],
+    frecuencia: 'Todos los días o día por medio, entre 1 y 5 minutos cada vez',
+    repite: true,
+    pregunta: '¿De dónde salen la "asistencia media" y el "control de matrícula"? Si salen de la asistencia, el sistema los puede dar hechos.',
+    fuente: 'Cuestionario de secretaría. Su propio pedido: "que no se repita la carga".',
+  },
+  {
+    id: 'direccion-fp',
+    emoji: '🏛️',
+    que: 'Dirección informa a la Dirección de Formación Profesional',
+    quien: 'Dirección',
+    donde: 'Planillas de Excel, formularios y relevamientos',
+    documentos: ['Registro federal', 'COPRET', 'Salidas', 'Relevamientos'],
+    frecuencia: 'Casi todos los días, entre 1 y 2 horas',
+    repite: true,
+    pregunta: 'Pidió "registros on line de matrícula y cursos": ¿quiere decir poder entrar desde afuera del CFP, o que esté en una computadora en vez de en papel?',
+    fuente: 'Cuestionario de dirección',
+  },
+  {
+    id: 'cierre',
+    emoji: '🎓',
+    que: 'Se cierra el curso: ficha, acta y títulos tienen que dar lo mismo',
+    quien: 'Preceptoría',
+    donde: 'Papel',
+    documentos: ['Ficha de curso', 'Acta de examen', 'Fichas de examen', 'Planilla extra con el número de egresados'],
+    frecuencia: 'Cuatrimestral o anual',
+    fuente: 'Preceptoría · entrevista del 4/9 (06:02) y cuestionario',
+  },
+  {
+    id: 'certificado',
+    emoji: '📜',
+    que: 'El certificado va a Dirección, a Inspección, vuelve al CFP y se entrega',
+    quien: 'Preceptoría, Dirección e Inspección',
+    donde: 'Papel',
+    documentos: ['Certificado'],
+    frecuencia: 'Cuatrimestral o anual',
+    pregunta: 'La inspección evalúa al CFP con la matrícula, el porcentaje de egresados y la POF mensual. ¿Alguien los calcula a mano?',
+    fuente: 'Cuestionarios de preceptoría, secretaría y dirección',
+  },
+]} />
 
 ## Las cinco etapas
 
@@ -85,18 +221,18 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     proceso: [
       'Buscar ese DNI entre todos los alumnos del CFP',
       'Ver a qué curso va, y si ese curso tiene clase ahora',
-      'Guardar la llegada con la hora',
-      'Decidir si eso es presente o tarde',
+      'Guardar la llegada con la hora: a horario o tarde',
+      'NO poner la asistencia: la llegada es un aviso, la asistencia la confirma el profe',
     ],
     intercambio: [
       'Le llega: nada. El alumno se identifica solo',
-      'Le entrega: al instructor, que encuentra la lista ya marcada',
+      'Le entrega: al profe, que ve distinguidos a los que marcaron en la entrada y confirma',
     ],
     salidas: [
       'El alumno ve su nombre y que quedó registrado',
-      'La lista del día de ese curso, ya marcada',
+      'Un aviso al profe, y la lista del día con la llegada de cada uno a la vista',
     ],
-    fuente: 'El instructor · 4/9 · marca 13:29. Rechazó las contraseñas de entrada: "el DNI ya es único y todos se lo saben". ⚠️ A qué hora deja de ser presente y pasa a tarde NO lo preguntamos: es la primera pregunta del miércoles.',
+    fuente: 'Un instructor · 4/9 · marca 13:29. Rechazó las contraseñas de entrada: "el DNI ya es único y todos se lo saben". ⚠️ A qué hora deja de ser presente y pasa a tarde NO lo preguntamos: es la primera pregunta del miércoles.',
   },
   {
     id: 'pasar-lista',
@@ -124,7 +260,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     salidas: [
       'La planilla en papel, que después alguien tiene que cargar',
     ],
-    fuente: 'El instructor · 4/9 · marcas 04:40 y 07:24',
+    fuente: 'Un instructor · 4/9 · marcas 04:40 y 07:24',
   },
   {
     id: 'como-voy',
@@ -153,7 +289,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     salidas: [
       'Un número y un semáforo: ¿llega al 85% o no?',
     ],
-    fuente: '🔑 El instructor · 4/9 · marcas 10:52 (el 85% es regla dura para aprobar) y 11:05 ("los alumnos me preguntan cómo van"). Es la regla más fuerte que apareció en todo el relevamiento: el sistema la tiene que vigilar.',
+    fuente: '🔑 Un instructor · 4/9 · marcas 10:52 (el 85% es regla dura para aprobar) y 11:05 ("los alumnos me preguntan cómo van"). Es la regla más fuerte que apareció en todo el relevamiento: el sistema la tiene que vigilar.',
   },
   {
     id: 'alerta-85',
@@ -180,7 +316,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
       'Un aviso, en algún lado que alguien mire',
     ],
     supuesto: true,
-    fuente: '⚠️ ESTO LO PROPONEMOS NOSOTROS. El instructor pidió poder CONTESTAR cuando le preguntan (11:05); que el sistema avise solo, sin que nadie pregunte, no lo pidió nadie. Preguntar si sirve o si es una alarma más que nadie mira.',
+    fuente: '⚠️ ESTO LO PROPONEMOS NOSOTROS. Un instructor pidió poder CONTESTAR cuando le preguntan (11:05); que el sistema avise solo, sin que nadie pregunte, no lo pidió nadie. Preguntar si sirve o si es una alarma más que nadie mira.',
   },
   {
     id: 'boletin-actitud',
@@ -206,7 +342,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
       'Un boletín no oficial que le da al alumno',
     ],
     supuesto: true,
-    fuente: 'El instructor · 4/9 · marca 05:01. Su "Proyecto evaluativo": lo armó él, no es oficial, y OFRECIÓ TRAERLO. ⚠️ Pedírselo el miércoles: sin ese papel, seis de los diez ítems los estamos adivinando.',
+    fuente: 'Un instructor · 4/9 · marca 05:01. Su "Proyecto evaluativo": lo armó él, no es oficial, y OFRECIÓ TRAERLO. ⚠️ Pedírselo el miércoles: sin ese papel, seis de los diez ítems los estamos adivinando.',
   },
   {
     id: 'firmar-libro',
@@ -230,7 +366,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
       'El libro de firmas, hoy en papel',
     ],
     supuesto: true,
-    fuente: 'El instructor lo extendió él solo (14:02): "lo mismo para los profes, digitalizar el libro de firmas con la hora". Todo lo demás —quién lo controla, para qué se usa, qué pasa si alguien no firma— lo pusimos nosotros. ⚠️ Regencia lo tiene que confirmar el miércoles.',
+    fuente: 'Un instructor lo extendió él solo (14:02): "lo mismo para los profes, digitalizar el libro de firmas con la hora". Todo lo demás —quién lo controla, para qué se usa, qué pasa si alguien no firma— lo pusimos nosotros. ⚠️ Regencia lo tiene que confirmar el miércoles.',
   },
   {
     id: 'ver-mis-horarios',
@@ -256,7 +392,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     salidas: [
       'La pantalla del tótem, o el acceso directo en el celular',
     ],
-    fuente: 'El instructor · 4/9 · marca 14:31: que los alumnos puedan ver los horarios de su curso, por si cambian. ⚠️ Choca con la decisión de que el sistema no salga de la red del CFP: si es solo LAN, el alumno lo ve acá y no desde su casa. Está en las decisiones abiertas, abajo.',
+    fuente: 'Un instructor · 4/9 · marca 14:31: que los alumnos puedan ver los horarios de su curso, por si cambian. ⚠️ Choca con la decisión de que el sistema no salga de la red del CFP: si es solo LAN, el alumno lo ve acá y no desde su casa. Está en las decisiones abiertas, abajo.',
   },
   {
     id: 'inscribir-alumno',
@@ -492,11 +628,38 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     fuente: '🔑 Preceptoría · 4/9 · marca 06:02. Es el control final del año: si algo no cuadra, se descubre acá y ya es tarde. Por eso importa tanto que las bajas se carguen cuando pasan.',
   },
   {
+    id: 'certificados',
+    nombre: 'Que el egresado reciba su certificado',
+    emoji: '📜',
+    roles: ['Preceptoría', 'Dirección', 'Inspección'],
+    frecuencia: 'Cuatrimestral o anual',
+    precondiciones: [
+      'El curso tiene que estar cerrado, con ficha, acta y títulos que coincidan',
+    ],
+    entradas: [
+      'El acta de examen',
+      'Los datos de cada egresado, que tienen que estar perfectos: van impresos',
+    ],
+    proceso: [
+      'Completar el certificado',
+      'Mandarlo a Dirección, de ahí a Inspección, y esperar que vuelva',
+    ],
+    intercambio: [
+      'Le entrega: a Dirección y a Inspección',
+      'Le llega de vuelta: el certificado aprobado',
+    ],
+    salidas: [
+      'El certificado, entregado al egresado',
+      'La planilla extra con el número de egresados',
+    ],
+    fuente: 'Cuestionario de preceptoría: "una vez completo, pasa a Dirección, luego a Inspección, vuelve al CFP y se entrega a los egresados".',
+  },
+  {
     id: 'acompanar',
     nombre: 'Saber a quién acompañar',
     emoji: '🎓',
     roles: ['Maestras de apoyo'],
-    frecuencia: 'Cuando entra gente nueva, y después cuando hace falta',
+    frecuencia: 'Dos veces por semana, y un relevamiento cada 15 días',
     precondiciones: [
       'Los alumnos tienen que estar cargados con su nivel de estudios',
       'Y eso tiene que salir de la ficha de inscripción, no de preguntarle a cada uno',
@@ -507,6 +670,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     ],
     proceso: [
       'Filtrar la lista de TODOS los alumnos del CFP por esos criterios',
+      'Sobre todo: los que tienen tramos pedagógicos sin finalizar',
       'No por curso: la pregunta es del CFP entero',
     ],
     intercambio: [
@@ -515,7 +679,7 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     salidas: [
       'Una pantalla con todos los alumnos y de qué curso es cada uno',
     ],
-    fuente: '🔑 Las dos maestras de apoyo lo pidieron POR SEPARADO, sin hablarse entre ellas. Que dos personas lleguen a lo mismo sin coordinarse es la señal más fuerte que hay.',
+    fuente: '🔑 Las dos maestras de apoyo lo pidieron POR SEPARADO, sin hablarse entre ellas, y el cuestionario lo repitió: "filtrar los alumnos con tramos pedagógicos sin finalizar". Que varias personas lleguen a lo mismo sin coordinarse es la señal más fuerte que hay.',
   },
   {
     id: 'cumpleanos',
@@ -543,18 +707,29 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     fuente: 'Lo sugirió una maestra de apoyo que todavía NO entrevistamos. Y el profe ya arma todos los años un calendario de cumpleaños a mano: dos personas llegaron a la misma necesidad por separado. ⚠️ Con clases dos veces por semana, la mayoría de los cumpleaños caen en días sin clase: si avisa solo el día exacto, no avisa casi nunca.',
   },
   {
-    id: 'ver-curso',
-    nombre: 'Ver cómo viene un curso',
+    id: 'informar-fp',
+    nombre: 'Informar a la Dirección de Formación Profesional',
     emoji: '🏛️',
     roles: ['Dirección'],
-    frecuencia: 'Por semana',
-    precondiciones: [],
-    entradas: [],
-    proceso: [],
-    intercambio: [],
-    salidas: [],
-    supuesto: true,
-    fuente: 'Todavía no entrevistamos a dirección. Este caso está vacío a propósito: es de los que hay que llenar el miércoles 16/9. Las preguntas están al final de esta página.',
+    frecuencia: 'Casi todos los días, entre 1 y 2 horas',
+    precondiciones: [
+      'Tener a mano la matrícula y los cursos, que hoy están repartidos en planillas',
+    ],
+    entradas: [
+      'Lo que le llega por mail y por WhatsApp',
+      'Los números de matrícula y de cursos',
+    ],
+    proceso: [
+      'Cargar planillas de Excel, formularios y relevamientos',
+    ],
+    intercambio: [
+      'Le llega: del equipo directivo, por mail y WhatsApp',
+      'Le entrega: a la Dirección de Formación Profesional',
+    ],
+    salidas: [
+      'Registro federal, COPRET, salidas y relevamientos',
+    ],
+    fuente: 'Cuestionario de dirección. Lo que pidió: "contar con registros on line de matrícula, cursos". Para la inspección, lo que importa es la matrícula y el porcentaje de egresados.',
   },
   {
     id: 'firmar-planilla',
@@ -587,20 +762,33 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
     intercambio: [],
     salidas: [],
     supuesto: true,
-    fuente: 'Vacío a propósito: no entrevistamos a regencia. Sabemos que existe el libro de firmas de los profes porque lo trajo el instructor (14:02), pero no sabemos quién lo controla ni para qué se usa. Miércoles 16/9.',
+    fuente: 'Vacío a propósito: no entrevistamos a regencia. Sabemos que existe el libro de firmas de los profes porque lo trajo un instructor (14:02), pero no sabemos quién lo controla ni para qué se usa. Regencia no respondió el cuestionario ni la entrevistamos.',
   },
   {
-    id: 'secretaria-pendiente',
-    nombre: 'Lo que secretaría hace con las planillas',
+    id: 'cargar-dgcye',
+    nombre: 'Cargar los números en los sistemas de la DGCyE',
     emoji: '🗄️',
     roles: ['Secretaría'],
-    precondiciones: [],
-    entradas: [],
-    proceso: [],
-    intercambio: [],
-    salidas: [],
-    supuesto: true,
-    fuente: 'Vacío a propósito. Sabemos que le llega una planilla mensual al Drive con la cantidad de varones y mujeres (preceptoría, 03:27 y 04:04), y no sabemos qué hace con ella ni a quién se la manda. Miércoles 16/9.',
+    frecuencia: 'Todos los días o día por medio, entre 1 y 5 minutos cada vez',
+    precondiciones: [
+      'Que le llegue la información, que hoy viene por Drive, WhatsApp, correo o de palabra',
+    ],
+    entradas: [
+      'La planilla mensual de preceptoría, con la cantidad de varones y mujeres',
+      'Lo que le dicen los demás',
+    ],
+    proceso: [
+      'Cargar datos en el Drive y en los sistemas de la DGCyE',
+    ],
+    intercambio: [
+      'Le llega: por Drive, WhatsApp y correo',
+      'Le entrega: al director y al regente, a la jefatura distrital, al inspector y al consejo escolar',
+    ],
+    salidas: [
+      'Relevamiento, POF, novedades, PDD, control de matrícula, rendición y asistencia media',
+      'Para la inspección: la POFA y la POF mensual',
+    ],
+    fuente: 'Cuestionario de secretaría. Su pedido: "que no se repita la carga". Y nos sugirió una pregunta que no hicimos: cuáles de sus tareas se pueden relacionar con la carga de asistencias.',
   },
   {
     id: 'meriendas',
@@ -630,49 +818,65 @@ quedan solo los suyos. Así cada uno mira los que le tocan y no los veintitantos
 
 ---
 
-## 🎯 Las preguntas del miércoles 16/9
+## 🎯 Lo que les queremos preguntar hoy
 
-Los casos vacíos de arriba son los que hay que llenar. Estas son las preguntas, **por rol**, para
-no improvisarlas en el momento.
+:::note[Viernes 18/9 · con el equipo directivo · 15 minutos]
+Gracias por venir. No les queremos hacer perder tiempo: armamos todo lo que nos contaron en las
+entrevistas y en el cuestionario, y lo que necesitamos hoy es que nos digan si lo entendimos bien
+y que nos ayuden a cerrar un par de decisiones.
+:::
 
-### 🏛️ Dirección
+Están en orden: si el tiempo alcanza solo para las primeras tres, alcanza.
 
-1. Cuando le llega la planilla del mes, **¿qué mira antes de firmarla?**
-2. ¿Qué necesita saber de un curso, semana a semana?
-3. ¿Qué pasa cuando un curso se queda con muy pocos alumnos? ¿Quién decide?
-4. El 85% de asistencia: ¿lo mira por curso, por alumno, o se entera en el cierre?
-5. El **cupo** de cada curso: ¿sale de la capacidad del aula, del Ministerio, o de otra cosa?
+**1. Para el miércoles que viene.** El miércoles 23/9 queremos hacer, junto con preceptoría, una
+demostración del bot del SiGeS con un alumno real. El bot deja al alumno como **pre inscripto** y
+la matrícula la sigue generando una persona. ¿Nos autorizan a hacerla? ¿Quién de ustedes tendría
+que estar presente?
 
-### 📌 Regencia
+**2. El viaje de un dato.** Arriba está el camino que entendimos que hace la información de un
+alumno, desde que se inscribe hasta que se lleva el certificado. ¿Falta algún paso? ¿Hay algún
+papel que no vimos?
 
-1. El **libro de firmas** de los profes: ¿quién lo controla, y para qué se usa después?
-2. ¿Qué hace cuando un profe falta? ¿Cómo se consigue el reemplazo?
-3. Los **cambios de horario**: ¿quién los decide y cómo se les avisa hoy a los alumnos?
-   *(El instructor pidió justamente que los alumnos los puedan ver.)*
+**3. Los papeles oficiales.** En el cuestionario aparecieron muchos nombres: ficha de curso, acta
+de examen, planilla de retiros, POF, relevamiento, Registro federal, COPRET… ¿Nos podrían pasar un
+**modelo en blanco** de cada uno? ¿Y decirnos cuáles tienen un formato oficial que no se puede
+cambiar?
 
-### 🗄️ Secretaría
+**4. En la computadora del centro, o también desde afuera.** Dirección nos pidió tener registros
+*on line* de matrícula y cursos, y preceptoría nos dijo que el sistema podía andar solo en la red
+del CFP. ¿Necesitan entrar desde afuera, o alcanza con que esté en una computadora del centro?
 
-1. La planilla mensual que le llega al Drive: **¿qué hace con ella y a quién se la manda?**
-2. Los **títulos**: ¿quién los emite, y con qué datos?
-3. ¿Qué dato del alumno necesita que esté perfecto, porque va impreso en el título?
+**5. Los números que pide la inspección.** Nos contaron que la inspección mira la matrícula, el
+porcentaje de egresados y la asistencia media. ¿Quién los calcula hoy, y con qué? Si salen de la
+asistencia, el sistema los puede dar hechos.
 
-### 🧹 Auxiliares
+**6. La entrada.** Un instructor nos propuso que los alumnos marquen su llegada con el DNI en la
+entrada. La idea es que eso **no pase lista solo**: avisa si llegó a horario o tarde, el profe lo
+ve distinguido cuando entra a pasar lista, y es él quien confirma. ¿Les parece bien? ¿Alcanza con
+un tótem, harían falta dos, o en algunos casos conviene que el instructor la pase desde el aula?
 
-1. **¿A qué hora necesitan saber cuántas meriendas preparar?** De esa hora depende cuándo tiene
-   que estar tomada la asistencia, y eso cambia el sistema entero.
-2. ¿Cómo lo saben hoy? ¿Preguntan, cuentan, o calculan siempre lo mismo?
-3. ¿Qué pasa cuando sobran o cuando faltan?
+<details>
+<summary><strong>Si sobra tiempo</strong></summary>
 
-### 🤝 Y en la reunión de todos
+- Cuando llega la planilla del mes, **¿qué miran antes de firmarla?** Cada cosa que miren es un
+  control que el sistema puede hacer solo.
+- ¿Qué dato del alumno tiene que estar **perfecto** porque va impreso en el certificado?
+- El **cupo** de cada curso: ¿sale de la capacidad del aula, del Ministerio, o de otra cosa?
+- Los **cambios de horario**: ¿quién los decide y cómo se les avisa hoy a los alumnos?
+- Secretaría nos sugirió una pregunta que no se nos había ocurrido: **¿cuáles de sus tareas tienen
+  que ver con la asistencia?**
+- A qué hora hay que saber **cuántas meriendas preparar**.
 
-1. Seguir **un solo dato** de punta a punta: de la ficha de inscripción hasta el título. ¿Cuántas
-   veces se escribe lo mismo?
-2. Los tótems: **¿uno, dos, o el instructor lo pasa desde el aula?** (abajo)
-3. ¿Qué pasa el día que el sistema no arranque? Porque va a pasar.
+</details>
 
 :::tip[Lo que hay que pedir, no preguntar]
-El **"Proyecto evaluativo"** del instructor: el boletín no oficial de 10 ítems que armó él. Ofreció
-traerlo. Sin ese papel, seis de los diez ítems los estamos inventando.
+El **"Proyecto evaluativo"** que armó un instructor: el boletín no oficial de 10 ítems. Ofreció
+traerlo, y sin ese papel seis de los diez ítems los estamos inventando.
+:::
+
+:::note[La reunión con todos, más adelante]
+La reunión con todos los roles juntos queda para cuando tengamos **algo andando para mostrar**.
+Juntarlos para hablar de supuestos sería hacerles perder una tarde.
 :::
 
 ## ⚖️ Las decisiones que quedan abiertas
@@ -687,45 +891,48 @@ Si todos marcan el DNI al entrar, y todos entran a la misma hora, se hace cola.
 
 | Opción | Qué implica |
 |---|---|
-| **Dos tótems** | Más hardware, la mitad de cola |
+| **Dos tótems** | Más equipos, la mitad de cola |
 | **Excepción: que suban** | El instructor pasa lista desde el aula, con la app. Más simple ahora que el sistema es una pantalla y no un papel |
 
 **Sin decidir.** Y no es solo nuestra: la tienen que decidir ellos, porque es su entrada.
 
-### 2. El sistema no sale del CFP, pero el alumno quiere ver sus horarios
+### 2. ¿Solo en el CFP, o también desde afuera?
 
-Preceptoría aprobó que el sistema **ande solo en la red del CFP, sin internet** (marca 18:31) — y
-lo aprobaron sabiendo que eso significa no poder entrar desde afuera.
+Hay tres pedidos que hay que poner uno al lado del otro:
 
-Pero el instructor pidió que **los alumnos vean los horarios de su curso** (14:31). Si el sistema es solo
-LAN, eso lo ven en el tótem o en el aula, no desde el celular en la casa.
+| Quién | Qué dijo |
+|---|---|
+| Preceptoría | Que el sistema **ande solo en la red del CFP**, sin internet (18:31). Lo aprobaron sabiendo que no se entra desde afuera |
+| Un instructor | Que **los alumnos vean los horarios de su curso** (14:31), por si cambian |
+| Dirección | Tener **registros *on line*** de matrícula y cursos (cuestionario) |
 
-**Las dos cosas se pueden**, pero hay que decir cuál gana dónde.
+**Las tres se pueden**, pero hay que decir cuál gana dónde. Puede que *"on line"* quiera decir
+*"en una computadora y no en papel"*, y entonces no choca con nada: por eso es la pregunta 4 de hoy.
 
-### 3. Si la llave es el DNI, ¿qué se puede hacer con un DNI?
+### 3. El DNI marca la llegada, no la asistencia
 
-El instructor rechazó las contraseñas y tiene un buen motivo: **el DNI ya es único y todos se lo saben**
-(13:29). El costo es que *todos se lo saben* vale también para el DNI del compañero.
+Un instructor pidió que no haya contraseñas, con un buen motivo: **el DNI ya es único y todos se lo
+saben** (13:29).
 
-Entonces hay que separar:
+Por eso el tótem **no pasa lista**: registra a qué hora llegó cada uno, a horario o tarde, y el profe
+lo ve distinguido en la lista del día, **con un aviso**, y es él quien confirma. Si alguien marcara
+por un compañero que no vino, el profe lo ve en el aula.
 
 | Con solo tipear un DNI | Con una persona del CFP adelante |
 |---|---|
-| Marcar la llegada | Ver o cambiar la ficha de un alumno |
-| Ver cómo voy con asistencia | Cargar o corregir asistencia de otro |
+| Marcar la llegada | Confirmar la asistencia |
+| Ver cómo voy con asistencia | Ver o cambiar la ficha de un alumno |
 | Ver los horarios de mi curso | Ver la lista completa del curso |
-
-**Sin decidir.** Es la primera vez en el curso que aparece esto: la seguridad no es una función que
-se agrega, es una consecuencia de una decisión de diseño que ya tomamos.
 
 ### 4. El bot del SiGeS es otro proyecto, y es el que sigue
 
-Lo pidieron ellos (19:08) y **ya está prototipado**. Pero no es parte del sistema de asistencias:
-es **el proyecto que arranca apenas termine este**, y se alimenta de él — carga en el SiGeS los
-datos que el sistema ya tiene.
+Lo pidieron ellos (19:08) y **ya está prototipado**. No es parte del sistema de asistencias: es **el
+proyecto que arranca apenas termine este**, y se alimenta de él — carga en el SiGeS los datos que el
+sistema ya tiene.
 
-Conviene decirlo en voz alta en la reunión: no para bajarle el precio, sino al revés. Es lo que
-más trabajo manual les saca, y por eso va primero en la fila de lo que viene después.
+**El miércoles 23/9 se prueba por primera vez con un alumno real**, junto con preceptoría, si el
+equipo directivo lo autoriza (pregunta 1 de hoy). El bot deja al alumno como pre inscripto: la
+matrícula la sigue generando una persona.
 
 ---
 

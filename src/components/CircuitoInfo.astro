@@ -1,0 +1,324 @@
+---
+/**
+ * El circuito de la información: por dónde viaja un dato del alumno, desde que
+ * se inscribe hasta que se lleva el certificado. EDITABLE, como el mapa de casos.
+ *
+ * ───────────────────── POR QUÉ ES OTRO COMPONENTE ──────────────────────────
+ *
+ * El mapa de casos cuenta el trabajo de UNA persona de punta a punta. Esto
+ * cuenta el viaje de UN DATO a través de todas las personas. Son dos preguntas
+ * distintas: "¿qué hace preceptoría?" y "¿por cuántas manos pasa el DNI de
+ * Ana antes de llegar al título?". La segunda es la que muestra dónde se
+ * vuelve a escribir lo mismo, que es justo lo que el sistema viene a sacar.
+ *
+ * ─────────────────── LO EDITADO NO PISA EL ORIGINAL ─────────────────────────
+ *
+ * Igual que MapaCasos: los pasos llegan por props y nunca se tocan. Lo que se
+ * edita en la reunión vive como una capa encima, en localStorage:
+ *
+ *     { <id>: {campos cambiados}, _nuevos: [], _borrados: [], _orden: [],
+ *       _banderas: {} }
+ *
+ * `_orden` existe porque acá, a diferencia de los casos, el ORDEN es el dato:
+ * si en la reunión dicen "no, eso pasa antes", hay que poder moverlo.
+ *
+ * ─────────────────────────── LAS REPETICIONES ───────────────────────────────
+ *
+ * Cada paso puede marcar `repite: true`: "acá se vuelve a escribir algo que ya
+ * estaba escrito en otro lado". Se pinta distinto y se cuenta arriba, porque
+ * ese número es el argumento del proyecto en una sola cifra.
+ */
+
+interface Paso {
+  id: string;
+  emoji: string;
+  /** Qué pasa, en una frase y con un verbo. */
+  que: string;
+  /** Quién lo hace. Rol, nunca un nombre: el repo es público. */
+  quien: string;
+  /** Dónde queda: papel, Drive, SiGeS, Excel… */
+  donde?: string;
+  /** Los papeles que salen o se usan, con el nombre que les dan ellos. */
+  documentos?: string[];
+  frecuencia?: string;
+  /** true = acá se vuelve a escribir algo que ya estaba escrito. */
+  repite?: boolean;
+  /** true = lo supusimos nosotros. */
+  supuesto?: boolean;
+  /** Lo que todavía no sabemos de este paso. */
+  pregunta?: string;
+  fuente?: string;
+}
+
+const { pasos } = Astro.props as { pasos: Paso[] };
+---
+
+<section class="circ" data-circuito>
+
+  <div class="casos__barra">
+    <span class="casos__cuantos" data-cuantos></span>
+    <button type="button" class="casos__btn casos__btn--ok" data-nuevo>➕ Paso al final</button>
+    <button type="button" class="casos__btn" data-copiar>📋 Copiar todo</button>
+    <button type="button" class="casos__btn" data-banderas>🚩 Ver banderitas</button>
+  </div>
+
+  <ol class="circ__lista" data-lista></ol>
+
+  <textarea class="casos__export" data-export rows="12" readonly hidden
+            aria-label="El circuito, para pegar en el .mdx"></textarea>
+
+  <script type="application/json" data-json set:html={JSON.stringify(pasos)}></script>
+</section>
+
+<script>
+  document.querySelectorAll('[data-circuito]').forEach((raiz) => {
+    const $ = (s: string) => raiz.querySelector(s) as HTMLElement | null;
+    let BASE: any[] = [];
+    try { BASE = JSON.parse((raiz.querySelector('[data-json]') as HTMLElement).textContent || '[]'); }
+    catch { /* sin datos no hay circuito, pero la página no se rompe */ }
+
+    const LS = 'pc_circuito_editado';
+    const VACIA = () => ({ _nuevos: [], _borrados: [], _orden: [], _banderas: {} });
+    let capa: any = VACIA();
+    try {
+      const g = JSON.parse(localStorage.getItem(LS) || 'null');
+      if (g) capa = { ...VACIA(), ...g };
+    } catch {}
+    const guardar = () => { try { localStorage.setItem(LS, JSON.stringify(capa)); } catch {} };
+
+    /* ── El original + la capa, en el orden que corresponda ────────── */
+    function efectivos() {
+      const todos = BASE
+        .filter((p) => !capa._borrados.includes(p.id))
+        .map((p) => ({ ...p, ...(capa[p.id] || {}) }))
+        .concat(capa._nuevos.filter((n: any) => !capa._borrados.includes(n.id)));
+      if (!capa._orden.length) return todos;
+      // Los que no figuran en _orden (un paso agregado al .mdx después de
+      // que alguien reordenó) van al final en vez de desaparecer.
+      const pos = (id: string) => { const i = capa._orden.indexOf(id); return i < 0 ? 1e9 : i; };
+      return todos.sort((a: any, b: any) => pos(a.id) - pos(b.id));
+    }
+    const esNuevo = (id: string) => capa._nuevos.some((n: any) => n.id === id);
+    const fueEditado = (id: string) => !!capa[id] || esNuevo(id);
+
+    function editar(id: string, campo: string, valor: any) {
+      const nuevo = capa._nuevos.find((n: any) => n.id === id);
+      if (nuevo) nuevo[campo] = valor;
+      else { capa[id] = capa[id] || {}; capa[id][campo] = valor; }
+      guardar();
+    }
+
+    function mover(id: string, delta: number) {
+      const ids = efectivos().map((p: any) => p.id);
+      const i = ids.indexOf(id), j = i + delta;
+      if (j < 0 || j >= ids.length) return;
+      [ids[i], ids[j]] = [ids[j], ids[i]];
+      capa._orden = ids;
+      guardar(); pintar();
+    }
+
+    function campo(valor: string, ph: string, alGuardar: (v: string) => void, clase = '') {
+      const i = document.createElement('input');
+      i.type = 'text';
+      i.className = 'casos__input ' + clase;
+      i.placeholder = ph;
+      i.value = valor || '';
+      i.addEventListener('input', () => alGuardar(i.value));
+      return i;
+    }
+
+    function fila(etiqueta: string, nodo: HTMLElement) {
+      const d = document.createElement('div');
+      d.className = 'casos__linea';
+      const e = document.createElement('span');
+      e.className = 'casos__et';
+      e.textContent = etiqueta;
+      d.appendChild(e);
+      d.appendChild(nodo);
+      return d;
+    }
+
+    function boton(texto: string, titulo: string, clase: string, alHacer: () => void) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'casos__btn casos__btn--chico ' + clase;
+      b.textContent = texto;
+      b.title = titulo;
+      b.setAttribute('aria-label', titulo);
+      b.addEventListener('click', alHacer);
+      return b;
+    }
+
+    /* ── Pintar ─────────────────────────────────────────────────────── */
+    function pintar() {
+      const lista = efectivos();
+      const repiten = lista.filter((p: any) => p.repite).length;
+      $('[data-cuantos]')!.textContent =
+        lista.length + ' pasos · ' + repiten + (repiten === 1 ? ' vez' : ' veces') +
+        ' se vuelve a escribir lo mismo';
+
+      const ol = $('[data-lista]')!;
+      ol.innerHTML = '';
+      lista.forEach((p: any, idx: number) => {
+        const li = document.createElement('li');
+        const marcado = !!capa._banderas[p.id];
+        li.className = 'circ__paso casos__paso' +
+          (p.supuesto ? ' es-supuesto' : '') +
+          (p.repite ? ' es-repite' : '') +
+          (marcado ? ' es-marcada' : '');
+
+        // ── cabecera: número, emoji, qué pasa, controles ──
+        const cab = document.createElement('div');
+        cab.className = 'circ__cab';
+        const num = document.createElement('span');
+        num.className = 'circ__num';
+        num.textContent = String(idx + 1);
+        cab.appendChild(num);
+        cab.appendChild(campo(p.emoji, '📄', (v) => editar(p.id, 'emoji', v), 'casos__input--emoji'));
+        cab.appendChild(campo(p.que, 'Qué pasa, con un verbo', (v) => editar(p.id, 'que', v), 'casos__input--nombre'));
+
+        const ctrl = document.createElement('div');
+        ctrl.className = 'circ__ctrl';
+        ctrl.appendChild(boton('↑', 'Pasa antes', '', () => mover(p.id, -1)));
+        ctrl.appendChild(boton('↓', 'Pasa después', '', () => mover(p.id, 1)));
+        const band = document.createElement('button');
+        band.type = 'button';
+        band.className = 'casos__bandera' + (marcado ? ' es-activa' : '');
+        band.title = marcado ? 'Sacar la banderita' : 'Acá está mal — para revisar después';
+        band.textContent = '🚩';
+        band.addEventListener('click', () => {
+          if (marcado) delete capa._banderas[p.id]; else capa._banderas[p.id] = true;
+          guardar(); pintar();
+        });
+        ctrl.appendChild(band);
+        cab.appendChild(ctrl);
+        li.appendChild(cab);
+
+        // ── los datos del paso ──
+        li.appendChild(fila('Quién', campo(p.quien, 'Preceptoría, Dirección…', (v) => editar(p.id, 'quien', v))));
+        li.appendChild(fila('Dónde queda', campo(p.donde || '', 'papel, Drive, SiGeS, Excel…', (v) => editar(p.id, 'donde', v))));
+        li.appendChild(fila('Cada cuánto', campo(p.frecuencia || '', 'todos los días, por mes…', (v) => editar(p.id, 'frecuencia', v))));
+        li.appendChild(fila('Papeles', campo((p.documentos || []).join(' · '),
+          'los nombres que les dan ellos, separados por ·',
+          (v) => editar(p.id, 'documentos', v.split('·').map((s) => s.trim()).filter(Boolean)))));
+
+        // ── "acá se vuelve a escribir" ──
+        const rep = document.createElement('label');
+        rep.className = 'circ__repite';
+        const chk = document.createElement('input');
+        chk.type = 'checkbox';
+        chk.checked = !!p.repite;
+        chk.addEventListener('change', () => { editar(p.id, 'repite', chk.checked); pintar(); });
+        rep.appendChild(chk);
+        rep.appendChild(document.createTextNode(' ✍️ Acá se vuelve a escribir algo que ya estaba escrito'));
+        li.appendChild(rep);
+
+        if (p.pregunta) {
+          const q = document.createElement('p');
+          q.className = 'circ__pregunta';
+          q.textContent = '❓ ' + p.pregunta;
+          li.appendChild(q);
+        }
+        if (p.supuesto) {
+          const s = document.createElement('p');
+          s.className = 'circ__supuesto';
+          s.textContent = '⚠️ Este paso lo supusimos nosotros: confírmenlo o corríjanlo.';
+          const ok = boton('✅ Nos lo confirmaron', 'Confirmado', '', () => { editar(p.id, 'supuesto', false); pintar(); });
+          s.appendChild(document.createTextNode(' '));
+          s.appendChild(ok);
+          li.appendChild(s);
+        }
+        if (p.fuente) {
+          const f = document.createElement('p');
+          f.className = 'casos__fuente';
+          f.textContent = '📍 ' + p.fuente;
+          li.appendChild(f);
+        }
+
+        // ── pie del paso ──
+        const pie = document.createElement('div');
+        pie.className = 'circ__pie';
+        pie.appendChild(boton('➕ Un paso acá abajo', 'Agregar un paso después de este', '', () => agregarDespues(p.id)));
+        if (fueEditado(p.id) && !esNuevo(p.id)) {
+          pie.appendChild(boton('↩ Volver al original', 'Descartar los cambios de este paso', '', () => {
+            if (!confirm('¿Descartar los cambios de este paso?')) return;
+            delete capa[p.id]; guardar(); pintar();
+          }));
+        }
+        pie.appendChild(boton('🗑', 'Borrar este paso', 'casos__btn--peligro', () => {
+          if (!confirm('¿Borrar "' + p.que + '"?')) return;
+          if (esNuevo(p.id)) capa._nuevos = capa._nuevos.filter((n: any) => n.id !== p.id);
+          else { capa._borrados.push(p.id); delete capa[p.id]; }
+          delete capa._banderas[p.id];
+          capa._orden = capa._orden.filter((x: string) => x !== p.id);
+          guardar(); pintar();
+        }));
+        li.appendChild(pie);
+
+        ol.appendChild(li);
+      });
+    }
+
+    function agregarDespues(id: string | null) {
+      const nuevo = {
+        id: 'paso' + Date.now().toString(36),
+        emoji: '📄', que: '', quien: '', documentos: [],
+        supuesto: true, fuente: 'Agregado durante la reunión',
+      };
+      capa._nuevos.push(nuevo);
+      const ids = efectivos().map((p: any) => p.id).filter((x: string) => x !== nuevo.id);
+      const i = id ? ids.indexOf(id) + 1 : ids.length;
+      ids.splice(i, 0, nuevo.id);
+      capa._orden = ids;
+      guardar(); pintar();
+      const inputs = raiz.querySelectorAll('.casos__input--nombre');
+      const foco = [...inputs].find((n) => !(n as HTMLInputElement).value) as HTMLInputElement | undefined;
+      foco?.focus();
+    }
+
+    /* ── Exportar: listo para pegar en el .mdx ───────────────────────── */
+    const txt = (s: string) => "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+    function serializar() {
+      const uno = (p: any) => [
+        '  {',
+        '    id: ' + txt(p.id) + ',',
+        '    emoji: ' + txt(p.emoji || '📄') + ',',
+        '    que: ' + txt(p.que) + ',',
+        '    quien: ' + txt(p.quien) + ',',
+        p.donde ? '    donde: ' + txt(p.donde) + ',' : '',
+        p.documentos && p.documentos.length
+          ? '    documentos: [' + p.documentos.map(txt).join(', ') + '],' : '',
+        p.frecuencia ? '    frecuencia: ' + txt(p.frecuencia) + ',' : '',
+        p.repite ? '    repite: true,' : '',
+        p.supuesto ? '    supuesto: true,' : '',
+        p.pregunta ? '    pregunta: ' + txt(p.pregunta) + ',' : '',
+        p.fuente ? '    fuente: ' + txt(p.fuente) + ',' : '',
+        '  },',
+      ].filter(Boolean).join('\n');
+      return '<CircuitoInfo pasos={[\n' + efectivos().map(uno).join('\n') + '\n]} />';
+    }
+
+    async function volcar(texto: string, b: HTMLElement) {
+      const ta = $('[data-export]') as HTMLTextAreaElement;
+      ta.value = texto;
+      const antes = b.textContent;
+      try {
+        await navigator.clipboard.writeText(texto);
+        b.textContent = '¡Copiado!';
+        setTimeout(() => { b.textContent = antes; }, 1800);
+      } catch { ta.hidden = false; ta.focus(); ta.select(); }
+    }
+
+    $('[data-nuevo]')!.addEventListener('click', () => agregarDespues(null));
+    $('[data-copiar]')!.addEventListener('click', (e) => volcar(serializar(), e.currentTarget as HTMLElement));
+    $('[data-banderas]')!.addEventListener('click', (e) => {
+      const l = ['PASOS DEL CIRCUITO MARCADOS PARA REVISAR', ''];
+      const marcados = efectivos().filter((p: any) => capa._banderas[p.id]);
+      marcados.forEach((p: any) => l.push('🚩 ' + (p.emoji || '') + ' ' + p.que + '  (' + p.quien + ')'));
+      if (!marcados.length) l.push('(ninguno todavía)');
+      volcar(l.join('\n'), e.currentTarget as HTMLElement);
+    });
+
+    pintar();
+  });
+</script>

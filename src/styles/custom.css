@@ -3399,3 +3399,43 @@ body.pc-resizing * {
 @media (max-width: 30rem) {
   .casos__grilla { grid-template-columns: 1fr; }
 }
+
+/* ---------------------------------------------------------------------------
+   EL CIRCUITO DE LA INFORMACIÓN (CircuitoInfo.astro)
+   Reusa las piezas de .casos__* (botones, campos, banderita) para que las dos
+   herramientas de la reunión se manejen igual. Acá va solo lo que es propio:
+   la lista numerada y la marca de "acá se vuelve a escribir".
+--------------------------------------------------------------------------- */
+.circ { margin: 1.5rem 0; }
+.circ__lista { list-style: none; padding: 0; margin: 0; counter-reset: none; }
+.circ__lista > li + li { margin-top: 0; }
+.circ__paso { position: relative; margin: 0; }
+/* La flecha entre pasos: el circuito se lee de arriba hacia abajo. */
+.circ__paso + .circ__paso { margin-top: 1.9rem; }
+.circ__paso + .circ__paso::before {
+  content: '↓'; position: absolute; top: -1.65rem; left: 1.1rem;
+  font-size: 1.2rem; line-height: 1; color: var(--sl-color-accent);
+}
+.circ__paso.es-supuesto { border-style: dashed; border-color: #ffd43b; }
+/* Donde se vuelve a escribir lo mismo: es el dolor que el sistema viene a sacar. */
+.circ__paso.es-repite { border-left: 4px solid #ff8787; }
+.circ__cab { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+.circ__cab > *, .circ__ctrl > *, .circ__pie > * { margin-top: 0; }
+.circ__num {
+  flex: none; width: 1.8rem; height: 1.8rem; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; font-weight: 700;
+  background: var(--sl-color-accent); color: var(--sl-color-black);
+}
+.circ__ctrl { display: flex; gap: 0.25rem; margin-left: auto; }
+.circ__repite {
+  display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem;
+  font-size: 0.85rem; color: var(--sl-color-gray-2); cursor: pointer;
+}
+.circ__pregunta, .circ__supuesto {
+  margin: 0.7rem 0 0; padding: 0.55rem 0.8rem; border-radius: 0.4rem;
+  font-size: 0.88rem; line-height: 1.5; background: var(--sl-color-black);
+}
+.circ__pregunta { border: 1px solid var(--sl-color-accent); }
+.circ__supuesto { border: 1px solid #ffd43b; }
+.circ__pie { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
