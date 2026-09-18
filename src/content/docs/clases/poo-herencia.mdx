@@ -52,7 +52,7 @@ cuando la hija necesita un atributo más.
   titulo="Instrumentos que heredan"
   dificultad="🌱"
   starter={`class Instrumento:\n    def __init__(self, nombre):\n        self.nombre = nombre\n    def tocar(self):\n        return f"{self.nombre} hace un sonido"\n\n# Creá Guitarra(Instrumento) y Bateria(Instrumento)\n# que SOBRESCRIBAN tocar() con su propio sonido (ver tests).`}
-  tests={`assert Guitarra("Gibson").tocar() == "Gibson hace: ¡Riiiff!", 'Guitarra debería sonar "<nombre> hace: ¡Riiiff!"'\nassert Bateria("Pearl").tocar() == "Pearl hace: ¡Pum pum tss!", 'Bateria debería sonar "<nombre> hace: ¡Pum pum tss!"'\nassert Instrumento("X").tocar() == "X hace un sonido"\nprint("¡Instrumentos OK!")`}
+  tests={`assert Guitarra("Gibson").tocar() == "Gibson hace: ¡Riiiff!", 'Guitarra debería sonar "<nombre> hace: ¡Riiiff!"'\nassert Bateria("Pearl").tocar() == "Pearl hace: ¡Pum pum tss!", 'Bateria debería sonar "<nombre> hace: ¡Pum pum tss!"'\nassert Instrumento("X").tocar() == "X hace un sonido"\nassert issubclass(Guitarra, Instrumento) and issubclass(Bateria, Instrumento), "Guitarra y Bateria suenan bien, pero no heredan de Instrumento: repetiste el constructor en cada una. Con class Guitarra(Instrumento): lo reciben hecho, que es justo lo que enseña este ejercicio"\nprint("¡Instrumentos OK!")`}
   pistas={[
     "Las tres clases comparten el nombre y la forma de construirse. ¿Hace falta volver a escribir el constructor en cada hija, o ya lo tienen de algún lado?",
     "Si lo único distinto entre una guitarra y un piano es cómo suenan, ¿qué es lo único que tendrías que escribir en cada hija?",
@@ -80,7 +80,7 @@ y sumás sus áreas con un solo `for`.
   dificultad="🌿"
   archivo="formas.py"
   starter={`class Figura:\n    def area(self):\n        return 0\n\n# Creá Circulo(radio) y Rectangulo(base, altura), que hereden de Figura\n# y sobrescriban area().  (Para el círculo usá 3.1416 * radio ** 2)`}
-  tests={`from formas import Figura, Circulo, Rectangulo\nassert round(Circulo(10).area(), 2) == 314.16, "el área del círculo de radio 10 debería ser 314.16"\nassert Rectangulo(4, 5).area() == 20, "el área del rectángulo 4x5 debería ser 20"\nassert Figura().area() == 0\nprint("¡formas.py guardado y OK!")`}
+  tests={`from formas import Figura, Circulo, Rectangulo\nassert round(Circulo(10).area(), 2) == 314.16, "el área del círculo de radio 10 debería ser 314.16"\nassert Rectangulo(4, 5).area() == 20, "el área del rectángulo 4x5 debería ser 20"\nassert Figura().area() == 0\nassert issubclass(Circulo, Figura) and issubclass(Rectangulo, Figura), "Circulo y Rectangulo tienen que heredar de Figura: class Circulo(Figura). Es lo que las hace figuras, y es lo que el ejercicio pide practicar"\nprint("¡formas.py guardado y OK!")`}
   pistas={[
     "Un círculo se define con el radio y un rectángulo con base y altura: no comparten los datos. ¿Qué es lo único que SÍ comparten las dos figuras?",
     "Las dos van a tener un método con el mismo nombre pero con cuentas distintas adentro. ¿Por qué conviene que se llamen igual?",

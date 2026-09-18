@@ -95,7 +95,7 @@ En un diagrama, `-` es privado y `+` es público:
   titulo="La marca que no acepta cualquier cosa"
   dificultad="🌿"
   starter={`class Asistencia:\n    def __init__(self, fecha):\n        self.fecha = fecha\n        self._estado = "A"\n    # marcar(estado): SOLO acepta "P", "A", "T" o "J". Cualquier otra cosa se ignora.\n    # __str__: devuelve  <fecha>: <estado>`}
-  tests={`d = Asistencia("2026-09-16")\nassert str(d) == "2026-09-16: A", f'sin marcar todavía, tendría que decir "2026-09-16: A" y dice {str(d)!r}'\nd.marcar("P")\nassert str(d) == "2026-09-16: P", "después de marcar P tiene que quedar en P"\nd.marcar("Z")\nassert str(d) == "2026-09-16: P", "'Z' no es un estado válido: la marca tenía que quedar como estaba"\nd.marcar("")\nassert str(d) == "2026-09-16: P", "una marca vacía tampoco vale"\nd.marcar("J")\nassert str(d) == "2026-09-16: J", "la J (justificada) sí es válida"\nprint("¡Asistencia OK!")`}
+  tests={`d = Asistencia("2026-09-16")\nassert str(d) == "2026-09-16: A", f'sin marcar todavía, tendría que decir "2026-09-16: A" y dice {str(d)!r}'\nd.marcar("P")\nassert str(d) == "2026-09-16: P", "después de marcar P tiene que quedar en P"\nd.marcar("Z")\nassert str(d) == "2026-09-16: P", "'Z' no es un estado válido: la marca tenía que quedar como estaba"\nd.marcar("")\nassert str(d) == "2026-09-16: P", "una marca vacía tampoco vale"\nd.marcar("J")\nassert str(d) == "2026-09-16: J", "la J (justificada) sí es válida"\nd.marcar("T")\nassert str(d) == "2026-09-16: T", "la T (llegó tarde) también es una marca válida: los estados son P, A, T y J"\nd.marcar("A")\nassert str(d) == "2026-09-16: A", "la A también se tiene que poder volver a poner: por ejemplo, si alguien quedó presente por error"\nprint("¡Asistencia OK!")`}
   pistas={[
     "Los cuatro estados válidos son <strong>P</strong> (presente), <strong>A</strong> (ausente), <strong>T</strong> (tarde) y <strong>J</strong> (justificada).",
     "¿Qué querés que pase si llega una marca inválida: que el programa explote, o que simplemente no cambie nada? Para el sistema, lo segundo.",
@@ -153,7 +153,7 @@ proyecto; están porque practicar de más nunca sobró.
   titulo="Que se imprima lindo"
   dificultad="🌱"
   starter={`class Producto:\n    def __init__(self, nombre, precio):\n        self.nombre = nombre\n        self.precio = precio\n    # agregá __str__ para que print(producto) muestre  🛒 <nombre> — $<precio>`}
-  tests={`p = Producto("Yerba", 1500)\nassert str(p) == "🛒 Yerba — $1500", 'print(p) debería mostrar  🛒 Yerba — $1500'\nprint("¡Producto OK!")`}
+  tests={`p = Producto("Yerba", 1500)\nassert str(p) == "🛒 Yerba — $1500", 'print(p) debería mostrar  🛒 Yerba — $1500'\nassert str(Producto("Azúcar", 900)) == "🛒 Azúcar — $900", "con otro producto tiene que mostrar SUS datos: si __str__ devuelve un texto escrito a mano, todos los productos se imprimen como Yerba"\nprint("¡Producto OK!")`}
   pistas={[
     "Cuando hacés <code>print(objeto)</code> sin <code>__str__</code>, Python muestra algo tipo <code>&lt;__main__.Producto object at 0x7f...&gt;</code>. ¿Qué información le falta a Python para mostrar algo útil?",
     "¿El método tiene que imprimir el texto, o entregárselo a Python para que lo imprima él?",
@@ -189,7 +189,7 @@ una marca `"Z"` no quiere decir nada.
   titulo="Alumno a prueba de errores"
   dificultad="🌿"
   starter={`class Alumno:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self._notas = []\n    # agregar_nota(nota): SOLO agrega si la nota está entre 0 y 10\n    # promedio(): devuelve el promedio (0 si no hay notas)\n    # __str__: devuelve  <nombre> — promedio <promedio>`}
-  tests={`a = Alumno("Ana")\na.agregar_nota(8)\na.agregar_nota(15)   # inválida: se ignora\na.agregar_nota(10)\nassert str(a) == "Ana — promedio 9.0", 'esperaba "Ana — promedio 9.0" (15 no cuenta)'\nprint("¡Alumno OK!")`}
+  tests={`a = Alumno("Ana")\na.agregar_nota(8)\na.agregar_nota(15)   # inválida: se ignora\na.agregar_nota(10)\nassert str(a) == "Ana — promedio 9.0", 'esperaba "Ana — promedio 9.0" (15 no cuenta)'\na.agregar_nota(-4)\nassert str(a) == "Ana — promedio 9.0", "una nota negativa tampoco existe, y entró igual: controlaste el techo (10) pero no el piso. Las notas van de 0 a 10"\nprint("¡Alumno OK!")`}
   pistas={[
     "¿Qué notas no tendrían sentido en una libreta? Nombrá el rango de las que sí.",
     "Si llega una nota inválida, ¿qué preferís: que el programa explote, o que simplemente no la agregue?",
