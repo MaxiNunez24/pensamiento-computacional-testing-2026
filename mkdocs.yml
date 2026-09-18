@@ -159,13 +159,13 @@ nav:
         - 🔍 Lectura y corrección de código: clases/bloque_2_funciones_y_colecciones/lectura_codigo.md
         - 🧠 Del enunciado al programa: clases/bloque_2_funciones_y_colecciones/del_enunciado_al_programa.md
         - 🎲 Bingo: clases/bloque_2_funciones_y_colecciones/bingo.md
-      - 🐙 Versionado:
-        - 🐙 Git y GitHub: clases/bloque_3_persistencia/git_github.md
-      - 🏗️ POO:
+      - 🏗️ POO y el proyecto:
         - 🧬 POO I — Clases y objetos: clases/bloque_4_poo/poo_1.md
         - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/bloque_4_poo/poo_2.md
         - "🤖 El bot del SiGeS": https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/
         - "🗃️ SQLite": https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/sqlite/
+      - 🧰 Herramientas:
+        - 🐙 Git y GitHub: clases/bloque_3_persistencia/git_github.md
     # Las optativas, al mismo nivel que "Python Básico". Archivos, JSON y
     # Herencia se MOVIERON acá el 18/9 (no están duplicadas). Una optativa
     # nueva es un .md en clases/para_ir_mas_alla/ más una línea acá.

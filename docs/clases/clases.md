@@ -68,7 +68,7 @@
 
 ---
 
-## 🛠️ Bloque 3 — Versionado ✅ { #persistencia }
+## 🧰 Herramientas: Git y GitHub ✅ { #persistencia }
 
 - [🌳 Git y GitHub](./bloque_3_persistencia/git_github.md)
 
@@ -78,7 +78,7 @@
 
 ---
 
-## 🏗️ Bloque 4 — POO y Primer Proyecto *(en curso)*
+## 🏗️ Bloque 3 — POO y Primer Proyecto *(en curso)*
 
 - [🧬 POO I — Clases, objetos, atributos y métodos](./bloque_4_poo/poo_1.md)
 - [🛡️ POO II — Encapsulamiento y métodos especiales](./bloque_4_poo/poo_2.md)
@@ -88,7 +88,7 @@
 
 ---
 
-## 🌐 Bloque 5 — Web y Segundo Proyecto *(segundo semestre)*
+## 🌐 Bloque 4 — Web y Segundo Proyecto *(segundo semestre)*
 
 - 🌐 Cómo funciona la web
 - 🍶 Flask I, II y III — con Jinja, y accesible desde el primer template
@@ -97,7 +97,7 @@
 
 ---
 
-## 🧪 Bloque 6 — Testing *(segundo semestre)*
+## 🧪 Bloque 5 — Testing *(segundo semestre)*
 
 - Testing con `pytest`: unitarias, de integración y E2E
 - Tests unitarios, fixtures y parametrización
@@ -106,7 +106,7 @@
 
 ---
 
-## 🤖 Bloque 7 — IA y Proyecto Final *(segundo semestre)*
+## 🤖 Bloque 6 — IA y Proyecto Final *(segundo semestre)*
 
 - 🤖 Introducción a IA y modelos de lenguaje
 - 🔌 Consumir APIs de IA desde Python

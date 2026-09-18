@@ -141,41 +141,27 @@ export default defineConfig({
             { label: '🎰 Bingo — integrador', link: '/clases/bingo/' },
           ],
         },
-        // Archivos y JSON pasaron a "Para ir más allá" el 18/9: el sistema
-        // guarda en SQLite desde el principio. Leer un CSV se ve con el bot.
+        // El Bloque 3 es POO y el proyecto, pegado al Bloque 2 (18/9). Antes el
+        // 3 era "Versionado", pero Archivos y JSON pasaron a "Para ir más allá"
+        // y solo quedaba Git, que ya se dio: ahora está en Herramientas.
+        //   · El bot va pegado a POO: el Alumno que carga es la misma clase de
+        //     POO I, con más datos y un método que dice si está lista.
+        //   · SQLite va con el proyecto y no con Archivos: el sistema guarda en
+        //     la base desde el principio.
         {
-          label: '🛠️ Bloque 3 — Versionado',
-          items: [
-            { label: '🐙 Git desde VS Code', link: '/clases/git-vscode/' },
-          ],
-        },
-        {
-          label: '🧰 Herramientas de Python',
-          items: [
-            { label: '🎁 Lo que Python hace por vos', link: '/clases/lo-que-python-hace-por-vos/' },
-          ],
-        },
-        {
-          label: '🏗️ POO',
+          label: '🏗️ Bloque 3 — POO y el proyecto',
           items: [
             { label: '🧬 POO I — Clases y objetos', link: '/clases/poo-1/' },
             { label: '🛡️ POO II — Encapsulamiento', link: '/clases/poo-2/' },
-          ],
-        },
-        // Va pegado a POO a propósito: el Alumno que carga el bot es la misma
-        // clase de POO I, con más datos y un método que dice si está lista.
-        {
-          label: '🤖 Proyecto: el bot del SiGeS',
-          items: [
             { label: '🤖 El bot del SiGeS', link: '/clases/bot-siges/' },
+            { label: '🗃️ SQLite — los datos en una base', link: '/clases/sqlite/' },
           ],
         },
-        // SQLite va con el proyecto y no con Archivos: el sistema guarda en la
-        // base desde el principio (decidido el 18/9).
         {
-          label: '🗃️ Proyecto: el sistema de asistencias',
+          label: '🧰 Herramientas',
           items: [
-            { label: '🗃️ SQLite — los datos en una base', link: '/clases/sqlite/' },
+            { label: '🐙 Git desde VS Code', link: '/clases/git-vscode/' },
+            { label: '🎁 Lo que Python hace por vos', link: '/clases/lo-que-python-hace-por-vos/' },
           ],
         },
         {

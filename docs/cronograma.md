@@ -57,7 +57,7 @@
     Modularización con **funciones** (parámetros, retorno, scope, `*args`/`**kwargs` a nivel
     concepto). Clases puente de repaso y lectura de código, e integrador (**Bingo**).
 
-!!! info "🛠️ Bloque 3 — Versionado"
+!!! success "🧰 Herramientas: Git y GitHub *(ya cursado)*"
     Workflow básico de **Git y GitHub** (init/add/commit/status/log/push/clone/pull) para versionar
     el código y continuarlo en casa. Se introduce antes del primer proyecto.
 
@@ -66,7 +66,7 @@
     que sí hace falta de archivos, **leer la planilla del formulario (un CSV)**, se ve con el bot del
     SiGeS, justo cuando lo necesitan.
 
-!!! info "🏗️ Bloque 4 — POO y Primer Proyecto: Sistema de Asistencias"
+!!! info "🏗️ Bloque 3 — POO y Primer Proyecto: Sistema de Asistencias"
     **POO**: clases, objetos, atributos, métodos, `__init__`, encapsulamiento, `__str__`/`__repr__`.
     *(Herencia y polimorfismo pasaron a optativos: en el CFP el rol es un dato de la persona, no una
     subclase.)*
@@ -83,7 +83,7 @@
 
     👉 El prototipo del sistema ya se puede **[ver y probar](./proyecto/index.md)**.
 
-!!! info "🌐 Bloque 5 — Web y Segundo Proyecto: Bot SiGes"
+!!! info "🌐 Bloque 4 — Web y Segundo Proyecto: Bot SiGes"
     Cómo funciona la web (HTTP, request/response, rutas) y **Flask** (Jinja2, formularios). Se
     **migra el Sistema de Asistencias a web**, refactorizando código propio.
 
@@ -94,7 +94,7 @@
     datos ya cargados en Asistencias. Playwright sirve además para **testing E2E** — engancha con el
     módulo de Testing.
 
-!!! info "🧪 Bloque 6 — Testing (teórico y aplicado)"
+!!! info "🧪 Bloque 5 — Testing (teórico y aplicado)"
     **Testing está en el nombre del curso**, así que tiene su propio bloque. Primero la **teoría**:
     por qué se prueba, qué es un caso de prueba, la diferencia entre prueba **unitaria**, de
     **integración** y **E2E**, qué es una regresión y qué mide (y qué no) la cobertura. Después,
@@ -107,7 +107,7 @@
     que se puede verificar: la [Ley 26.653](http://servicios.infoleg.gob.ar/infolegInternet/anexos/175000-179999/175694/norma.htm){ target=_blank }
     y las pautas **WCAG**.
 
-!!! info "🤖 Bloque 7 — IA y Proyecto Final"
+!!! info "🤖 Bloque 6 — IA y Proyecto Final"
     Qué es una **API de IA** y cómo consumirla desde Python; integrar modelos de lenguaje o visión.
     **Proyecto final original** a elección de cada alumno o equipo, presentado en la **Expo CFP**.
 
