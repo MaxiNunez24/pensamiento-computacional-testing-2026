@@ -175,6 +175,14 @@ export default defineConfig({
             { label: '🔗 Herencia y polimorfismo', link: '/clases/poo-herencia/' },
           ],
         },
+        // Va pegado a POO a propósito: el Alumno que carga el bot es la misma
+        // clase de POO I, con más datos y un método que dice si está lista.
+        {
+          label: '🤖 Proyecto: el bot del SiGeS',
+          items: [
+            { label: '🤖 El bot del SiGeS', link: '/clases/bot-siges/' },
+          ],
+        },
         {
           label: '🧪 Testing',
           items: [

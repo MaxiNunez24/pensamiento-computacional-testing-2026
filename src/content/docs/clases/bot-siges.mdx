@@ -1,0 +1,743 @@
+---
+title: El bot del SiGeS
+description: "El Alumno de POO aprende a decir si está listo para cargarse en el sistema del Ministerio. Leemos la planilla de inscripción, escribimos los controles y vemos al bot cargar solo en el simulador."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import OrdenarPasos from '../../../components/OrdenarPasos.astro';
+import Mermaid from '../../../components/Mermaid.astro';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+:::tip[El miércoles, esto carga a un alumno de verdad]
+Lo que escribamos hoy **es el código que va a correr el miércoles**, cuando junto con preceptoría
+carguemos a un alumno real en el SiGeS. La parte que decide quién se carga y quién no la van a
+escribir ustedes.
+:::
+
+## El problema
+
+Hoy, para inscribir a alguien en el SiGeS, una preceptora abre la planilla que dejó el formulario
+de inscripción, copia el DNI, lo pega en el sistema del Ministerio y completa **unos veinte campos
+a mano**, leyendo de la planilla. Después guarda, y vuelve a empezar con el siguiente.
+
+Con treinta inscriptos son un par de horas. Y cada campo es una oportunidad de equivocarse.
+
+Un **bot** hace eso solo: abre el navegador, escribe, hace clic, guarda. Lo mismo que haría una
+persona con el mouse, pero sin cansarse.
+
+Ahora, antes de seguir, pensá esto:
+
+<OpcionMultiple titulo="Chequeo: ¿qué hace el bot con un error?" opciones={[
+  { texto: "Lo carga igual, pero más rápido que una persona.", correcta: true, explicacion: "Exacto. El bot no sabe que 13/10/2072 es una fecha imposible: si se la das, la carga. Un bot no arregla un proceso malo: lo acelera." },
+  { texto: "Se da cuenta y lo corrige solo.", explicacion: "Nadie le enseñó qué está bien y qué está mal. Eso es justamente lo que vamos a escribir hoy." },
+  { texto: "Se frena y avisa.", explicacion: "Solo si alguien le escribió ese control. Por defecto, no: obedece." },
+]}>
+En la planilla alguien escribió que nació el **13/10/2072**. ¿Qué hace el bot con eso?
+</OpcionMultiple>
+
+:::caution[La frase de la clase]
+**Un bot no arregla un proceso malo: lo acelera.** Si la planilla tiene basura, un bot mete basura
+en el sistema del Ministerio a cuarenta registros por minuto en vez de a uno.
+:::
+
+## El plan: dos partes
+
+Por eso el bot son **dos programas**, y el primero es el que importa:
+
+<Mermaid code={`flowchart TD
+    P[📄 La planilla del formulario] --> L[planilla.py<br/>lee cada fila]
+    L --> A[alumno.py<br/>¿está listo?]
+    A -->|sí| B[🤖 bot.py<br/>lo carga en el simulador]
+    A -->|no| F[⛔ lo mira una persona]
+    style L fill:#2b8a3e,color:#fff
+    style A fill:#2b8a3e,color:#fff`} />
+
+Los dos cuadros verdes son de ustedes. `bot.py` ya viene hecho: **el bot no decide, tipea**.
+
+Y fijate que `alumno.py` es la clase `Alumno` del miércoles. Es la misma, con más datos, y con un
+método nuevo que dice si está lista para cargarse.
+
+<OpcionMultiple titulo="Chequeo: ¿quién decide?" opciones={[
+  { texto: "alumno.py: el método que dice si está listo.", correcta: true, explicacion: "Tal cual. El bot solo carga lo que alumno.py le deja pasar. Por eso esa parte es la importante, y por eso la escriben ustedes." },
+  { texto: "bot.py, porque es el que carga.", explicacion: "bot.py solo tipea lo que le dan. No mira si el dato tiene sentido." },
+  { texto: "El SiGeS, que no deja guardar datos malos.", explicacion: "El SiGeS pide que algunos campos no estén vacíos, pero no sabe si una fecha es imposible o si el domicilio es un DNI. Si llega mal, queda mal." },
+]}>
+Entre los archivos del proyecto, ¿cuál decide si un alumno se carga o no?
+</OpcionMultiple>
+
+## Preparar la compu
+
+Hoy trabajamos en **VS Code**, no en la plataforma. La plataforma la usamos para practicar cada
+pieza, y cuando te da ✓, la copiás a tu proyecto.
+
+<a class="sl-link-button not-content" data-variant="primary" href={b + 'bot-siges/proyecto-bot-siges.zip'} download>📦 Descargar el proyecto</a>
+
+Adentro del zip hay una carpeta `bot-siges` con esto:
+
+| Archivo | ¿De quién? | Qué hace |
+|---|---|---|
+| `alumno.py` | ✏️ **tuyo** | La clase `Alumno`, que dice si está lista para cargarse |
+| `planilla.py` | ✏️ **tuyo** | Lee la planilla y arma un `Alumno` por fila |
+| `bot.py` | ya viene hecho | Hace el control y después maneja el navegador |
+| `ayudas.py` | ya viene hecho | Lo que el bot necesita y no es lo importante |
+| `inscriptos.csv` | datos de prueba | Ocho inscriptos **inventados**, con errores a propósito |
+| `siges_falso.html` | el simulador | Una copia del formulario del SiGeS, para practicar sin romper nada |
+
+Los pasos son estos, pero desordenados. Ponelos en orden:
+
+<OrdenarPasos
+  titulo="Del zip a VS Code"
+  pasos={[
+    'Descargar el proyecto',
+    'Descomprimirlo (clic derecho → <strong>Extraer todo</strong>)',
+    'En VS Code: <strong>Archivo → Abrir carpeta</strong> y elegir la carpeta <code>bot-siges</code>',
+    'Abrir la terminal: <strong>Terminal → Nueva terminal</strong>',
+  ]}
+  pistas={['No se puede abrir en VS Code una carpeta que todavía está adentro del zip.']}
+/>
+
+:::note[Abrí la CARPETA, no un archivo]
+Si abrís solo `alumno.py`, VS Code no sabe que existen los otros archivos y la terminal arranca en
+cualquier lado. Con **Abrir carpeta**, la terminal arranca justo ahí, que es donde tiene que estar.
+:::
+
+## El entorno virtual
+
+Hasta ahora todo lo que usamos venía con Python: `print`, `input`, `csv`. Hoy necesitamos algo que
+**no viene**: Playwright, la librería que maneja el navegador. Hay que instalarla.
+
+Y acá aparece un problema que tiene todo el que programa: si instalás todo en el Python de la
+compu, el día que dos proyectos necesiten versiones distintas de la misma librería, se pisan. Y el
+proyecto que te anda a vos no le anda a tu compañero.
+
+La solución es un **entorno virtual**: una carpeta `.venv` adentro del proyecto, con **su propio
+Python y sus propias librerías**. Lo que instalás ahí adentro no toca nada de afuera.
+
+En la terminal de VS Code:
+
+```bash
+python -m venv .venv
+```
+
+Aparece una carpeta nueva, `.venv`. Ahora hay que **activarlo**, para que la terminal use ese
+Python y no el de la compu:
+
+```bash
+.venv\Scripts\activate
+```
+
+Te das cuenta de que funcionó porque la línea de la terminal empieza con **`(.venv)`**:
+
+```text
+(.venv) C:\Users\alumno\Descargas\bot-siges>
+```
+
+:::caution[Si dice que "la ejecución de scripts está deshabilitada"]
+Es PowerShell, que por seguridad no deja correr el archivo de activación. No hace falta cambiar
+nada de la compu: en la terminal, tocá la flechita al lado del **+** y elegí **Command Prompt**.
+Ahí `.venv\Scripts\activate` anda sin problema.
+:::
+
+:::tip[VS Code también lo puede hacer solo]
+`Ctrl+Shift+P` → **Python: Create Environment** → **Venv**. Te crea la carpeta, te pregunta si
+querés instalar lo que dice `requirements.txt`, y las terminales nuevas ya se abren activadas.
+:::
+
+<OpcionMultiple titulo="Chequeo: ¿se sube a GitHub?" opciones={[
+  { texto: "No: se sube requirements.txt, y cada uno arma su .venv con eso.", correcta: true, explicacion: "Exacto. El .venv pesa cientos de megas y además tiene rutas de TU compu: en otra no anda. Lo que viaja es la lista de lo que hay que instalar. Por eso el proyecto trae un .gitignore que lo deja afuera." },
+  { texto: "Sí, así el compañero no tiene que instalar nada.", explicacion: "Suena lógico, pero el .venv tiene rutas de tu compu adentro. En la del compañero no anda." },
+  { texto: "Sí, pero solo la carpeta Scripts.", explicacion: "No se sube nada del .venv. Lo que se sube es la receta para armarlo: requirements.txt." },
+]}>
+La carpeta `.venv`, ¿se sube a GitHub?
+</OpcionMultiple>
+
+## Instalar Playwright
+
+Con el `(.venv)` a la vista, dos comandos:
+
+```bash
+pip install -r requirements.txt
+python -m playwright install chromium
+```
+
+El primero instala la **librería** de Python. El segundo baja el **navegador** que esa librería
+maneja, un Chromium aparte del Chrome de la compu. Pesa bastante, así que **dejalo bajando y
+seguimos**: lo que viene no lo necesita.
+
+<OpcionMultiple titulo="Chequeo: ¿por qué dos comandos?" opciones={[
+  { texto: "Porque uno instala la librería y el otro baja el navegador que la librería maneja.", correcta: true, explicacion: "Tal cual. Sin el segundo, el bot arranca y se frena con \"Executable doesn't exist\": tiene el control remoto pero no tiene el televisor." },
+  { texto: "El segundo es opcional, para que ande más rápido.", explicacion: "No es opcional: sin el navegador, la librería no tiene qué manejar." },
+  { texto: "Uno es para Windows y el otro para Linux.", explicacion: "Los dos se corren en cualquier sistema." },
+]}>
+¿Por qué hacen falta dos comandos para instalar Playwright?
+</OpcionMultiple>
+
+## Leer la planilla
+
+El formulario de inscripción deja una **planilla**. Bajada como archivo, es un **CSV**: texto, con
+una fila por línea y los datos separados por comas. La primera línea son los títulos:
+
+```text
+dni,apellidos,nombres,fecha_nacimiento,celular,nacionalidad,domicilio
+40000004,Paz,Mateo Ariel,3/12/2004,2215550004,Argentino,Calle 47 nro 629
+```
+
+Python trae un módulo para leerlo, `csv`. Y lo más cómodo que tiene es `csv.DictReader`: te da
+**cada fila como un diccionario**, con los títulos como claves.
+
+```python
+import csv
+
+with open("inscriptos.csv", encoding="utf-8") as archivo:
+    for fila in csv.DictReader(archivo):
+        print(fila["apellidos"], fila["dni"])
+```
+
+La primera línea no aparece como una fila más: `DictReader` la usa para saber cómo se llama cada
+columna. Por eso después podés pedir `fila["apellidos"]` en vez de acordarte de que era la
+columna 2.
+
+<EjercicioPython
+  titulo="Leer la planilla"
+  dificultad="🌱"
+  datos={`with open("inscriptos.csv", "w", encoding="utf-8") as f:
+    f.write("dni,apellidos,nombres\\n")
+    f.write("40000004,Paz,Mateo Ariel\\n")
+    f.write("40000001,Gómez,Lucía Belén\\n")
+    f.write("40000009,Ledesma,Marta Elena\\n")
+`}
+  starter={`import csv
+
+def leer_filas(ruta):
+    filas = []
+    # 1. abrí el archivo con encoding="utf-8"
+    # 2. recorré csv.DictReader(archivo) y agregá cada fila a la lista
+    return filas
+`}
+  tests={`filas = leer_filas("inscriptos.csv")
+assert isinstance(filas, list), "leer_filas tiene que devolver una lista: armala y devolvela con return"
+assert len(filas) != 4, "devolviste 4 filas y la planilla tiene 3 inscriptos: estás contando la primera línea, que son los títulos. DictReader la usa como nombres de las columnas, así que no aparece como una fila más"
+assert len(filas) == 3, f"la planilla tiene 3 inscriptos y devolviste {len(filas)} filas"
+assert isinstance(filas[0], dict), "cada fila tiene que ser un diccionario: con csv.reader llegan listas, con csv.DictReader llegan diccionarios"
+assert filas[0]["apellidos"] == "Paz", 'la primera fila es la de Paz: filas[0]["apellidos"] tendría que ser "Paz"'
+assert filas[2]["dni"] == "40000009", 'el tercer inscripto tiene DNI "40000009"'
+print("¡Planilla leída! Cada fila es un diccionario con los títulos como claves.")
+`}
+  pistas={[
+    'Es el mismo <code>with open(...)</code> de siempre. Lo único nuevo es qué hacés adentro: en vez de recorrer el archivo línea por línea, lo recorrés con <code>csv.DictReader(archivo)</code>.',
+    '<code>for fila in csv.DictReader(archivo):</code> te da una fila por vuelta, ya convertida en diccionario. Solo te queda agregarla a la lista.',
+  ]}
+>
+Completá `leer_filas(ruta)`: que abra la planilla y devuelva **una lista con una fila por
+inscripto**, cada una como diccionario.
+
+La planilla ya está creada, con tres inscriptos.
+</EjercicioPython>
+
+Y ahora, cada fila se convierte en un objeto. Es el momento en que se juntan las dos cosas: **la
+planilla trae los datos, la clase les da comportamiento.**
+
+<EjercicioPython
+  titulo="De cada fila, un Alumno"
+  dificultad="🌿"
+  datos={`with open("inscriptos.csv", "w", encoding="utf-8") as f:
+    f.write("dni,apellidos,nombres,fecha_nacimiento,celular,nacionalidad,domicilio\\n")
+    f.write("40000004,Paz,Mateo Ariel,3/12/2004,2215550004,Argentino,Calle 47 nro 629\\n")
+    f.write("40000009,Ledesma,Marta Elena,13/10/2072,2215550009,Argentina,Calle 12 e/número 6\\n")
+    f.write("40000010,sosa,camila,12/06/2006,221 555 0010,argentina,40000010\\n")
+
+class Alumno:
+    def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
+        self.dni = dni
+        self.apellidos = apellidos
+        self.nombres = nombres
+        self.fecha_nacimiento = fecha_nacimiento
+        self.celular = celular
+        self.nacionalidad = nacionalidad
+        self.domicilio = domicilio
+`}
+  starter={`import csv
+
+def leer_inscriptos(ruta):
+    inscriptos = []
+    # por cada fila de la planilla, creá un Alumno y agregalo a la lista.
+    # El orden de los datos: dni, apellidos, nombres, fecha_nacimiento,
+    # celular, nacionalidad, domicilio
+    return inscriptos
+`}
+  tests={`inscriptos = leer_inscriptos("inscriptos.csv")
+assert isinstance(inscriptos, list) and len(inscriptos) == 3, f"la planilla tiene 3 inscriptos y la lista tiene {len(inscriptos) if isinstance(inscriptos, list) else 'otra cosa'}"
+assert not isinstance(inscriptos[0], dict), 'en la lista hay diccionarios: el ejercicio de antes ya los tenías. Ahora cada fila se convierte en un objeto: Alumno(fila["dni"], fila["apellidos"], ...)'
+assert isinstance(inscriptos[0], Alumno), "cada elemento de la lista tiene que ser un Alumno"
+assert inscriptos[0].apellidos == "Paz", f'el primero tendría que tener apellidos "Paz" y tiene {inscriptos[0].apellidos!r}: fijate el ORDEN en que le pasás los datos a Alumno(...)'
+assert inscriptos[0].dni == "40000004", "el DNI va como texto, tal cual viene de la planilla: no hace falta convertirlo a número (y si lo convertís, un DNI que empieza con 0 pierde el cero)"
+assert inscriptos[2].celular == "221 555 0010", "el celular tiene que quedar tal cual vino, con los espacios: limpiarlo es trabajo de otro ejercicio"
+assert inscriptos[2].domicilio == "40000010", "el domicilio del tercero es el que tiene el error de la planilla: tiene que llegar tal cual"
+print("¡Cada fila ya es un Alumno! Los datos vienen de la planilla, el comportamiento viene de la clase.")
+`}
+  pistas={[
+    'Es el ejercicio de antes, con un paso más adentro del <code>for</code>: antes de agregar la fila a la lista, la convertís en un <code>Alumno</code>.',
+    'Cada dato sale de la fila por su título: <code>fila["dni"]</code>, <code>fila["apellidos"]</code>… y van en el mismo orden que en el <code>__init__</code>.',
+  ]}
+>
+Ahora el paso que junta todo: que `leer_inscriptos(ruta)` devuelva una lista de **objetos
+`Alumno`**, uno por fila. La clase ya está definida, con su `__init__`.
+
+Esto va tal cual a tu `planilla.py`.
+</EjercicioPython>
+
+Cuando te dé ✓, **copiá la función a tu `planilla.py`** en VS Code.
+
+## Primero, sin controles
+
+La clase `Alumno` de tu `alumno.py` ya tiene el `__init__` y `nombre_completo()`. Le falta decir si
+está lista para cargarse.
+
+<EjercicioPython
+  titulo="¿Está listo para cargarse?"
+  dificultad="🌱"
+  starter={`class Alumno:
+    def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
+        self.dni = dni
+        self.apellidos = apellidos
+        self.nombres = nombres
+        self.fecha_nacimiento = fecha_nacimiento
+        self.celular = celular
+        self.nacionalidad = nacionalidad
+        self.domicilio = domicilio
+
+    def nombre_completo(self):
+        return f"{self.apellidos}, {self.nombres}"
+
+    def problemas(self):
+        lista = []
+        # todavía sin controles
+        return lista
+
+    def esta_listo(self):
+        # está listo si no tiene ningún problema
+        pass
+`}
+  tests={`BUENO = dict(dni="40000004", apellidos="Paz", nombres="Mateo", fecha_nacimiento="3/12/2004",
+             celular="2215550004", nacionalidad="Argentino", domicilio="Calle 47 nro 629")
+
+def alumno(**cambios):
+    d = dict(BUENO)
+    d.update(cambios)
+    return Alumno(d["dni"], d["apellidos"], d["nombres"], d["fecha_nacimiento"],
+                  d["celular"], d["nacionalidad"], d["domicilio"])
+
+def menciona(a, palabra):
+    return any(palabra.lower() in p.lower() for p in a.problemas())
+
+assert alumno().problemas() == [], f"un alumno con todos los datos bien no tiene que tener problemas, y problemas() devolvió {alumno().problemas()}"
+resultado = alumno().esta_listo()
+assert resultado is not None, "esta_listo() no devuelve nada: le falta el return. Tiene que devolver True o False"
+assert resultado is True, "un alumno sin problemas está listo: problemas() vuelve vacía, así que esta_listo() tiene que dar True"
+print("¡Listo! Ahora copiá esta_listo() a tu alumno.py y corré el bot: fijate qué carga.")
+`}
+  pistas={[
+    '¿Cuándo está listo un alumno? Cuando la lista de problemas está vacía. ¿Cómo sabés si una lista está vacía?',
+    '<code>len(self.problemas()) == 0</code> ya es <code>True</code> o <code>False</code>: lo podés devolver directo, sin <code>if</code>.',
+  ]}
+>
+Completá `esta_listo()`: que devuelva `True` si el alumno **no tiene ningún problema**, y `False`
+si tiene alguno. Todavía no hay ningún control, así que por ahora todos van a estar listos.
+</EjercicioPython>
+
+Copialo a tu `alumno.py` y en la terminal corré:
+
+```bash
+python bot.py
+```
+
+Mirá lo que carga. **Todo.** Incluida Marta Ledesma, que según la planilla nace en 2072. Y Camila
+Sosa, que tiene el DNI en el lugar del domicilio.
+
+```text
+Cargados: 8 de 8. Los 0 frenados no se tocaron.
+```
+
+Eso es un bot sin controles: hace exactamente lo que le pedimos, a toda velocidad, sin pensar.
+Vamos a enseñarle.
+
+## Los cinco controles
+
+Cada control es una pregunta que se le hace al alumno antes de cargarlo. Si la respuesta está
+mal, **se agrega un problema a la lista**, con un mensaje que explique qué pasa: ese mensaje es lo
+que va a leer la preceptora.
+
+Hacé uno, dale ✓, **copialo a tu `alumno.py`**, y seguí con el siguiente.
+
+<EjercicioPython
+  titulo="Control 1: el DNI"
+  dificultad="🌱"
+  starter={`class Alumno:
+    def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
+        self.dni = dni
+        self.apellidos = apellidos
+        self.nombres = nombres
+        self.fecha_nacimiento = fecha_nacimiento
+        self.celular = celular
+        self.nacionalidad = nacionalidad
+        self.domicilio = domicilio
+
+    def nombre_completo(self):
+        return f"{self.apellidos}, {self.nombres}"
+
+    def problemas(self):
+        lista = []
+        # el DNI: solo números, y que tenga 7 u 8
+        return lista
+
+    def esta_listo(self):
+        return len(self.problemas()) == 0
+`}
+  tests={`BUENO = dict(dni="40000004", apellidos="Paz", nombres="Mateo", fecha_nacimiento="3/12/2004",
+             celular="2215550004", nacionalidad="Argentino", domicilio="Calle 47 nro 629")
+
+def alumno(**cambios):
+    d = dict(BUENO)
+    d.update(cambios)
+    return Alumno(d["dni"], d["apellidos"], d["nombres"], d["fecha_nacimiento"],
+                  d["celular"], d["nacionalidad"], d["domicilio"])
+
+def menciona(a, palabra):
+    return any(palabra.lower() in p.lower() for p in a.problemas())
+
+assert alumno().problemas() == [], f"un alumno con todos los datos bien no tiene que tener problemas, y problemas() devolvió {alumno().problemas()}"
+assert menciona(alumno(dni="4000000A"), "DNI"), '"4000000A" tiene una letra: tiene que aparecer un problema que diga DNI. Para saber si un texto son solo números: .isdigit()'
+assert menciona(alumno(dni="40.000.004"), "DNI"), '"40.000.004" tiene puntos: no son solo números'
+assert menciona(alumno(dni="1234"), "DNI"), "un DNI de 4 números es demasiado corto: los DNI tienen 7 u 8"
+assert menciona(alumno(dni="123456789"), "DNI"), "9 números es demasiado largo: los DNI tienen 7 u 8"
+assert not menciona(alumno(dni="1234567"), "DNI"), "7 números es un DNI válido: los más viejos tienen 7. Revisá que aceptes 7 Y 8"
+assert alumno(dni="1234").esta_listo() is False, "con un problema en el DNI, esta_listo() tiene que dar False"
+print("¡Control del DNI OK! Copialo a tu alumno.py.")
+`}
+  pistas={[
+    'Son dos preguntas: ¿son todos números? y ¿cuántos son? Si falla <strong>cualquiera</strong> de las dos, hay un problema. ¿Qué palabra une dos condiciones así?',
+    '<code>self.dni.isdigit()</code> da <code>True</code> si son todos números. Y <code>len(self.dni)</code> te dice cuántos caracteres tiene.',
+    'El mensaje lo escribís vos, pero tiene que decir <strong>DNI</strong> en algún lado: el bot se lo muestra a la preceptora.',
+  ]}
+>
+Agregá el control del DNI: si **no son solo números**, o si **no tiene 7 u 8**, agregá a la lista
+un problema que diga **DNI**.
+</EjercicioPython>
+
+:::note[💡 Nuevo: .isdigit()]
+`"40000004".isdigit()` da `True`: son todos dígitos. `"40.000.004".isdigit()` da `False`, por
+los puntos. Es un método de los textos, como `.upper()` o `.strip()`.
+:::
+
+<EjercicioPython
+  titulo="Control 2: la fecha de nacimiento"
+  dificultad="🌿"
+  datos={`from datetime import date, datetime
+
+def leer_fecha(texto):
+    texto = (texto or "").strip()
+    for formato in ("%d/%m/%Y", "%d/%m/%y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(texto, formato).date()
+        except ValueError:
+            pass
+    return None
+`}
+  starter={`class Alumno:
+    def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
+        self.dni = dni
+        self.apellidos = apellidos
+        self.nombres = nombres
+        self.fecha_nacimiento = fecha_nacimiento
+        self.celular = celular
+        self.nacionalidad = nacionalidad
+        self.domicilio = domicilio
+
+    def nombre_completo(self):
+        return f"{self.apellidos}, {self.nombres}"
+
+    def problemas(self):
+        lista = []
+        # la fecha: que se entienda, y que no esté en el futuro
+        fecha = leer_fecha(self.fecha_nacimiento)
+        return lista
+
+    def esta_listo(self):
+        return len(self.problemas()) == 0
+`}
+  tests={`BUENO = dict(dni="40000004", apellidos="Paz", nombres="Mateo", fecha_nacimiento="3/12/2004",
+             celular="2215550004", nacionalidad="Argentino", domicilio="Calle 47 nro 629")
+
+def alumno(**cambios):
+    d = dict(BUENO)
+    d.update(cambios)
+    return Alumno(d["dni"], d["apellidos"], d["nombres"], d["fecha_nacimiento"],
+                  d["celular"], d["nacionalidad"], d["domicilio"])
+
+def menciona(a, palabra):
+    return any(palabra.lower() in p.lower() for p in a.problemas())
+
+assert alumno().problemas() == [], f"un alumno con todos los datos bien no tiene que tener problemas, y problemas() devolvió {alumno().problemas()}"
+try:
+    alumno(fecha_nacimiento="Completar").problemas()
+except TypeError:
+    raise AssertionError("con 'Completar', leer_fecha devuelve None, y None no se puede comparar con una fecha. Preguntá primero si es None, y recién si no lo es, comparala con hoy")
+assert menciona(alumno(fecha_nacimiento="Completar"), "fecha"), "'Completar' no es una fecha: leer_fecha devuelve None, y eso también es un problema. Tiene que aparecer uno que diga 'fecha'"
+assert menciona(alumno(fecha_nacimiento="13/10/2072"), "futuro"), "13/10/2072 todavía no pasó: tiene que aparecer un problema que diga 'futuro'"
+assert not menciona(alumno(fecha_nacimiento="1/1/1990"), "fecha"), "1/1/1990 es una fecha normal: no tiene que dar ningún problema"
+print("¡Control de la fecha OK! Copialo a tu alumno.py.")
+`}
+  pistas={[
+    'Hay dos casos malos y van en orden: primero, que no se entienda (<code>fecha is None</code>); y <strong>solo si se entendió</strong>, que esté en el futuro.',
+    'Las fechas se comparan con <code>&gt;</code> igual que los números: una fecha "mayor" es una fecha más adelante. Hoy es <code>date.today()</code>.',
+  ]}
+>
+Agregá el control de la fecha. Ya tenés `fecha = leer_fecha(self.fecha_nacimiento)`, que devuelve
+la fecha o `None` si no la entiende.
+
+- Si no se entiende → un problema que diga **fecha**.
+- Si está en el futuro → un problema que diga **futuro**.
+</EjercicioPython>
+
+:::note[💡 Nuevo: date.today()]
+`date.today()` es la fecha de hoy. Y las fechas se comparan como los números: `fecha > date.today()`
+es `True` si la fecha todavía no llegó. `leer_fecha` viene en `ayudas.py`, y es la que convierte
+`"3/12/2004"` en una fecha de verdad.
+:::
+
+<EjercicioPython
+  titulo="Control 3: el celular"
+  dificultad="🌿"
+  starter={`class Alumno:
+    def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
+        self.dni = dni
+        self.apellidos = apellidos
+        self.nombres = nombres
+        self.fecha_nacimiento = fecha_nacimiento
+        self.celular = celular
+        self.nacionalidad = nacionalidad
+        self.domicilio = domicilio
+
+    def nombre_completo(self):
+        return f"{self.apellidos}, {self.nombres}"
+
+    def problemas(self):
+        lista = []
+        # el celular: 10 números. Ojo, hay quien lo escribe con espacios
+        return lista
+
+    def esta_listo(self):
+        return len(self.problemas()) == 0
+`}
+  tests={`BUENO = dict(dni="40000004", apellidos="Paz", nombres="Mateo", fecha_nacimiento="3/12/2004",
+             celular="2215550004", nacionalidad="Argentino", domicilio="Calle 47 nro 629")
+
+def alumno(**cambios):
+    d = dict(BUENO)
+    d.update(cambios)
+    return Alumno(d["dni"], d["apellidos"], d["nombres"], d["fecha_nacimiento"],
+                  d["celular"], d["nacionalidad"], d["domicilio"])
+
+def menciona(a, palabra):
+    return any(palabra.lower() in p.lower() for p in a.problemas())
+
+assert alumno().problemas() == [], f"un alumno con todos los datos bien no tiene que tener problemas, y problemas() devolvió {alumno().problemas()}"
+assert not menciona(alumno(celular="221 555 0010"), "celular"), "'221 555 0010' tiene 10 números, solo que separados con espacios: sacale los espacios ANTES de contar. .replace(\\" \\", \\"\\") los saca"
+assert menciona(alumno(celular="2215550"), "celular"), "7 números no alcanza: un celular con la característica tiene 10. Tiene que aparecer un problema que diga 'celular'"
+assert menciona(alumno(celular="221555000111"), "celular"), "12 números es demasiado: son exactamente 10"
+assert menciona(alumno(celular="22155500AB"), "celular"), "con letras no es un celular, aunque sean 10 caracteres"
+print("¡Control del celular OK! Copialo a tu alumno.py.")
+`}
+  pistas={[
+    'Primero limpiá, después controlá: guardá en una variable el celular sin espacios, y controlá <strong>esa</strong> variable.',
+    'Es el mismo control que el del DNI (solo números y un largo), pero con largo exacto: 10.',
+  ]}
+>
+Agregá el control del celular: tienen que ser **10 números**. Los espacios no cuentan:
+`"221 555 0010"` está bien escrito.
+
+Si no, un problema que diga **celular**.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Control 4: la nacionalidad"
+  dificultad="🌱"
+  starter={`class Alumno:
+    def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
+        self.dni = dni
+        self.apellidos = apellidos
+        self.nombres = nombres
+        self.fecha_nacimiento = fecha_nacimiento
+        self.celular = celular
+        self.nacionalidad = nacionalidad
+        self.domicilio = domicilio
+
+    def nombre_completo(self):
+        return f"{self.apellidos}, {self.nombres}"
+
+    def problemas(self):
+        lista = []
+        # la nacionalidad: que no esté vacía ni diga "Completar"
+        return lista
+
+    def esta_listo(self):
+        return len(self.problemas()) == 0
+`}
+  tests={`BUENO = dict(dni="40000004", apellidos="Paz", nombres="Mateo", fecha_nacimiento="3/12/2004",
+             celular="2215550004", nacionalidad="Argentino", domicilio="Calle 47 nro 629")
+
+def alumno(**cambios):
+    d = dict(BUENO)
+    d.update(cambios)
+    return Alumno(d["dni"], d["apellidos"], d["nombres"], d["fecha_nacimiento"],
+                  d["celular"], d["nacionalidad"], d["domicilio"])
+
+def menciona(a, palabra):
+    return any(palabra.lower() in p.lower() for p in a.problemas())
+
+assert alumno().problemas() == [], f"un alumno con todos los datos bien no tiene que tener problemas, y problemas() devolvió {alumno().problemas()}"
+assert menciona(alumno(nacionalidad="Completar"), "nacionalidad"), "'Completar' es el texto de ejemplo del formulario, no una nacionalidad: tiene que aparecer un problema que diga 'nacionalidad'"
+assert menciona(alumno(nacionalidad="completar"), "nacionalidad"), "'completar' en minúscula también es el texto de ejemplo: compará pasando todo a minúsculas con .lower()"
+assert menciona(alumno(nacionalidad=""), "nacionalidad"), "vacía tampoco sirve"
+assert menciona(alumno(nacionalidad="   "), "nacionalidad"), "tres espacios también es vacía: .strip() saca los espacios de los costados"
+assert not menciona(alumno(nacionalidad="Arg"), "nacionalidad"), "'Arg' es una forma rara de escribir Argentina, pero es una nacionalidad: el bot después la acomoda sola. No la frenes"
+print("¡Control de la nacionalidad OK! Copialo a tu alumno.py.")
+`}
+  pistas={[
+    'Son dos casos malos: vacía, o que diga "completar". Y cualquiera de los dos alcanza.',
+    'Para que "Completar", "COMPLETAR" y "completar" sean lo mismo, compará <code>self.nacionalidad.lower()</code> contra <code>"completar"</code>.',
+  ]}
+>
+Agregá el control de la nacionalidad: si está **vacía** o dice **"Completar"** (con mayúscula o sin
+ella), un problema que diga **nacionalidad**.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="Control 5: el domicilio"
+  dificultad="🌱"
+  starter={`class Alumno:
+    def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
+        self.dni = dni
+        self.apellidos = apellidos
+        self.nombres = nombres
+        self.fecha_nacimiento = fecha_nacimiento
+        self.celular = celular
+        self.nacionalidad = nacionalidad
+        self.domicilio = domicilio
+
+    def nombre_completo(self):
+        return f"{self.apellidos}, {self.nombres}"
+
+    def problemas(self):
+        lista = []
+        # el domicilio: que no sea el DNI pegado en la columna equivocada
+        return lista
+
+    def esta_listo(self):
+        return len(self.problemas()) == 0
+`}
+  tests={`BUENO = dict(dni="40000004", apellidos="Paz", nombres="Mateo", fecha_nacimiento="3/12/2004",
+             celular="2215550004", nacionalidad="Argentino", domicilio="Calle 47 nro 629")
+
+def alumno(**cambios):
+    d = dict(BUENO)
+    d.update(cambios)
+    return Alumno(d["dni"], d["apellidos"], d["nombres"], d["fecha_nacimiento"],
+                  d["celular"], d["nacionalidad"], d["domicilio"])
+
+def menciona(a, palabra):
+    return any(palabra.lower() in p.lower() for p in a.problemas())
+
+assert alumno().problemas() == [], f"un alumno con todos los datos bien no tiene que tener problemas, y problemas() devolvió {alumno().problemas()}"
+assert menciona(alumno(dni="40000010", domicilio="40000010"), "domicilio"), "el domicilio dice lo mismo que el DNI: alguien lo pegó en la columna equivocada. Tiene que aparecer un problema que diga 'domicilio'"
+assert menciona(alumno(dni="40000010", domicilio=" 40000010 "), "domicilio"), "con espacios de más a los costados sigue siendo el DNI: limpialo con .strip() antes de comparar"
+assert not menciona(alumno(domicilio="Calle 12 e/número 6"), "domicilio"), "'Calle 12 e/número 6' es un domicilio normal, aunque tenga números: no lo frenes"
+print("¡Control del domicilio OK! Copialo a tu alumno.py, y ya tenés los cinco.")
+`}
+  pistas={[
+    'No hay que adivinar si "parece" un DNI: alcanza con comparar el domicilio con el DNI de <strong>ese mismo alumno</strong>.',
+  ]}
+>
+El último: si el domicilio **es igual al DNI**, alguien lo pegó en la columna equivocada. Un
+problema que diga **domicilio**.
+</EjercicioPython>
+
+## Ahora sí: el bot
+
+Con los cinco controles en tu `alumno.py`, primero mirá solo el control, sin abrir el navegador:
+
+```bash
+python bot.py --solo-control
+```
+
+Tendría que decir esto:
+
+```text
+✅ LISTOS PARA CARGAR: 5
+     40000004  Paz, Mateo Ariel
+     40000001  Gómez, Lucía Belén
+     40000005  HERRERA, Sofia Beatriz
+     40000003  Ríos, Valentina Rocío
+     40000006  Aguirre, Joaquín Blas
+
+⛔ FRENADOS, los tiene que mirar una persona: 3
+     40000009  Ledesma, Marta Elena
+               · la fecha "13/10/2072" está en el futuro
+     40000010  sosa, camila
+               · el domicilio es el DNI: se pegó en la columna equivocada
+     40000011  Soto, Daniela Aylén
+               · falta la nacionalidad
+```
+
+Los mensajes van a ser los tuyos, así que pueden no ser iguales. Lo que tiene que coincidir son
+los números: **5 listos y 3 frenados**.
+
+Y ahora, con el navegador:
+
+```bash
+python bot.py --lento
+```
+
+Se abre el simulador y **se llena solo**, campo por campo. Los tres frenados no se tocan.
+
+:::caution[Si no se abre el navegador]
+Si dice que todavía no está instalado Playwright, es que el segundo comando no terminó de bajar el
+navegador. Mientras tanto, `--solo-control` anda igual: el control es Python puro y no lo necesita.
+Si en tu compu no hay forma de instalarlo, trabajá en pareja con quien sí pudo.
+:::
+
+## El miércoles
+
+El miércoles, junto con preceptoría, corremos el bot contra el **SiGeS de verdad**, con un alumno
+real. Con tres reglas que no se rompen:
+
+1. **Primero el simulador.** Hasta que no anda perfecto acá, no toca el sistema real.
+2. **No se loguea solo.** No tiene usuario ni contraseña: una persona entra al sistema y recién
+   ahí el bot toma el control.
+3. **No genera la matrícula.** Deja al alumno como **pre inscripto**, que tiene un tachito al lado
+   para borrarlo si algo salió mal. La matrícula la genera una persona, mirando.
+
+<OpcionMultiple titulo="Chequeo final: ¿qué NO hace el bot?" opciones={[
+  { texto: "Generar la matrícula.", correcta: true, explicacion: "Esa es la frontera: el bot carga, la persona decide. Deja a todos como pre inscriptos, que es un estado que se puede deshacer." },
+  { texto: "Completar los campos del formulario.", explicacion: "Eso es justo lo que hace: tipear." },
+  { texto: "Frenar a los que tienen datos rotos.", explicacion: "Eso lo hace, pero gracias a los controles que escribiste vos en alumno.py." },
+]}>
+De estas tres cosas, ¿cuál es la que el bot **no hace nunca**?
+</OpcionMultiple>
+
+:::note[Para qué se usa lo que aprendiste hoy]
+Esto se puede usar para el trabajo del CFP, con nuestros datos y nuestro permiso. La misma
+herramienta, apuntada a un sistema que no es tuyo o con datos que no son tuyos, ya es otra cosa.
+La diferencia no está en el código: está en para qué lo usás.
+:::
+
+## Para llevar
+
+- Un **bot no arregla un proceso malo: lo acelera.** Primero se controla, después se carga.
+- `csv.DictReader` te da cada fila de una planilla como un **diccionario**.
+- De cada fila, **un objeto**: la planilla trae los datos y la clase les da comportamiento.
+- Un **entorno virtual** (`.venv`) tiene su propio Python y sus librerías. Se sube
+  `requirements.txt`, nunca el `.venv`.
+- **El bot no decide: tipea.** La decisión está en tu `alumno.py`.
