@@ -491,10 +491,13 @@ type MedirFn = (code: string, datos: string, escenariosJson: string, tope: numbe
 
 let runUser: RunUserFn | null = null;
 let medir: MedirFn | null = null;
+// El propio Pyodide, para poder cargar paquetes antes de correr (ver abajo).
+let pyodide: { loadPackagesFromImports: (codigo: string, opciones?: object) => Promise<unknown> } | null = null;
 
 async function init(): Promise<void> {
   const mod = await import(/* @vite-ignore */ `${PYODIDE_URL}pyodide.mjs`);
   const py = await mod.loadPyodide({ indexURL: PYODIDE_URL });
+  pyodide = py;
   py.runPython(RUNNER);
   // Guardamos UNA referencia a cada función (un solo PyProxy, sin fugas por corrida).
   runUser = py.globals.get('_run_user') as RunUserFn;
@@ -523,6 +526,27 @@ self.onmessage = async (
   const { id, code, tests, archivo, datos, entradas, modo, escenarios, tope } = ev.data;
   await initPromise;
   if (!runUser || !medir) return; // ya se reportó init-error
+
+  // Paquetes que no vienen con Pyodide de entrada: sqlite3 (la clase de
+  // SQLite), y más adelante numpy y pandas (Para ir más allá). Pyodide los trae
+  // SEPARADOS para no hacer más pesada la primera descarga de todos.
+  //
+  // loadPackagesFromImports lee los `import` del código y carga SOLO lo que
+  // haga falta. Los ejercicios de siempre no importan nada de eso, así que para
+  // ellos esto no descarga nada: es una lectura del texto, de milisegundos.
+  // Los módulos del alumno (`from alumno import ...`) no son paquetes de
+  // Pyodide y los ignora.
+  //
+  // Si falla (sin conexión, por ejemplo), se sigue igual: el `import` del
+  // alumno da su error de siempre, que es más claro que uno nuestro.
+  if (pyodide && modo !== 'medir') {
+    try {
+      const todo = [datos || '', code, tests].join(String.fromCharCode(10));
+      await pyodide.loadPackagesFromImports(todo, { messageCallback: () => {} });
+    } catch {
+      /* ver arriba */
+    }
+  }
   let raw: string;
   try {
     raw =

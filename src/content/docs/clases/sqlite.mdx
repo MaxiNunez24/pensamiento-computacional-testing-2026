@@ -1,0 +1,533 @@
+---
+title: SQLite — los datos en una base
+description: "Por qué el sistema guarda en una base de datos y no en archivos, y cómo se usa SQLite desde Python: crear una tabla, agregar, buscar, dar de baja sin borrar, y devolver objetos Alumno."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+:::note[La primera vez tarda un poquito más]
+El primer ejercicio que ejecutes baja la parte de Python que maneja bases de datos. Son unos
+segundos, una sola vez: después queda guardada.
+:::
+
+## El problema
+
+Hasta ahora, lo que un programa guardaba se perdía al cerrarlo. Para que el sistema de asistencias
+**recuerde**, los datos tienen que quedar en el disco. La pregunta es dónde.
+
+Lo más directo sería un archivo de texto. Pero en el CFP pasa algo que en nuestros ejercicios no
+pasaba nunca: **dos personas usando el sistema al mismo tiempo**. Dos preceptoras marcando
+asistencia en dos cursos, en el mismo minuto.
+
+Lo medimos, y con archivos pasan dos cosas:
+
+- Con dos personas guardando a la vez, **una de las dos marcas se pierde**. Sin ningún error: el
+  sistema dice que guardó y no guardó.
+- Si se corta la luz justo mientras se escribe, el archivo **queda ilegible entero**. No la última
+  marca: todo.
+
+Una **base de datos** resuelve las dos cosas. Y la que vamos a usar, **SQLite**, tiene una ventaja
+enorme: **viene con Python**. No se instala nada.
+
+<OpcionMultiple titulo="Chequeo: ¿por qué una base?" opciones={[
+  { texto: "Porque con dos personas guardando a la vez, en un archivo se puede perder una marca sin que nadie se entere.", correcta: true, explicacion: "Exacto. Y un sistema de asistencias que pierde marcas en silencio es peor que no tener sistema: la gente confía en que guardó." },
+  { texto: "Porque es más rápida.", explicacion: "No: lo medimos, y guardar una marca en un archivo es más rápido. La base se elige por lo que NO pierde, no por la velocidad." },
+  { texto: "Porque los archivos solo guardan texto.", explicacion: "Una base también guarda texto y números. La diferencia está en qué pasa cuando dos escriben a la vez o se corta la luz." },
+]}>
+¿Cuál es el motivo **principal** para que el sistema guarde en una base de datos y no en archivos?
+</OpcionMultiple>
+
+## Una tabla es una planilla con reglas
+
+Una base de datos guarda **tablas**. Y una tabla se parece mucho a las planillas que usan en el
+CFP: columnas con nombre, y una fila por alumno.
+
+| dni | apellido | nombre | activo |
+|---|---|---|---|
+| 30111222 | Perez | Ana | 1 |
+| 28999888 | Gomez | Beto | 1 |
+
+La diferencia es que **la tabla tiene reglas**. Cada columna tiene un tipo, y se puede decir que
+una columna **no se repite nunca**: eso se llama **`PRIMARY KEY`**. Para nosotros, el DNI.
+
+Es lo mismo que hacíamos a mano en *"El curso que no deja repetir"*, pero ahora **lo cuida la base**.
+
+Para hablarle a la base se usa un lenguaje propio, **SQL**. Se escribe como un texto adentro de
+Python, y `sqlite3` se lo pasa a la base:
+
+```python
+import sqlite3
+
+con = sqlite3.connect("asistencias.db")   # abre la base (si no existe, la crea)
+con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT)")
+```
+
+`con` es **la conexión**: por ahí pasa todo lo que le pedimos a la base.
+
+<EjercicioPython
+  titulo="Tu primera tabla"
+  dificultad="🌱"
+  starter={`import sqlite3
+
+def crear_tabla(con):
+    # la tabla alumnos, con dni (texto, que no se repita), apellido y nombre
+    con.execute("")
+`}
+  tests={`import sqlite3
+con = sqlite3.connect(":memory:")
+crear_tabla(con)
+info = con.execute("PRAGMA table_info(alumnos)").fetchall()
+assert info, "la tabla alumnos no existe todavía: CREATE TABLE alumnos (...)"
+columnas = {c[1]: c for c in info}
+for col in ("dni", "apellido", "nombre"):
+    assert col in columnas, f"falta la columna {col}"
+assert columnas["dni"][5] == 1, "el DNI tiene que ser PRIMARY KEY: es la columna que no se puede repetir, la que identifica a cada alumno"
+assert columnas["dni"][2].upper() == "TEXT", "el DNI va como TEXT, igual que en la clase Alumno: si fuera un número, un DNI que empieza con 0 perdería el cero"
+print("¡Tabla creada! Tiene sus columnas, y el DNI no se va a poder repetir.")
+`}
+  pistas={[
+    'La forma es <code>CREATE TABLE nombre (columna TIPO, columna TIPO, ...)</code>. Los tipos que vas a usar son <code>TEXT</code> e <code>INTEGER</code>.',
+    'Lo que no se repite lleva <code>PRIMARY KEY</code> al lado del tipo: <code>dni TEXT PRIMARY KEY</code>.',
+  ]}
+>
+Completá `crear_tabla(con)`: que cree la tabla `alumnos` con tres columnas, `dni`, `apellido` y
+`nombre`. El DNI es el que **no se puede repetir**.
+</EjercicioPython>
+
+:::tip[En los ejercicios, la base vive en la memoria]
+Acá usamos `sqlite3.connect(":memory:")`: una base que nace vacía y desaparece al terminar. Así
+cada prueba arranca de cero. En tu compu, en cambio, va a ser un archivo, `asistencias.db`, que
+queda guardado.
+:::
+
+## Agregar: el signo de pregunta
+
+Para agregar una fila se usa `INSERT`. Y acá hay una regla que **no se rompe nunca**: los valores
+no se pegan en el texto del SQL. Van con **`?`**, y se pasan aparte:
+
+```python
+con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES (?, ?, ?)",
+            ("30111222", "Perez", "Ana"))
+```
+
+Un `?` por cada valor, y después los valores **en el mismo orden**, en una tupla.
+
+¿Por qué tanta vuelta, si con un f-string quedaría más corto? Porque el SQL también usa comillas.
+Si un apellido tiene una —*D'Alessandro*, *O'Connor*—, esa comilla **cierra el texto adentro del
+SQL** y rompe todo. Con `?`, `sqlite3` se encarga de poner cada valor bien, tenga lo que tenga.
+
+<EjercicioPython
+  titulo="Agregar un alumno"
+  dificultad="🌱"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)")
+    return con
+`}
+  starter={`def agregar(con, dni, apellido, nombre):
+    # INSERT INTO alumnos ... con signos ? en lugar de los valores
+    pass
+`}
+  tests={`import sqlite3
+con = base_nueva()
+agregar(con, "30111222", "Perez", "Ana")
+try:
+    agregar(con, "28999888", "D'Alessandro", "Beto")
+except sqlite3.OperationalError:
+    raise AssertionError("con el apellido D'Alessandro se rompió: el apóstrofo cierra el texto ADENTRO del SQL. Por eso los valores nunca se pegan en el texto del SQL: van con ?, y sqlite3 los pone él")
+filas = con.execute("SELECT dni, apellido, nombre FROM alumnos ORDER BY dni").fetchall()
+assert len(filas) == 2, f"agregué dos alumnos y en la tabla hay {len(filas)}"
+assert filas == [("28999888", "D'Alessandro", "Beto"), ("30111222", "Perez", "Ana")], f"los datos no quedaron como llegaron: {filas}"
+print("¡Agregados! Y D'Alessandro entró sin romper nada, gracias a los ?")
+`}
+  pistas={[
+    'Primero el SQL, con un <code>?</code> por cada valor: <code>INSERT INTO alumnos (dni, apellido, nombre) VALUES (?, ?, ?)</code>.',
+    'Después, como segundo dato de <code>execute</code>, los valores en el mismo orden, en una tupla: <code>(dni, apellido, nombre)</code>.',
+  ]}
+>
+Completá `agregar(con, dni, apellido, nombre)`: que agregue una fila a la tabla. Los valores van con
+**`?`**, nunca pegados en el texto del SQL.
+
+La tabla ya está creada (fijate arriba), y los tests prueban con un apellido que tiene apóstrofo.
+</EjercicioPython>
+
+<OpcionMultiple titulo="Chequeo: ¿por qué el ?" opciones={[
+  { texto: "Porque si un dato trae una comilla, pegado en el SQL lo rompe. Con ?, sqlite3 lo pone bien siempre.", correcta: true, explicacion: "Eso. Y además es una cuestión de seguridad: si el dato lo escribe alguien de afuera, pegarlo en el SQL le permitiría meter órdenes propias. Con ? eso no puede pasar." },
+  { texto: "Porque es más rápido.", explicacion: "No es por la velocidad: es para que el dato nunca se confunda con el SQL." },
+  { texto: "Por estilo: los dos andan igual.", explicacion: "No andan igual: con D'Alessandro, el f-string se rompe. Lo acabás de ver." },
+]}>
+¿Por qué los valores van con `?` y no pegados con un f-string?
+</OpcionMultiple>
+
+## Leer: SELECT
+
+Para leer se usa `SELECT`. Y `ORDER BY` lo devuelve ordenado:
+
+```python
+filas = con.execute("SELECT apellido, nombre FROM alumnos ORDER BY apellido").fetchall()
+print(filas)    # [('Gomez', 'Beto'), ('Perez', 'Ana')]
+```
+
+`.fetchall()` trae **todas** las filas, y cada fila llega como **una tupla**. Es lo mismo que vimos
+con tuplas: se lee por posición, `fila[0]`, `fila[1]`.
+
+<EjercicioPython
+  titulo="Todos, en orden"
+  dificultad="🌱"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)")
+    return con
+
+def base_con_tres():
+    con = base_nueva()
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('30111222', 'Perez', 'Ana')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('28999888', 'Gomez', 'Beto')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('40000004', 'Paz', 'Mateo')")
+    return con
+`}
+  starter={`def apellidos_ordenados(con):
+    # SELECT ... ORDER BY ...  y devolvé una LISTA de apellidos (textos)
+    return []
+`}
+  tests={`con = base_con_tres()
+r = apellidos_ordenados(con)
+assert isinstance(r, list), "tiene que devolver una lista"
+assert not (r and isinstance(r[0], tuple)), "fetchall() devuelve una tupla por fila, como ('Gomez',): para quedarte con el apellido, sacalo de cada una con fila[0]"
+assert sorted(r) == ["Gomez", "Paz", "Perez"], f"tendrían que estar los tres apellidos, y están {r}"
+assert r == ["Gomez", "Paz", "Perez"], f"están los tres pero no en orden: {r}. Eso lo hace ORDER BY apellido, en el mismo SELECT"
+print("¡En orden! Ordenar lo hizo la base, no Python.")
+`}
+  pistas={[
+    '<code>SELECT apellido FROM alumnos ORDER BY apellido</code> te da los apellidos ya ordenados.',
+    '<code>.fetchall()</code> te devuelve una lista de tuplas: <code>[(\'Gomez\',), (\'Paz\',), ...]</code>. Recorrela y quedate con el <code>[0]</code> de cada una.',
+  ]}
+>
+Completá `apellidos_ordenados(con)`: que devuelva **una lista con los apellidos**, ordenados
+alfabéticamente. Que ordene la base, no Python.
+</EjercicioPython>
+
+## Buscar uno: WHERE
+
+`WHERE` filtra: trae solo las filas que cumplen. Y cuando esperás **una sola**, `.fetchone()`:
+
+```python
+fila = con.execute("SELECT * FROM alumnos WHERE dni = ?", ("30111222",)).fetchone()
+print(fila)     # ('30111222', 'Perez', 'Ana')
+```
+
+Si no hay ninguna, `fetchone()` devuelve `None`. Y fijate en la coma de `("30111222",)`: una tupla
+de **un solo elemento** se escribe con coma al final. Sin la coma, no es una tupla.
+
+<EjercicioPython
+  titulo="Buscar por DNI"
+  dificultad="🌿"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)")
+    return con
+
+def base_con_tres():
+    con = base_nueva()
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('30111222', 'Perez', 'Ana')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('28999888', 'Gomez', 'Beto')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('40000004', 'Paz', 'Mateo')")
+    return con
+`}
+  starter={`def buscar_por_dni(con, dni):
+    # SELECT ... WHERE dni = ?   y devolvé la fila, o None si no está
+    return None
+`}
+  tests={`import sqlite3
+con = base_con_tres()
+try:
+    r = buscar_por_dni(con, "30111222")
+except sqlite3.ProgrammingError:
+    raise AssertionError("(dni) sin coma no es una tupla: es el texto solo, y sqlite3 lo toma letra por letra (8 letras, 8 valores). Una tupla de un solo elemento se escribe con coma: (dni,)")
+assert not isinstance(r, list), "devolviste una lista: fetchall() trae TODAS las filas. Para una sola, fetchone()"
+assert r is not None, "el 30111222 está en la tabla y devolviste None"
+assert r[1] == "Perez", f"el 30111222 es Perez y la fila que devolviste es {r}"
+assert buscar_por_dni(con, "99999999") is None, "si no está, fetchone() devuelve None: devolvé eso"
+print("¡Encontrado! Y si no está, None: igual que en un diccionario con .get()")
+`}
+  pistas={[
+    'Es un <code>SELECT</code> con <code>WHERE dni = ?</code>, y el valor va en una tupla aparte.',
+    'Una tupla de un solo elemento lleva coma: <code>(dni,)</code>. Sin la coma, es el texto solo.',
+    '<code>.fetchone()</code> devuelve la primera fila, o <code>None</code> si no hay ninguna.',
+  ]}
+>
+Completá `buscar_por_dni(con, dni)`: que devuelva **la fila** de ese alumno, o **`None`** si no
+está.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="El alumno que no se repite"
+  dificultad="🌿"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)")
+    return con
+
+def buscar_por_dni(con, dni):
+    return con.execute("SELECT * FROM alumnos WHERE dni = ?", (dni,)).fetchone()
+`}
+  starter={`def agregar_si_no_esta(con, dni, apellido, nombre):
+    # si ya hay uno con ese DNI, no lo agregues y devolvé False
+    # si no, agregalo y devolvé True
+    pass
+`}
+  tests={`import sqlite3
+con = base_nueva()
+assert agregar_si_no_esta(con, "30111222", "Perez", "Ana") is True, "el primero tiene que entrar y devolver True"
+try:
+    otra_vez = agregar_si_no_esta(con, "30111222", "Perez", "Ana")
+except sqlite3.IntegrityError:
+    raise AssertionError("la base misma no te dejó: el DNI es PRIMARY KEY y ya estaba. Antes de insertar, buscalo con buscar_por_dni, igual que en el curso que no deja repetir")
+assert otra_vez is False, "ya estaba: tiene que devolver False"
+assert agregar_si_no_esta(con, "30111222", "Otro", "Nombre") is False, "el que manda es el DNI, aunque el apellido venga distinto"
+assert con.execute("SELECT COUNT(*) FROM alumnos").fetchone()[0] == 1, "en la tabla tiene que haber uno solo"
+print("¡Sin repetidos! Y fijate que la base te cuida igual: si te olvidás de buscar, el PRIMARY KEY no deja.")
+`}
+  pistas={[
+    '<code>buscar_por_dni</code> ya está hecha: si devuelve algo distinto de <code>None</code>, el alumno ya estaba.',
+    'Si ya estaba, <code>return False</code> y listo: no llega al <code>INSERT</code>.',
+  ]}
+>
+Completá `agregar_si_no_esta(con, dni, apellido, nombre)`: si ya hay alguien con ese DNI, no lo
+agregues y devolvé `False`. Si no, agregalo y devolvé `True`.
+
+`buscar_por_dni` ya viene hecha.
+</EjercicioPython>
+
+## Dar de baja no es borrar
+
+En la clase de POO, dar de baja a un alumno era cambiar `activo` a `False`, **nunca borrarlo**:
+si se borra, se pierde su asistencia de todo el año y los números del cierre dejan de dar.
+
+En la base es igual. Para cambiar un dato se usa `UPDATE`:
+
+```python
+con.execute("UPDATE alumnos SET activo = 0 WHERE dni = ?", ("28999888",))
+```
+
+:::caution[El WHERE es lo más importante de esa línea]
+Un `UPDATE` sin `WHERE` cambia **todas las filas** de la tabla. Sin avisar, y sin deshacer.
+:::
+
+<EjercicioPython
+  titulo="Dar de baja, sin borrar"
+  dificultad="🌱"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)")
+    return con
+
+def base_con_tres():
+    con = base_nueva()
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('30111222', 'Perez', 'Ana')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('28999888', 'Gomez', 'Beto')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('40000004', 'Paz', 'Mateo')")
+    return con
+`}
+  starter={`def dar_de_baja(con, dni):
+    # que ese alumno quede con activo = 0. Sin borrarlo.
+    pass
+`}
+  tests={`con = base_con_tres()
+dar_de_baja(con, "28999888")
+total = con.execute("SELECT COUNT(*) FROM alumnos").fetchone()[0]
+assert total == 3, "lo borraste: con DELETE se pierde toda su asistencia del año, y los números del cierre dejan de dar. Dar de baja es UPDATE ... SET activo = 0"
+activos = con.execute("SELECT dni FROM alumnos WHERE activo = 1 ORDER BY dni").fetchall()
+assert activos != [], "quedaron todos dados de baja: a un UPDATE sin WHERE le pasa eso, cambia TODAS las filas. Falta WHERE dni = ?"
+assert activos == [("30111222",), ("40000004",)], f"tendría que haber quedado de baja solo el 28999888, y los activos son {activos}"
+print("¡De baja, pero sigue estando! Igual que en la clase de POO: dar de baja no es borrar.")
+`}
+  pistas={[
+    'Para cambiar un dato de una fila que ya existe: <code>UPDATE alumnos SET columna = valor WHERE ...</code>.',
+    '¡El <code>WHERE</code> es lo más importante! Sin él, el <code>UPDATE</code> cambia todas las filas.',
+  ]}
+>
+Completá `dar_de_baja(con, dni)`: que ese alumno quede con `activo = 0`. **Sin borrarlo.**
+</EjercicioPython>
+
+<OpcionMultiple titulo="Chequeo: ¿DELETE o UPDATE?" opciones={[
+  { texto: "UPDATE, marcándolo como inactivo.", correcta: true, explicacion: "Sí. Sigue en la base con toda su historia, y deja de aparecer en la lista del día. Es lo que en el CFP llaman una baja." },
+  { texto: "DELETE: si se fue, se borra.", explicacion: "Si se borra, se pierde su asistencia de marzo a septiembre, y el cierre del curso, donde ficha, acta y títulos tienen que coincidir, deja de dar." },
+  { texto: "Da lo mismo.", explicacion: "No da lo mismo: uno se puede deshacer y el otro no." },
+]}>
+Un alumno deja el curso en septiembre. ¿Cómo se lo da de baja en la base?
+</OpcionMultiple>
+
+## Contar
+
+La base también sabe hacer cuentas. `COUNT(*)` cuenta las filas, **sin traerlas a Python**:
+
+```python
+cuantos = con.execute("SELECT COUNT(*) FROM alumnos").fetchone()[0]
+```
+
+El resultado es una fila con un solo valor, `(3,)`. Por eso el `[0]` del final.
+
+<EjercicioPython
+  titulo="¿Cuántos siguen activos?"
+  dificultad="🌱"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)")
+    return con
+
+def base_con_tres():
+    con = base_nueva()
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('30111222', 'Perez', 'Ana')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('28999888', 'Gomez', 'Beto')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('40000004', 'Paz', 'Mateo')")
+    return con
+`}
+  starter={`def cuantos_activos(con):
+    # SELECT COUNT(*) ... y devolvé el NÚMERO
+    return 0
+`}
+  tests={`con = base_con_tres()
+con.execute("UPDATE alumnos SET activo = 0 WHERE dni = '28999888'")
+r = cuantos_activos(con)
+assert not isinstance(r, tuple), f"devolviste {r}: COUNT devuelve una fila con un solo valor adentro. El número es el [0] de esa fila"
+assert r != 3, "contaste a los tres: el que está dado de baja no cuenta. Falta WHERE activo = 1"
+assert r == 2, f"quedan 2 activos y devolviste {r}"
+print("¡2 activos! Contar lo hizo la base: no hubo que traer las filas a Python.")
+`}
+  pistas={[
+    '<code>SELECT COUNT(*) FROM alumnos WHERE activo = 1</code> cuenta las filas que cumplen.',
+    '<code>fetchone()</code> te da la fila, <code>(2,)</code>. El número está adentro: <code>[0]</code>.',
+  ]}
+>
+Completá `cuantos_activos(con)`: que devuelva **el número** de alumnos que siguen activos.
+</EjercicioPython>
+
+## De la fila al objeto: el repositorio
+
+Hasta acá, todo devuelve **filas**: tuplas con los datos. Pero el resto del sistema —el bot, la
+pantalla de pasar lista— trabaja con **objetos `Alumno`**, que saben armar su nombre completo o
+decir si están listos.
+
+Entonces hay que convertir. Y esa conversión va **en un solo lugar**: un archivo que se llama
+**`repositorio.py`**, con funciones como `buscar_alumno`, `guardar_alumno` o `dar_de_baja`. Todo lo
+que toca la base vive ahí adentro, y **ningún otro archivo del sistema escribe SQL**.
+
+¿Por qué tanto cuidado? Porque así, si mañana cambia la base, **se cambia un solo archivo**. El
+resto del programa pide un `Alumno` y recibe un `Alumno`, sin enterarse de dónde salió.
+
+<EjercicioPython
+  titulo="De la fila al objeto"
+  dificultad="🌶️"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)")
+    return con
+
+def base_con_tres():
+    con = base_nueva()
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('30111222', 'Perez', 'Ana')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('28999888', 'Gomez', 'Beto')")
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('40000004', 'Paz', 'Mateo')")
+    return con
+
+class Alumno:
+    def __init__(self, dni, apellido, nombre, activo=True):
+        self.dni = dni
+        self.apellido = apellido
+        self.nombre = nombre
+        self.activo = activo
+
+    def nombre_completo(self):
+        return f"{self.apellido}, {self.nombre}"
+`}
+  starter={`def buscar_alumno(con, dni):
+    # buscá la fila y, si está, devolvé un objeto Alumno armado con sus datos.
+    # Si no está, None.
+    return None
+`}
+  tests={`con = base_con_tres()
+con.execute("UPDATE alumnos SET activo = 0 WHERE dni = '28999888'")
+a = buscar_alumno(con, "30111222")
+assert a is not None, "el 30111222 está en la tabla y devolviste None"
+assert not isinstance(a, tuple), "devolviste la fila tal cual: el resto del programa no tiene que saber que existen filas. Armá un Alumno(...) con sus datos"
+assert isinstance(a, Alumno), "tiene que devolver un objeto Alumno"
+assert a.nombre_completo() == "Perez, Ana", f"el alumno quedó como {a.nombre_completo()!r}: fijate el orden de las columnas en la fila (dni, apellido, nombre, activo)"
+assert buscar_alumno(con, "28999888").activo is False, "el 28999888 está dado de baja: en la base es activo = 0, y en el objeto tiene que quedar activo = False"
+assert buscar_alumno(con, "99999999") is None, "si no está, None"
+print("¡Esto es el repositorio! El programa pide un Alumno y recibe un Alumno: de la base no se entera nadie más.")
+`}
+  pistas={[
+    'Primero buscá la fila, como en <code>buscar_por_dni</code>. Si es <code>None</code>, devolvé <code>None</code>.',
+    'La fila es una tupla: <code>fila[0]</code> es el DNI, <code>fila[1]</code> el apellido, y así. Con eso armás <code>Alumno(...)</code>.',
+    'En la base, <code>activo</code> es 1 o 0. En el objeto conviene <code>True</code> o <code>False</code>: <code>fila[3] == 1</code>.',
+  ]}
+>
+El último, y el más importante: `buscar_alumno(con, dni)` tiene que devolver **un objeto
+`Alumno`** —la clase de POO, que ya está definida— armado con los datos de la fila. O `None` si no
+está.
+</EjercicioPython>
+
+## En tu compu
+
+En VS Code es todo igual, con dos diferencias.
+
+**La base es un archivo.** Con `sqlite3.connect("asistencias.db")` se crea `asistencias.db` en la
+carpeta del proyecto, y ahí quedan los datos.
+
+**Hay que confirmar los cambios.** Lo que agregás, cambiás o das de baja queda **pendiente** hasta
+que lo confirmás:
+
+```python
+con.commit()
+```
+
+Sin el `commit()`, cuando el programa termina, los cambios se descartan. Es a propósito: si algo
+se corta a mitad de camino, la base vuelve a como estaba en vez de quedar a medio hacer.
+
+:::tip[Para ver adentro de la base]
+**[DB Browser for SQLite](https://sqlitebrowser.org/)** es un programa gratis y de código abierto
+que abre `asistencias.db` y te muestra las tablas como una planilla. Sirve muchísimo para ver qué
+guardó de verdad tu programa.
+:::
+
+<OpcionMultiple titulo="Chequeo: el commit" opciones={[
+  { texto: "Los cambios no quedan guardados: se descartan al terminar.", correcta: true, explicacion: "Así es. Y es una ventaja: si algo se corta a la mitad, la base no queda a medio hacer." },
+  { texto: "Se guardan igual, commit es opcional.", explicacion: "No: sin commit, lo que agregaste o cambiaste se pierde cuando termina el programa." },
+  { texto: "Da un error.", explicacion: "No avisa nada. Por eso hay que acordarse." },
+]}>
+En tu compu, agregás un alumno con `INSERT` y el programa termina **sin** `con.commit()`. ¿Qué pasa?
+</OpcionMultiple>
+
+## Para practicar más SQL
+
+**[aprendesql.dev](https://aprendesql.dev)** es un curso gratis y en castellano, hecho por
+**[midudev](https://midu.dev)**, con un editor de SQL en cada lección. Va desde el primer `SELECT`
+hasta cosas bastante avanzadas, y todo lo que se aprende ahí sirve para SQLite.
+
+## Para llevar
+
+- El sistema guarda en una **base de datos** porque con dos personas a la vez, un archivo **pierde
+  datos sin avisar**.
+- **SQLite viene con Python**: `import sqlite3` y listo.
+- Una **tabla** es una planilla con reglas. **`PRIMARY KEY`** = la columna que no se repite.
+- Los valores van con **`?`**, nunca pegados en el SQL.
+- `fetchall()` = todas las filas; `fetchone()` = una, o `None`.
+- **Dar de baja es `UPDATE`, no `DELETE`.** Y el `UPDATE` sin `WHERE` cambia todo.
+- En tu compu: **`con.commit()`**, o los cambios se pierden.
+- Todo lo que toca la base, en **`repositorio.py`**. El resto del programa ve objetos `Alumno`.

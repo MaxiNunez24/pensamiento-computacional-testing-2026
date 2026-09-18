@@ -165,6 +165,7 @@ nav:
         - 🧬 POO I — Clases y objetos: clases/bloque_4_poo/poo_1.md
         - 🛡️ POO II — Métodos especiales y encapsulamiento: clases/bloque_4_poo/poo_2.md
         - "🤖 El bot del SiGeS": https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/
+        - "🗃️ SQLite": https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/sqlite/
     # Las optativas, al mismo nivel que "Python Básico". Archivos, JSON y
     # Herencia se MOVIERON acá el 18/9 (no están duplicadas). Una optativa
     # nueva es un .md en clases/para_ir_mas_alla/ más una línea acá.
