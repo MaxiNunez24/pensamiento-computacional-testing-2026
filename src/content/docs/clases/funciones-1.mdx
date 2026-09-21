@@ -249,10 +249,11 @@ se puede desarmar: `minimo, maximo, promedio, pares = analizar(notas)`.
   titulo="Validador de contraseñas"
   dificultad="🌳"
   starter={`def validar_password(password):\n    pass`}
-  tests={`assert validar_password("Python123") is True, "cumple todas las reglas"\nassert validar_password("python123") is False, "le falta la mayúscula"\nassert validar_password("Python") is False, "le falta el número"\nassert validar_password("Py1") is False, "es muy corta"\nassert validar_password("Python 123") is False, "tiene un espacio"\nassert validar_password("ABCDEFG1") is True, "8 caracteres justos, con mayúscula y número"`}
+  tests={`r = validar_password("Python123")\npista = f"'Python123' cumple las cuatro reglas (9 caracteres, la P mayúscula, los números y ningún espacio), pero tu función devolvió {r!r}. Probá cada condición sola con print() para ver cuál da False. Ojo: password in '0123456789' y password.isdigit() preguntan por la contraseña ENTERA, no si tiene AL MENOS un número. Para eso hay que mirar carácter por carácter, como con la mayúscula."\nassert r is True, pista\nassert validar_password("python123") is False, "le falta la mayúscula"\nassert validar_password("Python") is False, "le falta el número"\nassert validar_password("Py1") is False, "es muy corta"\nr = validar_password("Python 123")\npista = f"'Python 123' tiene un espacio en el medio, pero tu función devolvió {r!r}. Ojo: password not in ' ' pregunta si la contraseña ENTERA es un espacio, no si tiene un espacio adentro. Dale vuelta: ¿está ' ' adentro de password?"\nassert r is False, pista\nr = validar_password("ABCDEFG1")\npista = f"'ABCDEFG1' tiene 8 caracteres justos, mayúscula y número, pero tu función devolvió {r!r}. La regla dice AL MENOS 8: ¿tu condición de largo deja entrar al 8?"\nassert r is True, pista`}
   pistas={[
     "Son cuatro condiciones que se tienen que cumplir TODAS. ¿Con qué las unís?",
     "Para saber si hay <em>al menos una</em> mayúscula tenés que mirar carácter por carácter. ¿Qué método te dice si un carácter suelto es mayúscula?",
+    "Con el número pasa lo mismo que con la mayúscula: no alcanza con mirar la contraseña entera, hay que revisar carácter por carácter. ¿Qué método te dice si un carácter suelto es un número?",
     "El test de <code>ABCDEFG1</code> tiene exactamente 8 caracteres y tiene que pasar. ¿Tu condición de largo incluye al 8 o lo deja afuera?",
   ]}
 >

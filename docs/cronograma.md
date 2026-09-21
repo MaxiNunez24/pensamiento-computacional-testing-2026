@@ -83,16 +83,18 @@
 
     👉 El prototipo del sistema ya se puede **[ver y probar](./proyecto/index.md)**.
 
-!!! info "🌐 Bloque 4 — Web y Segundo Proyecto: Bot SiGes"
+!!! info "🌐 Bloque 4 — Web: el sistema en Flask"
     Cómo funciona la web (HTTP, request/response, rutas) y **Flask** (Jinja2, formularios). Se
     **migra el Sistema de Asistencias a web**, refactorizando código propio.
 
     **Accesibilidad desde el primer template**: HTML con etiquetas que dicen qué es cada cosa, un
     `<label>` en cada campo, contraste, y que la pantalla se pueda usar con **Tab**. No es un
-    agregado: el tótem de la entrada lo va a usar todo el CFP. Después, el segundo
-    proyecto: un **Bot que automatiza la carga de alumnos en SiGes** con **Playwright**, tomando los
-    datos ya cargados en Asistencias. Playwright sirve además para **testing E2E** — engancha con el
-    módulo de Testing.
+    agregado: el tótem de la entrada lo va a usar todo el CFP. Con el sistema andando, el **bot del
+    SiGeS** (Bloque 3) pasa a tomar los datos ya cargados en Asistencias en vez de la planilla, y
+    **Playwright** vuelve en Testing para las pruebas **E2E**.
+
+    Al final del bloque, **Lo que Python hace por vos**: los atajos del lenguaje, cuando ya hay un
+    sistema entero donde usarlos.
 
 !!! info "🧪 Bloque 5 — Testing (teórico y aplicado)"
     **Testing está en el nombre del curso**, así que tiene su propio bloque. Primero la **teoría**:
@@ -229,6 +231,7 @@
 | Mié 9/9 | Resolución y corrección del **Mini Parcial** de los dos alumnos presentes, y charla sobre el mercado informático actual | [📄](./clases/bloque_1_fundamentos/mini_parcial.md) |
 | Vie 11/9 | 🚫 Sin clases (asueto por el **Día del Profesional de la Educación**) | |
 | Mié 16/9 | **POO I**: la clase como molde y los objetos como copias, `__init__`, `self`, métodos y `__str__`. Se resolvieron los dos primeros ejercicios de la clase. **Clase grabada en video** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/poo-1/) |
+| Vie 18/9 | **Repaso de POO I** e **introducción a POO II**. Tarea: leer la clase de POO II y la del **bot del SiGeS** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/poo-2/) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.

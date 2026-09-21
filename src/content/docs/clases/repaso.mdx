@@ -120,9 +120,10 @@ Completá `analizar_ventas` para que devuelva un **diccionario** con estas clave
   titulo="¿Es segura?"
   dificultad="🌿"
   starter={`def es_segura(password):\n    pass`}
-  tests={`assert es_segura("Python123") is True, "cumple las tres"\nassert es_segura("python123") is False, "sin mayúscula"\nassert es_segura("PythonAbc") is False, "sin número"\nassert es_segura("Py1") is False, "muy corta"\nassert es_segura("ABCDEFG1") is True, "8 justos, con mayúscula y número"\nassert es_segura("") is False, "vacía no pasa"`}
+  tests={`r = es_segura("Python123")\npista = f"'Python123' cumple las tres (9 caracteres, la P mayúscula y los números), pero tu función devolvió {r!r}. Probá cada condición sola con print() para ver cuál da False. Ojo: password in '0123456789' y password.isdigit() preguntan por la contraseña ENTERA, no si tiene AL MENOS un número. Para eso hay que mirar carácter por carácter, como con la mayúscula."\nassert r is True, pista\nassert es_segura("python123") is False, "sin mayúscula"\nassert es_segura("PythonAbc") is False, "sin número"\nassert es_segura("Py1") is False, "muy corta"\nr = es_segura("ABCDEFG1")\npista = f"'ABCDEFG1' tiene 8 caracteres justos, mayúscula y número, pero tu función devolvió {r!r}. La regla dice AL MENOS 8: ¿tu condición de largo deja entrar al 8?"\nassert r is True, pista\nassert es_segura("") is False, "vacía no pasa"`}
   pistas={[
     "Para saber si hay <em>al menos una</em> mayúscula tenés que mirar carácter por carácter. ¿Qué método te dice si un carácter suelto es mayúscula?",
+    "Con el número pasa lo mismo que con la mayúscula: no alcanza con mirar la contraseña entera, hay que revisar carácter por carácter. ¿Qué método te dice si un carácter suelto es un número?",
     "El test de <code>ABCDEFG1</code> tiene exactamente 8 caracteres y tiene que pasar. ¿Tu condición de largo incluye al 8?",
   ]}
 >

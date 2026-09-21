@@ -57,39 +57,36 @@ queda señalada con **estás acá**.
       { clase: 'repaso', nombre: 'Repaso general', estado: 'vista' },
       { clase: 'lectura-codigo', nombre: 'Lectura y corrección de código', estado: 'vista' },
       { clase: 'bingo', nombre: 'Bingo — integrador', estado: 'vista' },
-      { clase: 'logica-pensar', nombre: 'Pensar antes de escribir', estado: 'optativa',
-        nota: 'Cómo encarar un ejercicio que no sabés resolver' },
     ],
   },
   {
-    nombre: 'Que los datos no se pierdan',
-    meta: 'El paso que convierte un ejercicio en un programa de verdad',
+    nombre: 'Trabajar como en un equipo',
+    meta: 'Guardar cada versión del código y no perder nunca lo que funcionaba',
     paradas: [
       { clase: 'git-vscode', nombre: 'Git desde VS Code', estado: 'vista' },
-      { clase: 'archivos', nombre: 'Manejo de archivos', estado: 'optativa',
-        nota: 'Lo que hace falta de archivos (leer un CSV) se ve con el bot' },
-      { clase: 'json', nombre: 'JSON', estado: 'optativa' },
     ],
   },
   {
     nombre: 'Armar el sistema',
     meta: 'Acá arranca el proyecto del CFP',
     paradas: [
-      { clase: 'lo-que-python-hace-por-vos', nombre: 'Lo que Python hace por vos', estado: 'viene',
-        nota: 'Los atajos que vas a ver en el sistema' },
       { clase: 'poo-1', nombre: 'POO I: clases y objetos', estado: 'vista' },
-      { clase: 'bot-siges', nombre: 'El bot del SiGeS', estado: 'ahora',
-        nota: 'El Alumno de POO decide quién se carga' },
+      { clase: 'poo-2', nombre: 'POO II: métodos y encapsulamiento', estado: 'ahora',
+        nota: 'Para leer antes de la clase' },
+      { clase: 'bot-siges', nombre: 'El bot del SiGeS', estado: 'viene',
+        nota: 'El Alumno de POO decide quién se carga. Para leer antes de la clase' },
       { clase: 'sqlite', nombre: 'SQLite: los datos en una base', estado: 'viene',
         nota: 'Donde el sistema guarda todo' },
       { clase: 'excepciones', nombre: 'Excepciones: cuando algo sale mal', estado: 'viene',
         nota: 'Que un dato roto no tire abajo el sistema' },
-      { clase: 'poo-2', nombre: 'POO II: métodos y encapsulamiento', estado: 'viene' },
-      { clase: 'logica-eficiencia', nombre: 'Eficiencia', estado: 'optativa',
-        nota: 'Buscar un alumno entre 5.000, de dos formas' },
-      { clase: 'poo-herencia', nombre: 'Herencia y polimorfismo', estado: 'optativa',
-        nota: 'No hace falta para el sistema' },
-      { clase: 'logica-desafios', nombre: 'Desafíos de optimización', estado: 'optativa' },
+    ],
+  },
+  {
+    nombre: 'Afinar el código',
+    meta: 'Cuando el sistema ya anda: escribir lo mismo con menos',
+    paradas: [
+      { clase: 'lo-que-python-hace-por-vos', nombre: 'Lo que Python hace por vos', estado: 'viene',
+        nota: 'Los atajos que vas a ver en el código de otros' },
     ],
   },
   {
@@ -97,6 +94,24 @@ queda señalada con **estás acá**.
     meta: 'La otra mitad del nombre del curso',
     paradas: [
       { clase: 'testing-1', nombre: 'Testing I: probar en serio', estado: 'viene' },
+    ],
+  },
+  {
+    // Las optativas, todas juntas al final y en el mismo orden que en el
+    // menú. No cuentan para el total ni para el "estás acá".
+    nombre: '🎁 Para ir más allá',
+    meta: 'No hacen falta para el proyecto, pero están buenas',
+    paradas: [
+      { clase: 'archivos', nombre: 'Manejo de archivos', estado: 'optativa',
+        nota: 'Lo que hace falta de archivos (leer un CSV) se ve con el bot' },
+      { clase: 'json', nombre: 'JSON', estado: 'optativa' },
+      { clase: 'poo-herencia', nombre: 'Herencia y polimorfismo', estado: 'optativa',
+        nota: 'No hace falta para el sistema' },
+      { clase: 'logica-pensar', nombre: 'Pensar antes de escribir', estado: 'optativa',
+        nota: 'Cómo encarar un ejercicio que no sabés resolver' },
+      { clase: 'logica-eficiencia', nombre: 'Eficiencia', estado: 'optativa',
+        nota: 'Buscar un alumno entre 5.000, de dos formas' },
+      { clase: 'logica-desafios', nombre: 'Desafíos de optimización', estado: 'optativa' },
     ],
   },
 ]} />
