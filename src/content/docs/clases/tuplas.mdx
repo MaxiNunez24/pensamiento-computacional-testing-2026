@@ -105,15 +105,6 @@ a, b = b, a            # intercambia los valores, sin variable auxiliar
 
 Del lado derecho se arma la tupla `(2, 1)` y del izquierdo se desempaqueta. Por eso funciona.
 
-Y también explica el `for` sobre `.items()` de los diccionarios:
-
-```python
-for clave, valor in precios.items():
-    ...
-```
-
-`.items()` va entregando tuplas de dos, y el `for` las desempaqueta en cada vuelta.
-
 ## Devolver más de un valor
 
 :::note[Esto engancha con Funciones I]
@@ -173,16 +164,22 @@ avisar**. Cuando las listas tendrían que ir apareadas, conviene chequear que mi
   titulo="Armar el boletín"
   dificultad="🌿"
   datos={`nombres = ["Ana", "Beto"]\nnotas = [10, 7]`}
-  starter={`# Mostrá un diccionario que asocie cada nombre con su nota.\n`}
-  tests={`import ast\nassert ast.literal_eval(correr(nombres=["Ana", "Beto"], notas=[10, 7]).strip()) == {"Ana": 10, "Beto": 7}, f'imprimiste {correr(nombres=["Ana", "Beto"], notas=[10, 7]).strip()!r}'\nassert ast.literal_eval(correr(nombres=[], notas=[]).strip()) == {}, "sin alumnos, diccionario vacío"\nassert ast.literal_eval(correr(nombres=["Ana"], notas=[9]).strip()) == {"Ana": 9}, "un solo alumno"`}
+  starter={`# Mostrá una línea por alumno: el nombre, dos puntos y la nota.\n`}
+  tests={`r = correr(nombres=["Ana", "Beto"], notas=[10, 7]).strip().splitlines()\nassert r == ["Ana: 10", "Beto: 7"], f"con Ana y Beto tenía que salir Ana: 10 y Beto: 7, y salió {r!r}"\nr = correr(nombres=["Ana"], notas=[9]).strip()\nassert r == "Ana: 9", f"con un solo alumno salió {r!r}"\nr = correr(nombres=["Ana", "Beto", "Caro"], notas=[10, 7]).strip()\npista = f"A Caro le falta la nota: son 3 nombres y 2 notas. zip la descarta sin avisar, y el boletín sale incompleto como si nada. Tenía que salir solo Las listas no coinciden, y salió {r!r}"\nassert r == "Las listas no coinciden", pista\nr = correr(nombres=["Ana"], notas=[9, 8]).strip()\nassert r == "Las listas no coinciden", f"acá sobra una nota: también tiene que avisar. Salió {r!r}"`}
   pistas={[
     "Los dos datos de cada alumno están en listas distintas, en la misma posición. ¿Qué función viste que los va emparejando?",
-    "El resultado no es una lista sino algo donde buscás por nombre. ¿Qué estructura es esa, y con qué valor arranca antes de cargar al primero?",
+    "Mirá el recuadro de arriba: zip no avisa si las listas no miden lo mismo. Chequealo vos con <code>len()</code> antes de arrancar el <code>for</code>.",
   ]}
 >
-Mostrá un **diccionario** que asocie cada nombre con su nota.
+Mostrá el boletín: **una línea por alumno**, con su nombre y su nota.
 
-Con `["Ana", "Beto"]` y `[10, 7]` tiene que dar `{'Ana': 10, 'Beto': 7}`.
+```text
+Ana: 10
+Beto: 7
+```
+
+Pero si las dos listas **no miden lo mismo**, a alguien le falta la nota. En ese caso, en vez del
+boletín, mostrá solo `Las listas no coinciden`.
 </EjercicioPython>
 
 ## ¿Lista o tupla?
@@ -193,14 +190,6 @@ Con `["Ana", "Beto"]` y `[10, 7]` tiene que dar `{'Ana': 10, 'Beto': 7}`.
 | todos los elementos son lo mismo | cada posición significa algo distinto |
 | necesitás agregar, sacar u ordenar | querés garantizar que nadie lo modifique |
 | *notas de un alumno, productos del carrito* | *coordenadas, una fecha, un registro* |
-
-:::tip[Un bonus concreto]
-Las tuplas **pueden ser claves de un diccionario** y las listas no, justamente porque no cambian:
-
-```python
-distancias = {("Buenos Aires", "Córdoba"): 700}
-```
-:::
 
 
 ## 🏗️ El sistema: la marca que no se toca

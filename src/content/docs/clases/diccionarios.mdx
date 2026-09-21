@@ -95,7 +95,8 @@ for clave, valor in precios.items():       # las dos cosas a la vez
     print(f"{clave} sale ${valor}")
 ```
 
-`.items()` es la que más vas a usar: te da el par completo en cada vuelta.
+`.items()` es la que más vas a usar: te da el par completo en cada vuelta, como una **tupla** de dos
+que el `for` desempaqueta: lo mismo que hacías con `zip` en la clase de Tuplas.
 
 <EjercicioPython
   titulo="El total del carrito"
