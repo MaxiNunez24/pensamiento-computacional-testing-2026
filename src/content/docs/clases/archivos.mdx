@@ -97,6 +97,7 @@ quedan renglones vacíos en el medio. Por eso el `end=""`.
 
 <EjercicioPython
   titulo="Guardar una lista"
+  fundamental
   dificultad="🌿"
   starter={`def guardar(ruta, items):\n    pass`}
   tests={`guardar("t1.txt", ["Guada", "Brandon", "Yoda"])\nwith open("t1.txt", encoding="utf-8") as f:\n    contenido = f.read()\nassert contenido == "Guada\\nBrandon\\nYoda\\n", f"el archivo quedó con {contenido!r}"\nguardar("t1.txt", ["Tux"])\nwith open("t1.txt", encoding="utf-8") as f:\n    assert f.read() == "Tux\\n", "al guardar de nuevo tiene que reemplazar, no agregar"\nprint("¡Archivo escrito!")`}
@@ -224,6 +225,7 @@ solo la primera vez que hay que revisar algo a mano.
 
 <EjercicioPython
   titulo="Leer la lista, y si no está arrancar vacío"
+  fundamental
   dificultad="🌿"
   starter={`from pathlib import Path\n\ndef cargar_dia(ruta):\n    pass`}
   tests={`import os\nif os.path.exists("dia2.txt"):\n    os.remove("dia2.txt")\nassert cargar_dia("dia2.txt") == {}, "si el archivo no existe todavía, el día arranca vacío en vez de reventar"\nwith open("dia2.txt", "w", encoding="utf-8") as f:\n    f.write("30111222,P\\n28999888,T\\n")\nd = cargar_dia("dia2.txt")\nassert d == {"30111222": "P", "28999888": "T"}, f"volvió {d!r}"\nassert d["30111222"] == "P", "el estado no puede volver con el salto de línea pegado"\nwith open("dia2.txt", "w", encoding="utf-8") as f:\n    f.write("")\nassert cargar_dia("dia2.txt") == {}, "un archivo vacío es un día sin marcar, no un error"\nprint("¡Día cargado!")`}

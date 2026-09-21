@@ -82,6 +82,14 @@
 
         a.appendChild(ico);
         a.appendChild(nom);
+        // ⭐ Los fundamentales de la clase, para verlos todos de un vistazo.
+        if (sec.hasAttribute('data-fundamental')) {
+          var est = document.createElement('span');
+          est.className = 'idx-ej__estrella';
+          est.title = 'Fundamental';
+          est.textContent = '⭐';
+          a.appendChild(est);
+        }
         a.appendChild(ok);
         li.appendChild(a);
         ul.appendChild(li);

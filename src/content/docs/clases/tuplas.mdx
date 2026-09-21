@@ -71,6 +71,7 @@ Lo único que no podés es **modificarla**: nada de `append`, `remove`, ni asign
 
 <EjercicioPython
   titulo="Los extremos"
+  fundamental
   dificultad="🌱"
   datos={`numeros = [3, 9, 1, 7]`}
   starter={`# Mostrá una tupla con el menor y el mayor.\n`}
@@ -216,6 +217,7 @@ marcas = [("30111222", "P"), ("28999888", "A"), ("27888444", "T")]
 
 <EjercicioPython
   titulo="Una marca de asistencia"
+  fundamental
   dificultad="🌱"
   starter={`def marcar(dni, estado):\n    # Devolvé la marca: el DNI y el estado, juntos.\n    pass`}
   tests={`m = marcar("30111222", "P")\nassert m == ("30111222", "P"), f"devolviste {m!r}"\nassert isinstance(m, tuple), "tiene que ser una TUPLA, no una lista: una marca no se edita, se reemplaza"\ntry:\n    m[1] = "A"\n    assert False, "si se pudo cambiar, no era una tupla"\nexcept TypeError:\n    pass\nassert marcar("1", "J") == ("1", "J")\nprint("¡Marca OK!")`}
@@ -241,6 +243,7 @@ Uno de los tests de acá arriba comprueba justamente eso: intenta cambiarla y es
 
 <EjercicioPython
   titulo="Desempaquetar en el for"
+  fundamental
   dificultad="🌿"
   datos={`marcas = [("30111222", "P"), ("28999888", "A"), ("27888444", "T"), ("26777333", "J")]`}
   starter={`def los_que_vinieron(marcas):\n    # Devolvé la lista de DNI de los que vinieron.\n    # La "T" cuenta como que vino.\n    pass`}

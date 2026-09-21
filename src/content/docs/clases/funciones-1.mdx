@@ -65,6 +65,7 @@ mientras todavía no lo escribiste. **Borralo y poné tu solución** en su lugar
 
 <EjercicioPython
   titulo="Tu primera función"
+  fundamental
   dificultad="🌱"
   starter={`def saludar(nombre):\n    # Tiene que DEVOLVER el texto "¡Hola, <nombre>!"\n    pass`}
   tests={`assert saludar("Ana") == "¡Hola, Ana!", 'saludar("Ana") debería devolver "¡Hola, Ana!"'\nassert saludar("Beto") == "¡Hola, Beto!"\nprint("Probado con Ana y Beto")`}
@@ -126,6 +127,7 @@ más importante y la que menos lo parece.
 
 <EjercicioPython
   titulo="¿Vino o no vino?"
+  fundamental
   dificultad="🌱"
   starter={`def vino(estado):\n    # "P" y "T" cuentan como que vino.\n    # "A" y "J", como que no.\n    pass`}
   tests={`assert vino("P") is True, 'vino("P") tiene que devolver True (el valor True, no el texto)'\nassert vino("T") is True, "el que llegó tarde vino igual"\nassert vino("A") is False, 'vino("A") tiene que devolver False'\nassert vino("J") is False, "la falta justificada sigue siendo una falta"\nassert vino("") is False, "cualquier otra cosa tampoco es haber venido"\nprint("¡Regla OK!")`}
@@ -167,6 +169,7 @@ Si todavía no tiene ninguna marca, devolvé `0`.
 
 <EjercicioPython
   titulo="Una función que usa a otra"
+  fundamental
   dificultad="🌿"
   starter={`def vino(estado):\n    return estado in ("P", "T")\n\ndef cuantos_vinieron(marcas):\n    # Usá vino(). No vuelvas a escribir la regla acá.\n    pass`}
   tests={`assert cuantos_vinieron(["P", "T", "A", "P"]) == 3, "vinieron tres: dos P y una T"\nassert cuantos_vinieron([]) == 0, "sin marcas no vino nadie"\nassert cuantos_vinieron(["A", "J"]) == 0\n\n# Y ahora la prueba de verdad: cambiamos la regla y miramos si acompaña.\n_original = vino\ndef vino(estado):\n    return estado == "P"        # el CFP decidió que el tarde ya no cuenta\ntry:\n    r = cuantos_vinieron(["P", "T", "A", "P"])\n    assert r == 2, f"si cambia vino(), cuantos_vinieron() tiene que dar 2 solo, y dio {r!r}. Eso pasa únicamente si la usás en vez de repetir la regla adentro."\nfinally:\n    vino = _original\nprint("¡Reutilización OK!")`}
@@ -245,27 +248,6 @@ se puede desarmar: `minimo, maximo, promedio, pares = analizar(notas)`.
 `analizar([1, 2, 3, 4])` → `(1, 4, 2.5, 2)`
 </EjercicioPython>
 
-<EjercicioPython
-  titulo="Validador de contraseñas"
-  dificultad="🌳"
-  starter={`def validar_password(password):\n    pass`}
-  tests={`r = validar_password("Python123")\npista = f"'Python123' cumple las cuatro reglas (9 caracteres, la P mayúscula, los números y ningún espacio), pero tu función devolvió {r!r}. Probá cada condición sola con print() para ver cuál da False. Ojo: password in '0123456789' y password.isdigit() preguntan por la contraseña ENTERA, no si tiene AL MENOS un número. Para eso hay que mirar carácter por carácter, como con la mayúscula."\nassert r is True, pista\nassert validar_password("python123") is False, "le falta la mayúscula"\nassert validar_password("Python") is False, "le falta el número"\nassert validar_password("Py1") is False, "es muy corta"\nr = validar_password("Python 123")\npista = f"'Python 123' tiene un espacio en el medio, pero tu función devolvió {r!r}. Ojo: password not in ' ' pregunta si la contraseña ENTERA es un espacio, no si tiene un espacio adentro. Dale vuelta: ¿está ' ' adentro de password?"\nassert r is False, pista\nr = validar_password("ABCDEFG1")\npista = f"'ABCDEFG1' tiene 8 caracteres justos, mayúscula y número, pero tu función devolvió {r!r}. La regla dice AL MENOS 8: ¿tu condición de largo deja entrar al 8?"\nassert r is True, pista`}
-  pistas={[
-    "Son cuatro condiciones que se tienen que cumplir TODAS. ¿Con qué las unís?",
-    "Para saber si hay <em>al menos una</em> mayúscula tenés que mirar carácter por carácter. ¿Qué método te dice si un carácter suelto es mayúscula?",
-    "Con el número pasa lo mismo que con la mayúscula: no alcanza con mirar la contraseña entera, hay que revisar carácter por carácter. ¿Qué método te dice si un carácter suelto es un número?",
-    "El test de <code>ABCDEFG1</code> tiene exactamente 8 caracteres y tiene que pasar. ¿Tu condición de largo incluye al 8 o lo deja afuera?",
-  ]}
->
-Completá `validar_password` para que devuelva `True` solo si la contraseña cumple **todas** estas
-reglas:
-
-- Al menos **8 caracteres**
-- Al menos **una mayúscula**
-- Al menos **un número**
-- **Sin espacios**
-</EjercicioPython>
-
 <EncontrarElError
   titulo="La mayúscula que no era"
   dificultad="🌿"
@@ -298,6 +280,28 @@ Por eso los tests de acá abajo prueban con números, con espacios y con una sol
 raros no son un capricho: son los únicos que encuentran esta clase de error.**
 :::
 </EncontrarElError>
+
+<EjercicioPython
+  titulo="Validador de contraseñas"
+  fundamental
+  dificultad="🌳"
+  starter={`def validar_password(password):\n    pass`}
+  tests={`r = validar_password("Python123")\npista = f"'Python123' cumple las cuatro reglas (9 caracteres, la P mayúscula, los números y ningún espacio), pero tu función devolvió {r!r}. Probá cada condición sola con print() para ver cuál da False. Ojo: password in '0123456789' y password.isdigit() preguntan por la contraseña ENTERA, no si tiene AL MENOS un número. Para eso hay que mirar carácter por carácter, como con la mayúscula."\nassert r is True, pista\nassert validar_password("python123") is False, "le falta la mayúscula"\nassert validar_password("Python") is False, "le falta el número"\nassert validar_password("Py1") is False, "es muy corta"\nr = validar_password("Python 123")\npista = f"'Python 123' tiene un espacio en el medio, pero tu función devolvió {r!r}. Ojo: password not in ' ' pregunta si la contraseña ENTERA es un espacio, no si tiene un espacio adentro. Dale vuelta: ¿está ' ' adentro de password?"\nassert r is False, pista\nr = validar_password("ABCDEFG1")\npista = f"'ABCDEFG1' tiene 8 caracteres justos, mayúscula y número, pero tu función devolvió {r!r}. La regla dice AL MENOS 8: ¿tu condición de largo deja entrar al 8?"\nassert r is True, pista`}
+  pistas={[
+    "Son cuatro condiciones que se tienen que cumplir TODAS. ¿Con qué las unís?",
+    "Para saber si hay <em>al menos una</em> mayúscula tenés que mirar carácter por carácter. ¿Qué método te dice si un carácter suelto es mayúscula?",
+    "Con el número pasa lo mismo que con la mayúscula: no alcanza con mirar la contraseña entera, hay que revisar carácter por carácter. ¿Qué método te dice si un carácter suelto es un número?",
+    "El test de <code>ABCDEFG1</code> tiene exactamente 8 caracteres y tiene que pasar. ¿Tu condición de largo incluye al 8 o lo deja afuera?",
+  ]}
+>
+Completá `validar_password` para que devuelva `True` solo si la contraseña cumple **todas** estas
+reglas:
+
+- Al menos **8 caracteres**
+- Al menos **una mayúscula**
+- Al menos **un número**
+- **Sin espacios**
+</EjercicioPython>
 
 :::note[¿Qué sigue?]
 En **Funciones II** vamos a ver el *scope* (dónde "viven" las variables), los valores por defecto y

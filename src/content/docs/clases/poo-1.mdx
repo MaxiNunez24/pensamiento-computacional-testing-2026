@@ -106,6 +106,7 @@ desde cero.
 
 <EjercicioPython
   titulo="Tu primera clase: Alumno"
+  fundamental
   dificultad="🌱"
   starter={`class Alumno:\n    # 1) __init__ con dni, apellido y nombre\n    # 2) método nombre_completo() que DEVUELVA "Apellido, Nombre"\n    pass`}
   tests={`a = Alumno("30111222", "Perez", "Ana")\nassert a.dni == "30111222", "el DNI tiene que quedar guardado en el objeto, tal cual llegó"\nassert a.nombre_completo() == "Perez, Ana", 'nombre_completo() debería devolver "Perez, Ana"'\nassert Alumno("28999888", "Gomez", "Beto").nombre_completo() == "Gomez, Beto"\nassert hasattr(a, "apellido") and hasattr(a, "nombre"), "el apellido y el nombre tienen que quedar guardados cada uno en su atributo (self.apellido, self.nombre), no solo el texto ya armado: el sistema los va a necesitar por separado, por ejemplo para ordenar por apellido"\nassert a.apellido == "Perez" and a.nombre == "Ana", f'self.apellido tendría que ser "Perez" y self.nombre "Ana", y quedaron {a.apellido!r} y {a.nombre!r}'\nprint("¡Alumno OK!")`}
@@ -122,6 +123,7 @@ Ejemplo: `Alumno("30111222", "Perez", "Ana").nombre_completo()` → `"Perez, Ana
 
 <EjercicioPython
   titulo="El curso que no deja repetir"
+  fundamental
   dificultad="🌿"
   datos={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre`}
   starter={`class Curso:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self.alumnos = []\n    # inscribir(alumno): lo agrega a la lista, PERO no si ya hay uno con ese DNI\n    # cuantos(): devuelve cuántos alumnos tiene inscriptos`}
@@ -178,6 +180,7 @@ Vamos a practicarlo con la de verdad: en el primer recuadro guardás `alumno.py`
 
 <EjercicioPython
   titulo="La clase Alumno, en su propio archivo"
+  fundamental
   dificultad="🌿"
   archivo="alumno.py"
   starter={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre\n        self.activo = True\n    # nombre_completo(): devuelve "Apellido, Nombre"\n    # dar_de_baja(): deja 'activo' en False (pero NO borra nada)`}
@@ -203,6 +206,7 @@ Es la misma idea que la papelera de esta plataforma, y por el mismo motivo.
 
 <EjercicioPython
   titulo="Usá la clase desde otro archivo"
+  fundamental
   dificultad="🌱"
   starter={`from alumno import Alumno\n\n# Creá al alumno 27888444 / Gomez / Beto en una variable 'beto',\n# dalo de baja, y guardá su nombre completo en 'etiqueta'.\n`}
   tests={`assert beto.dni == "27888444", "el DNI va como texto, entre comillas: los ceros de adelante importan"\nassert beto.activo is False, "faltó darlo de baja"\nassert etiqueta == "Gomez, Beto", f'etiqueta tendría que ser "Gomez, Beto" y es {etiqueta!r}'\nprint("¡Importaste y usaste tu clase! 🎉")`}

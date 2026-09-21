@@ -29,6 +29,8 @@ import { idEjercicio } from '../scripts/id-ejercicio';
  */
 interface Props {
   titulo: string;
+  /** ⭐ Lo principal de la clase: se hace en clase, y si alguien hace solo algunos, que sean estos. */
+  fundamental?: boolean;
   dificultad?: string;
   pasos: string[];
   /** Orden inicial: posiciones (1..n) del orden correcto. Por defecto, al revés. */
@@ -47,10 +49,14 @@ const orden = inicial && inicial.length === pasos.length
 const id = idEjercicio(titulo);
 ---
 
-<section class="ordenar" id={id} data-titulo={titulo}>
+<section class="ordenar" id={id} data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined}>
   <header class="ejercicio__header">
     <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
     <span class="ej-hecho" hidden>✓ Resuelto</span>
   </header>
 

@@ -21,6 +21,8 @@ import { idEjercicio } from '../scripts/id-ejercicio';
  */
 interface Props {
   titulo: string;
+  /** ⭐ Lo principal de la clase: se hace en clase, y si alguien hace solo algunos, que sean estos. */
+  fundamental?: boolean;
   dificultad?: string; // 🌱 / 🌿 / 🌶️
   plantilla: string;
   tests: string;
@@ -63,12 +65,16 @@ const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('ba
   class="ejercicio completar"
   id={id}
   data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined}
   data-segmentos={enc(segmentos)}
   data-tests={Buffer.from(tests, 'utf-8').toString('base64')}
 >
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
     <span class="ej-hecho" hidden>✓ Resuelto</span>
     <span class="ejercicio__archivo" title="Completá los huecos en blanco">✏️ completar</span>
   </header>

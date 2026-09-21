@@ -18,6 +18,8 @@ interface TipoFlecha { id: string; simbolo: string; nombre: string; significado:
 interface Relacion { de: string; a: string; tipo: string }
 interface Props {
   titulo?: string;
+  /** ⭐ Lo principal de la clase: se hace en clase, y si alguien hace solo algunos, que sean estos. */
+  fundamental?: boolean;
   clases: Clase[];
   tiposFlecha: TipoFlecha[];
   relaciones: Relacion[];
@@ -37,10 +39,14 @@ const posicionadas = clases.map((c, i) => ({
 }));
 ---
 
-<section class="diagrama" id={id} data-titulo={titulo} data-solucion={enc({ relaciones })}>
+<section class="diagrama" id={id} data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined} data-solucion={enc({ relaciones })}>
   <header class="ejercicio__header">
     <span class="ejercicio__dif" aria-hidden="true">🎨</span>
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
     <span class="ej-hecho" hidden>✓ Resuelto</span>
   </header>
 

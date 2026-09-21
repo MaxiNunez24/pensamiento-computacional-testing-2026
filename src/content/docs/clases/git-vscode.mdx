@@ -70,7 +70,7 @@ preparación de la que hablamos en la terminal:
   titulo="Después de tocar el + en main.py"
 />
 
-<OpcionMultiple titulo="¿Qué hace el +?" opciones={[
+<OpcionMultiple titulo="¿Qué hace el +?" fundamental opciones={[
   { texto: "<code>git add</code>", correcta: true, explicacion: "Sí. El + prepara ese archivo para el próximo commit, igual que git add archivo." },
   { texto: "<code>git commit</code>", explicacion: "No: el commit es el botón azul de arriba. El + solo prepara, todavía no guarda nada." },
   { texto: "<code>git push</code>", explicacion: "No: push manda a GitHub, y eso ni siquiera pasa hasta después del commit." },
@@ -98,7 +98,7 @@ ahora, ese archivo **no entra**. Es el mismo error clásico de la terminal: hace
 hecho `add`.
 :::
 
-<OpcionMultiple titulo="¿Qué queda guardado?" opciones={[
+<OpcionMultiple titulo="¿Qué queda guardado?" fundamental opciones={[
   { texto: "Solo <code>main.py</code>.", correcta: true, explicacion: "Correcto: únicamente lo que está en STAGED CHANGES entra al commit. notas.txt queda esperando." },
   { texto: "Los dos archivos.", explicacion: "No: notas.txt está en CHANGES, no preparado. Habría que tocarle el + primero." },
   { texto: "Ninguno, porque falta hacer push.", explicacion: "El commit guarda igual en tu compu. El push es otro paso, después, y sirve para mandarlo a GitHub." },

@@ -83,6 +83,7 @@ Debería mostrar `Total: 19`, pero lanza un `TypeError`.
 
 <EncontrarElError
   titulo="4 · La suma que se reinicia"
+  fundamental
   dificultad="🌿"
   codigo={`numeros = [5, 15, 3, 20, 8, 12]\nsuma = 0\nfor n in numeros:\n    if n > 10:\n        suma = 0\n        suma += n\nprint(f"Suma de mayores a 10: {suma}")`}
   errores={[5]}
@@ -152,6 +153,7 @@ Debería mostrar `amarillo`, pero lanza un `IndexError`.
 
 <EncontrarElError
   titulo="8 · El buscador de inscriptos"
+  fundamental
   dificultad="🌿"
   codigo={`inscriptos = {"Ana", "Beto", "Cami", "Dante"}\nif inscriptos == "Dante":\n    print("Dante está inscripto")\nelse:\n    print("Dante no está inscripto")`}
   errores={[2]}
@@ -181,6 +183,7 @@ Debería mostrar el teléfono de Ana, pero lanza un `KeyError`.
 
 <EncontrarElError
   titulo="10 · ¿Este anda?"
+  fundamental
   dificultad="🌳"
   codigo={`def palabra_mas_larga(palabras):\n    mas_larga = palabras[0]\n    for p in palabras:\n        if len(p) > len(mas_larga):\n            mas_larga = p\n    return mas_larga\n\nlista = ["python", "es", "increíblemente", "divertido"]\nprint(palabra_mas_larga(lista))`}
   errores={[]}

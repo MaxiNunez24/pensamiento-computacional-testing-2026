@@ -89,6 +89,7 @@ Los pasos son estos, pero desordenados. Ponelos en orden:
 
 <OrdenarPasos
   titulo="Del zip a VS Code"
+  fundamental
   pasos={[
     'Descargar el proyecto',
     'Descomprimirlo (clic derecho → <strong>Extraer todo</strong>)',
@@ -201,6 +202,7 @@ columna 2.
 
 <EjercicioPython
   titulo="Leer la planilla"
+  fundamental
   dificultad="🌱"
   datos={`with open("inscriptos.csv", "w", encoding="utf-8") as f:
     f.write("dni,apellidos,nombres\\n")
@@ -241,6 +243,7 @@ planilla trae los datos, la clase les da comportamiento.**
 
 <EjercicioPython
   titulo="De cada fila, un Alumno"
+  fundamental
   dificultad="🌿"
   datos={`with open("inscriptos.csv", "w", encoding="utf-8") as f:
     f.write("dni,apellidos,nombres,fecha_nacimiento,celular,nacionalidad,domicilio\\n")
@@ -297,6 +300,7 @@ está lista para cargarse.
 
 <EjercicioPython
   titulo="¿Está listo para cargarse?"
+  fundamental
   dificultad="🌱"
   starter={`class Alumno:
     def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
@@ -373,6 +377,7 @@ Hacé uno, dale ✓, **copialo a tu `alumno.py`**, y seguí con el siguiente.
 
 <EjercicioPython
   titulo="Control 1: el DNI"
+  fundamental
   dificultad="🌱"
   starter={`class Alumno:
     def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):

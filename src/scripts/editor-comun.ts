@@ -7,6 +7,7 @@
 
 import { EditorView } from 'codemirror';
 import { indentMore, indentLess } from '@codemirror/commands';
+import { indentUnit } from '@codemirror/language';
 
 // Casilla a la que el alumno manda su código (un solo lugar para cambiarla).
 export const EMAIL_PROFE = 'maxinunez434@gmail.com';
@@ -19,7 +20,12 @@ export const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.worker
 // Theme propio: fija tipografía e interlineado del editor con alta especificidad,
 // para que los estilos de Starlight no desfasen las líneas ni el cursor. El
 // line-height va en .cm-content/.cm-gutters (lo que CodeMirror mide por línea).
-export const editorTheme = EditorView.theme({
+//
+// Va junto con la unidad de indentación, así todos los editores (que ya usan
+// editorTheme) la reciben sin tocar cada uno. CodeMirror trae 2 espacios de
+// fábrica; Python, VS Code y cualquier linter usan 4, y un alumno que copia de
+// acá a VS Code no tiene que encontrarse con otra indentación.
+export const editorTheme = [indentUnit.of('    '), EditorView.theme({
   // 1rem (16px) y no menos: Safari en iOS hace zoom automático al enfocar un
   // campo con tipografía menor a 16px, y la página queda corrida.
   '&': { fontSize: '1rem', maxHeight: '22rem' },
@@ -44,7 +50,7 @@ export const editorTheme = EditorView.theme({
   '.cm-content, .cm-line, .cm-gutters, .cm-gutterElement': {
     lineHeight: 'normal',
   },
-});
+})];
 
 // Los data-* del HTML van en base64 para poder llevar saltos de línea y comillas
 // sin pelear con el escapado.

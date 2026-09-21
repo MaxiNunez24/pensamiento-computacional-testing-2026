@@ -26,6 +26,8 @@ interface Conexion { de: string; a: string; }
 interface TipoFlecha { id: string; simbolo: string; nombre: string; significado: string; }
 interface Props {
   titulo?: string;
+  /** ⭐ Lo principal de la clase: se hace en clase, y si alguien hace solo algunos, que sean estos. */
+  fundamental?: boolean;
   clases: string[];
   slots: Slot[];
   conexiones: Conexion[];
@@ -54,10 +56,14 @@ const conex = conexiones.map((c) => {
 });
 ---
 
-<section class="diagrama" id={id} data-titulo={titulo} data-solucion={enc({ claseEnSlot, flechaEnConexion })}>
+<section class="diagrama" id={id} data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined} data-solucion={enc({ claseEnSlot, flechaEnConexion })}>
   <header class="ejercicio__header">
     <span class="ejercicio__dif" aria-hidden="true">🧩</span>
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
     <span class="ej-hecho" hidden>✓ Resuelto</span>
   </header>
 

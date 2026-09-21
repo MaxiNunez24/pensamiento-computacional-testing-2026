@@ -97,6 +97,7 @@ Te faltaron $9000.0 para el objetivo
 
 <EjercicioPython
   titulo="Estadísticas de ventas"
+  fundamental
   dificultad="🌿"
   starter={`def analizar_ventas(ventas):\n    pass`}
   tests={`r = analizar_ventas([100, 200, 300])\nassert r["total"] == 600, f'total mal: {r["total"]!r}'\nassert r["promedio"] == 200, "el promedio de 100, 200 y 300 es 200"\nassert r["mayor"] == 300, "la mayor es 300"\nassert r["menor"] == 100, "la menor es 100"\nassert r["sobre_promedio"] == 1, "solo 300 supera el promedio de 200"\nr2 = analizar_ventas([50])\nassert r2 == {"total": 50, "promedio": 50.0, "mayor": 50, "menor": 50, "sobre_promedio": 0}, f"con una sola venta: {r2!r}"`}
@@ -118,6 +119,7 @@ Completá `analizar_ventas` para que devuelva un **diccionario** con estas clave
 
 <EjercicioPython
   titulo="¿Es segura?"
+  fundamental
   dificultad="🌿"
   starter={`def es_segura(password):\n    pass`}
   tests={`r = es_segura("Python123")\npista = f"'Python123' cumple las tres (9 caracteres, la P mayúscula y los números), pero tu función devolvió {r!r}. Probá cada condición sola con print() para ver cuál da False. Ojo: password in '0123456789' y password.isdigit() preguntan por la contraseña ENTERA, no si tiene AL MENOS un número. Para eso hay que mirar carácter por carácter, como con la mayúscula."\nassert r is True, pista\nassert es_segura("python123") is False, "sin mayúscula"\nassert es_segura("PythonAbc") is False, "sin número"\nassert es_segura("Py1") is False, "muy corta"\nr = es_segura("ABCDEFG1")\npista = f"'ABCDEFG1' tiene 8 caracteres justos, mayúscula y número, pero tu función devolvió {r!r}. La regla dice AL MENOS 8: ¿tu condición de largo deja entrar al 8?"\nassert r is True, pista\nassert es_segura("") is False, "vacía no pasa"`}
@@ -163,6 +165,7 @@ Los dos días: 2
 
 <EjercicioPython
   titulo="Agenda de contactos"
+  fundamental
   dificultad="🌳"
   starter={`def buscar(agenda, nombre):\n    pass\n\ndef agregar(agenda, nombre, telefono, ciudad):\n    pass\n\ndef por_ciudad(agenda, ciudad):\n    pass`}
   tests={`agenda = {"Ana": {"telefono": "111", "ciudad": "CABA"}}\nassert buscar(agenda, "Ana") == {"telefono": "111", "ciudad": "CABA"}, "buscar a alguien que está"\nassert buscar(agenda, "Zoe") == "No encontrado", "y a alguien que no está"\nagregar(agenda, "Beto", "222", "CABA")\nassert agenda["Beto"] == {"telefono": "222", "ciudad": "CABA"}, "agregar tiene que modificar la agenda que recibió"\nagregar(agenda, "Cami", "333", "Rosario")\nassert sorted(por_ciudad(agenda, "CABA")) == ["Ana", "Beto"], f'en CABA esperaba Ana y Beto, salió {sorted(por_ciudad(agenda, "CABA"))!r}'\nassert por_ciudad(agenda, "Córdoba") == [], "si no hay nadie de esa ciudad, lista vacía"\nprint("¡Agenda OK!")`}

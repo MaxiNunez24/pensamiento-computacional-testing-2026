@@ -148,6 +148,26 @@ body.pc-resizing * {
   border-radius: 999px;
   white-space: nowrap;
 }
+/* ⭐ Fundamental: lo principal de la clase. Es lo que se hace en clase, y la
+   guía para el que tiene poco tiempo: si hace solo algunos, que sean estos.
+   Ámbar y no verde, para no confundirse con el "✓ Resuelto". */
+.ejercicio__fundamental {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  color: #6b4700;
+  background: #fff3cd;
+  border: 1px solid #e0b44c;
+}
+:root[data-theme='dark'] .ejercicio__fundamental {
+  color: #ffd866;
+  background: rgba(255, 193, 7, 0.12);
+  border-color: rgba(255, 193, 7, 0.45);
+}
+
 /* Cuando un ejercicio está resuelto, un borde verde sutil a la izquierda. */
 .ejercicio.ej-resuelto,
 .diagrama.ej-resuelto,
@@ -1192,6 +1212,10 @@ body.pc-resizing * {
 }
 .idx-ej__nombre {
   flex: 1 1 auto;
+}
+.idx-ej__estrella {
+  flex: 0 0 auto;
+  font-size: 0.8em;
 }
 .idx-ej__ok {
   flex: 0 0 auto;

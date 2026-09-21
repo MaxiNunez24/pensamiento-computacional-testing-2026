@@ -43,6 +43,7 @@ print(Alumno("30111222", "Perez", "Ana"))   # 30111222 — Perez, Ana
 
 <EjercicioPython
   titulo="Que el alumno se imprima lindo"
+  fundamental
   dificultad="🌱"
   starter={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre\n    # agregá __str__ para que print(alumno) muestre  30111222 — Perez, Ana`}
   tests={`a = Alumno("30111222", "Perez", "Ana")\nassert str(a) == "30111222 — Perez, Ana", f'esperaba "30111222 — Perez, Ana" y salió {str(a)!r}'\nassert str(Alumno("28999888", "Gomez", "Beto")) == "28999888 — Gomez, Beto", "con otro alumno tiene que acompañar"\nprint("¡Alumno OK!")`}
@@ -93,6 +94,7 @@ En un diagrama, `-` es privado y `+` es público:
 
 <EjercicioPython
   titulo="La marca que no acepta cualquier cosa"
+  fundamental
   dificultad="🌿"
   starter={`class Asistencia:\n    def __init__(self, fecha):\n        self.fecha = fecha\n        self._estado = "A"\n    # marcar(estado): SOLO acepta "P", "A", "T" o "J". Cualquier otra cosa se ignora.\n    # __str__: devuelve  <fecha>: <estado>`}
   tests={`d = Asistencia("2026-09-16")\nassert str(d) == "2026-09-16: A", f'sin marcar todavía, tendría que decir "2026-09-16: A" y dice {str(d)!r}'\nd.marcar("P")\nassert str(d) == "2026-09-16: P", "después de marcar P tiene que quedar en P"\nd.marcar("Z")\nassert str(d) == "2026-09-16: P", "'Z' no es un estado válido: la marca tenía que quedar como estaba"\nd.marcar("")\nassert str(d) == "2026-09-16: P", "una marca vacía tampoco vale"\nd.marcar("J")\nassert str(d) == "2026-09-16: J", "la J (justificada) sí es válida"\nd.marcar("T")\nassert str(d) == "2026-09-16: T", "la T (llegó tarde) también es una marca válida: los estados son P, A, T y J"\nd.marcar("A")\nassert str(d) == "2026-09-16: A", "la A también se tiene que poder volver a poner: por ejemplo, si alguien quedó presente por error"\nprint("¡Asistencia OK!")`}
@@ -111,6 +113,7 @@ ausente** (es como funciona la planilla de papel).
 
 <EjercicioPython
   titulo="El alumno que calcula su asistencia"
+  fundamental
   dificultad="🌿"
   starter={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre\n        self._marcas = []\n    # marcar(estado): SOLO agrega si es "P", "A", "T" o "J"\n    # porcentaje(): qué porcentaje vino. La "T" cuenta como que vino.\n    #               Si todavía no hay marcas, 0 (y no un error de división).\n    # __str__: devuelve  <Apellido>, <Nombre> — <porcentaje con 1 decimal>%`}
   tests={`a = Alumno("30111222", "Perez", "Ana")\na.marcar("P")\na.marcar("T")\na.marcar("A")\na.marcar("P")\na.marcar("Z")   # inválida: si entrara, el porcentaje daría 60 en vez de 75\nassert str(a) == "Perez, Ana — 75.0%", f'esperaba "Perez, Ana — 75.0%" y salió {str(a)!r}'\nvacio = Alumno("28999888", "Sin", "Marcas")\nassert vacio.porcentaje() == 0, "sin ninguna marca el porcentaje es 0, no un error"\nassert str(vacio) == "Sin, Marcas — 0.0%", f'con el curso recién empezado tendría que decir "Sin, Marcas — 0.0%" y dice {str(vacio)!r}'\ntodas = Alumno("1", "Siempre", "Vino")\ntodas.marcar("P")\ntodas.marcar("T")\nassert str(todas) == "Siempre, Vino — 100.0%", "el que llegó tarde igual vino: 2 de 2"\nprint("¡Alumno OK!")`}

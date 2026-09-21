@@ -50,6 +50,7 @@ cuando la hija necesita un atributo más.
 
 <EjercicioPython
   titulo="Instrumentos que heredan"
+  fundamental
   dificultad="🌱"
   starter={`class Instrumento:\n    def __init__(self, nombre):\n        self.nombre = nombre\n    def tocar(self):\n        return f"{self.nombre} hace un sonido"\n\n# Creá Guitarra(Instrumento) y Bateria(Instrumento)\n# que SOBRESCRIBAN tocar() con su propio sonido (ver tests).`}
   tests={`assert Guitarra("Gibson").tocar() == "Gibson hace: ¡Riiiff!", 'Guitarra debería sonar "<nombre> hace: ¡Riiiff!"'\nassert Bateria("Pearl").tocar() == "Pearl hace: ¡Pum pum tss!", 'Bateria debería sonar "<nombre> hace: ¡Pum pum tss!"'\nassert Instrumento("X").tocar() == "X hace un sonido"\nassert issubclass(Guitarra, Instrumento) and issubclass(Bateria, Instrumento), "Guitarra y Bateria suenan bien, pero no heredan de Instrumento: repetiste el constructor en cada una. Con class Guitarra(Instrumento): lo reciben hecho, que es justo lo que enseña este ejercicio"\nprint("¡Instrumentos OK!")`}
@@ -92,6 +93,7 @@ Completá `formas.py`: `Circulo(radio)` y `Rectangulo(base, altura)` que **hered
 
 <EjercicioPython
   titulo="Sumá áreas (polimorfismo entre archivos)"
+  fundamental
   dificultad="🌿"
   starter={`from formas import Circulo, Rectangulo\n\nfiguras = [Circulo(10), Rectangulo(4, 5), Circulo(1)]\n\n# Recorré la lista con UN for y guardá la suma de todas las áreas en 'total'.\n`}
   tests={`assert round(total, 2) == 337.30, "la suma de las áreas debería ser 337.30"\nprint("¡Polimorfismo entre archivos! 🎉")`}

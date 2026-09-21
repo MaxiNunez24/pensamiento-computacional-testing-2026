@@ -71,6 +71,7 @@ comunica su resultado con `return` se puede leer, probar y reusar sola.
 
 <EjercicioPython
   titulo="Sin tocar nada de afuera"
+  fundamental
   dificultad="🌱"
   starter={`def agregar_item(lista, item):\n    pass`}
   tests={`original = ["pan"]\nnueva = agregar_item(original, "leche")\nassert nueva == ["pan", "leche"], f"devolviste {nueva!r}"\nassert original == ["pan"], "la lista original NO tiene que cambiar: devolvé una nueva"\nassert agregar_item([], "x") == ["x"], "sobre una lista vacía también"\nprint("¡Sin efectos secundarios!")`}
@@ -272,6 +273,7 @@ porque el día normal es "vinieron casi todos".
 
 <EjercicioPython
   titulo="Lo normal es que hayan venido"
+  fundamental
   dificultad="🌱"
   starter={`def marcar(dia, dni, estado):\n    # Hacé que 'estado' valga "P" cuando no se lo pasan.\n    pass`}
   tests={`dia = {}\nmarcar(dia, "30111222")\nassert dia == {"30111222": "P"}, f"sin decir nada tendría que quedar presente, y quedó {dia!r}"\nmarcar(dia, "28999888", "A")\nassert dia["28999888"] == "A", "si se dice el estado, manda el que se dijo"\nassert len(dia) == 2\nmarcar(dia, "30111222", "T")\nassert dia["30111222"] == "T", "corregir pisa la marca anterior"\nassert len(dia) == 2, "corregir no agrega a nadie"\nprint("¡Por defecto OK!")`}
@@ -294,6 +296,7 @@ de sintaxis.
 
 <EjercicioPython
   titulo="Pasar lista de varios de una"
+  fundamental
   dificultad="🌿"
   starter={`def marcar_varios(dia, *dnis, estado="P"):\n    pass`}
   tests={`dia = {}\nmarcar_varios(dia, "1", "2", "3")\nassert dia == {"1": "P", "2": "P", "3": "P"}, f"quedó {dia!r}"\nmarcar_varios(dia, "4", "5", estado="A")\nassert dia["4"] == "A" and dia["5"] == "A", "los dos tenían que quedar ausentes"\nassert len(dia) == 5, "los tres de antes tienen que seguir estando"\nmarcar_varios(dia)\nassert len(dia) == 5, "sin ningún DNI no tiene que romper ni agregar nada"\nmarcar_varios(dia, "1", estado="J")\nassert dia["1"] == "J", "también sirve para uno solo"\nprint("¡Varios OK!")`}

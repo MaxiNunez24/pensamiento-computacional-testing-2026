@@ -47,6 +47,8 @@ interface Camino {
 
 interface Props {
   titulo: string;
+  /** ⭐ Lo principal de la clase: se hace en clase, y si alguien hace solo algunos, que sean estos. */
+  fundamental?: boolean;
   dificultad?: string; // 🌱 / 🌿 / 🌳
   starter?: string;
   tests: string;
@@ -91,6 +93,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   class="ejercicio ejercicio--eficiencia"
   id={id}
   data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined}
   data-starter={enc(starter)}
   data-tests={enc(tests)}
   data-datos={datos ? enc(datos) : undefined}
@@ -102,6 +105,9 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
     <span class="ej-hecho" hidden>✓ Resuelto</span>
     {/* Insignia ganada en visitas anteriores; el script la rellena al cargar. */}
     <span class="efi__sello" data-efi-sello hidden></span>

@@ -131,6 +131,7 @@ es la primera vez que lo veo — y sumale uno"*. Sin el `get`, la primera aparic
 
 <EjercicioPython
   titulo="Contar apariciones"
+  fundamental
   dificultad="🌳"
   datos={`items = ["a", "b", "a"]`}
   starter={`# Mostrá un diccionario con cuántas veces aparece cada elemento.\n`}
@@ -191,6 +192,7 @@ lista_del_dia = {
 
 <EjercicioPython
   titulo="El que no está en la lista"
+  fundamental
   dificultad="🌱"
   starter={`def estado_de(lista_del_dia, dni):\n    pass`}
   tests={`dia = {"30111222": "P", "28999888": "T", "27888444": "J"}\nassert estado_de(dia, "30111222") == "P", 'el de Ana es "P"'\nassert estado_de(dia, "28999888") == "T", "el que llegó tarde tiene T"\nassert estado_de(dia, "99999999") == "A", "a ese nadie lo marcó: cuenta como ausente"\nassert estado_de({}, "30111222") == "A", "con el día sin empezar, todos ausentes"\nassert dia == {"30111222": "P", "28999888": "T", "27888444": "J"}, "consultar no tiene que MODIFICAR la lista del día"\nprint("¡Consulta OK!")`}
@@ -228,6 +230,7 @@ Sirve tanto para marcarlo por primera vez como para **corregir** una marca que e
 
 <EjercicioPython
   titulo="El resumen del día"
+  fundamental
   dificultad="🌿"
   starter={`def resumen(lista_del_dia):\n    pass`}
   tests={`r = resumen({"1": "P", "2": "P", "3": "A", "4": "T"})\nassert r == {"P": 2, "A": 1, "T": 1, "J": 0}, f"salió {r!r}"\nassert resumen({}) == {"P": 0, "A": 0, "T": 0, "J": 0}, "sin nadie marcado, los cuatro tienen que estar y valer 0"\nr2 = resumen({"1": "J", "2": "J"})\nassert r2 == {"P": 0, "A": 0, "T": 0, "J": 2}, f"con dos justificadas salió {r2!r}"\nprint("¡Resumen OK!")`}

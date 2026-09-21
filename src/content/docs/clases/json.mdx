@@ -104,6 +104,7 @@ recuperado["notas"][0]   # 10  ← ahora sí, es un diccionario de verdad
 
 <EjercicioPython
   titulo="Guardar y recuperar"
+  fundamental
   dificultad="🌿"
   starter={`import json\n\ndef guardar(ruta, datos):\n    pass\n\ndef cargar(ruta):\n    pass`}
   tests={`original = {"nombre": "Guada", "edad": 25, "notas": [10, 8]}\nguardar("a.json", original)\nvuelta = cargar("a.json")\nassert vuelta == original, f"lo que volvió es {vuelta!r}"\nassert vuelta["notas"][0] == 10, "las notas tienen que seguir siendo una lista de números"\nassert isinstance(vuelta["edad"], int), "la edad tiene que volver como número, no como texto"\nguardar("a.json", {"x": 1})\nassert cargar("a.json") == {"x": 1}, "guardar de nuevo tiene que reemplazar el archivo"\nprint("¡Ida y vuelta OK!")`}
@@ -209,6 +210,7 @@ no da. Esto es JSON.
 
 <EjercicioPython
   titulo="El curso que sobrevive al apagado"
+  fundamental
   dificultad="🌿"
   starter={`import json\nfrom pathlib import Path\n\nVACIO = {"nombre": "", "alumnos": [], "asistencia": {}}\n\ndef guardar_curso(ruta, curso):\n    pass\n\ndef cargar_curso(ruta):\n    pass`}
   tests={`import os\nif os.path.exists("curso.json"):\n    os.remove("curso.json")\nassert cargar_curso("curso.json") == {"nombre": "", "alumnos": [], "asistencia": {}}, "la primera vez no hay archivo: el curso arranca vacío en vez de reventar"\ncurso = {"nombre": "Pensamiento Computacional", "alumnos": [{"dni": "30111222", "apellido": "Perez", "nombre": "Ana", "activo": True}], "asistencia": {"2026-09-16": {"30111222": "P"}}}\nguardar_curso("curso.json", curso)\nvuelta = cargar_curso("curso.json")\nassert vuelta == curso, f"lo que volvió es {vuelta!r}"\nassert vuelta["alumnos"][0]["activo"] is True, "el activo tiene que volver como booleano, no como el texto 'True'"\nassert vuelta["alumnos"][0]["dni"] == "30111222", "y el DNI como texto, con sus ceros si los tuviera"\nc1 = cargar_curso("noexiste1.json")\nc1["alumnos"].append({"dni": "9"})\nc2 = cargar_curso("noexiste2.json")\nassert c2["alumnos"] == [], "dos cursos vacíos distintos no pueden compartir la misma lista: devolvé una COPIA de VACIO, no VACIO"\nguardar_curso("curso.json", {"nombre": "Otro", "alumnos": [], "asistencia": {}})\nassert cargar_curso("curso.json")["nombre"] == "Otro", "guardar de nuevo reemplaza el archivo"\nprint("¡Curso a salvo!")`}

@@ -103,6 +103,7 @@ Los pasos para contar cuántas veces aparece una palabra dentro de una lista de 
 
 <OrdenarPasos
   titulo="Promedio de las notas aprobadas"
+  fundamental
   pasos={[
     'Arrancar la suma en cero y el contador de aprobadas en cero',
     'Tomar la siguiente nota',
@@ -175,6 +176,7 @@ Ahora sí, el paso final: traducir a Python la lista de pasos que ordenaste reci
 
 <EjercicioPython
   titulo="Traducir el promedio de aprobadas"
+  fundamental
   dificultad="🌿"
   starter={`def promedio_aprobadas(notas):\n    # Seguí los pasos que ordenaste arriba, uno por uno.\n    pass`}
   tests={`assert promedio_aprobadas([10, 4, 8]) == 9, "con [10, 4, 8] las aprobadas son 10 y 8: promedio 9"\nassert promedio_aprobadas([2, 3, 5]) == 0, "si no hay ninguna aprobada tiene que devolver 0, no romper"\nassert promedio_aprobadas([6]) == 6\nassert promedio_aprobadas([]) == 0, "con la lista vacía tampoco puede romper"\nassert abs(promedio_aprobadas([7, 8]) - 7.5) < 0.001`}

@@ -36,6 +36,8 @@ const {
   pistas = [],
 } = Astro.props as {
   titulo: string;
+  /** ⭐ Lo principal de la clase: se hace en clase, y si alguien hace solo algunos, que sean estos. */
+  fundamental?: boolean;
   dificultad?: string;
   cajas: Caja[];
   tarjetas: Tarjeta[];
@@ -53,10 +55,14 @@ const mezcladas = tarjetas
   .map((x) => x.t);
 ---
 
-<section class="clasificar ejercicio" id={id} data-titulo={titulo}>
+<section class="clasificar ejercicio" id={id} data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined}>
   <header class="ejercicio__header">
     <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
     <span class="ej-hecho" hidden>✓ Resuelto</span>
   </header>
 

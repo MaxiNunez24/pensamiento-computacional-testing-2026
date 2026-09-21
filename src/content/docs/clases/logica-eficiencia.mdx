@@ -114,6 +114,7 @@ resolverlo que **no cambia** aunque `n` sea un millón.
 
 <EjercicioEficiencia
   titulo="¿Hay algún repetido?"
+  fundamental
   dificultad="🌿"
   starter={`def hay_repetidos(numeros):\n    # True si algún número aparece más de una vez, False si son todos distintos\n    pass`}
   tests={`assert hay_repetidos([1, 2, 2, 3]), "el 2 está dos veces"\nassert not hay_repetidos([1, 2, 3]), "son todos distintos"\nassert not hay_repetidos([]), "una lista vacía no tiene repetidos"\nassert hay_repetidos([7, 7])\nassert not hay_repetidos([5])`}
@@ -158,6 +159,7 @@ Cuidado con este: la primera idea que se le ocurre a todo el mundo es la más ca
 
 <EjercicioEficiencia
   titulo="Buscar y cortar a tiempo"
+  fundamental
   dificultad="🌿"
   starter={`def posicion_de(numeros, buscado):\n    # La posición de la PRIMERA aparición, o -1 si no está\n    pass`}
   tests={`assert posicion_de([5, 9, 2], 9) == 1\nassert posicion_de([5, 9, 2], 5) == 0\nassert posicion_de([5, 9, 2], 7) == -1, "si no está, va -1"\nassert posicion_de([], 1) == -1\nassert posicion_de([4, 8, 4], 4) == 0, "la PRIMERA aparición, no la última"`}

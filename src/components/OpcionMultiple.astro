@@ -20,6 +20,8 @@ interface Opcion {
 }
 interface Props {
   titulo?: string;
+  /** ⭐ Lo principal de la clase: se hace en clase, y si alguien hace solo algunos, que sean estos. */
+  fundamental?: boolean;
   opciones: Opcion[];
 }
 
@@ -36,10 +38,14 @@ const id = idEjercicio(titulo);
 const enc = (o: unknown) => Buffer.from(JSON.stringify(o), 'utf-8').toString('base64');
 ---
 
-<section class="quiz" id={id} data-titulo={titulo} data-solucion={enc({ correctas, expl, multiple })}>
+<section class="quiz" id={id} data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined} data-solucion={enc({ correctas, expl, multiple })}>
   <header class="ejercicio__header">
     <span class="ejercicio__dif" aria-hidden="true">❓</span>
     <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
     <span class="ej-hecho" hidden>✓ Resuelto</span>
   </header>
 
