@@ -75,10 +75,30 @@ queda señalada con **estás acá**.
         nota: 'Para leer antes de la clase' },
       { clase: 'bot-siges', nombre: 'El bot del SiGeS', estado: 'viene',
         nota: 'El Alumno de POO decide quién se carga. Para leer antes de la clase' },
-      { clase: 'sqlite', nombre: 'SQLite: los datos en una base', estado: 'viene',
-        nota: 'Donde el sistema guarda todo' },
       { clase: 'excepciones', nombre: 'Excepciones: cuando algo sale mal', estado: 'viene',
         nota: 'Que un dato roto no tire abajo el sistema' },
+      { clase: 'sqlite', nombre: 'SQLite: los datos en una base', estado: 'viene',
+        nota: 'Donde el sistema guarda todo' },
+      { clase: 'taller-consola', nombre: 'Taller: el sistema por consola', estado: 'preparacion',
+        nota: 'La primera versión que anda de verdad: el mismo código que después usa la web' },
+    ],
+  },
+  {
+    // Las clases de la web todavía no existen: van "en preparación" para que
+    // se vea lo que falta. El orden sale del plan de octubre y noviembre.
+    nombre: 'Llevarlo a la web',
+    meta: 'El mismo sistema, ahora desde el navegador y el celular',
+    paradas: [
+      { clase: 'como-funciona-la-web', nombre: 'Cómo funciona la web: pedido y respuesta', estado: 'preparacion' },
+      { clase: 'html-css', nombre: 'HTML y CSS, lo justo', estado: 'preparacion',
+        nota: 'Accesible desde el primer template: el tótem lo usa todo el CFP' },
+      { clase: 'flask-1', nombre: 'Flask I: rutas y plantillas', estado: 'preparacion' },
+      { clase: 'flask-2', nombre: 'Flask II: formularios', estado: 'preparacion',
+        nota: 'El alta de alumnos, por web' },
+      { clase: 'migrar-a-flask', nombre: 'Taller: migrar el sistema a Flask', estado: 'preparacion' },
+      { clase: 'login', nombre: 'Login: contraseñas y sesiones', estado: 'preparacion' },
+      { clase: 'red-del-cfp', nombre: 'El sistema en la red del CFP', estado: 'preparacion',
+        nota: 'Hito: andando el 6/11, una semana antes de la Expo' },
     ],
   },
   {
@@ -93,7 +113,10 @@ queda señalada con **estás acá**.
     nombre: 'Probar lo que hicimos',
     meta: 'La otra mitad del nombre del curso',
     paradas: [
-      { clase: 'testing-1', nombre: 'Testing I: probar en serio', estado: 'viene' },
+      { clase: 'testing-1', nombre: 'Testing I: probar en serio', estado: 'viene',
+        nota: 'Los tests se van escribiendo en cada clase del proyecto' },
+      { clase: 'glosario-testing', nombre: 'Todo lo que probaste', estado: 'preparacion',
+        nota: 'El glosario de testing: lo que ya hiciste, con su nombre' },
     ],
   },
   {
@@ -126,6 +149,7 @@ queda señalada con **estás acá**.
 | **ya la dimos** | Se dio en clase. Los ejercicios podés hacerlos cuando quieras. |
 | **la que viene** | Es la próxima. |
 | **optativa** | Está buena, pero no hace falta para el proyecto. No cuenta en el total. |
+| **en preparación** | Es parte del camino, pero la clase todavía se está armando. |
 
 :::note[¿Y si me falta una de atrás?]
 No pasa nada, pero **no la saltees**: cada clase usa lo de la anterior. Si empezás bucles sin

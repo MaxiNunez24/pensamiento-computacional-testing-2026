@@ -154,8 +154,8 @@ export default defineConfig({
             { label: '🧬 POO I — Clases y objetos', link: '/clases/poo-1/' },
             { label: '🛡️ POO II — Encapsulamiento', link: '/clases/poo-2/' },
             { label: '🤖 El bot del SiGeS', link: '/clases/bot-siges/' },
-            { label: '🗃️ SQLite — los datos en una base', link: '/clases/sqlite/' },
             { label: '🚨 Excepciones', link: '/clases/excepciones/' },
+            { label: '🗃️ SQLite — los datos en una base', link: '/clases/sqlite/' },
           ],
         },
         {

@@ -308,6 +308,58 @@ agregues y devolvé `False`. Si no, agregalo y devolvé `True`.
 `buscar_por_dni` ya viene hecha.
 </EjercicioPython>
 
+## Otra forma: que la base diga que no
+
+Recién, para no repetir un DNI, **buscaste antes** de insertar. Hay otra forma, con el `try` de
+la clase de Excepciones: **intentar el `INSERT`** y que la base te diga que no. Cuando algo rompe una regla de la tabla —como
+repetir un `PRIMARY KEY`—, `sqlite3` levanta **`sqlite3.IntegrityError`**.
+
+<EjercicioPython
+  titulo="Que la base diga que no"
+  dificultad="🌿"
+  datos={`import sqlite3
+
+def base_nueva():
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT)")
+    return con
+`}
+  starter={`import sqlite3
+
+def agregar(con, dni, apellido, nombre):
+    # intentá el INSERT. Si el DNI ya estaba, la base levanta
+    # sqlite3.IntegrityError: atrapala y devolvé False. Si entró, True.
+    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES (?, ?, ?)",
+                (dni, apellido, nombre))
+`}
+  tests={`import sqlite3
+con = base_nueva()
+assert agregar(con, "30111222", "Perez", "Ana") is True, "el primero tiene que entrar y devolver True"
+try:
+    otra = agregar(con, "30111222", "Perez", "Ana")
+except sqlite3.IntegrityError:
+    raise AssertionError("el DNI ya estaba, la base levantó IntegrityError y nadie la atajó. Rodeá el INSERT con try y atrapá sqlite3.IntegrityError")
+assert otra is False, "el repetido tiene que devolver False"
+assert con.execute("SELECT COUNT(*) FROM alumnos").fetchone()[0] == 1, "en la tabla tiene que haber uno solo"
+print("¡Bien! En el ejercicio anterior buscabas antes de insertar. Esta es la otra forma: intentar, y que la base diga que no.")
+`}
+  pistas={[
+    'El <code>INSERT</code> va adentro del <code>try</code>, y si sale bien, <code>return True</code> justo después.',
+    'La excepción se llama <code>sqlite3.IntegrityError</code>: es la que levanta la base cuando algo rompe una regla de la tabla, como repetir un <code>PRIMARY KEY</code>.',
+  ]}
+>
+Completá `agregar(con, dni, apellido, nombre)`: que **intente** el `INSERT` y devuelva `True` si
+entró, o `False` si la base dijo que no porque el DNI ya estaba.
+</EjercicioPython>
+
+<OpcionMultiple titulo="Chequeo: buscar antes, o intentar" opciones={[
+  { texto: "Intentar: entre que buscás y que insertás, otra preceptora pudo haber insertado al mismo alumno.", correcta: true, explicacion: "Eso. Con dos personas usando el sistema a la vez, 'no estaba cuando busqué' no garantiza que 'no esté cuando inserto'. La base, en cambio, controla en el momento justo. Es el mismo argumento de por qué usamos una base y no archivos." },
+  { texto: "Buscar antes, porque es más prolijo.", explicacion: "Con una sola persona anda bien. Con dos a la vez, entre tu búsqueda y tu INSERT la otra pudo haber insertado al mismo alumno." },
+  { texto: "Da igual.", explicacion: "Con una persona sola sí, casi. Con dos a la vez, no: buscar antes deja un hueco." },
+]}>
+En el CFP van a cargar alumnos varias personas al mismo tiempo. ¿Qué conviene para no repetir un DNI?
+</OpcionMultiple>
+
 ## Dar de baja no es borrar
 
 En la clase de POO, dar de baja a un alumno era cambiar `activo` a `False`, **nunca borrarlo**:
@@ -527,6 +579,8 @@ hasta cosas bastante avanzadas, y todo lo que se aprende ahí sirve para SQLite.
 - **SQLite viene con Python**: `import sqlite3` y listo.
 - Una **tabla** es una planilla con reglas. **`PRIMARY KEY`** = la columna que no se repite.
 - Los valores van con **`?`**, nunca pegados en el SQL.
+- Para no repetir, se puede **buscar antes** o **intentar** y atajar **`sqlite3.IntegrityError`**.
+  Con varias personas cargando a la vez, gana intentar.
 - `fetchall()` = todas las filas; `fetchone()` = una, o `None`.
 - **Dar de baja es `UPDATE`, no `DELETE`.** Y el `UPDATE` sin `WHERE` cambia todo.
 - En tu compu: **`con.commit()`**, o los cambios se pierden.

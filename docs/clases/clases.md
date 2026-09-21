@@ -83,8 +83,8 @@
 - [🧬 POO I — Clases, objetos, atributos y métodos](./bloque_4_poo/poo_1.md)
 - [🛡️ POO II — Encapsulamiento y métodos especiales](./bloque_4_poo/poo_2.md)
 - [🤖 El bot del SiGeS](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/){ target=_blank } — el `Alumno` decide quién se carga · VS Code y entorno virtual
-- [🗃️ SQLite — los datos en una base](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/sqlite/){ target=_blank } — tablas, `?`, dar de baja sin borrar, y el `repositorio.py`
 - [🚨 Excepciones — cuando algo sale mal](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/excepciones/){ target=_blank } — `try`/`except`, `raise`, y que un dato roto no tire abajo el sistema
+- [🗃️ SQLite — los datos en una base](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/sqlite/){ target=_blank } — tablas, `?`, dar de baja sin borrar, y el `repositorio.py`
 - 🚀 Sistema de Asistencias del CFP (CLI, guardando en SQLite)
 
 ---

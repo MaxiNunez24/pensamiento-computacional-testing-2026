@@ -17,7 +17,7 @@ import { idEjercicio } from '../scripts/id-ejercicio';
 interface Parada {
   clase: string;
   nombre: string;
-  /** vista | ahora | viene | optativa */
+  /** vista | ahora | viene | optativa | preparacion */
   estado?: string;
   nota?: string;
 }
@@ -65,7 +65,7 @@ const conTotales = etapas.map((e) => ({
   ...e,
   paradas: e.paradas.map((p) => ({
     ...p,
-    total: cuantosEjercicios(p.clase),
+    total: p.estado === 'preparacion' ? 0 : cuantosEjercicios(p.clase),
     evaluacion: esEvaluacion(p.clase),
   })),
 }));
@@ -101,12 +101,25 @@ const totalCurso = conTotales
             data-clase={p.clase}
             data-total={String(p.total)}
           >
-            <a href={`${base}/clases/${p.clase}/`}>
-              <span class="camino__nombre">{p.nombre}</span>
-              {p.nota && <span class="camino__nota">{p.nota}</span>}
-            </a>
+            {/* "preparacion": la clase todavía no tiene página. Va sin link
+                (daría 404) y sin total, así no cuenta ni puede ser el "estás
+                acá". Está para que se vea lo que falta y el ritmo que hay que
+                llevar. Cuando se escribe la clase, se le cambia el estado. */}
+            {p.estado === 'preparacion' ? (
+              <span class="camino__sin-link">
+                <span class="camino__nombre">{p.nombre}</span>
+                {p.nota && <span class="camino__nota">{p.nota}</span>}
+              </span>
+            ) : (
+              <a href={`${base}/clases/${p.clase}/`}>
+                <span class="camino__nombre">{p.nombre}</span>
+                {p.nota && <span class="camino__nota">{p.nota}</span>}
+              </a>
+            )}
             <span class="camino__progreso">
-              {p.total > 0 ? (
+              {p.estado === 'preparacion' ? (
+                <span class="camino__cuenta camino__cuenta--sin">en preparación</span>
+              ) : p.total > 0 ? (
                 <>
                   <span class="camino__mini"><span class="camino__mini-fill" data-mini></span></span>
                   <span class="camino__cuenta" data-cuenta>0/{p.total}</span>

@@ -97,7 +97,12 @@
     sistema entero donde usarlos.
 
 !!! info "🧪 Bloque 5 — Testing (teórico y aplicado)"
-    **Testing está en el nombre del curso**, así que tiene su propio bloque. Primero la **teoría**:
+    **Testing está en el nombre del curso**, pero **no se da todo junto al final**: se va dando a
+    medida que el proyecto lo pide, y cada clase del sistema cierra escribiendo el test de lo que se
+    hizo ese día. Así los conceptos llegan con el sistema de verdad adelante. Al final, un
+    **glosario** junta todo lo que probaron, con su nombre, se hayan dado cuenta o no.
+
+    Lo que se ve, en el orden en que va haciendo falta. La **teoría**:
     por qué se prueba, qué es un caso de prueba, la diferencia entre prueba **unitaria**, de
     **integración** y **E2E**, qué es una regresión y qué mide (y qué no) la cobertura. Después,
     **`pytest` aplicado al proyecto propio**: el primer test, los casos borde, un bug real cazado

@@ -2491,7 +2491,10 @@ body.pc-resizing * {
   padding: 0.5rem 0.7rem; margin-left: -2px;
   border-left: 2px solid transparent;
 }
-.camino__parada a { text-decoration: none; flex: 1; min-width: 12rem; }
+.camino__parada a,
+.camino__sin-link { text-decoration: none; flex: 1; min-width: 12rem; }
+/* En preparación: todavía no hay página. Se ve, pero apagada y punteada. */
+.camino__parada.es-preparacion { opacity: 0.6; border-left-style: dashed; border-left-color: var(--sl-color-gray-4); }
 .camino__nombre { display: block; font-weight: 500; }
 .camino__nota { display: block; font-size: 0.78rem; color: var(--sl-color-gray-3); }
 

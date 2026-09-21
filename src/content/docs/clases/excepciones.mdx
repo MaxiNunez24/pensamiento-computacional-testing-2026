@@ -236,58 +236,6 @@ demás**. Los que se pudieron crear van a `inscriptos`; el mensaje de los que no
 El `Alumno` que levanta `ValueError` ya está hecho (es el del ejercicio anterior).
 </EjercicioPython>
 
-## La base también dice que no
-
-En la clase de SQLite, para no repetir un DNI, **buscabas antes** de insertar. Hay otra forma:
-**intentar el `INSERT`** y que la base te diga que no. Cuando algo rompe una regla de la tabla —como
-repetir un `PRIMARY KEY`—, `sqlite3` levanta **`sqlite3.IntegrityError`**.
-
-<EjercicioPython
-  titulo="Que la base diga que no"
-  dificultad="🌿"
-  datos={`import sqlite3
-
-def base_nueva():
-    con = sqlite3.connect(":memory:")
-    con.execute("CREATE TABLE alumnos (dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT)")
-    return con
-`}
-  starter={`import sqlite3
-
-def agregar(con, dni, apellido, nombre):
-    # intentá el INSERT. Si el DNI ya estaba, la base levanta
-    # sqlite3.IntegrityError: atrapala y devolvé False. Si entró, True.
-    con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES (?, ?, ?)",
-                (dni, apellido, nombre))
-`}
-  tests={`import sqlite3
-con = base_nueva()
-assert agregar(con, "30111222", "Perez", "Ana") is True, "el primero tiene que entrar y devolver True"
-try:
-    otra = agregar(con, "30111222", "Perez", "Ana")
-except sqlite3.IntegrityError:
-    raise AssertionError("el DNI ya estaba, la base levantó IntegrityError y nadie la atajó. Rodeá el INSERT con try y atrapá sqlite3.IntegrityError")
-assert otra is False, "el repetido tiene que devolver False"
-assert con.execute("SELECT COUNT(*) FROM alumnos").fetchone()[0] == 1, "en la tabla tiene que haber uno solo"
-print("¡Bien! En la clase de SQLite buscabas antes de insertar. Esta es la otra forma: intentar, y que la base diga que no.")
-`}
-  pistas={[
-    'El <code>INSERT</code> va adentro del <code>try</code>, y si sale bien, <code>return True</code> justo después.',
-    'La excepción se llama <code>sqlite3.IntegrityError</code>: es la que levanta la base cuando algo rompe una regla de la tabla, como repetir un <code>PRIMARY KEY</code>.',
-  ]}
->
-Completá `agregar(con, dni, apellido, nombre)`: que **intente** el `INSERT` y devuelva `True` si
-entró, o `False` si la base dijo que no porque el DNI ya estaba.
-</EjercicioPython>
-
-<OpcionMultiple titulo="Chequeo: buscar antes, o intentar" opciones={[
-  { texto: "Intentar: entre que buscás y que insertás, otra preceptora pudo haber insertado al mismo alumno.", correcta: true, explicacion: "Eso. Con dos personas usando el sistema a la vez, 'no estaba cuando busqué' no garantiza que 'no esté cuando inserto'. La base, en cambio, controla en el momento justo. Es el mismo argumento de por qué usamos una base y no archivos." },
-  { texto: "Buscar antes, porque es más prolijo.", explicacion: "Con una sola persona anda bien. Con dos a la vez, entre tu búsqueda y tu INSERT la otra pudo haber insertado al mismo alumno." },
-  { texto: "Da igual.", explicacion: "Con una persona sola sí, casi. Con dos a la vez, no: buscar antes deja un hueco." },
-]}>
-En el CFP van a cargar alumnos varias personas al mismo tiempo. ¿Qué conviene para no repetir un DNI?
-</OpcionMultiple>
-
 ## Para llevar
 
 - Una **excepción** es Python diciendo *"no puedo hacer esto"*. Su **nombre** dice qué pasó.
@@ -297,4 +245,3 @@ En el CFP van a cargar alumnos varias personas al mismo tiempo. ¿Qué conviene 
 - **`raise ValueError("...")`** frena todo cuando un dato no sirve. Un `Alumno` con el DNI roto no
   llega a existir.
 - **`except ... as e`** te guarda la excepción: con eso anotás el motivo y seguís con el siguiente.
-- La base también levanta las suyas: **`sqlite3.IntegrityError`** cuando se rompe una regla de la tabla.
