@@ -359,6 +359,30 @@ alimenta de él.
 Conviene decirlo así en la reunión: no para bajarle el precio, sino al revés. Es
 lo que más trabajo manual les saca.
 
+### 🔑 Los datos que el alumno no da: valores por defecto (21/9)
+
+El SiGeS pide **mucho más de lo que pide el formulario de inscripción** (Vivienda,
+Contacto, Transportes y más). Hoy, cuando el alumno no dio un dato, **el preceptor
+lo completa con lo que se usa siempre**.
+
+**Decidido: el bot usa valores por defecto, pero nunca los inventa.**
+
+- Los valores **los define preceptoría**, no nosotros: son los que ya ponen a mano.
+  Viven en **un solo archivo** de configuración, a la vista, para que se puedan
+  cambiar sin tocar el código.
+- Cada campo completado con un valor por defecto queda **marcado como supuesto** en
+  el resumen que ve la persona antes de confirmar: *"Transporte: colectivo
+  (por defecto)"*. Así un dato real y uno supuesto no se confunden.
+- Un campo sin dato **y** sin valor por defecto queda **vacío**, y el bot lo avisa
+  (*"falta completar: X"*). Nunca se rellena con algo que suene bien.
+
+**Por qué importa:** un dato inventado que parece real no lo detecta nadie. Uno
+vacío o marcado como supuesto se ve.
+
+**Para preguntarle a preceptoría el miércoles 23/9:** *"Cuando el alumno no les
+dio un dato que el SiGeS pide, ¿qué ponen? ¿Siempre lo mismo?"* Con esa lista se
+arma el archivo.
+
 ---
 
 ## Las decisiones que quedan abiertas
@@ -383,5 +407,7 @@ proyecto.
 | La reunión con todos | **cuando haya algo andando para mostrar** |
 | La maestra de apoyo que sugirió el calendario | sin fecha |
 | El SiGeS con el preceptor — se ofreció a mostrar el proceso completo | sin fecha |
+| Preceptoría: el HTML del formulario de alta del SiGeS (vacío, guardado con Ctrl+S) | pedido el **22/9**, para la demo del **23/9** |
+| Preceptoría: los valores por defecto que ponen cuando el alumno no dio un dato | **miércoles 23/9** |
 
 **Y una cosa para pedir, no para preguntar:** el papel del boletín de actitud.
