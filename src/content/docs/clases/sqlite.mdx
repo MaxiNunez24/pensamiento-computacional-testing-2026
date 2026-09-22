@@ -6,6 +6,34 @@ description: "Por qué el sistema guarda en una base de datos y no en archivos, 
 import EjercicioPython from '../../../components/EjercicioPython.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 
+{/* El alumno.py del sistema (el mismo que se descarga en el taller): el
+    ejercicio del repositorio lo importa como en VS Code. */}
+export const ALUMNO_PY = `"""La clase Alumno: la de POO, con lo que le agregamos en Excepciones.
+
+Un Alumno con el DNI roto no llega a existir: el __init__ levanta ValueError,
+y quien lo quiso crear decide qué hacer (en el menú: avisarle a la persona).
+"""
+
+
+class Alumno:
+    def __init__(self, dni, apellido, nombre, activo=True):
+        dni = dni.strip()
+        if not dni.isdigit() or len(dni) not in (7, 8):
+            raise ValueError("el DNI tiene que ser de 7 u 8 números, sin puntos")
+        if not apellido.strip() or not nombre.strip():
+            raise ValueError("faltan el apellido o el nombre")
+        self.dni = dni
+        self.apellido = apellido.strip()
+        self.nombre = nombre.strip()
+        self.activo = activo
+
+    def nombre_completo(self):
+        return f"{self.apellido}, {self.nombre}"
+
+    def __str__(self):
+        return f"{self.nombre_completo()} (DNI {self.dni})"
+`;
+
 :::note[La primera vez tarda un poquito más]
 El primer ejercicio que ejecutes baja la parte de Python que maneja bases de datos. Son unos
 segundos, una sola vez: después queda guardada.
@@ -488,7 +516,9 @@ resto del programa pide un `Alumno` y recibe un `Alumno`, sin enterarse de dónd
   titulo="De la fila al objeto"
   fundamental
   dificultad="🌶️"
+  archivos={{ 'alumno.py': ALUMNO_PY }}
   datos={`import sqlite3
+from alumno import Alumno
 
 def base_nueva():
     con = sqlite3.connect(":memory:")
@@ -501,16 +531,6 @@ def base_con_tres():
     con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('28999888', 'Gomez', 'Beto')")
     con.execute("INSERT INTO alumnos (dni, apellido, nombre) VALUES ('40000004', 'Paz', 'Mateo')")
     return con
-
-class Alumno:
-    def __init__(self, dni, apellido, nombre, activo=True):
-        self.dni = dni
-        self.apellido = apellido
-        self.nombre = nombre
-        self.activo = activo
-
-    def nombre_completo(self):
-        return f"{self.apellido}, {self.nombre}"
 `}
   starter={`def buscar_alumno(con, dni):
     # buscá la fila y, si está, devolvé un objeto Alumno armado con sus datos.
@@ -535,7 +555,7 @@ print("¡Esto es el repositorio! El programa pide un Alumno y recibe un Alumno: 
   ]}
 >
 El último, y el más importante: `buscar_alumno(con, dni)` tiene que devolver **un objeto
-`Alumno`** —la clase de POO, que ya está definida— armado con los datos de la fila. O `None` si no
+`Alumno`** —la clase de POO, que viene en `alumno.py`— armado con los datos de la fila. O `None` si no
 está.
 </EjercicioPython>
 
