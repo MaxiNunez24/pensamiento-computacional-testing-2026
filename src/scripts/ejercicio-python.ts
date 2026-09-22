@@ -37,6 +37,12 @@ function initEjercicio(el: HTMLElement): void {
   const tests = b64decode(el.dataset.tests || '');
   const archivo = el.dataset.archivo || '';
   const datos = b64decode(el.dataset.datos || '');
+  // Los otros archivos del proyecto (taller del sistema): se escriben en el
+  // disco de Python antes de cada corrida, así el alumno los importa igual que
+  // en VS Code (`import repositorio`).
+  const archivos = el.dataset.archivos
+    ? (JSON.parse(b64decode(el.dataset.archivos)) as Record<string, string>)
+    : {};
   const cajaEntradas = el.querySelector<HTMLTextAreaElement>('[data-entradas-input]');
   // Las entradas se leen en cada corrida: si el alumno las edita, la próxima
   // ejecución ya usa las nuevas.
@@ -103,7 +109,7 @@ function initEjercicio(el: HTMLElement): void {
       'is-loading',
     );
     try {
-      const res = await runPython(getCode(), conTests ? tests : '', archivo, datos, leerEntradas());
+      const res = await runPython(getCode(), conTests ? tests : '', archivo, datos, leerEntradas(), archivos);
       const out = res.out.trimEnd();
       if (!conTests) {
         // Botón "Ejecutar": solo muestra lo que imprime el código.

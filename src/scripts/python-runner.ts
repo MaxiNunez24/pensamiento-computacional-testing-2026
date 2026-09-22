@@ -95,8 +95,10 @@ export async function runPython(
   archivo = '',
   datos = '',
   entradas: string[] = [],
+  /** Otros archivos del proyecto ({"repositorio.py": "..."}), para importarlos. */
+  archivos: Record<string, string> = {},
 ): Promise<RunResult> {
-  const raw = await pedir({ code, tests, archivo, datos, entradas });
+  const raw = await pedir({ code, tests, archivo, datos, entradas, archivos });
   return JSON.parse(raw) as RunResult;
 }
 

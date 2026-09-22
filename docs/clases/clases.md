@@ -85,7 +85,7 @@
 - [🤖 El bot del SiGeS](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/){ target=_blank } — el `Alumno` decide quién se carga · VS Code y entorno virtual
 - [🚨 Excepciones — cuando algo sale mal](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/excepciones/){ target=_blank } — `try`/`except`, `raise`, y que un dato roto no tire abajo el sistema
 - [🗃️ SQLite — los datos en una base](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/sqlite/){ target=_blank } — tablas, `?`, dar de baja sin borrar, y el `repositorio.py`
-- 🚀 Sistema de Asistencias del CFP (CLI, guardando en SQLite)
+- [🚀 Taller: el sistema por consola](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/taller-consola/){ target=_blank } — la primera versión que anda: alta, pasar lista y la lista del día, con la regla que después facilita pasarlo a Flask
 
 ---
 

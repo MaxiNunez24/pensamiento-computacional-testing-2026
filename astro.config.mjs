@@ -167,6 +167,7 @@ export default defineConfig({
                   { label: '🤖 El bot del SiGeS', link: '/clases/bot-siges/' },
                   { label: '🚨 Excepciones', link: '/clases/excepciones/' },
                   { label: '🗃️ SQLite — los datos en una base', link: '/clases/sqlite/' },
+                  { label: '🚀 Taller: el sistema por consola', link: '/clases/taller-consola/' },
                 ],
               },
               {

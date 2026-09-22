@@ -39,9 +39,13 @@ interface Props {
   /** Respuestas que va a ir devolviendo `input()`, una por línea. Si se setea,
    *  el ejercicio muestra una caja de "Entradas" que el alumno puede editar. */
   entradas?: string;
+  /** Otros archivos del proyecto, ya hechos ({"repositorio.py": "..."}). Se
+   *  cargan antes de correr, así el alumno los importa como en VS Code, y se
+   *  muestran plegados para el que quiera mirarlos. */
+  archivos?: Record<string, string>;
 }
 
-const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '' } = Astro.props;
+const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '', archivos } = Astro.props;
 
 const id = idEjercicio(titulo);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
@@ -57,6 +61,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   data-archivo={archivo || undefined}
   data-datos={datos ? enc(datos) : undefined}
   data-entradas={entradas ? enc(entradas) : undefined}
+  data-archivos={archivos ? enc(JSON.stringify(archivos)) : undefined}
 >
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
@@ -89,6 +94,19 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
       <span class="ejercicio__datos-label">📌 Esto ya está cargado — no hace falta que lo escribas:</span>
       <pre><code>{datos}</code></pre>
     </div>
+  )}
+  {/* Plegados a propósito: están para importarlos, no para leerlos antes de
+      arrancar. Pero a la vista, para el que quiera ver cómo están hechos. */}
+  {archivos && (
+    <details class="ejercicio__archivos">
+      <summary>📁 Los otros archivos del proyecto, ya hechos: {Object.keys(archivos).join(', ')}</summary>
+      {Object.entries(archivos).map(([nombre, codigo]) => (
+        <div class="ejercicio__archivo">
+          <span class="ejercicio__archivo-nombre">{nombre}</span>
+          <pre><code>{codigo}</code></pre>
+        </div>
+      ))}
+    </details>
   )}
 
   <div class="ejercicio__editor" data-editor></div>

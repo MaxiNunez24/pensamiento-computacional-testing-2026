@@ -1,0 +1,514 @@
+---
+title: "Taller: el sistema por consola"
+description: "La primera versión del sistema que anda de verdad: dar de alta, pasar lista y ver la lista del día, guardando todo en SQLite. Y la regla que después hace fácil pasarlo a la web."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import Clasificar from '../../../components/Clasificar.astro';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+export const ARCHIVOS = {
+  'alumno.py': `"""La clase Alumno: la de POO, con lo que le agregamos en Excepciones.
+
+Un Alumno con el DNI roto no llega a existir: el __init__ levanta ValueError,
+y quien lo quiso crear decide qué hacer (en el menú: avisarle a la persona).
+"""
+
+
+class Alumno:
+    def __init__(self, dni, apellido, nombre, activo=True):
+        dni = dni.strip()
+        if not dni.isdigit() or len(dni) not in (7, 8):
+            raise ValueError("el DNI tiene que ser de 7 u 8 números, sin puntos")
+        if not apellido.strip() or not nombre.strip():
+            raise ValueError("faltan el apellido o el nombre")
+        self.dni = dni
+        self.apellido = apellido.strip()
+        self.nombre = nombre.strip()
+        self.activo = activo
+
+    def nombre_completo(self):
+        return f"{self.apellido}, {self.nombre}"
+
+    def __str__(self):
+        return f"{self.nombre_completo()} (DNI {self.dni})"
+`,
+  'repositorio.py': `"""Todo lo que toca la base vive acá. Ningún otro archivo escribe SQL.
+
+El resto del sistema pide un Alumno y recibe un Alumno: de las filas y las
+tablas no se entera nadie más. Por eso, cuando el sistema pase a Flask, este
+archivo se usa tal cual, sin cambiarle una línea.
+"""
+import sqlite3
+
+from alumno import Alumno
+
+# Los estados posibles de una marca: presente, ausente, tarde.
+ESTADOS = ("P", "A", "T")
+
+
+def conectar(archivo="asistencias.db"):
+    """Abre la base (si no existe, la crea) y se asegura de que estén las tablas."""
+    con = sqlite3.connect(archivo)
+    crear_tablas(con)
+    return con
+
+
+def crear_tablas(con):
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS alumnos "
+        "(dni TEXT PRIMARY KEY, apellido TEXT, nombre TEXT, activo INTEGER DEFAULT 1)"
+    )
+    # Una fila por alumno y por día. La fecha va como texto "2026-10-02": así,
+    # ordenada alfabéticamente, también queda ordenada por fecha.
+    con.execute("CREATE TABLE IF NOT EXISTS marcas (fecha TEXT, dni TEXT, estado TEXT)")
+    con.commit()
+
+
+def guardar_alumno(con, alumno):
+    """Agrega un Alumno a la base. Devuelve False si ese DNI ya estaba."""
+    try:
+        con.execute(
+            "INSERT INTO alumnos (dni, apellido, nombre) VALUES (?, ?, ?)",
+            (alumno.dni, alumno.apellido, alumno.nombre),
+        )
+    except sqlite3.IntegrityError:
+        return False
+    con.commit()
+    return True
+
+
+def buscar_alumno(con, dni):
+    """El Alumno con ese DNI, o None si no está."""
+    fila = con.execute(
+        "SELECT dni, apellido, nombre, activo FROM alumnos WHERE dni = ?", (dni,)
+    ).fetchone()
+    if fila is None:
+        return None
+    return Alumno(fila[0], fila[1], fila[2], fila[3] == 1)
+
+
+def listar_alumnos(con):
+    """Los alumnos activos, ordenados por apellido."""
+    filas = con.execute(
+        "SELECT dni, apellido, nombre FROM alumnos WHERE activo = 1 ORDER BY apellido, nombre"
+    ).fetchall()
+    return [Alumno(f[0], f[1], f[2]) for f in filas]
+
+
+# ---------------------------------------------------------------------------
+# ✏️ De acá para abajo es tuyo: son los ejercicios del taller. Cuando la
+#    plataforma te dé ✓, pegá tu función en lugar de la que está.
+# ---------------------------------------------------------------------------
+
+def marcar(con, fecha, dni, estado):
+    """Anota la marca de un alumno en un día. Si ya tenía una, la corrige."""
+    # ✏️ Ejercicio "Marcar la asistencia". Acordate: en tu compu, después de
+    #    escribir en la base va con.commit().
+    raise NotImplementedError("Todavía falta: es el ejercicio 'Marcar la asistencia'")
+
+
+def lista_del_dia(con, fecha):
+    """Una tupla (Alumno, estado) por cada alumno activo. Sin marca: '-'."""
+    # ✏️ Ejercicio "La lista del día".
+    raise NotImplementedError("Todavía falta: es el ejercicio 'La lista del día'")
+`,
+};
+
+:::tip[Hoy sale la primera versión que anda]
+Todo lo que vimos hasta acá eran piezas: el `Alumno` de POO, el `raise` de Excepciones, el
+repositorio de SQLite. Hoy se juntan en **un programa que se usa**: das de alta a un alumno, le
+pasás lista, cerrás, y mañana los datos siguen ahí.
+:::
+
+## Cómo está armado
+
+El sistema son **tres archivos**, y cada uno tiene un solo trabajo:
+
+```text
+sistema-consola/
+├── alumno.py        ← las reglas del alumno (qué es un DNI válido)
+├── repositorio.py   ← todo lo que toca la base
+├── menu.py          ← lo único que habla con la persona
+└── asistencias.db   ← la base: se crea sola la primera vez
+```
+
+## La regla de oro
+
+**En `menu.py` solo hay `input()`, `print()` y llamadas a funciones de `repositorio.py`.** Ni una
+línea de SQL, ni una regla.
+
+Parece una manía, pero es lo que más trabajo nos va a ahorrar en el curso. En unas semanas el
+sistema pasa a la **web, con Flask**: en vez de `input()` va a haber un formulario, y en vez de
+`print()`, una página. **Eso es exactamente lo que hace `menu.py`**. Si todo lo demás está en los
+otros dos archivos, pasar a la web es cambiar un archivo solo. Si el SQL está desparramado por el
+menú, es reescribir el sistema.
+
+<Clasificar
+  titulo="¿En qué archivo va?"
+  fundamental
+  cajas={[
+    { id: 'menu', nombre: '🗣️ menu.py', ayuda: 'habla con la persona' },
+    { id: 'repo', nombre: '🗃️ repositorio.py', ayuda: 'todo lo que toca la base' },
+    { id: 'alumno', nombre: '🧬 alumno.py', ayuda: 'las reglas del alumno' },
+  ]}
+  tarjetas={[
+    { texto: 'dni = input("DNI: ")', caja: 'menu',
+      porque: 'Pedirle algo a la persona es trabajo del menú. En Flask esto va a ser un campo de un formulario.' },
+    { texto: 'print("Listo:", alumno.nombre_completo())', caja: 'menu',
+      porque: 'Mostrarle algo a la persona, también. En Flask va a ser una página.' },
+    { texto: 'except ValueError as e: print("No se pudo:", e)', caja: 'menu',
+      porque: 'El error lo DETECTA el Alumno, pero qué hacer con él (avisarle a la persona) lo decide el menú.' },
+    { texto: 'con.execute("INSERT INTO marcas ...")', caja: 'repo',
+      porque: 'SQL: va al repositorio, siempre. Es el único archivo que sabe que existe una base.' },
+    { texto: 'con.commit()', caja: 'repo',
+      porque: 'Confirmar los cambios en la base es parte de escribir en la base.' },
+    { texto: 'SELECT estado FROM marcas WHERE fecha = ? AND dni = ?', caja: 'repo',
+      porque: 'Otra consulta: repositorio.' },
+    { texto: 'if not dni.isdigit(): raise ValueError(...)', caja: 'alumno',
+      porque: 'Qué es un DNI válido es una regla del Alumno. Así vale igual para el menú, para Flask y para el bot.' },
+    { texto: 'def nombre_completo(self):', caja: 'alumno',
+      porque: 'Lo que un alumno sabe hacer va en su clase.' },
+  ]}
+  pistas={[
+    'Si la tarjeta tiene <code>input</code> o <code>print</code>, preguntate: ¿está hablando con la persona?',
+    'Si tiene SQL o <code>con.</code>, toca la base.',
+  ]}
+>
+  Llevá cada línea al archivo donde va.
+</Clasificar>
+
+## Descargar el proyecto
+
+<a class="sl-link-button not-content" data-variant="primary" href={b + 'sistema-consola/sistema-consola.zip'} download>📦 Descargar el proyecto</a>
+
+| Archivo | ¿De quién? | Qué tiene |
+|---|---|---|
+| `alumno.py` | ya viene hecho | La clase `Alumno`: la de POO, con el `raise` de Excepciones |
+| `repositorio.py` | ✏️ **tuyo**, abajo de todo | Lo de SQLite ya está. Te faltan `marcar` y `lista_del_dia` |
+| `menu.py` | ✏️ **tuyo** | Tres opciones ya están. Te faltan el alta y el menú |
+
+Se abre igual que el del bot: **descomprimir**, y en VS Code **Archivo → Abrir carpeta**. Pero este
+**no instala nada**: `sqlite3` viene con Python, así que no hace falta entorno virtual.
+
+:::caution[La base no se sube a GitHub]
+`asistencias.db` va a tener **datos de personas de verdad**: nombres y DNI. El proyecto trae un
+`.gitignore` que la deja afuera. **No lo borres**: si tu repositorio es público, lo ve cualquiera,
+y un DNI subido a GitHub queda en el historial aunque después lo borres.
+:::
+
+Como con el bot: cada pieza se practica acá, y cuando te da ✓, la pegás en tu proyecto.
+
+## Una tabla nueva: las marcas
+
+Los alumnos ya tienen su tabla. Falta dónde anotar **quién vino cada día**:
+
+```sql
+CREATE TABLE marcas (fecha TEXT, dni TEXT, estado TEXT)
+```
+
+Una fila por alumno y por día: `('2026-10-02', '30111222', 'P')`. El estado es `P` (presente),
+`A` (ausente) o `T` (tarde), y los tres están en `ESTADOS`, en `repositorio.py`.
+
+:::note[¿Por qué la fecha va al revés?]
+`2026-10-02` y no `02/10/2026`: así, ordenadas como texto, **las fechas quedan en orden**. Con el
+formato de siempre, el `02/11` quedaría antes que el `15/10`.
+:::
+
+Y una regla que salió de preceptoría: **las marcas se corrigen**. Si alguien marcó presente al que
+llegó tarde, se cambia. Pero tiene que quedar **una sola marca** por alumno y por día.
+
+<EjercicioPython
+  titulo="Marcar la asistencia"
+  fundamental
+  dificultad="🌿"
+  archivos={ARCHIVOS}
+  datos={`from repositorio import conectar, ESTADOS
+
+con = conectar(":memory:")
+`}
+  starter={`def marcar(con, fecha, dni, estado):
+    # 1. Si el estado no está en ESTADOS, levantá ValueError.
+    # 2. Si ese alumno ya tiene una marca ese día, corregila (UPDATE).
+    # 3. Si no, agregala (INSERT).
+    pass
+`}
+  tests={`def marcas(c):
+    return c.execute("SELECT fecha, dni, estado FROM marcas ORDER BY fecha, dni").fetchall()
+c = conectar(":memory:")
+marcar(c, "2026-10-02", "30111222", "P")
+r = marcas(c)
+assert r == [("2026-10-02", "30111222", "P")], f"después de marcar una vez, en la tabla quedó {r!r}"
+marcar(c, "2026-10-02", "30111222", "T")
+r = marcas(c)
+pista = f"la preceptora se equivocó y lo corrigió a T: tiene que quedar UNA sola marca, con T, y quedó {r!r}. Antes de insertar, buscá si ya hay una marca de ese DNI en esa fecha"
+assert r == [("2026-10-02", "30111222", "T")], pista
+marcar(c, "2026-10-03", "30111222", "A")
+assert len(marcas(c)) == 2, "otro día es otra marca: la del 3/10 no pisa la del 2/10"
+marcar(c, "2026-10-02", "28999888", "P")
+assert len(marcas(c)) == 3, "otro alumno el mismo día también es otra marca: el WHERE tiene que mirar la fecha Y el DNI"
+try:
+    marcar(c, "2026-10-02", "30111222", "X")
+except ValueError:
+    pass
+else:
+    raise AssertionError("con el estado X tenía que levantar ValueError: solo valen P, A o T, que están en ESTADOS")
+r = [m for m in marcas(c) if m[:2] == ("2026-10-02", "30111222")]
+assert r == [("2026-10-02", "30111222", "T")], f"el estado inválido no tenía que tocar la marca que ya estaba, y quedó {r!r}. Revisá el estado ANTES de escribir en la base"
+print("¡Marcas OK! Una por alumno y por día, y se puede corregir.")
+`}
+  pistas={[
+    'Lo primero, antes de tocar la base: <code>if estado not in ESTADOS:</code> y ahí el <code>raise ValueError(...)</code>, como en la clase de Excepciones.',
+    'Para saber si ya hay una marca: <code>SELECT estado FROM marcas WHERE fecha = ? AND dni = ?</code>, con <code>fetchone()</code>. Si da <code>None</code>, no había.',
+    'Si había, <code>UPDATE marcas SET estado = ? WHERE fecha = ? AND dni = ?</code>. Si no, el <code>INSERT</code>. Los valores, siempre con <code>?</code>.',
+  ]}
+>
+Completá `marcar(con, fecha, dni, estado)`: que anote la marca, o que la **corrija** si ese alumno
+ya tenía una ese día. Y que un estado que no sea `P`, `A` o `T` **no llegue a la base**.
+</EjercicioPython>
+
+## La lista del día
+
+Es la pantalla que más se va a mirar: cómo viene el día. Y tiene un detalle que es fácil pasar por
+alto: **el que todavía no tiene marca tiene que aparecer igual**. Es justo el que hay que ir a
+buscar.
+
+<EjercicioPython
+  titulo="La lista del día"
+  fundamental
+  dificultad="🌳"
+  archivos={ARCHIVOS}
+  datos={`from repositorio import conectar, guardar_alumno, listar_alumnos
+from alumno import Alumno
+
+con = conectar(":memory:")
+guardar_alumno(con, Alumno("30111222", "Perez", "Ana"))
+guardar_alumno(con, Alumno("28999888", "Gomez", "Beto"))
+con.execute("INSERT INTO marcas VALUES ('2026-10-02', '30111222', 'P')")
+`}
+  starter={`def lista_del_dia(con, fecha):
+    # Una tupla (alumno, estado) por cada alumno activo, en orden de apellido.
+    # Si no tiene marca ese día, el estado es "-".
+    lista = []
+    return lista
+
+
+# Para probar con Ejecutar (esto NO va a repositorio.py):
+for alumno, estado in lista_del_dia(con, "2026-10-02"):
+    print(estado, alumno.nombre_completo())
+`}
+  tests={`c = conectar(":memory:")
+for d, a, n in [("30111222", "Perez", "Ana"), ("28999888", "Gomez", "Beto"), ("40000004", "Paz", "Mateo")]:
+    guardar_alumno(c, Alumno(d, a, n))
+c.execute("UPDATE alumnos SET activo = 0 WHERE dni = '40000004'")
+c.execute("INSERT INTO marcas VALUES ('2026-10-02', '30111222', 'P')")
+c.execute("INSERT INTO marcas VALUES ('2026-10-02', '28999888', 'T')")
+c.execute("INSERT INTO marcas VALUES ('2026-10-03', '30111222', 'A')")
+r = lista_del_dia(c, "2026-10-02")
+assert isinstance(r, list) and r, "tiene que devolver una lista con los alumnos del día"
+assert all(isinstance(x, tuple) and len(x) == 2 for x in r), "cada elemento es una tupla de dos: (alumno, estado)"
+assert all(isinstance(x[0], Alumno) for x in r), "lo primero de cada tupla es el objeto Alumno, no el DNI: así el menú puede usar alumno.nombre_completo()"
+v = [(a.nombre_completo(), e) for a, e in r]
+assert v == [("Gomez, Beto", "T"), ("Perez, Ana", "P")], f"el 2/10 tenía que dar Gomez con T y Perez con P, en ese orden, y dio {v!r}. Paz está dado de baja: no va"
+v = [(a.nombre_completo(), e) for a, e in lista_del_dia(c, "2026-10-03")]
+if "Gomez, Beto" not in [x[0] for x in v]:
+    pista = f"el 3/10 Gomez no tiene marca, y tiene que aparecer igual, con '-'. Dio {v!r}. Recorré los ALUMNOS, no las marcas: el que no tiene marca es justo el que hay que ver"
+else:
+    pista = f"el 3/10 tenía que dar Gomez con '-' (ese día no tiene marca) y Perez con A, y dio {v!r}. ¿El SELECT mira la fecha Y el DNI?"
+assert v == [("Gomez, Beto", "-"), ("Perez, Ana", "A")], pista
+v = [(a.nombre_completo(), e) for a, e in lista_del_dia(c, "2026-10-09")]
+assert v == [("Gomez, Beto", "-"), ("Perez, Ana", "-")], f"un día sin ninguna marca: están todos, con '-'. Dio {v!r}"
+print("¡La lista del día! El que no tiene marca aparece igual: así se ve a quién falta marcar.")
+`}
+  pistas={[
+    '<code>listar_alumnos(con)</code> ya te da los activos, en orden de apellido. Recorré esa lista.',
+    'Para cada alumno, su marca de ese día: <code>SELECT estado FROM marcas WHERE fecha = ? AND dni = ?</code>. <code>fetchone()</code> te da <code>("P",)</code>, o <code>None</code> si no tiene.',
+    'Si es <code>None</code>, el estado es <code>"-"</code>. Si no, está adentro de la tupla: <code>fila[0]</code>. Y a la lista va <code>(alumno, estado)</code>.',
+  ]}
+>
+Completá `lista_del_dia(con, fecha)`: una tupla `(alumno, estado)` por cada alumno activo, en orden
+de apellido. El que no tiene marca ese día va igual, con `"-"`.
+
+Cuando te dé ✓, pegá **solo la función** en `repositorio.py`: el `for` de abajo es para probarla acá.
+</EjercicioPython>
+
+## El menú
+
+El menú es un **`while True`** que muestra las opciones, pregunta, y llama a la función que
+corresponde. Solo se corta cuando eligen salir. Ya lo hiciste con el cajero automático, en la
+clase de bucles: es lo mismo, con otras opciones.
+
+<EjercicioPython
+  titulo="El menú que no se cierra solo"
+  fundamental
+  dificultad="🌿"
+  datos={`con = "la conexión a la base"
+hoy = "2026-10-02"
+
+def opcion_ver(con): print("(acá se ven los alumnos)")
+def opcion_alta(con): print("(acá se da de alta)")
+def opcion_pasar_lista(con, hoy): print("(acá se pasa lista)")
+def opcion_lista_de_hoy(con, hoy): print("(acá se ve la lista de hoy)")
+`}
+  entradas={`1
+4
+5`}
+  starter={`# Que el menú se repita hasta que elijan 5.
+print()
+print("1) Ver alumnos")
+print("2) Dar de alta")
+print("3) Pasar lista de hoy")
+print("4) Ver la lista de hoy")
+print("5) Salir")
+opcion = input("Opción: ")
+`}
+  tests={`r = correr(entradas=["5"])
+assert r.strip().endswith("¡Hasta luego!"), f"con 5 se despide con ¡Hasta luego! y termina. La última línea fue {r.strip().splitlines()[-1:]!r}"
+r = correr(entradas=["1", "4", "5"])
+assert "(acá se ven los alumnos)" in r and "(acá se ve la lista de hoy)" in r, "con 1 y después 4 tenía que llamar a opcion_ver y a opcion_lista_de_hoy, y seguir esperando"
+n = r.count("5) Salir")
+assert n == 3, f"el menú se muestra de nuevo antes de cada elección: con 3 elecciones, 3 veces, y se mostró {n}. ¿Los print del menú están adentro del while?"
+r = correr(entradas=["2", "3", "5"])
+assert "(acá se da de alta)" in r and "(acá se pasa lista)" in r, "con 2 y 3 tenía que llamar a opcion_alta(con) y a opcion_pasar_lista(con, hoy)"
+r = correr(entradas=["9", "hola", "5"])
+assert r.count("Opción inválida") == 2, "con algo que no es del 1 al 5 dice Opción inválida y vuelve a mostrar el menú, sin cerrarse"
+print("¡El menú anda! Se repite, llama a cada opción y solo se cierra cuando se lo piden.")
+`}
+  pistas={[
+    'Todo lo que tiene que repetirse (los <code>print</code> del menú y el <code>input</code>) va adentro de un <code>while True:</code>.',
+    'Después del <code>input</code>, un <code>if</code> / <code>elif</code> por opción, y cada una llama a su función. El <code>else</code> es para lo que no es ninguna.',
+    'Si ves <em>"pidió más datos de los que hay"</em>, es que el 5 no corta el <code>while</code>: después del <code>¡Hasta luego!</code> va un <code>break</code>.',
+  ]}
+>
+Hacé que el menú **se repita** hasta que elijan `5`, y que cada opción llame a su función:
+
+| Opción | Llama a |
+|---|---|
+| `1` | `opcion_ver(con)` |
+| `2` | `opcion_alta(con)` |
+| `3` | `opcion_pasar_lista(con, hoy)` |
+| `4` | `opcion_lista_de_hoy(con, hoy)` |
+| `5` | nada: dice `¡Hasta luego!` y termina |
+
+Con cualquier otra cosa, `Opción inválida`, y el menú vuelve a aparecer. Las opciones ya están
+hechas (acá solo avisan que las llamaste), y en **⌨️ Entradas** podés cambiar lo que se elige.
+</EjercicioPython>
+
+## El alta que no se cae
+
+Acá se junta lo de Excepciones: el `Alumno` **se niega a existir** con un DNI roto, y el menú
+**ataja** esa excepción y le avisa a la persona. Un DNI mal tipeado no puede cerrar el programa en
+la cara de la preceptora.
+
+<EjercicioPython
+  titulo="El alta que no se cae"
+  fundamental
+  dificultad="🌿"
+  archivos={ARCHIVOS}
+  datos={`import repositorio
+from alumno import Alumno
+
+con = repositorio.conectar(":memory:")
+`}
+  entradas={`30111222
+Perez
+Ana`}
+  starter={`def opcion_alta(con):
+    dni = input("DNI: ")
+    apellido = input("Apellido: ")
+    nombre = input("Nombre: ")
+    # Armá el Alumno y guardalo con repositorio.guardar_alumno(con, alumno).
+    # Si el Alumno no se puede crear (ValueError), avisá "No se pudo: ..." y listo.
+    # Si guardar_alumno devuelve False, es que el DNI ya estaba.
+
+
+# Para probar con Ejecutar (esto NO va a menu.py):
+opcion_alta(con)
+`}
+  tests={`import io, contextlib
+def probar(*teclas):
+    global input
+    cola = list(teclas)
+    def input(prompt=""):
+        valor = cola.pop(0)
+        print(prompt + valor)
+        return valor
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        opcion_alta(c)
+    return buf.getvalue()
+c = repositorio.conectar(":memory:")
+r = probar("30111222", "Perez", "Ana")
+assert repositorio.buscar_alumno(c, "30111222") is not None, "con datos buenos, el alumno tenía que quedar guardado en la base"
+assert "Perez, Ana" in r, f"avisale que quedó cargado, con su nombre (Perez, Ana). Mostró: {r!r}"
+try:
+    r = probar("30.111.333", "Gomez", "Beto")
+except ValueError:
+    raise AssertionError("con el DNI 30.111.333 (con puntos) el Alumno levanta ValueError, y tu función la dejó pasar: el menú entero se caería. Atajala con try/except y avisá No se pudo")
+assert "No se pudo" in r, f"con el DNI con puntos tenía que avisar No se pudo: ... Mostró: {r!r}"
+assert "sin puntos" in r, "mostrá también el motivo, que viene adentro de la excepción: except ValueError as e, y después print(..., e)"
+assert repositorio.buscar_alumno(c, "30111333") is None, "el que no se pudo crear no tiene que llegar a la base"
+r = probar("30111222", "Otro", "Nombre")
+assert "ya estaba" in r, f"el 30111222 ya estaba cargado: guardar_alumno devuelve False, y hay que avisar que ya estaba. Mostró: {r!r}"
+assert repositorio.buscar_alumno(c, "30111222").apellido == "Perez", "el que ya estaba no se pisa"
+try:
+    r = probar("40111222", "", "Camila")
+except ValueError:
+    raise AssertionError("sin apellido el Alumno también levanta ValueError, y se escapó")
+assert "No se pudo" in r, "sin apellido tampoco se puede: el Alumno lo rechaza, y el menú avisa"
+print("¡El alta no se cae! Un dato roto se avisa, y el menú sigue andando.")
+`}
+  pistas={[
+    'El <code>Alumno(dni, apellido, nombre)</code> va adentro de un <code>try</code>. Si el DNI está mal, salta al <code>except ValueError as e:</code>.',
+    'En el <code>except</code>: <code>print("No se pudo:", e)</code> y <code>return</code>, así no sigue con un alumno que no existe.',
+    '<code>repositorio.guardar_alumno(con, alumno)</code> devuelve <code>True</code> si entró y <code>False</code> si el DNI ya estaba. Con un <code>if</code> avisás cada cosa.',
+  ]}
+>
+Completá `opcion_alta(con)`: pide los tres datos, arma el `Alumno` y lo guarda. Tiene que avisar
+las tres cosas que pueden pasar:
+
+- Salió bien → `Listo: Perez, Ana`
+- El `Alumno` no se pudo crear → `No se pudo:` y **el motivo**
+- El DNI ya estaba → que **ya estaba** cargado
+
+Y en ninguno de los tres casos el menú se cae.
+</EjercicioPython>
+
+## Probarlo en tu compu
+
+Con las cuatro piezas pegadas, en la terminal de VS Code:
+
+```text
+python menu.py
+```
+
+Y una prueba de verdad, de punta a punta: dá de alta a dos personas (una con el DNI con puntos,
+para ver que avisa), pasá lista, mirá la lista del día y salí. **Volvé a abrirlo**: los alumnos
+tienen que seguir ahí. Eso es lo que hace la base.
+
+:::tip[Para ver adentro de la base]
+Con **[DB Browser for SQLite](https://sqlitebrowser.org/)** abrís `asistencias.db` y ves las dos
+tablas como una planilla. Sirve para chequear que lo que dice el menú es lo que quedó guardado.
+:::
+
+<OpcionMultiple titulo="Chequeo: cuando pasemos a la web" opciones={[
+  { texto: "menu.py", correcta: true, explicacion: "Ese. Es el único que habla con la persona, y en la web se habla con formularios y páginas en vez de input() y print(). alumno.py y repositorio.py se usan tal cual: por eso la regla de oro." },
+  { texto: "repositorio.py", explicacion: "No: la base sigue siendo la misma. Flask le va a pedir a repositorio.py lo mismo que le pide hoy el menú." },
+  { texto: "alumno.py", explicacion: "No: qué es un DNI válido no cambia porque el sistema esté en la web. Esa regla sigue en el Alumno." },
+  { texto: "Los tres", explicacion: "Sería así si el SQL y las reglas estuvieran mezclados en el menú. Justamente para que no pase, cada archivo tiene un solo trabajo." },
+]}>
+Cuando el sistema pase a Flask, ¿qué archivo se reemplaza?
+</OpcionMultiple>
+
+## Para llevar
+
+- El sistema son **tres archivos con un trabajo cada uno**: `alumno.py` (las reglas),
+  `repositorio.py` (la base) y `menu.py` (la persona).
+- **La regla de oro:** en `menu.py` solo hay `input()`, `print()` y llamadas. Por eso pasar a la
+  web va a ser cambiar un archivo solo.
+- **Una marca por alumno y por día**, que se puede corregir: buscar antes, y `UPDATE` o `INSERT`.
+- En la lista del día se recorren **los alumnos**, no las marcas: el que no tiene marca aparece con `-`.
+- El `Alumno` **detecta** el error y el menú **decide** qué hacer: avisar y seguir.
+- **`asistencias.db` no se sube nunca**: tiene datos de personas reales.

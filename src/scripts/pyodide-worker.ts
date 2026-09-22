@@ -492,7 +492,11 @@ type MedirFn = (code: string, datos: string, escenariosJson: string, tope: numbe
 let runUser: RunUserFn | null = null;
 let medir: MedirFn | null = null;
 // El propio Pyodide, para poder cargar paquetes antes de correr (ver abajo).
-let pyodide: { loadPackagesFromImports: (codigo: string, opciones?: object) => Promise<unknown> } | null = null;
+let pyodide: {
+  loadPackagesFromImports: (codigo: string, opciones?: object) => Promise<unknown>;
+  FS: { writeFile: (ruta: string, contenido: string) => void };
+  runPython: (codigo: string) => unknown;
+} | null = null;
 
 async function init(): Promise<void> {
   const mod = await import(/* @vite-ignore */ `${PYODIDE_URL}pyodide.mjs`);
@@ -517,15 +521,37 @@ self.onmessage = async (
     archivo?: string;
     datos?: string;
     entradas?: string[];
+    /** Otros archivos del proyecto, que el código del alumno importa. */
+    archivos?: Record<string, string>;
     /** 'medir' cuenta pasos en vez de correr tests (ejercicios de eficiencia). */
     modo?: 'correr' | 'medir';
     escenarios?: unknown[];
     tope?: number;
   }>,
 ) => {
-  const { id, code, tests, archivo, datos, entradas, modo, escenarios, tope } = ev.data;
+  const { id, code, tests, archivo, datos, entradas, archivos, modo, escenarios, tope } = ev.data;
   await initPromise;
   if (!runUser || !medir) return; // ya se reportó init-error
+
+  // Los otros archivos del proyecto (el taller del sistema: alumno.py,
+  // repositorio.py) van al disco virtual, donde el `import` los encuentra: es
+  // la misma carpeta donde los ejercicios con `archivo` guardan su módulo. Se
+  // escriben en CADA corrida y se sacan de sys.modules, así nunca queda
+  // importada una versión vieja (ni la que dejó otro ejercicio con el mismo
+  // nombre de archivo).
+  const nombresArchivos = Object.keys(archivos || {});
+  if (pyodide && nombresArchivos.length) {
+    for (const nombre of nombresArchivos) pyodide.FS.writeFile(nombre, archivos![nombre]);
+    const modulos = nombresArchivos.map((n) => n.replace(/\.py$/, ''));
+    pyodide.runPython(
+      [
+        'import sys, importlib',
+        'for _m in ' + JSON.stringify(modulos) + ':',
+        '    sys.modules.pop(_m, None)',
+        'importlib.invalidate_caches()',
+      ].join(String.fromCharCode(10)),
+    );
+  }
 
   // Paquetes que no vienen con Pyodide de entrada: sqlite3 (la clase de
   // SQLite), y más adelante numpy y pandas (Para ir más allá). Pyodide los trae
@@ -541,7 +567,7 @@ self.onmessage = async (
   // alumno da su error de siempre, que es más claro que uno nuestro.
   if (pyodide && modo !== 'medir') {
     try {
-      const todo = [datos || '', code, tests].join(String.fromCharCode(10));
+      const todo = [datos || '', code, tests, ...Object.values(archivos || {})].join(String.fromCharCode(10));
       await pyodide.loadPackagesFromImports(todo, { messageCallback: () => {} });
     } catch {
       /* ver arriba */
