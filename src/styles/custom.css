@@ -1087,12 +1087,21 @@ body.pc-resizing * {
 }
 .zoom-codigo__btn {
   /* Tamaño fijo en px a propósito: es el control que cambia el tamaño del
-     código, así que no puede cambiar de tamaño con él. */
+     código, así que no puede cambiar de tamaño con él.
+     Y la CAJA es fija, con el texto centrado adentro: el signo − (U+2212) no
+     está en la tipografía de la interfaz, el navegador lo saca de otra fuente
+     y sus métricas más altas estiraban el botón. Con la caja fija, el glifo que
+     toque no puede cambiarle la forma. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 24px;
+  padding: 0;
+  overflow: hidden;
   font-size: 12px;
   line-height: 1;
   font-weight: 700;
-  padding: 0.3rem 0.4rem;
-  min-width: 1.9rem;
   border-radius: 0.35rem;
   border: 1px solid var(--sl-color-gray-5);
   background: var(--sl-color-black);

@@ -33,7 +33,7 @@
 | ❄️ **22/7 – 1/8** | Receso invernal *(pasado)* |
 | 🔁 **Agosto** | Vuelta del receso: **repaso y práctica** en la plataforma |
 | 🏗️ **Septiembre** | **POO**, el **bot del SiGeS** y el arranque del **Sistema de Asistencias**, todo en **VS Code y GitHub** |
-| 🗺️ **Vie 18/9** | **El equipo directivo**, 15 minutos: avalar lo relevado y cerrar el camino de la información. La **reunión con todos** queda para cuando haya algo andando para mostrar |
+| 🗺️ **Mié 23/9** | **El equipo directivo**, 15 minutos: avalar lo relevado y cerrar el camino de la información. La **reunión con todos** queda para cuando haya algo andando para mostrar |
 | 🤖 **Mié 23/9** | **Demo del bot del SiGeS con un alumno real**, junto con preceptoría |
 | 🎉 **24 y 26/9** | **Nerdearla** — salida educativa al Ciudad Cultural Konex. (El evento va del 22 al 26; el 22 y 23 son online y lo presencial arranca el jueves 24.) |
 | ✅ **Fecha a confirmar** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en **SQLite** |
