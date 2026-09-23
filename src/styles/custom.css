@@ -450,7 +450,9 @@ body.pc-resizing * {
   background: var(--sl-color-gray-7, var(--sl-color-black));
   white-space: pre-wrap;
   word-break: break-word;
-  font-size: 0.9rem;
+  /* Acompaña al editor: si agrandaste el código para proyectar, el resultado
+     —que es donde está el mensaje del test— tiene que agrandarse igual. */
+  font-size: calc(var(--pc-editor-font, 1rem) * 0.9);
   line-height: 1.5;
 }
 .ejercicio__salida.is-ok {
@@ -1057,6 +1059,55 @@ body.pc-resizing * {
   margin-top: 0;
 }
 
+/* ---------------------------------------------------------------------------
+   Zoom del código: los botones A− / A+ de cada editor (public/zoom-codigo.js).
+   Van flotando en la esquina de arriba a la derecha del editor, apagados, para
+   no competir con Ejecutar y Verificar. Es el lugar donde el código casi nunca
+   llega: las líneas de Python son cortas y la primera suele ser un `def`.
+--------------------------------------------------------------------------- */
+.ejercicio__editor,
+.encontrar__editor,
+.evaluacion__editor,
+.probador__editor-tests {
+  position: relative;
+}
+.zoom-codigo {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.35rem;
+  z-index: 2;
+  display: flex;
+  gap: 0.2rem;
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+}
+.zoom-codigo:hover,
+.zoom-codigo:focus-within {
+  opacity: 1;
+}
+.zoom-codigo__btn {
+  /* Tamaño fijo en px a propósito: es el control que cambia el tamaño del
+     código, así que no puede cambiar de tamaño con él. */
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  padding: 0.3rem 0.4rem;
+  min-width: 1.9rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-black);
+  color: var(--sl-color-gray-2);
+  cursor: pointer;
+}
+.zoom-codigo__btn:hover:not(:disabled) {
+  color: var(--sl-color-white);
+  border-color: var(--sl-color-gray-4);
+}
+.zoom-codigo__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 /* Editor del modo "arreglo completo" de EncontrarElError. */
 .encontrar__editor {
   margin-top: 0.6rem;
@@ -1064,7 +1115,7 @@ body.pc-resizing * {
   border-radius: 0.5rem;
   overflow: hidden;
 }
-.encontrar__editor .cm-editor { font-size: 1rem; }
+.encontrar__editor .cm-editor { font-size: var(--pc-editor-font, 1rem); }
 .encontrar__editor .cm-content,
 .encontrar__editor .cm-line,
 .encontrar__editor .cm-gutters,
@@ -1128,7 +1179,7 @@ body.pc-resizing * {
   border-radius: 0.45rem;
   overflow: hidden;
 }
-.evaluacion__editor .cm-editor { font-size: 1rem; }
+.evaluacion__editor .cm-editor { font-size: var(--pc-editor-font, 1rem); }
 .evaluacion__editor .cm-content,
 .evaluacion__editor .cm-line,
 .evaluacion__editor .cm-gutters,

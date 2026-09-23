@@ -26,9 +26,14 @@ export const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.worker
 // fábrica; Python, VS Code y cualquier linter usan 4, y un alumno que copia de
 // acá a VS Code no tiene que encontrarse con otra indentación.
 export const editorTheme = [indentUnit.of('    '), EditorView.theme({
-  // 1rem (16px) y no menos: Safari en iOS hace zoom automático al enfocar un
-  // campo con tipografía menor a 16px, y la página queda corrida.
-  '&': { fontSize: '1rem', maxHeight: '22rem' },
+  // El tamaño sale de --pc-editor-font, que manejan los botones A− / A+ de cada
+  // editor (public/zoom-codigo.js) y se recuerda para toda la plataforma. Va en
+  // rem, así además acompaña al zoom del navegador.
+  //
+  // El default es 1rem (16px), y en el celular no se baja de ahí: Safari en iOS
+  // hace zoom automático al enfocar un campo con tipografía menor a 16px, y la
+  // página queda corrida.
+  '&': { fontSize: 'var(--pc-editor-font, 1rem)', maxHeight: '22rem' },
   // Aire abajo del código, para que el cartel de sugerencias caiga sobre espacio
   // vacío y no sobre el párrafo siguiente cuando se escribe en la última línea.
   '.cm-content': { paddingBottom: '7rem' },

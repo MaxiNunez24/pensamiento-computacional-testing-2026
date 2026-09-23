@@ -44,9 +44,22 @@ export default defineConfig({
             "try{if(localStorage.getItem('pc:header')==='0')" +
             "document.documentElement.dataset.pcSinHeader=''}catch(e){}",
         },
+        // Mismo truco que el de arriba: el tamaño del código guardado se aplica
+        // antes de pintar, así el editor no aparece chico y salta a grande.
+        {
+          tag: 'script',
+          content:
+            "try{var z=parseInt(localStorage.getItem('pc:zoom-codigo'),10);" +
+            'if(!isNaN(z))document.documentElement.style.setProperty(' +
+            "'--pc-editor-font',[0.85,1,1.15,1.35,1.6][Math.min(Math.max(z,0),4)]+'rem')}catch(e){}",
+        },
         {
           tag: 'script',
           attrs: { src: `${base}/header-plegable.js`, defer: true },
+        },
+        {
+          tag: 'script',
+          attrs: { src: `${base}/zoom-codigo.js`, defer: true },
         },
         {
           tag: 'script',
