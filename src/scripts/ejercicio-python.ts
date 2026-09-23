@@ -113,7 +113,16 @@ function initEjercicio(el: HTMLElement): void {
       const out = res.out.trimEnd();
       if (!conTests) {
         // Botón "Ejecutar": solo muestra lo que imprime el código.
-        if (res.ok) show(out || '(el código corrió, pero no imprimió nada)', '');
+        //
+        // Cuando no imprime nada hay que decir POR QUÉ. En los ejercicios que
+        // guardan un archivo (una clase sola, sin un print al final) lo normal
+        // es que no se vea nada, y "no imprimió nada" se lee como que algo
+        // falló: pasó en clase, una alumna creyó que su clase no andaba.
+        const sinSalida = archivo
+          ? `📄 Listo: se guardó como ${archivo}.\n\nNo muestra nada, y está bien: una clase es la receta, no la torta. ` +
+            'Recién hace algo cuando alguien la usa.\n\nTocá ✓ Verificar para probarla, y después usala en el ejercicio de abajo.'
+          : '(el código corrió, pero no imprimió nada)';
+        if (res.ok) show(out || sinSalida, '');
         else show((out ? out + '\n\n' : '') + res.err, 'is-error');
       } else if (res.ok) {
         show((out ? out + '\n\n' : '') + '✅ ¡Todos los tests pasaron! 🎉', 'is-ok');

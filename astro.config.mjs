@@ -89,7 +89,9 @@ export default defineConfig({
             {
               id: 'curso',
               label: 'El curso',
-              link: '/',
+              // Va al camino y no a la portada: el que toca "El curso" está
+              // preguntando por dónde sigue, y eso lo contesta el camino.
+              link: '/camino/',
               icon: 'open-book',
               items: [
               { label: '🏠 Inicio', link: '/' },
