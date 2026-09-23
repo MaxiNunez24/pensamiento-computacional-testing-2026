@@ -224,9 +224,22 @@ mano todos los días.
     "Fijate que la función modifica el diccionario que le pasan. No hace falta devolver nada.",
   ]}
 >
-Completá `marcar(lista_del_dia, dni, estado)`: deja anotado el estado de ese alumno.
+La lista del día es un diccionario **`{dni: estado}`**, como el del ejercicio anterior.
 
-Sirve tanto para marcarlo por primera vez como para **corregir** una marca que estaba mal.
+Completá `marcar(lista_del_dia, dni, estado)`: que deje anotado el estado de ese alumno **en ese
+mismo diccionario**. No devuelve nada: modifica el que le pasan.
+
+```python
+dia = {"30111222": "P"}
+
+marcar(dia, "28999888", "A")    # un alumno nuevo
+# dia queda {"30111222": "P", "28999888": "A"}
+
+marcar(dia, "28999888", "T")    # corrección: no faltó, llegó tarde
+# dia queda {"30111222": "P", "28999888": "T"}
+```
+
+Sirve para las dos cosas: **marcar** por primera vez y **corregir** una marca que estaba mal.
 </EjercicioPython>
 
 <EjercicioPython
