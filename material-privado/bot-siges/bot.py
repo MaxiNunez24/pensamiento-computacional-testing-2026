@@ -22,9 +22,14 @@ Las tres reglas que este bot no rompe
    real hay que pedirlo explícitamente con --real.
 2. **Nunca inicia sesión solo.** No hay usuario ni contraseña en el código, ni
    los pide. La persona se loguea a mano y recién ahí el bot toma el control.
+   Contra el sistema real, además, es la persona la que busca el DNI y abre el
+   formulario: el bot completa uno que ya está en pantalla.
 3. **Nunca aprieta "Generar matrícula inicial".** El bot deja a la persona como
    PRE INSCRIPTA, que es un estado reversible: si algo salió mal, se borra con
    el tachito. La matrícula la genera una persona, mirando.
+4. **Contra el sistema real tampoco guarda.** Completa lo que sabe y deja el
+   formulario en pantalla; "Guardar estudiante" lo aprieta una persona después
+   de revisar. Ver `siges_real.py`, que además explica qué secciones NO toca.
 
 Se corre así:
     python bot.py                      # contra el simulador, mostrando el navegador
@@ -40,13 +45,27 @@ import time
 from playwright.sync_api import sync_playwright
 
 import normalizar
+import siges_real
+
+# Windows a veces abre la consola en cp1252, que no sabe escribir ✅ ni ⛔, y el
+# programa se cae con UnicodeEncodeError a mitad de una carga. Que un emoji se
+# vea como "?" es infinitamente mejor que perder la corrida por un adorno.
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except Exception:                                       # noqa: BLE001
+    pass
 
 AQUI = pathlib.Path(__file__).parent
 SIMULADOR = (AQUI / 'siges_falso.html').as_uri()
 
 
 def cargar_una(page, datos, lento=0):
-    """Carga UNA persona. Devuelve (ok, detalle)."""
+    """Carga UNA persona EN EL SIMULADOR. Devuelve (ok, detalle).
+
+    El formulario real se completa en siges_real.py: son dos pantallas
+    distintas y cada una tiene su función, para que arreglar una no rompa la
+    otra.
+    """
 
     def respirar():
         if lento:
@@ -126,10 +145,13 @@ def main():
         print('=' * 62)
         print(f'  Destino : {destino}')
         print(f'  Personas: {len(listos)}')
-        print('\n  Antes de seguir:')
+        print('\n  Cómo es contra el sistema real:')
         print('   · Iniciá sesión vos en el navegador que se va a abrir.')
-        print('   · Revisá que el trayecto sea el correcto.')
-        print('   · El bot NO va a generar la matrícula: quedan como pre inscriptos.')
+        print('   · De cada persona, vos buscás el DNI y abrís "Agregar estudiante".')
+        print('   · El bot completa lo que sabe y para. NO guarda.')
+        print('   · Dirección, Vivienda y Contacto los completás vos: no están relevados.')
+        print('   · Salud, discapacidad y restricción judicial el bot NO los toca nunca.')
+        print('   · Guardás vos, y la matrícula la genera una persona: quedan pre inscriptos.')
         if input('\n  Escribí CARGAR para continuar: ').strip() != 'CARGAR':
             print('  Cancelado. No se tocó nada.')
             return
@@ -149,12 +171,28 @@ def main():
         bien, mal = 0, []
         for i, datos in listos:
             quien = f'{datos["apellidos"]}, {datos["nombres"]}'
-            print(f'  fila {i:>3}  {quien:<38}', end=' ', flush=True)
+            if args.real:
+                # Contra el sistema real, cada persona empieza con una mano
+                # humana: buscar el DNI y abrir "Agregar estudiante". El bot
+                # completa un formulario que ya está en pantalla.
+                print(f'\n  fila {i:>3}  {quien}  (DNI {datos["dni"]})')
+                input('    Buscá ese DNI, abrí "Agregar estudiante" y apretá Enter... ')
+                print(f'    completando…', end=' ', flush=True)
+            else:
+                print(f'  fila {i:>3}  {quien:<38}', end=' ', flush=True)
             try:
-                ok, detalle = cargar_una(page, datos, lento=0.35 if args.lento else 0)
+                if args.real:
+                    pausa = (lambda: time.sleep(0.35)) if args.lento else (lambda: None)
+                    ok, detalle = siges_real.completar(page, datos, pausa)
+                else:
+                    ok, detalle = cargar_una(page, datos, lento=0.35 if args.lento else 0)
             except Exception as e:                      # noqa: BLE001
                 ok, detalle = False, f'{type(e).__name__}: {e}'
-            if ok:
+            if ok and args.real:
+                bien += 1
+                print(f'✅ {detalle}')
+                input('    Revisá, completá eso y apretá "Guardar estudiante" vos. Enter para seguir... ')
+            elif ok:
                 bien += 1
                 print('✅')
             else:
@@ -162,7 +200,8 @@ def main():
                 print(f'⛔ {detalle}')
 
         print(f'\n{"=" * 62}')
-        print(f'  Cargados: {bien}    Con problema: {len(mal)}')
+        etiqueta = 'Completados' if args.real else 'Cargados'
+        print(f'  {etiqueta}: {bien}    Con problema: {len(mal)}')
         for quien, detalle in mal:
             print(f'   · {quien}: {detalle}')
         print('=' * 62)
