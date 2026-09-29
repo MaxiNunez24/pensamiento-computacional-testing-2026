@@ -65,7 +65,7 @@ Es una aplicación Angular: **no recarga la página**, cambia el contenido. Por 
 ## ✅ Verificado contra la pantalla real (23/9/2026)
 
 Preceptoría guardó con Ctrl+S el formulario **Agregar estudiante** vacío
-(`material-privado/capturas_bot/siges-alta-alumno-23-09-2026.html`, fuera de Git). Esto es lo que
+(`material-docente/capturas_bot/siges-alta-alumno-23-09-2026.html`, fuera de Git). Esto es lo que
 confirmó y lo que corrigió:
 
 | | Qué se verificó |

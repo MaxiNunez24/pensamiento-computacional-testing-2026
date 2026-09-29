@@ -135,7 +135,7 @@ Cada clase que use tabs, asides con título, o ejercicios pasa a `.mdx` (no `.md
 - [ ] **Deploy**: workflow de GitHub Actions que haga `npm run build` y publique `dist/` en GitHub
       Pages **solo desde `main`** (la rama `dev` se pushea pero NO se despliega).
 - [ ] **Cutover**: cuando todo esté migrado, retirar `docs/` + `mkdocs.yml` (o archivarlos en
-      `material-privado/`).
+      `material-docente/`).
 
 ---
 

@@ -52,7 +52,7 @@ package.json / pnpm-*     → deps de Astro (pnpm, no npm)
 scripts/verificar_render.py   → chequea el HTML construido (ver §7)
 worker/consultas-discord.js   → Cloudflare Worker: consultas de alumnos → Discord (ver §8)
 
-material-privado/         → TEACHER-ONLY (fuera del build, pero visible en GitHub)
+material-docente/         → TEACHER-ONLY (fuera del build, pero visible en GitHub)
 guiones/                  → guiones de video (fuera del build)
 
 .github/workflows/
@@ -285,7 +285,7 @@ de la portada que daba 404 solo en producción.
   `src/scripts/ejercicio-python.ts` (mientras esté vacío, cae a un `mailto:`). Pasos en `worker/README.md`.
 - **Contador de clases restantes** (`docs/javascripts/clases-restantes.js`): se auto-decrementa por
   fecha real, salta receso y feriados (lista `FERIADOS` editable). Se renderiza en `#clases-restantes`.
-- **Asistente para alumnos** (`material_apoyo.md` + `material-privado/prompt-asistente-alumnos.md`):
+- **Asistente para alumnos** (`material_apoyo.md` + `material-docente/prompt-asistente-alumnos.md`):
   prompt copiable para que el alumno abra un chat con Claude que **guía sin dar las respuestas**.
 
 ---
@@ -325,5 +325,5 @@ de la portada que daba 404 solo en producción.
    `gh-deploy`. Los commits terminan con `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
 
 **Restricciones a respetar siempre:** no reducir abstracción (sumar andamiaje); pistas = preguntas;
-no `def` antes de Funciones I; `material-privado/` y `guiones/` son públicos en GitHub aunque no
+no `def` antes de Funciones I; `material-docente/` y `guiones/` son públicos en GitHub aunque no
 salgan en el sitio; no tocar `gh-pages` ni `.git/` a mano.

@@ -1,6 +1,6 @@
 # Transcripción local de las entrevistas.
 #
-#     pip install -r material-privado/transcribir/requirements.txt
+#     pip install -r material-docente/transcribir/requirements.txt
 #
 # Todo corre en esta máquina: faster-whisper baja el modelo una vez y no manda
 # nada a ningún servidor. Los audios son gente del CFP hablando de su trabajo,

@@ -195,7 +195,7 @@ personal del CFP y opiniones sobre cómo funciona su propio trabajo. Por eso:
   No con la `CLAVE_CURSO` que viaja en el JavaScript del sitio (esa la puede leer cualquiera).
 - **Si el secreto no está configurado, no se lee nada.** Falla cerrado. Un olvido de configuración
   no puede dejar esto abierto.
-- **Las respuestas NO van al repo.** El repo es público. Ni siquiera a `material-privado/`, que
+- **Las respuestas NO van al repo.** El repo es público. Ni siquiera a `material-docente/`, que
   está excluido del sitio pero igual se sube a GitHub. Si exportás las respuestas, que queden fuera
   de la carpeta del proyecto.
 

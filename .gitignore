@@ -27,7 +27,7 @@ venv/
 # Capturas del proceso de carga al SiGeS: son pantallas reales del sistema del
 # Ministerio, con DNI y nombres de personas. El repo es PUBLICO: no se suben.
 # Viven solo en la maquina del profe.
-material-privado/capturas_bot/
+material-docente/capturas_bot/
 
 # El contenido privado de /casos/: vive en el KV del Worker y en la maquina del
 # profe, nunca en el repositorio (que es publico).

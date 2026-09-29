@@ -8,7 +8,7 @@ corra con `--real`.
 De dónde salen estos rótulos
 ----------------------------
 De la pantalla real guardada el 23/9/2026 (Ctrl+S sobre el formulario abierto),
-en `material-privado/capturas_bot/`. Verificado sobre ese archivo: los 68
+en `material-docente/capturas_bot/`. Verificado sobre ese archivo: los 68
 rótulos del formulario tienen `for=`, es decir que **cada etiqueta está asociada
 a su campo**. Por eso se busca por el texto que se ve, con `get_by_label`, y no
 por identificadores: los `id` de Angular Material (`mat-input-1`,

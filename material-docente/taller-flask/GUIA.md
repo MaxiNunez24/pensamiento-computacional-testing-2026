@@ -91,15 +91,15 @@ Lo de abajo explica cómo construirlo desde cero. Pero si lo que se quiere es le
 está en esta carpeta — por ejemplo, para mostrarlo — son tres comandos:
 
 ```bash
-pip install -r material-privado/taller-flask/requirements.txt
+pip install -r material-docente/taller-flask/requirements.txt
 ```
 
 ```bash
-python material-privado/taller-flask/sembrar_demo.py
+python material-docente/taller-flask/sembrar_demo.py
 ```
 
 ```bash
-python material-privado/taller-flask/app.py
+python material-docente/taller-flask/app.py
 ```
 
 Queda en `http://localhost:5000`, con dos pantallas:

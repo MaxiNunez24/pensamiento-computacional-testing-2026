@@ -1,6 +1,6 @@
 # Sistema de Asistencias CFP 401 — estado, decisiones y qué sigue
 
-> Documento de trabajo, teacher-only. Vive en `material-privado/` (no se publica en el sitio).
+> Documento de trabajo, teacher-only. Vive en `material-docente/` (no se publica en el sitio).
 > **No poner datos personales de alumnos acá** (nombres, DNI, teléfonos): el repo puede leerse.
 >
 > Última actualización: 20/8/2026 — ver **§11 (lo que salió de la elicitación)** y

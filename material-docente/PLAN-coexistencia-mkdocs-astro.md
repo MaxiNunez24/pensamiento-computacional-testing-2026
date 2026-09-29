@@ -1,8 +1,8 @@
 # 🧭 Plan: coexistencia MkDocs + Astro (borrador para el receso)
 
-> **Privado / teacher-only.** Vive en `material-privado/` (fuera de `docs/`), NO se publica. Es un
+> **Privado / teacher-only.** Vive en `material-docente/` (fuera de `docs/`), NO se publica. Es un
 > **plan a ejecutar en el receso**, no ahora. Cuando se implemente, reconciliar con la guía
-> `material-privado/MIGRACION-ASTRO.md` (que vive en la rama `dev`).
+> `material-docente/MIGRACION-ASTRO.md` (que vive en la rama `dev`).
 
 ## 1. La idea (en una frase)
 

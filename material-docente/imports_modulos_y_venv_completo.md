@@ -1,6 +1,6 @@
 # 📦 Imports, módulos, paquetes y venv — referencia completa (solo profe)
 
-> **Privado.** Vive en `material-privado/` (fuera de `docs/`), así que **no se publica**. Es el
+> **Privado.** Vive en `material-docente/` (fuera de `docs/`), así que **no se publica**. Es el
 > tratamiento *completo* del tema imports + el borrador de la futura clase de paquetes/entornos
 > virtuales. El anexo público para los alumnos (nivel núcleo) está en
 > `docs/clases/python/06_funciones/imports_y_modulos.md`.

@@ -12,7 +12,7 @@ minuto**, para no tener que escuchar tres horas de nuevo.
 ## 1. Instalación (una vez)
 
 ```bash
-pip install -r material-privado/transcribir/requirements.txt
+pip install -r material-docente/transcribir/requirements.txt
 ```
 
 Y nada más. **No hace falta instalar ffmpeg**: faster-whisper 1.x decodifica con
@@ -46,7 +46,7 @@ instalado en el sistema.
 ## 2. Correrlo
 
 ```bash
-python material-privado/transcribir/transcribir.py preceptoria.webm --marcas marcas.txt --seccion "Preceptoría"
+python material-docente/transcribir/transcribir.py preceptoria.webm --marcas marcas.txt --seccion "Preceptoría"
 ```
 
 Deja un `preceptoria.md` al lado del audio.

@@ -1,6 +1,6 @@
 # Dependencias del taller de Flask.
 #
-#     pip install -r material-privado/taller-flask/requirements.txt
+#     pip install -r material-docente/taller-flask/requirements.txt
 #
 # Nada más que Flask: el modelo y la persistencia son Python puro, a propósito.
 # Esa es la decisión de diseño del taller — las reglas viven en modelo.py y se

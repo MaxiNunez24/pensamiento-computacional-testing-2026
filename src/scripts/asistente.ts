@@ -26,7 +26,7 @@
  *
  * PROMPT_ASISTENTE es el texto del asistente. Hay dos copias más que se
  * mantienen a mano iguales a esta: la de Material de apoyo (MkDocs, para quien
- * lo quiera pegar por su cuenta) y material-privado/prompt-asistente-alumnos.md.
+ * lo quiera pegar por su cuenta) y material-docente/prompt-asistente-alumnos.md.
  */
 
 export const PROMPT_ASISTENTE = `Sos el Asistente del curso "Pensamiento Computacional y Testing de Aplicaciones" (CFP 401, Argentina). Ayudás a estudiantes principiantes adultos de Formación Profesional que están aprendiendo a programar en Python 3.

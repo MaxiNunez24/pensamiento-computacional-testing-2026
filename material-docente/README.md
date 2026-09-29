@@ -1,4 +1,4 @@
-# 🔒 Material privado (solo para el profe)
+# 📚 Material del profe (fuera del sitio, pero en GitHub)
 
 Esta carpeta **no se publica en el sitio**: MkDocs solo construye `docs/` y Astro solo
 `src/content/docs/`, así que todo lo que viva acá queda fuera del sitio y del buscador.
@@ -6,8 +6,21 @@ Esta carpeta **no se publica en el sitio**: MkDocs solo construye `docs/` y Astr
 > ⚠️ **Pero el repositorio es PÚBLICO.** "No se publica" quiere decir que no aparece en la web del
 > curso, **no** que sea secreto: cualquiera que entre a github.com/MaxiNunez24/… lo lee.
 > **Nada de datos personales acá**: ni nombres de alumnos, ni DNI, ni teléfonos, ni capturas de
-> sistemas con datos reales. Lo que necesite ser privado de verdad va a `.gitignore`
-> (como `capturas_bot/`).
+> sistemas con datos reales.
+>
+> Antes esta carpeta se llamaba `material-privado/`, y el nombre engañaba: se lee igual que el
+> resto del repositorio. Se renombró el 29/9 por eso.
+
+## 🔒 Lo que sí es privado va a otra carpeta
+
+`contenido-privado/`, que está en `.gitignore` y **no se sube**. Vive solo en la máquina del profe:
+
+| Qué | Por qué |
+|---|---|
+| `REQUERIMIENTOS-RELEVADOS.md` | Lo que dijo cada rol del CFP sobre su propio trabajo, con las marcas del audio |
+| `casos.json` | El contenido de la página *Cómo trabaja cada uno* (también vive en el KV del Worker) |
+
+Dentro de esta carpeta, `capturas_bot/` también está ignorado: son pantallas reales del SiGeS.
 
 ---
 

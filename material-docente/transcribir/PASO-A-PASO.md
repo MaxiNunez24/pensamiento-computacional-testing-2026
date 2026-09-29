@@ -24,7 +24,7 @@ Si contesta `1.2.0`, **ya está instalado y no hay que instalar nada más**.
 Si dice `ModuleNotFoundError`, ahí sí:
 
 ```bash
-pip install -r material-privado/transcribir/requirements.txt
+pip install -r material-docente/transcribir/requirements.txt
 ```
 
 > ⚠️ **Ojo con cuál `python`.** En esta máquina hay dos Python 3.14 y
@@ -82,7 +82,7 @@ haya salido bien. Es la única copia que hay.
 E:\Ex Disco D\CFP\desarrollo_sistema_gestion_de_alumnos\interview_recordings\
 ```
 
-Podría ir adentro de `material-privado/transcribir/`, porque el `.gitignore` de
+Podría ir adentro de `material-docente/transcribir/`, porque el `.gitignore` de
 esa carpeta ya ignora `*.m4a`, `*.mp3`, `*.webm` y hasta los `.md` que salen.
 Pero después de lo del `datos_ejemplo.csv`, la regla que vale es otra: **lo que
 no puede subirse al repo, que no esté en la carpeta del repo**. Un `.gitignore`
@@ -167,7 +167,7 @@ Empezá con **una** entrevista y con el modelo chico, para ver que todo el camin
 funciona antes de esperar media hora:
 
 ```bash
-python material-privado/transcribir/transcribir.py "E:\Ex Disco D\CFP\desarrollo_sistema_gestion_de_alumnos\interview_recordings\NOMBRE.m4a" --modelo small --cpu
+python material-docente/transcribir/transcribir.py "E:\Ex Disco D\CFP\desarrollo_sistema_gestion_de_alumnos\interview_recordings\NOMBRE.m4a" --modelo small --cpu
 ```
 
 Tendría que verse algo así:
@@ -190,7 +190,7 @@ Las dos líneas que importan:
 Después le sumás las marcas:
 
 ```bash
-python material-privado/transcribir/transcribir.py "E:\...\NOMBRE.m4a" --marcas "E:\...\marcas.txt" --seccion "Preceptoría" --cpu
+python material-docente/transcribir/transcribir.py "E:\...\NOMBRE.m4a" --marcas "E:\...\marcas.txt" --seccion "Preceptoría" --cpu
 ```
 
 **Cuánto tarda en CPU.** Medido: 24 segundos de audio con `small` tardaron 7

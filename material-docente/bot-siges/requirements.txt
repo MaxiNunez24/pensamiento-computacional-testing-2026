@@ -1,6 +1,6 @@
 # Dependencias del bot de carga al SiGeS.
 #
-#     pip install -r material-privado/bot-siges/requirements.txt
+#     pip install -r material-docente/bot-siges/requirements.txt
 #     python -m playwright install chromium
 #
 # El segundo comando NO es opcional: `pip install playwright` trae la librería
