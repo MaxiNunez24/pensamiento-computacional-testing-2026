@@ -3253,6 +3253,41 @@ body.pc-resizing * {
    campo de la clave y los botones sean grandes, y que el texto de cada
    respuesta se lea cómodo: es lo que hay que leer, no decorado.
 --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   La puerta de /casos/: mismo aspecto que la de las respuestas, porque es la
+   misma idea y conviene que se reconozca. Se apoya en las clases .resp__* para
+   el formulario; acá solo va lo propio.
+--------------------------------------------------------------------------- */
+.puerta__aviso {
+  border: 1px solid #ffd43b; border-radius: 0.5rem; background: var(--sl-color-black);
+  padding: 0.7rem 0.9rem; margin-bottom: 1rem; font-size: 0.9rem; line-height: 1.55;
+}
+.puerta__form {
+  border: 1px solid var(--sl-color-gray-5); border-radius: 0.6rem;
+  background: var(--sl-color-black); padding: 1rem; margin: 1.2rem 0;
+}
+.puerta__etiqueta { display: block; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.25rem; }
+.puerta__ayuda { margin: 0 0 0.7rem; font-size: 0.9rem; line-height: 1.5; color: var(--sl-color-gray-3); }
+.puerta__fila { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.puerta__input {
+  flex: 1 1 16rem; font: inherit; font-size: 17px; padding: 0.7rem 0.8rem;
+  border-radius: 0.45rem; border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-6); color: var(--sl-color-white);
+}
+.puerta__input:focus { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+.puerta__btn {
+  font: inherit; font-size: 0.95rem; cursor: pointer; min-height: 2.9rem;
+  padding: 0.6rem 1rem; border-radius: 0.45rem;
+  border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-white);
+}
+.puerta__btn:hover { border-color: var(--sl-color-accent); }
+.puerta__btn--ok {
+  border-color: var(--sl-color-accent); background: var(--sl-color-accent);
+  color: var(--sl-color-black); font-weight: 600;
+}
+.puerta__estado { margin: 0.6rem 0 0; font-size: 0.9rem; color: var(--sl-color-text-accent); }
+.puerta__salir { margin: 0.5rem 0 1rem; }
+
 .resp__aviso {
   border: 1px solid #ffd43b; border-radius: 0.5rem; background: var(--sl-color-black);
   padding: 0.7rem 0.9rem; margin-bottom: 1rem; font-size: 0.9rem; line-height: 1.55;

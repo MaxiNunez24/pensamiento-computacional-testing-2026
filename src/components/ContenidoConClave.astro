@@ -1,0 +1,126 @@
+---
+/**
+ * La puerta de /casos/: sin la clave, la página no tiene nada que mostrar.
+ *
+ * ─────────────────────── POR QUÉ NO ALCANZA CON ESCONDER ────────────────────
+ *
+ * Una clave delante de una página estática no protege nada: el texto viajó con
+ * el HTML y se lee con Ctrl+U. Por eso acá el contenido **no se publica**. La
+ * página sale vacía, y lo que se ve llega del Worker recién cuando alguien
+ * escribe la clave. Es lo mismo que hacemos con las respuestas del cuestionario.
+ *
+ * El contenido vive en el KV del Worker, bajo la clave `casos`. En la máquina
+ * del profe queda `contenido-privado/casos.json`, que está fuera de Git.
+ *
+ * ────────────────────────────── QUÉ ENTREGA ─────────────────────────────────
+ *
+ *   { pasos: [...],            → van al CircuitoInfo   (evento circuito:datos)
+ *     casos: [...],            → van al MapaCasos      (evento casos:datos)
+ *     html: { antes, entre, despues } }  → los textos, a sus huecos
+ *
+ * Los componentes ya sabían dibujarse solos con los datos que les llegan: lo
+ * único nuevo es de dónde vienen.
+ */
+const WORKER = 'https://cuestionario.maxinunez434.workers.dev';
+const ORIGEN_OK = 'https://maxinunez24.github.io';
+---
+
+<section class="puerta" data-puerta data-worker={WORKER} data-origen={ORIGEN_OK}>
+  <p class="puerta__aviso" data-aviso-origen hidden></p>
+
+  <form class="puerta__form" data-entrar>
+    <label class="puerta__etiqueta" for="puerta-clave">🔒 Clave de lectura</label>
+    <p class="puerta__ayuda">
+      Esta página es del curso: lo que hay acá es cómo trabaja cada persona del CFP, contado por
+      ellas. <strong>La clave no se guarda</strong>: se escribe cada vez y se va al cerrar la pestaña.
+    </p>
+    <div class="puerta__fila">
+      <input class="puerta__input" type="password" id="puerta-clave" data-clave
+             autocomplete="off" placeholder="la clave del curso" />
+      <button class="puerta__btn puerta__btn--ok" type="submit">Entrar</button>
+    </div>
+    <p class="puerta__estado" data-estado></p>
+  </form>
+
+  <button type="button" class="puerta__btn puerta__salir" data-salir hidden>🔒 Cerrar</button>
+</section>
+
+<script>
+  document.querySelectorAll('[data-puerta]').forEach((raiz) => {
+    const $ = (s: string) => raiz.querySelector(s) as HTMLElement | null;
+    const WORKER = (raiz as HTMLElement).dataset.worker!;
+    const ORIGEN_OK = (raiz as HTMLElement).dataset.origen!;
+
+    /* La clave vive en esta variable y en ningún otro lado: ni localStorage ni
+       sessionStorage. Cerrar la pestaña la borra. */
+    let clave = '';
+
+    if (location.origin !== ORIGEN_OK) {
+      const aviso = $('[data-aviso-origen]')!;
+      aviso.hidden = false;
+      aviso.innerHTML =
+        '⚠️ Esto solo funciona desde el <strong>sitio publicado</strong>. El Worker acepta pedidos ' +
+        'de <code>' + ORIGEN_OK + '</code> y nada más, así que desde <code>' + location.origin +
+        '</code> el navegador los frena por CORS. No es la clave: es el origen.';
+    }
+
+    const huecos = () => ({
+      antes: document.querySelector('[data-privado="antes"]') as HTMLElement | null,
+      entre: document.querySelector('[data-privado="entre"]') as HTMLElement | null,
+      despues: document.querySelector('[data-privado="despues"]') as HTMLElement | null,
+    });
+
+    function repartir(datos: any) {
+      const h = huecos();
+      (['antes', 'entre', 'despues'] as const).forEach((donde) => {
+        const caja = h[donde];
+        if (caja) caja.innerHTML = (datos.html && datos.html[donde]) || '';
+      });
+      document.querySelector('[data-circuito]')
+        ?.dispatchEvent(new CustomEvent('circuito:datos', { detail: datos.pasos || [] }));
+      document.querySelector('[data-casos]')
+        ?.dispatchEvent(new CustomEvent('casos:datos', { detail: { casos: datos.casos || [] } }));
+    }
+
+    function vaciar() {
+      const h = huecos();
+      Object.values(h).forEach((caja) => { if (caja) caja.innerHTML = ''; });
+      document.querySelector('[data-circuito]')
+        ?.dispatchEvent(new CustomEvent('circuito:datos', { detail: [] }));
+      document.querySelector('[data-casos]')
+        ?.dispatchEvent(new CustomEvent('casos:datos', { detail: { casos: [] } }));
+    }
+
+    $('[data-entrar]')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const est = $('[data-estado]')!;
+      clave = ($('[data-clave]') as HTMLInputElement).value.trim();
+      if (!clave) return;
+      est.textContent = 'Buscando…';
+      try {
+        const r = await fetch(WORKER + '/casos', { headers: { 'X-Clave': clave } });
+        if (r.status === 401) { est.textContent = 'Esa clave no es. Probá de nuevo.'; return; }
+        if (r.status === 404) { est.textContent = 'El Worker todavía no tiene el contenido cargado.'; return; }
+        if (r.status === 503) { est.textContent = 'El Worker no tiene CLAVE_DOCENTE configurada.'; return; }
+        if (!r.ok) { est.textContent = 'El Worker contestó ' + r.status + '.'; return; }
+        repartir(await r.json());
+        est.textContent = '';
+        ($('[data-entrar]') as HTMLElement).hidden = true;
+        $('[data-salir]')!.hidden = false;
+      } catch {
+        est.textContent = 'No se pudo hablar con el Worker. ¿Hay internet?';
+      }
+    });
+
+    /* Cerrar borra la clave Y todo lo traído: si esto queda abierto en la
+       máquina del aula, que no quede nada a la vista. */
+    $('[data-salir]')!.addEventListener('click', () => {
+      clave = '';
+      vaciar();
+      ($('[data-clave]') as HTMLInputElement).value = '';
+      ($('[data-entrar]') as HTMLElement).hidden = false;
+      $('[data-salir]')!.hidden = true;
+      $('[data-estado]')!.textContent = '';
+    });
+  });
+</script>

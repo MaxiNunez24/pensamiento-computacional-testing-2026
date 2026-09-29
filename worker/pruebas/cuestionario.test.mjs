@@ -102,6 +102,30 @@ r = await post('/respuesta', {
 ok(r.status === 200, 'una respuesta larguisima entra igual');
 ok(JSON.parse(KV.get('r:largo')).respuestas.verbos.length === 4000, 'pero recortada');
 
+// ── EL CONTENIDO DE /casos/ ──────────────────────────────────────────
+// Lo mismo que con las respuestas: lo que hay que probar es lo que NO tiene
+// que pasar. Esta pagina es la unica que publica como trabaja cada persona
+// del CFP, y por eso el contenido no viaja con el sitio.
+
+r = await pedir('/casos');
+ok(r.status === 401, 'sin clave no se ve el contenido de /casos/');
+ok(!(await r.text()).includes('preceptor'), 'y el 401 no deja escapar nada');
+
+r = await pedir('/casos', { headers: { 'X-Clave': CLAVE } });
+ok(r.status === 401, 'la clave del curso no alcanza: va la del profe');
+
+r = await pedir('/casos', { headers: { 'X-Clave': SECRETO } }, { CUESTIONARIO: almacen });
+ok(r.status === 503, 'sin CLAVE_DOCENTE configurada falla cerrado');
+
+r = await pedir('/casos', { headers: { 'X-Clave': SECRETO } });
+ok(r.status === 404, 'si el contenido todavia no se cargo, 404 y no un vacio silencioso');
+
+KV.set('casos', JSON.stringify({ casos: [{ id: 'x', nombre: 'Pasar lista' }], pasos: [], html: {} }));
+r = await pedir('/casos', { headers: { 'X-Clave': SECRETO } });
+ok(r.status === 200, 'con el secreto del profe si');
+d = await r.json();
+ok(d.casos[0].nombre === 'Pasar lista', 'y llega el contenido tal cual se guardo');
+
 // ── ORIGEN ───────────────────────────────────────────────────────────
 r = await mod.default.fetch(new Request('https://x/cuantas', { headers: { Origin: 'https://malo.com' } }), env);
 ok(r.status === 403, 'un origen ajeno no entra');

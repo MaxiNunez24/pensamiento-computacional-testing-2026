@@ -255,3 +255,25 @@ node worker/pruebas/cuestionario.test.mjs
 
 23 casos. La mitad prueban lo que **no** tiene que pasar: que la clave del curso no alcance para
 leer, que sin el secreto configurado falle cerrado, y que `/cuantas` no deje escapar ni un nombre.
+
+### El contenido de "Cómo trabaja cada uno" (`/casos`)
+
+La página `/casos/` se publica **vacía**: el texto no viaja con el sitio. Una clave delante de una
+página estática no protege nada —lo que se ve con Ctrl+U ya está en la máquina de quien entró—, así
+que el contenido vive acá y llega solo con `CLAVE_DOCENTE`.
+
+En la máquina del profe queda `contenido-privado/casos.json`, **fuera de Git**.
+
+**Cargarlo (o actualizarlo):**
+
+```bash
+wrangler kv key put --binding=CUESTIONARIO casos --path contenido-privado/casos.json --remote
+```
+
+O desde el panel: Cloudflare → el KV del cuestionario → **Add entry**, clave `casos`, y pegar el
+archivo entero.
+
+**Para actualizar el contenido después de una reunión:** en la página, con la clave puesta, se
+edita como siempre y se toca **📋 Copiar todos**. Eso da los casos corregidos, que se pegan en la
+parte `casos` del JSON y se vuelve a subir. Los textos de alrededor viven en `html.antes`,
+`html.entre` y `html.despues`, que son HTML tal cual.

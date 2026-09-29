@@ -172,6 +172,34 @@ export default {
       return json({ respuestas }, cabeceras);
     }
 
+    // ─────────── EL CONTENIDO DE /casos/ (solo con la clave) ──────────
+    //
+    // La página "Cómo trabaja cada uno" se publica VACÍA: lo que se ve sale de
+    // acá. Una clave delante de una página estática no protege nada —el texto
+    // ya viajó con el HTML y se lee con Ctrl+U—, así que el texto directamente
+    // no se publica.
+    //
+    // Se carga una sola vez, desde la máquina del profe:
+    //   wrangler kv key put --binding=CUESTIONARIO casos --path contenido-privado/casos.json --remote
+    // (o pegándolo en el panel de Cloudflare, en el KV, con la clave `casos`).
+
+    if (ruta === '/casos' && request.method === 'GET') {
+      if (!env.CLAVE_DOCENTE) {
+        return json({ error: 'sin CLAVE_DOCENTE configurada' }, cabeceras, 503);
+      }
+      if (request.headers.get('X-Clave') !== env.CLAVE_DOCENTE) {
+        return json({ error: 'no autorizado' }, cabeceras, 401);
+      }
+      const guardado = await env.CUESTIONARIO.get('casos');
+      if (!guardado) {
+        return json({ error: 'el contenido todavía no está cargado' }, cabeceras, 404);
+      }
+      // Ya está en JSON: se devuelve tal cual, sin volver a parsearlo.
+      return new Response(guardado, {
+        headers: { 'Content-Type': 'application/json; charset=utf-8', ...cabeceras },
+      });
+    }
+
     return json({ error: 'ruta desconocida' }, cabeceras, 404);
   },
 };

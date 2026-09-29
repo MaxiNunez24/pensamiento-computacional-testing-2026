@@ -60,8 +60,12 @@ interface Caso {
   supuesto?: boolean;
 }
 
-const { casos, titulo = 'Cómo trabaja cada uno' } = Astro.props as {
-  casos: Caso[];
+/* `casos` es OPCIONAL a propósito. En /casos/ no se pasa ninguno: el contenido
+   no se publica, lo trae el Worker cuando alguien escribe la clave, y llega por
+   el evento `casos:datos`. Sin clave, esta página se publica vacía: no alcanza
+   con esconderla, tiene que no estar. */
+const { casos = [], titulo = 'Cómo trabaja cada uno' } = Astro.props as {
+  casos?: Caso[];
   titulo?: string;
 };
 const id = idEjercicio(titulo);
@@ -532,5 +536,14 @@ const ETAPAS = [
 
     pintar();
     if (abierto) pintarDetalle();
+
+    /* Los casos que llegan del Worker después de escribir la clave. Mismo
+       dibujo, misma capa de edición: lo único distinto es de dónde vinieron. */
+    raiz.addEventListener('casos:datos', ((e: CustomEvent) => {
+      BASE = e.detail?.casos || [];
+      if (e.detail?.ETAPAS?.length) ETAPAS = e.detail.ETAPAS;
+      pintar();
+      if (abierto) pintarDetalle();
+    }) as EventListener);
   });
 </script>

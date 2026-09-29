@@ -50,7 +50,9 @@ interface Paso {
   fuente?: string;
 }
 
-const { pasos } = Astro.props as { pasos: Paso[] };
+/* Opcional: en /casos/ los pasos no se publican, los trae el Worker con la
+   clave y llegan por el evento `circuito:datos`. */
+const { pasos = [] } = Astro.props as { pasos?: Paso[] };
 ---
 
 <section class="circ" data-circuito>
@@ -320,5 +322,11 @@ const { pasos } = Astro.props as { pasos: Paso[] };
     });
 
     pintar();
+
+    /* Los pasos que llegan del Worker después de escribir la clave. */
+    raiz.addEventListener('circuito:datos', ((e: CustomEvent) => {
+      BASE = e.detail || [];
+      pintar();
+    }) as EventListener);
   });
 </script>
