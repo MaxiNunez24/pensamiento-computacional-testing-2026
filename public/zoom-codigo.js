@@ -41,10 +41,24 @@
     document.querySelectorAll('[data-zoom="menos"]').forEach(function (b) { b.disabled = alfondo; });
   }
 
-  function cambiar(paso) {
+  function cambiar(paso, boton) {
+    // El tamaño cambia en TODOS los editores de la página, también en los que
+    // están más arriba. Como cada uno crece o se achica, lo que estabas mirando
+    // se corre solo: medido, 100px al agrandar y 181px al achicar dos veces.
+    //
+    // Por eso se anota dónde estaba el botón que se tocó, y después de aplicar
+    // se corrige el scroll la misma distancia. Resultado: el editor en el que
+    // estás trabajando no se mueve de la pantalla, y el resto se acomoda
+    // alrededor.
+    var antes = boton ? boton.getBoundingClientRect().top : null;
     indice = Math.min(Math.max(Math.max(indice, minimo()) + paso, minimo()), PASOS.length - 1);
     try { localStorage.setItem(CLAVE, String(indice)); } catch (e) { /* ídem */ }
     aplicar();
+    if (antes !== null) {
+      // Leer el rect fuerza a que el navegador ya haya recalculado el layout.
+      var despues = boton.getBoundingClientRect().top;
+      if (despues !== antes) window.scrollBy(0, despues - antes);
+    }
   }
 
   function boton(signo, texto, ayuda) {
@@ -55,7 +69,7 @@
     b.textContent = texto;
     b.title = ayuda;
     b.setAttribute('aria-label', ayuda);
-    b.addEventListener('click', function () { cambiar(signo === 'mas' ? 1 : -1); });
+    b.addEventListener('click', function () { cambiar(signo === 'mas' ? 1 : -1, b); });
     return b;
   }
 

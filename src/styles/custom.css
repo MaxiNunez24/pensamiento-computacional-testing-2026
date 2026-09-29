@@ -1085,6 +1085,14 @@ body.pc-resizing * {
 .zoom-codigo:focus-within {
   opacity: 1;
 }
+/* El escaloncito: el A+ va más abajo que el A−, en diagonal.
+   Salió sin querer —Starlight le pone margin-top a todo hermano que sigue a
+   otro, y acá pegó justo— pero quedó lindo y se queda. Va escrito para que sea
+   una decisión y no una casualidad: si mañana Starlight cambia esa regla, el
+   escalón sigue igual. */
+.zoom-codigo__btn + .zoom-codigo__btn {
+  margin-top: 16px;
+}
 .zoom-codigo__btn {
   /* Tamaño fijo en px a propósito: es el control que cambia el tamaño del
      código, así que no puede cambiar de tamaño con él.
