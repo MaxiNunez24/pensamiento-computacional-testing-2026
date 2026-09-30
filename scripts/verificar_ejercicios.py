@@ -34,6 +34,12 @@ import sys
 import tempfile
 import traceback
 
+# Windows abre la consola en cp1252 y se cae al escribir ✅ o ⛔. Que un emoji
+# salga como "?" es mejor que perder la corrida entera por un adorno.
+# (verificar_render.py ya lo hacía; este se había quedado sin ello.)
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLASES = os.path.join(RAIZ, 'src', 'content', 'docs', 'clases')
 

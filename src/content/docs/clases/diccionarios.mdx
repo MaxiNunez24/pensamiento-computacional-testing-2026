@@ -202,6 +202,16 @@ lista_del_dia = {
     "Mirá el último test: comprueba que la lista quede igual que antes. Ojo con los métodos que <em>de paso</em> agregan la clave que faltaba.",
   ]}
 >
+La lista del día es un diccionario **`{dni: estado}`**: la clave es el DNI y el valor es cómo vino
+(`"P"` presente, `"A"` ausente, `"T"` tarde, `"J"` justificado).
+
+```python
+dia = {"30111222": "P", "28999888": "T", "27888444": "J"}
+
+estado_de(dia, "30111222")   # "P"
+estado_de(dia, "99999999")   # "A"   ← a ese nadie lo marcó
+```
+
 Completá `estado_de(lista_del_dia, dni)`: devuelve cómo vino ese alumno **ese día**.
 
 Si el DNI **no está en la lista**, devolvé `"A"`.

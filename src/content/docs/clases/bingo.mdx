@@ -149,6 +149,14 @@ empate.
 `cartones` es un diccionario `{nombre: carton}`. Completá `jugar_multijugador` para que devuelva una
 **tupla** con la **lista de ganadores** y **en qué bolilla** ganaron.
 
+```python
+cartones = {"Ana": {1, 2}, "Beto": {5, 9}}
+
+jugar_multijugador(cartones, [1, 2, 5, 9])   # (["Ana"], 2)    ← Ana completó en la 2ª bolilla
+jugar_multijugador(cartones, [5, 9, 1, 2])   # (["Beto"], 2)
+jugar_multijugador(cartones, [1, 5])         # ([], None)      ← no ganó nadie
+```
+
 Si se completan varios en la misma bolilla, ganan todos. Si no gana nadie: `([], None)`.
 </EjercicioPython>
 

@@ -235,6 +235,18 @@ solo la primera vez que hay que revisar algo a mano.
     "Ojo con el archivo vacío: si tu código entra al bucle igual, fijate qué pasa cuando no hay ni un renglón.",
   ]}
 >
+En el archivo, cada renglón es `dni,estado`:
+
+```text
+30111222,P
+28999888,T
+```
+
+```python
+cargar_dia("dia.txt")        # {"30111222": "P", "28999888": "T"}
+cargar_dia("no-existe.txt")  # {}
+```
+
 Completá `cargar_dia(ruta)`: devuelve el diccionario `{dni: estado}` que estaba guardado.
 
 **Si el archivo no existe, devolvé `{}`** — sin romper.

@@ -107,6 +107,11 @@ Te faltaron $9000.0 para el objetivo
     "Mirá el test de una sola venta: <code>sobre_promedio</code> da 0, porque una venta no puede superarse a sí misma. ¿Usás mayor o mayor o igual?",
   ]}
 >
+```python
+analizar_ventas([100, 200, 300])
+# {"total": 600, "promedio": 200.0, "mayor": 300, "menor": 100, "sobre_promedio": 1}
+```
+
 Completá `analizar_ventas` para que devuelva un **diccionario** con estas claves:
 
 - `"total"` — la suma
@@ -199,6 +204,11 @@ Completá las tres funciones sobre una agenda con esta forma:
     "Para la más frecuente necesitás saber cuántas veces aparece cada una. ¿Qué patrón usaste para contar apariciones?",
   ]}
 >
+```python
+analizar("hola mundo hola")
+# {"palabras": 3, "unicas": 2, "mas_frecuente": "hola"}
+```
+
 Completá `analizar(texto)` para que devuelva un diccionario con:
 
 - `"palabras"` — cuántas hay en total

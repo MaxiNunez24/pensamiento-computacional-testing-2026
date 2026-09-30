@@ -113,6 +113,12 @@ recuperado["notas"][0]   # 10  ← ahora sí, es un diccionario de verdad
     "De las cuatro funciones del módulo, ¿cuáles son las dos que trabajan directamente con un archivo abierto en vez de con un texto?",
   ]}
 >
+```python
+guardar("ficha.json", {"nombre": "Guada", "edad": 25, "notas": [10, 8]})
+
+cargar("ficha.json")   # {"nombre": "Guada", "edad": 25, "notas": [10, 8]}
+```
+
 Completá las dos funciones: `guardar` escribe `datos` como JSON en `ruta`, y `cargar` lo lee y
 devuelve la estructura de Python.
 
@@ -148,6 +154,15 @@ Devolver una estructura vacía es lo que hace que el programa arranque bien la p
     "El último test guarda un nombre que ya estaba y espera que se actualice sin duplicarse. ¿Qué hace un diccionario cuando le asignás una clave que ya tenía?",
   ]}
 >
+La agenda se guarda como **`{nombre: teléfono}`**:
+
+```python
+agregar_contacto("agenda.json", "Guada", "1122334455")
+agregar_contacto("agenda.json", "Brandon", "1199887766")
+
+# agenda.json queda {"Guada": "1122334455", "Brandon": "1199887766"}
+```
+
 Completá `agregar_contacto` para que sume un contacto a la agenda guardada en `ruta`, **sin perder
 los que ya estaban**.
 
@@ -247,6 +262,14 @@ todavía más difícil de ver.
     "Si abrís el archivo en modo escritura antes de leerlo, ya lo borraste. Leé primero, cerrá, y recién ahí escribí.",
   ]}
 >
+El archivo guarda **todas las fechas**, y adentro de cada una la lista de ese día:
+
+```python
+# asistencias.json, después de cuatro marcas
+{"2026-09-16": {"30111222": "P", "28999888": "T"},
+ "2026-09-18": {"30111222": "A"}}
+```
+
 Completá `marcar_y_guardar(ruta, fecha, dni, estado)`: deja anotada esa marca en el archivo, **sin
 perder nada de lo que ya estaba**.
 
@@ -277,8 +300,23 @@ clase del **30/10** es esa: por qué esto deja de alcanzar y qué se usa en su l
     "El último test importa el mismo archivo dos veces seguidas y espera 0 la segunda. Es lo que pasa de verdad cuando alguien baja el formulario y lo importa sin acordarse de que ya lo había hecho.",
   ]}
 >
-Los inscriptos llegan de un formulario web, en un JSON aparte. Completá
-`importar(ruta_curso, ruta_nuevos)`:
+Los inscriptos llegan de un formulario web, en un JSON aparte. Son **dos archivos con forma
+distinta**: el del curso tiene todo adentro, y el del formulario es una lista suelta.
+
+```python
+# curso.json
+{"nombre": "PC",
+ "alumnos": [{"dni": "1", "apellido": "Perez", "nombre": "Ana"}],
+ "asistencia": {"2026-09-16": {"1": "P"}}}
+
+# nuevos.json — lo que manda el formulario
+[{"dni": "1", "apellido": "Perez", "nombre": "Ana Maria"},
+ {"dni": "2", "apellido": "Gomez", "nombre": "Beto"}]
+
+importar("curso.json", "nuevos.json")   # 1   ← el DNI 1 ya estaba: entra solo el 2
+```
+
+Completá `importar(ruta_curso, ruta_nuevos)`:
 
 - agrega al curso **los que no estén ya** (por DNI),
 - vuelve a guardar el curso,
@@ -323,6 +361,16 @@ Si el archivo no existe, devolvé los defaults tal cual.
     "La primera vez no hay archivo y la página nunca fue visitada. Son dos casos distintos: ¿cómo resolvés cada uno sin que rompa?",
   ]}
 >
+El archivo es un **`{página: cuántas visitas}`**:
+
+```python
+sumar_visita("stats.json", "inicio")
+sumar_visita("stats.json", "inicio")
+sumar_visita("stats.json", "contacto")
+
+# stats.json queda {"inicio": 2, "contacto": 1}
+```
+
 Completá `sumar_visita` para que lleve la cuenta de visitas por página en un archivo JSON.
 
 Cada llamada suma 1 a esa página, **conservando** lo que ya había.

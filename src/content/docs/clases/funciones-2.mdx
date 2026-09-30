@@ -282,6 +282,15 @@ porque el día normal es "vinieron casi todos".
     "Fijate que el primer test llama a <code>marcar</code> con dos argumentos y el segundo con tres. La misma función tiene que aceptar las dos formas.",
   ]}
 >
+`dia` es la lista del día, el diccionario **`{dni: estado}`** de la clase de diccionarios. La
+función lo modifica: no devuelve nada.
+
+```python
+dia = {}
+marcar(dia, "30111222")         # dia queda {"30111222": "P"}
+marcar(dia, "28999888", "A")    # dia queda {"30111222": "P", "28999888": "A"}
+```
+
 Completá `marcar(dia, dni, estado)` para que **el estado sea opcional**: si no se lo pasan, vale
 `"P"`.
 
