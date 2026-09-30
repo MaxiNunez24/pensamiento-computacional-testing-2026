@@ -273,16 +273,29 @@ los días en que todo salió bien**. Un contador que a veces no está es peor qu
   starter={`def marcas_de(mes, dni):\n    pass`}
   tests={`mes = {\n    "2026-09-04": {"30111222": "P", "28999888": "A"},\n    "2026-09-02": {"30111222": "T"},\n    "2026-09-09": {"30111222": "P", "28999888": "P"},\n}\nassert marcas_de(mes, "30111222") == ["T", "P", "P"], f'esperaba ["T", "P", "P"] (en orden de fecha) y salió {marcas_de(mes, "30111222")!r}'\nassert marcas_de(mes, "28999888") == ["A", "P"], "el día en que no estaba en la lista no suma marca"\nassert marcas_de(mes, "99999999") == [], "un alumno que no aparece nunca no tiene marcas"\nassert marcas_de({}, "30111222") == [], "un mes sin cargar todavía"\nprint("¡Mes OK!")`}
   pistas={[
-    "El mes es un diccionario de diccionarios: la clave de afuera es la fecha, y el valor es la lista de ese día.",
+    "Recorré las fechas del mes y, en cada una, fijate si ese DNI está en la lista de ese día: <code>mes[fecha]</code> es un diccionario <code>{dni: estado}</code>.",
     "Los días están cargados en desorden a propósito. Un diccionario los recuerda en el orden en que se agregaron, no por fecha: ¿cómo recorrés las claves ordenadas?",
     "Con fechas escritas <code>2026-09-04</code>, ordenarlas como texto ya las ordena bien. Por eso el sistema las guarda así y no como <code>4/9/2026</code>.",
   ]}
 >
-La asistencia de un mes entero es un **diccionario de diccionarios**: para cada fecha, la lista de
-ese día.
+La asistencia de un mes entero es un **diccionario de diccionarios**: la clave es la fecha, y el
+valor es **la lista de ese día**, que es el `{dni: estado}` de los ejercicios de arriba.
+
+```python
+mes = {
+    "2026-09-04": {"30111222": "P", "28999888": "A"},
+    "2026-09-02": {"30111222": "T"},
+    "2026-09-09": {"30111222": "P", "28999888": "P"},
+}
+
+marcas_de(mes, "30111222")   # ["T", "P", "P"]  ← el 2, el 4 y el 9
+marcas_de(mes, "28999888")   # ["A", "P"]       ← el 2 no vino a marcar: no suma
+```
 
 Completá `marcas_de(mes, dni)`: devuelve la lista de estados de ese alumno, **en orden de fecha**.
 Los días en que no fue marcado no suman nada.
+
+Ojo con las fechas: **están cargadas en desorden**, como en la vida real.
 
 Es lo que después va a comer `porcentaje_asistencia()`.
 </EjercicioPython>
