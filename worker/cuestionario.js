@@ -183,11 +183,26 @@ export default {
     //   wrangler kv key put --binding=CUESTIONARIO casos --path contenido-privado/casos.json --remote
     // (o pegándolo en el panel de Cloudflare, en el KV, con la clave `casos`).
 
+    // Dos claves distintas abren esta página, y es a propósito:
+    //
+    //   CLAVE_DOCENTE → la del profe. Abre esto Y las respuestas del
+    //                   cuestionario, donde cada persona del CFP contó cómo
+    //                   trabaja. Eso se prometió que no sale del curso.
+    //   CLAVE_CASOS   → la que se le da al equipo directivo para que revise el
+    //                   mapa por su cuenta. Abre esta página y nada más.
+    //
+    // Si fuera una sola, darles la clave a los directivos sería darles también
+    // las respuestas del cuestionario. Son dos permisos distintos, entonces son
+    // dos claves distintas.
+
     if (ruta === '/casos' && request.method === 'GET') {
-      if (!env.CLAVE_DOCENTE) {
-        return json({ error: 'sin CLAVE_DOCENTE configurada' }, cabeceras, 503);
+      if (!env.CLAVE_DOCENTE && !env.CLAVE_CASOS) {
+        return json({ error: 'sin claves configuradas' }, cabeceras, 503);
       }
-      if (request.headers.get('X-Clave') !== env.CLAVE_DOCENTE) {
+      const clave = request.headers.get('X-Clave');
+      const vale = (env.CLAVE_DOCENTE && clave === env.CLAVE_DOCENTE)
+                || (env.CLAVE_CASOS && clave === env.CLAVE_CASOS);
+      if (!vale) {
         return json({ error: 'no autorizado' }, cabeceras, 401);
       }
       const guardado = await env.CUESTIONARIO.get('casos');

@@ -115,7 +115,14 @@ r = await pedir('/casos', { headers: { 'X-Clave': CLAVE } });
 ok(r.status === 401, 'la clave del curso no alcanza: va la del profe');
 
 r = await pedir('/casos', { headers: { 'X-Clave': SECRETO } }, { CUESTIONARIO: almacen });
-ok(r.status === 503, 'sin CLAVE_DOCENTE configurada falla cerrado');
+ok(r.status === 503, 'sin ninguna clave configurada falla cerrado');
+
+// La clave de los directivos abre los casos y NADA MAS. Si abriera tambien las
+// respuestas, darsela seria romper lo que les prometimos en el cuestionario.
+const CASOS = 'la-clave-de-los-directivos';
+const env2 = { CUESTIONARIO: almacen, CLAVE_DOCENTE: SECRETO, CLAVE_CASOS: CASOS };
+r = await pedir('/respuestas', { headers: { 'X-Clave': CASOS } }, env2);
+ok(r.status === 401, 'la clave de los directivos NO abre las respuestas del cuestionario');
 
 r = await pedir('/casos', { headers: { 'X-Clave': SECRETO } });
 ok(r.status === 404, 'si el contenido todavia no se cargo, 404 y no un vacio silencioso');
@@ -125,6 +132,11 @@ r = await pedir('/casos', { headers: { 'X-Clave': SECRETO } });
 ok(r.status === 200, 'con el secreto del profe si');
 d = await r.json();
 ok(d.casos[0].nombre === 'Pasar lista', 'y llega el contenido tal cual se guardo');
+
+r = await pedir('/casos', { headers: { 'X-Clave': CASOS } }, env2);
+ok(r.status === 200, 'y con la clave de los directivos tambien');
+r = await pedir('/casos', { headers: { 'X-Clave': 'ni-una-ni-otra' } }, env2);
+ok(r.status === 401, 'pero cualquier otra sigue sin entrar');
 
 // ── ORIGEN ───────────────────────────────────────────────────────────
 r = await mod.default.fetch(new Request('https://x/cuantas', { headers: { Origin: 'https://malo.com' } }), env);
