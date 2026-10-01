@@ -239,7 +239,7 @@
 | Vie 18/9 | **Repaso de POO I** e **introducción a POO II**. Tarea: leer la clase de POO II y la del **bot del SiGeS** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/poo-2/) |
 | Mié 23/9 | **Repaso de POO I** e **introducción a POO II**. Y una reunión breve con el **equipo directivo**: aprobaron el mapa de cómo trabaja cada uno y dejaron varias ideas. Quedó corta de tiempo, así que la próxima se hace **cuando haya más del sistema para mostrar** | [🗺️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/casos/) |
 | Vie 25/9 | 🚫 Sin clases (**Nerdearla**) | |
-| Mié 30/9 | **POO II**: se cerró el tema. Tarea: leer la clase del **bot del SiGeS** y la de **Excepciones**. **Clase grabada en video** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/poo-2/) |
+| Mié 30/9 | **Cierre de POO I y II**, y una retrospectiva de lo que se vio en **Nerdearla**. Tarea: leer la clase del **bot del SiGeS** y la de **Excepciones**. **Clase grabada en video** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/poo-2/) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.
