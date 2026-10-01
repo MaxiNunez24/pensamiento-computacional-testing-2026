@@ -259,7 +259,7 @@ Checklist:
 - [ ] `repositorio_sqlite.py` con las mismas funciones que el de JSON
 - [ ] Correr **los mismos tests** contra los dos. Si pasan, la migración está bien
 - [ ] Script `importar_json.py` que lea los `.json` y llene la base (se corre una vez)
-- [ ] `PRAGMA journal_mode=WAL` y `PRAGMA foreign_keys=ON` al abrir
+- [x] `PRAGMA journal_mode=WAL` y `PRAGMA foreign_keys=ON` al abrir — hecho el 1/10 en `conectar()`, en las tres copias de `repositorio.py`
 - [ ] **Guardar los `.json` viejos**, no borrarlos. Son la copia de seguridad de la migración
 - [ ] Copia automática del `.db` a un pendrive y **una copia fuera del edificio** (§12.2)
 

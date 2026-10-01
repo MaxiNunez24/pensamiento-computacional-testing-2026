@@ -52,6 +52,13 @@ ESTADOS = ("P", "A", "T")
 def conectar(archivo="asistencias.db"):
     """Abre la base (si no existe, la crea) y se asegura de que estén las tablas."""
     con = sqlite3.connect(archivo)
+    # WAL: el que lee no espera al que escribe. Es una sola línea, queda
+    # guardada en el archivo y no se vuelve a tocar. Con varias personas
+    # marcando a la vez, cada marca pasa de 6,8 ms a 2,3 ms.
+    con.execute("PRAGMA journal_mode=WAL")
+    # Que la base haga respetar las relaciones entre tablas. SQLite viene con
+    # esto apagado, por compatibilidad con programas de hace veinte años.
+    con.execute("PRAGMA foreign_keys=ON")
     crear_tablas(con)
     return con
 
@@ -63,7 +70,14 @@ def crear_tablas(con):
     )
     # Una fila por alumno y por día. La fecha va como texto "2026-10-02": así,
     # ordenada alfabéticamente, también queda ordenada por fecha.
-    con.execute("CREATE TABLE IF NOT EXISTS marcas (fecha TEXT, dni TEXT, estado TEXT)")
+    # marcado_por y marcado_en: quién puso la marca y cuándo. El día que una
+    # marca se discuta, es lo único que lo puede contestar. La fecha y hora la
+    # pone la base sola: así todas las marcas se miden con el mismo reloj.
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS marcas "
+        "(fecha TEXT, dni TEXT, estado TEXT, marcado_por TEXT, "
+        "marcado_en TEXT DEFAULT (datetime('now', 'localtime')))"
+    )
     con.commit()
 
 
@@ -103,8 +117,11 @@ def listar_alumnos(con):
 #    plataforma te dé ✓, pegá tu función en lugar de la que está.
 # ---------------------------------------------------------------------------
 
-def marcar(con, fecha, dni, estado):
-    """Anota la marca de un alumno en un día. Si ya tenía una, la corrige."""
+def marcar(con, fecha, dni, estado, quien="consola"):
+    """Anota la marca de un alumno en un día. Si ya tenía una, la corrige.
+
+    En quien va el nombre de quien la está poniendo, y queda guardado.
+    """
     # ✏️ Ejercicio "Marcar la asistencia". Acordate: en tu compu, después de
     #    escribir en la base va con.commit().
     raise NotImplementedError("Todavía falta: es el ejercicio 'Marcar la asistencia'")
@@ -220,6 +237,10 @@ formato de siempre, el `02/11` quedaría antes que el `15/10`.
 Y una regla que salió de preceptoría: **las marcas se corrigen**. Si alguien marcó presente al que
 llegó tarde, se cambia. Pero tiene que quedar **una sola marca** por alumno y por día.
 
+Y si se corrigen, hay que poder saber **quién la puso y cuándo**. No es desconfianza: es que el día
+que un alumno diga "yo vine", la respuesta no puede ser "la computadora dice que no". Por eso la
+tabla `marcas` tiene dos columnas más, `marcado_por` y `marcado_en`.
+
 <EjercicioPython
   titulo="Marcar la asistencia"
   fundamental
@@ -229,22 +250,31 @@ llegó tarde, se cambia. Pero tiene que quedar **una sola marca** por alumno y p
 
 con = conectar(":memory:")
 `}
-  starter={`def marcar(con, fecha, dni, estado):
+  starter={`def marcar(con, fecha, dni, estado, quien="consola"):
     # 1. Si el estado no está en ESTADOS, levantá ValueError.
     # 2. Si ese alumno ya tiene una marca ese día, corregila (UPDATE).
     # 3. Si no, agregala (INSERT).
+    # En los dos casos, en la columna marcado_por va quien.
     pass
 `}
   tests={`def marcas(c):
     return c.execute("SELECT fecha, dni, estado FROM marcas ORDER BY fecha, dni").fetchall()
+def quien_puso(c, fecha, dni):
+    return c.execute("SELECT marcado_por FROM marcas WHERE fecha = ? AND dni = ?", (fecha, dni)).fetchone()[0]
 c = conectar(":memory:")
 marcar(c, "2026-10-02", "30111222", "P")
 r = marcas(c)
 assert r == [("2026-10-02", "30111222", "P")], f"después de marcar una vez, en la tabla quedó {r!r}"
-marcar(c, "2026-10-02", "30111222", "T")
+q = quien_puso(c, "2026-10-02", "30111222")
+pista = f"en marcado_por tiene que quedar quién puso la marca. Nadie pasó un nombre, así que vale el valor por defecto del parámetro ('consola'), y quedó {q!r}. Agregá la columna marcado_por al INSERT"
+assert q == "consola", pista
+marcar(c, "2026-10-02", "30111222", "T", "marisa")
 r = marcas(c)
 pista = f"la preceptora se equivocó y lo corrigió a T: tiene que quedar UNA sola marca, con T, y quedó {r!r}. Antes de insertar, buscá si ya hay una marca de ese DNI en esa fecha"
 assert r == [("2026-10-02", "30111222", "T")], pista
+q = quien_puso(c, "2026-10-02", "30111222")
+pista = f"la corrección la hizo marisa, así que en marcado_por tiene que quedar 'marisa', y quedó {q!r}. El UPDATE también tiene que actualizar marcado_por: si no, queda el nombre del que la puso mal"
+assert q == "marisa", pista
 marcar(c, "2026-10-03", "30111222", "A")
 assert len(marcas(c)) == 2, "otro día es otra marca: la del 3/10 no pisa la del 2/10"
 marcar(c, "2026-10-02", "28999888", "P")
@@ -257,16 +287,21 @@ else:
     raise AssertionError("con el estado X tenía que levantar ValueError: solo valen P, A o T, que están en ESTADOS")
 r = [m for m in marcas(c) if m[:2] == ("2026-10-02", "30111222")]
 assert r == [("2026-10-02", "30111222", "T")], f"el estado inválido no tenía que tocar la marca que ya estaba, y quedó {r!r}. Revisá el estado ANTES de escribir en la base"
-print("¡Marcas OK! Una por alumno y por día, y se puede corregir.")
+print("¡Marcas OK! Una por alumno y por día, se puede corregir, y queda quién la puso.")
 `}
   pistas={[
     'Lo primero, antes de tocar la base: <code>if estado not in ESTADOS:</code> y ahí el <code>raise ValueError(...)</code>, como en la clase de Excepciones.',
     'Para saber si ya hay una marca: <code>SELECT estado FROM marcas WHERE fecha = ? AND dni = ?</code>, con <code>fetchone()</code>. Si da <code>None</code>, no había.',
     'Si había, <code>UPDATE marcas SET estado = ? WHERE fecha = ? AND dni = ?</code>. Si no, el <code>INSERT</code>. Los valores, siempre con <code>?</code>.',
+    'Para <code>marcado_por</code>: en el <code>INSERT</code> es una columna y un <code>?</code> más; en el <code>UPDATE</code>, un <code>SET marcado_por = ?</code> más. Ojo con el orden de los valores en la tupla.',
   ]}
 >
-Completá `marcar(con, fecha, dni, estado)`: que anote la marca, o que la **corrija** si ese alumno
-ya tenía una ese día. Y que un estado que no sea `P`, `A` o `T` **no llegue a la base**.
+Completá `marcar(con, fecha, dni, estado, quien)`: que anote la marca, o que la **corrija** si ese
+alumno ya tenía una ese día. Y que un estado que no sea `P`, `A` o `T` **no llegue a la base**.
+
+En **`marcado_por`** va `quien`, que es el nombre de quien la está poniendo. La fecha y hora
+(`marcado_en`) no las escribís vos: la tabla las pone sola. Pero cuando **corregís** una marca,
+`marcado_por` tiene que pasar a ser el que corrigió, no el que se equivocó.
 </EjercicioPython>
 
 ## La lista del día
@@ -286,7 +321,7 @@ from alumno import Alumno
 con = conectar(":memory:")
 guardar_alumno(con, Alumno("30111222", "Perez", "Ana"))
 guardar_alumno(con, Alumno("28999888", "Gomez", "Beto"))
-con.execute("INSERT INTO marcas VALUES ('2026-10-02', '30111222', 'P')")
+con.execute("INSERT INTO marcas (fecha, dni, estado) VALUES ('2026-10-02', '30111222', 'P')")
 `}
   starter={`def lista_del_dia(con, fecha):
     # Una tupla (alumno, estado) por cada alumno activo, en orden de apellido.
@@ -303,9 +338,9 @@ for alumno, estado in lista_del_dia(con, "2026-10-02"):
 for d, a, n in [("30111222", "Perez", "Ana"), ("28999888", "Gomez", "Beto"), ("40000004", "Paz", "Mateo")]:
     guardar_alumno(c, Alumno(d, a, n))
 c.execute("UPDATE alumnos SET activo = 0 WHERE dni = '40000004'")
-c.execute("INSERT INTO marcas VALUES ('2026-10-02', '30111222', 'P')")
-c.execute("INSERT INTO marcas VALUES ('2026-10-02', '28999888', 'T')")
-c.execute("INSERT INTO marcas VALUES ('2026-10-03', '30111222', 'A')")
+c.execute("INSERT INTO marcas (fecha, dni, estado) VALUES ('2026-10-02', '30111222', 'P')")
+c.execute("INSERT INTO marcas (fecha, dni, estado) VALUES ('2026-10-02', '28999888', 'T')")
+c.execute("INSERT INTO marcas (fecha, dni, estado) VALUES ('2026-10-03', '30111222', 'A')")
 r = lista_del_dia(c, "2026-10-02")
 assert isinstance(r, list) and r, "tiene que devolver una lista con los alumnos del día"
 assert all(isinstance(x, tuple) and len(x) == 2 for x in r), "cada elemento es una tupla de dos: (alumno, estado)"
