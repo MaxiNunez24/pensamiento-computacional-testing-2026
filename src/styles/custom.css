@@ -3307,6 +3307,13 @@ body.pc-resizing * {
   margin: 0 0 1.5rem; padding-top: 0.2rem;
 }
 .resp-dir__estado { font-size: 0.9rem; color: var(--sl-color-text-accent); }
+.resp-dir__mail {
+  flex-basis: 100%; margin: 0.2rem 0 0;
+  font-size: 0.85rem; color: var(--sl-color-gray-3);
+}
+/* Las de "Si sobra tiempo": son opcionales, así que ocupan menos. */
+.resp-dir--chico { margin: 0.4rem 0 0.9rem; }
+.resp-dir--chico .resp-dir__et { font-weight: 400; font-size: 0.8rem; }
 /* El link del mail se ve como botón, pero sigue siendo un link: se abre con el
    programa de correo de cada uno, sin ventanas emergentes que el navegador frene. */
 .resp-dir__barra a.puerta__btn { display: inline-flex; align-items: center; text-decoration: none; }

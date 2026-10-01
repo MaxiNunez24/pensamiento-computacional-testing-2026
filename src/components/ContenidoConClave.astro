@@ -115,19 +115,44 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
         });
       });
 
-      // La barra para que las respuestas vuelvan: copiar y escribir el mail.
+      // La barra para que las respuestas vuelvan.
+      //
+      // El mailto ya trae las respuestas adentro, así que con un clic se abre
+      // el correo con todo escrito. Pero NO se puede confiar solo en eso: si
+      // la máquina no tiene programa de correo configurado —que es lo normal
+      // en una PC de oficina— el clic no hace absolutamente nada y la persona
+      // se queda mirando la pantalla. Por eso la dirección está también a la
+      // vista, y el botón de copiar es el camino principal.
       const email = (raiz as HTMLElement).dataset.email || '';
       const barra = document.createElement('div');
       barra.className = 'resp-dir__barra';
       barra.innerHTML =
         '<button type="button" class="puerta__btn puerta__btn--ok" data-copiar-resp>📋 Copiar mis respuestas</button>' +
-        '<a class="puerta__btn" data-mail href="mailto:' + email +
-        '?subject=' + encodeURIComponent('Correcciones — Cómo trabaja cada uno (CFP 401)') +
-        '">✉️ Escribirle al profe</a>' +
-        '<span class="resp-dir__estado" data-estado-resp></span>';
+        '<a class="puerta__btn" data-mail href="#">✉️ Abrir mi correo</a>' +
+        '<span class="resp-dir__estado" data-estado-resp></span>' +
+        '<p class="resp-dir__mail">Si el botón no abre nada, tu computadora no tiene un programa de ' +
+        'correo configurado: copiá las respuestas y mandalas a <a href="mailto:' + email + '">' +
+        email + '</a></p>';
       campos[campos.length - 1].closest('label')!.after(barra);
 
       const estado = barra.querySelector('[data-estado-resp]') as HTMLElement;
+      const enlace = barra.querySelector('[data-mail]') as HTMLAnchorElement;
+      const asunto = encodeURIComponent('Correcciones — Cómo trabaja cada uno (CFP 401)');
+
+      /* El cuerpo del mailto se arma con lo contestado hasta ese momento. Va
+         recortado: hay programas de correo que cortan las URL largas, y una
+         respuesta cortada por la mitad es peor que ninguna. */
+      const actualizarMail = () => {
+        const texto = textoDeRespuestas();
+        const cuerpo = texto.length > 1500
+          ? texto.slice(0, 1500) + '\n\n[…] (quedó cortado: pegá el resto con 📋 Copiar mis respuestas)'
+          : texto;
+        enlace.href = 'mailto:' + email + '?subject=' + asunto +
+                      (cuerpo ? '&body=' + encodeURIComponent(cuerpo) : '');
+      };
+      actualizarMail();
+      campos.forEach((c) => c.addEventListener('input', actualizarMail));
+
       barra.querySelector('[data-copiar-resp]')!.addEventListener('click', async () => {
         const texto = textoDeRespuestas();
         if (!texto) { estado.textContent = 'Todavía no escribiste ninguna respuesta.'; return; }
@@ -140,6 +165,38 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
       });
     }
 
+    /* ── El índice de la derecha ────────────────────────────────────────
+       Starlight lo arma al cargar la página, cuando acá todavía no hay nada:
+       por eso quedaba solo "Sinopsis". Se completa con los títulos que trae el
+       contenido, para poder saltar directo a las preguntas o a las decisiones
+       abiertas en vez de bajar a dedo por veintitantos casos. */
+    function armarIndice() {
+      const titulos = [...document.querySelectorAll('.sl-markdown-content h2[id], .sl-markdown-content h3[id]')]
+        .filter((h) => (h as HTMLElement).innerText.trim());
+      document.querySelectorAll('starlight-toc, mobile-starlight-toc').forEach((toc) => {
+        const lista = toc.querySelector('ul');
+        if (!lista) return;
+        lista.querySelectorAll('[data-del-contenido]').forEach((x) => x.remove());
+        const modelo = lista.querySelector('li');
+        titulos.forEach((titulo) => {
+          const prof = titulo.tagName === 'H3' ? 1 : 0;
+          const li = modelo
+            ? (modelo.cloneNode(true) as HTMLElement)
+            : document.createElement('li');
+          li.dataset.delContenido = '';
+          li.style.setProperty('--depth', String(prof));
+          const a = li.querySelector('a') || document.createElement('a');
+          a.setAttribute('href', '#' + titulo.id);
+          a.style.setProperty('--depth', String(prof));
+          const span = a.querySelector('span');
+          const texto = (titulo as HTMLElement).innerText.replace(/\s*Sección titulada.*$/s, '').trim();
+          if (span) span.textContent = texto; else a.textContent = texto;
+          if (!li.contains(a)) li.appendChild(a);
+          lista.appendChild(li);
+        });
+      });
+    }
+
     function repartir(datos: any) {
       const h = huecos();
       (['antes', 'entre', 'despues'] as const).forEach((donde) => {
@@ -147,6 +204,7 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
         if (caja) caja.innerHTML = (datos.html && datos.html[donde]) || '';
       });
       prepararRespuestas();
+      armarIndice();
       document.querySelector('[data-circuito]')
         ?.dispatchEvent(new CustomEvent('circuito:datos', { detail: datos.pasos || [] }));
       document.querySelector('[data-casos]')
@@ -156,6 +214,7 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
     function vaciar() {
       const h = huecos();
       Object.values(h).forEach((caja) => { if (caja) caja.innerHTML = ''; });
+      document.querySelectorAll('[data-del-contenido]').forEach((x) => x.remove());
       document.querySelector('[data-circuito]')
         ?.dispatchEvent(new CustomEvent('circuito:datos', { detail: [] }));
       document.querySelector('[data-casos]')
