@@ -869,6 +869,22 @@ body.pc-resizing * {
   font-size: 0.8rem; line-height: 1.45; white-space: pre;
 }
 
+/* Las tres formas de mandarlo: Discord, Gmail o las dos. */
+.ejercicio__envio-tit { margin: 0 0 0.5rem; font-weight: 600; }
+.ejercicio__envio-opciones {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;
+}
+.ejercicio__envio-opciones a.ejercicio__btn {
+  display: inline-flex; align-items: center; text-decoration: none;
+}
+.ejercicio__envio-nota {
+  margin: 0 0 0.6rem; font-size: 0.85rem; line-height: 1.5; color: var(--sl-color-gray-3);
+}
+.ejercicio__envio-estado {
+  display: inline-block; margin-left: 0.6rem;
+  font-size: 0.85rem; color: var(--sl-color-text-accent);
+}
+
 /* Plan B del envío: aparece recién después de tocar "Enviar a mi profe". */
 .ejercicio__envio {
   margin-top: 0.7rem;

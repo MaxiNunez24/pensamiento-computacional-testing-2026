@@ -319,6 +319,8 @@ export function conectarEnvio(
   if (!btnEnviar) return;
   const cajaEnvio = el.querySelector<HTMLElement>('[data-envio]');
   let ultimoMensaje = '';
+  /* Se arma en cada envío, con los datos de ESE intento. */
+  let publicarEnDiscord: (() => Promise<void>) | null = null;
 
   btnEnviar.addEventListener('click', () => {
     const nombre = obtenerNombreAlumno();
@@ -349,38 +351,63 @@ export function conectarEnvio(
       `${getCode()}\n`;
     ultimoMensaje = `Para: ${EMAIL_PROFE}\nAsunto: ${asunto}\n\n${cuerpo}`;
 
-    // Abre el correo en una pestaña aparte, para no sacar al alumno de la
-    // lección: si navegáramos en la misma, al volver perdería el scroll y la
-    // sensación es la de que "se fue" del ejercicio.
-    const porMail = () => {
-      const mailto =
-        `mailto:${EMAIL_PROFE}` +
-        `?subject=${encodeURIComponent(asunto)}` +
-        `&body=${encodeURIComponent(cuerpo)}`;
-      window.open(mailto, '_blank', 'noopener');
-      if (cajaEnvio) cajaEnvio.hidden = false;
-    };
+    // ── Elegir por dónde mandarlo ────────────────────────────────────
+    //
+    // Antes se mandaba por los dos canales SIEMPRE, sin preguntar: se abría el
+    // correo solo y además se publicaba en Discord. Dos problemas: al que usa
+    // Discord le aparecía una pestaña de correo que no pidió, y al que no tiene
+    // programa de correo configurado no le pasaba nada y no entendía por qué.
+    //
+    // Ahora elige. Y el correo es Gmail por link, no `mailto:`, porque Gmail
+    // anda con solo estar logueado en el navegador — que es el caso de las
+    // computadoras del CFP, donde `mailto:` no abre nada.
+    //
+    // Importante: cada botón abre su pestaña en SU PROPIO clic. Los navegadores
+    // solo dejan abrir pestañas durante el gesto del usuario, así que esto no se
+    // puede hacer después de esperar una respuesta del Worker.
+    if (!cajaEnvio) return;
 
-    // Se manda por los DOS canales siempre: Discord para que quede registro
-    // público (y que a otro alumno con la misma duda le sirva), y el mail para
-    // que al profe le entre la notificación sí o sí aunque el Worker esté caído.
-    if (!WORKER_CONSULTAS) {
-      porMail();
-      return;
-    }
+    // El cuerpo recortado para el link: el código puede ser largo y las URL
+    // tienen tope. Si no entra, queda el botón de copiar, que no tiene límite.
+    const cuerpoCorto = cuerpo.length > 1500
+      ? cuerpo.slice(0, 1500) + '\n\n[…] (cortado: usá 📋 Copiar el mensaje y pegalo acá)'
+      : cuerpo;
+    const gmail =
+      'https://mail.google.com/mail/?view=cm&fs=1' +
+      `&to=${encodeURIComponent(EMAIL_PROFE)}` +
+      `&su=${encodeURIComponent(asunto)}` +
+      `&body=${encodeURIComponent(cuerpoCorto)}`;
+    const mailto =
+      `mailto:${EMAIL_PROFE}` +
+      `?subject=${encodeURIComponent(asunto)}` +
+      `&body=${encodeURIComponent(cuerpoCorto)}`;
 
-    // El mail se abre ACÁ, en el mismo tick del click. Los navegadores solo
-    // dejan abrir pestañas mientras dura la "activación por gesto del usuario";
-    // si esperáramos a que responda el Worker, el window.open caería fuera de
-    // esa ventana y el bloqueador de pop-ups se lo comería. Y como ahora abre en
-    // una pestaña aparte, la página no navega: el fetch de abajo sigue vivo.
-    porMail();
+    cajaEnvio.hidden = false;
+    cajaEnvio.innerHTML =
+      '<p class="ejercicio__envio-tit">¿Por dónde se lo mandás?</p>' +
+      '<div class="ejercicio__envio-opciones">' +
+      (WORKER_CONSULTAS
+        ? '<button type="button" class="ejercicio__btn" data-por="discord">💬 Discord</button>'
+        : '') +
+      `<a class="ejercicio__btn" data-por="gmail" href="${gmail}" target="_blank" rel="noopener">✉️ Gmail</a>` +
+      (WORKER_CONSULTAS
+        ? `<a class="ejercicio__btn ejercicio__btn--ok" data-por="ambas" href="${gmail}" target="_blank" rel="noopener">📨 Las dos</a>`
+        : '') +
+      '</div>' +
+      '<p class="ejercicio__envio-nota">' +
+      'En <strong>#Consultas</strong> de Discord lo ve el profe y además le sirve a otro que tenga ' +
+      'la misma duda. Por mail le llega a él solo.<br>' +
+      `¿Usás otro correo? <a href="${mailto}">Abrir el programa de correo de esta computadora</a>.` +
+      '</p>' +
+      '<button type="button" class="ejercicio__btn" data-copiar-envio>📋 Copiar el mensaje</button>' +
+      '<span class="ejercicio__envio-estado" data-envio-estado role="status"></span>';
+    cajaEnvio.scrollIntoView({ block: 'nearest' });
 
-    const original = btnEnviar.textContent;
-    btnEnviar.disabled = true;
-    btnEnviar.textContent = '⏳ Enviando…';
-    void (async () => {
-      let aDiscord = false;
+    const estado = cajaEnvio.querySelector<HTMLElement>('[data-envio-estado]');
+
+    publicarEnDiscord = async () => {
+      if (!estado) return;
+      estado.textContent = '⏳ Publicando en Discord…';
       try {
         const r = await fetch(WORKER_CONSULTAS, {
           method: 'POST',
@@ -402,30 +429,37 @@ export function conectarEnvio(
         if (!r.ok) throw new Error(String(r.status));
         const respuesta = await r.json().catch(() => null);
         if (!respuesta?.ok) throw new Error('respuesta inesperada');
-        aDiscord = true;
+        estado.textContent = '✓ Publicado en #Consultas';
       } catch {
-        aDiscord = false;
+        estado.textContent = '⚠️ Discord no respondió. Mandalo por Gmail o copiá el mensaje.';
       }
+    };
 
-      btnEnviar.textContent = aDiscord
-        ? '✓ Publicado en Discord'
-        : '⚠️ Discord no respondió — mandalo por mail';
-      btnEnviar.disabled = false;
-      setTimeout(() => { btnEnviar.textContent = original; }, 6000);
-    })();
   });
 
-  const btnCopiar = el.querySelector<HTMLButtonElement>('[data-copiar-envio]');
-  btnCopiar?.addEventListener('click', async () => {
-    if (!ultimoMensaje) return;
-    const original = btnCopiar.textContent;
-    try {
-      await navigator.clipboard.writeText(ultimoMensaje);
-      btnCopiar.textContent = '✓ ¡Copiado! Pegalo en Discord';
-    } catch {
-      btnCopiar.textContent = '✗ No se pudo copiar — seleccioná el código a mano';
+  /* Un solo escuchador para toda la caja, puesto UNA vez. Los botones se
+     vuelven a dibujar en cada envío —cambian los links, que llevan el mensaje
+     adentro—, así que engancharlos uno por uno sumaría un escuchador nuevo en
+     cada clic y el envío se duplicaría. */
+  cajaEnvio?.addEventListener('click', (ev) => {
+    const boton = (ev.target as HTMLElement).closest<HTMLElement>('[data-por], [data-copiar-envio]');
+    if (!boton) return;
+    const por = boton.dataset.por;
+    const estado = cajaEnvio.querySelector<HTMLElement>('[data-envio-estado]');
+    if ((por === 'discord' || por === 'ambas') && publicarEnDiscord) void publicarEnDiscord();
+    if (por === 'gmail' && estado) estado.textContent = 'Se abrió Gmail en otra pestaña.';
+    if (boton.hasAttribute('data-copiar-envio')) {
+      void (async () => {
+        const original = boton.textContent;
+        try {
+          await navigator.clipboard.writeText(ultimoMensaje);
+          boton.textContent = '✓ ¡Copiado! Pegalo donde quieras';
+        } catch {
+          boton.textContent = '✗ No se pudo copiar — seleccioná el código a mano';
+        }
+        setTimeout(() => { boton.textContent = original; }, 4000);
+      })();
     }
-    setTimeout(() => { btnCopiar.textContent = original; }, 4000);
   });
 }
 
