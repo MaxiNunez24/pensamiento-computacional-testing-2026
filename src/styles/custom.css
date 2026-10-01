@@ -3286,6 +3286,30 @@ body.pc-resizing * {
   color: var(--sl-color-black); font-weight: 600;
 }
 .puerta__estado { margin: 0.6rem 0 0; font-size: 0.9rem; color: var(--sl-color-text-accent); }
+
+/* Los campos donde el equipo directivo contesta las preguntas. Lo que escriben
+   queda en SU navegador: vuelve copiando y pegando en un mail, no solo. */
+.resp-dir { display: block; margin: 0.6rem 0 1.4rem; }
+.resp-dir__et {
+  display: block; margin-bottom: 0.3rem;
+  font-size: 0.85rem; font-weight: 600; color: var(--sl-color-gray-2);
+}
+.resp-dir__caja {
+  width: 100%; font: inherit; font-size: 1rem; line-height: 1.5;
+  padding: 0.6rem 0.75rem; border-radius: 0.45rem;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-6); color: var(--sl-color-white);
+  resize: vertical;
+}
+.resp-dir__caja:focus { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+.resp-dir__barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  margin: 0 0 1.5rem; padding-top: 0.2rem;
+}
+.resp-dir__estado { font-size: 0.9rem; color: var(--sl-color-text-accent); }
+/* El link del mail se ve como botón, pero sigue siendo un link: se abre con el
+   programa de correo de cada uno, sin ventanas emergentes que el navegador frene. */
+.resp-dir__barra a.puerta__btn { display: inline-flex; align-items: center; text-decoration: none; }
 .puerta__salir { margin: 0.5rem 0 1rem; }
 
 .resp__aviso {

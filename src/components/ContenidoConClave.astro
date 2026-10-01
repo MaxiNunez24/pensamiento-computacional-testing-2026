@@ -21,11 +21,13 @@
  * Los componentes ya sabían dibujarse solos con los datos que les llegan: lo
  * único nuevo es de dónde vienen.
  */
+import { EMAIL_PROFE } from '../scripts/editor-comun';
+
 const WORKER = 'https://cuestionario.maxinunez434.workers.dev';
 const ORIGEN_OK = 'https://maxinunez24.github.io';
 ---
 
-<section class="puerta" data-puerta data-worker={WORKER} data-origen={ORIGEN_OK}>
+<section class="puerta" data-puerta data-worker={WORKER} data-origen={ORIGEN_OK} data-email={EMAIL_PROFE}>
   <p class="puerta__aviso" data-aviso-origen hidden></p>
 
   <form class="puerta__form" data-entrar>
@@ -71,12 +73,80 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
       despues: document.querySelector('[data-privado="despues"]') as HTMLElement | null,
     });
 
+    /* ── Las respuestas del equipo directivo ────────────────────────────
+       Los campos vienen adentro del HTML que manda el Worker. Acá se les
+       engancha el guardado y la forma de que vuelvan.
+
+       No se envían solas a propósito: se copian y se pegan en un mail. Un
+       botón que "manda" sin que se vea qué mandó es justo lo que no queremos
+       en una página que trata sobre el trabajo de otras personas. */
+    const LS_RESP = 'pc_casos_respuestas';
+
+    function guardadas(): Record<string, string> {
+      try { return JSON.parse(localStorage.getItem(LS_RESP) || '{}'); } catch { return {}; }
+    }
+
+    function textoDeRespuestas() {
+      const campos = [...document.querySelectorAll('[data-respuesta]')] as HTMLTextAreaElement[];
+      const lineas = ['RESPUESTAS — Cómo trabaja cada uno (CFP 401)', ''];
+      let hay = 0;
+      campos.forEach((c) => {
+        const valor = c.value.trim();
+        if (!valor) return;
+        hay++;
+        const etiqueta = c.closest('label')?.querySelector('.resp-dir__et')?.textContent || c.dataset.respuesta;
+        lineas.push('── ' + etiqueta, valor, '');
+      });
+      return hay ? lineas.join('\n') : '';
+    }
+
+    function prepararRespuestas() {
+      const campos = [...document.querySelectorAll('[data-respuesta]')] as HTMLTextAreaElement[];
+      if (!campos.length) return;
+      const previas = guardadas();
+
+      campos.forEach((c) => {
+        const id = c.dataset.respuesta!;
+        if (previas[id]) c.value = previas[id];
+        c.addEventListener('input', () => {
+          const todas = guardadas();
+          todas[id] = c.value;
+          try { localStorage.setItem(LS_RESP, JSON.stringify(todas)); } catch { /* sin guardado */ }
+        });
+      });
+
+      // La barra para que las respuestas vuelvan: copiar y escribir el mail.
+      const email = (raiz as HTMLElement).dataset.email || '';
+      const barra = document.createElement('div');
+      barra.className = 'resp-dir__barra';
+      barra.innerHTML =
+        '<button type="button" class="puerta__btn puerta__btn--ok" data-copiar-resp>📋 Copiar mis respuestas</button>' +
+        '<a class="puerta__btn" data-mail href="mailto:' + email +
+        '?subject=' + encodeURIComponent('Correcciones — Cómo trabaja cada uno (CFP 401)') +
+        '">✉️ Escribirle al profe</a>' +
+        '<span class="resp-dir__estado" data-estado-resp></span>';
+      campos[campos.length - 1].closest('label')!.after(barra);
+
+      const estado = barra.querySelector('[data-estado-resp]') as HTMLElement;
+      barra.querySelector('[data-copiar-resp]')!.addEventListener('click', async () => {
+        const texto = textoDeRespuestas();
+        if (!texto) { estado.textContent = 'Todavía no escribiste ninguna respuesta.'; return; }
+        try {
+          await navigator.clipboard.writeText(texto);
+          estado.textContent = '✅ Copiadas. Ahora pegalas en el mail.';
+        } catch {
+          estado.textContent = 'No pude copiar: seleccioná el texto de los campos a mano.';
+        }
+      });
+    }
+
     function repartir(datos: any) {
       const h = huecos();
       (['antes', 'entre', 'despues'] as const).forEach((donde) => {
         const caja = h[donde];
         if (caja) caja.innerHTML = (datos.html && datos.html[donde]) || '';
       });
+      prepararRespuestas();
       document.querySelector('[data-circuito]')
         ?.dispatchEvent(new CustomEvent('circuito:datos', { detail: datos.pasos || [] }));
       document.querySelector('[data-casos]')
