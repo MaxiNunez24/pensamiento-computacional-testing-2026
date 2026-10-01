@@ -127,28 +127,38 @@ const ORIGEN_OK = 'https://maxinunez24.github.io';
       const barra = document.createElement('div');
       barra.className = 'resp-dir__barra';
       barra.innerHTML =
-        '<button type="button" class="puerta__btn puerta__btn--ok" data-copiar-resp>📋 Copiar mis respuestas</button>' +
-        '<a class="puerta__btn" data-mail href="#">✉️ Abrir mi correo</a>' +
+        '<a class="puerta__btn puerta__btn--ok" data-gmail target="_blank" rel="noopener" href="#">✉️ Escribir en Gmail</a>' +
+        '<button type="button" class="puerta__btn" data-copiar-resp>📋 Copiar mis respuestas</button>' +
         '<span class="resp-dir__estado" data-estado-resp></span>' +
-        '<p class="resp-dir__mail">Si el botón no abre nada, tu computadora no tiene un programa de ' +
-        'correo configurado: copiá las respuestas y mandalas a <a href="mailto:' + email + '">' +
-        email + '</a></p>';
+        '<p class="resp-dir__mail">¿Usás otro correo? <a data-mail href="#">Abrir el programa de ' +
+        'correo de esta computadora</a>, o copiá las respuestas y mandalas a ' +
+        '<a href="mailto:' + email + '">' + email + '</a></p>';
       campos[campos.length - 1].closest('label')!.after(barra);
 
       const estado = barra.querySelector('[data-estado-resp]') as HTMLElement;
       const enlace = barra.querySelector('[data-mail]') as HTMLAnchorElement;
-      const asunto = encodeURIComponent('Correcciones — Cómo trabaja cada uno (CFP 401)');
+      const gmail = barra.querySelector('[data-gmail]') as HTMLAnchorElement;
+      const ASUNTO = 'Correcciones — Cómo trabaja cada uno (CFP 401)';
 
-      /* El cuerpo del mailto se arma con lo contestado hasta ese momento. Va
-         recortado: hay programas de correo que cortan las URL largas, y una
-         respuesta cortada por la mitad es peor que ninguna. */
+      /* Dos caminos, porque no todos tienen lo mismo:
+         · Gmail abre una ventana de redacción en el navegador, con todo puesto.
+           Es el principal: no necesita que la máquina tenga nada configurado.
+         · mailto abre el programa de correo instalado, para quien use otro.
+
+         El cuerpo va recortado en los dos: las URL largas las cortan tanto los
+         programas de correo como el propio navegador, y una respuesta cortada
+         por la mitad es peor que ninguna. */
       const actualizarMail = () => {
         const texto = textoDeRespuestas();
         const cuerpo = texto.length > 1500
           ? texto.slice(0, 1500) + '\n\n[…] (quedó cortado: pegá el resto con 📋 Copiar mis respuestas)'
           : texto;
+        const asunto = encodeURIComponent(ASUNTO);
         enlace.href = 'mailto:' + email + '?subject=' + asunto +
                       (cuerpo ? '&body=' + encodeURIComponent(cuerpo) : '');
+        // view=cm abre la ventana de redacción; fs=1 la abre a pantalla completa.
+        gmail.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) +
+                     '&su=' + asunto + (cuerpo ? '&body=' + encodeURIComponent(cuerpo) : '');
       };
       actualizarMail();
       campos.forEach((c) => c.addEventListener('input', actualizarMail));
