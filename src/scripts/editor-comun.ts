@@ -384,6 +384,8 @@ export function conectarEnvio(
 
     cajaEnvio.hidden = false;
     cajaEnvio.innerHTML =
+      '<button type="button" class="ejercicio__envio-cerrar" data-cerrar-envio ' +
+      'title="Cerrar" aria-label="Cerrar">✕</button>' +
       '<p class="ejercicio__envio-tit">¿Por dónde se lo mandás?</p>' +
       '<div class="ejercicio__envio-opciones">' +
       (WORKER_CONSULTAS
@@ -442,8 +444,15 @@ export function conectarEnvio(
      adentro—, así que engancharlos uno por uno sumaría un escuchador nuevo en
      cada clic y el envío se duplicaría. */
   cajaEnvio?.addEventListener('click', (ev) => {
-    const boton = (ev.target as HTMLElement).closest<HTMLElement>('[data-por], [data-copiar-envio]');
+    const boton = (ev.target as HTMLElement)
+      .closest<HTMLElement>('[data-por], [data-copiar-envio], [data-cerrar-envio]');
     if (!boton) return;
+    // Cerrar: la caja queda ocupando media pantalla hasta que uno se va del
+    // ejercicio, y lo normal es mandar la consulta y seguir resolviendo.
+    if (boton.hasAttribute('data-cerrar-envio')) {
+      cajaEnvio.hidden = true;
+      return;
+    }
     const por = boton.dataset.por;
     const estado = cajaEnvio.querySelector<HTMLElement>('[data-envio-estado]');
     if ((por === 'discord' || por === 'ambas') && publicarEnDiscord) void publicarEnDiscord();

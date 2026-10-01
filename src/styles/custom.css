@@ -870,7 +870,19 @@ body.pc-resizing * {
 }
 
 /* Las tres formas de mandarlo: Discord, Gmail o las dos. */
-.ejercicio__envio-tit { margin: 0 0 0.5rem; font-weight: 600; }
+.ejercicio__envio { position: relative; }
+.ejercicio__envio-cerrar {
+  position: absolute; top: 0.35rem; right: 0.45rem;
+  width: 1.9rem; height: 1.9rem; padding: 0; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; border-radius: 0.35rem;
+  background: transparent; color: var(--sl-color-gray-3);
+  font-size: 1rem; cursor: pointer;
+}
+.ejercicio__envio-cerrar:hover {
+  color: var(--sl-color-white); border-color: var(--sl-color-gray-5);
+}
+.ejercicio__envio-tit { margin: 0 2rem 0.5rem 0; font-weight: 600; }
 .ejercicio__envio-opciones {
   display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;
 }
