@@ -223,6 +223,23 @@ Carpeta: `08_persistencia/`
 > (`guardar_dia` recibe uno y `cargar_dia` devuelve uno). Los tres primeros no, así que se puede
 > empezar Archivos sin Diccionarios — pero no terminarlo.
 
+---
+
+## 09 — Excepciones (1 video)
+
+Carpeta: `09_excepciones/`
+
+| # | Archivo | Tema |
+|---|---------|------|
+| 1 | [01_excepciones.md](./09_excepciones/01_excepciones.md) | `try`/`except` con nombre, por qué intentar le gana a `isdigit()`, el `except` pelado que esconde tus typos, y `raise` en el `__init__` |
+
+> 📅 **Por qué existe.** El 25/9 no hubo clase y Excepciones quedó de tarea. Este video reemplaza
+> la explicación, **no la práctica**: los cuatro ejercicios siguen siendo de la plataforma.
+>
+> Es el primero de la serie del **proyecto**, no de los repasos: lo que se cuenta acá se usa tal
+> cual en el sistema —el `Alumno` que se niega a existir con un DNI roto— y vuelve en SQLite con
+> `sqlite3.IntegrityError`.
+
 *(En esa carpeta está además `setup_git_github_videos.md`, que no es un guion de repaso.)*
 
 ---
