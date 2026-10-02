@@ -17,8 +17,14 @@ Qué mira
 --------
 Un ejercicio queda marcado cuando **los tests arman una estructura compuesta**
 —un diccionario con claves de texto, o una lista de listas/tuplas/diccionarios—
-y el enunciado **no muestra ningún ejemplo**: ni bloque de código, ni una flecha
-`→`, ni un literal.
+y el enunciado **no muestra esa estructura escrita**.
+
+Tiene que aparecer el literal: `{"30111222": "P"}`, `[{...}, {...}]`. **Un bloque
+de código no alcanza por sí solo**, porque puede mostrar otra cosa. Eso fue lo
+que se escapó en "Buscar con los filtros que vengan": el enunciado tenía un
+bloque de código perfecto… que mostraba las LLAMADAS a la función, no los datos
+con los que trabajaba. El alumno veía `buscar(alumnos, apellido="Perez")` y
+seguía sin saber que cada alumno era un diccionario.
 
 No mira los que traen `datos`, porque esos ya muestran sus valores arriba del
 editor, en el recuadro "Esto ya está cargado".
@@ -59,8 +65,9 @@ def revisar():
             if not tests:
                 continue
             arma_estructura = COMPUESTA.search(tests.group(1)) or LISTA_DE.search(tests.group(1))
-            muestra_ejemplo = ('```' in enunciado or '→' in enunciado
-                               or COMPUESTA.search(enunciado) or LISTA_DE.search(enunciado))
+            # El literal tiene que estar escrito. Un bloque de código o una
+            # flecha no alcanzan: pueden estar mostrando las llamadas.
+            muestra_ejemplo = COMPUESTA.search(enunciado) or LISTA_DE.search(enunciado)
             if arma_estructura and not muestra_ejemplo:
                 faltan.append((pagina.stem, titulo))
     return faltan

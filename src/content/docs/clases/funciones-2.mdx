@@ -316,9 +316,17 @@ de sintaxis.
 >
 Completá `marcar_varios`: marca a todos los DNI que le pasen, con el mismo estado.
 
+`dia` es un diccionario con el DNI de clave y el estado de valor, y la función lo **modifica ahí
+mismo**: no devuelve nada, le escribe adentro.
+
 ```python
+dia = {}
+
 marcar_varios(dia, "30111222", "28999888", "27888444")          # los tres presentes
+# dia quedó {"30111222": "P", "28999888": "P", "27888444": "P"}
+
 marcar_varios(dia, "30111222", "28999888", estado="A")          # los dos ausentes
+# dia quedó {"30111222": "A", "28999888": "A", "27888444": "P"}
 ```
 
 :::note[Por qué `estado` va después del `*dnis`]
@@ -332,22 +340,76 @@ enteraría hasta ver la planilla. Poniéndolo después del `*`, la única forma 
 <EjercicioPython
   titulo="Buscar con los filtros que vengan"
   dificultad="🌿"
-  starter={`def buscar(alumnos, **filtros):\n    pass`}
-  tests={`alumnos = [\n    {"dni": "1", "apellido": "Perez", "activo": True},\n    {"dni": "2", "apellido": "Gomez", "activo": True},\n    {"dni": "3", "apellido": "Perez", "activo": False},\n]\nassert buscar(alumnos) == alumnos, "sin filtros salen todos"\nr = buscar(alumnos, apellido="Perez")\nassert [a["dni"] for a in r] == ["1", "3"], f"por apellido salieron {[a['dni'] for a in r]!r}"\nr = buscar(alumnos, apellido="Perez", activo=True)\nassert [a["dni"] for a in r] == ["1"], "con dos filtros se tienen que cumplir los DOS"\nassert buscar(alumnos, apellido="Lopez") == [], "si no coincide ninguno, la lista vacía"\nassert buscar(alumnos, color="verde") == [], "un filtro por algo que los alumnos no tienen no puede devolver a todos"\nassert len(alumnos) == 3, "buscar no toca la lista original"\nprint("¡Búsqueda OK!")`}
+  datos={`alumnos = [
+    {"dni": "1", "apellido": "Perez", "activo": True},
+    {"dni": "2", "apellido": "Gomez", "activo": True},
+    {"dni": "3", "apellido": "Perez", "activo": False},
+]
+`}
+  starter={`def buscar(alumnos, **filtros):
+    pass
+
+
+# Para probar con Ejecutar:
+print(buscar(alumnos, apellido="Perez"))
+`}
+  tests={`alumnos = [
+    {"dni": "1", "apellido": "Perez", "activo": True},
+    {"dni": "2", "apellido": "Gomez", "activo": True},
+    {"dni": "3", "apellido": "Perez", "activo": False},
+]
+r = buscar(alumnos)
+assert isinstance(r, list), f"tiene que devolver una lista de alumnos, y devolvió {type(r).__name__}"
+pista = f"devolvé los alumnos enteros, los mismos diccionarios que te llegaron, no sus DNI ni sus apellidos sueltos; devolviste {r!r}"
+assert all(isinstance(a, dict) for a in r), pista
+assert r == alumnos, f"sin ningún filtro tienen que salir los tres alumnos, y salieron {len(r)}"
+r = buscar(alumnos, apellido="Perez")
+dnis = [a["dni"] for a in r]
+assert dnis == ["1", "3"], f"los Perez son el 1 y el 3, y salieron {dnis!r}"
+r = buscar(alumnos, apellido="Perez", activo=True)
+dnis = [a["dni"] for a in r]
+if len(dnis) != len(set(dnis)):
+    pista = f"salieron {dnis!r}: hay alumnos repetidos. Eso pasa cuando el append está ADENTRO del for de los filtros, así que agregás al alumno una vez por cada filtro que le coincide. Tiene que agregarse UNA sola vez, recién cuando revisaste TODOS los filtros"
+    raise AssertionError(pista)
+pista = f"el 3 también es Perez, pero tiene activo False: con dos filtros se tienen que cumplir los DOS, así que tenía que salir solo el 1, y salieron {dnis!r}"
+assert dnis == ["1"], pista
+r = buscar(alumnos, apellido="Lopez")
+assert r == [], f"no hay ningún Lopez, así que la lista tiene que quedar vacía, y quedó {r!r}"
+try:
+    r = buscar(alumnos, color="verde")
+except KeyError:
+    pista = "pediste la clave con corchetes y ningún alumno tiene la clave color, así que explota con KeyError. Usá .get(clave): devuelve None en vez de romper, y ese alumno simplemente no cumple el filtro"
+    raise AssertionError(pista) from None
+pista = f"ninguno de los alumnos tiene la clave color, así que ninguno cumple ese filtro y la lista queda vacía; quedó {r!r}. Ojo: si pedís la clave con corchetes esto explota, y si la salteás cuando no está, devolvés a todos"
+assert r == [], pista
+assert len(alumnos) == 3, "buscar no tiene que tocar la lista original: armá una lista nueva con los que pasan"
+print("¡Búsqueda OK!")
+`}
   pistas={[
-    "<code>filtros</code> llega como un diccionario: <code>{\"apellido\": \"Perez\", \"activo\": True}</code>. Un alumno entra si cumple TODOS.",
-    "Para cada alumno, recorré los filtros y fijate si alguno no coincide. Con que falle uno, ese alumno queda afuera.",
-    "El test del filtro <code>color=\"verde\"</code> es el que atrapa la solución perezosa: si pedís la clave con corchetes explota, y si la ignorás cuando no está, devolvés a todos.",
+    'Los filtros llegan juntos en un diccionario: con <code>buscar(alumnos, apellido="Perez", activo=True)</code>, adentro <code>filtros</code> vale <code>{"apellido": "Perez", "activo": True}</code>. Un alumno entra si cumple TODOS.',
+    'Para cada alumno, recorré los filtros y fijate si alguno no coincide. Con que falle uno, ese alumno ya queda afuera.',
+    'Ojo con el <code>break</code>: corta solo el <code>for</code> en el que está. Si el de los filtros está adentro del de los alumnos, el <code>break</code> te saca del de los filtros y seguís con el mismo alumno. Te conviene una variable tipo <code>cumple = True</code> que se ponga en <code>False</code> cuando algo no coincide, y agregar al alumno después del for mirando esa variable.',
+    'El filtro <code>color="verde"</code> es el que atrapa la solución perezosa: si pedís la clave con corchetes explota, y si la salteás cuando no está, devolvés a todos. <code>.get()</code> te da <code>None</code> en vez de explotar.',
   ]}
 >
 Completá `buscar(alumnos, **filtros)`: devuelve los alumnos que cumplen **todos** los filtros que
 le pasen, sean los que sean.
 
+Cada alumno es un **diccionario**, y la lista ya está cargada arriba del editor:
+
 ```python
-buscar(alumnos)                                  # todos
-buscar(alumnos, apellido="Perez")                # los Perez
-buscar(alumnos, apellido="Perez", activo=True)   # los Perez que siguen cursando
+alumnos = [
+    {"dni": "1", "apellido": "Perez", "activo": True},
+    {"dni": "2", "apellido": "Gomez", "activo": True},
+    {"dni": "3", "apellido": "Perez", "activo": False},
+]
+
+buscar(alumnos)                                  # los tres
+buscar(alumnos, apellido="Perez")                # los dos Perez: el 1 y el 3
+buscar(alumnos, apellido="Perez", activo=True)   # solo el 1, porque el 3 no está activo
 ```
+
+Lo que devolvés son **los alumnos enteros** —los mismos diccionarios—, no sus DNI.
 
 :::note[Una sola función para todas las búsquedas]
 Sin `**kwargs` habría que escribir `buscar_por_apellido`, `buscar_por_dni`,

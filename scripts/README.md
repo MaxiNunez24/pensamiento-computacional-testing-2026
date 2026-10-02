@@ -11,7 +11,7 @@ python scripts/verificar_render.py
 
 | Script | Qué busca | Por qué existe |
 |---|---|---|
-| `revisar-enunciados.py` | Ejercicios que piden trabajar con **datos cuya forma nunca se muestra** | Pasó tres veces: el enunciado decía qué hacer pero no con qué, el alumno suponía una lista donde había un diccionario, y el test le decía que no |
+| `revisar-enunciados.py` | Ejercicios que piden trabajar con **datos cuya forma nunca se muestra** | Pasó cuatro veces: el enunciado decía qué hacer pero no con qué, el alumno suponía una lista donde había un diccionario, y el test le decía que no. La cuarta se escapó del chequeo porque el enunciado tenía un bloque de código que mostraba las **llamadas** y no los **datos**: ahora se exige el literal escrito |
 | `verificar_ejercicios.py` | Que ningún test le muestre al alumno **un error nuestro** | Un alumno tuvo bien las dos líneas del ejercicio, le faltó el `print`, y la plataforma le mostró un `IndexError` de código nuestro |
 | `verificar_render.py` | Que las páginas se construyan y se vean | — |
 
