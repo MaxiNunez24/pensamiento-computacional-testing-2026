@@ -36,10 +36,16 @@ def crear_tablas(con):
     # marcado_por y marcado_en: quién puso la marca y cuándo. El día que una
     # marca se discuta, es lo único que lo puede contestar. La fecha y hora la
     # pone la base sola: así todas las marcas se miden con el mismo reloj.
+    #
+    # PRIMARY KEY (fecha, dni): la regla "una sola marca por alumno y por día"
+    # la hace cumplir la base, no la confianza en que el código esté bien. El
+    # día que haya varios tótems, dos marcas que llegan en el mismo instante no
+    # se pueden duplicar ni queriendo.
     con.execute(
         "CREATE TABLE IF NOT EXISTS marcas "
-        "(fecha TEXT, dni TEXT, estado TEXT, marcado_por TEXT, "
-        "marcado_en TEXT DEFAULT (datetime('now', 'localtime')))"
+        "(fecha TEXT NOT NULL, dni TEXT NOT NULL, estado TEXT, marcado_por TEXT, "
+        "marcado_en TEXT DEFAULT (datetime('now', 'localtime')), "
+        "PRIMARY KEY (fecha, dni))"
     )
     con.commit()
 

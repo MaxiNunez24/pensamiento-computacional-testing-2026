@@ -22,6 +22,13 @@ python menu.py
 
 No hay que instalar nada: `sqlite3` viene con Python.
 
+> ⚠️ **Si bajaste el proyecto antes y ya tenías un `asistencias.db`**, borralo
+> antes de arrancar. Las tablas se crean con `CREATE TABLE IF NOT EXISTS`, así
+> que una base vieja se queda como estaba y te va a decir
+> `no such column: marcado_por`. Borrar el archivo lo arregla: se crea sola de
+> nuevo. (Cuando el sistema esté en el CFP con datos de verdad esto no se hace
+> así, se migra; pero eso lo vemos cuando llegue.)
+
 ## La regla de oro
 
 En `menu.py` solo hay `input()`, `print()` y llamadas a `repositorio`. Nada de

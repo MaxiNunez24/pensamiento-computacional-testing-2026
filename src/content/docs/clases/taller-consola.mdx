@@ -73,10 +73,16 @@ def crear_tablas(con):
     # marcado_por y marcado_en: quién puso la marca y cuándo. El día que una
     # marca se discuta, es lo único que lo puede contestar. La fecha y hora la
     # pone la base sola: así todas las marcas se miden con el mismo reloj.
+    #
+    # PRIMARY KEY (fecha, dni): la regla "una sola marca por alumno y por día"
+    # la hace cumplir la base, no la confianza en que el código esté bien. El
+    # día que haya varios tótems, dos marcas que llegan en el mismo instante no
+    # se pueden duplicar ni queriendo.
     con.execute(
         "CREATE TABLE IF NOT EXISTS marcas "
-        "(fecha TEXT, dni TEXT, estado TEXT, marcado_por TEXT, "
-        "marcado_en TEXT DEFAULT (datetime('now', 'localtime')))"
+        "(fecha TEXT NOT NULL, dni TEXT NOT NULL, estado TEXT, marcado_por TEXT, "
+        "marcado_en TEXT DEFAULT (datetime('now', 'localtime')), "
+        "PRIMARY KEY (fecha, dni))"
     )
     con.commit()
 
@@ -241,6 +247,14 @@ Y si se corrigen, hay que poder saber **quién la puso y cuándo**. No es descon
 que un alumno diga "yo vine", la respuesta no puede ser "la computadora dice que no". Por eso la
 tabla `marcas` tiene dos columnas más, `marcado_por` y `marcado_en`.
 
+:::note[La regla no depende de que tu código esté bien]
+La tabla tiene **`PRIMARY KEY (fecha, dni)`**: el mismo alumno no puede tener dos marcas el mismo
+día, y eso lo hace cumplir **la base**. Si tu función intenta agregar una segunda, salta
+`UNIQUE constraint failed` y no se guarda nada. Es lo mismo que vimos en <a href={b + 'clases/sqlite/#otra-forma-que-la-base-diga-que-no'}>que la base diga que no</a>,
+y el día que el sistema esté en la red del CFP con varios tótems va a ser lo que impida que dos
+marcas que llegan en el mismo instante se dupliquen.
+:::
+
 <EjercicioPython
   titulo="Marcar la asistencia"
   fundamental
@@ -268,7 +282,13 @@ assert r == [("2026-10-02", "30111222", "P")], f"después de marcar una vez, en 
 q = quien_puso(c, "2026-10-02", "30111222")
 pista = f"en marcado_por tiene que quedar quién puso la marca. Nadie pasó un nombre, así que vale el valor por defecto del parámetro ('consola'), y quedó {q!r}. Agregá la columna marcado_por al INSERT"
 assert q == "consola", pista
-marcar(c, "2026-10-02", "30111222", "T", "marisa")
+try:
+    marcar(c, "2026-10-02", "30111222", "T", "marisa")
+except Exception as e:
+    if "UNIQUE" not in str(e):
+        raise
+    pista = "la base rechazó la segunda marca: la tabla tiene PRIMARY KEY (fecha, dni), así que el mismo alumno no puede tener dos marcas el mismo día. Es a propósito. Antes de insertar, buscá si ya hay una marca de ese DNI en esa fecha; si hay, corregila con UPDATE en vez de agregar otra"
+    raise AssertionError(pista) from None
 r = marcas(c)
 pista = f"la preceptora se equivocó y lo corrigió a T: tiene que quedar UNA sola marca, con T, y quedó {r!r}. Antes de insertar, buscá si ya hay una marca de ese DNI en esa fecha"
 assert r == [("2026-10-02", "30111222", "T")], pista
@@ -294,6 +314,7 @@ print("¡Marcas OK! Una por alumno y por día, se puede corregir, y queda quién
     'Para saber si ya hay una marca: <code>SELECT estado FROM marcas WHERE fecha = ? AND dni = ?</code>, con <code>fetchone()</code>. Si da <code>None</code>, no había.',
     'Si había, <code>UPDATE marcas SET estado = ? WHERE fecha = ? AND dni = ?</code>. Si no, el <code>INSERT</code>. Los valores, siempre con <code>?</code>.',
     'Para <code>marcado_por</code>: en el <code>INSERT</code> es una columna y un <code>?</code> más; en el <code>UPDATE</code>, un <code>SET marcado_por = ?</code> más. Ojo con el orden de los valores en la tupla.',
+    'Si te sale <code>UNIQUE constraint failed</code>, es la base avisándote que ese alumno ya tiene marca ese día: te falta el camino del <code>UPDATE</code>.',
   ]}
 >
 Completá `marcar(con, fecha, dni, estado, quien)`: que anote la marca, o que la **corrija** si ese
