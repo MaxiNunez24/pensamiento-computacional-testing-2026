@@ -33,7 +33,17 @@ export const editorTheme = [indentUnit.of('    '), EditorView.theme({
   // El default es 1rem (16px), y en el celular no se baja de ahí: Safari en iOS
   // hace zoom automático al enfocar un campo con tipografía menor a 16px, y la
   // página queda corrida.
-  '&': { fontSize: 'var(--pc-editor-font, 1rem)', maxHeight: '22rem' },
+  // resize/overflow: la manija nativa de abajo a la derecha, para que el alumno
+  // se haga el editor tan alto como necesite. El `max-height` lo deja crecer
+  // solo con el código hasta 22rem; cuando agarra la manija se lo sacamos (ver
+  // `soltarElTope` más abajo), porque si no el navegador no lo deja pasar de ahí.
+  '&': {
+    fontSize: 'var(--pc-editor-font, 1rem)',
+    maxHeight: '22rem',
+    minHeight: '5rem',
+    resize: 'vertical',
+    overflow: 'hidden',
+  },
   // Aire abajo del código, para que el cartel de sugerencias caiga sobre espacio
   // vacío y no sobre el párrafo siguiente cuando se escribe en la última línea.
   '.cm-content': { paddingBottom: '7rem' },
@@ -56,6 +66,56 @@ export const editorTheme = [indentUnit.of('    '), EditorView.theme({
     lineHeight: 'normal',
   },
 })];
+
+/* El tope de alto manda mientras el editor crece solo; en cuanto el alumno
+   agarra la manija, no.
+
+   El `max-height: 22rem` del theme hace dos cosas a la vez: deja que el editor
+   crezca con el código y después lo frena. Lo segundo choca con `resize`,
+   porque el navegador no deja arrastrar más allá del `max-height`: la manija se
+   ve, pero al segundo tirón no pasa nada más.
+
+   Entonces lo sacamos, pero recién cuando lo agarran. Un `pointerdown` en la
+   esquina de abajo a la derecha (la manija vive en la caja del elemento, no es
+   un hijo) y a ESE editor le ponemos `max-height: none`. De ahí en más el alto
+   es el que eligió el alumno: el `height` que escribe el navegador manda, y el
+   editor deja de crecer solo. Para volver atrás, lo vuelve a arrastrar.
+
+   Un solo listener para toda la página, en captura, así también alcanza a los
+   editores que se crean después (los ejercicios se arman al hacer scroll). */
+const ESQUINA = 18; // px de la esquina que agarra la manija
+
+function soltarElTope(evento: PointerEvent) {
+  const destino = evento.target as HTMLElement | null;
+  const editor = destino?.closest?.('.cm-editor') as HTMLElement | null;
+  if (!editor) return;
+  const caja = editor.getBoundingClientRect();
+  if (evento.clientX <= caja.right - ESQUINA || evento.clientY <= caja.bottom - ESQUINA) return;
+
+  const topeAnterior = editor.style.maxHeight;
+  const altoAnterior = caja.height;
+  editor.style.maxHeight = 'none';
+
+  // Si lo soltó donde lo agarró, fue un click de paso y no un arrastre: le
+  // devolvemos el tope. Si no, un toque en esa esquina dejaría al editor
+  // creciendo sin límite con el código, que es justo lo que el tope evita.
+  const alSoltar = () => {
+    document.removeEventListener('pointerup', alSoltar, true);
+    if (Math.abs(editor.getBoundingClientRect().height - altoAnterior) < 1) {
+      editor.style.maxHeight = topeAnterior;
+    }
+  };
+  document.addEventListener('pointerup', alSoltar, true);
+}
+
+declare global {
+  interface Window { __pcEditorEstirable?: boolean }
+}
+
+if (typeof document !== 'undefined' && !window.__pcEditorEstirable) {
+  window.__pcEditorEstirable = true;
+  document.addEventListener('pointerdown', soltarElTope, true);
+}
 
 // Los data-* del HTML van en base64 para poder llevar saltos de línea y comillas
 // sin pelear con el escapado.
