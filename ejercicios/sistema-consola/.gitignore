@@ -1,0 +1,4 @@
+# La base tiene datos de personas reales (DNI, nombres): NUNCA va a GitHub.
+asistencias.db
+
+__pycache__/
