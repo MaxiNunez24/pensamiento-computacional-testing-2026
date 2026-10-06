@@ -55,6 +55,21 @@ export const editorTheme = [indentUnit.of('    '), EditorView.theme({
      Con `vh` nunca pasa de un cuarto de la pantalla, tenga la letra el tamaño
      que tenga; y en el peor caso, si igual se da vuelta, tapa mucho menos. */
   '.cm-tooltip-autocomplete > ul': { maxHeight: 'min(10em, 25vh)' },
+  /* El panel de documentación (el `info` de cada método). Va acá y no en el CSS
+     por especificidad: la regla de fábrica es `.ͼ1 .cm-tooltip.cm-completionInfo`
+     (0,3,0) y le ganaba a la del archivo de estilos, que llegaba a 0,2,0. Desde
+     el theme sale con el mismo selector, y CodeMirror pone los themes DESPUÉS
+     del tema base justo para esto.
+     El ancho no se toca a propósito: lo calcula CodeMirror según el lugar que
+     haya, y en una pantalla angosta lo achica solo. Un `max-width` nuestro lo
+     único que haría es pelearse con eso. */
+  '.cm-tooltip.cm-completionInfo': {
+    padding: '0',
+    border: '1px solid #3e4451',
+    borderRadius: '0.4rem',
+    background: '#21252b',
+    boxShadow: '0 6px 18px rgb(0 0 0 / 0.35)',
+  },
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
   },
@@ -681,11 +696,141 @@ const METODOS: Completion[] = [
   { label: 'commit', type: 'method', detail: 'confirmar los cambios' },
 ];
 
+/* La documentación del cartel, al estilo del panel de VS Code.
+   -----------------------------------------------------------
+   CodeMirror ya lo trae: cada opción acepta un `info`, y lo muestra en un panel
+   al costado SOLO de la opción que está seleccionada. Por eso no molesta: el que
+   ya sabe lo que busca no lo ve.
+
+   Arrancamos por los que más se usan en el curso, no por los 44. Los demás
+   siguen con su renglón de `detail`, y se les va agregando panel a medida que
+   aparezcan en clase.
+
+   Los ejemplos son Python de verdad: `scripts/verificar-docs-editor.py` los
+   corre y comprueba cada `→`. Si uno miente, el script lo canta. */
+type Doc = { firma: string; que: string; ejemplo: string };
+
+const DOCS: Record<string, Doc> = {
+  append: {
+    firma: 'lista.append(elemento)',
+    que: 'Agrega el elemento al final. No devuelve nada: cambia la lista que ya tenías.',
+    ejemplo: 'colores = ["azul"]\ncolores.append("rojo")\ncolores → ["azul", "rojo"]',
+  },
+  pop: {
+    firma: 'lista.pop()',
+    que: 'Saca el último y te lo devuelve. Con un número adentro, saca el de esa posición.',
+    ejemplo: 'notas = [7, 9, 4]\nnotas.pop() → 4\nnotas → [7, 9]',
+  },
+  sort: {
+    firma: 'lista.sort()',
+    que: 'Ordena la lista misma y devuelve None. Si la querés ordenada sin tocar la original, usá sorted(lista).',
+    ejemplo: 'notas = [7, 4, 9]\nnotas.sort()\nnotas → [4, 7, 9]',
+  },
+  strip: {
+    firma: 'texto.strip()',
+    que: 'Devuelve el texto sin los espacios ni los Enter de los bordes. Por dentro no toca nada. Es lo primero que se le hace a lo que llega de input() o de un archivo.',
+    ejemplo: '"  Ana  ".strip() → "Ana"',
+  },
+  lower: {
+    firma: 'texto.lower()',
+    que: 'Devuelve el texto todo en minúsculas. Sirve para comparar sin que importen las mayúsculas.',
+    ejemplo: '"Perez".lower() → "perez"',
+  },
+  upper: {
+    firma: 'texto.upper()',
+    que: 'Devuelve el texto todo en MAYÚSCULAS.',
+    ejemplo: '"perez".upper() → "PEREZ"',
+  },
+  split: {
+    firma: 'texto.split(separador)',
+    que: 'Parte el texto cada vez que encuentra el separador y devuelve una lista. Sin separador, parte por los espacios.',
+    ejemplo: '"30111222,P".split(",") → ["30111222", "P"]',
+  },
+  join: {
+    firma: 'separador.join(lista)',
+    que: 'Lo contrario de split: une los elementos de una lista en un solo texto. Ojo que se escribe al revés de como se lee: el separador va adelante.',
+    ejemplo: '",".join(["30111222", "P"]) → "30111222,P"',
+  },
+  replace: {
+    firma: 'texto.replace(viejo, nuevo)',
+    que: 'Devuelve el texto con una parte cambiada por otra, todas las veces que aparezca.',
+    ejemplo: '"30.111.222".replace(".", "") → "30111222"',
+  },
+  isdigit: {
+    firma: 'texto.isdigit()',
+    que: 'True si el texto son todos números y no está vacío. Es la forma de chequear un DNI antes de convertirlo con int().',
+    ejemplo: '"30111222".isdigit() → True\n"30.111".isdigit() → False',
+  },
+  startswith: {
+    firma: 'texto.startswith(principio)',
+    que: 'True si el texto empieza con eso.',
+    ejemplo: '"2026-10-02".startswith("2026") → True',
+  },
+  get: {
+    firma: 'diccionario.get(clave)',
+    que: 'El valor de esa clave. Si la clave no está devuelve None en vez de romper, y esa es toda la diferencia con dia[clave].',
+    ejemplo: 'dia = {"30111222": "P"}\ndia.get("30111222") → "P"\ndia.get("99999999") → None',
+  },
+  items: {
+    firma: 'diccionario.items()',
+    que: 'La clave y el valor de a pares, para recorrer el diccionario con un for de dos variables: for dni, estado in dia.items().',
+    ejemplo: 'dia = {"30111222": "P", "28999888": "A"}\nlist(dia.items()) → [("30111222", "P"), ("28999888", "A")]',
+  },
+  keys: {
+    firma: 'diccionario.keys()',
+    que: 'Solo las claves. Para recorrerlas alcanza con for dni in dia, que hace lo mismo y se lee mejor.',
+    ejemplo: 'dia = {"30111222": "P", "28999888": "A"}\nlist(dia.keys()) → ["30111222", "28999888"]',
+  },
+};
+
+/** Arma el panel de un método. CodeMirror lo llama cuando lo seleccionan. */
+function panelDoc(nombre: string) {
+  return (): HTMLElement => {
+    const doc = DOCS[nombre];
+    const caja = document.createElement('div');
+    caja.className = 'pc-doc';
+
+    const firma = document.createElement('code');
+    firma.className = 'pc-doc__firma';
+    firma.textContent = doc.firma;
+
+    const que = document.createElement('p');
+    que.className = 'pc-doc__que';
+    que.textContent = doc.que;
+
+    const ejemplo = document.createElement('div');
+    ejemplo.className = 'pc-doc__ejemplo';
+    for (const linea of doc.ejemplo.split('\n')) {
+      const fila = document.createElement('div');
+      const [izquierda, derecha] = linea.split('→');
+      if (derecha === undefined) {
+        fila.textContent = linea;
+      } else {
+        const flecha = document.createElement('b');
+        flecha.className = 'pc-doc__flecha';
+        flecha.textContent = '→';
+        fila.append(izquierda.trimEnd() + '  ', flecha, '  ' + derecha.trim());
+      }
+      ejemplo.append(fila);
+    }
+
+    caja.append(firma, que, ejemplo);
+    return caja;
+  };
+}
+
 /* Donde NO hay que sugerir nada. El paquete de Python envuelve su lista en un
    `ifNotIn` con estos nodos; nosotros usábamos `completeFromList` pelado y por
    eso la lista se colaba adentro de los strings y de los comentarios: escribir
    `mensaje = "hola def` ofrecía la palabra `def`. */
 const NO_COMPLETAR = ['String', 'FormatString', 'Comment'];
+
+/* El panel se engancha solo: alcanza con agregarle una entrada a DOCS y ese
+   método lo tiene. Así la lista de arriba no se llena de `info:` repetidos y no
+   hay forma de que un método quede con panel a medias. */
+for (const metodo of METODOS) {
+  if (DOCS[metodo.label]) metodo.info = panelDoc(metodo.label);
+}
 
 /** El trozo `.loQueVaDespues` si el cursor está escribiendo después de un punto. */
 function despuesDeUnPunto(context: CompletionContext) {

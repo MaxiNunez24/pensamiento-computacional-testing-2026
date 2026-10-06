@@ -288,6 +288,56 @@ body.pc-resizing * {
 .ejercicio .cm-foldGutter {
   display: none !important;
 }
+
+/* ---------------------------------------------------------------------------
+   El panel de documentación del cartel de sugerencias (el `info` de cada
+   método, armado en editor-comun.ts). Aparece al costado SOLO de la opción que
+   está seleccionada, así que no le estorba al que ya sabe lo que busca.
+
+   Los colores van fijos y no con las variables de Starlight porque el editor
+   lleva `oneDark` SIEMPRE, tenga la página el tema que tenga: si acá usáramos
+   los tokens del sitio, en modo claro saldría un panel blanco pegado a un
+   editor oscuro.
+
+   El recuadro en sí (fondo, borde, padding) NO se estila acá sino en el theme
+   de editor-comun.ts: la regla de fábrica de CodeMirror llega a 0,3,0 de
+   especificidad y le gana a cualquier cosa que pongamos en este archivo.
+--------------------------------------------------------------------------- */
+.pc-doc {
+  padding: 0.6rem 0.7rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  font-family: var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+}
+.pc-doc__firma {
+  display: block;
+  color: #61afef;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.pc-doc__que {
+  margin: 0 0 0.5rem;
+  color: #abb2bf;
+  font-family: var(--sl-font, inherit);
+  font-size: 0.86rem;
+  /* El contenedor viene en `pre-line` de fábrica: sin esto, el texto largo
+     respeta los saltos que no tiene y no se acomoda al ancho del panel. */
+  white-space: normal;
+}
+.pc-doc__ejemplo {
+  margin: 0;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.3rem;
+  background: #282c34;
+  color: #abb2bf;
+  font-size: 0.82rem;
+  white-space: pre;
+  overflow-x: auto;
+}
+.pc-doc__flecha {
+  color: #98c379;
+  font-weight: 400;
+}
 /* CLAVE (caret/selección "una línea más abajo"): Starlight le mete "margin-top"
    a cada bloque hermano de su prosa (.sl-markdown-content), y eso se cuela en
    las piezas internas de CodeMirror. Dos efectos:
