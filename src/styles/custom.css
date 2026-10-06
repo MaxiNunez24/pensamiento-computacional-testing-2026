@@ -331,8 +331,17 @@ body.pc-resizing * {
   background: #282c34;
   color: #abb2bf;
   font-size: 0.82rem;
-  white-space: pre;
-  overflow-x: auto;
+  /* Partir y no scrollear: los ejemplos de base de datos pasan los 400px del
+     panel (y en el celular el panel mide 268). Un scroll de costado adentro de
+     un cartel flotante no lo encuentra nadie. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* Sangría colgante: si un renglón no entra, la continuación queda corrida a la
+   derecha, y se ve que es el mismo renglón y no uno nuevo. */
+.pc-doc__ejemplo > div {
+  padding-left: 1.5em;
+  text-indent: -1.5em;
 }
 .pc-doc__flecha {
   color: #98c379;

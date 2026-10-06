@@ -69,6 +69,11 @@ export const editorTheme = [indentUnit.of('    '), EditorView.theme({
     borderRadius: '0.4rem',
     background: '#21252b',
     boxShadow: '0 6px 18px rgb(0 0 0 / 0.35)',
+    // Red de seguridad para el celular: el panel más largo, angosto, llegó a
+    // 493px y se salía por arriba. Con el tope scrollea para abajo, que con el
+    // dedo es natural; y CodeMirror mide el alto ya topado para ubicarlo.
+    maxHeight: 'min(20rem, 45vh)',
+    overflowY: 'auto',
   },
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
@@ -707,7 +712,12 @@ const METODOS: Completion[] = [
    aparezcan en clase.
 
    Los ejemplos son Python de verdad: `scripts/verificar-docs-editor.py` los
-   corre y comprueba cada `→`. Si uno miente, el script lo canta. */
+   corre y comprueba cada `→`. Si uno miente, el script lo canta.
+
+   Para que los de archivos y base de datos sean cortos, el script les deja
+   preparado lo que el alumno ya tendría a mano: un `dia.txt` con dos renglones
+   y una `con` con la tabla `alumnos` (dni, nombre) y una fila, Ana. Así el panel
+   muestra el método y no tres renglones de preparación. */
 type Doc = { firma: string; que: string; ejemplo: string };
 
 const DOCS: Record<string, Doc> = {
@@ -780,6 +790,168 @@ const DOCS: Record<string, Doc> = {
     firma: 'diccionario.keys()',
     que: 'Solo las claves. Para recorrerlas alcanza con for dni in dia, que hace lo mismo y se lee mejor.',
     ejemplo: 'dia = {"30111222": "P", "28999888": "A"}\nlist(dia.keys()) → ["30111222", "28999888"]',
+  },
+
+  // ---- Listas -------------------------------------------------------------
+  remove: {
+    firma: 'lista.remove(valor)',
+    que: 'Saca la PRIMERA vez que aparece ese valor. Si no está, da ValueError: preguntá antes con in.',
+    ejemplo: 'notas = [7, 9, 7]\nnotas.remove(7)\nnotas → [9, 7]',
+  },
+  insert: {
+    firma: 'lista.insert(posicion, elemento)',
+    que: 'Agrega el elemento en esa posición y corre los demás un lugar. Las posiciones arrancan en 0.',
+    ejemplo: 'colores = ["azul", "rojo"]\ncolores.insert(1, "verde")\ncolores → ["azul", "verde", "rojo"]',
+  },
+  reverse: {
+    firma: 'lista.reverse()',
+    que: 'Da vuelta la lista misma: el último pasa a ser el primero. No la ordena, la invierte. Devuelve None.',
+    ejemplo: 'notas = [7, 4, 9]\nnotas.reverse()\nnotas → [9, 4, 7]',
+  },
+  index: {
+    firma: 'lista.index(valor)',
+    que: 'En qué posición está la primera vez que aparece. Si no está, ValueError: preguntá antes con in.',
+    ejemplo: 'colores = ["azul", "rojo"]\ncolores.index("rojo") → 1',
+  },
+  count: {
+    firma: 'lista.count(valor)',
+    que: 'Cuántas veces aparece. Anda igual en listas y en textos.',
+    ejemplo: '[7, 9, 7].count(7) → 2\n"banana".count("a") → 3',
+  },
+  extend: {
+    firma: 'lista.extend(otra_lista)',
+    que: 'Agrega al final todos los elementos de la otra lista, de a uno. Con append, la otra lista entraría entera como UN solo elemento.',
+    ejemplo: 'notas = [7, 9]\nnotas.extend([4, 10])\nnotas → [7, 9, 4, 10]',
+  },
+  clear: {
+    firma: 'lista.clear()',
+    que: 'Vacía la lista: la deja en [] pero es la MISMA lista, así que todos los que la apuntaban la ven vacía.',
+    ejemplo: 'notas = [7, 9]\nnotas.clear()\nnotas → []',
+  },
+
+  // ---- Texto --------------------------------------------------------------
+  endswith: {
+    firma: 'texto.endswith(final)',
+    que: 'True si el texto termina con eso.',
+    ejemplo: '"informe.pdf".endswith(".pdf") → True',
+  },
+  isalpha: {
+    firma: 'texto.isalpha()',
+    que: 'True si son todas letras y no está vacío. Ojo: el espacio no es una letra.',
+    ejemplo: '"Ana".isalpha() → True\n"Ana Paz".isalpha() → False',
+  },
+  title: {
+    firma: 'texto.title()',
+    que: 'Devuelve el texto con la primera letra de cada palabra en mayúscula.',
+    ejemplo: '"ana paz".title() → "Ana Paz"',
+  },
+  capitalize: {
+    firma: 'texto.capitalize()',
+    que: 'Devuelve el texto con SOLO la primera letra en mayúscula y el resto en minúscula.',
+    ejemplo: '"ana PAZ".capitalize() → "Ana paz"',
+  },
+  splitlines: {
+    firma: 'texto.splitlines()',
+    que: 'Parte el texto en renglones. A diferencia de split("\\n"), no deja un renglón vacío al final cuando el texto termina con un Enter.',
+    ejemplo: '"30111222,P\\n28999888,A\\n".splitlines() → ["30111222,P", "28999888,A"]',
+  },
+  rstrip: {
+    firma: 'texto.rstrip()',
+    que: 'Como strip, pero solo del final. Es el clásico para sacarle el Enter a un renglón leído de un archivo.',
+    ejemplo: '"30111222,P\\n".rstrip() → "30111222,P"',
+  },
+  lstrip: {
+    firma: 'texto.lstrip()',
+    que: 'Como strip, pero solo del principio.',
+    ejemplo: '"   Ana".lstrip() → "Ana"',
+  },
+  format: {
+    firma: 'texto.format(valores)',
+    que: 'Arma un texto cambiando cada {} por un valor, en orden. Hoy casi siempre se usa el f-string, que hace lo mismo y se lee mejor.',
+    ejemplo: '"{} tiene {}".format("Ana", 7) → "Ana tiene 7"',
+  },
+
+  // ---- Diccionarios -------------------------------------------------------
+  values: {
+    firma: 'diccionario.values()',
+    que: 'Solo los valores, sin las claves.',
+    ejemplo: 'dia = {"30111222": "P", "28999888": "A"}\nlist(dia.values()) → ["P", "A"]',
+  },
+  update: {
+    firma: 'diccionario.update(otro)',
+    que: 'Agrega o pisa varios de una: las claves que ya estaban cambian de valor, y las nuevas se suman.',
+    ejemplo: 'dia = {"30111222": "P"}\ndia.update({"30111222": "T", "28999888": "A"})\ndia → {"30111222": "T", "28999888": "A"}',
+  },
+
+  // ---- Conjuntos ----------------------------------------------------------
+  add: {
+    firma: 'conjunto.add(elemento)',
+    que: 'Agrega el elemento. Si ya estaba no pasa nada: un conjunto no repite.',
+    ejemplo: 'vistos = {"30111222"}\nvistos.add("28999888")\nvistos.add("30111222")\nlen(vistos) → 2',
+  },
+  discard: {
+    firma: 'conjunto.discard(elemento)',
+    que: 'Saca el elemento si está, y si no está no pasa nada. remove, en cambio, da KeyError.',
+    ejemplo: 'vistos = {"30111222"}\nvistos.discard("99999999")\nvistos → {"30111222"}',
+  },
+  union: {
+    firma: 'conjunto.union(otro)',
+    que: 'Un conjunto nuevo con los que están en cualquiera de los dos.',
+    ejemplo: '{"P", "A"}.union({"A", "T"}) → {"P", "A", "T"}',
+  },
+  intersection: {
+    firma: 'conjunto.intersection(otro)',
+    que: 'Un conjunto nuevo con los que están en los DOS.',
+    ejemplo: '{"P", "A"}.intersection({"A", "T"}) → {"A"}',
+  },
+  issubset: {
+    firma: 'conjunto.issubset(otro)',
+    que: 'True si todos los de este conjunto están también en el otro. Sirve para chequear que los estados sean todos válidos.',
+    ejemplo: '{"P", "T"}.issubset({"P", "A", "T"}) → True',
+  },
+
+  // ---- Archivos (los ejemplos usan un dia.txt con dos renglones) ----------
+  read: {
+    firma: 'archivo.read()',
+    que: 'Todo el archivo, en un solo texto. Los Enter vienen adentro, como \\n.',
+    ejemplo: 'archivo = open("dia.txt", encoding="utf-8")\narchivo.read() → "30111222,P\\n28999888,A\\n"',
+  },
+  readlines: {
+    firma: 'archivo.readlines()',
+    que: 'Los renglones, como lista. Ojo: cada uno trae su Enter al final; por eso después casi siempre va un strip().',
+    ejemplo: 'archivo = open("dia.txt", encoding="utf-8")\narchivo.readlines() → ["30111222,P\\n", "28999888,A\\n"]',
+  },
+  write: {
+    firma: 'archivo.write(texto)',
+    que: 'Escribe el texto en el archivo. No agrega el Enter solo: si querés renglón nuevo, va un \\n al final.',
+    ejemplo: 'archivo = open("dia.txt", "w", encoding="utf-8")\narchivo.write("30111222,T\\n")\narchivo.close()\nopen("dia.txt", encoding="utf-8").read() → "30111222,T\\n"',
+  },
+  close: {
+    firma: 'archivo.close()',
+    que: 'Cierra el archivo. Con with open(...) as archivo no hace falta: se cierra solo al salir del bloque.',
+    ejemplo: 'archivo = open("dia.txt", encoding="utf-8")\narchivo.close()\narchivo.closed → True',
+  },
+
+  // ---- Base de datos (los ejemplos usan una con con la tabla alumnos) -----
+  execute: {
+    firma: 'con.execute(sql, valores)',
+    que: 'Corre una consulta SQL. Los valores van aparte, en una tupla, con un ? en el SQL por cada uno: nunca pegados al texto.',
+    ejemplo: 'con.execute("INSERT INTO alumnos VALUES (?, ?)", ("28999888", "Beto"))',
+  },
+  fetchone: {
+    firma: 'con.execute(sql).fetchone()',
+    que: 'La primera fila del resultado, como tupla. Si no hay ninguna, None: por eso antes de usarla va un if fila is None.',
+    ejemplo: 'fila = con.execute("SELECT nombre FROM alumnos").fetchone()\nfila → ("Ana",)',
+  },
+  fetchall: {
+    firma: 'con.execute(sql).fetchall()',
+    que: 'Todas las filas del resultado: una lista de tuplas. Si no hay ninguna, la lista vacía.',
+    ejemplo: 'filas = con.execute("SELECT dni FROM alumnos").fetchall()\nfilas → [("30111222",)]',
+  },
+  commit: {
+    firma: 'con.commit()',
+    que: 'Confirma los cambios. Sin commit(), lo que agregaste o cambiaste se pierde cuando termina el programa.',
+    ejemplo: 'con.execute("INSERT INTO alumnos VALUES (?, ?)", ("28999888", "Beto"))\ncon.commit()',
   },
 };
 
