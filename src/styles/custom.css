@@ -554,14 +554,35 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 }
 
 /* Enviar al profe: discreto y separado a la derecha, para que no compita
-   con Ejecutar/Verificar. */
-.ejercicio__btn--enviar {
+   con Ejecutar/Verificar. Es un botón partido —[💬 Enviar a mi profe | ▾]—
+   y las dos mitades van en un span inline-flex para que el flex-wrap de la
+   fila nunca las separe: en el celular bajan juntas al renglón de abajo. */
+.ejercicio__enviar {
+  display: inline-flex;
   margin-left: auto;
+}
+.ejercicio__btn--enviar,
+.ejercicio__btn--enviar-otras {
   background: transparent;
   font-weight: 500;
+  white-space: nowrap;
+}
+.ejercicio__btn--enviar {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.ejercicio__btn--enviar-otras {
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.4rem 0.6rem;
+}
+.ejercicio__btn--enviar-otras[aria-expanded='true'] {
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-text-accent);
 }
 @media (max-width: 30rem) {
-  .ejercicio__btn--enviar { margin-left: 0; }
+  .ejercicio__enviar { margin-left: 0; }
 }
 
 .ejercicio__salida {
@@ -991,7 +1012,7 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   font-size: 0.8rem; line-height: 1.45; white-space: pre;
 }
 
-/* Las tres formas de mandarlo: Discord, Gmail o las dos. */
+/* La caja del envío: el estado de Discord, o las otras vías (la flecha ▾). */
 .ejercicio__envio { position: relative; }
 .ejercicio__envio-cerrar {
   position: absolute; top: 0.35rem; right: 0.45rem;
@@ -1015,9 +1036,11 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   margin: 0 0 0.6rem; font-size: 0.85rem; line-height: 1.5; color: var(--sl-color-gray-3);
 }
 .ejercicio__envio-estado {
-  display: inline-block; margin-left: 0.6rem;
+  display: inline-block;
   font-size: 0.85rem; color: var(--sl-color-text-accent);
 }
+/* El aviso de Discord, solo en la caja: que no se meta abajo de la ✕. */
+.ejercicio__envio-estado--solo { display: block; margin-right: 2rem; }
 
 /* Plan B del envío: aparece recién después de tocar "Enviar a mi profe". */
 .ejercicio__envio {
@@ -1076,6 +1099,8 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
    Va con dos clases para ganarle en especificidad a la regla de arriba (0,2,0
    contra 0,1,2). */
 .ejercicio .ejercicio__acciones > *,
+.ejercicio .ejercicio__enviar > *,
+.ejercicio .ejercicio__envio-opciones > *,
 .ejercicio .ejercicio__teclas > *,
 .ejercicio .ejercicio__envio > *,
 .ejercicio .ejercicio__aviso-datos > * {

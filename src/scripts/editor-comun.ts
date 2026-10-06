@@ -392,7 +392,17 @@ export function conectarTeclas(
 
 // ---------- Enviar el código al profe ----------
 
-// mailto: (100% estático, sin terceros) + publicación en Discord vía Worker.
+// Botón partido: [💬 Enviar a mi profe | ▾].
+//
+// - El cuerpo publica directo en #Consultas de Discord (vía el Worker).
+// - La flecha abre la caja con las otras vías: Gmail, el programa de correo de
+//   la compu y copiar el mensaje.
+//
+// Historia: primero se mandaba por Discord y además se abría el correo, sin
+// preguntar (al que usa Discord le aparecía una pestaña que no pidió). Después
+// pasó a preguntar siempre "¿por dónde?" y el envío costaba dos clics. Ahora lo
+// normal (Discord) es un clic, y lo demás queda a mano en la flecha.
+//
 // `getCode` se pasa como función porque el código cambia entre clics.
 //
 // `getEntradas` es para los ejercicios con input(): sin saber QUÉ tecleó el
@@ -405,28 +415,44 @@ export function conectarEnvio(
 ): void {
   const btnEnviar = el.querySelector<HTMLButtonElement>('[data-enviar]');
   if (!btnEnviar) return;
+  const btnOtras = el.querySelector<HTMLButtonElement>('[data-enviar-otras]');
   const cajaEnvio = el.querySelector<HTMLElement>('[data-envio]');
   let ultimoMensaje = '';
-  /* Se arma en cada envío, con los datos de ESE intento. */
-  let publicarEnDiscord: (() => Promise<void>) | null = null;
+  // Para no hacerle escribir la consulta dos veces: si la publicó en Discord y
+  // después quiere mandarla también por mail, el segundo prompt ya la trae.
+  let ultimaConsulta = '';
 
-  btnEnviar.addEventListener('click', () => {
+  type Envio = {
+    nombre: string; titulo: string; consulta: string; asunto: string;
+    enlace: string; entradas: string[]; cuerpo: string; codigo: string;
+  };
+
+  // Junta todo lo del envío. Devuelve null si canceló el nombre o la consulta.
+  //
+  // Cancelar la consulta CANCELA el envío. Antes daba lo mismo que dejarla
+  // vacía, porque después había que elegir por dónde mandarlo. Ahora el botón
+  // publica en Discord apenas se acepta: si "Cancelar" mandara igual, el que se
+  // arrepiente terminaría con su código publicado.
+  function armarEnvio(dondeVa: string): Envio | null {
     const nombre = obtenerNombreAlumno();
-    if (!nombre) return; // canceló el nombre
+    if (!nombre) return null;
+    const respuesta = window.prompt(
+      '¿Querés contarle algo al profe? (podés dejarlo vacío)\n\n' +
+        'Por ejemplo: qué no te sale, o qué error te aparece.\n\n' +
+        dondeVa,
+      ultimaConsulta,
+    );
+    if (respuesta === null) return null;
+    const consulta = respuesta.trim();
+    ultimaConsulta = consulta;
     const titulo = el.dataset.titulo || 'Ejercicio';
-    const consulta = (
-      window.prompt(
-        '¿Querés contarle algo al profe? (podés dejarlo vacío)\n\n' +
-          'Por ejemplo: qué no te sale, o qué error te aparece.',
-      ) || ''
-    ).trim();
-    const asunto = `${nombre} — ${titulo}`;
     // Link al EJERCICIO, no a la clase entera. Antes se mandaba `location.href`
     // pelado y del otro lado había que buscar cuál de los 19 ejercicios era.
     // Los id ahora salen del título (ver scripts/id-ejercicio.ts), así que la
     // dirección sigue sirviendo después del próximo deploy.
     const enlace = el.id ? `${location.href.split('#')[0]}#${el.id}` : location.href;
     const entradas = (getEntradas ? getEntradas() : []).filter((e) => e !== '');
+    const codigo = getCode();
     const cuerpo =
       `¡Hola profe! Te mando mi intento. 🙂\n\n` +
       `Lección: ${document.title}\n` +
@@ -436,95 +462,136 @@ export function conectarEnvio(
       (consulta ? `--- mi consulta ---\n${consulta}\n\n` : '') +
       (entradas.length ? `--- lo que tecleé (entradas) ---\n${entradas.join('\n')}\n\n` : '') +
       `--- mi código ---\n` +
-      `${getCode()}\n`;
+      `${codigo}\n`;
+    const asunto = `${nombre} — ${titulo}`;
     ultimoMensaje = `Para: ${EMAIL_PROFE}\nAsunto: ${asunto}\n\n${cuerpo}`;
+    return { nombre, titulo, consulta, asunto, enlace, entradas, cuerpo, codigo };
+  }
 
-    // ── Elegir por dónde mandarlo ────────────────────────────────────
-    //
-    // Antes se mandaba por los dos canales SIEMPRE, sin preguntar: se abría el
-    // correo solo y además se publicaba en Discord. Dos problemas: al que usa
-    // Discord le aparecía una pestaña de correo que no pidió, y al que no tiene
-    // programa de correo configurado no le pasaba nada y no entendía por qué.
-    //
-    // Ahora elige. Y el correo es Gmail por link, no `mailto:`, porque Gmail
-    // anda con solo estar logueado en el navegador — que es el caso de las
-    // computadoras del CFP, donde `mailto:` no abre nada.
-    //
-    // Importante: cada botón abre su pestaña en SU PROPIO clic. Los navegadores
-    // solo dejan abrir pestañas durante el gesto del usuario, así que esto no se
-    // puede hacer después de esperar una respuesta del Worker.
+  function cerrarCaja(): void {
     if (!cajaEnvio) return;
+    cajaEnvio.hidden = true;
+    delete cajaEnvio.dataset.modo;
+    btnOtras?.setAttribute('aria-expanded', 'false');
+  }
 
+  const BOTON_CERRAR =
+    '<button type="button" class="ejercicio__envio-cerrar" data-cerrar-envio ' +
+    'title="Cerrar" aria-label="Cerrar">✕</button>';
+
+  // ── La caja de las otras vías (la flecha ▾) ─────────────────────────
+  //
+  // Gmail va por link y no por `mailto:`: anda con solo estar logueado en el
+  // navegador, que es el caso de las computadoras del CFP, donde `mailto:` no
+  // abre nada.
+  //
+  // Importante: cada vía abre su pestaña en SU PROPIO clic. Los navegadores solo
+  // dejan abrir pestañas durante el gesto del usuario, y entre el clic en la
+  // flecha y este punto hubo un prompt(). Por eso la caja trae links para tocar
+  // y no un window.open() acá.
+  function mostrarOtras(e: Envio, aviso = ''): void {
+    if (!cajaEnvio) return;
     // El cuerpo recortado para el link: el código puede ser largo y las URL
     // tienen tope. Si no entra, queda el botón de copiar, que no tiene límite.
-    const cuerpoCorto = cuerpo.length > 1500
-      ? cuerpo.slice(0, 1500) + '\n\n[…] (cortado: usá 📋 Copiar el mensaje y pegalo acá)'
-      : cuerpo;
+    const cuerpoCorto = e.cuerpo.length > 1500
+      ? e.cuerpo.slice(0, 1500) + '\n\n[…] (cortado: usá 📋 Copiar el mensaje y pegalo acá)'
+      : e.cuerpo;
     const gmail =
       'https://mail.google.com/mail/?view=cm&fs=1' +
       `&to=${encodeURIComponent(EMAIL_PROFE)}` +
-      `&su=${encodeURIComponent(asunto)}` +
+      `&su=${encodeURIComponent(e.asunto)}` +
       `&body=${encodeURIComponent(cuerpoCorto)}`;
     const mailto =
       `mailto:${EMAIL_PROFE}` +
-      `?subject=${encodeURIComponent(asunto)}` +
+      `?subject=${encodeURIComponent(e.asunto)}` +
       `&body=${encodeURIComponent(cuerpoCorto)}`;
 
     cajaEnvio.hidden = false;
+    cajaEnvio.dataset.modo = 'otras';
+    btnOtras?.setAttribute('aria-expanded', 'true');
     cajaEnvio.innerHTML =
-      '<button type="button" class="ejercicio__envio-cerrar" data-cerrar-envio ' +
-      'title="Cerrar" aria-label="Cerrar">✕</button>' +
-      '<p class="ejercicio__envio-tit">¿Por dónde se lo mandás?</p>' +
+      BOTON_CERRAR +
+      '<p class="ejercicio__envio-tit">Otras formas de mandárselo</p>' +
       '<div class="ejercicio__envio-opciones">' +
-      (WORKER_CONSULTAS
-        ? '<button type="button" class="ejercicio__btn" data-por="discord">💬 Discord</button>'
-        : '') +
       `<a class="ejercicio__btn" data-por="gmail" href="${gmail}" target="_blank" rel="noopener">✉️ Gmail</a>` +
-      (WORKER_CONSULTAS
-        ? `<a class="ejercicio__btn ejercicio__btn--ok" data-por="ambas" href="${gmail}" target="_blank" rel="noopener">📨 Las dos</a>`
-        : '') +
+      '<button type="button" class="ejercicio__btn" data-copiar-envio>📋 Copiar el mensaje</button>' +
       '</div>' +
       '<p class="ejercicio__envio-nota">' +
-      'En <strong>#Consultas</strong> de Discord lo ve el profe y además le sirve a otro que tenga ' +
-      'la misma duda. Por mail le llega a él solo.<br>' +
+      'Por mail le llega al profe solo. Con <strong>💬 Enviar a mi profe</strong> se publica en ' +
+      '<strong>#Consultas</strong> de Discord, y le sirve también a otro que tenga la misma duda.<br>' +
       `¿Usás otro correo? <a href="${mailto}">Abrir el programa de correo de esta computadora</a>.` +
       '</p>' +
-      '<button type="button" class="ejercicio__btn" data-copiar-envio>📋 Copiar el mensaje</button>' +
-      '<span class="ejercicio__envio-estado" data-envio-estado role="status"></span>';
+      `<span class="ejercicio__envio-estado" data-envio-estado role="status">${aviso}</span>`;
     cajaEnvio.scrollIntoView({ block: 'nearest' });
+  }
 
-    const estado = cajaEnvio.querySelector<HTMLElement>('[data-envio-estado]');
-
-    publicarEnDiscord = async () => {
-      if (!estado) return;
-      estado.textContent = '⏳ Publicando en Discord…';
-      try {
-        const r = await fetch(WORKER_CONSULTAS, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nombre,
-            consulta,
-            codigo: getCode(),
-            entradas,
-            ejercicio: titulo,
-            leccion: document.title,
-            url: enlace,
-          }),
-        });
-        // No alcanza con que responda 200: un Worker a medio configurar (el
-        // "Hello World!" del template, por ejemplo) también responde 200 y el
-        // alumno se quedaría con un "✓ Enviado" que nunca llegó a ningún lado.
-        // Exigimos la respuesta que solo da NUESTRO Worker.
-        if (!r.ok) throw new Error(String(r.status));
-        const respuesta = await r.json().catch(() => null);
-        if (!respuesta?.ok) throw new Error('respuesta inesperada');
-        estado.textContent = '✓ Publicado en #Consultas';
-      } catch {
-        estado.textContent = '⚠️ Discord no respondió. Mandalo por Gmail o copiá el mensaje.';
+  // ── El cuerpo del botón: Discord directo ────────────────────────────
+  async function publicarEnDiscord(e: Envio): Promise<void> {
+    if (!cajaEnvio) return;
+    cajaEnvio.hidden = false;
+    cajaEnvio.dataset.modo = 'estado';
+    btnOtras?.setAttribute('aria-expanded', 'false');
+    cajaEnvio.innerHTML =
+      BOTON_CERRAR +
+      '<span class="ejercicio__envio-estado ejercicio__envio-estado--solo" data-envio-estado ' +
+      'role="status">⏳ Publicando en Discord…</span>';
+    cajaEnvio.scrollIntoView({ block: 'nearest' });
+    // Sin esto, el que aprieta dos veces porque "no pasó nada" publica dos veces.
+    btnEnviar!.disabled = true;
+    try {
+      const r = await fetch(WORKER_CONSULTAS, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: e.nombre,
+          consulta: e.consulta,
+          codigo: e.codigo,
+          entradas: e.entradas,
+          ejercicio: e.titulo,
+          leccion: document.title,
+          url: e.enlace,
+        }),
+      });
+      // No alcanza con que responda 200: un Worker a medio configurar (el
+      // "Hello World!" del template, por ejemplo) también responde 200 y el
+      // alumno se quedaría con un "✓ Enviado" que nunca llegó a ningún lado.
+      // Exigimos la respuesta que solo da NUESTRO Worker.
+      if (!r.ok) throw new Error(String(r.status));
+      const respuesta = await r.json().catch(() => null);
+      if (!respuesta?.ok) throw new Error('respuesta inesperada');
+      const estado = cajaEnvio.querySelector<HTMLElement>('[data-envio-estado]');
+      if (estado) {
+        estado.textContent =
+          '✓ Publicado en #Consultas de Discord. Si además lo querés mandar por mail, tocá ▾.';
       }
-    };
+    } catch {
+      // Si Discord falla, las otras vías aparecen solas: el alumno no tiene que
+      // adivinar que estaban escondidas en la flecha.
+      mostrarOtras(e, '⚠️ Discord no respondió. Mandalo por Gmail o copiá el mensaje.');
+    } finally {
+      btnEnviar!.disabled = false;
+    }
+  }
 
+  btnEnviar.addEventListener('click', () => {
+    // Sin Worker configurado no hay Discord: el botón hace lo de la flecha.
+    if (!WORKER_CONSULTAS) {
+      const e = armarEnvio('Después elegís por dónde mandarlo.');
+      if (e) mostrarOtras(e);
+      return;
+    }
+    const e = armarEnvio('Al aceptar, se publica en #Consultas de Discord.');
+    if (e) void publicarEnDiscord(e);
+  });
+
+  btnOtras?.addEventListener('click', () => {
+    // La flecha también cierra: es lo que uno espera de un desplegable.
+    if (cajaEnvio && !cajaEnvio.hidden && cajaEnvio.dataset.modo === 'otras') {
+      cerrarCaja();
+      return;
+    }
+    const e = armarEnvio('Después elegís: Gmail, tu programa de correo o copiar el mensaje.');
+    if (e) mostrarOtras(e);
   });
 
   /* Un solo escuchador para toda la caja, puesto UNA vez. Los botones se
@@ -538,13 +605,11 @@ export function conectarEnvio(
     // Cerrar: la caja queda ocupando media pantalla hasta que uno se va del
     // ejercicio, y lo normal es mandar la consulta y seguir resolviendo.
     if (boton.hasAttribute('data-cerrar-envio')) {
-      cajaEnvio.hidden = true;
+      cerrarCaja();
       return;
     }
-    const por = boton.dataset.por;
     const estado = cajaEnvio.querySelector<HTMLElement>('[data-envio-estado]');
-    if ((por === 'discord' || por === 'ambas') && publicarEnDiscord) void publicarEnDiscord();
-    if (por === 'gmail' && estado) estado.textContent = 'Se abrió Gmail en otra pestaña.';
+    if (boton.dataset.por === 'gmail' && estado) estado.textContent = 'Se abrió Gmail en otra pestaña.';
     if (boton.hasAttribute('data-copiar-envio')) {
       void (async () => {
         const original = boton.textContent;

@@ -80,7 +80,13 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   <div class="ejercicio__acciones">
     <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-verify>🧪 Probar mis tests</button>
     <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
-    <button type="button" class="ejercicio__btn ejercicio__btn--enviar" data-enviar>✉️ Enviar a mi profe</button>
+    <span class="ejercicio__enviar">
+      <button type="button" class="ejercicio__btn ejercicio__btn--enviar" data-enviar
+        title="Publicar tu código y tu consulta en #Consultas de Discord">💬 Enviar a mi profe</button>
+      <button type="button" class="ejercicio__btn ejercicio__btn--enviar-otras" data-enviar-otras
+        aria-expanded="false" aria-label="Otras formas de mandárselo"
+        title="Mandarlo por mail o copiar el mensaje">▾</button>
+    </span>
   </div>
 
   {pistas.length > 0 && (
@@ -92,7 +98,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 
   <p class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></p>
   <ul class="et__marcador" data-marcador hidden></ul>
-  <p class="ejercicio__envio" data-envio hidden></p>
+  <div class="ejercicio__envio" data-envio hidden></div>
 </section>
 
 <script>
