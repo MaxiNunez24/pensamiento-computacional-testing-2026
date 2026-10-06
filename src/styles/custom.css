@@ -1526,9 +1526,13 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 /* En celular sigue flotando: el encabezado no tiene lugar y el menú
    hamburguesa lo escondería a dos toques de distancia. Se muestra solo abajo
    del breakpoint md (la clase md:sl-hidden de Starlight lo apaga arriba). */
+/* Va a la IZQUIERDA del botón de plegar el encabezado (.pc-header-toggle), que
+   tiene la esquina. Antes compartían esquina: en celular el toggle se subía
+   arriba de este, pero en la compu, al plegar el encabezado, este aparecía (el
+   de arriba se esconde con el encabezado) y caía justo encima del toggle. */
 .pc-sync-flotante {
   position: fixed;
-  right: 1rem;
+  right: calc(1rem + var(--pc-toggle-lado) + 0.5rem);
   bottom: 1rem;
   z-index: 80;
   padding: 0.65rem;
@@ -2933,15 +2937,22 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 }
 
 /* El botón vive abajo a la derecha, la esquina que menos se mira mientras se
-   explica. Va POR ENCIMA del botón de sincronizar (z-index 80): con el
-   encabezado plegado, en celular este es el único camino de vuelta al menú. */
+   explica. Es el dueño de la esquina porque está SIEMPRE, y con el encabezado
+   plegado en celular es el único camino de vuelta al menú. El de sincronizar
+   flotante se pone a su izquierda, por eso el lado va en una variable: lo usan
+   las dos reglas. */
+:root {
+  --pc-toggle-lado: 2.1rem;
+}
 .pc-header-toggle {
   position: fixed;
   right: 1rem;
-  bottom: 1rem;
+  /* Alineado por el CENTRO con el de sincronizar, que mide 41px contra 34
+     de este: con los dos apoyados en 1rem, el chico quedaba 3px más abajo. */
+  bottom: 1.2rem;
   z-index: 90;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: var(--pc-toggle-lado);
+  height: var(--pc-toggle-lado);
   padding: 0;
   font: inherit;
   font-size: 0.8rem;
@@ -2960,13 +2971,6 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   opacity: 1;
   color: var(--sl-color-white);
   border-color: var(--sl-color-accent);
-}
-/* En celular el botón de sincronizar ya ocupa esa esquina: este se apoya
-   arriba de aquel en vez de taparlo. */
-@media (max-width: 50rem) {
-  .pc-header-toggle {
-    bottom: 4.4rem;
-  }
 }
 /* Al imprimir no va: la planilla y los apuntes salen sin botones. */
 @media print {
