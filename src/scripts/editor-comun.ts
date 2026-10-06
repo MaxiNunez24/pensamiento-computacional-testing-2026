@@ -552,7 +552,10 @@ export function conectarEnvio(
    Lo segundo importa más de lo que parece: el alumno mira el editor vacío y no
    se acuerda de cómo se llamaba la variable. Ahora se la ofrece el editor.
 */
-import { autocompletion, completeFromList, type Completion } from '@codemirror/autocomplete';
+import {
+  autocompletion, completeFromList, ifNotIn,
+  type Completion, type CompletionContext, type CompletionResult,
+} from '@codemirror/autocomplete';
 import { localCompletionSource } from '@codemirror/lang-python';
 
 /** Saca los nombres que define un bloque de `datos`: `precio = 1500` → precio. */
@@ -613,6 +616,98 @@ const PALABRAS: Completion[] = [
   { label: 'self', type: 'keyword', detail: 'el objeto que se está usando' },
 ];
 
+/* Los métodos del curso: lo que va DESPUÉS de un punto.
+   ----------------------------------------------------
+   Hasta ahora no había ninguno, así que `lista.app` no completaba nunca: no es
+   que fallara, es que no existía la fuente. Y la del paquete de Python se niega
+   a trabajar después de un punto a propósito (su `dontComplete` incluye
+   `PropertyName`), porque solo sabe de variables locales.
+
+   La lista salió de contar qué se usa de verdad en las clases. No se separa por
+   tipo —no se infiere si la variable es lista o texto— porque el tipo casi nunca
+   se puede saber: `alumnos` llega de los `datos`, y un parámetro de función no
+   tiene tipo. Con escribir dos letras después del punto el filtro deja una o
+   dos, que es lo mismo que daría inferir, sin la mitad de los falsos negativos. */
+const METODOS: Completion[] = [
+  // Listas
+  { label: 'append', type: 'method', detail: 'agregar al final', boost: 60 },
+  { label: 'remove', type: 'method', detail: 'sacar por valor' },
+  { label: 'pop', type: 'method', detail: 'sacar y devolver' },
+  { label: 'insert', type: 'method', detail: 'agregar en una posición' },
+  { label: 'sort', type: 'method', detail: 'ordenar la lista misma' },
+  { label: 'reverse', type: 'method', detail: 'darla vuelta' },
+  { label: 'index', type: 'method', detail: 'en qué posición está' },
+  { label: 'count', type: 'method', detail: 'cuántas veces aparece' },
+  { label: 'extend', type: 'method', detail: 'pegarle otra lista' },
+  { label: 'clear', type: 'method', detail: 'vaciar' },
+  // Texto
+  { label: 'strip', type: 'method', detail: 'sacar espacios de los bordes', boost: 60 },
+  { label: 'lower', type: 'method', detail: 'todo en minúsculas', boost: 55 },
+  { label: 'upper', type: 'method', detail: 'todo en MAYÚSCULAS', boost: 55 },
+  { label: 'split', type: 'method', detail: 'partir en una lista', boost: 50 },
+  { label: 'join', type: 'method', detail: 'unir una lista en un texto' },
+  { label: 'replace', type: 'method', detail: 'cambiar una parte por otra' },
+  { label: 'startswith', type: 'method', detail: '¿empieza con…?' },
+  { label: 'endswith', type: 'method', detail: '¿termina con…?' },
+  { label: 'isdigit', type: 'method', detail: '¿son todos números?' },
+  { label: 'isalpha', type: 'method', detail: '¿son todas letras?' },
+  { label: 'title', type: 'method', detail: 'Cada Palabra En Mayúscula' },
+  { label: 'capitalize', type: 'method', detail: 'Solo la primera en mayúscula' },
+  { label: 'splitlines', type: 'method', detail: 'partir por renglones' },
+  { label: 'rstrip', type: 'method', detail: 'sacar espacios del final' },
+  { label: 'lstrip', type: 'method', detail: 'sacar espacios del principio' },
+  { label: 'format', type: 'method', detail: 'armar un texto con valores' },
+  // Diccionarios
+  { label: 'get', type: 'method', detail: 'el valor, o None si no está', boost: 55 },
+  { label: 'keys', type: 'method', detail: 'las claves' },
+  { label: 'values', type: 'method', detail: 'los valores' },
+  { label: 'items', type: 'method', detail: 'clave y valor de a pares', boost: 50 },
+  { label: 'update', type: 'method', detail: 'agregar o pisar varios' },
+  // Conjuntos
+  { label: 'add', type: 'method', detail: 'agregar al conjunto' },
+  { label: 'discard', type: 'method', detail: 'sacar, sin romper si no está' },
+  { label: 'union', type: 'method', detail: 'los de los dos' },
+  { label: 'intersection', type: 'method', detail: 'los que están en los dos' },
+  { label: 'issubset', type: 'method', detail: '¿están todos en el otro?' },
+  // Archivos
+  { label: 'read', type: 'method', detail: 'todo el archivo, como un texto' },
+  { label: 'write', type: 'method', detail: 'escribir en el archivo' },
+  { label: 'readlines', type: 'method', detail: 'los renglones, como lista' },
+  { label: 'close', type: 'method', detail: 'cerrar' },
+  // Base de datos
+  { label: 'execute', type: 'method', detail: 'correr una consulta SQL' },
+  { label: 'fetchone', type: 'method', detail: 'una fila, o None' },
+  { label: 'fetchall', type: 'method', detail: 'todas las filas' },
+  { label: 'commit', type: 'method', detail: 'confirmar los cambios' },
+];
+
+/* Donde NO hay que sugerir nada. El paquete de Python envuelve su lista en un
+   `ifNotIn` con estos nodos; nosotros usábamos `completeFromList` pelado y por
+   eso la lista se colaba adentro de los strings y de los comentarios: escribir
+   `mensaje = "hola def` ofrecía la palabra `def`. */
+const NO_COMPLETAR = ['String', 'FormatString', 'Comment'];
+
+/** El trozo `.loQueVaDespues` si el cursor está escribiendo después de un punto. */
+function despuesDeUnPunto(context: CompletionContext) {
+  const trozo = context.matchBefore(/\.[A-Za-z_]*$/);
+  if (!trozo) return null;
+  // `3.14` también tiene un punto y no es un método: miramos qué hay antes.
+  const anterior = context.state.sliceDoc(Math.max(0, trozo.from - 1), trozo.from);
+  return /[0-9]/.test(anterior) ? null : trozo;
+}
+
+/** Después de un punto: solo métodos. */
+function metodosDelPunto(context: CompletionContext): CompletionResult | null {
+  const trozo = despuesDeUnPunto(context);
+  if (!trozo) return null;
+  return {
+    // +1 para no pisar el punto: se reemplaza solo lo que viene después.
+    from: trozo.from + 1,
+    options: METODOS,
+    validFor: /^[A-Za-z_]*$/,
+  };
+}
+
 /**
  * Extensiones de autocompletado para un editor de ejercicio.
  * `datos` es el bloque de variables que el ejercicio inyecta (puede ir vacío).
@@ -626,6 +721,14 @@ export function autocompletado(datos = '') {
     boost: 99,
   }));
 
+  const listaCurada = completeFromList([...delEjercicio, ...BASICOS, ...PALABRAS]);
+
+  /* Funciones, palabras del lenguaje y variables del ejercicio: todo MENOS
+     después de un punto. Sin este corte, `texto.pri` ofrecía `print`, que como
+     método de un texto no existe. Ahí mandan los métodos y nadie más. */
+  const sueltas = (context: CompletionContext) =>
+    (despuesDeUnPunto(context) ? null : listaCurada(context));
+
   return [
     autocompletion({
       /* `override` reemplaza TODAS las fuentes, y eso es lo importante acá.
@@ -635,10 +738,20 @@ export function autocompletado(datos = '') {
          sugerirle a nadie, y sobre todo hacen un cartel de ocho renglones que
          tapa la consigna.
 
-         Quedan dos fuentes: la lista curada del curso, y los nombres que el
-         alumno definió en su propio código (esa sí la queremos: completar la
-         función que acaba de escribir). */
-      override: [completeFromList([...delEjercicio, ...BASICOS, ...PALABRAS]), localCompletionSource],
+         OJO con lo que el `override` se llevó puesto sin querer: el paquete
+         envolvía su lista en un `ifNotIn`, y al reemplazarla perdimos esa
+         guarda. De ahí los dos `ifNotIn` de acá abajo.
+
+         Las tres fuentes, y cada una sabe cuándo callarse:
+           - `sueltas`     → funciones, palabras y datos del ejercicio; nunca después de un punto
+           - `metodosDelPunto` → solo después de un punto
+           - `localCompletionSource` → lo que el alumno definió en su código
+             (trae su propia guarda, incluido el no completar después del punto) */
+      override: [
+        ifNotIn(NO_COMPLETAR, sueltas),
+        ifNotIn(NO_COMPLETAR, metodosDelPunto),
+        localCompletionSource,
+      ],
       // Sin esto, el cartel se cierra al tocar afuera y en el celular eso pasa
       // con cualquier scroll.
       closeOnBlur: true,
