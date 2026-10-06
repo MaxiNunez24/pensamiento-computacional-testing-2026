@@ -1048,8 +1048,14 @@ function flechaDoc(completion: Completion, _estado: unknown, view: EditorView): 
   if (!completion.info) return null;
   const flecha = document.createElement('span');
   flecha.className = 'pc-doc-flecha';
-  flecha.textContent = '›';
   flecha.title = 'Ver u ocultar la explicación';
+  // El símbolo va aparte porque es LO QUE GIRA. Si girara la caja entera (que
+  // es más ancha que alta y ocupa todo el renglón), a mitad del giro quedaría
+  // parada, más alta que el renglón, y a la lista le aparecía un scroll.
+  const icono = document.createElement('span');
+  icono.className = 'pc-doc-flecha__icono';
+  icono.textContent = '›';
+  flecha.append(icono);
 
   /* La lista de CodeMirror escucha `mousedown`, sube desde lo que tocaste
      hasta el <li> y APLICA esa sugerencia. Sin el stopPropagation, tocar la

@@ -311,6 +311,13 @@ body.pc-resizing * {
 .pc-doc__ejemplo > * {
   margin-top: 0 !important;
 }
+/* Lo mismo en la LISTA del cartel: Starlight le pone 4px arriba a cada <li>
+   desde el segundo (es su regla para las listas de la prosa). Cinco opciones
+   × 4px = 20px de más, que con el tope de 160px de la lista alcanzaban para
+   que apareciera un scroll aunque las seis entraran justas. */
+.cm-tooltip-autocomplete > ul > li {
+  margin: 0 !important;
+}
 
 /* Cerrado: se esconde con visibility y no con display, para que CodeMirror lo
    siga midiendo y al abrirlo aparezca ya ubicado (ver editor-comun.ts). */
@@ -319,7 +326,13 @@ html:not(.pc-doc-abierta) .cm-tooltip.cm-completionInfo {
 }
 
 /* La flecha › de cada opción que tiene explicación. Ancha a propósito: en el
-   celular se toca con el dedo, y el renglón mide apenas 26px de alto. */
+   celular se toca con el dedo, y el renglón mide apenas 26px de alto.
+
+   OJO con el alto: `line-height: 1` es lo que impide que la flecha agrande el
+   renglón. Con la letra 15% más grande y el interlineado normal ocupaba 22px
+   contra 19,2 del nombre; cada renglón crecía 3px, seis ya no entraban en los
+   160px de tope de la lista, y aparecía un scroll. `align-self: stretch` la
+   estira al alto que el renglón YA tiene, sin empujarlo. */
 .pc-doc-flecha {
   flex: none;
   margin-left: auto;
@@ -328,19 +341,29 @@ html:not(.pc-doc-abierta) .cm-tooltip.cm-completionInfo {
   align-items: center;
   justify-content: center;
   width: 2rem;
+  overflow: hidden;
   font-size: 1.15em;
+  line-height: 1;
   font-style: normal;
   color: #7f848e;
   cursor: pointer;
-  transition: transform 0.15s ease, color 0.15s ease;
+  transition: color 0.15s ease;
 }
 .pc-doc-flecha:hover {
   color: #abb2bf;
 }
+/* Lo que gira es solo el símbolo: es chico, y entra en el renglón en
+   cualquier ángulo del giro. */
+.pc-doc-flecha__icono {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
 /* Abierto: la flecha de la opción elegida se da vuelta y se prende. */
 html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha {
-  transform: rotate(180deg);
   color: #61afef;
+}
+html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
+  transform: rotate(180deg);
 }
 
 .pc-doc {
