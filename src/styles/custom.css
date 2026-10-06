@@ -303,6 +303,46 @@ body.pc-resizing * {
    de editor-comun.ts: la regla de fábrica de CodeMirror llega a 0,3,0 de
    especificidad y le gana a cualquier cosa que pongamos en este archivo.
 --------------------------------------------------------------------------- */
+/* El renglón vacío entre cada línea del ejemplo: es el margin-top que Starlight
+   le pone a cada bloque hermano de su prosa, el mismo que ya descolocaba el
+   cursor (ver la regla de .cm-line más abajo). El panel vive adentro del editor,
+   que vive adentro de la prosa, así que también le llega. */
+.pc-doc > *,
+.pc-doc__ejemplo > * {
+  margin-top: 0 !important;
+}
+
+/* Cerrado: se esconde con visibility y no con display, para que CodeMirror lo
+   siga midiendo y al abrirlo aparezca ya ubicado (ver editor-comun.ts). */
+html:not(.pc-doc-abierta) .cm-tooltip.cm-completionInfo {
+  visibility: hidden;
+}
+
+/* La flecha › de cada opción que tiene explicación. Ancha a propósito: en el
+   celular se toca con el dedo, y el renglón mide apenas 26px de alto. */
+.pc-doc-flecha {
+  flex: none;
+  margin-left: auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  font-size: 1.15em;
+  font-style: normal;
+  color: #7f848e;
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+.pc-doc-flecha:hover {
+  color: #abb2bf;
+}
+/* Abierto: la flecha de la opción elegida se da vuelta y se prende. */
+html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha {
+  transform: rotate(180deg);
+  color: #61afef;
+}
+
 .pc-doc {
   padding: 0.6rem 0.7rem;
   font-size: 0.84rem;

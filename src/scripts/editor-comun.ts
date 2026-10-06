@@ -75,6 +75,14 @@ export const editorTheme = [indentUnit.of('    '), EditorView.theme({
     maxHeight: 'min(20rem, 45vh)',
     overflowY: 'auto',
   },
+  /* Cada opción en fila flexible, para que la flecha › quede contra el borde
+     derecho aunque el nombre sea corto. La descripción corta es la que cede
+     (con sus "…") cuando no entra todo. */
+  '.cm-tooltip-autocomplete > ul > li': { display: 'flex', alignItems: 'center' },
+  '.cm-completionLabel': { flex: 'none' },
+  '.cm-completionDetail': {
+    flex: '1 1 auto', minWidth: '0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+  },
   '.cm-scroller': {
     fontFamily: 'var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)',
   },
@@ -573,7 +581,7 @@ export function conectarEnvio(
    se acuerda de cómo se llamaba la variable. Ahora se la ofrece el editor.
 */
 import {
-  autocompletion, completeFromList, ifNotIn,
+  autocompletion, completeFromList, ifNotIn, setSelectedCompletion,
   type Completion, type CompletionContext, type CompletionResult,
 } from '@codemirror/autocomplete';
 import { localCompletionSource } from '@codemirror/lang-python';
@@ -1004,6 +1012,66 @@ for (const metodo of METODOS) {
   if (DOCS[metodo.label]) metodo.info = panelDoc(metodo.label);
 }
 
+/* El panel se abre y se cierra con una flecha › a la derecha de cada opción.
+   ------------------------------------------------------------------------
+   En el celular el panel no tiene lugar al costado y CodeMirror lo pone encima
+   o debajo de la lista, y con el teclado abierto termina tapando opciones. Así
+   que ahí arranca cerrado. En la compu sale al costado sin tapar nada, y ahí
+   arranca abierto. Lo que el alumno elija se recuerda en ese navegador.
+
+   El estado es UNO para toda la página (una clase en <html>), no uno por
+   editor: si lo cerraste en un ejercicio, no querés que se te abra en el de
+   abajo. Se esconde con `visibility` y no con `display: none` a propósito:
+   así CodeMirror lo sigue midiendo y ubicando, y al abrirlo aparece ya en su
+   lugar, sin un salto. */
+const CLAVE_DOC = 'pc:doc-editor';
+
+function docAbierta() {
+  return document.documentElement.classList.contains('pc-doc-abierta');
+}
+
+function ponerDocAbierta(abierta: boolean, recordar = true) {
+  document.documentElement.classList.toggle('pc-doc-abierta', abierta);
+  if (!recordar) return;
+  try { localStorage.setItem(CLAVE_DOC, abierta ? 'abierta' : 'cerrada'); } catch { /* sin storage, no se recuerda */ }
+}
+
+if (typeof document !== 'undefined') {
+  let guardado: string | null = null;
+  try { guardado = localStorage.getItem(CLAVE_DOC); } catch { /* idem */ }
+  const angosta = window.matchMedia('(max-width: 767px)').matches;
+  ponerDocAbierta(guardado ? guardado === 'abierta' : !angosta, false);
+}
+
+/** La flecha de una opción. Solo la llevan las que tienen panel. */
+function flechaDoc(completion: Completion, _estado: unknown, view: EditorView): Node | null {
+  if (!completion.info) return null;
+  const flecha = document.createElement('span');
+  flecha.className = 'pc-doc-flecha';
+  flecha.textContent = '›';
+  flecha.title = 'Ver u ocultar la explicación';
+
+  /* La lista de CodeMirror escucha `mousedown`, sube desde lo que tocaste
+     hasta el <li> y APLICA esa sugerencia. Sin el stopPropagation, tocar la
+     flecha escribiría el método en vez de mostrar su explicación. Y sin el
+     preventDefault el editor pierde el foco y el cartel se cierra solo. */
+  flecha.addEventListener('mousedown', (evento) => {
+    evento.preventDefault();
+    evento.stopPropagation();
+    const opcion = flecha.closest('li');
+    if (opcion?.getAttribute('aria-selected') === 'true') {
+      ponerDocAbierta(!docAbierta());
+      return;
+    }
+    // Otra opción: se elige esa y se abre SU panel, que es lo que uno espera
+    // al tocar la flecha de algo que todavía no está marcado.
+    const indice = Number(/-(\d+)$/.exec(opcion?.id ?? '')?.[1]);
+    if (!Number.isNaN(indice)) view.dispatch({ effects: setSelectedCompletion(indice) });
+    ponerDocAbierta(true);
+  });
+  return flecha;
+}
+
 /** El trozo `.loQueVaDespues` si el cursor está escribiendo después de un punto. */
 function despuesDeUnPunto(context: CompletionContext) {
   const trozo = context.matchBefore(/\.[A-Za-z_]*$/);
@@ -1075,6 +1143,9 @@ export function autocompletado(datos = '') {
       // Seis y no ocho: el cartel tiene que caber DEBAJO del cursor, porque si
       // no CodeMirror lo da vuelta y lo pone encima de lo que se está leyendo.
       maxRenderedOptions: 6,
+      // La flecha › que abre y cierra el panel. 90 la pone después del nombre
+      // (50) y de la descripción corta (80): queda contra el borde derecho.
+      addToOptions: [{ render: flechaDoc, position: 90 }],
     }),
   ];
 }
