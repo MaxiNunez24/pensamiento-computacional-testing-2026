@@ -73,6 +73,59 @@
     return b;
   }
 
+  /* ── ⤢ El editor del tamaño del código ─────────────────────────────────
+   *
+   * Los alumnos usan mucho la barra de scroll de la página, y con el tope de
+   * alto del editor (22rem) la rueda del mouse arriba de un editor largo
+   * scrollea el CÓDIGO y no la página: parece que la página se trabó.
+   *
+   * Ajustado (de fábrica): el editor mide lo que mide el código, sin scroll
+   * adentro, y la rueda siempre mueve la página. Sin ajustar: como antes, con
+   * tope, scroll interno y la manija para estirarlo.
+   *
+   * Es una clase en <html> y no un estilo por editor: así vale para todos, y
+   * para los que se arman después. La regla está en custom.css
+   * (html.pc-editor-ajustado), y editor-comun.ts la mira para no pelearse con
+   * la manija.
+   */
+  var CLAVE_AJUSTE = 'pc:editor-ajustado';
+  var ajustado = true;
+  try { ajustado = localStorage.getItem(CLAVE_AJUSTE) !== 'no'; } catch (e) { /* queda ajustado */ }
+
+  function aplicarAjuste() {
+    document.documentElement.classList.toggle('pc-editor-ajustado', ajustado);
+    var ayuda = ajustado
+      ? 'El editor mide lo que mide el código. Tocá para ponerle tope y scroll adentro'
+      : 'El editor tiene tope y scroll adentro. Tocá para que mida lo que mide el código';
+    document.querySelectorAll('[data-zoom="ajustar"]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(ajustado));
+      b.title = ayuda;
+      b.setAttribute('aria-label', ayuda);
+    });
+  }
+  // Ya mismo, antes de que CodeMirror arme los editores: así nacen con el
+  // tamaño que van a tener y no pegan un salto al cargar.
+  aplicarAjuste();
+
+  function botonAjustar() {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'zoom-codigo__btn zoom-codigo__btn--ajustar';
+    b.dataset.zoom = 'ajustar';
+    b.textContent = '⤢';
+    b.addEventListener('click', function () {
+      // Mismo truco que el zoom: todos los editores de arriba cambian de alto,
+      // así que se corrige el scroll para que este no se escape de la pantalla.
+      var antes = b.getBoundingClientRect().top;
+      ajustado = !ajustado;
+      try { localStorage.setItem(CLAVE_AJUSTE, ajustado ? 'si' : 'no'); } catch (e) { /* ídem */ }
+      aplicarAjuste();
+      var despues = b.getBoundingClientRect().top;
+      if (despues !== antes) window.scrollBy(0, despues - antes);
+    });
+    return b;
+  }
+
   function poner() {
     // Todos los contenedores de editor de la plataforma. Existen en el HTML
     // desde el principio, así que no hay que esperar a que CodeMirror monte.
@@ -83,11 +136,15 @@
       if (caja.querySelector('.zoom-codigo')) return; // ya puesto
       var grupo = document.createElement('div');
       grupo.className = 'zoom-codigo';
+      // El ⤢ va PRIMERO, a la altura del A−: como tercer escalón bajaba hasta
+      // el primer renglón del código y en el celular lo tapaba.
+      grupo.appendChild(botonAjustar());
       grupo.appendChild(boton('menos', 'A−', 'Achicar el código'));
       grupo.appendChild(boton('mas', 'A+', 'Agrandar el código'));
       caja.appendChild(grupo);
     });
     aplicar();
+    aplicarAjuste();
   }
 
   if (document.readyState === 'loading') {

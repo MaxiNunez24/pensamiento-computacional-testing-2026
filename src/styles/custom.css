@@ -1268,6 +1268,32 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 .zoom-codigo__btn + .zoom-codigo__btn {
   margin-top: 16px;
 }
+/* El ⤢ va a la izquierda del A−, en la misma franja de arriba, que es la que el
+   código no ocupa. Como tercer escalón bajaba hasta el primer renglón y en el
+   celular lo tapaba. Sin esta regla, el A− (que ahora tiene un hermano antes)
+   se llevaba el escalón, y A− y A+ quedaban a la misma altura. */
+.zoom-codigo__btn--ajustar + .zoom-codigo__btn {
+  margin-top: 0;
+}
+.zoom-codigo__btn--ajustar {
+  margin-right: 0.3rem; /* otra función: un poco aparte del par A− / A+ */
+}
+.zoom-codigo__btn--ajustar[aria-pressed='true'] {
+  color: var(--sl-color-text-accent);
+  border-color: var(--sl-color-accent);
+}
+
+/* El editor del tamaño del código (el ⤢, ver public/zoom-codigo.js).
+   Con !important porque enfrente hay dos cosas que si no ganan: el `max-height`
+   y el `resize` del theme de CodeMirror (editor-comun.ts), y el `height` que el
+   navegador escribe en línea cuando alguien estiró el editor con la manija.
+   Sin tope, el código entra entero, el scroll de adentro no tiene nada que
+   mover, y la rueda del mouse pasa a mover la página. */
+html.pc-editor-ajustado .cm-editor {
+  max-height: none !important;
+  height: auto !important;
+  resize: none !important;
+}
 .zoom-codigo__btn {
   /* Tamaño fijo en px a propósito: es el control que cambia el tamaño del
      código, así que no puede cambiar de tamaño con él.

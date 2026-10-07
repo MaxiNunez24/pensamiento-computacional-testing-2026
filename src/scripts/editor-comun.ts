@@ -37,6 +37,8 @@ export const editorTheme = [indentUnit.of('    '), EditorView.theme({
   // se haga el editor tan alto como necesite. El `max-height` lo deja crecer
   // solo con el código hasta 22rem; cuando agarra la manija se lo sacamos (ver
   // `soltarElTope` más abajo), porque si no el navegador no lo deja pasar de ahí.
+  // Todo esto vale con el ⤢ apagado: prendido (que es lo de fábrica), el editor
+  // mide lo que mide el código. Ver public/zoom-codigo.js y custom.css.
   '&': {
     fontSize: 'var(--pc-editor-font, 1rem)',
     maxHeight: '22rem',
@@ -114,6 +116,8 @@ export const editorTheme = [indentUnit.of('    '), EditorView.theme({
 const ESQUINA = 18; // px de la esquina que agarra la manija
 
 function soltarElTope(evento: PointerEvent) {
+  // Con el editor ajustado al código (el ⤢) no hay tope ni manija: nada que soltar.
+  if (document.documentElement.classList.contains('pc-editor-ajustado')) return;
   const destino = evento.target as HTMLElement | null;
   const editor = destino?.closest?.('.cm-editor') as HTMLElement | null;
   if (!editor) return;
