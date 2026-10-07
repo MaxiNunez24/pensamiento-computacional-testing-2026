@@ -6,6 +6,7 @@
 // copias del estado cada componente se enteraba solo de sus propios botones.
 
 import { EditorView } from 'codemirror';
+import { tooltips } from '@codemirror/view';
 import { indentMore, indentLess } from '@codemirror/commands';
 import { indentUnit } from '@codemirror/language';
 
@@ -25,7 +26,19 @@ export const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.worker
 // editorTheme) la reciben sin tocar cada uno. CodeMirror trae 2 espacios de
 // fábrica; Python, VS Code y cualquier linter usan 4, y un alumno que copia de
 // acá a VS Code no tiene que encontrarse con otra indentación.
-export const editorTheme = [indentUnit.of('    '), EditorView.theme({
+export const editorTheme = [indentUnit.of('    '),
+  /* Los carteles (sugerencias y su panel de documentación) se dibujan en <body>
+     y no adentro del editor. Starlight le pone `isolation: isolate` a la
+     columna del medio (.main-pane): todo lo de adentro queda en una capa que
+     pinta DEBAJO de las dos barras laterales, por más z-index que tenga. El
+     panel de documentación, que sale al costado, quedaba tapado por ellas
+     (lo marcó Maxi, 7/10). CodeMirror le pasa al contenedor las clases de tema
+     del editor, así que el theme de acá y el de oneDark los siguen alcanzando. */
+  tooltips({ parent: typeof document !== 'undefined' ? document.body : undefined }),
+  EditorView.theme({
+  // Adentro del editor el cartel heredaba el tamaño del código (y con él los
+  // botones A− / A+). En <body> ya no hereda nada: se lo damos explícito.
+  '.cm-tooltip': { fontSize: 'var(--pc-editor-font, 1rem)' },
   // El tamaño sale de --pc-editor-font, que manejan los botones A− / A+ de cada
   // editor (public/zoom-codigo.js) y se recuerda para toda la plataforma. Va en
   // rem, así además acompaña al zoom del navegador.
