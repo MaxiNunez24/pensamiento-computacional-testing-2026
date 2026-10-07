@@ -1248,7 +1248,7 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 }
 .zoom-codigo {
   position: absolute;
-  top: 0.25rem;
+  top: 2px;
   right: 0.35rem;
   z-index: 2;
   display: flex;
@@ -1260,23 +1260,34 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 .zoom-codigo:focus-within {
   opacity: 1;
 }
-/* El escaloncito: el A+ va más abajo que el A−, en diagonal.
-   Salió sin querer —Starlight le pone margin-top a todo hermano que sigue a
-   otro, y acá pegó justo— pero quedó lindo y se queda. Va escrito para que sea
-   una decisión y no una casualidad: si mañana Starlight cambia esa regla, el
-   escalón sigue igual. */
+/* Los tres en fila: ⤢  A−  A+. Starlight le pone margin-top a todo hermano que
+   sigue a otro, y con dos botones eso dejaba el A+ en escalón, que se quedó
+   porque quedaba lindo. Con tres se veía torcido (lo marcó Maxi, 7/10). */
 .zoom-codigo__btn + .zoom-codigo__btn {
-  margin-top: 16px;
-}
-/* El ⤢ va a la izquierda del A−, en la misma franja de arriba, que es la que el
-   código no ocupa. Como tercer escalón bajaba hasta el primer renglón y en el
-   celular lo tapaba. Sin esta regla, el A− (que ahora tiene un hermano antes)
-   se llevaba el escalón, y A− y A+ quedaban a la misma altura. */
-.zoom-codigo__btn--ajustar + .zoom-codigo__btn {
   margin-top: 0;
 }
 .zoom-codigo__btn--ajustar {
   margin-right: 0.3rem; /* otra función: un poco aparte del par A− / A+ */
+}
+
+/* La franja de los botones, arriba del código.
+   Antes había ahí 32px negros que nadie había puesto: la misma regla de
+   Starlight le daba 16px de margen a .cm-editor (que ahora tiene antes al grupo
+   de botones) y otros 16px a .cm-scroller, adentro. Ahora el lugar es a
+   propósito y del color del editor (#282c34, el fondo de oneDark), así se ve
+   como parte de él. Mide lo justo para que los botones no tapen la primera
+   línea, que en el celular llega hasta abajo de ellos. */
+[data-editor],
+[data-editor-tests],
+[data-editor-completo] {
+  padding-top: 28px;
+  background: #282c34;
+}
+[data-editor] > .cm-editor,
+[data-editor-tests] > .cm-editor,
+[data-editor-completo] > .cm-editor,
+.cm-editor > .cm-scroller {
+  margin-top: 0;
 }
 .zoom-codigo__btn--ajustar[aria-pressed='true'] {
   color: var(--sl-color-text-accent);
@@ -1293,6 +1304,14 @@ html.pc-editor-ajustado .cm-editor {
   max-height: none !important;
   height: auto !important;
   resize: none !important;
+}
+/* Y abajo del código, aire chico. Los 7rem del theme están para que el cartel
+   de sugerencias caiga sobre espacio vacío del editor, y con tope casi no se
+   ven. Sin tope aparecían enteros, 112px vacíos, en cada editor de la página.
+   Ajustado, el cartel puede tapar un rato los botones de abajo mientras se
+   escribe en la última línea: se va solo al elegir o al seguir escribiendo. */
+html.pc-editor-ajustado .cm-editor .cm-content {
+  padding-bottom: 1.25rem !important;
 }
 .zoom-codigo__btn {
   /* Tamaño fijo en px a propósito: es el control que cambia el tamaño del

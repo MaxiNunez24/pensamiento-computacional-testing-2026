@@ -637,9 +637,14 @@ export function conectarEnvio(
 
    1. El cartelito de sugerencias TAPABA lo que estaban escribiendo. Pasaba al
       escribir en la última línea: CodeMirror pone el cartel abajo del cursor y,
-      si no le entra adentro del editor, lo da vuelta y lo pone ARRIBA — justo
-      encima del renglón que estás tecleando. La solución no es mover el cartel:
-      es dejarle lugar abajo (ver `padding-bottom` en el theme).
+      si no le entra, lo da vuelta y lo pone ARRIBA, justo encima del renglón
+      que estás tecleando. La solución no es mover el cartel: es dejarle lugar
+      abajo (ver `padding-bottom` en el theme).
+      Ojo con el "si no le entra": el espacio que mira CodeMirror es la VENTANA,
+      no el editor (acá no se configura otro). Medido el 7/10 con el editor
+      ajustado al código y solo 1,25rem abajo: el cartel cae debajo del renglón,
+      sin darse vuelta. Los 7rem lo que hacen es que caiga sobre fondo del
+      editor y no sobre los botones de abajo.
 
    2. Las variables que el ejercicio ya define (`precio`, `cantidad`, `frase`…)
       NO aparecían entre las sugerencias. Y es lógico: no están escritas en el
