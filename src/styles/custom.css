@@ -305,8 +305,10 @@ body.pc-resizing * {
 --------------------------------------------------------------------------- */
 /* El renglón vacío entre cada línea del ejemplo: es el margin-top que Starlight
    le pone a cada bloque hermano de su prosa, el mismo que ya descolocaba el
-   cursor (ver la regla de .cm-line más abajo). El panel vive adentro del editor,
-   que vive adentro de la prosa, así que también le llega. */
+   cursor (ver la regla de .cm-line más abajo). Le llegaba porque el panel vivía
+   adentro del editor, que vive adentro de la prosa. Desde el 7/10 los carteles
+   se dibujan en <body> y ya no le llega, pero la regla queda: no cuesta nada y
+   cubre el día que algo los vuelva a meter adentro. */
 .pc-doc > *,
 .pc-doc__ejemplo > * {
   margin-top: 0 !important;
@@ -366,9 +368,14 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   transform: rotate(180deg);
 }
 
+/* Todo en `em` y no en `rem`: así el panel crece y se achica con los botones
+   A− / A+ igual que la lista de al lado. El cartel toma el tamaño del código
+   (--pc-editor-font, ver el theme en editor-comun.ts) y esto va relativo a él.
+   Con `rem` el panel se quedaba en 13px mientras la lista llegaba a 25. Y la
+   letra es la MISMA que la de la lista (1em): se leen de un vistazo, juntas. */
 .pc-doc {
-  padding: 0.6rem 0.7rem;
-  font-size: 0.84rem;
+  padding: 0.7em 0.8em;
+  font-size: 1em;
   line-height: 1.5;
   font-family: var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
 }
@@ -376,24 +383,24 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   display: block;
   color: #61afef;
   font-weight: 600;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4em;
 }
 .pc-doc__que {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.6em;
   color: #abb2bf;
   font-family: var(--sl-font, inherit);
-  font-size: 0.86rem;
+  font-size: 1em;
   /* El contenedor viene en `pre-line` de fábrica: sin esto, el texto largo
      respeta los saltos que no tiene y no se acomoda al ancho del panel. */
   white-space: normal;
 }
 .pc-doc__ejemplo {
   margin: 0;
-  padding: 0.45rem 0.55rem;
+  padding: 0.5em 0.65em;
   border-radius: 0.3rem;
   background: #282c34;
   color: #abb2bf;
-  font-size: 0.82rem;
+  font-size: 0.92em; /* un pelo más chico: es código, y así se separa del texto */
   /* Partir y no scrollear: los ejemplos de base de datos pasan los 400px del
      panel (y en el celular el panel mide 268). Un scroll de costado adentro de
      un cartel flotante no lo encuentra nadie. */

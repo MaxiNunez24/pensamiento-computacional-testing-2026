@@ -87,7 +87,8 @@ export const editorTheme = [indentUnit.of('    '),
     // Red de seguridad para el celular: el panel más largo, angosto, llegó a
     // 493px y se salía por arriba. Con el tope scrollea para abajo, que con el
     // dedo es natural; y CodeMirror mide el alto ya topado para ubicarlo.
-    maxHeight: 'min(20rem, 45vh)',
+    // En `em`: acompaña a la letra, que sube con A+ (ver .pc-doc en custom.css).
+    maxHeight: 'min(20em, 45vh)',
     overflowY: 'auto',
   },
   /* Cada opción en fila flexible, para que la flecha › quede contra el borde
