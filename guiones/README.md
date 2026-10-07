@@ -244,4 +244,19 @@ Carpeta: `09_excepciones/`
 
 ---
 
+## 10 — Bot del SiGeS (proyecto)
+
+Carpeta: `10_bot_siges/`
+
+| # | Archivo | Tema |
+|---|---------|------|
+| 1 | *(la clase del 2/10, grabada en vivo)* | El problema, el entorno virtual, `pip` y Playwright |
+| 2 | [02_leer_la_planilla_y_el_dni.md](./10_bot_siges/02_leer_la_planilla_y_el_dni.md) | `csv.DictReader`, de cada fila un `Alumno`, `esta_listo()`, el bot sin controles y el **Control 1 (DNI)** |
+
+> 📅 **Por qué hay un guion para la Parte 2 y no para la 1.** La segunda mitad de la clase del 2/10
+> se grabó **sin imagen** (OBS se colgó), así que se regraba. La narración sale del audio de ese
+> día, sin las vueltas. Los controles 2 a 5 quedan para una Parte 3.
+
+---
+
 **Total: 46 videos · ~252 minutos de contenido**
