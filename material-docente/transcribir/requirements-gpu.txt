@@ -1,0 +1,17 @@
+# Lo mismo que requirements.txt, más lo que necesita la placa de video.
+#
+#     python -m venv material-docente/transcribir/.venv
+#     material-docente/transcribir/.venv/Scripts/python -m pip install -r material-docente/transcribir/requirements-gpu.txt
+#
+# ctranslate2 (el motor de faster-whisper) usa cuBLAS de CUDA 12 y cuDNN 9, y
+# no los trae. Acá vienen como paquetes de Python, con las DLL adentro: sin
+# instalar el CUDA Toolkit, sin permisos de administrador y sin tocar el PATH
+# del sistema. Para deshacerlo, se borra la carpeta .venv.
+#
+# Son ~1,2 GB: por eso van aparte y en un entorno virtual en D:, y no en el
+# requirements.txt de siempre, que tiene que servir en una compu sin placa.
+#
+# transcribir.py encuentra solo dónde quedaron las DLL (_sumar_dlls_de_nvidia).
+-r requirements.txt
+nvidia-cublas-cu12
+nvidia-cudnn-cu12==9.*

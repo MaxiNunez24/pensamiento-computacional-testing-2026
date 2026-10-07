@@ -34,12 +34,41 @@ instalado en el sistema.
 > La primera corrida baja el modelo (`large-v3` son unos 3 GB). Después queda
 > cacheado y no se vuelve a bajar.
 
-> ⚠️ **La GPU todavía no anda, y la prueba que decía que sí estaba mal hecha.**
-> Construir el modelo en `cuda` funciona aunque falten las librerías de CUDA:
-> lo único que comprueba es que exista una placa. La cuenta real pasa después y
-> muere con `Library cublas64_12.dll is not found`. Hasta que se instalen
-> cuBLAS y cuDNN, esto corre en CPU — que anda bien, solo más lento.
-> El detalle está en [PASO-A-PASO.md](PASO-A-PASO.md).
+### Con la placa de video (recomendado en esta máquina)
+
+```bash
+python -m venv material-docente/transcribir/.venv
+material-docente/transcribir/.venv/Scripts/python -m pip install -r material-docente/transcribir/requirements-gpu.txt
+```
+
+Trae, además, **cuBLAS y cuDNN como paquetes de Python** (~1,2 GB): sin CUDA
+Toolkit, sin administrador y sin tocar el PATH del sistema. Va en un entorno
+virtual en D: para no cargar C:, y se deshace borrando la carpeta `.venv`, que
+el repo ya ignora.
+
+Desde ahí, **el comando es con el Python del entorno** en vez de `python`:
+
+```bash
+material-docente/transcribir/.venv/Scripts/python material-docente/transcribir/transcribir.py audio.webm
+```
+
+Tiene que decir `intentando con GPU (float16)` y **no** seguir con
+`la placa no pudo`.
+
+**Medido el 6/10:** una clase de 35 minutos con `large-v3` tardó **5 minutos,
+contando la primera descarga del modelo** (3 GB). En CPU, con el modelo `small`,
+que es mucho peor, eran 12.
+
+> 👻 `large-v3` a veces **rellena los silencios repitiendo una frase**: en esa
+> prueba, "Vamos a ver" diez veces seguidas, una por segundo. Si ves una racha
+> así, no es algo que se dijo.
+
+> ⚠️ **Por qué antes "andaba" y no andaba.** Construir el modelo en `cuda`
+> funciona aunque falten las librerías: lo único que comprueba es que exista una
+> placa. La cuenta real pasa después y muere con
+> `Library cublas64_12.dll is not found`. Y aun con los paquetes instalados pasa
+> lo mismo si Windows no sabe dónde quedaron las DLL: de eso se encarga
+> `_sumar_dlls_de_nvidia()` en `transcribir.py`.
 
 ---
 

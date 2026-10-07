@@ -199,10 +199,12 @@ sale en **2 a 4 minutos**. Con `large-v3` es bastante más lento en CPU.
 
 ### ¿Y la placa de video?
 
-**Todavía no anda, y hace falta instalar cosas.** `ctranslate2` necesita cuBLAS
-y cuDNN de CUDA 12, que en esta máquina no están: no hay CUDA Toolkit ni
-paquetes `nvidia-*` en pip. El síntoma es este, y aparece **después** de
-detectar la duración:
+**Anda desde el 6/10, con el entorno virtual de `requirements-gpu.txt`** (ver el
+README). `ctranslate2` necesita cuBLAS de CUDA 12 y cuDNN 9, que no trae: ese
+archivo los instala como paquetes de Python, en `material-docente/transcribir/.venv`.
+
+Si corrés con `python` a secas en vez del Python del entorno, no los encuentra y
+aparece esto, **después** de detectar la duración:
 
 ```
 RuntimeError: Library cublas64_12.dll is not found or cannot be loaded
@@ -210,10 +212,6 @@ RuntimeError: Library cublas64_12.dll is not found or cannot be loaded
 
 Sin `--cpu` el script lo intenta igual, se da cuenta y **sigue solo en CPU**.
 La bandera `--cpu` sirve para saltear el intento y no esperar de gusto.
-
-Para que la placa funcione hay que instalar `nvidia-cublas-cu12` y
-`nvidia-cudnn-cu12`, que son ~1 GB y por defecto van a `site-packages` en C:.
-Conviene hacerlo dentro de un entorno virtual en otro disco.
 
 Después repetís lo mismo con los otros dos audios. Son corridas independientes:
 cada una deja su `.md` al lado de su audio.
@@ -267,7 +265,7 @@ algo": no lo dice ninguna marca sola, sale de ordenarlas por tiempo.
 |---|---|
 | `ModuleNotFoundError: faster_whisper` | Corriste `python3`. Usá `python`. |
 | `No existe: ...` | La ruta. Si tiene espacios, va entre comillas. |
-| `Library cublas64_12.dll is not found` | Faltan las librerías de CUDA. El script sigue solo en CPU; con `--cpu` te ahorrás el intento. |
+| `Library cublas64_12.dll is not found` | Corriste con `python` y no con el Python del `.venv`, o falta instalar `requirements-gpu.txt`. El script sigue solo en CPU; con `--cpu` te ahorrás el intento. |
 | Baja el modelo aunque ya lo tengas en F: | Esa terminal se abrió antes de definir `HF_HOME`. Cerrala y abrí otra. |
 | Se queda en `transcribiendo… 00:00` largo rato | La primera vez está bajando el modelo. Los 3 GB no muestran barra de progreso. |
 | Termina bien pero con letras raras (`Busc? ?`) | La consola de Windows es cp1252 y no sabe dibujar los acentos ni el emoji. **El `.md` sale perfecto igual**, se escribe en UTF-8 aparte. |

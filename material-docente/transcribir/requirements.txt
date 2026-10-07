@@ -13,3 +13,12 @@
 # ⚠️ En esta máquina hay dos Python 3.14 distintos. Usar `python`, no `python3`,
 # o va a decir que falta el módulo.
 faster-whisper==1.2.0
+# faster-whisper hace `import requests` pero no lo declara: antes llegaba de
+# arrastre con huggingface-hub, que en la 1.x se pasó a httpx. En un entorno
+# limpio, sin esta línea, se cae al importar (pasó el 6/10 armando el .venv).
+requests
+# PyAV 19 sacó el parámetro `metadata_errors` de av.open(), que faster-whisper
+# 1.2.0 usa para abrir CUALQUIER audio: con av 19 no transcribe nada
+# ("open() got an unexpected keyword argument"). La 18.1 es la que anda en el
+# Python global de esta máquina.
+av<19

@@ -40,6 +40,7 @@ PyAV, que trae las librerías de ffmpeg adentro.
 """
 
 import argparse
+import os
 import pathlib
 import re
 import sys
@@ -152,6 +153,33 @@ def _dibujar(grupo):
 
 # ─────────────────────────── La transcripción ──────────────────────────
 
+def _sumar_dlls_de_nvidia():
+    """Le dice a Windows dónde están cuBLAS y cuDNN si vinieron por pip.
+
+    `requirements-gpu.txt` instala las DLL de CUDA como paquetes de Python
+    (nvidia-cublas-cu12, nvidia-cudnn-cu12): quedan en site-packages/nvidia/*/bin.
+    Pero ctranslate2 las carga recién en la primera cuenta, con la búsqueda
+    normal de Windows, que no mira ahí. Sin esto, todo está instalado y aun así
+    sale 'cublas64_12.dll is not found'.
+
+    Si los paquetes no están, no hace nada: se sigue como siempre y cae a CPU.
+    """
+    encontradas = []
+    for base in sys.path:
+        # cuda_nvrtc viene de arrastre con cuDNN 9: compila kernels en el momento.
+        for lib in ('cublas', 'cudnn', 'cuda_nvrtc'):
+            carpeta = pathlib.Path(base) / 'nvidia' / lib / 'bin'
+            if carpeta.is_dir() and str(carpeta) not in encontradas:
+                encontradas.append(str(carpeta))
+    for carpeta in encontradas:
+        # Las dos cosas: add_dll_directory alcanza para lo que carga Python, y
+        # el PATH para lo que carga ctranslate2 por su cuenta con LoadLibrary.
+        if hasattr(os, 'add_dll_directory'):
+            os.add_dll_directory(carpeta)
+        os.environ['PATH'] = carpeta + os.pathsep + os.environ.get('PATH', '')
+    return encontradas
+
+
 def _una_pasada(audio, modelo, idioma, device, compute_type):
     """Una corrida entera: construir el modelo, transcribir y CONSUMIR todo.
 
@@ -199,6 +227,9 @@ def transcribir(audio, modelo, idioma, forzar_cpu=False):
     # minutos. En CPU con int8 sale igual de bien, pero tarda ~10x.
     planes = []
     if not forzar_cpu:
+        if not _sumar_dlls_de_nvidia():
+            print('  (no están las librerías de CUDA de requirements-gpu.txt: '
+                  'la placa probablemente no pueda)')
         planes.append(('cuda', 'float16', 'GPU (float16)'))
     planes.append(('cpu', 'int8', 'CPU (int8) — más lento'))
 
