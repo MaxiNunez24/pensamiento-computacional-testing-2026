@@ -340,6 +340,15 @@ assert alumno().problemas() == [], f"un alumno con todos los datos bien no tiene
 resultado = alumno().esta_listo()
 assert resultado is not None, "esta_listo() no devuelve nada: le falta el return. Tiene que devolver True o False"
 assert resultado is True, "un alumno sin problemas está listo: problemas() vuelve vacía, así que esta_listo() tiene que dar True"
+
+# Y uno CON un problema. Todavía no escribiste ningún control, así que se lo
+# inventamos: a este alumno le cambiamos problemas() por una que siempre se queja.
+def problemas_inventados():
+    return ["DNI: tiene letras"]
+
+con_problema = alumno()
+con_problema.problemas = problemas_inventados
+assert con_problema.esta_listo() is False, "un alumno CON problemas no está listo: si problemas() devuelve algo, esta_listo() tiene que dar False. ¿No estarás devolviendo True siempre? Fijate en la lista"
 print("¡Listo! Ahora copiá esta_listo() a tu alumno.py y corré el bot: fijate qué carga.")
 `}
   pistas={[
