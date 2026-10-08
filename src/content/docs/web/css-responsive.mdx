@@ -1,0 +1,297 @@
+---
+title: "CSS IV · Que se vea bien en el celular"
+description: "La mayoría va a abrir tu página desde el celular. Primero el celular, media queries para la compu, imágenes que no se salen, variables de CSS y modo oscuro."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const TARJETAS = `<h1>Don Pepe</h1>
+<main class="catalogo">
+  <article class="producto"><h2>Taza</h2><p>$ 4500</p></article>
+  <article class="producto"><h2>Mate</h2><p>$ 7800</p></article>
+  <article class="producto"><h2>Vela</h2><p>$ 3200</p></article>
+  <article class="producto"><h2>Bolso</h2><p>$ 12500</p></article>
+</main>
+`;
+
+export const BASE = `* { box-sizing: border-box; }
+body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; }
+.producto { padding: 12px; border-radius: 10px; border: 1px solid #ddd; }
+.producto h2 { margin: 0 0 4px; font-size: 1.1rem; }
+.producto p { margin: 0; font-weight: bold; }
+`;
+
+:::tip[Antes de empezar]
+Usa lo de [CSS III](../css-flex-grid/): Flexbox y Grid.
+:::
+
+## El problema
+
+Mandaste el link de tu catálogo por WhatsApp. **¿Desde dónde lo abren?** Desde el celular, casi
+todos. Y una página pensada para la pantalla de la compu, en un celular, es una pesadilla: letra
+diminuta, hay que hacer zoom, las fotos se salen del costado.
+
+Una página **responsive** (que "responde" al tamaño) se ve bien en cualquier pantalla. No son dos
+páginas: es **una sola**, con reglas que cambian según el ancho.
+
+## La línea que no puede faltar
+
+Antes de cualquier CSS, esto va en el `<head>` de toda página:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
+
+Sin ella, el celular **simula ser una pantalla de compu** de unos 980 píxeles y achica todo para que
+entre: la letra queda diminuta, por más CSS que le pongas. Con ella, le decís *"usá el ancho real del
+celular"*. Es la primera causa de "mi página se ve chiquita en el celular".
+
+## Media queries: reglas que dependen del ancho
+
+Una **media query** es un `if` de CSS: las reglas de adentro valen **solo si** se cumple la
+condición.
+
+```css
+.catalogo {
+  display: grid;
+  grid-template-columns: 1fr;          /* en el celular: una columna */
+}
+
+@media (min-width: 600px) {
+  .catalogo {
+    grid-template-columns: repeat(3, 1fr);   /* desde 600px de ancho: tres */
+  }
+}
+```
+
+`min-width: 600px` quiere decir **"si la pantalla mide 600 o más"**. Fijate el orden: primero las
+reglas para el celular, y después, con `min-width`, lo que **cambia** cuando hay más lugar. Se llama
+**primero el celular** (*mobile first*), y es la forma recomendada, por dos motivos:
+
+- la mayoría de las visitas son desde el celular, así que esa es la versión principal;
+- es más fácil **agregar** cosas cuando hay lugar que **sacarlas** cuando no hay.
+
+<EjercicioWeb
+  titulo="Una columna en el celular, tres en la compu"
+  fundamental
+  dificultad="🌿"
+  html={TARJETAS}
+  cssBase={BASE}
+  css={`.catalogo {
+  display: grid;
+  gap: 12px;
+  /* en el celular: una sola columna */
+}
+
+/* desde 600px de ancho: tres columnas iguales */
+`}
+  tests={`var base = (regla(".catalogo", "grid-template-columns") || "").replace(/\\s+/g, "");
+assert(base === "1fr" || base === "repeat(1,1fr)", "Fuera de toda media query, el catálogo tiene que tener UNA columna (1fr): es la versión del celular");
+var grande = (regla(".catalogo", "grid-template-columns", "min-width: 600px") || "").replace(/\\s+/g, "");
+assert(grande, "Falta la media query: @media (min-width: 600px) { ... }, con la regla del catálogo adentro");
+assert(grande === "repeat(3,1fr)" || grande === "1fr1fr1fr", "Adentro de la media query, el catálogo tiene que tener 3 columnas iguales. Tiene: " + grande);
+var columnas = estilo(".catalogo", "grid-template-columns").split(" ").length;
+var esperado = window.innerWidth >= 600 ? 3 : 1;
+assert(columnas === esperado, "Con esta pantalla de " + window.innerWidth + "px tendrían que verse " + esperado + " columnas y se ven " + columnas + ". ¿La media query está bien escrita, con los paréntesis?");`}
+  pistas={[
+    '¿Qué versión va primero, afuera de toda condición: la del celular o la de la compu?',
+    'Adentro de la media query, ¿hace falta repetir el <code>display: grid</code>, o solo lo que cambia?',
+  ]}
+>
+Hacé que el catálogo tenga **una columna** en el celular y **tres** desde **600px** de ancho. Primero
+el celular, después la media query.
+
+Achicá y agrandá la ventana del navegador para verlo cambiar.
+</EjercicioWeb>
+
+## Unidades que se adaptan
+
+Los píxeles son fijos. Para que las cosas se acomoden, hay unidades **relativas**:
+
+| Unidad | Es… | Para… |
+|---|---|---|
+| `%` | Un porcentaje **del contenedor** | Anchos: `width: 50%` |
+| `rem` | Veces **la letra de la página** (normalmente 16px) | Tamaños de letra y espacios: `font-size: 1.5rem` |
+| `vw` / `vh` | Un 1% del **ancho / alto de la pantalla** | Una portada que ocupe toda la pantalla: `height: 100vh` |
+
+Usar `rem` para la letra tiene un beneficio enorme: si alguien que ve poco **agranda la letra** en su
+celular, tu página se agranda con ella. Con `px`, no.
+
+Y las imágenes: una foto de 1200px de ancho, en un celular de 360, **se sale**. Esta regla la
+arregla para siempre:
+
+```css
+img {
+  max-width: 100%;   /* como mucho, el ancho de su contenedor */
+  height: auto;      /* y el alto, proporcional: que no se deforme */
+}
+```
+
+<EjercicioWeb
+  titulo="La foto que se sale"
+  dificultad="🌱"
+  html={`<article class="producto">
+  <h2>Mate de calabaza</h2>
+  <img src="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web-img/mate.svg" width="900" height="675" alt="Mate de calabaza marrón con bombilla plateada">
+  <p>$ 7800</p>
+</article>
+`}
+  cssBase={BASE}
+  css={`.producto {
+  max-width: 320px;
+}
+
+/* que la foto no se salga de la tarjeta, ni se deforme */
+`}
+  tests={`var img = $("img").getBoundingClientRect(), tarjeta = $(".producto").getBoundingClientRect();
+assert(img.width <= tarjeta.width + 0.5, "La foto se sale de la tarjeta: mide " + Math.round(img.width) + "px y la tarjeta " + Math.round(tarjeta.width) + "px");
+assert(regla("img", "max-width") === "100%", "La regla tiene que valer para todas las imágenes: img { max-width: 100%; }");
+assert(Math.abs(img.width / img.height - 900 / 675) < 0.02, "La foto se deformó: el alto tiene que acompañar al ancho (height: auto)");`}
+  pistas={[
+    '¿Qué tope de ancho tiene sentido para una imagen: un número fijo, o el de su contenedor?',
+    'Si achicás el ancho y el alto queda igual, ¿qué le pasa a la foto?',
+  ]}
+>
+La foto mide 900px y se sale de la tarjeta. Hacé que **ninguna imagen** se salga de su contenedor, y
+que **no se deforme**.
+</EjercicioWeb>
+
+## Variables de CSS
+
+En una página, el mismo color aparece veinte veces: en el título, en los botones, en los precios. Si
+un día cambia el color de la marca, hay que buscarlos todos. Con **variables**, se escribe una vez:
+
+```css
+:root {
+  --principal: #2f4858;
+  --fondo: #faf7f2;
+}
+
+h1      { color: var(--principal); }
+.boton  { background: var(--principal); }
+body    { background: var(--fondo); }
+```
+
+- Se definen con **dos guiones** adelante, y `:root` las hace valer **para toda la página**.
+- Se usan con `var(--nombre)`.
+- Cambiás `--principal` en un solo lugar, y cambia en todos.
+
+Es la misma idea que una **variable de Python**: un nombre para un valor que se usa en muchos lados.
+
+<EjercicioWeb
+  titulo="Los colores de la marca"
+  fundamental
+  dificultad="🌿"
+  html={`<h1>Don Pepe</h1>
+<p class="precio">Miel de la isla: $ 5200</p>
+<a class="boton" href="#">Consultar</a>
+`}
+  css={`body { font-family: system-ui, sans-serif; padding: 16px; }
+.boton { display: inline-block; padding: 10px 20px; color: white; text-decoration: none; border-radius: 8px; }
+
+/* 1. en :root, la variable --principal con el color #8a5a2b */
+/* 2. que el h1, el precio y el fondo del botón usen esa variable */
+`}
+  tests={`var raiz = getComputedStyle(document.documentElement).getPropertyValue("--principal").trim().toLowerCase();
+assert(raiz, "Falta la variable --principal en :root");
+assert(raiz === "#8a5a2b", "La variable --principal tiene que valer #8a5a2b, y vale " + raiz);
+var marron = "rgb(138, 90, 43)";
+assert(estilo("h1", "color") === marron, "El h1 tiene que ser del color de la variable");
+assert(estilo(".precio", "color") === marron, "El precio tiene que ser del color de la variable");
+assert(estilo(".boton", "background-color") === marron, "El fondo del botón tiene que ser del color de la variable");
+var usos = ["h1", ".precio", ".boton"].filter(function (s) {
+  return [regla(s, "color"), regla(s, "background-color"), regla(s, "background")].some(function (v) { return v && v.indexOf("var(--principal)") !== -1; });
+});
+assert(usos.length === 3, "Los tres tienen que usar var(--principal), no el color escrito a mano. Lo usan: " + (usos.join(", ") || "ninguno"));`}
+  pistas={[
+    '¿Dónde se define una variable para que valga en toda la página?',
+    'Si mañana el color cambia, ¿cuántos lugares tendrías que tocar? ¿Y si cada uno tuviera el color escrito a mano?',
+  ]}
+>
+Definí la variable **`--principal`** con el color **`#8a5a2b`**, y usala en el **título**, el
+**precio** y el **fondo del botón**.
+
+Después cambiá el valor de la variable y mirá cómo cambian los tres juntos.
+</EjercicioWeb>
+
+## Modo oscuro
+
+Muchos usan el celular en **modo oscuro**. Tu página se puede enterar con una media query, y como
+los colores están en variables, alcanza con **cambiar las variables**:
+
+```css
+:root {
+  --fondo: #faf7f2;
+  --texto: #2b2b2b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #1d2125;
+    --texto: #e6e6e6;
+  }
+}
+
+body {
+  background: var(--fondo);
+  color: var(--texto);
+}
+```
+
+Todo lo que usa `var(--fondo)` y `var(--texto)` cambia solo. **Esa es la gran ventaja de las
+variables**: el modo oscuro es redefinir dos o tres, no reescribir la página.
+
+<EjercicioWeb
+  titulo="Modo oscuro"
+  dificultad="🌿"
+  html={`<h1>Don Pepe</h1>
+<p>Productos de campo, desde 1987.</p>
+`}
+  css={`:root {
+  --fondo: #faf7f2;
+  --texto: #2b2b2b;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  padding: 16px;
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+/* en modo oscuro: fondo #1d2125 y texto #e6e6e6 */
+`}
+  tests={`var oscuro = function (prop) { return regla(":root", prop, "prefers-color-scheme: dark"); };
+assert(oscuro("--fondo") !== null || oscuro("--texto") !== null, "Falta la media query del modo oscuro: @media (prefers-color-scheme: dark), con :root adentro");
+assert((oscuro("--fondo") || "").toLowerCase() === "#1d2125", "En modo oscuro, --fondo tiene que valer #1d2125");
+assert((oscuro("--texto") || "").toLowerCase() === "#e6e6e6", "En modo oscuro, --texto tiene que valer #e6e6e6");
+assert((regla("body", "background") || regla("body", "background-color") || "").indexOf("var(--fondo)") !== -1, "El body tiene que seguir usando las variables: no hace falta tocarlo");`}
+  pistas={[
+    '¿Hace falta cambiar las reglas del body, o alcanza con cambiar lo que valen las variables?',
+    'Adentro de la media query, ¿a qué selector le redefinís las variables?',
+  ]}
+>
+Agregá el **modo oscuro**: que en ese modo el fondo sea **`#1d2125`** y el texto **`#e6e6e6`**.
+
+Para verlo: en la compu, poné el sistema en modo oscuro; en el celular, activalo desde los ajustes.
+</EjercicioWeb>
+
+<OpcionMultiple titulo="Chequeo: ¿por qué primero el celular?" opciones={[
+  { texto: "Porque la mayoría entra desde el celular, y es más fácil agregar cosas cuando sobra lugar que sacarlas cuando falta.", correcta: true, explicacion: "Las dos. La versión del celular es la principal, y la de la compu se arma agregando: más columnas, más espacio. Al revés, hay que andar deshaciendo." },
+  { texto: "Porque los celulares no entienden las media queries de max-width.", explicacion: "Las entienden perfectamente. Es una forma de pensar la página, no una limitación." },
+  { texto: "Porque así la página carga más rápido en la compu.", explicacion: "La velocidad no cambia: el archivo de CSS es el mismo." },
+]}>
+¿Por qué se recomienda escribir primero el CSS del celular, y después las media queries para la compu?
+</OpcionMultiple>
+
+## Para llevar
+
+- `<meta name="viewport" content="width=device-width, initial-scale=1">` en el `<head>`, siempre.
+- **Media queries**: `@media (min-width: 600px) { ... }`, las reglas de adentro valen desde ese
+  ancho. **Primero el celular**, después lo que cambia en la compu.
+- Unidades relativas: `%` del contenedor, `rem` de la letra (respeta al que agranda la letra), `vw`/`vh`
+  de la pantalla.
+- `img { max-width: 100%; height: auto; }`: ninguna imagen se sale.
+- **Variables**: `:root { --principal: #8a5a2b; }` y `var(--principal)`. Un cambio, y cambia todo.
+- **Modo oscuro**: `@media (prefers-color-scheme: dark)` y redefinir las variables.

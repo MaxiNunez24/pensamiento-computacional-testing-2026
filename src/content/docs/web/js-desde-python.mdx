@@ -1,0 +1,316 @@
+---
+title: "JavaScript I · Para quien ya sabe Python"
+description: "JavaScript es el lenguaje de los navegadores, y si sabés Python ya sabés casi todo: es lo mismo escrito de otra forma. Variables, if, for, funciones, listas y diccionarios, al lado de su equivalente."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+:::tip[Antes de empezar]
+Esta clase da por sabido **Python**: variables, `if`, `for`, funciones, listas y diccionarios. Si
+eso lo tenés, JavaScript te va a resultar conocido. En estos ejercicios no hay página: lo que
+importa es **la consola**, que es el `print` de JavaScript.
+:::
+
+## El problema
+
+Con HTML y CSS la página **se ve**, pero no **hace** nada: tocás un botón y no pasa nada. Para que
+responda hace falta un programa, y el único lenguaje que entienden **todos los navegadores** es
+JavaScript.
+
+La buena noticia: **ya sabés programar**. Las ideas son las mismas —variables, condiciones, bucles,
+funciones, listas—; lo que cambia es **cómo se escriben**. Esta clase es una traducción.
+
+## La gran diferencia: llaves en vez de sangría
+
+En Python, lo que está **adentro** de un `if` o un `def` lo marca la **sangría**. En JavaScript, lo
+marcan las **llaves** `{ }`, y la condición va entre **paréntesis**:
+
+<Tabs>
+<TabItem label="🐍 Python">
+```python
+if edad >= 18:
+    print("Mayor")
+else:
+    print("Menor")
+```
+</TabItem>
+<TabItem label="⚡ JavaScript">
+```js
+if (edad >= 18) {
+  console.log("Mayor");
+} else {
+  console.log("Menor");
+}
+```
+</TabItem>
+</Tabs>
+
+La sangría en JavaScript **se usa igual**, para que se lea bien, pero al lenguaje le da lo mismo:
+mandan las llaves. Y cada instrucción termina con **punto y coma**: no siempre es obligatorio, pero
+se pone.
+
+## El diccionario de traducción
+
+| Python | JavaScript | Ojo con… |
+|---|---|---|
+| `print("hola")` | `console.log("hola")` | Sale en **la consola**, no en la página |
+| `# comentario` | `// comentario` | Y `/* ... */` para varias líneas |
+| `nombre = "Ana"` | `let nombre = "Ana";` | `let` la primera vez. Si no va a cambiar: `const` |
+| `True` / `False` | `true` / `false` | En minúscula |
+| `None` | `null` | Y también `undefined`: "todavía no tiene valor" |
+| `and` / `or` / `not` | `&&` / `\|\|` / `!` | |
+| `==` | **`===`** | Ver abajo |
+| `f"Hola, {nombre}"` | `` `Hola, ${nombre}` `` | Con **comillas invertidas** y `$` |
+| `len(lista)` | `lista.length` | Es una propiedad, sin paréntesis |
+| `lista.append(x)` | `lista.push(x)` | |
+| `def doble(n):` | `function doble(n) {` | |
+| `elif` | `else if` | |
+
+### `let` y `const`
+
+En Python una variable aparece la primera vez que le das valor. En JavaScript se **declara**:
+
+```js
+let total = 0;        // va a cambiar
+total = total + 100;  // ya declarada: sin let
+
+const IVA = 0.21;     // no va a cambiar nunca
+```
+
+Usá **`const` siempre que puedas**, y `let` solo si la vas a reasignar. Si después tratás de
+cambiar una `const`, JavaScript te avisa con un error: te protege de pisarla sin querer.
+
+<EjercicioWeb
+  titulo="Hola desde JavaScript"
+  fundamental
+  dificultad="🌱"
+  sinVista
+  js={`// Mostrá en la consola: Hola, mundo
+// Después, en una variable "nombre", guardá tu nombre,
+// y mostrá: Hola, <tu nombre>  (con una template string)
+`}
+  tests={`assert(consola.length >= 2, "Tiene que haber dos mensajes en la consola, y hay " + consola.length + ". ¿Usaste console.log?");
+assert(consola[0] === "Hola, mundo", 'El primer mensaje tiene que ser "Hola, mundo" y es "' + consola[0] + '"');
+assert(typeof nombre === "string" && nombre.trim() !== "", "Falta la variable nombre, con un texto adentro");
+assert(consola[1] === "Hola, " + nombre, 'El segundo mensaje tiene que ser "Hola, " y tu nombre, armado con la variable. Salió: "' + consola[1] + '"');`}
+  pistas={[
+    '¿Cuál es el <code>print</code> de JavaScript, y dónde se ve lo que muestra?',
+    'Una f-string en JavaScript va entre comillas invertidas. ¿Y cómo se mete una variable adentro?',
+  ]}
+>
+Mostrá en la consola **`Hola, mundo`**. Después guardá tu nombre en una variable **`nombre`** y
+mostrá **`Hola, `** seguido de tu nombre, armado con la variable.
+</EjercicioWeb>
+
+## El `===`, y por qué no `==`
+
+JavaScript tiene dos formas de comparar, y una es una trampa:
+
+```js
+5 == "5"     // true   ← convierte el texto a número, y "son iguales"
+5 === "5"    // false  ← distinto tipo: no son iguales
+```
+
+`==` trata de **convertir** antes de comparar, y da resultados que nadie espera (`0 == ""` es
+`true`). **`===` compara de verdad**, como el `==` de Python. Usá siempre `===` (y `!==` para
+"distinto").
+
+<OpcionMultiple titulo="Chequeo: la comparación" opciones={[
+  { texto: 'Con ===, porque el dato que viene de un campo es texto: "18" === 18 da false y te avisa que hay que convertirlo.', correcta: true, explicacion: 'Exacto. Lo que se escribe en un campo de la página siempre llega como texto, como el input() de Python. === no te deja comparar texto con número sin darte cuenta: hay que convertir con Number(edad).' },
+  { texto: 'Con ==, porque convierte solo y es más cómodo.', explicacion: 'Convierte, sí, pero de formas que nadie espera: 0 == "" da true. Un error así no te avisa: funciona "más o menos" y falla después.' },
+  { texto: "Da igual: las dos hacen lo mismo.", explicacion: "No: == convierte los tipos antes de comparar, === no. Con datos de un formulario, eso cambia todo." },
+]}>
+La edad viene de un campo de la página, y querés saber si es `18`. ¿Con cuál comparás?
+</OpcionMultiple>
+
+## Funciones
+
+<Tabs>
+<TabItem label="🐍 Python">
+```python
+def precio_con_iva(precio):
+    return precio * 1.21
+```
+</TabItem>
+<TabItem label="⚡ JavaScript">
+```js
+function precioConIva(precio) {
+  return precio * 1.21;
+}
+```
+</TabItem>
+</Tabs>
+
+Igual que en Python: parámetros, `return`, y se llama con paréntesis. Lo único que cambia es la
+costumbre de los nombres: en JavaScript se escribe **`precioConIva`** (cada palabra nueva con
+mayúscula) en vez de `precio_con_iva`.
+
+<EjercicioWeb
+  titulo="Tu primera función"
+  fundamental
+  dificultad="🌱"
+  sinVista
+  js={`// precioFinal(precio, cantidad): el total, con el 21% de IVA.
+// Y si son 10 o más unidades, un 10% de descuento sobre ese total.
+
+console.log(precioFinal(1000, 2));   // 2420
+console.log(precioFinal(1000, 10));  // 10890
+`}
+  tests={`assert(typeof precioFinal === "function", "Falta la función precioFinal: function precioFinal(precio, cantidad) { ... }");
+var r1 = precioFinal(1000, 2);
+assert(typeof r1 === "number", "precioFinal tiene que DEVOLVER un número, con return. Devolvió: " + r1);
+assert(Math.abs(r1 - 2420) < 0.01, "precioFinal(1000, 2) tiene que dar 2420 (2000 más el 21%) y dio " + r1);
+assert(Math.abs(precioFinal(1000, 10) - 10890) < 0.01, "Con 10 unidades va el 10% de descuento: precioFinal(1000, 10) tiene que dar 10890 y dio " + precioFinal(1000, 10));
+assert(Math.abs(precioFinal(200, 9) - 2178) < 0.01, "Con 9 unidades todavía no hay descuento: precioFinal(200, 9) tiene que dar 2178 y dio " + precioFinal(200, 9));
+assert(Math.abs(precioFinal(500, 20) - 10890) < 0.01, "precioFinal(500, 20) tiene que dar 10890: 10000, más IVA, menos el 10%");`}
+  pistas={[
+    '¿Cómo lo escribirías en Python? Escribilo así primero, y después traducí línea por línea con la tabla.',
+    '"10 o más": ¿qué comparación es? ¿Y dónde va la condición, en JavaScript?',
+  ]}
+>
+Escribí **`precioFinal(precio, cantidad)`**: el total (precio por cantidad) con el **21% de IVA**.
+Y si son **10 o más unidades**, un **10% de descuento** sobre ese total.
+
+```text
+precioFinal(1000, 2)    →  2420
+precioFinal(1000, 10)   →  10890
+```
+</EjercicioWeb>
+
+## Listas y bucles
+
+Una lista de Python es un **array** en JavaScript. Se escribe igual, con corchetes, y se recorre con
+un `for ... of`:
+
+<Tabs>
+<TabItem label="🐍 Python">
+```python
+precios = [4500, 7800, 3200]
+precios.append(5900)
+
+total = 0
+for p in precios:
+    total += p
+print(len(precios), total)
+```
+</TabItem>
+<TabItem label="⚡ JavaScript">
+```js
+const precios = [4500, 7800, 3200];
+precios.push(5900);
+
+let total = 0;
+for (const p of precios) {
+  total += p;
+}
+console.log(precios.length, total);
+```
+</TabItem>
+</Tabs>
+
+:::caution[`of`, no `in`]
+JavaScript también tiene `for (const x in lista)`, y **no hace lo que esperás**: recorre las
+**posiciones** (`"0"`, `"1"`, `"2"`), no los elementos. El que equivale al `for` de Python es
+**`for ... of`**.
+:::
+
+(Y sí: `precios` es `const` aunque le hagamos `push`. `const` quiere decir que la variable no pasa a
+ser **otra** lista; la lista misma puede cambiar por dentro.)
+
+<EjercicioWeb
+  titulo="El más caro"
+  fundamental
+  dificultad="🌿"
+  sinVista
+  js={`// masCaro(precios): el precio más alto de la lista.
+// Sin Math.max: recorriéndola, como lo harías en Python.
+
+console.log(masCaro([4500, 7800, 3200]));  // 7800
+`}
+  tests={`assert(typeof masCaro === "function", "Falta la función masCaro");
+assert(masCaro([4500, 7800, 3200]) === 7800, "masCaro([4500, 7800, 3200]) tiene que dar 7800 y dio " + masCaro([4500, 7800, 3200]));
+assert(masCaro([12500, 300]) === 12500, "Si el más caro es el primero: masCaro([12500, 300]) tiene que dar 12500 y dio " + masCaro([12500, 300]));
+assert(masCaro([10, 20, 30, 40]) === 40, "Si es el último: masCaro([10, 20, 30, 40]) tiene que dar 40");
+assert(masCaro([-5, -2, -9]) === -2, "Con números negativos: masCaro([-5, -2, -9]) tiene que dar -2. ¿Con qué valor arrancaste a comparar?");
+var codigo = masCaro.toString();
+assert(codigo.indexOf("Math.max") === -1, "Sin Math.max: recorré la lista");`}
+  pistas={[
+    'Antes de mirar ningún precio, ¿cuál es "el más caro hasta ahora"? ¿Funciona si todos son negativos?',
+    'Al recorrer, ¿cuándo cambia "el más caro hasta ahora"?',
+  ]}
+>
+Escribí **`masCaro(precios)`**: el precio más alto de la lista, **recorriéndola** (sin `Math.max`).
+
+```text
+masCaro([4500, 7800, 3200])  →  7800
+masCaro([-5, -2, -9])        →  -2
+```
+</EjercicioWeb>
+
+## Diccionarios: objetos
+
+Un diccionario de Python es un **objeto** en JavaScript. Las claves van **sin comillas**, y se lee
+el valor con un **punto**:
+
+<Tabs>
+<TabItem label="🐍 Python">
+```python
+producto = {"nombre": "Mate", "precio": 7800}
+print(producto["nombre"])
+producto["precio"] = 8000
+```
+</TabItem>
+<TabItem label="⚡ JavaScript">
+```js
+const producto = { nombre: "Mate", precio: 7800 };
+console.log(producto.nombre);
+producto.precio = 8000;
+```
+</TabItem>
+</Tabs>
+
+`producto["nombre"]` también funciona, como en Python; el punto es más corto y es lo que vas a ver
+en todos lados.
+
+<EjercicioWeb
+  titulo="La etiqueta del producto"
+  dificultad="🌿"
+  sinVista
+  js={`// etiqueta(producto): un texto como "Mate de calabaza: $ 7800",
+// y si el producto tiene oferta: true, que termine con " ¡OFERTA!"
+
+console.log(etiqueta({ nombre: "Mate de calabaza", precio: 7800, oferta: false }));
+console.log(etiqueta({ nombre: "Taza", precio: 4500, oferta: true }));
+`}
+  tests={`assert(typeof etiqueta === "function", "Falta la función etiqueta");
+var a = etiqueta({ nombre: "Mate de calabaza", precio: 7800, oferta: false });
+assert(a === "Mate de calabaza: $ 7800", 'etiqueta del mate tiene que dar "Mate de calabaza: $ 7800" y dio "' + a + '"');
+var b = etiqueta({ nombre: "Taza", precio: 4500, oferta: true });
+assert(b === "Taza: $ 4500 ¡OFERTA!", 'Con oferta tiene que dar "Taza: $ 4500 ¡OFERTA!" y dio "' + b + '"');
+var c = etiqueta({ nombre: "Vela", precio: 3200, oferta: false });
+assert(c === "Vela: $ 3200", 'Con otro producto tiene que cambiar: "Vela: $ 3200". Dio "' + c + '"');`}
+  pistas={[
+    '¿Cómo leés el nombre de un objeto en JavaScript? ¿Y cómo lo metés en un texto?',
+    'La oferta es <code>true</code> o <code>false</code>. ¿Hace falta compararla con algo, o ya sirve como condición?',
+  ]}
+>
+Escribí **`etiqueta(producto)`**: un texto con el nombre y el precio. Si el producto tiene
+`oferta: true`, que termine con **` ¡OFERTA!`**.
+
+```text
+etiqueta({ nombre: "Mate de calabaza", precio: 7800, oferta: false })  →  "Mate de calabaza: $ 7800"
+etiqueta({ nombre: "Taza", precio: 4500, oferta: true })               →  "Taza: $ 4500 ¡OFERTA!"
+```
+</EjercicioWeb>
+
+## Para llevar
+
+- **Llaves en vez de sangría**, condiciones entre paréntesis, `;` al final.
+- `console.log` es el `print`. `let` para lo que cambia, **`const` para lo que no**.
+- **`===` siempre**, nunca `==`. `true`, `false`, `null` en minúscula. `&&`, `||`, `!`.
+- Template strings: `` `Hola, ${nombre}` ``, con comillas invertidas.
+- `function nombre(params) { return ...; }`, y los nombres en `camelCase`.
+- Arrays: `[1, 2]`, `.push()`, `.length`, y se recorren con **`for (const x of lista)`**.
+- Objetos: `{ clave: valor }`, y se lee con `objeto.clave`.

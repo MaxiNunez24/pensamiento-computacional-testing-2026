@@ -1,0 +1,251 @@
+---
+title: "HTML II · Listas, links e imágenes"
+description: "Listas con viñetas y numeradas, links a otras páginas y a otra parte de la misma, imágenes con su descripción, y texto con énfasis."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const FOTOS = 'https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web-img/';
+
+:::tip[Antes de empezar]
+Esta clase usa lo de [HTML I](../html-estructura/): etiquetas, atributos y el esqueleto de la página.
+En los ejercicios alcanza con escribir lo de adentro del `<body>`: el esqueleto lo pone la plataforma.
+:::
+
+## El problema
+
+Con títulos y párrafos se puede escribir un cuento, pero no una página de verdad. Cualquier página
+que mires tiene **listas** (el menú, los ingredientes, los pasos), **links** que llevan a otra
+parte, e **imágenes**. Con eso, ya podés armar la página de un emprendimiento.
+
+## Listas
+
+Hay dos, según si **el orden importa**:
+
+| | Etiqueta | Se ve | Para… |
+|---|---|---|---|
+| Sin orden | `<ul>` (*unordered list*) | con viñetas • | Los ingredientes, lo que ofrece un local |
+| Numerada | `<ol>` (*ordered list*) | 1. 2. 3. | Los pasos de una receta, un ranking |
+
+Y adentro, **cada elemento** va en un `<li>` (*list item*), en las dos:
+
+```html
+<ul>
+  <li>Yerba</li>
+  <li>Azúcar</li>
+</ul>
+
+<ol>
+  <li>Calentar el agua, sin que hierva</li>
+  <li>Cebar</li>
+</ol>
+```
+
+Es la misma idea que una **lista de Python**: una caja con elementos adentro, en orden. Solo que acá
+`<ul>` u `<ol>` dicen además cómo se muestra.
+
+<EjercicioWeb
+  titulo="El menú del buffet"
+  fundamental
+  dificultad="🌱"
+  html={`<h1>Buffet del CFP</h1>
+
+<h2>Hoy hay</h2>
+<!-- una lista SIN orden con: Empanadas, Pizza, Tarta de verdura -->
+
+<h2>Cómo pedir</h2>
+<!-- una lista NUMERADA con: Elegí, Pagá en la caja, Retirá tu pedido -->
+`}
+  tests={`var ul = $("ul"), ol = $("ol");
+assert(ul, "Falta la lista sin orden, <ul>, con las comidas");
+assert(ol, "Falta la lista numerada, <ol>, con los pasos para pedir");
+var comidas = $$("ul li").map(function (li) { return li.textContent.trim(); });
+assert(comidas.length === 3, "La lista de comidas tiene que tener 3 elementos <li> y tiene " + comidas.length);
+assert(comidas.join("|") === "Empanadas|Pizza|Tarta de verdura", "Las comidas tienen que ser Empanadas, Pizza y Tarta de verdura, en ese orden. Son: " + comidas.join(", "));
+var pasos = $$("ol li").map(function (li) { return li.textContent.trim(); });
+assert(pasos.length === 3, "La lista de pasos tiene que tener 3 elementos y tiene " + pasos.length);
+assert(pasos[0] === "Elegí" && pasos[2] === "Retirá tu pedido", "Los pasos: Elegí, Pagá en la caja, Retirá tu pedido. En ese orden");
+assert($$("ul > li").length === 3 && $$("ol > li").length === 3, "Cada <li> tiene que ir directamente adentro de su lista");`}
+  pistas={[
+    '¿En cuál de las dos importa el orden? ¿Da lo mismo pagar antes de elegir?',
+    '¿Qué etiqueta va adentro de la lista, una vez por cada cosa?',
+  ]}
+>
+Completá la página del buffet: lo que **hay hoy**, en una lista con viñetas (no importa el orden), y
+**cómo pedir**, en una lista numerada (el orden sí importa).
+</EjercicioWeb>
+
+## Links
+
+Un link es la etiqueta `<a>` (*anchor*, ancla). **Adónde lleva** va en el atributo `href`, y lo que
+queda adentro es **el texto que se ve** y se toca:
+
+```html
+<a href="https://www.argentina.gob.ar">Ir a Argentina.gob.ar</a>
+```
+
+Hay tres clases de dirección:
+
+| `href` | Lleva a… |
+|---|---|
+| `https://www.algo.com/pagina` | **Otra página de internet**: la dirección entera |
+| `contacto.html` | **Otra página tuya**, en la misma carpeta |
+| `#horarios` | **Otra parte de esta misma página**: la que tenga `id="horarios"` |
+
+El último sirve para los menús que bajan hasta una sección. El destino lleva un **`id`**, un nombre
+que no se puede repetir en la página:
+
+```html
+<a href="#horarios">Ver los horarios</a>
+...
+<h2 id="horarios">Horarios</h2>
+```
+
+Y si querés que el link se abra **en otra pestaña**, sin que la persona se vaya de tu página:
+
+```html
+<a href="https://wa.me/5492215550000" target="_blank">Escribinos</a>
+```
+
+<EjercicioWeb
+  titulo="El menú que baja"
+  fundamental
+  dificultad="🌿"
+  html={`<h1>Panadería La Espiga</h1>
+<!-- 1. un link "Horarios" que baje hasta la sección de horarios -->
+<!-- 2. un link "Escribinos" a https://wa.me/5492215550000, que se abra en otra pestaña -->
+
+<h2>Lo que hacemos</h2>
+<p>Pan, facturas y tortas por encargo.</p>
+
+<h2>Horarios</h2>
+<p>De lunes a sábado, de 7 a 13 y de 16 a 20.</p>
+`}
+  tests={`var links = $$("a");
+assert(links.length >= 2, "Faltan links: uno a los horarios y otro a WhatsApp. Hay " + links.length);
+var aHorarios = links.filter(function (a) { return (a.getAttribute("href") || "").charAt(0) === "#"; })[0];
+assert(aHorarios, 'Falta el link a la sección de horarios: su href empieza con # y sigue con el id del destino');
+var id = aHorarios.getAttribute("href").slice(1);
+var destino = document.getElementById(id);
+assert(destino, 'El link lleva a "#' + id + '", pero ningún elemento tiene id="' + id + '". ¿Le pusiste el id al título de los horarios?');
+assert(destino.textContent.trim() === "Horarios", 'El id tiene que estar en el título "Horarios", y está en: "' + destino.textContent.trim() + '"');
+var wa = links.filter(function (a) { return (a.getAttribute("href") || "").indexOf("wa.me") !== -1; })[0];
+assert(wa, "Falta el link a WhatsApp: https://wa.me/5492215550000");
+assert(wa.getAttribute("href") === "https://wa.me/5492215550000", "El href de WhatsApp tiene que ser exactamente https://wa.me/5492215550000");
+assert(wa.getAttribute("target") === "_blank", 'El link de WhatsApp tiene que abrirse en otra pestaña: target="_blank"');
+assert(texto("a[href^='#']").indexOf("Horarios") !== -1, 'El link a los horarios tiene que decir "Horarios"');`}
+  pistas={[
+    'Un link a otra parte de la misma página, ¿cómo sabe cuál es "la parte"? ¿Qué le tenés que agregar al destino?',
+    'Para el de WhatsApp: ¿qué atributo hace que se abra en otra pestaña?',
+  ]}
+>
+Agregá arriba **dos links**:
+
+- **Horarios**, que baje hasta la sección de horarios de la misma página;
+- **Escribinos**, a `https://wa.me/5492215550000`, que se abra **en otra pestaña**.
+</EjercicioWeb>
+
+## Imágenes
+
+Una imagen es la etiqueta `<img>`, y es de las que **no se cierran**: no tiene contenido, solo
+atributos.
+
+```html
+<img src="mate.jpg" alt="Un mate de calabaza con bombilla de alpaca">
+```
+
+| Atributo | Qué es |
+|---|---|
+| `src` | **Qué archivo mostrar**: una dirección, como en los links |
+| `alt` | **La descripción de la imagen**, en palabras |
+
+El `alt` **no es opcional**, aunque la página se vea igual sin él. Lo leen:
+
+- los **lectores de pantalla**, que le dicen a una persona ciega qué hay en la imagen;
+- el navegador, que lo muestra **cuando la imagen no carga** (una conexión lenta, un nombre mal escrito);
+- los buscadores, para saber de qué es la foto.
+
+Un buen `alt` describe **lo que importa** de la imagen, como se lo contarías a alguien por teléfono.
+`alt="foto"` o `alt="imagen1"` no le sirven a nadie.
+
+<EjercicioWeb
+  titulo="Una foto con su descripción"
+  fundamental
+  dificultad="🌱"
+  html={`<h1>Mate de calabaza</h1>
+<!-- la foto: ${FOTOS}mate.svg -->
+<p>Curado y listo para usar. $ 7800.</p>
+`}
+  tests={`var img = $("img");
+assert(img, "Falta la imagen: la etiqueta <img>");
+var src = atributo("img", "src") || "";
+assert(src.indexOf("mate.svg") !== -1, 'La imagen tiene que mostrar el archivo mate.svg: va en el atributo src. Ahora src es "' + src + '"');
+var alt = (atributo("img", "alt") || "").trim();
+assert(alt, 'A la imagen le falta el alt: la descripción para quien no la puede ver');
+assert(alt.length >= 10, 'El alt "' + alt + '" es muy corto: describí qué se ve, como se lo contarías a alguien por teléfono');
+assert(["foto", "imagen", "img", "mate.svg"].indexOf(alt.toLowerCase()) === -1, 'Un alt como "' + alt + '" no le dice nada a quien no ve la imagen: ¿qué hay en la foto?');
+assert(img.compareDocumentPosition($("h1")) & Node.DOCUMENT_POSITION_PRECEDING, "La foto va abajo del título");`}
+  pistas={[
+    '¿Qué dos cosas necesita saber el navegador: qué archivo mostrar, y qué?',
+    'Cerrá los ojos y que alguien te lea tu alt. ¿Sabrías qué hay en la foto?',
+  ]}
+>
+Agregá abajo del título **la foto del mate**, que está en esta dirección:
+
+```text
+https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web-img/mate.svg
+```
+
+Con una descripción que le sirva a alguien que no la puede ver.
+</EjercicioWeb>
+
+<OpcionMultiple titulo="Chequeo: un buen alt" opciones={[
+  { texto: '"Mate de calabaza marrón con bombilla plateada"', correcta: true, explicacion: "Sí: dice qué es y cómo es, que es lo que importa en un catálogo. Con eso, alguien que no ve la foto sabe qué se vende." },
+  { texto: '"foto del producto"', explicacion: "No le dice nada: ya sabe que es una foto. Lo que no sabe es de qué." },
+  { texto: "Ninguno: si la página se ve igual, no hace falta.", explicacion: "Se ve igual para vos. Para alguien que usa un lector de pantalla, o cuando la imagen no carga, la imagen sin alt directamente no existe." },
+]}>
+Es la foto de un mate en un catálogo. ¿Cuál es el mejor `alt`?
+</OpcionMultiple>
+
+## Énfasis: negrita e itálica
+
+Para marcar que algo **importa**, `<strong>`; para el *énfasis* al decirlo, `<em>`:
+
+```html
+<p>El curso es <strong>gratuito</strong>, y <em>no</em> hace falta saber programar.</p>
+```
+
+Se ven en negrita y en itálica, pero lo que dicen es **para qué** están: un lector de pantalla
+cambia el tono de voz. Si solo querés que algo se vea en negrita porque queda lindo, eso es trabajo
+de CSS.
+
+<EjercicioWeb
+  titulo="Lo importante, marcado"
+  dificultad="🌱"
+  html={`<h1>Inscripciones abiertas</h1>
+<p>El curso de Pensamiento Computacional es gratuito.</p>
+<p>Traé tu DNI, no una fotocopia.</p>
+`}
+  tests={`var fuerte = $$("strong").map(function (e) { return e.textContent.trim(); });
+assert(fuerte.indexOf("gratuito") !== -1, 'Marcá como importante la palabra "gratuito", con <strong>');
+var enfasis = $$("em").map(function (e) { return e.textContent.trim(); });
+assert(enfasis.indexOf("no") !== -1, 'Poné énfasis en el "no" de "no una fotocopia", con <em>');
+assert($$("p").length === 2, "Las dos frases tienen que seguir siendo dos párrafos");
+assert(texto("p") === "El curso de Pensamiento Computacional es gratuito.", "El texto del primer párrafo tiene que quedar igual: solo se marca una palabra");`}
+  pistas={[
+    '¿Cuál de las dos palabras es información que no te podés perder, y cuál es cómo se diría en voz alta?',
+    'Las etiquetas de énfasis van alrededor de la palabra, adentro del párrafo: ¿dónde abre y dónde cierra cada una?',
+  ]}
+>
+Marcá **gratuito** como lo importante, y poné énfasis en el **no** de "no una fotocopia".
+</EjercicioWeb>
+
+## Para llevar
+
+- **Listas**: `<ul>` con viñetas, `<ol>` numerada, y cada cosa en un `<li>`.
+- **Links**: `<a href="...">texto</a>`. Una dirección entera, otra página tuya, o `#id` para otra
+  parte de la misma. `target="_blank"` abre otra pestaña.
+- `id="nombre"` le pone un nombre único a un elemento: es el destino de los links con `#`.
+- **Imágenes**: `<img src="..." alt="...">`, sin cierre. **El `alt` no es opcional.**
+- `<strong>` para lo importante y `<em>` para el énfasis: dicen **por qué**, no solo cómo se ve.

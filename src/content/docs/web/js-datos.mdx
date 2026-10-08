@@ -1,0 +1,307 @@
+---
+title: "JavaScript IV · Datos, JSON y localStorage"
+description: "Filtrar, transformar y ordenar listas de objetos (las comprensiones de Python, en JavaScript), el JSON, y localStorage para que la página se acuerde de cosas."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+export const PRODUCTOS = `const PRODUCTOS = [
+  { nombre: "Taza", precio: 4500, stock: 12 },
+  { nombre: "Mate", precio: 7800, stock: 0 },
+  { nombre: "Vela", precio: 3200, stock: 5 },
+  { nombre: "Bolso", precio: 12500, stock: 2 },
+  { nombre: "Maceta", precio: 5900, stock: 0 },
+];
+`;
+
+:::tip[Antes de empezar]
+Usa lo de los tres bloques de JavaScript. Si viste las **comprensiones de listas** en Python, esta
+clase te va a sonar mucho.
+:::
+
+## El problema
+
+Un catálogo de verdad tiene filtros: *"solo los que hay en stock"*, *"de menor a mayor precio"*. Y
+algunas cosas se tienen que **recordar**: los favoritos que marcó alguien, el carrito, si eligió el
+modo oscuro. Todo eso es trabajar con **listas de objetos**, y guardarlas.
+
+## Filtrar y transformar: `filter` y `map`
+
+En Python, para quedarte con algunos elementos o transformarlos, usás una **comprensión de listas**.
+En JavaScript hay dos métodos, uno para cada cosa:
+
+<Tabs>
+<TabItem label="🐍 Python">
+```python
+baratos = [p for p in productos if p["precio"] < 5000]
+nombres = [p["nombre"] for p in productos]
+```
+</TabItem>
+<TabItem label="⚡ JavaScript">
+```js
+const baratos = productos.filter((p) => p.precio < 5000);
+const nombres = productos.map((p) => p.nombre);
+```
+</TabItem>
+</Tabs>
+
+| Método | Hace | Devuelve |
+|---|---|---|
+| `filter(función)` | Se queda con los que **dan `true`** | Una lista **más corta** (o igual) |
+| `map(función)` | **Transforma** cada uno | Una lista **del mismo largo** |
+
+Ninguno de los dos cambia la lista original: devuelven una nueva, igual que la comprensión.
+
+### Las funciones flecha
+
+`(p) => p.precio < 5000` es una **función flecha**: una función chiquita, escrita en una línea. Es
+lo mismo que:
+
+```js
+function (p) {
+  return p.precio < 5000;
+}
+```
+
+A la izquierda de `=>` van los parámetros, y a la derecha **lo que devuelve**. Es el `lambda` de
+Python: `lambda p: p["precio"] < 5000`.
+
+<EjercicioWeb
+  titulo="Los que hay en stock"
+  fundamental
+  dificultad="🌱"
+  sinVista
+  js={`${PRODUCTOS}
+// enStock(productos): la lista de los que tienen stock (más de 0)
+// nombres(productos): la lista de los nombres
+// Con filter y map.
+
+console.log(nombres(enStock(PRODUCTOS)));
+`}
+  tests={`assert(typeof enStock === "function" && typeof nombres === "function", "Faltan las funciones enStock y nombres");
+var hay = enStock(PRODUCTOS);
+assert(Array.isArray(hay), "enStock tiene que devolver una lista");
+assert(hay.length === 3, "Hay 3 productos con stock y enStock devolvió " + hay.length);
+assert(hay.every(function (p) { return p.stock > 0; }), "En la lista quedó alguno sin stock");
+assert(hay[0] === PRODUCTOS[0], "enStock tiene que devolver los MISMOS objetos, no copias ni solo los nombres");
+var n = nombres(PRODUCTOS);
+assert(Array.isArray(n) && n.join("|") === "Taza|Mate|Vela|Bolso|Maceta", "nombres(PRODUCTOS) tiene que dar los 5 nombres, en orden. Dio: " + JSON.stringify(n));
+assert(PRODUCTOS.length === 5, "Las funciones no pueden cambiar la lista original: tiene que seguir teniendo 5");
+assert(enStock.toString().indexOf("filter") !== -1 && nombres.toString().indexOf("map") !== -1, "Hacelas con filter y map");`}
+  pistas={[
+    '¿Cuál de las dos se queda con algunos, y cuál transforma todos? ¿Cuál de las dos devuelve una lista del mismo largo?',
+    'Escribilo primero como comprensión de Python. ¿Qué parte de la comprensión es la función que le pasás a filter?',
+  ]}
+>
+Escribí dos funciones, con `filter` y `map`:
+
+- **`enStock(productos)`**: la lista de los que tienen stock (más de 0);
+- **`nombres(productos)`**: la lista de los nombres.
+
+```text
+nombres(enStock(PRODUCTOS))  →  ["Taza", "Vela", "Bolso"]
+```
+</EjercicioWeb>
+
+## Ordenar: la trampa del `sort`
+
+Ordenar parece fácil, y tiene una trampa famosa:
+
+```js
+[100, 25, 3].sort()   // [100, 25, 3]  ← ¡¿qué?!
+```
+
+`sort()` sin nada **ordena como si fueran textos**, letra por letra: `"100"` va antes que `"25"`
+porque `"1"` va antes que `"2"`. Igual que un diccionario ordena "100" antes que "25".
+
+Para ordenar **números**, hay que decirle cómo comparar dos, con una función:
+
+```js
+[100, 25, 3].sort((a, b) => a - b)   // [3, 25, 100]
+```
+
+La función recibe dos elementos y devuelve **un número negativo si `a` va antes, positivo si va
+después**. `a - b` hace justamente eso con números: de menor a mayor.
+
+:::caution[sort cambia la lista]
+A diferencia de `filter` y `map`, **`sort` cambia la lista original**, como el `.sort()` de Python.
+Si no querés tocarla, ordená una copia: `[...lista].sort(...)`. Los tres puntos arman una lista
+nueva con los mismos elementos.
+:::
+
+<OpcionMultiple titulo="Chequeo: ¿qué da?" opciones={[
+  { texto: "[1000, 200, 30]: los ordena como textos.", correcta: true, explicacion: 'Exacto. Comparados como texto, "1000" va primero porque empieza con 1, después "200" y después "30". Para números siempre: sort((a, b) => a - b).' },
+  { texto: "[30, 200, 1000]: de menor a mayor.", explicacion: "Eso daría con sort((a, b) => a - b). Sin la función, compara como textos." },
+  { texto: "[1000, 200, 30]... porque ordena de mayor a menor.", explicacion: "Da eso, pero no por esa razón: lo ordena como texto. Probá con [5, 40, 300] y vas a ver que no es de mayor a menor." },
+]}>
+¿Qué da `[200, 30, 1000].sort()`?
+</OpcionMultiple>
+
+<EjercicioWeb
+  titulo="De menor a mayor precio"
+  fundamental
+  dificultad="🌿"
+  sinVista
+  js={`${PRODUCTOS}
+// porPrecio(productos): una lista NUEVA, ordenada de menor a mayor precio.
+// Sin cambiar la original.
+
+console.log(porPrecio(PRODUCTOS).map((p) => p.nombre));
+`}
+  tests={`assert(typeof porPrecio === "function", "Falta la función porPrecio");
+var ordenada = porPrecio(PRODUCTOS);
+var precios = ordenada.map(function (p) { return p.precio; });
+assert(precios.join(",") === "3200,4500,5900,7800,12500", "Tiene que quedar de menor a mayor: 3200, 4500, 5900, 7800, 12500. Quedó: " + precios.join(", ") + ". ¿Le dijiste a sort cómo comparar dos números?");
+assert(PRODUCTOS[0].nombre === "Taza" && PRODUCTOS[4].nombre === "Maceta", "La lista original cambió de orden: porPrecio tiene que ordenar una COPIA");
+assert(ordenada !== PRODUCTOS, "porPrecio tiene que devolver una lista nueva");
+var otros = porPrecio([{ precio: 100 }, { precio: 25 }, { precio: 3 }]).map(function (p) { return p.precio; });
+assert(otros.join(",") === "3,25,100", "Con precios 100, 25 y 3 tiene que dar 3, 25, 100, y dio " + otros.join(", ") + ": la trampa del sort con textos");`}
+  pistas={[
+    'La función que le pasás a sort recibe dos productos. ¿Qué tenés que restar para que queden de menor a mayor precio?',
+    '¿Cómo hacés una copia de la lista antes de ordenarla, para no tocar la original?',
+  ]}
+>
+Escribí **`porPrecio(productos)`**: una lista **nueva**, ordenada de **menor a mayor precio**, sin
+cambiar la original.
+</EjercicioWeb>
+
+## JSON: el idioma de los datos
+
+Los datos viajan entre programas —entre tu página y un servidor, entre Python y JavaScript— como
+**texto**. El formato que usa todo el mundo es **JSON**, y te va a resultar conocido: es casi igual a
+escribir una lista de diccionarios.
+
+```json
+[
+  { "nombre": "Taza", "precio": 4500 },
+  { "nombre": "Mate", "precio": 7800 }
+]
+```
+
+(Las claves, con comillas dobles siempre.) JavaScript lo convierte en las dos direcciones:
+
+| | De… | A… |
+|---|---|---|
+| `JSON.stringify(datos)` | una lista u objeto | **texto** JSON |
+| `JSON.parse(texto)` | texto JSON | una lista u objeto |
+
+Es lo mismo que `json.dumps` y `json.loads` de Python. Y por eso un programa en Python puede armar un
+JSON con los productos, y la página leerlo con JavaScript.
+
+## localStorage: que la página se acuerde
+
+Si recargás la página, **todas las variables se borran**: el programa arranca de cero. Para guardar
+algo **en el navegador de esa persona**, que siga ahí mañana, está `localStorage`:
+
+```js
+localStorage.setItem("modo", "oscuro");    // guardar
+localStorage.getItem("modo");              // leer: "oscuro" (o null si no hay nada)
+localStorage.removeItem("modo");           // borrar
+```
+
+Guarda **solo texto**. Para guardar una lista, se la pasa a JSON:
+
+```js
+const favoritos = ["Mate", "Taza"];
+localStorage.setItem("favoritos", JSON.stringify(favoritos));
+
+const leidos = JSON.parse(localStorage.getItem("favoritos"));   // ["Mate", "Taza"]
+```
+
+:::note[Es de esa persona, en ese navegador]
+Lo que se guarda en `localStorage` **no viaja a ningún lado**: queda en el navegador de quien usa la
+página. Sirve para preferencias y favoritos, no para datos que tenga que ver otra persona (eso
+necesita un servidor). Es justamente lo que usa esta plataforma para guardar tu avance.
+
+En los ejercicios de acá, `localStorage` está simulado y se borra cada vez que la página se rearma;
+en tu página de verdad, dura.
+:::
+
+<EjercicioWeb
+  titulo="Favoritos que se acuerdan"
+  fundamental
+  dificultad="🌿"
+  sinVista
+  js={`// guardarFavoritos(lista): guarda la lista en localStorage, con la clave "favoritos"
+// leerFavoritos(): devuelve la lista guardada; si no hay nada guardado, una lista vacía
+
+guardarFavoritos(["Mate", "Taza"]);
+console.log(leerFavoritos());
+`}
+  tests={`assert(typeof guardarFavoritos === "function" && typeof leerFavoritos === "function", "Faltan las funciones guardarFavoritos y leerFavoritos");
+localStorage.clear();
+var vacia = leerFavoritos();
+assert(Array.isArray(vacia) && vacia.length === 0, "Sin nada guardado, leerFavoritos tiene que devolver una lista vacía, y devolvió: " + JSON.stringify(vacia) + ". ¿Qué devuelve getItem si no hay nada?");
+guardarFavoritos(["Vela", "Bolso", "Mate"]);
+var guardado = localStorage.getItem("favoritos");
+assert(typeof guardado === "string", 'No hay nada guardado con la clave "favoritos"');
+assert(guardado.charAt(0) === "[", 'Lo guardado tiene que ser la lista en JSON, y es: ' + guardado + ". localStorage guarda texto: ¿cómo pasás una lista a texto JSON?");
+var leida = leerFavoritos();
+assert(Array.isArray(leida) && leida.join("|") === "Vela|Bolso|Mate", "Después de guardar, leerFavoritos tiene que devolver la misma lista. Devolvió: " + JSON.stringify(leida));
+guardarFavoritos([]);
+assert(leerFavoritos().length === 0, "Guardar una lista vacía también tiene que funcionar");`}
+  pistas={[
+    'localStorage guarda solo texto. ¿Cómo convertís la lista en texto para guardarla, y el texto en lista para leerla?',
+    'La primera vez no hay nada guardado. ¿Qué te devuelve <code>getItem</code> en ese caso, y qué querés devolver vos?',
+  ]}
+>
+Escribí dos funciones:
+
+- **`guardarFavoritos(lista)`**: guarda la lista en `localStorage`, con la clave `"favoritos"`;
+- **`leerFavoritos()`**: devuelve la lista guardada, o **una lista vacía** si todavía no hay nada.
+
+```text
+guardarFavoritos(["Mate", "Taza"])
+leerFavoritos()   →  ["Mate", "Taza"]
+```
+</EjercicioWeb>
+
+<EjercicioWeb
+  titulo="El total del carrito"
+  dificultad="🌿"
+  sinVista
+  js={`${PRODUCTOS}
+// total(carrito): cuánto suma el carrito.
+// carrito es una lista de { nombre, cantidad }: el precio sale de PRODUCTOS.
+
+const CARRITO = [
+  { nombre: "Taza", cantidad: 2 },
+  { nombre: "Vela", cantidad: 3 },
+];
+console.log(total(CARRITO));   // 18600
+`}
+  tests={`assert(typeof total === "function", "Falta la función total");
+assert(total([{ nombre: "Taza", cantidad: 2 }, { nombre: "Vela", cantidad: 3 }]) === 18600, "2 tazas (4500) y 3 velas (3200) suman 18600, y dio " + total([{ nombre: "Taza", cantidad: 2 }, { nombre: "Vela", cantidad: 3 }]));
+assert(total([]) === 0, "Un carrito vacío suma 0");
+assert(total([{ nombre: "Bolso", cantidad: 1 }]) === 12500, "Un bolso solo: 12500");
+assert(total([{ nombre: "Mate", cantidad: 1 }, { nombre: "Maceta", cantidad: 2 }]) === 19600, "Un mate y dos macetas: 7800 + 11800 = 19600");`}
+  pistas={[
+    'Para cada cosa del carrito sabés el nombre, pero no el precio. ¿Dónde lo buscás, y con qué método te quedás con UN producto de una lista?',
+    '¿Con qué valor arranca la suma, para que un carrito vacío dé 0?',
+  ]}
+>
+Escribí **`total(carrito)`**: cuánto suma el carrito. El carrito tiene el **nombre** y la
+**cantidad** de cada cosa; el precio lo buscás en `PRODUCTOS`.
+
+```text
+total([{ nombre: "Taza", cantidad: 2 }, { nombre: "Vela", cantidad: 3 }])  →  18600
+```
+
+(Para buscar **un** elemento en una lista existe `lista.find((p) => ...)`: como `filter`, pero
+devuelve el primero que encuentre, no una lista.)
+</EjercicioWeb>
+
+## Para llevar
+
+- `filter` se queda con algunos, `map` transforma todos: las **comprensiones** de Python. Devuelven
+  una lista nueva.
+- **Funciones flecha**: `(p) => p.precio` es una función que devuelve `p.precio`. El `lambda` de Python.
+- `find` devuelve **el primero** que cumple.
+- **`sort` ordena como texto**: para números, `sort((a, b) => a - b)`. Y cambia la lista: ordená una
+  copia con `[...lista]`.
+- **JSON** es el formato de texto de los datos. `JSON.stringify` y `JSON.parse`, como `json.dumps` y
+  `json.loads`.
+- **`localStorage`** guarda texto en el navegador de esa persona: `setItem`, `getItem` (o `null`),
+  `removeItem`. Las listas, pasadas a JSON.

@@ -1,0 +1,293 @@
+---
+title: "JavaScript II · Leer y cambiar la página"
+description: "El DOM: cómo un programa en JavaScript encuentra los elementos de la página, les cambia el texto y las clases, y crea elementos nuevos a partir de datos."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const BASE = `body { font-family: system-ui, sans-serif; padding: 16px; }
+.producto { padding: 8px 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 8px; }
+.agotado { opacity: 0.45; text-decoration: line-through; }
+.catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.tarjeta { padding: 12px; border-radius: 10px; background: #f1ece4; }
+.tarjeta h2 { margin: 0 0 4px; font-size: 1.05rem; }
+.tarjeta p { margin: 0; font-weight: bold; color: #2f4858; }
+`;
+
+:::tip[Antes de empezar]
+Usa lo de [JavaScript I](../js-desde-python/) y los bloques de HTML y CSS. Desde acá los ejercicios
+tienen **HTML y JavaScript**: tu programa cambia la página, y la ves cambiar.
+:::
+
+## El problema
+
+El catálogo dice qué productos hay, pero no cuáles **se agotaron**. Los precios están escritos a
+mano en el HTML. Y si mañana agregás un producto, hay que copiar y pegar una tarjeta entera. Todo
+eso lo puede hacer un programa: **leer la página, cambiarla y agregarle cosas**.
+
+## El DOM: la página como objetos
+
+Cuando el navegador lee tu HTML, arma en memoria **un árbol de objetos**, uno por cada etiqueta. Ese
+árbol se llama **DOM** (*Document Object Model*), y JavaScript lo puede leer y cambiar. Cada cambio
+**se ve al instante** en la página.
+
+```text
+document
+└── html
+    ├── head
+    │   └── title
+    └── body
+        ├── h1
+        └── ul
+            ├── li
+            └── li
+```
+
+Todo arranca de `document`, que es la página entera.
+
+## Encontrar un elemento
+
+Para buscar, se usan **los mismos selectores de CSS**:
+
+```js
+const titulo = document.querySelector("h1");            // el primero que encuentre
+const precio = document.querySelector("#precio-mate");  // por id
+const productos = document.querySelectorAll(".producto"); // TODOS: una lista
+```
+
+| | Devuelve |
+|---|---|
+| `querySelector(selector)` | **El primero** que coincide, o `null` si no hay ninguno |
+| `querySelectorAll(selector)` | **Todos**, en una lista que se recorre con `for ... of` |
+
+## Cambiar lo que dice
+
+```js
+const titulo = document.querySelector("h1");
+titulo.textContent = "Almacén Don Pepe";
+```
+
+`textContent` es **el texto de adentro**: se lee y se cambia. Es como si el programa entrara al HTML
+y escribiera ahí.
+
+<EjercicioWeb
+  titulo="Cambiar lo que dice"
+  fundamental
+  dificultad="🌱"
+  cssBase={BASE}
+  html={`<h1>Cargando…</h1>
+<p id="cantidad"></p>
+
+<div class="producto">Miel de la isla</div>
+<div class="producto">Dulce de leche</div>
+<div class="producto">Queso de cabra</div>
+<div class="producto">Salame de Tandil</div>
+`}
+  js={`// 1. que el título diga: Almacén Don Pepe
+// 2. que el párrafo #cantidad diga cuántos productos hay: Hay 4 productos
+//    (contándolos, no escribiendo el 4 a mano)
+`}
+  tests={`assert(texto("h1") === "Almacén Don Pepe", 'El título tiene que decir "Almacén Don Pepe" y dice "' + texto("h1") + '"');
+assert(texto("#cantidad") === "Hay 4 productos", 'El párrafo tiene que decir "Hay 4 productos" y dice "' + texto("#cantidad") + '"');
+var el = document.createElement("div"); el.className = "producto"; el.textContent = "Yerba"; document.body.appendChild(el);
+new Function(Array.prototype.slice.call(document.scripts).pop().textContent)();
+assert(texto("#cantidad") === "Hay 5 productos", "Agregamos un quinto producto, volvimos a correr tu programa, y dice: " + texto("#cantidad") + ". El número no puede estar escrito a mano: contalos. ¿Qué tiene la lista que te da querySelectorAll?");`}
+  pistas={[
+    '¿Con qué buscás el párrafo, si tiene un id? ¿Y qué le cambiás para que diga otra cosa?',
+    'querySelectorAll te da una lista. ¿Cómo sabés cuántos elementos tiene una lista en JavaScript?',
+  ]}
+>
+Hacé que el título diga **Almacén Don Pepe**, y que el párrafo `#cantidad` diga **cuántos productos
+hay**: `Hay 4 productos`. El número, **contándolos**, no escrito a mano.
+</EjercicioWeb>
+
+## Cambiar las clases
+
+Muchas veces no querés cambiar el texto sino **cómo se ve**. La forma prolija es **no tocar el CSS
+desde JavaScript**: el CSS ya tiene una clase preparada, y el programa se la pone o se la saca.
+
+```js
+const mate = document.querySelector("#mate");
+mate.classList.add("agotado");      // le pone la clase
+mate.classList.remove("agotado");   // se la saca
+mate.classList.toggle("agotado");   // si la tiene, se la saca; si no, se la pone
+```
+
+Así cada lenguaje hace lo suyo: **CSS dice cómo se ve un agotado, JavaScript decide cuál está
+agotado**.
+
+### Datos guardados en el HTML
+
+Un elemento puede llevar **datos propios**, en atributos que empiezan con `data-`:
+
+```html
+<div class="producto" data-stock="0">Dulce de leche</div>
+```
+
+Y JavaScript los lee con `dataset`, sin el `data-`:
+
+```js
+elemento.dataset.stock    // "0"  ← siempre texto, como el input() de Python
+```
+
+<EjercicioWeb
+  titulo="Marcar los agotados"
+  fundamental
+  dificultad="🌿"
+  cssBase={BASE}
+  html={`<h1>Almacén Don Pepe</h1>
+<div class="producto" data-stock="12">Miel de la isla</div>
+<div class="producto" data-stock="0">Dulce de leche</div>
+<div class="producto" data-stock="5">Queso de cabra</div>
+<div class="producto" data-stock="0">Salame de Tandil</div>
+`}
+  js={`// A cada producto con stock 0, ponele la clase "agotado"
+`}
+  tests={`var prods = $$(".producto");
+var agotados = prods.filter(function (p) { return p.classList.contains("agotado"); }).map(function (p) { return p.textContent.trim(); });
+assert(agotados.length > 0, 'Ningún producto quedó con la clase "agotado". Si los recorriste y usaste classList.add, mirá la comparación: dataset.stock es TEXTO, "0", y el número 0 no es igual a "0" con ===');
+assert(agotados.indexOf("Dulce de leche") !== -1 && agotados.indexOf("Salame de Tandil") !== -1, "El dulce de leche y el salame tienen stock 0: los dos tienen que quedar agotados");
+assert(agotados.length === 2, "Solo los de stock 0 se agotan, y quedaron " + agotados.length + ": " + agotados.join(", ") + ". ¿Qué comparaste? El stock llega como TEXTO");`}
+  pistas={[
+    '¿Con cuál de los dos query buscás TODOS los productos? ¿Y cómo los recorrés?',
+    'dataset.stock es un texto. ¿Contra qué lo comparás: contra 0, o contra "0"?',
+  ]}
+>
+Cada producto tiene su stock en `data-stock`. A **los que tienen stock 0**, ponéles la clase
+**`agotado`** (el CSS ya sabe cómo mostrarlos: tachados y apagados).
+</EjercicioWeb>
+
+## Crear elementos nuevos
+
+Lo más útil: **armar la página desde los datos**, igual que hiciste con Python en el catálogo. Un
+elemento nuevo se crea, se completa y se agrega:
+
+```js
+const lista = document.querySelector("#lista");
+
+const item = document.createElement("li");   // 1. crear un <li> (todavía no está en la página)
+item.textContent = "Yerba";                  // 2. completarlo
+lista.append(item);                          // 3. agregarlo adentro de la lista: ahora se ve
+```
+
+Y con un `for`, uno por cada dato:
+
+```js
+const compras = ["Yerba", "Azúcar", "Pan"];
+for (const cosa of compras) {
+  const item = document.createElement("li");
+  item.textContent = cosa;
+  lista.append(item);
+}
+```
+
+<EjercicioWeb
+  titulo="La lista, desde los datos"
+  fundamental
+  dificultad="🌿"
+  cssBase={BASE}
+  html={`<h1>Precios de hoy</h1>
+<ul id="lista"></ul>
+`}
+  js={`const PRODUCTOS = [
+  { nombre: "Miel de la isla", precio: 5200 },
+  { nombre: "Dulce de leche", precio: 3900 },
+  { nombre: "Queso de cabra", precio: 8700 },
+];
+
+// Un <li> por producto, adentro de #lista, que diga: Miel de la isla — $ 5200
+`}
+  tests={`var items = $$("#lista li").map(function (li) { return li.textContent.trim(); });
+assert(items.length === PRODUCTOS.length, "Tiene que haber un <li> por producto (" + PRODUCTOS.length + ") adentro de #lista, y hay " + items.length);
+assert(items[0] === "Miel de la isla — $ 5200", 'El primero tiene que decir "Miel de la isla — $ 5200" y dice "' + items[0] + '"');
+assert(items[2] === "Queso de cabra — $ 8700", 'El tercero: "Queso de cabra — $ 8700"');`}
+  pistas={[
+    '¿Cuántas veces tenés que crear un <code>li</code>? ¿Qué estructura de control repite algo una vez por cada elemento?',
+    'El texto de cada uno, ¿cómo lo armás con el nombre y el precio adentro? (La raya larga — la podés copiar del enunciado.)',
+  ]}
+>
+Armá la lista desde `PRODUCTOS`: un `<li>` por producto, adentro de `#lista`, con el texto
+**`Miel de la isla — $ 5200`** (nombre, raya, signo y precio).
+</EjercicioWeb>
+
+## Armar pedazos de HTML de una
+
+Para algo más grande que un `<li>` —una tarjeta con título, precio y botón—, crear cada elemento por
+separado es largo. Se puede escribir **el HTML entero en una template string** y meterlo con
+`innerHTML`:
+
+```js
+const catalogo = document.querySelector(".catalogo");
+for (const p of PRODUCTOS) {
+  catalogo.innerHTML += `
+    <article class="tarjeta">
+      <h2>${p.nombre}</h2>
+      <p>$ ${p.precio}</p>
+    </article>`;
+}
+```
+
+Es **exactamente** lo que hiciste con el f-string de Python en el catálogo: un texto con huecos para
+los datos.
+
+:::danger[innerHTML, solo con datos tuyos]
+`innerHTML` **interpreta** el texto como HTML. Si el texto viene de alguien de afuera —lo que
+escribió una persona en un formulario—, puede meter un `<script>` y correr su programa en tu página.
+Para mostrar lo que escribe la gente, **`textContent`**, que lo muestra tal cual, sin interpretarlo.
+:::
+
+<EjercicioWeb
+  titulo="Las tarjetas, desde los datos"
+  dificultad="🌿"
+  cssBase={BASE}
+  html={`<h1>Catálogo</h1>
+<main class="catalogo"></main>
+`}
+  js={`const PRODUCTOS = [
+  { nombre: "Taza", precio: 4500 },
+  { nombre: "Mate", precio: 7800 },
+  { nombre: "Vela", precio: 3200 },
+  { nombre: "Bolso", precio: 12500 },
+];
+
+// Una tarjeta por producto, adentro de .catalogo:
+// <article class="tarjeta"><h2>Taza</h2><p>$ 4500</p></article>
+`}
+  tests={`var tarjetas = $$(".catalogo article.tarjeta");
+assert(tarjetas.length === PRODUCTOS.length, "Tiene que haber una tarjeta (article.tarjeta) por producto adentro de .catalogo, y hay " + tarjetas.length);
+var nombres = $$(".tarjeta h2").map(function (h) { return h.textContent.trim(); });
+assert(nombres.join("|") === "Taza|Mate|Vela|Bolso", "Los títulos tienen que ser los nombres, en orden: " + nombres.join(", "));
+assert(texto(".tarjeta p") === "$ 4500", 'El precio de la primera tiene que decir "$ 4500" y dice "' + texto(".tarjeta p") + '"');
+assert(texto(".tarjeta:nth-child(4) p") === "$ 12500", "Y el de la última, \\"$ 12500\\"");`}
+  pistas={[
+    '¿Cómo era la tarjeta en HTML? Escribila entera, y después reemplazá lo que cambia por huecos <code>${...}</code>.',
+    'Si usás <code>innerHTML =</code> adentro del for, ¿qué pasa con las tarjetas de las vueltas anteriores?',
+  ]}
+>
+Armá una **tarjeta por producto** adentro de `.catalogo`, con una template string:
+
+```html
+<article class="tarjeta"><h2>Taza</h2><p>$ 4500</p></article>
+```
+</EjercicioWeb>
+
+<OpcionMultiple titulo="Chequeo: ¿textContent o innerHTML?" opciones={[
+  { texto: "textContent: lo escribió una persona, y así se muestra tal cual, sin interpretarlo como HTML.", correcta: true, explicacion: "Exacto. Si alguien escribe <script>…</script> en el comentario, textContent lo muestra como texto. Con innerHTML, el navegador lo correría en tu página." },
+  { texto: "innerHTML: así se respetan las negritas que haya puesto.", explicacion: "Y también el <script> que haya puesto. Lo que viene de afuera nunca va por innerHTML." },
+  { texto: "Cualquiera: los dos muestran el texto.", explicacion: "No: innerHTML lo interpreta como HTML. Con texto de afuera, esa diferencia es un agujero de seguridad." },
+]}>
+Querés mostrar en la página **el comentario que dejó un cliente** en un formulario. ¿Con qué?
+</OpcionMultiple>
+
+## Para llevar
+
+- El **DOM** es la página como un árbol de objetos. Arranca en `document`.
+- `document.querySelector(selector)` → el primero (o `null`); `querySelectorAll` → todos.
+  **Los mismos selectores de CSS.**
+- `.textContent` lee y cambia el texto.
+- `.classList.add / remove / toggle`: el CSS define la clase, JavaScript la pone o la saca.
+- `data-algo` en el HTML se lee con `.dataset.algo`, y **siempre es texto**.
+- Crear: `document.createElement("li")`, completarlo, y `.append()` adentro de otro.
+- `innerHTML` con una template string arma HTML de una, **pero solo con datos tuyos**. Lo que escribe
+  la gente, con `textContent`.

@@ -1,0 +1,274 @@
+---
+title: "HTML III · Etiquetas con significado, tablas y formularios"
+description: "Una página ordenada en partes con nombre, la planilla de asistencia como tabla, y el formulario de inscripción."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+:::tip[Antes de empezar]
+Usa lo de [HTML I](../html-estructura/) y [HTML II](../html-contenido/). Los dos ejercicios grandes
+son **el sistema de asistencias**: la planilla del día y el formulario de inscripción.
+:::
+
+## El problema
+
+Una página real tiene partes que se repiten en todas: una **cabecera** con el nombre, un **menú**,
+el **contenido** y un **pie** con los datos de contacto. Con lo que sabemos, todo eso sería un
+montón de párrafos y títulos sueltos, y nadie —ni vos, ni Google, ni un lector de pantalla— sabría
+dónde empieza el menú y dónde el contenido.
+
+Y el sistema de asistencias necesita dos cosas que todavía no sabemos hacer: **la planilla del día**,
+que es una tabla, y **el formulario de inscripción**, donde la persona escribe sus datos.
+
+## Las partes de una página, con nombre
+
+HTML tiene etiquetas que no cambian cómo se ve nada: **dicen qué es cada parte**.
+
+| Etiqueta | Es… |
+|---|---|
+| `<header>` | La cabecera: el nombre, el logo |
+| `<nav>` | El menú de navegación: los links a las secciones |
+| `<main>` | **El contenido principal.** Uno solo por página |
+| `<section>` | Una sección con su título, como un capítulo |
+| `<article>` | Algo que se entiende solo: una noticia, un producto, una tarjeta |
+| `<footer>` | El pie: contacto, dirección, horarios |
+
+```html
+<body>
+  <header><h1>CFP 401</h1></header>
+  <nav>
+    <a href="#cursos">Cursos</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+  <main>
+    <section id="cursos">...</section>
+  </main>
+  <footer id="contacto">Calle 2 nro 401, Ensenada</footer>
+</body>
+```
+
+Antes todo se hacía con `<div>`, que es **una caja sin significado**: sirve para agrupar, pero no
+dice qué hay adentro. Sigue existiendo, y se usa cuando ninguna de las de arriba corresponde.
+
+:::note[¿Para qué, si se ve igual?]
+Un lector de pantalla tiene un atajo para **saltar al contenido** y no escuchar el menú en cada
+página: lo encuentra por el `<main>`. Y Google le da más importancia a lo que está en el `<main>`
+que a lo que está en el `<footer>`. Las etiquetas con significado son **gratis**: ocupan lo mismo
+que un `<div>`.
+:::
+
+<EjercicioWeb
+  titulo="Ordenar la página"
+  fundamental
+  dificultad="🌱"
+  html={`<div class="cabecera">
+  <h1>CFP 401 · Ensenada</h1>
+</div>
+<div class="menu">
+  <a href="#cursos">Cursos</a>
+  <a href="#contacto">Contacto</a>
+</div>
+<div class="contenido">
+  <h2 id="cursos">Cursos</h2>
+  <p>Pensamiento Computacional y Testing de Aplicaciones.</p>
+</div>
+<div class="pie" id="contacto">
+  <p>Calle 2 nro 401, Ensenada.</p>
+</div>
+`}
+  tests={`assert($("header"), "La cabecera tiene que ser un <header> y no un <div>");
+assert($("header h1"), "El título va adentro del <header>");
+assert($("nav"), "El menú tiene que ser un <nav>");
+assert($$("nav a").length === 2, "Los dos links del menú van adentro del <nav>");
+assert($("main"), "El contenido principal tiene que ser un <main>");
+assert($("main h2"), "La sección de cursos va adentro del <main>");
+assert($("footer"), "El pie tiene que ser un <footer>");
+assert($("footer").id === "contacto", 'El <footer> tiene que conservar id="contacto": si no, el link del menú no llega');
+assert($$("div").length === 0, "Quedan " + $$("div").length + " <div>: cada uno tiene una etiqueta con significado que le corresponde");`}
+  pistas={[
+    'Cada <code>div</code> tiene una clase que dice qué es. ¿Qué etiqueta de la tabla dice lo mismo?',
+    'Al cambiar la etiqueta de apertura, ¿qué tenés que cambiar también al final de esa caja?',
+  ]}
+>
+La página está armada toda con `<div>`. Cambiá cada uno por **la etiqueta que dice qué es**,
+sin tocar lo de adentro.
+</EjercicioWeb>
+
+## Tablas: la planilla del día
+
+Una tabla se arma **por renglones**. Cada renglón es un `<tr>` (*table row*), y adentro van sus
+celdas: `<th>` si es un título de columna (*table header*), `<td>` si es un dato (*table data*).
+
+```html
+<table>
+  <thead>
+    <tr><th>DNI</th><th>Nombre</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>30111222</td><td>Ana Gómez</td></tr>
+    <tr><td>28999888</td><td>Luis Paz</td></tr>
+  </tbody>
+</table>
+```
+
+| Etiqueta | Es… |
+|---|---|
+| `<table>` | La tabla entera |
+| `<thead>` | El renglón de los títulos |
+| `<tbody>` | Los renglones de datos |
+| `<tr>` | Un renglón |
+| `<th>` / `<td>` | Una celda de título / de dato |
+
+Si te suena, es porque **es una lista de listas**: la tabla es una lista de renglones, y cada
+renglón es una lista de celdas. Como `[["30111222", "Ana Gómez"], ["28999888", "Luis Paz"]]`.
+
+:::caution[Las tablas son para datos en tabla]
+Hace veinte años se usaban para acomodar cosas en la página: el menú en una celda, el contenido en
+otra. **No.** Para eso está CSS. Una tabla es para lo que en papel sería una planilla.
+:::
+
+<EjercicioWeb
+  titulo="La planilla de asistencia"
+  fundamental
+  dificultad="🌿"
+  html={`<h1>Asistencia del 14/10</h1>
+<!-- una tabla con los títulos DNI, Nombre y Estado, y estos tres renglones:
+     30111222  Ana Gómez   Presente
+     28999888  Luis Paz    Ausente
+     35444555  Sofía Ríos  Presente -->
+`}
+  tests={`assert($("table"), "Falta la tabla: <table>");
+var titulos = $$("thead th").map(function (c) { return c.textContent.trim(); });
+assert(titulos.length === 3, "El renglón de títulos tiene que estar en un <thead>, con 3 celdas <th>. Hay " + titulos.length);
+assert(titulos.join("|") === "DNI|Nombre|Estado", "Los títulos tienen que ser DNI, Nombre y Estado, en ese orden. Son: " + titulos.join(", "));
+var filas = $$("tbody tr");
+assert(filas.length === 3, "Los datos van en un <tbody>, un <tr> por persona. Hay " + filas.length + " renglones");
+var celdas = filas.map(function (f) { return Array.prototype.map.call(f.querySelectorAll("td"), function (c) { return c.textContent.trim(); }); });
+assert(celdas.every(function (c) { return c.length === 3; }), "Cada renglón tiene que tener 3 celdas <td>: DNI, nombre y estado");
+assert(celdas[0].join("|") === "30111222|Ana Gómez|Presente", "El primer renglón: 30111222, Ana Gómez, Presente");
+assert(celdas[1][2] === "Ausente", "Luis Paz está Ausente");
+assert(celdas[2][0] === "35444555" && celdas[2][1] === "Sofía Ríos", "El tercer renglón: 35444555, Sofía Ríos, Presente");`}
+  pistas={[
+    'Pensala como una lista de listas: ¿cuántos renglones tiene, contando el de los títulos? ¿Cuántas celdas cada uno?',
+    'El renglón de los títulos, ¿lleva celdas de título o de dato? ¿Y en qué parte de la tabla va?',
+  ]}
+>
+Armá la planilla del día: los títulos **DNI**, **Nombre** y **Estado**, y un renglón por persona:
+
+| DNI | Nombre | Estado |
+|---|---|---|
+| 30111222 | Ana Gómez | Presente |
+| 28999888 | Luis Paz | Ausente |
+| 35444555 | Sofía Ríos | Presente |
+</EjercicioWeb>
+
+## Formularios: que la persona escriba
+
+Un formulario junta **campos** donde la persona completa datos, y un botón para mandarlos:
+
+```html
+<form>
+  <label for="nombre">Nombre</label>
+  <input id="nombre" type="text">
+
+  <label for="email">Correo</label>
+  <input id="email" type="email">
+
+  <button>Inscribirme</button>
+</form>
+```
+
+- `<input>` es el campo. **No se cierra**, como `<img>`.
+- `type` dice **qué se escribe**, y el navegador ayuda según eso: con `email` revisa que tenga @, con
+  `number` solo deja números, y en el celular **muestra el teclado que corresponde**.
+- `<label>` es el **cartel** del campo. Su `for` tiene que ser igual al `id` del campo.
+
+| `type` | Para… |
+|---|---|
+| `text` | Texto cualquiera |
+| `email` | Un correo |
+| `number` | Un número |
+| `tel` | Un teléfono (en el celular, el teclado de números) |
+| `date` | Una fecha, con un calendario |
+| `checkbox` | Una casilla de sí o no |
+
+Para elegir **una opción de una lista**, `<select>`, con un `<option>` por opción:
+
+```html
+<label for="turno">Turno</label>
+<select id="turno">
+  <option>Mañana</option>
+  <option>Tarde</option>
+</select>
+```
+
+:::note[¿Y adónde se manda?]
+Con HTML solo, el botón **no tiene adónde mandar los datos**: hace falta un programa del otro lado
+que los reciba y los guarde. Ese programa, en Python, es justamente lo que vas a hacer con **Flask**
+en el sistema de asistencias. Por ahora, el formulario se arma y se ve.
+:::
+
+<OpcionMultiple titulo="Chequeo: ¿para qué el label?" opciones={[
+  { texto: "Para que tocar el cartel active el campo, y para que un lector de pantalla diga qué se escribe ahí.", correcta: true, explicacion: "Las dos. Probalo: tocá el texto de un label y el cursor salta a su campo, que en el celular es un blanco mucho más grande. Y un lector de pantalla lee el label al entrar al campo; sin él, dice solo \"campo de texto\"." },
+  { texto: "Solo para que se vea el texto al lado del campo.", explicacion: "Para eso alcanzaría un párrafo. El label hace más: lo une al campo por el for." },
+  { texto: "Para que el navegador revise que el dato esté bien escrito.", explicacion: "Eso lo hace el type del input (email, number), no el label." },
+]}>
+¿Por qué cada campo lleva un `<label>` con `for`, y no solo un texto al lado?
+</OpcionMultiple>
+
+<EjercicioWeb
+  titulo="El formulario de inscripción"
+  fundamental
+  dificultad="🌿"
+  html={`<h1>Inscripción 2027</h1>
+<form>
+  <!-- 1. Nombre y apellido: texto -->
+  <!-- 2. DNI: número -->
+  <!-- 3. Correo: email -->
+  <!-- 4. Turno: Mañana o Tarde, para elegir de una lista -->
+  <!-- 5. el botón "Inscribirme" -->
+</form>
+`}
+  tests={`assert($("form"), "Todo va adentro del <form>");
+var campo = function (tipo) { return $$("form input").filter(function (i) { return (i.getAttribute("type") || "text") === tipo; }); };
+var conLabel = function (el) { return el.id && $("label[for='" + el.id + "']"); };
+assert(campo("text").length >= 1, 'Falta el campo del nombre: un <input type="text">');
+assert(campo("number").length >= 1, 'Falta el campo del DNI: un <input type="number">, así en el celular sale el teclado de números');
+assert(campo("email").length >= 1, 'Falta el campo del correo: un <input type="email">');
+var sel = $("form select");
+assert(sel, "Falta la lista del turno: un <select>");
+var opciones = Array.prototype.map.call(sel.querySelectorAll("option"), function (o) { return o.textContent.trim(); });
+assert(opciones.join("|") === "Mañana|Tarde", "El turno tiene que tener dos opciones, Mañana y Tarde. Tiene: " + opciones.join(", "));
+var todos = campo("text").concat(campo("number"), campo("email"), [sel]);
+var sinLabel = todos.filter(function (el) { return !conLabel(el); });
+assert(sinLabel.length === 0, sinLabel.length + " campo(s) sin su <label>. Cada campo lleva un id, y su label un for con ese mismo id");
+var boton = $("form button");
+assert(boton, "Falta el botón, adentro del form: <button>");
+assert(boton.textContent.trim() === "Inscribirme", 'El botón tiene que decir "Inscribirme"');`}
+  pistas={[
+    '¿Qué tiene que saber el navegador de cada campo, para ayudar a completarlo? ¿Dónde se lo decís?',
+    'El label y su campo se encuentran por un nombre que comparten. ¿En qué atributo va ese nombre en cada uno?',
+  ]}
+>
+Armá el formulario de inscripción, con **un label para cada campo**:
+
+- **Nombre y apellido**, texto;
+- **DNI**, número;
+- **Correo**, email;
+- **Turno**, para elegir de una lista: **Mañana** o **Tarde**;
+- y el botón **Inscribirme**.
+
+Tocá los labels en la vista: el cursor salta a su campo.
+</EjercicioWeb>
+
+## Para llevar
+
+- Etiquetas **con significado**: `<header>`, `<nav>`, `<main>` (uno solo), `<section>`,
+  `<article>`, `<footer>`. `<div>` es una caja sin significado, para cuando ninguna corresponde.
+- **Tablas**: `<table>`, con `<thead>` para los títulos y `<tbody>` para los datos. Cada renglón un
+  `<tr>`, cada celda un `<th>` (título) o `<td>` (dato). Son para datos, no para acomodar la página.
+- **Formularios**: `<form>`, con un `<input>` por campo y el `type` que corresponde (`text`, `email`,
+  `number`, `tel`, `date`…). `<select>` con `<option>` para elegir.
+- **Cada campo con su `<label>`**: el `for` del label igual al `id` del campo.
+- Mandar los datos necesita un programa del otro lado: eso es Flask.

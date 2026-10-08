@@ -45,6 +45,66 @@ const RUNTIME = `<script>
   window.addEventListener('load', avisarAlto);
   if (window.ResizeObserver) new ResizeObserver(avisarAlto).observe(document.documentElement);
 
+  /* La consola: en JavaScript, el print de Python es console.log, y adentro
+     del marco no lo ve nadie. Se copia a la plataforma y queda guardado para
+     los tests (la ayuda "consola", una lista de renglones). */
+  var consola = [];
+  var formatear = function (x) {
+    if (typeof x === 'string') return x;
+    if (x === undefined) return 'undefined';
+    try { return JSON.stringify(x); } catch (e) { return String(x); }
+  };
+  ['log', 'info', 'warn', 'error'].forEach(function (nivel) {
+    var original = console[nivel];
+    console[nivel] = function () {
+      var texto = Array.prototype.map.call(arguments, formatear).join(' ');
+      consola.push(texto);
+      enviar({ tipo: 'log', texto: texto, nivel: nivel });
+      original.apply(console, arguments);
+    };
+  });
+
+  /* localStorage: en un marco con sandbox (sin allow-same-origin) el navegador
+     lo prohíbe y tira un error. Para los ejercicios, uno en memoria que hace lo
+     mismo; se borra cada vez que la página se rearma. */
+  try { window.localStorage.getItem('x'); } catch (e) {
+    var guardado = {};
+    var falso = {
+      getItem: function (k) { return Object.prototype.hasOwnProperty.call(guardado, k) ? guardado[k] : null; },
+      setItem: function (k, v) { guardado[k] = String(v); },
+      removeItem: function (k) { delete guardado[k]; },
+      clear: function () { guardado = {}; },
+      key: function (i) { return Object.keys(guardado)[i] || null; }
+    };
+    Object.defineProperty(falso, 'length', { get: function () { return Object.keys(guardado).length; } });
+    try { Object.defineProperty(window, 'localStorage', { value: falso, configurable: true }); } catch (e2) { /* sin suerte */ }
+  }
+
+  /* El CSS que ESCRIBIÓ el alumno, y no el resultado: getComputedStyle dice
+     "200px 200px" aunque haya escrito repeat(auto-fill, ...), y no sabe nada de
+     las media queries que no aplican al ancho actual. regla(".a", "color") da
+     el valor escrito para ese selector fuera de toda media query; con un
+     tercer argumento, el de adentro de la media query que contenga ese texto. */
+  var juntarReglas = function (lista, media, fuera) {
+    Array.prototype.forEach.call(lista, function (r) {
+      if (r.selectorText !== undefined) fuera.push({ sel: r.selectorText, style: r.style, media: media });
+      else if (r.cssRules) juntarReglas(r.cssRules, r.conditionText || (r.media && r.media.mediaText) || media, fuera);
+    });
+  };
+  var regla = function (selector, prop, media) {
+    var todas = [];
+    Array.prototype.forEach.call(document.styleSheets, function (h) { try { juntarReglas(h.cssRules, null, todas); } catch (e) { /* ajena */ } });
+    var valor = null;
+    todas.forEach(function (r) {
+      var sels = r.sel.split(',').map(function (s) { return s.trim(); });
+      if (sels.indexOf(selector) === -1) return;
+      if (media === undefined ? r.media : !(r.media && r.media.indexOf(media) !== -1)) return;
+      var v = r.style.getPropertyValue(prop);
+      if (v) valor = v.trim();
+    });
+    return valor;
+  };
+
   function Falla(m) { this.message = m; }
   window.addEventListener('message', function (ev) {
     var d = ev.data;
@@ -63,17 +123,25 @@ const RUNTIME = `<script>
     };
     var correr;
     try {
-      correr = new Function('assert', '$', '$$', 'texto', 'estilo', 'atributo', 'click', 'escribir', 'esperar',
+      correr = new Function('assert', '$', '$$', 'texto', 'estilo', 'atributo', 'click', 'escribir', 'esperar', 'consola', 'regla',
         'return (async function () {\\n' + d.tests + '\\n})();');
     } catch (e) { enviar({ tipo: 'tests', ok: false, nuestro: true, mensaje: 'El test tiene un error: ' + e.message }); return; }
-    correr(assert, $, $$, texto, estilo, atributo, click, escribir, esperar).then(
+    correr(assert, $, $$, texto, estilo, atributo, click, escribir, esperar, consola, regla).then(
       function () { enviar({ tipo: 'tests', ok: true }); },
       function (e) {
         if (e instanceof Falla) enviar({ tipo: 'tests', ok: false, mensaje: e.message });
         else enviar({ tipo: 'tests', ok: false, nuestro: true, mensaje: String(e && e.message || e) });
       });
   });
-  enviar({ tipo: 'lista' });
+  /* "Lista" recién con la página entera leída: DOMContentLoaded llega DESPUÉS
+     de que corrió el script del alumno (va al final del body). Si avisáramos
+     antes, los tests de los ejercicios de JavaScript revisarían una página que
+     su programa todavía no tocó. */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { enviar({ tipo: 'lista' }); });
+  } else {
+    enviar({ tipo: 'lista' });
+  }
 })();
 <\/script>`;
 
@@ -102,7 +170,9 @@ function armarPagina(codigo: Partial<Record<Lang, string>>, cssBase: string): { 
     // los marcos con sandbox (corren en otro proceso) les impone el ancho del
     // TELÉFONO, y la vista se ve cortada a la derecha. Medido el 8/10: es la
     // emulación; sin ella, adentro de un marco de 300px la página mide 300.
-    doc = `<!doctype html><html lang="es"><head><meta charset="utf-8">${cabeza}</head>` +
+    // data-pc-envuelta: el esqueleto lo puso la plataforma y no el alumno. El
+    // ejercicio que pide escribirlo lo mira; si no, pasaría sin escribirlo.
+    doc = `<!doctype html><html lang="es" data-pc-envuelta><head><meta charset="utf-8">${cabeza}</head>` +
       `<body>${cuerpo}${pie}</body></html>`;
   }
   // En qué línea de la página arranca el JS del alumno: los errores del
@@ -149,9 +219,13 @@ function initEjercicio(el: HTMLElement): void {
      así lo que ve el alumno es siempre lo que escribió, sin restos de antes. */
   let lineaJs = 0;
   let alListo: (() => void) | null = null;
+  const cajaConsola = el.querySelector<HTMLElement>('[data-consola-caja]');
+  const consola = el.querySelector<HTMLElement>('[data-consola]');
   const refrescar = () => {
     const armado = armarPagina(codigo(), cssBase);
     lineaJs = armado.lineaJs;
+    // La consola es de ESTA corrida: lo de la anterior ya no corresponde.
+    if (consola && cajaConsola) { consola.textContent = ''; cajaConsola.hidden = true; }
     marco.srcdoc = armado.doc;
   };
 
@@ -202,6 +276,11 @@ function initEjercicio(el: HTMLElement): void {
       marco.style.height = Math.min(Math.max(Number(d.alto) + 4, 120), 640) + 'px';
     } else if (d.tipo === 'lista') {
       alListo?.();
+    } else if (d.tipo === 'log') {
+      if (consola && cajaConsola) {
+        cajaConsola.hidden = false;
+        consola.textContent += (consola.textContent ? '\n' : '') + String(d.texto);
+      }
     } else if (d.tipo === 'error') {
       const linea = Number(d.linea) - lineaJs + 1;
       delete salida.dataset.deTests; // es un error de su JS, no un resultado de Verificar

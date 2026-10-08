@@ -1048,6 +1048,12 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 .web__pestanas + .ejercicio__editor {
   border-top-left-radius: 0;
 }
+/* Los editores de las otras pestañas se esconden con `hidden`, pero el tema
+   base de CodeMirror le pone `display: flex !important` a .cm-editor y le gana
+   al hidden: se veían los dos editores a la vez (visto el 8/10). */
+.ejercicio--web .cm-editor[hidden] {
+  display: none !important;
+}
 .web__vista {
   margin-top: 0.75rem;
   border: 1px solid var(--sl-color-gray-5);
@@ -1066,6 +1072,18 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   color: var(--sl-color-gray-2);
 }
 .web__vista-nota { font-weight: 400; color: var(--sl-color-gray-3); }
+.web__consola pre {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  max-height: 16rem;
+  overflow: auto;
+  background: #21252b;
+  color: #abb2bf;
+  border: 0;
+  border-radius: 0;
+  font-size: var(--pc-editor-font, 0.9rem);
+  white-space: pre-wrap;
+}
 .web__marco {
   display: block;
   width: 100%;

@@ -224,7 +224,37 @@ export default defineConfig({
                   // de a poco se suman los bloques de HTML, CSS y JavaScript.
                   label: '🌐 Páginas web',
                   items: [
+                    { label: '📝 El recorrido', link: '/web/' },
                     { label: '🛍️ Tu catálogo con Python', link: '/web/catalogo/', badge: { text: 'nuevo', variant: 'success' } },
+                    {
+                      label: '🧱 HTML',
+                      collapsed: true,
+                      items: [
+                        { label: 'I · Tu primera página', link: '/web/html-estructura/' },
+                        { label: 'II · Listas, links e imágenes', link: '/web/html-contenido/' },
+                        { label: 'III · Significado, tablas y formularios', link: '/web/html-semantica/' },
+                      ],
+                    },
+                    {
+                      label: '🎨 CSS',
+                      collapsed: true,
+                      items: [
+                        { label: 'I · Colores, letras y la cascada', link: '/web/css-selectores/' },
+                        { label: 'II · El modelo de caja', link: '/web/css-caja/' },
+                        { label: 'III · Flexbox y Grid', link: '/web/css-flex-grid/' },
+                        { label: 'IV · Que se vea bien en el celular', link: '/web/css-responsive/' },
+                      ],
+                    },
+                    {
+                      label: '⚡ JavaScript',
+                      collapsed: true,
+                      items: [
+                        { label: 'I · Para quien ya sabe Python', link: '/web/js-desde-python/' },
+                        { label: 'II · Leer y cambiar la página', link: '/web/js-dom/' },
+                        { label: 'III · Eventos', link: '/web/js-eventos/' },
+                        { label: 'IV · Datos, JSON y localStorage', link: '/web/js-datos/' },
+                      ],
+                    },
                   ],
                 },
                 { label: '📊 Aplicaciones de Python', link: '/mas-alla/aplicaciones/', badge: { text: 'en preparación', variant: 'caution' } },

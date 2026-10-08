@@ -1,0 +1,288 @@
+---
+title: "CSS II · El modelo de caja"
+description: "Todo en una página es una caja: el contenido, el relleno, el borde y el margen. Cómo centrar, por qué una caja de 100% se sale, y cómo hacer un botón."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+:::tip[Antes de empezar]
+Usa lo de [CSS I](../css-selectores/): reglas, selectores por clase y colores.
+:::
+
+## El problema
+
+Le pusiste color a todo, pero sigue viéndose apretado: el texto pegado al borde de la tarjeta, las
+tarjetas pegadas entre sí, y la página entera estirada de punta a punta en una pantalla ancha. Lo
+que falta no es color: es **espacio**. Y para manejar el espacio hay que entender una sola idea.
+
+## Todo es una caja
+
+Para el navegador, **cada elemento es una caja** rectangular, aunque no se vea. Un título, un
+párrafo, una imagen, un link: cajas. Y toda caja tiene cuatro capas, de adentro hacia afuera:
+
+```text
+┌──────────────── margin (margen) ─────────────────┐
+│  ┌───────────── border (borde) ───────────────┐  │
+│  │  ┌────────── padding (relleno) ─────────┐  │  │
+│  │  │                                      │  │  │
+│  │  │      content (el contenido)          │  │  │
+│  │  │                                      │  │  │
+│  │  └──────────────────────────────────────┘  │  │
+│  └────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────┘
+```
+
+| Capa | Es… | Tiene color de fondo |
+|---|---|---|
+| `padding` | El **aire de adentro**, entre el contenido y el borde | ✅ el de la caja |
+| `border` | La **línea** alrededor | ✅ el suyo |
+| `margin` | El **aire de afuera**, que separa esta caja de las demás | ❌ es transparente |
+
+La pregunta para saber cuál usar: **¿el espacio es parte de la caja, o la separa de las otras?** El
+texto lejos del borde de la tarjeta es `padding`; una tarjeta lejos de la otra es `margin`.
+
+```css
+.tarjeta {
+  padding: 16px;                 /* 16 de aire adentro, en los cuatro lados */
+  border: 1px solid #dddddd;     /* grosor, estilo, color */
+  border-radius: 12px;           /* las esquinas redondeadas */
+  margin-bottom: 20px;           /* 20 de aire abajo, hasta la siguiente */
+}
+```
+
+Las tres aceptan **un lado solo** (`padding-top`, `margin-left`…) o los cuatro de una. Con dos
+valores, el primero es arriba y abajo, y el segundo los costados: `padding: 10px 20px;`.
+
+<EjercicioWeb
+  titulo="Una tarjeta con aire"
+  fundamental
+  dificultad="🌱"
+  html={`<article class="tarjeta">
+  <h2>Taza de cerámica</h2>
+  <p>Pintada a mano. Va al microondas.</p>
+  <p class="precio">$ 4500</p>
+</article>
+`}
+  css={`body {
+  font-family: system-ui, sans-serif;
+  background: #faf7f2;
+}
+
+.tarjeta {
+  background: white;
+  /* 1. 16px de aire adentro
+     2. un borde de 1px, sólido, color #dddddd
+     3. las esquinas redondeadas, 12px */
+}
+`}
+  tests={`var t = ".tarjeta";
+assert(estilo(t, "padding-top") === "16px" && estilo(t, "padding-left") === "16px", "La tarjeta tiene que tener 16px de aire adentro, en los cuatro lados. ¿Es padding o margin?");
+// El grosor, con margen: con el escalado de Windows (125%, 150%) el navegador ajusta el borde a
+// píxeles de la pantalla, y 1px se calcula como 0.8px. Medido el 8/10.
+var grosor = parseFloat(estilo(t, "border-top-width"));
+assert(grosor > 0.4 && grosor < 1.6, "Falta el borde de 1px");
+assert(estilo(t, "border-top-style") === "solid", "El borde tiene que ser sólido (solid)");
+assert(estilo(t, "border-top-color") === "rgb(221, 221, 221)", "El borde tiene que ser color #dddddd");
+assert(estilo(t, "border-top-left-radius") === "12px", "Las esquinas tienen que estar redondeadas, 12px: border-radius");`}
+  pistas={[
+    'El aire entre el texto y el borde de la tarjeta, ¿es parte de la tarjeta o la separa de otras?',
+    'El borde lleva tres datos en una sola declaración: ¿cuáles?',
+  ]}
+>
+El texto está pegado al borde de la tarjeta. Dale **16px de aire adentro**, un **borde** de 1px
+sólido color `#dddddd`, y las **esquinas redondeadas** (12px).
+</EjercicioWeb>
+
+## Ancho, y cómo centrar
+
+Un párrafo, un título o una tarjeta ocupan **todo el ancho disponible**, aunque su contenido sea
+corto. En una pantalla ancha, un texto de punta a punta es incómodo de leer. Se le pone un tope:
+
+```css
+.contenedor {
+  max-width: 600px;    /* como mucho 600; si la pantalla es más chica, lo que haya */
+  margin: 0 auto;      /* 0 arriba y abajo, y AUTO a los costados */
+}
+```
+
+`margin: auto` a los costados le dice al navegador *"repartí lo que sobra en partes iguales a la
+izquierda y a la derecha"*. Resultado: **la caja queda centrada**. Es la forma clásica de centrar
+una página.
+
+:::tip[¿`width` o `max-width`?]
+`width: 600px` es **exactamente** 600, aunque la pantalla del celular mida 360: se sale. `max-width:
+600px` es **como mucho** 600: en la compu mide eso, en el celular se achica. Casi siempre querés
+`max-width`.
+:::
+
+<EjercicioWeb
+  titulo="La página, centrada"
+  fundamental
+  dificultad="🌱"
+  html={`<div class="contenedor">
+  <h1>Almacén Don Pepe</h1>
+  <p>Productos de campo, desde 1987. Miel de la isla, dulces caseros, quesos de cabra y
+  embutidos de la zona. Atendemos de lunes a sábado.</p>
+</div>
+`}
+  css={`body {
+  font-family: system-ui, sans-serif;
+  background: #faf7f2;
+}
+
+.contenedor {
+  background: white;
+  padding: 20px;
+  /* como mucho 400px de ancho, y centrada */
+}
+`}
+  tests={`var c = ".contenedor";
+var tope = estilo(c, "max-width");
+assert(tope === "400px", "El contenedor tiene que tener como mucho 400px de ancho: max-width. Ahora: " + tope);
+assert(regla(c, "width") === null, "Con max-width alcanza: un width fijo se sale de la pantalla del celular");
+assert(regla(c, "margin-left") === "auto" && regla(c, "margin-right") === "auto", "Para centrarlo, el margen de los costados tiene que ser auto");
+var m1 = parseFloat(estilo(c, "margin-left")), m2 = parseFloat(estilo(c, "margin-right"));
+assert(Math.abs(m1 - m2) < 1, "Los dos costados tienen que tener el mismo margen: así queda centrado");`}
+  pistas={[
+    '¿Querés que mida siempre 400, o como mucho 400? ¿Qué pasa en un celular de 360?',
+    'Si a los costados le sobra espacio, ¿cómo le decís al navegador que lo reparta en partes iguales?',
+  ]}
+>
+El contenedor ocupa todo el ancho. Hacé que mida **como mucho 400px** y quede **centrado** en la
+página.
+
+(Si tu pantalla es angosta, achicá la ventana o mirá que el margen de los dos lados sea igual.)
+</EjercicioWeb>
+
+## El misterio de la caja que se sale
+
+Esto le pasa a todo el mundo la primera vez. Una caja con `width: 100%` que **igual se sale** de su
+lugar:
+
+```css
+.caja {
+  width: 100%;
+  padding: 20px;
+  border: 4px solid #2f4858;
+}
+```
+
+¿Por qué? Porque **`width` mide solo el contenido**. El relleno y el borde **se suman afuera**: la
+caja mide 100% + 20 + 20 + 4 + 4. Se pasa por 48 píxeles.
+
+La solución es una línea, que cambia cómo se mide:
+
+```css
+* {
+  box-sizing: border-box;
+}
+```
+
+Con `border-box`, el ancho **incluye** el relleno y el borde: si decís 100%, mide 100%, y el
+relleno se acomoda adentro. Es tan útil que casi todas las páginas lo ponen al principio, para todo
+(`*` quiere decir "todos los elementos").
+
+<EjercicioWeb
+  titulo="La caja que se sale"
+  dificultad="🌿"
+  html={`<div class="marco">
+  <div class="caja">Esta caja tendría que entrar justo en el marco.</div>
+</div>
+`}
+  css={`body { font-family: system-ui, sans-serif; }
+
+.marco {
+  max-width: 300px;
+  margin: 20px auto;
+  outline: 2px dashed #c0392b;
+}
+
+.caja {
+  width: 100%;
+  padding: 20px;
+  border: 4px solid #2f4858;
+}
+`}
+  tests={`var marco = $(".marco").getBoundingClientRect(), caja = $(".caja").getBoundingClientRect();
+assert(caja.width <= marco.width + 0.5, "La caja sigue saliéndose del marco: mide " + Math.round(caja.width) + "px y el marco " + Math.round(marco.width) + "px. ¿Qué es lo que se está sumando afuera del ancho?");
+assert(estilo(".caja", "padding-left") === "20px" && Math.abs(parseFloat(estilo(".caja", "border-left-width")) - 4) < 0.6, "El relleno y el borde de la caja tienen que quedar como están: el problema es cómo se mide, no lo que tiene");
+assert(estilo(".caja", "box-sizing") === "border-box", "Arreglalo cambiando cómo se mide el ancho de la caja: box-sizing");`}
+  pistas={[
+    'La caja dice 100%. ¿100% de qué parte de la caja? ¿Qué capas quedan afuera de esa cuenta?',
+    '¿Y si en vez de sacarle el relleno, el ancho lo incluyera?',
+  ]}
+>
+La caja dice `width: 100%`, pero se sale del marco punteado. Hacé que entre justo, **sin sacarle
+el relleno ni el borde**.
+</EjercicioWeb>
+
+## Cajas en bloque y cajas en línea
+
+No todas las cajas se acomodan igual. Hay dos clases, según su `display`:
+
+| `display` | Se acomodan… | Ejemplos | `width` y `padding` arriba/abajo |
+|---|---|---|---|
+| `block` | **Una abajo de la otra**, todo el ancho | `<p>`, `<h1>`, `<div>`, `<section>` | ✅ funcionan |
+| `inline` | **En el renglón**, como palabras | `<a>`, `<strong>`, `<span>`, `<em>` | ❌ no del todo |
+| `inline-block` | En el renglón, **pero** como una caja | — | ✅ funcionan |
+
+Por eso un link no acepta bien un `padding`: es `inline`, va en el renglón como una palabra. Para
+hacer un **botón** con un link, se lo pasa a `inline-block`: sigue en el renglón, pero ahora tiene
+relleno de verdad.
+
+<OpcionMultiple titulo="Chequeo: ¿padding o margin?" opciones={[
+  { texto: "margin: es espacio entre una tarjeta y otra.", correcta: true, explicacion: "Exacto. El margen es aire de afuera, que separa. Y por eso no tiene color: entre las tarjetas se ve el fondo de la página." },
+  { texto: "padding: es espacio alrededor de la tarjeta.", explicacion: "El padding es aire de ADENTRO de la caja: agrandaría la tarjeta (con su fondo blanco), pero las dejaría pegadas." },
+  { texto: "border: un borde más grueso las separa.", explicacion: "Un borde grueso agranda la tarjeta, no la separa: y además se vería como una línea gruesa." },
+]}>
+Las tarjetas del catálogo están **pegadas una a la otra**. ¿Qué les falta?
+</OpcionMultiple>
+
+<EjercicioWeb
+  titulo="Un link que parece botón"
+  fundamental
+  dificultad="🌿"
+  html={`<p>¿Te interesa algún producto?</p>
+<a class="boton" href="https://wa.me/5492215550000">Consultar por WhatsApp</a>
+`}
+  css={`body { font-family: system-ui, sans-serif; padding: 20px; }
+
+.boton {
+  /* 1. que sea una caja en el renglón
+     2. relleno: 12px arriba y abajo, 24px a los costados
+     3. fondo #25d366, letra blanca, en negrita
+     4. sin subrayado: text-decoration
+     5. esquinas redondeadas de 8px */
+}
+`}
+  tests={`var b = ".boton";
+assert(estilo(b, "display") === "inline-block", "El link tiene que ser una caja en el renglón: display inline-block");
+assert(estilo(b, "padding-top") === "12px" && estilo(b, "padding-bottom") === "12px", "Relleno de 12px arriba y abajo");
+assert(estilo(b, "padding-left") === "24px" && estilo(b, "padding-right") === "24px", "Relleno de 24px a los costados");
+assert(estilo(b, "background-color") === "rgb(37, 211, 102)", "Fondo #25d366, el verde de WhatsApp");
+assert(estilo(b, "color") === "rgb(255, 255, 255)", "La letra, blanca");
+assert(parseInt(estilo(b, "font-weight"), 10) >= 700, "La letra, en negrita");
+assert(estilo(b, "text-decoration-line") === "none", "Sin subrayado: text-decoration: none");
+assert(estilo(b, "border-top-left-radius") === "8px", "Esquinas redondeadas de 8px");`}
+  pistas={[
+    'Si el relleno de arriba y abajo no se ve, ¿qué clase de caja es un link?',
+    'Con dos valores en <code>padding</code>, ¿cuál es el de arriba y abajo, y cuál el de los costados?',
+  ]}
+>
+Convertí el link en un **botón**: una caja en el renglón, con relleno de **12px arriba y abajo y
+24px a los costados**, fondo `#25d366`, letra **blanca** y en negrita, **sin subrayado** y con
+esquinas de **8px**.
+</EjercicioWeb>
+
+## Para llevar
+
+- **Todo es una caja**: contenido, `padding` (aire de adentro), `border` (la línea) y `margin` (aire
+  de afuera, transparente).
+- ¿El espacio es parte de la caja o la separa de otras? `padding` o `margin`.
+- `max-width` + `margin: 0 auto` **centra** una caja. `max-width` mejor que `width`: no se sale en
+  el celular.
+- **`* { box-sizing: border-box; }`** al principio de todo: así el ancho incluye relleno y borde.
+- `display`: `block` (uno abajo del otro), `inline` (en el renglón), `inline-block` (en el renglón,
+  pero como caja: para los botones).
+- `border-radius` redondea las esquinas.

@@ -1,0 +1,253 @@
+---
+title: "CSS III · Flexbox y Grid"
+description: "Poner cosas una al lado de la otra con Flexbox, y armar grillas con Grid: el menú, la cabecera y la grilla del catálogo que se acomoda sola."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const TARJETAS = `<main class="catalogo">
+  <article class="producto"><h2>Taza</h2><p>$ 4500</p></article>
+  <article class="producto"><h2>Mate</h2><p>$ 7800</p></article>
+  <article class="producto"><h2>Vela</h2><p>$ 3200</p></article>
+  <article class="producto"><h2>Bolso</h2><p>$ 12500</p></article>
+  <article class="producto"><h2>Maceta</h2><p>$ 5900</p></article>
+  <article class="producto"><h2>Cuaderno</h2><p>$ 4100</p></article>
+</main>
+`;
+
+export const BASE_TARJETAS = `* { box-sizing: border-box; }
+body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; background: #faf7f2; }
+.producto { padding: 12px; border-radius: 10px; background: white; box-shadow: 0 1px 4px rgb(0 0 0 / 0.1); }
+.producto h2 { margin: 0 0 4px; font-size: 1.1rem; }
+.producto p { margin: 0; color: #2f4858; font-weight: bold; }
+`;
+
+:::tip[Antes de empezar]
+Usa lo de [CSS II](../css-caja/): el modelo de caja y `display`.
+:::
+
+## El problema
+
+Las cajas en bloque van **una abajo de la otra**. Siempre. Pero casi todo lo que querés hacer en una
+página va **al lado**: el menú en una fila, el logo a la izquierda y los links a la derecha, las
+tarjetas del catálogo en una grilla de tres.
+
+Durante años eso se hacía con trucos que se rompían solos. Hoy hay dos herramientas hechas para
+esto, y son de lo mejor que tiene CSS:
+
+| | Para… |
+|---|---|
+| **Flexbox** | Cosas **en una fila** (o en una columna): un menú, una cabecera, botones |
+| **Grid** | Una **grilla** de filas y columnas: el catálogo, una galería |
+
+## Flexbox: en una fila
+
+La idea clave: **el estilo se le pone al CONTENEDOR**, no a cada cosa. El contenedor dice "mis hijos
+van en fila", y ellos se acomodan.
+
+```css
+nav {
+  display: flex;   /* mis hijos, uno al lado del otro */
+  gap: 16px;       /* con 16 de espacio entre cada uno */
+}
+```
+
+Con solo eso, los links del menú pasan a estar en fila. `gap` es el espacio **entre** los hijos (no
+en los bordes): mucho más cómodo que ponerle margen a cada uno.
+
+<EjercicioWeb
+  titulo="El menú en una fila"
+  fundamental
+  dificultad="🌱"
+  html={`<nav class="menu">
+  <a href="#inicio">Inicio</a>
+  <a href="#productos">Productos</a>
+  <a href="#contacto">Contacto</a>
+</nav>
+<p>Los tres links, uno al lado del otro.</p>
+`}
+  css={`body { font-family: system-ui, sans-serif; padding: 16px; }
+.menu a { display: block; padding: 8px 12px; background: #2f4858; color: white; text-decoration: none; border-radius: 6px; }
+
+.menu {
+  /* los links en una fila, con 12px entre cada uno */
+}
+`}
+  tests={`assert(estilo(".menu", "display") === "flex", "El menú tiene que ser un contenedor flex: display en .menu (el contenedor, no los links)");
+var tops = $$(".menu a").map(function (a) { return Math.round(a.getBoundingClientRect().top); });
+assert(tops[0] === tops[1] && tops[1] === tops[2], "Los tres links tienen que quedar en la misma fila");
+assert(estilo(".menu", "column-gap") === "12px" || estilo(".menu", "gap") === "12px", "Tiene que haber 12px entre cada link: gap");`}
+  pistas={[
+    '¿A quién le ponés el estilo: a cada link, o a la caja que los contiene?',
+    'Para el espacio entre ellos, ¿hay algo más cómodo que ponerle margen a cada link?',
+  ]}
+>
+Los links del menú están uno abajo del otro. Ponelos **en una fila**, con **12px** entre cada uno.
+</EjercicioWeb>
+
+### Repartir el espacio y alinear
+
+Con los hijos en fila, dos propiedades del contenedor deciden **dónde** quedan:
+
+| Propiedad | Sobre… | Valores que más se usan |
+|---|---|---|
+| `justify-content` | **A lo largo** de la fila (horizontal) | `flex-start`, `center`, `flex-end`, **`space-between`** |
+| `align-items` | **A lo ancho** (vertical) | `stretch`, **`center`**, `flex-start` |
+
+`space-between` deja **el primero contra un borde, el último contra el otro**, y reparte lo que
+sobra entre ellos: es la cabecera de casi todas las páginas, con el logo a la izquierda y el menú a
+la derecha. Y `align-items: center` los centra **verticalmente**, que antes de Flexbox era
+famosamente difícil.
+
+<EjercicioWeb
+  titulo="Logo a un lado, menú al otro"
+  fundamental
+  dificultad="🌿"
+  html={`<header class="cabecera">
+  <strong class="logo">🧉 Don Pepe</strong>
+  <nav class="links">
+    <a href="#productos">Productos</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
+`}
+  css={`body { margin: 0; font-family: system-ui, sans-serif; }
+.logo { font-size: 1.5rem; }
+.links { display: flex; gap: 12px; }
+.links a { color: white; }
+
+.cabecera {
+  background: #2f4858;
+  color: white;
+  padding: 16px;
+  /* el logo a la izquierda, los links a la derecha, y centrados de alto */
+}
+`}
+  tests={`assert(estilo(".cabecera", "display") === "flex", "La cabecera tiene que ser un contenedor flex");
+assert(estilo(".cabecera", "justify-content") === "space-between", "El logo contra un borde y los links contra el otro: justify-content");
+assert(estilo(".cabecera", "align-items") === "center", "Centrados de alto: align-items");
+var cab = $(".cabecera").getBoundingClientRect(), links = $(".links").getBoundingClientRect(), logo = $(".logo").getBoundingClientRect();
+assert(Math.abs(links.right - (cab.right - 16)) < 2, "Los links tienen que quedar contra el borde derecho de la cabecera");
+assert(Math.abs((logo.top + logo.bottom) / 2 - (links.top + links.bottom) / 2) < 2, "El logo y los links tienen que quedar centrados a la misma altura");`}
+  pistas={[
+    '¿Cuál de los valores de <code>justify-content</code> manda el primero a un borde y el último al otro?',
+    'El logo es más grande que los links. ¿Qué propiedad los alinea de alto, y con qué valor quedan centrados?',
+  ]}
+>
+Armá la cabecera: el **logo a la izquierda**, los **links a la derecha**, y los dos **centrados de
+alto** (el logo es más grande, y sin esto quedan desparejos).
+</EjercicioWeb>
+
+## Grid: la grilla
+
+Flexbox piensa en **una fila**. Para filas **y** columnas a la vez, Grid. También va en el
+contenedor:
+
+```css
+.catalogo {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;   /* tres columnas iguales */
+  gap: 16px;
+}
+```
+
+`fr` es **una fracción del espacio que sobra**: `1fr 1fr 1fr` son tres partes iguales. `2fr 1fr`
+sería una columna el doble de ancha que la otra. Y como repetir es aburrido:
+`repeat(3, 1fr)` es lo mismo.
+
+Los hijos van llenando la grilla **en orden**, de izquierda a derecha y de arriba hacia abajo. Seis
+tarjetas en tres columnas: dos filas, solas.
+
+<EjercicioWeb
+  titulo="La grilla de tres"
+  fundamental
+  dificultad="🌱"
+  html={TARJETAS}
+  cssBase={BASE_TARJETAS}
+  css={`.catalogo {
+  /* una grilla de 3 columnas iguales, con 16px de separación */
+}
+`}
+  tests={`assert(estilo(".catalogo", "display") === "grid", "El catálogo tiene que ser una grilla: display en .catalogo");
+var columnas = estilo(".catalogo", "grid-template-columns").split(" ").length;
+assert(columnas === 3, "Tiene que tener 3 columnas, y tiene " + columnas + ": grid-template-columns");
+var anchos = $$(".producto").slice(0, 3).map(function (p) { return Math.round(p.getBoundingClientRect().width); });
+assert(Math.max.apply(null, anchos) - Math.min.apply(null, anchos) <= 1, "Las tres columnas tienen que ser iguales: ¿usaste fr?");
+assert(estilo(".catalogo", "row-gap") === "16px" && estilo(".catalogo", "column-gap") === "16px", "16px de separación entre las tarjetas: gap");
+var tops = $$(".producto").map(function (p) { return Math.round(p.getBoundingClientRect().top); });
+assert(tops[0] === tops[2] && tops[3] > tops[0], "Las 6 tarjetas tienen que quedar en 2 filas de 3");`}
+  pistas={[
+    '¿Cómo decís "tres partes iguales" con la unidad <code>fr</code>?',
+    'La separación, ¿se la ponés a cada tarjeta, o a la grilla?',
+  ]}
+>
+Armá la grilla del catálogo: **3 columnas iguales** con **16px** de separación.
+</EjercicioWeb>
+
+### Que se acomode sola
+
+Tres columnas quedan bien en la compu, pero en un celular cada tarjeta mediría 100 píxeles. Lo
+ideal sería: **"poné tantas columnas como entren, de por lo menos 150px cada una"**. Y eso se puede
+escribir casi así:
+
+```css
+.catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+```
+
+| Pedazo | Quiere decir |
+|---|---|
+| `repeat(auto-fill, ...)` | **Tantas columnas como entren** |
+| `minmax(150px, 1fr)` | Cada una, **de 150 como mínimo**; si sobra, se estiran en partes iguales |
+
+En un celular entran dos; en una compu, cinco o seis. **Sin una sola línea más.** Es exactamente la
+grilla del catálogo de la clase [Tu catálogo con Python](../catalogo/).
+
+<EjercicioWeb
+  titulo="La grilla que se acomoda sola"
+  dificultad="🌿"
+  html={TARJETAS}
+  cssBase={BASE_TARJETAS}
+  css={`.catalogo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+`}
+  tests={`var escrito = (regla(".catalogo", "grid-template-columns") || "").replace(/\\s+/g, "");
+assert(escrito.indexOf("auto-fill") !== -1 || escrito.indexOf("auto-fit") !== -1, "Tiene que poner tantas columnas como entren: repeat(auto-fill, ...)");
+assert(escrito.indexOf("minmax(150px,1fr)") !== -1, "Cada columna de 150px como mínimo, y que se estiren si sobra: minmax(150px, 1fr)");
+var anchos = $$(".producto").map(function (p) { return p.getBoundingClientRect().width; });
+assert(Math.min.apply(null, anchos) >= 149, "Ninguna tarjeta puede medir menos de 150px");`}
+  pistas={[
+    'En vez de decir cuántas columnas, ¿qué le pedís a <code>repeat</code>?',
+    'Cada columna tiene un mínimo y puede crecer: ¿qué función recibe esos dos valores?',
+  ]}
+>
+La grilla tiene siempre 3 columnas, y en un celular quedan apretadas. Cambiala para que ponga
+**tantas columnas como entren, de 150px como mínimo**. Achicá y agrandá la ventana para verla
+acomodarse.
+</EjercicioWeb>
+
+<OpcionMultiple titulo="Chequeo: ¿flex o grid?" opciones={[
+  { texto: "Flexbox: es una sola fila de cosas.", correcta: true, explicacion: "Sí. Una fila de botones, con espacio entre ellos y centrados de alto, es lo que Flexbox hace mejor. Grid también podría, pero es para cuando pensás en filas Y columnas." },
+  { texto: "Grid: siempre que haya varias cosas.", explicacion: "Grid puede, pero es para grillas de filas y columnas. Para una fila sola, Flexbox es más simple." },
+  { texto: "Ninguno: con margin alcanza.", explicacion: "Con margin podés separarlos, pero no ponerlos al lado: los botones que son block van uno abajo del otro." },
+]}>
+Querés tres botones **en una fila**, separados y centrados de alto. ¿Qué usás?
+</OpcionMultiple>
+
+## Para llevar
+
+- **El estilo va en el contenedor**: él dice cómo se acomodan sus hijos.
+- **Flexbox**: `display: flex` pone los hijos **en fila**. `gap` los separa. `justify-content`
+  reparte a lo largo (`space-between`: uno a cada borde); `align-items: center` los centra de alto.
+- **Grid**: `display: grid` y `grid-template-columns`. `fr` es una fracción de lo que sobra:
+  `repeat(3, 1fr)` son tres columnas iguales.
+- **`repeat(auto-fill, minmax(150px, 1fr))`**: tantas columnas como entren, de 150 como mínimo. La
+  grilla que se acomoda sola.
+- Una fila → Flexbox. Filas y columnas → Grid.

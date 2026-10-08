@@ -16,6 +16,14 @@
  *   assert(condicion, "qué esperaba")     $(selector)   $$(selector)
  *   texto(selector)   estilo(selector, "propiedad")   atributo(selector, "nombre")
  *   click(selector)   escribir(selector, valor)   await esperar(ms)
+ *   consola                       los renglones que mostró console.log, en orden
+ *   regla(selector, "prop")       el CSS ESCRITO para ese selector (no el calculado)
+ *   regla(selector, "prop", "min-width")   el de adentro de esa media query
+ *
+ * Y las funciones y variables del JS del alumno se llaman directo: `doble(3)`.
+ *
+ * `sinVista`: para los ejercicios de JavaScript puro, que no arman página. La
+ * página igual corre (escondida); lo que se ve es la consola.
  *
  *   <EjercicioWeb
  *     titulo="Tu primera tarjeta"
@@ -40,9 +48,11 @@ interface Props {
   /** JavaScript con assert(): corre adentro de la página del alumno. */
   tests: string;
   pistas?: string[];
+  /** JavaScript puro: se esconde la página y queda la consola. */
+  sinVista?: boolean;
 }
 
-const { titulo, dificultad = '', html, css, js, cssBase = '', tests, pistas = [] } = Astro.props;
+const { titulo, dificultad = '', html, css, js, cssBase = '', tests, pistas = [], sinVista = false } = Astro.props;
 const id = idEjercicio(titulo);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 
@@ -97,12 +107,22 @@ const pestanas = [
 
   <BarraSimbolos modo="web" />
 
-  <div class="web__vista">
+  {/* `hidden` y no "no ponerlo": con sinVista la página igual tiene que correr,
+      porque ahí vive el JavaScript del alumno y ahí corren los tests. */}
+  <div class="web__vista" hidden={sinVista}>
     <div class="web__vista-barra"><span>👁️ Así se ve</span><span class="web__vista-nota">se actualiza sola mientras escribís</span></div>
     {/* allow-scripts SIN allow-same-origin: el JavaScript del alumno corre,
         pero en una página aparte, sin poder tocar la plataforma. Por eso los
         tests viajan por postMessage y no se leen desde acá. */}
-    <iframe class="web__marco" data-vista sandbox="allow-scripts allow-modals" title={`Vista de: ${titulo}`}></iframe>
+    {/* allow-forms: sin él, el navegador frena el envío de un formulario ANTES
+        de avisar el evento submit, y el ejercicio de formularios no tendría
+        nada que escuchar. */}
+    <iframe class="web__marco" data-vista sandbox="allow-scripts allow-modals allow-forms" title={`Vista de: ${titulo}`}></iframe>
+  </div>
+
+  <div class="web__vista web__consola" data-consola-caja hidden>
+    <div class="web__vista-barra"><span>🖥️ Consola</span><span class="web__vista-nota">lo que muestra console.log</span></div>
+    <pre data-consola></pre>
   </div>
 
   <div class="ejercicio__acciones">

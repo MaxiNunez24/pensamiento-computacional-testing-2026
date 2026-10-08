@@ -1,0 +1,246 @@
+---
+title: "HTML I · Tu primera página"
+description: "Qué es una etiqueta, el esqueleto que tiene toda página web, títulos y párrafos. Y por qué los espacios no cuentan."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+:::tip[Antes de empezar]
+Los ejercicios muestran **la página mientras la escribís**, abajo del editor. Todavía sin colores
+ni nada lindo: así se ve el HTML solo. Lo lindo es CSS, y viene después.
+:::
+
+## El problema
+
+Abrí cualquier página —la de tu banco, la de un diario, esta misma— y apretá **Ctrl + U**. Aparece
+un montón de texto con cosas entre `<` y `>`. **Eso es la página.** Todo lo que ves en el navegador
+sale de un texto así.
+
+Lo que hace el navegador es **leer ese texto y dibujarlo**. Y vos podés escribir uno: no hace falta
+nada más que un editor de texto. En esta clase escribís tu primera página, desde la primera línea.
+
+## Las etiquetas
+
+En una página, el contenido va **entre etiquetas** que le dicen al navegador qué es cada cosa:
+
+```html
+<h1>Recetas de la abuela</h1>
+<p>Las que se hacen en casa desde siempre.</p>
+```
+
+- `<h1>` **abre** un título. `</h1>` lo **cierra**: es igual, con una `/` adelante.
+- Lo que queda entre las dos es el **contenido**: el texto del título.
+- `<p>` es un **párrafo**.
+
+Las etiquetas pueden ir **una adentro de otra**, como cajas. Y la que se abre adentro, se cierra
+adentro:
+
+```html
+<p>Esto es <strong>importante</strong>.</p>
+```
+
+:::caution[Como los paréntesis en Python]
+Abrir `<p>`, abrir `<strong>`, cerrar `</p>` y después `</strong>` está mal: se cierran **en el
+orden contrario** al que se abrieron, igual que `print(len(lista))`. El navegador no te va a tirar
+un error —lo arregla como puede—, pero lo que dibuja puede no ser lo que querías.
+:::
+
+## El esqueleto de toda página
+
+Toda página completa tiene la misma forma. Es siempre igual, y la vas a copiar mil veces:
+
+```html
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Recetas de la abuela</title>
+  </head>
+  <body>
+    <h1>Recetas de la abuela</h1>
+    <p>Las que se hacen en casa desde siempre.</p>
+  </body>
+</html>
+```
+
+| Parte | Qué es |
+|---|---|
+| `<!doctype html>` | "Esto es una página web moderna". Va siempre primero |
+| `<html lang="es">` | La caja que contiene todo. `lang="es"` dice que está en castellano |
+| `<head>` | **La cabeza: datos para el navegador.** No se ve en la página |
+| `<meta charset="utf-8">` | Que las tildes y la ñ se vean bien. **Sin esto, "Gómez" puede salir "GÃ³mez"** |
+| `<title>` | El nombre que aparece **en la pestaña** del navegador |
+| `<body>` | **El cuerpo: todo lo que se ve.** |
+
+Fijate en `lang="es"`: es un **atributo**. Los atributos van adentro de la etiqueta de apertura,
+con la forma `nombre="valor"`, y le agregan información.
+
+Y fijate en la **sangría**: lo que está adentro de otra cosa va corrido a la derecha. Al navegador
+le da igual —no es Python—, pero a vos te deja ver de un vistazo qué está adentro de qué.
+
+<EjercicioWeb
+  titulo="El esqueleto"
+  fundamental
+  dificultad="🌱"
+  html={`<!-- Escribí acá la página entera: el doctype, html, head y body -->
+`}
+  tests={`assert(!document.documentElement.hasAttribute("data-pc-envuelta"), "Falta el esqueleto: la página entera va adentro de <html> ... </html>, con su <head> y su <body>");
+assert(document.doctype && document.doctype.name === "html", "Falta el <!doctype html> al principio de todo");
+assert(document.documentElement.getAttribute("lang") === "es", 'La etiqueta <html> tiene que llevar lang="es"');
+assert($("head meta[charset]"), 'Falta el <meta charset="utf-8"> adentro del head: sin eso, las tildes pueden salir mal');
+assert(document.title === "Mi primera página", 'El título de la pestaña tiene que ser "Mi primera página" y es "' + document.title + '". Va en <title>, adentro del head');
+assert($("body h1"), "Falta el título grande, un <h1>, adentro del body");
+assert(texto("h1") === "Hola, mundo", 'El <h1> tiene que decir "Hola, mundo" y dice "' + texto("h1") + '"');
+assert($("body p"), "Falta un párrafo, <p>, adentro del body");`}
+  pistas={[
+    'Mirá el esqueleto de arriba. ¿Qué partes son siempre iguales, y cuáles cambian según la página?',
+    'El título de la pestaña y el título grande de la página, ¿van en el mismo lugar? ¿Cuál se ve adentro de la página y cuál no?',
+  ]}
+>
+Escribí una página completa:
+
+- en la pestaña, el título **Mi primera página**;
+- en la página, un título grande que diga **Hola, mundo**;
+- y abajo un párrafo, con lo que quieras.
+</EjercicioWeb>
+
+<OpcionMultiple titulo="Chequeo: ¿head o body?" opciones={[
+  { texto: "El título de la pestaña va en el head; el título grande de la página, en el body.", correcta: true, explicacion: "Exacto. El head es para el navegador: lo que pone ahí no se dibuja en la página. Todo lo que se ve va en el body." },
+  { texto: "Los dos van en el head, porque son títulos.", explicacion: "El <title> sí, pero el <h1> es contenido de la página: si lo ponés en el head, no se va a ver." },
+  { texto: "Da igual: el navegador los acomoda solo.", explicacion: "A veces los acomoda, pero no siempre como querías. Y una página desordenada es difícil de leer para los buscadores y para los lectores de pantalla." },
+]}>
+Una página tiene un título en la pestaña y un título grande arriba de todo. ¿Dónde va cada uno?
+</OpcionMultiple>
+
+## Títulos de seis tamaños
+
+Hay seis niveles de título, de `<h1>` (el más importante) a `<h6>`. No son "tamaños de letra": son
+**niveles**, como el índice de un libro. Una página tiene **un solo `<h1>`**, que dice de qué trata,
+y adentro, secciones con `<h2>`, que a su vez pueden tener `<h3>`:
+
+```html
+<h1>Recetas de la abuela</h1>
+
+<h2>Postres</h2>
+<h3>Flan casero</h3>
+<p>El de siempre, con dulce de leche.</p>
+
+<h2>Comidas</h2>
+<h3>Guiso de lentejas</h3>
+<p>Para los días de lluvia.</p>
+```
+
+:::note[¿Para qué importa el nivel, si después el tamaño lo cambio con CSS?]
+Porque hay quien **no ve** la página: los buscadores, como Google, y los **lectores de pantalla**
+que usan las personas ciegas. Ellos leen los niveles para entender cómo está organizada. Un lector
+de pantalla deja saltar de `<h2>` en `<h2>` como quien hojea un libro por los capítulos.
+:::
+
+<EjercicioWeb
+  titulo="Una receta, ordenada"
+  fundamental
+  dificultad="🌱"
+  html={`<h1>Torta de manzana</h1>
+<!-- 1. una sección "Ingredientes", con un párrafo -->
+<!-- 2. una sección "Preparación", con dos párrafos -->
+`}
+  tests={`assert($$("h1").length === 1, "Tiene que haber un solo <h1>, el nombre de la receta, y hay " + $$("h1").length);
+var secciones = $$("h2").map(function (h) { return h.textContent.trim(); });
+assert(secciones.length === 2, "Tiene que haber 2 secciones con <h2> (Ingredientes y Preparación) y hay " + secciones.length);
+assert(secciones[0] === "Ingredientes", 'La primera sección tiene que ser "Ingredientes" y es "' + secciones[0] + '"');
+assert(secciones[1] === "Preparación", 'La segunda sección tiene que ser "Preparación" y es "' + secciones[1] + '"');
+assert($$("p").length >= 3, "Faltan párrafos: uno en Ingredientes y dos en Preparación. Hay " + $$("p").length);
+var h2s = $$("h2"), ps = $$("p");
+var antesDeLaSegunda = ps.filter(function (p) { return h2s[1].compareDocumentPosition(p) & Node.DOCUMENT_POSITION_PRECEDING; }).length;
+assert(antesDeLaSegunda >= 1, "El párrafo de los ingredientes tiene que ir ABAJO de su título y antes de Preparación");
+assert(ps.length - antesDeLaSegunda >= 2, "Preparación tiene que tener dos párrafos abajo de su título");`}
+  pistas={[
+    'Si "Torta de manzana" es el título de toda la página, ¿qué nivel les toca a sus secciones?',
+    '¿El párrafo de una sección va antes o después de su título?',
+  ]}
+>
+Completá la receta con dos secciones: **Ingredientes**, con un párrafo, y **Preparación**, con dos.
+Cada sección, con su título del nivel que le corresponde.
+</EjercicioWeb>
+
+## Los espacios no cuentan
+
+Esto sorprende a todos la primera vez. Escribí un poema así:
+
+```html
+<p>
+  Caminante, son tus huellas
+  el camino y nada más;
+</p>
+```
+
+y el navegador lo muestra **en un solo renglón**: *Caminante, son tus huellas el camino y nada más;*.
+
+**En HTML, los saltos de línea y los espacios de más no cuentan**: el navegador junta todo y deja
+un espacio. Lo que separa una cosa de otra son **las etiquetas**. Para cortar el renglón adentro de
+un párrafo hay una etiqueta especial, que no se cierra porque no tiene contenido:
+
+```html
+<p>
+  Caminante, son tus huellas<br>
+  el camino y nada más;
+</p>
+```
+
+`<br>` es *break*: "cortá acá".
+
+:::tip[¿Por qué funciona así?]
+Para que vos puedas acomodar el código como te resulte cómodo —con sangría, partido en renglones— sin
+que eso cambie la página. Lo que se ve lo deciden las etiquetas, no cómo quedó escrito.
+:::
+
+<EjercicioWeb
+  titulo="Los espacios no cuentan"
+  dificultad="🌱"
+  html={`<h1>Lista del súper</h1>
+<p>
+  Yerba
+  Azúcar
+  Pan
+  Leche
+</p>
+`}
+  tests={`var p = $("p");
+assert(p, "No toques el párrafo: hay que hacer que cada cosa salga en su renglón");
+var renglones = p.innerText.split("\\n").map(function (s) { return s.trim(); }).filter(Boolean);
+assert(renglones.length === 4, "En la página tienen que verse 4 renglones (Yerba, Azúcar, Pan, Leche) y se ven " + renglones.length + ": " + renglones.join(" | "));
+assert(renglones[0] === "Yerba" && renglones[3] === "Leche", "Los cuatro, en el mismo orden: Yerba, Azúcar, Pan, Leche");`}
+  pistas={[
+    'Los saltos de línea ya están en el código. ¿Por qué el navegador los ignora? ¿Qué es lo que sí le hace caso?',
+    '¿Cuántos cortes necesitás para que cuatro cosas queden en cuatro renglones?',
+  ]}
+>
+La lista se ve **en un solo renglón**, aunque en el código está en cuatro. Hacé que en la página
+cada cosa salga **en su renglón**, sin sacarlas del párrafo.
+</EjercicioWeb>
+
+## Comentarios
+
+Como el `#` de Python, pero con otra forma: lo que va entre `<!--` y `-->` el navegador no lo
+muestra.
+
+```html
+<!-- Esto no se ve. Sirve para dejarte notas, o para "apagar" un pedazo -->
+<p>Esto sí.</p>
+```
+
+Ojo: **no se ve en la página, pero está en el código**, y cualquiera lo lee con Ctrl + U. Ahí no
+van contraseñas ni nada privado.
+
+## Para llevar
+
+- Una página es **un archivo de texto** terminado en `.html`. El navegador lo lee y lo dibuja.
+- El contenido va **entre etiquetas**: `<p>` abre, `</p>` cierra. Se cierran en el orden contrario
+  al que se abrieron.
+- Los **atributos** van en la etiqueta de apertura: `<html lang="es">`.
+- **El esqueleto**: `<!doctype html>`, `<html>`, `<head>` (para el navegador: `charset`, `title`) y
+  `<body>` (lo que se ve).
+- Títulos de `<h1>` a `<h6>` por **nivel**, no por tamaño. Un solo `<h1>` por página.
+- **Los espacios y saltos de línea no cuentan.** `<br>` corta el renglón.
+- `<!-- comentario -->`: no se ve, pero cualquiera lo lee.

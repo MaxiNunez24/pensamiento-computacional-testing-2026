@@ -1,0 +1,258 @@
+---
+title: "JavaScript III · Eventos"
+description: "Que pase algo cuando la persona hace clic o escribe: un contador, mostrar y ocultar, el buscador del catálogo, y un formulario que avisa si algo está mal."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const BASE = `body { font-family: system-ui, sans-serif; padding: 16px; }
+button { font: inherit; padding: 8px 16px; border-radius: 8px; border: 0; background: #2f4858; color: white; cursor: pointer; }
+input { font: inherit; padding: 8px; border: 1px solid #bbb; border-radius: 8px; }
+.oculto { display: none; }
+.producto { padding: 8px 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 8px; }
+.error { color: #c0392b; }
+.ok { color: #1e8449; }
+`;
+
+:::tip[Antes de empezar]
+Usa lo de [JavaScript II](../js-dom/): encontrar elementos y cambiarlos. En esta clase los tests
+**tocan** tu página: hacen clic y escriben, como lo haría una persona.
+:::
+
+## El problema
+
+En la clase anterior el programa cambiaba la página **apenas cargaba**, y listo. Pero lo
+interesante es que la página **responda**: que al tocar un botón pase algo, que al escribir en el
+buscador se filtren los productos. El programa tiene que **esperar** a que la persona haga algo.
+
+## Escuchar un evento
+
+Cada cosa que hace la persona —un clic, una tecla, escribir en un campo— es un **evento**. Un
+programa puede **escuchar** un evento en un elemento, y decir qué hacer cuando pase:
+
+```js
+const boton = document.querySelector("#saludar");
+
+boton.addEventListener("click", function () {
+  console.log("¡Me tocaron!");
+});
+```
+
+Se lee: *"al botón, cuando le hagan **click**, hacé esto"*. La función de adentro **no se ejecuta
+ahora**: queda guardada, y el navegador la llama **cada vez** que pasa el evento.
+
+:::note[Una función que se pasa sin llamarla]
+Es la primera vez que le pasamos **una función entera** a otra, como si fuera un dato. No se llama
+con paréntesis: se la damos al navegador para que **él** la llame cuando corresponda. En Python
+también se puede (es lo que hace `sorted(lista, key=len)` con `len`), pero en JavaScript lo vas a
+ver todo el tiempo.
+:::
+
+| Evento | Pasa cuando… |
+|---|---|
+| `click` | Hacen clic (o tocan, en el celular) |
+| `input` | Cambia lo escrito en un campo: **con cada letra** |
+| `submit` | Se envía un formulario |
+| `keydown` | Se aprieta una tecla |
+
+<EjercicioWeb
+  titulo="El contador"
+  fundamental
+  dificultad="🌱"
+  cssBase={BASE}
+  html={`<p>Unidades: <strong id="cuenta">0</strong></p>
+<button id="mas">Agregar una</button>
+`}
+  js={`// Cada vez que tocan "Agregar una", la cuenta sube de a uno
+`}
+  tests={`assert(texto("#cuenta") === "0", "Al principio la cuenta tiene que estar en 0, y está en " + texto("#cuenta"));
+click("#mas");
+assert(texto("#cuenta") === "1", "Después de un clic tendría que decir 1, y dice " + texto("#cuenta") + ". ¿Escuchás el click del botón?");
+click("#mas"); click("#mas");
+assert(texto("#cuenta") === "3", "Después de tres clics tendría que decir 3, y dice " + texto("#cuenta") + ". ¿La cuenta se guarda entre un clic y otro?");`}
+  pistas={[
+    '¿A qué elemento le escuchás el click? ¿Y qué elemento cambiás cuando pasa?',
+    'Si la cuenta vive adentro de la función del click, ¿qué le pasa cada vez que la función arranca de nuevo? ¿Dónde tendría que vivir?',
+  ]}
+>
+Cada vez que tocan **Agregar una**, el número tiene que subir de a uno. Probalo en la vista.
+</EjercicioWeb>
+
+## Mostrar y ocultar
+
+Con `classList.toggle` y un evento, se arma el "Ver más" de cualquier página: el CSS tiene una clase
+`oculto`, y el botón la pone y la saca.
+
+```js
+boton.addEventListener("click", function () {
+  detalle.classList.toggle("oculto");
+});
+```
+
+`toggle` devuelve si **quedó puesta** la clase: `true` o `false`. Sirve para cambiar también el
+texto del botón.
+
+<EjercicioWeb
+  titulo="Ver más, ver menos"
+  fundamental
+  dificultad="🌿"
+  cssBase={BASE}
+  html={`<h2>Mate de calabaza</h2>
+<p>$ 7800</p>
+<p id="detalle" class="oculto">Curado y listo para usar. Bombilla de alpaca incluida.
+Se recomienda no lavarlo con detergente.</p>
+<button id="ver">Ver más</button>
+`}
+  js={`// Al tocar el botón: mostrar u ocultar el detalle,
+// y que el botón diga "Ver menos" si el detalle se ve, y "Ver más" si no
+`}
+  tests={`var visible = function () { return estilo("#detalle", "display") !== "none"; };
+assert(!visible(), "Al principio el detalle tiene que estar oculto (ya tiene la clase oculto)");
+click("#ver");
+assert(visible(), "Después de tocar el botón, el detalle tiene que verse");
+assert(texto("#ver") === "Ver menos", 'Con el detalle a la vista, el botón tiene que decir "Ver menos" y dice "' + texto("#ver") + '"');
+click("#ver");
+assert(!visible(), "Tocándolo de nuevo, el detalle se vuelve a ocultar");
+assert(texto("#ver") === "Ver más", 'Y el botón vuelve a decir "Ver más"');`}
+  pistas={[
+    'La clase <code>oculto</code> ya existe en el CSS. ¿Qué método se la pone si no la tiene y se la saca si la tiene?',
+    '¿Cómo sabés, después de ese cambio, si el detalle quedó oculto o a la vista? ¿Qué te devuelve ese método?',
+  ]}
+>
+El botón **Ver más** tiene que mostrar el detalle, y entonces decir **Ver menos**; tocado de nuevo,
+lo oculta y vuelve a decir **Ver más**.
+</EjercicioWeb>
+
+## El buscador del catálogo
+
+El evento `input` pasa **con cada letra** que se escribe en un campo. Y lo escrito se lee con
+`.value`:
+
+```js
+const buscador = document.querySelector("#buscar");
+
+buscador.addEventListener("input", function () {
+  console.log("Escribieron:", buscador.value);
+});
+```
+
+Con eso y lo que ya sabés —recorrer, comparar textos, poner y sacar clases—, se arma un buscador.
+
+:::tip[Buscar sin importar mayúsculas]
+`"Mate".includes("ma")` es `false`: para JavaScript, `M` y `m` son distintas. Pasá los dos a
+minúscula antes de comparar: `.toLowerCase()`, el `.lower()` de Python.
+:::
+
+<EjercicioWeb
+  titulo="El buscador del catálogo"
+  fundamental
+  dificultad="🌿"
+  cssBase={BASE}
+  html={`<input id="buscar" type="search" placeholder="Buscar…">
+<div class="producto">Mate de calabaza</div>
+<div class="producto">Taza de cerámica</div>
+<div class="producto">Maceta pintada</div>
+<div class="producto">Vela aromática</div>
+<div class="producto">Bolso matero</div>
+`}
+  js={`// Con cada letra que escriban en #buscar, que se vean SOLO
+// los productos que contengan lo escrito (sin importar mayúsculas)
+`}
+  tests={`var visibles = function () { return $$(".producto").filter(function (p) { return getComputedStyle(p).display !== "none"; }).map(function (p) { return p.textContent.trim(); }); };
+assert(visibles().length === 5, "Sin escribir nada, se tienen que ver los 5 productos");
+escribir("#buscar", "ma");
+var v = visibles();
+assert(v.length === 3, 'Buscando "ma" se tienen que ver 3 (Mate, Maceta y Bolso matero) y se ven ' + v.length + ": " + v.join(", ") + ". ¿Buscaste sin importar mayúsculas?");
+assert(v.indexOf("Taza de cerámica") === -1, 'La taza no tiene "ma": tiene que ocultarse');
+escribir("#buscar", "VELA");
+v = visibles();
+assert(v.length === 1 && v[0] === "Vela aromática", 'Buscando "VELA", en mayúsculas, se tiene que ver solo la vela. Se ven: ' + v.join(", "));
+escribir("#buscar", "");
+assert(visibles().length === 5, "Al borrar lo escrito, se tienen que volver a ver todos. ¿Los que ocultaste antes vuelven a aparecer?");`}
+  pistas={[
+    'Con cada letra, ¿hay que revisar solo un producto, o todos? ¿Y qué les pasa a los que antes estaban ocultos?',
+    'Para cada producto hay dos casos: contiene lo escrito o no. ¿Qué hacés en cada uno con la clase <code>oculto</code>?',
+  ]}
+>
+Armá el buscador: con **cada letra** que se escriba en `#buscar`, que se vean **solo los productos
+que contengan lo escrito**, sin importar mayúsculas. Si se borra todo, se ven todos.
+</EjercicioWeb>
+
+## Formularios: no recargar la página
+
+Un formulario, al enviarse, **recarga la página**: es lo que hacía antes de que existiera
+JavaScript, mandando los datos a un servidor. Si querés manejarlo vos, hay que **frenarlo**:
+
+```js
+formulario.addEventListener("submit", function (evento) {
+  evento.preventDefault();   // "no hagas lo de siempre: no recargues"
+  // ...lo tuyo
+});
+```
+
+La función recibe **el evento**, con información de lo que pasó, y `preventDefault()` le dice al
+navegador que no haga lo que hace normalmente. Sin esa línea, la página se recarga y todo lo que tu
+programa haya mostrado desaparece en un parpadeo.
+
+<EjercicioWeb
+  titulo="El formulario que avisa"
+  dificultad="🌿"
+  cssBase={BASE}
+  html={`<form id="suscripcion">
+  <label for="email">Tu correo</label>
+  <input id="email" type="text">
+  <button>Suscribirme</button>
+</form>
+<p id="mensaje"></p>
+`}
+  js={`// Al enviar el formulario, sin recargar la página:
+// - si el correo tiene una @: "¡Gracias! Te vamos a escribir a <el correo>", con la clase ok
+// - si no:                    "Revisá el correo: le falta la @", con la clase error
+`}
+  tests={`var recargo = false;
+window.addEventListener("submit", function (e) { if (!e.defaultPrevented) { recargo = true; e.preventDefault(); } });
+escribir("#email", "ana@gmail.com");
+click("#suscripcion button");
+assert(!recargo, "El formulario recargó la página: falta frenarlo. ¿Qué le decís al evento?");
+assert(texto("#mensaje") === "¡Gracias! Te vamos a escribir a ana@gmail.com", 'Con un correo bien, el mensaje tiene que ser "¡Gracias! Te vamos a escribir a ana@gmail.com" y es "' + texto("#mensaje") + '"');
+assert($("#mensaje").classList.contains("ok"), "Con un correo bien, el mensaje lleva la clase ok");
+escribir("#email", "anagmail.com");
+click("#suscripcion button");
+assert(texto("#mensaje") === "Revisá el correo: le falta la @", 'Sin @, el mensaje tiene que ser "Revisá el correo: le falta la @" y es "' + texto("#mensaje") + '"');
+assert($("#mensaje").classList.contains("error") && !$("#mensaje").classList.contains("ok"), "Sin @, el mensaje lleva la clase error, y ya no la ok");`}
+  pistas={[
+    '¿A qué evento le prestás atención: al click del botón, o al envío del formulario? ¿Y qué es lo primero que hacés adentro?',
+    'Si primero mandan uno bien y después uno mal, ¿con qué clases queda el mensaje? ¿Hay que sacar alguna?',
+  ]}
+>
+Al enviar el formulario, **sin recargar la página**:
+
+- si el correo tiene una **@**: `¡Gracias! Te vamos a escribir a ana@gmail.com`, con la clase `ok`;
+- si no: `Revisá el correo: le falta la @`, con la clase `error`.
+</EjercicioWeb>
+
+<OpcionMultiple titulo="Chequeo: ¿cuándo corre la función?" opciones={[
+  { texto: "Cada vez que hacen clic en el botón, y nunca antes.", correcta: true, explicacion: "Exacto. addEventListener no la ejecuta: la guarda. El navegador la llama él, una vez por cada clic, todas las veces que pase." },
+  { texto: "Una vez, cuando carga la página.", explicacion: "Eso le pasaría al código que está afuera de la función. Lo de adentro espera al evento." },
+  { texto: "Solo la primera vez que hacen clic.", explicacion: "Corre en cada clic. (Si quisieras que sea solo la primera, hay una opción para eso: { once: true }.)" },
+]}>
+```js
+boton.addEventListener("click", function () {
+  console.log("hola");
+});
+```
+
+¿Cuándo se muestra el `hola`?
+</OpcionMultiple>
+
+## Para llevar
+
+- Un **evento** es algo que hace la persona: `click`, `input` (cada letra), `submit`, `keydown`.
+- `elemento.addEventListener("click", function () { ... })`: la función **queda guardada** y el
+  navegador la llama cada vez que pasa.
+- Lo que tiene que **durar entre un evento y otro** (una cuenta) vive **afuera** de la función.
+- Lo escrito en un campo: `campo.value`, siempre texto.
+- `classList.toggle` para mostrar y ocultar, y devuelve si la clase quedó puesta.
+- En un formulario: `evento.preventDefault()` para que no recargue la página.
+- Para buscar sin importar mayúsculas: `.toLowerCase()` a los dos lados.

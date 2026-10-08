@@ -1,0 +1,267 @@
+---
+title: "CSS I · Colores, letras y la cascada"
+description: "Cómo se le da estilo a una página: las reglas, los selectores (por etiqueta, por clase, por id), colores y letras, y qué pasa cuando dos reglas se pelean."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const TIENDA = `<header>
+  <h1>Almacén Don Pepe</h1>
+  <p>Productos de campo, desde 1987.</p>
+</header>
+<main>
+  <h2>Ofertas de la semana</h2>
+  <p class="producto">Miel de la isla <span class="precio">$ 5200</span></p>
+  <p class="producto oferta">Dulce de leche <span class="precio">$ 3900</span></p>
+  <p class="producto">Queso de cabra <span class="precio">$ 8700</span></p>
+</main>
+`;
+
+:::tip[Antes de empezar]
+Usa lo de los tres bloques de HTML. En los ejercicios, el HTML ya está escrito: vos escribís **en
+la pestaña CSS**, y la vista cambia mientras escribís.
+:::
+
+## El problema
+
+Las páginas del bloque de HTML funcionan, pero se ven como un documento de 1995: letra con
+patitas, todo negro sobre blanco, todo pegado al borde. La de un almacén de barrio que hiciste
+quedaría igual que la de un banco.
+
+**CSS** (*Cascading Style Sheets*, hojas de estilo en cascada) es el lenguaje que dice **cómo se ve**
+cada cosa. Y lo bueno es que va **aparte** del HTML: podés cambiar toda la apariencia sin tocar el
+contenido.
+
+## Una regla de CSS
+
+```css
+h1 {
+  color: darkgreen;
+  font-size: 40px;
+}
+```
+
+| Parte | Es… |
+|---|---|
+| `h1` | El **selector**: a qué le aplica |
+| `{ ... }` | Las **declaraciones**: qué le cambia |
+| `color: darkgreen;` | Una **propiedad** (`color`), dos puntos, un **valor** (`darkgreen`) y punto y coma |
+
+Se lee: *"a todos los `h1`, ponelos verde oscuro y de 40 píxeles"*.
+
+:::caution[El punto y coma]
+Cada declaración termina con `;`. Si te lo olvidás, el navegador **no te avisa**: junta esa
+declaración con la siguiente, no entiende ninguna de las dos y las ignora. Si algo "no hace nada",
+lo primero es mirar los `;` y los `:`.
+:::
+
+### ¿Dónde se escribe?
+
+En una página real, el CSS va en **un archivo aparte**, y el HTML lo trae desde el `<head>`:
+
+```html
+<head>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+```
+
+Así, **un mismo archivo le da estilo a todas las páginas** del sitio: cambiás un color en un lugar y
+cambia en todas. Es lo que hace el catálogo con su `estilos.css`.
+
+## Colores y letras
+
+| Propiedad | Qué cambia | Ejemplo |
+|---|---|---|
+| `color` | El color del **texto** | `color: #2f4858;` |
+| `background-color` | El **fondo** | `background-color: #faf7f2;` |
+| `font-family` | La **tipografía** | `font-family: Georgia, serif;` |
+| `font-size` | El **tamaño** de letra | `font-size: 20px;` |
+| `font-weight` | Negrita | `font-weight: bold;` |
+| `text-align` | Alineación | `text-align: center;` |
+
+Los colores se pueden escribir de varias formas:
+
+- **por nombre**: `red`, `darkgreen`, `white` (hay 140);
+- **en hexadecimal**: `#2f4858` — rojo, verde y azul, de `00` a `ff`. Es lo que te da cualquier
+  selector de colores;
+- **en rgb**: `rgb(47, 72, 88)` — lo mismo, de 0 a 255.
+
+`font-family` lleva **una lista**, separada por comas: el navegador usa la primera que tenga
+instalada. La última tiene que ser una genérica (`serif`, `sans-serif`, `monospace`), que siempre
+existe.
+
+<EjercicioWeb
+  titulo="Pintar el título"
+  fundamental
+  dificultad="🌱"
+  html={TIENDA}
+  css={`/* El título grande: color #2f4858 y centrado */
+`}
+  tests={`var h1 = estilo("h1", "color");
+assert(h1 === "rgb(47, 72, 88)", "El h1 tiene que ser de color #2f4858. Ahora es " + h1 + ". ¿El selector es h1? ¿Cerraste la llave?");
+assert(estilo("h1", "text-align") === "center", "El h1 tiene que estar centrado: text-align");
+assert(estilo("h2", "color") !== "rgb(47, 72, 88)", "Solo el h1: los h2 no tienen que cambiar");`}
+  pistas={[
+    '¿A qué etiqueta le aplica la regla? Eso va antes de la llave.',
+    'Si escribiste la regla y no cambia nada, ¿cada declaración tiene sus dos puntos y su punto y coma?',
+  ]}
+>
+Ponele al título grande el color **`#2f4858`** y centralo.
+</EjercicioWeb>
+
+## Elegir qué pintar: los selectores
+
+Con `h1` le aplicás a **todos** los `h1`. Pero en una tienda no querés pintar todos los párrafos
+igual: el precio de un producto no es lo mismo que la descripción. Para eso, en el HTML se les pone
+**un nombre**, y CSS los busca por ese nombre:
+
+| Selector | Le aplica a… | En el HTML |
+|---|---|---|
+| `p` | Todos los `<p>` | — |
+| `.precio` | Todo lo que tenga **la clase** `precio` | `<span class="precio">` |
+| `#portada` | **El** elemento con **id** `portada` (hay uno solo) | `<section id="portada">` |
+| `header p` | Los `<p>` que estén **adentro** de un `<header>` | — |
+
+El punto `.` es para las clases y el numeral `#` para los id. Y un elemento puede tener **varias
+clases**, separadas por espacios: `class="producto oferta"` es un producto y además está en oferta.
+
+:::tip[¿Clase o id?]
+Casi siempre, **clase**. Un id es único y sirve para los links con `#`; una clase se repite tanto
+como quieras: todos los precios de la tienda llevan `class="precio"`, y una sola regla los pinta a
+todos.
+:::
+
+<EjercicioWeb
+  titulo="Los precios, de otro color"
+  fundamental
+  dificultad="🌱"
+  html={TIENDA}
+  css={`/* 1. los precios: verde (green) y en negrita */
+/* 2. el producto en oferta: fondo amarillo claro (#fff3b0) */
+`}
+  tests={`var precios = $$(".precio");
+assert(precios.every(function (p) { return getComputedStyle(p).color === "rgb(0, 128, 0)"; }), "Todos los precios tienen que ser verdes (green). ¿Seleccionaste por la clase, con el punto adelante?");
+var peso = parseInt(estilo(".precio", "font-weight"), 10);
+assert(peso >= 700, "Los precios tienen que ir en negrita: font-weight");
+assert(estilo(".oferta", "background-color") === "rgb(255, 243, 176)", "El producto en oferta tiene que tener fondo #fff3b0");
+var otros = $$(".producto").filter(function (p) { return !p.classList.contains("oferta"); });
+assert(otros.every(function (p) { return getComputedStyle(p).backgroundColor === "rgba(0, 0, 0, 0)"; }), "Solo el que está en oferta lleva fondo: los otros productos no");
+assert(estilo("h2", "color") !== "rgb(0, 128, 0)", "Solo los precios son verdes: el resto del texto no");`}
+  pistas={[
+    'Mirá el HTML: ¿qué tienen en común todos los precios? ¿Y qué tiene el dulce de leche que no tienen los otros?',
+    '¿Con qué símbolo empieza un selector que busca por clase?',
+  ]}
+>
+Mirá el HTML (en la vista): cada precio es un `<span class="precio">`, y el dulce de leche tiene
+además la clase `oferta`.
+
+- Los **precios**: verdes (`green`) y en **negrita**.
+- El **producto en oferta**: fondo amarillo claro, `#fff3b0`.
+</EjercicioWeb>
+
+## La cascada: cuando dos reglas se pelean
+
+¿Qué pasa si dos reglas le dicen cosas distintas al mismo elemento?
+
+```css
+p { color: gray; }
+.oferta { color: red; }
+```
+
+El dulce de leche es un `<p>` **y** tiene la clase `oferta`. ¿Gris o rojo? **Rojo**: gana la regla
+**más específica**. El orden es:
+
+| Selector | Específico | Gana sobre… |
+|---|---|---|
+| `#id` | 🥇 Muy | Todo lo de abajo |
+| `.clase` | 🥈 Bastante | Las etiquetas |
+| `etiqueta` | 🥉 Poco | — |
+
+Cuando un selector combina varias cosas, **se cuentan**: primero los id, después las clases, y
+recién después las etiquetas. `main .producto` tiene una clase **y** una etiqueta, así que le gana
+a `.oferta`, que tiene una clase sola. Pero ojo: **una clase le gana a cualquier cantidad de
+etiquetas**. `main p` (dos etiquetas) pierde contra `.oferta`, porque las clases se comparan antes.
+
+Y si dos reglas son **igual** de específicas, gana **la que está más abajo** en el CSS. Por eso se
+llama *cascada*: las reglas caen una sobre otra, y la que queda arriba es la que se ve.
+
+:::note[La herencia]
+Algunas propiedades **se heredan**: si le ponés `font-family` al `<body>`, todo lo de adentro la
+toma, sin que tengas que repetirla en cada etiqueta. Pasa con las del texto (`color`, `font-family`,
+`font-size`), no con las de la caja (`background-color`, el borde, los márgenes).
+:::
+
+<OpcionMultiple titulo="Chequeo: ¿de qué color sale?" opciones={[
+  { texto: "Azul: el selector por id es el más específico.", correcta: true, explicacion: "Exacto. No importa que el .destacado esté más abajo: un id le gana a una clase, y una clase a una etiqueta. El orden solo desempata entre reglas igual de específicas." },
+  { texto: "Rojo: es la regla que está más abajo.", explicacion: "El orden solo desempata entre reglas IGUAL de específicas. Acá hay un id, que le gana a cualquier clase." },
+  { texto: "Verde: la etiqueta es la que está más cerca del elemento.", explicacion: "La etiqueta es la menos específica de las tres." },
+]}>
+```css
+#bienvenida { color: blue; }
+p { color: green; }
+.destacado { color: red; }
+```
+
+Con estas reglas, ¿de qué color sale `<p id="bienvenida" class="destacado">Hola</p>`?
+</OpcionMultiple>
+
+<EjercicioWeb
+  titulo="¿Quién gana?"
+  dificultad="🌿"
+  html={TIENDA}
+  css={`main .producto {
+  color: gray;
+}
+
+.oferta {
+  color: red;
+}
+`}
+  tests={`assert(estilo(".oferta", "color") === "rgb(255, 0, 0)", "El producto en oferta tiene que verse rojo. Ahora es " + estilo(".oferta", "color") + ": ¿qué regla le está ganando, y por qué?");
+assert(estilo(".producto:not(.oferta)", "color") === "rgb(128, 128, 128)", "Los otros productos tienen que seguir grises");
+assert(regla("main .producto", "color") === "gray", "La regla de main .producto tiene que quedar: el desafío es ganarle, no sacarla");
+var todo = Array.prototype.map.call(document.styleSheets, function (h) { try { return Array.prototype.map.call(h.cssRules, function (r) { return r.cssText; }).join(" "); } catch (e) { return ""; } }).join(" ");
+assert(todo.indexOf("!important") === -1, "Sin !important: es un parche que después no le gana nadie. Hacelo con un selector más específico");`}
+  pistas={[
+    '¿Cuánto "pesa" <code>main .producto</code>? Tiene una clase y además una etiqueta. ¿Y <code>.oferta</code>?',
+    'Si las dos tienen una clase, la otra gana por la etiqueta de más. ¿Qué le podés agregar al selector de la oferta para empatar o pasarla? Y si empatan, ¿qué decide?',
+  ]}
+>
+El dulce de leche tendría que verse **rojo**, pero sale **gris**: alguna regla le está ganando a
+`.oferta`. Hacé que salga rojo **sin borrar** la regla de `main .producto` y **sin `!important`**.
+</EjercicioWeb>
+
+<EjercicioWeb
+  titulo="La letra de toda la página"
+  dificultad="🌱"
+  html={TIENDA}
+  css={`/* Toda la página, con una sola regla:
+   letra sin patitas (Verdana, y si no está, sans-serif),
+   fondo #faf7f2 */
+`}
+  tests={`var fuente = estilo("body", "font-family").toLowerCase();
+assert(fuente.indexOf("verdana") !== -1, "La página tiene que usar Verdana: font-family en el body");
+assert(fuente.indexOf("sans-serif") !== -1, "Después de Verdana, la genérica: sans-serif. Por si la compu no tiene Verdana");
+assert(estilo(".precio", "font-family").toLowerCase().indexOf("verdana") !== -1, "Los precios también tienen que heredar la letra: ¿la pusiste en el body?");
+assert(estilo("body", "background-color") === "rgb(250, 247, 242)", "El fondo de la página tiene que ser #faf7f2");
+var reglas = Array.prototype.slice.call(document.styleSheets).pop().cssRules;
+assert(reglas.length <= 2, "Con una regla alcanza (dos como mucho): la letra se hereda sola");`}
+  pistas={[
+    '¿Qué etiqueta contiene a todas las demás? Si le das la letra a esa, ¿qué pasa con las de adentro?',
+    'En font-family van varias, separadas por comas. ¿Cuál va al final, por si no está ninguna?',
+  ]}
+>
+Con **una sola regla**, que toda la página use **Verdana** (y si no está, `sans-serif`) y tenga de
+fondo **`#faf7f2`**.
+</EjercicioWeb>
+
+## Para llevar
+
+- Una **regla**: `selector { propiedad: valor; }`. Cada declaración con su `:` y su `;`.
+- En una página real, el CSS va en un archivo aparte: `<link rel="stylesheet" href="estilos.css">`.
+- **Selectores**: `etiqueta`, `.clase`, `#id`, y `padre hijo` para lo que está adentro.
+- Colores por nombre, `#hex` o `rgb()`. `font-family` con una lista que termina en una genérica.
+- **La cascada**: gana la regla más específica (`#id` > `.clase` > `etiqueta`); si empatan, la de
+  más abajo.
+- Las propiedades del **texto se heredan**: dásela al `<body>` y la toma todo.
