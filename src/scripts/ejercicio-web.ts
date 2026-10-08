@@ -41,7 +41,11 @@ const RUNTIME = `<script>
   window.addEventListener('error', function (e) {
     enviar({ tipo: 'error', mensaje: e.message, linea: e.lineno });
   });
-  var avisarAlto = function () { enviar({ tipo: 'alto', alto: document.documentElement.scrollHeight }); };
+  /* El alto del CONTENIDO, no scrollHeight: scrollHeight nunca es menor que el
+     alto del marco, así que cada vez que la página se rearmaba medía "el marco
+     + un poco", el marco crecía, y la siguiente vez medía más. Con cada tecla,
+     la vista se agrandaba (lo vio Maxi, 9/10). */
+  var avisarAlto = function () { enviar({ tipo: 'alto', alto: Math.ceil(document.documentElement.getBoundingClientRect().height) }); };
   window.addEventListener('load', avisarAlto);
   if (window.ResizeObserver) new ResizeObserver(avisarAlto).observe(document.documentElement);
 
@@ -273,7 +277,7 @@ function initEjercicio(el: HTMLElement): void {
     if (!d || d.pcWeb !== true) return;
     if (d.tipo === 'alto') {
       // El marco crece con la página, con un tope: una página larga scrollea adentro.
-      marco.style.height = Math.min(Math.max(Number(d.alto) + 4, 120), 640) + 'px';
+      marco.style.height = Math.min(Math.max(Number(d.alto), 120), 640) + 'px';
     } else if (d.tipo === 'lista') {
       alListo?.();
     } else if (d.tipo === 'log') {

@@ -104,8 +104,10 @@ function initEjercicio(el: HTMLElement): void {
     if (!html.includes('<')) { cajaVista.hidden = true; return; } // no imprimió HTML
     cajaVista.hidden = false;
     marcoVista.onload = () => {
-      const alto = marcoVista.contentDocument?.documentElement.scrollHeight || 200;
-      marcoVista.style.height = Math.min(Math.max(alto + 4, 120), 640) + 'px';
+      // El alto del contenido y no scrollHeight, que nunca baja del alto del
+      // marco: con cada Ejecutar, la vista crecía (ver ejercicio-web.ts).
+      const alto = Math.ceil(marcoVista.contentDocument?.documentElement.getBoundingClientRect().height || 200);
+      marcoVista.style.height = Math.min(Math.max(alto, 120), 640) + 'px';
     };
     // Si imprimió una página entera, los estilos van en su <head>; si es un
     // pedazo (una tarjeta), lo envolvemos.

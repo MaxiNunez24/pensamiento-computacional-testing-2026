@@ -52,7 +52,11 @@ export const editorTheme = [indentUnit.of('    '),
   // `soltarElTope` más abajo), porque si no el navegador no lo deja pasar de ahí.
   // Todo esto vale con el ⤢ apagado: prendido (que es lo de fábrica), el editor
   // mide lo que mide el código. Ver public/zoom-codigo.js y custom.css.
-  '&': {
+  // `&.cm-editor` y no `&` a secas: desde que los carteles se dibujan en <body>,
+  // CodeMirror les arma un contenedor con las MISMAS clases de tema. Con `&`,
+  // ese contenedor vacío también se llevaba el alto mínimo y la manija: cada
+  // editor dejaba 5rem en blanco al final de la página (lo vio Maxi, 9/10).
+  '&.cm-editor': {
     fontSize: 'var(--pc-editor-font, 1rem)',
     maxHeight: '22rem',
     minHeight: '5rem',
