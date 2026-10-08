@@ -1019,6 +1019,67 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   font-size: 0.8rem; line-height: 1.45; white-space: pre;
 }
 
+/* ---------- Ejercicios de páginas web (<EjercicioWeb>) ----------
+   Las pestañas HTML / CSS / JavaScript van pegadas arriba del editor, como las
+   de VS Code; y la página del alumno abajo, con fondo blanco: es una página,
+   no un pedazo de la plataforma, y así se ve como la vería cualquiera. */
+.web__pestanas {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+}
+.web__pestana {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-bottom: 0;
+  border-radius: 0.45rem 0.45rem 0 0;
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-gray-3);
+  cursor: pointer;
+}
+.web__pestana[aria-selected='true'] {
+  background: #282c34; /* el fondo del editor: la pestaña elegida "es" el editor */
+  color: var(--sl-color-white);
+  border-color: var(--sl-color-accent);
+}
+.web__pestanas + .ejercicio__editor {
+  border-top-left-radius: 0;
+}
+.web__vista {
+  margin-top: 0.75rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.web__vista[hidden] { display: none; }
+.web__vista-barra {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-gray-2);
+}
+.web__vista-nota { font-weight: 400; color: var(--sl-color-gray-3); }
+.web__marco {
+  display: block;
+  width: 100%;
+  height: 160px;
+  border: 0;
+  background: #fff;
+}
+/* El margen de Starlight entre hermanos, otra vez: sin esto, las pestañas
+   quedan en escalera y la vista se separa de su barra. */
+.ejercicio .web__pestanas > *,
+.ejercicio .web__vista > * {
+  margin-top: 0;
+}
+
 /* La caja del envío: el estado de Discord, o las otras vías (la flecha ▾). */
 .ejercicio__envio { position: relative; }
 .ejercicio__envio-cerrar {

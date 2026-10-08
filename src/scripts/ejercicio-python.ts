@@ -94,6 +94,27 @@ function initEjercicio(el: HTMLElement): void {
     salida.className = 'ejercicio__salida' + (estado ? ' ' + estado : '');
   };
 
+  /* Los ejercicios con `vista` (los que arman una página): lo que imprimió el
+     programa se muestra también como página, con los estilos del ejercicio. */
+  const cajaVista = el.querySelector<HTMLElement>('[data-vista-py]');
+  const marcoVista = cajaVista?.querySelector('iframe');
+  const cssVista = b64decode(el.dataset.vista || '');
+  const mostrarPagina = (html: string) => {
+    if (!cajaVista || !marcoVista) return;
+    if (!html.includes('<')) { cajaVista.hidden = true; return; } // no imprimió HTML
+    cajaVista.hidden = false;
+    marcoVista.onload = () => {
+      const alto = marcoVista.contentDocument?.documentElement.scrollHeight || 200;
+      marcoVista.style.height = Math.min(Math.max(alto + 4, 120), 640) + 'px';
+    };
+    // Si imprimió una página entera, los estilos van en su <head>; si es un
+    // pedazo (una tarjeta), lo envolvemos.
+    const estilos = `<style>${cssVista}</style>`;
+    marcoVista.srcdoc = /<head[^>]*>/i.test(html)
+      ? html.replace(/<head[^>]*>/i, (m) => m + estilos)
+      : `<!doctype html><html lang="es"><head><meta charset="utf-8">${estilos}</head><body>${html}</body></html>`;
+  };
+
   const setBusy = (busy: boolean) => {
     [btnRun, btnVerify, btnReset].forEach((b) => b && (b.disabled = busy));
   };
@@ -124,6 +145,7 @@ function initEjercicio(el: HTMLElement): void {
           : '(el código corrió, pero no imprimió nada)';
         if (res.ok) show(out || sinSalida, '');
         else show((out ? out + '\n\n' : '') + res.err, 'is-error');
+        mostrarPagina(res.ok ? out : '');
       } else if (res.ok) {
         show((out ? out + '\n\n' : '') + '✅ ¡Todos los tests pasaron! 🎉', 'is-ok');
         marcarHecho(titulo);
@@ -190,7 +212,7 @@ function boot(): void {
   // Los de eficiencia también son .ejercicio (heredan todo el CSS), pero los
   // maneja su propio script: acá los salteamos para no inicializarlos dos veces.
   document
-    .querySelectorAll<HTMLElement>('.ejercicio:not(.ejercicio--eficiencia):not(.probador)')
+    .querySelectorAll<HTMLElement>('.ejercicio:not(.ejercicio--eficiencia):not(.probador):not(.ejercicio--web)')
     .forEach((el) => {
     if (el.dataset.init) return;
     el.dataset.init = '1';

@@ -31,7 +31,53 @@ interface Tecla {
   ayuda?: string;
 }
 
-const grupos: Tecla[][] = [
+interface Props {
+  /** 'web' para los ejercicios de HTML/CSS/JS: otras teclas y otras ayudas. */
+  modo?: 'python' | 'web';
+}
+const { modo = 'python' } = Astro.props;
+
+/* Las de HTML, CSS y JS. Mismo criterio que las de Python: lo que se teclea de
+   verdad. `<` `>` `/` y `=` son las etiquetas y sus atributos; `{` `}` `:` y `;`
+   son cada regla de CSS; el `#` y el `.` son los selectores. */
+const gruposWeb: Tecla[][] = [
+  [
+    { indent: 'mas', txt: '⇥', ayuda: 'Indentar (meter la línea para adentro)' },
+    { indent: 'menos', txt: '⇤', ayuda: 'Quitar indentación' },
+  ],
+  [
+    { ins: '<', ayuda: 'Abre una etiqueta: <h1>' },
+    { ins: '>', ayuda: 'Cierra una etiqueta' },
+    { ins: '/', ayuda: 'La etiqueta de cierre: </h1>' },
+    { ins: '=', ayuda: 'Valor de un atributo: class="precio"' },
+    { ins: '"' },
+    { ins: "'" },
+  ],
+  [
+    { ins: '{', ayuda: 'Abre una regla de CSS, o un bloque de JS' },
+    { ins: '}' },
+    { ins: ':', ayuda: 'En CSS, entre la propiedad y el valor: color: red' },
+    { ins: ';', ayuda: 'En CSS, termina cada propiedad' },
+    { ins: '(' },
+    { ins: ')' },
+    { ins: '[' },
+    { ins: ']' },
+  ],
+  [
+    { ins: '#', ayuda: 'Selector por id: #titulo' },
+    { ins: '.', ayuda: 'Selector por clase: .precio' },
+    { ins: '-', ayuda: 'Los nombres de CSS van con guiones: font-size' },
+    { ins: '!' },
+    { ins: '+' },
+    { ins: '*' },
+    { ins: '$' },
+    { ins: '¿' },
+    { ins: '?' },
+    { ins: '¡' },
+  ],
+];
+
+const gruposPython: Tecla[][] = [
   [
     { indent: 'mas', txt: '⇥', ayuda: 'Indentar (meter la línea para adentro)' },
     { indent: 'menos', txt: '⇤', ayuda: 'Quitar indentación' },
@@ -82,9 +128,11 @@ const grupos: Tecla[][] = [
     { ins: '$' },
   ],
 ];
+
+const grupos = modo === 'web' ? gruposWeb : gruposPython;
 ---
 
-<div class="ejercicio__teclas" data-teclas aria-label="Símbolos de Python">
+<div class="ejercicio__teclas" data-teclas aria-label={modo === 'web' ? 'Símbolos de HTML, CSS y JavaScript' : 'Símbolos de Python'}>
   {grupos.flat().map((t) =>
     t.indent ? (
       <button type="button" class="ejercicio__tecla" data-indent={t.indent} title={t.ayuda}>

@@ -42,6 +42,8 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLASES = os.path.join(RAIZ, 'src', 'content', 'docs', 'clases')
+# Las clases de páginas web (el catálogo y lo que venga) viven en su carpeta.
+CARPETAS = [CLASES, os.path.join(RAIZ, 'src', 'content', 'docs', 'web')]
 
 # Los tres componentes que corren código del alumno contra tests.
 COMPONENTES = r'<(EjercicioPython|EncontrarElError|CompletarCodigo)\b(.*?)\n>'
@@ -69,9 +71,27 @@ def desescapar(literal: str) -> str:
     return ''.join(fuera)
 
 
+def con_constantes(crudo: str, constantes: dict) -> str:
+    """Un template literal con sus `${NOMBRE}` ya reemplazados, como lo arma JS.
+
+    Lo de afuera de las llaves se desescapa; lo de adentro es el valor de la
+    constante, que ya vino desescapado (en JS también: es otro string).
+    """
+    partes = re.split(r'\$\{(\w+)\}', crudo)  # [literal, nombre, literal, ...]
+    return ''.join(
+        desescapar(p) if i % 2 == 0 else constantes.get(p, '${' + p + '}')
+        for i, p in enumerate(partes)
+    )
+
+
 def ejercicios_de(ruta: str):
     """Saca (titulo, datos, starter, tests) de cada ejercicio de un .mdx."""
     fuente = io.open(ruta, encoding='utf-8').read()
+    # Las constantes del .mdx (`export const PRODUCTOS = \`...\`;`), que Astro
+    # mete donde dice ${PRODUCTOS}. El catálogo las usa para no repetir los
+    # mismos productos y funciones en cinco ejercicios. Sin esto, acá llegaba
+    # el texto "${PRODUCTOS}" y Python lo leía como código roto.
+    constantes = {n: desescapar(v) for n, v in re.findall(r'export const (\w+) = `(.*?)`;', fuente, re.S)}
     for bloque in re.finditer(COMPONENTES, fuente, re.S):
         cuerpo = bloque.group(2)
         titulo = re.search(r'titulo="([^"]*)"', cuerpo)
@@ -80,7 +100,7 @@ def ejercicios_de(ruta: str):
         props = {}
         for nombre in ('datos', 'starter', 'tests', 'codigo', 'plantilla'):
             encontrado = re.search(nombre + r'=\{`(.*?)`\}', cuerpo, re.S)
-            props[nombre] = desescapar(encontrado.group(1)) if encontrado else ''
+            props[nombre] = con_constantes(encontrado.group(1), constantes) if encontrado else ''
         # EncontrarElError trae el código ya escrito y CompletarCodigo la
         # plantilla con huecos: en esos el alumno no arranca de cero.
         arranque = props['starter'] or props['codigo'] or props['plantilla']
@@ -176,11 +196,10 @@ def main() -> int:
     revisados = 0
     rotos = []
     avisos = []
-    for archivo in sorted(os.listdir(CLASES)):
-        if not archivo.endswith('.mdx'):
-            continue
+    paginas = [(c, a) for c in CARPETAS if os.path.isdir(c) for a in sorted(os.listdir(c)) if a.endswith('.mdx')]
+    for carpeta, archivo in paginas:
         clase = archivo[:-4]
-        for titulo, datos, starter, tests in ejercicios_de(os.path.join(CLASES, archivo)):
+        for titulo, datos, starter, tests in ejercicios_de(os.path.join(carpeta, archivo)):
             if not tests:
                 continue
             revisados += 1

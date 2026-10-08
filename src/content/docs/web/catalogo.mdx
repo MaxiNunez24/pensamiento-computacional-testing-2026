@@ -1,0 +1,740 @@
+---
+title: Tu catálogo con Python
+description: "Un catálogo de productos publicado en internet, con botón de WhatsApp, armado por Python desde una planilla. Lo poco de HTML que hace falta, y todo lo demás ya lo sabés."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+export const ESTILOS = `* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #faf7f2;
+  color: #2b2b2b;
+}
+.encabezado {
+  padding: 2rem 1rem 1.25rem;
+  text-align: center;
+  background: #2f4858;
+  color: #fff;
+}
+.encabezado h1 { margin: 0; font-size: 2rem; }
+.catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.25rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+.producto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 320px;
+  padding: 1.25rem;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.08);
+}
+.catalogo .producto { max-width: none; }
+body > .producto { margin: 1rem; }
+.producto__foto {
+  padding: 0.75rem 0;
+  border-radius: 10px;
+  background: #f1ece4;
+  font-size: 3.5rem;
+  line-height: 1.2;
+  text-align: center;
+}
+img.producto__foto { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; padding: 0; }
+.producto h2 { margin: 0.25rem 0 0; font-size: 1.15rem; }
+.descripcion { flex: 1; margin: 0; color: #666; font-size: 0.92rem; }
+.precio { margin: 0; color: #2f4858; font-size: 1.3rem; font-weight: 700; }
+.consultar {
+  display: block;
+  padding: 0.6rem;
+  border-radius: 10px;
+  background: #25d366;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+.consultar:hover { background: #1ebe5a; }
+`;
+
+export const PRODUCTOS = `PRODUCTOS = [
+    {"nombre": "Taza de cerámica", "precio": "4500", "emoji": "☕", "descripcion": "Pintada a mano. Va al microondas."},
+    {"nombre": "Mate de calabaza", "precio": "7800", "emoji": "🧉", "descripcion": "Curado y listo para usar."},
+    {"nombre": "Vela aromática", "precio": "3200", "emoji": "🕯️", "descripcion": "Lavanda. Dura 30 horas."},
+]`;
+
+export const LINK = `from urllib.parse import quote
+
+def link_whatsapp(numero, nombre):
+    return f"https://wa.me/{numero}?text=" + quote(f"Hola, quiero consultar por: {nombre}")`;
+
+export const TARJETA_CON_BOTON = `def tarjeta(producto, numero):
+    return f"""
+<article class="producto">
+  <div class="producto__foto">{producto['emoji']}</div>
+  <h2>{producto['nombre']}</h2>
+  <p class="descripcion">{producto['descripcion']}</p>
+  <p class="precio">$ {producto['precio']}</p>
+  <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}">Consultar por WhatsApp</a>
+</article>
+"""`;
+
+:::tip[Esta clase es optativa, y es para hacer]
+No hace falta para el proyecto del curso. Pero al terminarla tenés **una página publicada en
+internet**, con un link para compartir. Todos los ejercicios corren acá mismo, en el navegador.
+:::
+
+## El problema
+
+Esta clase salió de una pregunta real. Alguien que vende productos quiere lo que tienen muchos
+emprendimientos: **un catálogo en internet**, con una tarjeta por producto, el precio, y un botón
+que abre WhatsApp con el mensaje ya escrito. Y la pregunta que vino detrás fue:
+
+> *"¿Y lo que están aprendiendo, para qué sirve? ¿Todavía no saben hacer nada útil?"*
+
+Hagamos la cuenta. Los productos están en una **planilla**. Para armar el catálogo hay que:
+
+| Paso | ¿Lo sabés hacer? |
+|---|---|
+| Leer la planilla | ✅ Lo hiciste con el bot del SiGeS: `csv.DictReader` |
+| Recorrer los productos, uno por uno | ✅ Un `for` |
+| Armar el texto de cada tarjeta con los datos | ✅ Un f-string |
+| Guardar el resultado en un archivo | ✅ `with open(..., "w")` |
+| Que el resultado sea una **página web** | ❌ Esto es lo nuevo |
+| Publicarla con un link | 🟡 Casi: ya subís cosas a GitHub |
+
+La parte difícil —**leer los datos, recorrerlos y decidir qué mostrar**— ya la sabés. Lo que
+falta es el idioma de las páginas web. Y es lo más fácil de todo.
+
+:::note[La analogía de la clase]
+**HTML y CSS son la ropa. La lógica es el cuerpo.** Una página escrita a mano se ve igual de linda,
+pero si cambia un precio, alguien la tiene que editar a mano; si agregás un producto, a mano. La
+que arma Python se actualiza sola: cambiás la planilla, corrés el programa, y está.
+:::
+
+## Una página es un archivo de texto
+
+Una página web es **un archivo de texto** que termina en `.html`. Adentro, el contenido va entre
+**etiquetas** que le dicen al navegador qué es cada cosa:
+
+```html
+<h2>Mate de calabaza</h2>
+<p>Curado y listo para usar.</p>
+```
+
+- `<h2>` abre un **título**, y `</h2>` lo cierra. Lo de adentro es el texto del título.
+- `<p>` es un **párrafo**.
+- Casi todas las etiquetas se abren y se cierran: la de cierre es igual, con una `/`.
+
+Y una etiqueta puede llevar **atributos**, que van adentro de la de apertura:
+
+```html
+<p class="precio">$ 7800</p>
+```
+
+`class="precio"` no se ve en la página: es un **nombre** que le ponemos a ese párrafo, para que los
+estilos sepan cuál es el precio y lo pinten grande y en negrita.
+
+Una tarjeta entera es esto: una caja (`<article>`) con cosas adentro.
+
+```html
+<article class="producto">
+  <div class="producto__foto">🧉</div>
+  <h2>Mate de calabaza</h2>
+  <p class="precio">$ 7800</p>
+</article>
+```
+
+Fijate en la **sangría**: lo que está adentro del `<article>` va corrido a la derecha. Al
+navegador le da igual (no es Python), pero a vos te deja ver qué está adentro de qué.
+
+<EjercicioWeb
+  titulo="Tu primera tarjeta"
+  fundamental
+  dificultad="🌱"
+  cssBase={ESTILOS}
+  html={`<article class="producto">
+  <div class="producto__foto">☕</div>
+  <!-- 1. el nombre, en un título h2 -->
+  <!-- 2. el precio, en un párrafo con class="precio" -->
+</article>
+`}
+  tests={`assert($("article.producto"), 'La tarjeta tiene que estar adentro de <article class="producto">: ¿se borró sin querer?');
+assert($("h2"), "Falta el nombre del producto, en un <h2>");
+assert($("article.producto h2"), "El <h2> tiene que quedar ADENTRO del article: antes del </article>");
+assert(texto("h2") === "Taza de cerámica", 'El <h2> tiene que decir "Taza de cerámica" y dice "' + texto("h2") + '"');
+assert($(".precio"), 'Falta el precio: un párrafo con class="precio"');
+assert($(".precio").tagName === "P", "El precio va en un párrafo: <p>");
+assert(texto(".precio") === "$ 4500", 'El precio tiene que decir "$ 4500" y dice "' + texto(".precio") + '"');`}
+  pistas={[
+    'Mirá la tarjeta del mate, arriba: ¿qué etiqueta tiene el nombre, y cuál el precio?',
+    'Lo que está entre <code>&lt;!--</code> y <code>--&gt;</code> es un comentario: el navegador no lo muestra. ¿Lo reemplazás, o escribís abajo?',
+    'Si el precio no se ve grande y en negrita, ¿le pusiste el atributo que lo nombra?',
+  ]}
+>
+Completá la tarjeta de la **Taza de cerámica**, que sale **$ 4500**: el nombre en un `<h2>` y el
+precio en un párrafo con `class="precio"`.
+
+Abajo ves la tarjeta como la mostraría el navegador, y **cambia mientras escribís**. Los estilos (los
+colores, la sombra, la letra) ya vienen hechos.
+</EjercicioWeb>
+
+### Un link
+
+Los links son la etiqueta `<a>`, y adónde llevan va en el atributo `href`:
+
+```html
+<a href="https://www.google.com">Ir a Google</a>
+```
+
+Para WhatsApp hay una dirección especial, que abre un chat con ese número:
+
+```text
+https://wa.me/5492215550000
+```
+
+El número va **sin `+`, sin espacios y sin guiones**: `54` (Argentina) + `9` (celular) + la
+característica **sin el 0** + el número **sin el 15**. Un 221 15 555-0000 de La Plata queda
+`5492215550000`.
+
+<EjercicioWeb
+  titulo="El botón de consultar"
+  dificultad="🌱"
+  cssBase={ESTILOS}
+  html={`<article class="producto">
+  <div class="producto__foto">☕</div>
+  <h2>Taza de cerámica</h2>
+  <p class="precio">$ 4500</p>
+  <!-- el botón: un link a WhatsApp, con class="consultar" -->
+</article>
+`}
+  tests={`assert($("a"), "Falta el link: una etiqueta <a>");
+assert($("article.producto a"), "El link tiene que quedar ADENTRO de la tarjeta");
+var href = atributo("a", "href");
+assert(href, 'El link no tiene href: ¿adónde lleva? Va adentro de la etiqueta: <a href="...">');
+assert(href.indexOf("https://wa.me/") === 0, 'El href tiene que empezar con https://wa.me/ y empieza con "' + href + '"');
+assert(/^https:\\/\\/wa\\.me\\/\\d{10,15}/.test(href), "Después de wa.me/ va el número, solo dígitos: sin +, sin espacios y sin guiones");
+assert($("a.consultar"), 'Al link le falta class="consultar": sin eso no se ve como botón');
+assert(texto("a").indexOf("Consultar") !== -1, 'El texto del botón tiene que decir "Consultar", por ejemplo "Consultar por WhatsApp"');`}
+  pistas={[
+    '¿Qué partes tiene el link de Google de arriba? ¿Dónde va la dirección y dónde el texto que se ve?',
+    'Si el link aparece pero no parece un botón, ¿qué le pusiste al precio para que se viera distinto?',
+  ]}
+>
+Agregale a la tarjeta un botón **"Consultar por WhatsApp"**: un link `<a>` a
+`https://wa.me/5492215550000`, con `class="consultar"`.
+</EjercicioWeb>
+
+<OpcionMultiple titulo="Chequeo: ¿quién hace qué?" opciones={[
+  { texto: "HTML dice QUÉ es cada cosa, CSS CÓMO se ve, y Python ARMA la página con los datos.", correcta: true, explicacion: "Exacto. Y por eso la página que arma Python se actualiza sola: los datos están en la planilla, no escritos a mano en el HTML." },
+  { texto: "HTML es un lenguaje de programación, como Python.", explicacion: "No: HTML no tiene if, ni for, ni variables. Describe qué hay en la página, nada más. Por eso hace falta Python para repetir una tarjeta por producto." },
+  { texto: "CSS es el que pone los productos en la página.", explicacion: "CSS no agrega nada: solo decide colores, tamaños y lugares de lo que ya está. Los productos los pone el HTML." },
+]}>
+En un catálogo armado con Python, ¿qué hace cada uno?
+</OpcionMultiple>
+
+## Que lo escriba Python
+
+Ahora viene lo tuyo. Una tarjeta es **un texto**, y vos ya sabés armar textos con los datos
+adentro: un f-string.
+
+Lo único nuevo: el texto de una tarjeta tiene **varios renglones**. Para eso, el string va entre
+**tres comillas**:
+
+```python
+nombre = "Vela aromática"
+html = f"""
+<article class="producto">
+  <h2>{nombre}</h2>
+</article>
+"""
+```
+
+:::caution[Las comillas adentro de las llaves]
+Si el dato sale de un diccionario, adentro de las llaves usá **comillas simples**:
+`{producto['nombre']}`. Con dobles, en un Python anterior al 3.12 se confunde con el final del
+string y da error.
+:::
+
+<EjercicioPython
+  titulo="Una tarjeta, armada por Python"
+  fundamental
+  dificultad="🌱"
+  vista={ESTILOS}
+  starter={`def tarjeta(producto):
+    # producto es un diccionario, como el de abajo
+    return f"""
+<article class="producto">
+  <div class="producto__foto">☕</div>
+  <h2>Taza de cerámica</h2>
+  <p class="descripcion">Pintada a mano. Va al microondas.</p>
+  <p class="precio">$ 4500</p>
+</article>
+"""
+
+print(tarjeta({"nombre": "Mate de calabaza", "precio": "7800", "emoji": "🧉", "descripcion": "Curado y listo para usar."}))
+`}
+  tests={`p = {"nombre": "Bolso matero", "precio": "12500", "emoji": "👜", "descripcion": "De cuero, con dos bolsillos."}
+html = tarjeta(p)
+assert isinstance(html, str), "tarjeta tiene que DEVOLVER el texto de la tarjeta, con return"
+assert "Taza" not in html, "Quedó la taza escrita a mano: la tarjeta tiene que salir de los datos de cada producto, no siempre la misma"
+assert "<h2>Bolso matero</h2>" in html, 'Con el producto "Bolso matero", la tarjeta tendría que tener <h2>Bolso matero</h2>'
+assert "$ 12500" in html, 'El precio tendría que salir "$ 12500": el signo, un espacio y el precio del producto'
+assert "👜" in html, "Falta el emoji del producto, en la caja de la foto"
+assert "De cuero, con dos bolsillos." in html, "Falta la descripción del producto"
+assert 'class="producto"' in html, 'La tarjeta tiene que seguir siendo un <article class="producto">'
+assert tarjeta(p) == html, "Dos veces el mismo producto tendría que dar la misma tarjeta"
+print("¡Una tarjeta para cualquier producto! Tocá Ejecutar para verla.")
+`}
+  pistas={[
+    'Cuando le pasan el mate, ¿de dónde tendría que sacar la función el nombre: del texto escrito a mano, o del diccionario?',
+    '¿Cómo metés el valor de una variable adentro de un f-string? ¿Y si el valor está en un diccionario?',
+  ]}
+>
+`tarjeta(producto)` devuelve **siempre la tarjeta de la taza**, escrita a mano. Cambiala para que
+arme la tarjeta del producto que le pasan. El producto es un diccionario:
+
+```python
+{"nombre": "Mate de calabaza", "precio": "7800", "emoji": "🧉", "descripcion": "Curado y listo para usar."}
+```
+
+Tocá **▶ Ejecutar**: abajo de lo que imprime aparece **la página que armó tu programa**.
+</EjercicioPython>
+
+## Una tarjeta por producto
+
+Un catálogo son muchas tarjetas, una atrás de otra. Y "una por cada producto" ya sabés escribirlo.
+
+<EjercicioPython
+  titulo="Todas las tarjetas"
+  dificultad="🌱"
+  vista={ESTILOS}
+  datos={`def tarjeta(producto):
+    return f"""
+<article class="producto">
+  <div class="producto__foto">{producto['emoji']}</div>
+  <h2>{producto['nombre']}</h2>
+  <p class="descripcion">{producto['descripcion']}</p>
+  <p class="precio">$ {producto['precio']}</p>
+</article>
+"""
+
+${PRODUCTOS}`}
+  starter={`def tarjetas(productos):
+    html = ""
+    # una tarjeta por cada producto, todas seguidas
+    return html
+
+print('<main class="catalogo">' + tarjetas(PRODUCTOS) + '</main>')
+`}
+  tests={`html = tarjetas(PRODUCTOS)
+assert isinstance(html, str), "tarjetas tiene que devolver UN texto, con todas las tarjetas pegadas"
+assert html.count("<article") == 3, f"Hay 3 productos y salieron {html.count('<article')} tarjetas"
+assert html.index("Taza") < html.index("Mate") < html.index("Vela"), "Las tarjetas tienen que salir en el mismo orden que los productos"
+assert tarjetas([]) == "", "Sin productos, no hay tarjetas: tendría que devolver un texto vacío"
+uno = [{"nombre": "Yerbera", "precio": "6200", "emoji": "🫙", "descripcion": "De lata."}]
+assert tarjetas(uno).count("<article") == 1, "Con un solo producto, una sola tarjeta"
+print("¡Todas las tarjetas! Tocá Ejecutar para ver la grilla.")
+`}
+  pistas={[
+    'Ya tenés <code>tarjeta(producto)</code> hecha, arriba. ¿Cuántas veces la tenés que llamar?',
+    'Si en <code>html</code> vas juntando las tarjetas, ¿qué le hacés a <code>html</code> en cada vuelta?',
+  ]}
+>
+`tarjetas(productos)` recibe la lista de productos y devuelve **todas las tarjetas seguidas**, en un
+solo texto. `tarjeta(producto)` ya está hecha (es la del ejercicio de antes) y `PRODUCTOS` tiene tres:
+
+```python
+PRODUCTOS = [
+    {"nombre": "Taza de cerámica", "precio": "4500", "emoji": "☕", "descripcion": "..."},
+    {"nombre": "Mate de calabaza", "precio": "7800", "emoji": "🧉", "descripcion": "..."},
+    {"nombre": "Vela aromática",   "precio": "3200", "emoji": "🕯️", "descripcion": "..."},
+]
+```
+
+Con la lista vacía, devuelve `""`.
+</EjercicioPython>
+
+## Los productos, desde la planilla
+
+Escribir los productos en el código sirve para probar. Pero quien vende no va a abrir Python para
+cambiar un precio: va a editar **una planilla**. Bajada como CSV, es esto:
+
+```text
+nombre,precio,emoji,descripcion
+Taza de cerámica,4500,☕,Pintada a mano. Va al microondas.
+Mate de calabaza,7800,🧉,Curado y listo para usar.
+```
+
+Y una planilla ya sabés leerla: es lo mismo que hiciste en
+<a href={b + 'clases/bot-siges/#leer-la-planilla'}>Leer la planilla del bot del SiGeS</a>.
+
+<EjercicioPython
+  titulo="Los productos, desde la planilla"
+  fundamental
+  dificultad="🌿"
+  datos={`with open("productos.csv", "w", encoding="utf-8") as f:
+    f.write("nombre,precio,emoji,descripcion\\n")
+    f.write("Taza de cerámica,4500,☕,Pintada a mano. Va al microondas.\\n")
+    f.write("Mate de calabaza,7800,🧉,Curado y listo para usar.\\n")
+    f.write("Vela aromática,3200,🕯️,Lavanda. Dura 30 horas.\\n")
+    f.write("Bolso matero,12500,👜,De cuero. Con dos bolsillos.\\n")
+`}
+  starter={`import csv
+
+def leer_productos(ruta):
+    productos = []
+    # cada fila de la planilla, como diccionario, a la lista
+    return productos
+
+print(leer_productos("productos.csv"))
+`}
+  tests={`productos = leer_productos("productos.csv")
+assert isinstance(productos, list), "leer_productos tiene que devolver una lista"
+assert len(productos) != 5, "Salieron 5 y la planilla tiene 4 productos: la primera línea son los títulos, no un producto. DictReader la usa para nombrar las columnas"
+assert len(productos) == 4, f"La planilla tiene 4 productos y salieron {len(productos)}"
+assert isinstance(productos[0], dict), "Cada producto tiene que ser un diccionario: csv.DictReader los da así"
+assert productos[0]["nombre"] == "Taza de cerámica", 'El primero es la taza: productos[0]["nombre"] tendría que ser "Taza de cerámica". ¿Abriste con encoding="utf-8"?'
+assert productos[3]["precio"] == "12500", 'El bolso matero sale "12500"'
+assert productos[1]["emoji"] == "🧉", "Los emojis también tienen que llegar bien: es otro motivo para el encoding"
+print("¡Planilla leída! Cada producto es un diccionario, como los de antes.")
+`}
+  pistas={[
+    '¿Te acordás de cómo leías la planilla de inscriptos en el bot? ¿Qué cambia acá, aparte del nombre del archivo?',
+    'Si la taza sale con letras raras, ¿qué le dijiste a open() sobre cómo está escrito el archivo?',
+  ]}
+>
+Completá `leer_productos(ruta)`: que abra la planilla y devuelva **una lista con un diccionario por
+producto**. La planilla `productos.csv` ya está creada, con 4 productos.
+
+Los diccionarios que salen son **iguales** a los de `PRODUCTOS`: por eso `tarjeta()` los va a
+entender sin cambiar nada.
+</EjercicioPython>
+
+## El botón de WhatsApp, con el mensaje ya escrito
+
+El link de WhatsApp puede llevar **el mensaje ya escrito**, para que la persona solo toque enviar:
+
+```text
+https://wa.me/5492215550000?text=Hola, quiero consultar por: Mate de calabaza
+```
+
+Pero un link **no puede tener espacios**, ni tildes, ni comas sueltas. Hay que "traducir" el
+mensaje al idioma de los links: cada espacio pasa a ser `%20`, la `á` pasa a `%C3%A1`… A mano es
+imposible. Python lo hace solo.
+
+:::note[📦 Módulo: urllib.parse]
+Viene con Python: no hay que instalar nada. De todo lo que tiene, usamos una sola función.
+
+```python
+from urllib.parse import quote
+
+quote("Hola, quiero consultar por: Mate de calabaza")
+# 'Hola%2C%20quiero%20consultar%20por%3A%20Mate%20de%20calabaza'
+```
+
+| Función | Qué hace |
+|---|---|
+| `quote(texto)` | Devuelve el texto listo para ir adentro de un link |
+
+`from urllib.parse import quote` trae **solo** esa función, y por eso después se usa sin el
+`urllib.parse.` adelante.
+:::
+
+<EjercicioPython
+  titulo="El botón de WhatsApp"
+  dificultad="🌿"
+  starter={`from urllib.parse import quote
+
+def link_whatsapp(numero, nombre):
+    # el link de wa.me, con el mensaje ya escrito
+    return ""
+
+print(link_whatsapp("5492215550000", "Mate de calabaza"))
+`}
+  tests={`from urllib.parse import quote as _q
+link = link_whatsapp("5492215550000", "Mate de calabaza")
+assert isinstance(link, str) and link, "link_whatsapp tiene que devolver el link, con return"
+assert link.startswith("https://wa.me/5492215550000"), f"El link tiene que empezar con https://wa.me/ y el número. Empieza así: {link[:40]}"
+assert "?text=" in link, "Después del número va ?text= y el mensaje"
+assert " " not in link, "El link tiene espacios: el mensaje tiene que pasar por quote() antes de ir al link"
+esperado = "https://wa.me/5492215550000?text=" + _q("Hola, quiero consultar por: Mate de calabaza")
+assert link == esperado, f"El mensaje tiene que ser exactamente: Hola, quiero consultar por: Mate de calabaza"
+otro = link_whatsapp("5491144440000", "Taza de cerámica")
+assert otro == "https://wa.me/5491144440000?text=" + _q("Hola, quiero consultar por: Taza de cerámica"), "Con otro número y otro producto tiene que cambiar el link: ¿quedó algo escrito a mano?"
+print("¡Link listo! Probalo: copialo y pegalo en el navegador.")
+`}
+  pistas={[
+    '¿Qué partes del link cambian según el producto, y cuáles son siempre iguales?',
+    '¿A qué parte del link le hace falta pasar por <code>quote()</code>: a todo, o solo a lo que puede tener espacios?',
+  ]}
+>
+`link_whatsapp(numero, nombre)` devuelve el link de WhatsApp a ese número, con este mensaje ya
+escrito:
+
+```text
+Hola, quiero consultar por: Mate de calabaza
+```
+
+Para `link_whatsapp("5492215550000", "Mate de calabaza")`:
+
+```text
+https://wa.me/5492215550000?text=Hola%2C%20quiero%20consultar%20por%3A%20Mate%20de%20calabaza
+```
+</EjercicioPython>
+
+## La página entera
+
+Una página completa tiene, además de las tarjetas, una **cabecera** con datos para el navegador
+(el título de la pestaña, que la letra se vea bien en el celular, de dónde sacar los estilos) y el
+**cuerpo**, que es lo que se ve:
+
+```html
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi catálogo</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <header class="encabezado"><h1>Mi catálogo</h1></header>
+  <main class="catalogo">
+    ...las tarjetas...
+  </main>
+</body>
+</html>
+```
+
+No hace falta aprenderla de memoria: es siempre igual, y la vas a copiar. Lo que importa es saber
+**dónde van las tarjetas**: adentro del `<main>`.
+
+<EjercicioPython
+  titulo="La página entera"
+  fundamental
+  dificultad="🌿"
+  vista={ESTILOS}
+  datos={`${LINK}
+
+${TARJETA_CON_BOTON}
+
+${PRODUCTOS}`}
+  starter={`def pagina(titulo, productos, numero):
+    tarjetas = ""
+    # 1. una tarjeta por producto: tarjeta(producto, numero)
+
+    # 2. el título y las tarjetas, en su lugar
+    return f"""<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi catálogo</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <header class="encabezado"><h1>Mi catálogo</h1></header>
+  <main class="catalogo">
+  </main>
+</body>
+</html>
+"""
+
+print(pagina("Deco Ensenada", PRODUCTOS, "5492215550000"))
+`}
+  tests={`html = pagina("Deco Ensenada", PRODUCTOS, "5492215550000")
+assert isinstance(html, str), "pagina tiene que devolver la página entera, con return"
+assert html.lstrip().lower().startswith("<!doctype html>"), "La página tiene que empezar con <!doctype html>"
+assert "<title>Deco Ensenada</title>" in html, "El título de la pestaña tiene que ser el que le pasan: <title>Deco Ensenada</title>"
+assert "<h1>Deco Ensenada</h1>" in html, "El título grande de la página también: <h1>Deco Ensenada</h1>"
+assert "Mi catálogo" not in html, 'Quedó "Mi catálogo" escrito a mano en algún lado'
+assert html.count("<article") == 3, f"Hay 3 productos y la página tiene {html.count('<article')} tarjetas"
+main = html[html.index("<main"):html.index("</main>")]
+assert main.count("<article") == 3, "Las tarjetas tienen que ir ADENTRO del <main>, entre <main ...> y </main>"
+assert html.count("https://wa.me/5492215550000") == 3, "Cada tarjeta lleva su botón con el número que le pasan"
+otra = pagina("Otra tienda", PRODUCTOS[:1], "5491144440000")
+assert otra.count("<article") == 1 and "wa.me/5491144440000" in otra, "Con otros datos tiene que salir otra página: ¿quedó algo fijo?"
+print("¡Página completa! Tocá Ejecutar para verla entera.")
+`}
+  pistas={[
+    'El paso 1 es el ejercicio de "Todas las tarjetas". ¿Qué cambia ahora que <code>tarjeta</code> también recibe el número?',
+    'En el texto de la página, ¿en qué dos lugares está escrito "Mi catálogo"? ¿Y en qué lugar, entre qué etiquetas, tienen que quedar las tarjetas?',
+  ]}
+>
+`pagina(titulo, productos, numero)` devuelve **la página completa**: con el título que le pasan
+(en la pestaña y arriba de todo) y una tarjeta por producto, cada una con su botón de WhatsApp.
+
+`tarjeta(producto, numero)` ya está hecha, **con el botón**: es la tuya, más el link del ejercicio
+anterior. Mirala arriba, en lo que ya está cargado.
+</EjercicioPython>
+
+## Guardarla en un archivo
+
+Lo último que hace el programa es **escribir la página en un archivo**: `index.html`. Ese nombre no
+es casual: es el que buscan los servidores cuando entrás a una dirección sin nombre de archivo.
+
+<EjercicioPython
+  titulo="Guardar la página"
+  dificultad="🌿"
+  datos={`import csv
+${LINK}
+
+${TARJETA_CON_BOTON}
+
+def leer_productos(ruta):
+    with open(ruta, encoding="utf-8") as archivo:
+        return list(csv.DictReader(archivo))
+
+def pagina(titulo, productos, numero):
+    tarjetas = ""
+    for producto in productos:
+        tarjetas += tarjeta(producto, numero)
+    return f"""<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>{titulo}</title><link rel="stylesheet" href="estilos.css"></head>
+<body><header class="encabezado"><h1>{titulo}</h1></header><main class="catalogo">{tarjetas}</main></body>
+</html>
+"""
+
+with open("productos.csv", "w", encoding="utf-8") as f:
+    f.write("nombre,precio,emoji,descripcion\\n")
+    f.write("Taza de cerámica,4500,☕,Pintada a mano.\\n")
+    f.write("Mate de calabaza,7800,🧉,Curado y listo para usar.\\n")
+`}
+  starter={`def generar(ruta_csv, ruta_html, titulo, numero):
+    # 1. leer los productos de la planilla
+    # 2. armar la página
+    # 3. escribirla en ruta_html
+    pass
+
+generar("productos.csv", "index.html", "Deco Ensenada", "5492215550000")
+print("Listo: se generó index.html")
+`}
+  tests={`import os
+if os.path.exists("index.html"):
+    os.remove("index.html")
+generar("productos.csv", "index.html", "Deco Ensenada", "5492215550000")
+assert os.path.exists("index.html"), "No se creó index.html: ¿abriste el archivo para escribir, con 'w'?"
+with open("index.html", encoding="utf-8") as f:
+    html = f.read()
+assert html.strip(), "index.html quedó vacío: ¿escribiste la página adentro del archivo?"
+assert "<title>Deco Ensenada</title>" in html, "La página guardada tiene que tener el título que le pasan"
+assert html.count("<article") == 2, f"La planilla tiene 2 productos y la página guardada tiene {html.count('<article')} tarjetas: ¿leíste la planilla que te pasan?"
+assert "Taza de cerámica" in html, 'Los productos tienen que llegar bien, con sus tildes: encoding="utf-8" al escribir también'
+generar("productos.csv", "otra.html", "Otra", "5491144440000")
+assert os.path.exists("otra.html"), "Tiene que escribir en el archivo que le dicen (ruta_html), no siempre en index.html"
+print("¡Catálogo generado! Es exactamente lo que vas a correr en tu compu.")
+`}
+  pistas={[
+    'Las tres funciones que necesitás ya están hechas, arriba. ¿En qué orden las llamás, y qué le pasa cada una a la siguiente?',
+    'Para escribir un archivo, ¿con qué modo lo abrís? ¿Y cómo escribís un texto adentro?',
+  ]}
+>
+`generar(ruta_csv, ruta_html, titulo, numero)` hace todo de punta a punta: lee la planilla, arma
+la página y **la guarda** en `ruta_html`. No devuelve nada.
+
+`leer_productos`, `pagina` y `tarjeta` ya están hechas: son las de los ejercicios de arriba.
+</EjercicioPython>
+
+## Tu catálogo de verdad
+
+Todo lo de arriba, junto, en tu compu.
+
+**1. Bajá el proyecto:** <a href={b + 'proyecto-catalogo/proyecto-catalogo.zip'} download>📦 proyecto-catalogo.zip</a>.
+Adentro de la carpeta `catalogo/` hay:
+
+| Archivo | Qué es |
+|---|---|
+| `catalogo.py` | ✏️ **Tuyo.** Las funciones de los ejercicios, para completar |
+| `productos.csv` | La planilla: **acá van tus productos** |
+| `estilos.css` | Los estilos, ya hechos. Los mismos de los ejercicios |
+| `LEEME.md` | Estos mismos pasos |
+
+**2. Completá `catalogo.py`** con las funciones de los ejercicios: copialas de acá, una por una.
+Arriba de todo cambiá el título y **tu número de WhatsApp**.
+
+**3. Poné tus productos** en `productos.csv`. Se puede abrir con una planilla de cálculo (al
+guardar, elegí **CSV UTF-8**) o con cualquier editor de texto, como VS Code.
+
+**4. Generá la página.** En la terminal de VS Code, parado en la carpeta:
+
+```bash
+python catalogo.py
+```
+
+Aparece un `index.html` nuevo. **Abrilo con doble clic**: es tu catálogo, en tu navegador.
+
+:::tip[Cada vez que cambie algo]
+¿Cambió un precio? ¿Llegó un producto nuevo? Editás la planilla y volvés a correr
+`python catalogo.py`. **Nunca tocás el HTML a mano.** Para eso lo armó Python.
+:::
+
+## Publicarlo en internet, gratis
+
+GitHub publica páginas gratis: se llama **GitHub Pages**, y es justamente donde está publicada esta
+plataforma.
+
+1. En GitHub, creá un repositorio nuevo **público**, por ejemplo `catalogo`.
+2. Subí `index.html` y `estilos.css`. Con lo de Git que ya sabés (`git add`, `git commit`,
+   `git push`), o arrastrándolos en la página del repositorio, con **Add file → Upload files**.
+3. En el repositorio: **Settings → Pages**. En *Branch* elegí `main` y la carpeta `/ (root)`, y
+   tocá **Save**.
+4. Esperá uno o dos minutos y recargá esa página: arriba aparece el link, algo así como
+   `https://tu-usuario.github.io/catalogo/`.
+
+**Ese link es tu catálogo.** Se puede mandar por WhatsApp, poner en Instagram o imprimir en un QR.
+Cada vez que generes la página de nuevo, la volvés a subir y el link muestra la versión nueva.
+
+:::caution[Lo que se sube es público]
+Cualquiera con el link ve la página, y el repositorio también. Ahí no van datos que no pondrías en
+una vidriera: tu número de WhatsApp sí (es para que te escriban), una dirección particular no.
+:::
+
+## Desafío: con fotos de verdad
+
+Los emojis sirven para practicar, pero un catálogo de verdad lleva fotos. Para eso:
+
+1. Una carpeta `fotos/` al lado de `index.html`, con una foto por producto.
+2. Una columna más en la planilla, `foto`, con el nombre del archivo: `taza.jpg`.
+3. En `tarjeta()`, en vez de la caja del emoji, una **imagen**:
+
+```html
+<img class="producto__foto" src="fotos/taza.jpg" alt="Taza de cerámica">
+```
+
+`<img>` es de las pocas etiquetas **que no se cierran**: no tiene contenido, solo atributos. `src`
+dice qué archivo mostrar, y `alt` lo describe para quien no puede ver la imagen. Los estilos ya
+están preparados para que la foto ocupe el ancho de la tarjeta.
+
+¿Y si un producto todavía no tiene foto? Que siga con el emoji. Eso es un `if`: ya sabés.
+
+Y para subirlo, la carpeta `fotos/` va también al repositorio.
+
+## Para llevar
+
+- **Una página web es un archivo de texto** con etiquetas: `<h2>` título, `<p>` párrafo, `<a href>`
+  link, `<img src>` imagen. Casi todas se abren y se cierran.
+- **HTML dice qué es cada cosa, CSS cómo se ve, y Python la arma con los datos.** Por eso se
+  actualiza sola: los datos viven en la planilla.
+- Un **f-string de tres comillas** arma un texto de varios renglones con los datos adentro.
+- `quote()` deja un texto listo para ir adentro de un link.
+- **GitHub Pages** publica gratis lo que subas a un repositorio. `index.html` es la página que
+  abre la dirección.
+
+:::note[¿Querés más?]
+Esto es lo justo para el catálogo. HTML, CSS y JavaScript dan para mucho más —que la página se vea
+distinta en el celular, un buscador de productos, un carrito— y van a estar en esta misma sección,
+de a poco.
+:::

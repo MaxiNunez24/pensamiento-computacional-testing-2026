@@ -1,0 +1,138 @@
+---
+/**
+ * Ejercicio de HTML / CSS / JavaScript, con la página en vivo al lado.
+ *
+ * Es el hermano de <EjercicioPython> para las clases de páginas web: el alumno
+ * escribe, y abajo del editor ve la página como la mostraría el navegador. Se
+ * actualiza sola mientras escribe; no hay botón de Ejecutar.
+ *
+ * Una pestaña por cada lenguaje que traiga starter: `html`, `css`, `js`. Si una
+ * prop no viene, su pestaña no aparece (un ejercicio de solo HTML muestra solo
+ * HTML). Ojo: `css=""` SÍ muestra la pestaña, vacía, para que la escriba él.
+ *
+ * Los `tests` son JavaScript y corren ADENTRO de la página del alumno, con
+ * estas ayudas a mano (ver RUNTIME en scripts/ejercicio-web.ts):
+ *
+ *   assert(condicion, "qué esperaba")     $(selector)   $$(selector)
+ *   texto(selector)   estilo(selector, "propiedad")   atributo(selector, "nombre")
+ *   click(selector)   escribir(selector, valor)   await esperar(ms)
+ *
+ *   <EjercicioWeb
+ *     titulo="Tu primera tarjeta"
+ *     html={`<article class="producto">\n</article>`}
+ *     cssBase={ESTILOS}
+ *     tests={`assert($("h2"), "Falta el nombre del producto, en un <h2>")`}
+ *   >Consigna en Markdown.</EjercicioWeb>
+ */
+import BarraSimbolos from './BarraSimbolos.astro';
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Props {
+  titulo: string;
+  /** ⭐ Lo principal de la clase. */
+  fundamental?: boolean;
+  dificultad?: string;
+  html?: string;
+  css?: string;
+  js?: string;
+  /** CSS que se aplica siempre y no se edita (los estilos que "ya vienen hechos"). */
+  cssBase?: string;
+  /** JavaScript con assert(): corre adentro de la página del alumno. */
+  tests: string;
+  pistas?: string[];
+}
+
+const { titulo, dificultad = '', html, css, js, cssBase = '', tests, pistas = [] } = Astro.props;
+const id = idEjercicio(titulo);
+const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
+
+const pestanas = [
+  { lang: 'html', nombre: 'HTML', starter: html },
+  { lang: 'css', nombre: 'CSS', starter: css },
+  { lang: 'js', nombre: 'JavaScript', starter: js },
+].filter((p) => p.starter !== undefined);
+---
+
+<section
+  class="ejercicio ejercicio--web"
+  id={id}
+  data-titulo={titulo}
+  data-fundamental={Astro.props.fundamental ? '' : undefined}
+  data-tests={enc(tests)}
+  data-css-base={cssBase ? enc(cssBase) : undefined}
+  data-starters={enc(JSON.stringify(Object.fromEntries(pestanas.map((p) => [p.lang, p.starter]))))}
+>
+  <header class="ejercicio__header">
+    {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
+    <h3 class="ejercicio__titulo">{titulo}</h3>
+    {Astro.props.fundamental && (
+      <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+    )}
+    <span class="ej-hecho" hidden>✓ Resuelto</span>
+  </header>
+
+  <div class="ejercicio__consigna">
+    <slot />
+  </div>
+
+  {/* Los estilos que el ejercicio da hechos: se aplican igual, y están a la
+      vista para el que quiera ver de dónde sale lo lindo. */}
+  {cssBase && (
+    <details class="ejercicio__archivos">
+      <summary>🎨 Los estilos que ya vienen hechos (CSS)</summary>
+      <pre><code>{cssBase}</code></pre>
+    </details>
+  )}
+
+  {pestanas.length > 1 && (
+    <div class="web__pestanas" role="tablist" aria-label="Lenguaje">
+      {pestanas.map((p, i) => (
+        <button type="button" role="tab" class="web__pestana" data-pestana={p.lang}
+                aria-selected={i === 0 ? 'true' : 'false'}>{p.nombre}</button>
+      ))}
+    </div>
+  )}
+
+  <div class="ejercicio__editor" data-editor></div>
+
+  <BarraSimbolos modo="web" />
+
+  <div class="web__vista">
+    <div class="web__vista-barra"><span>👁️ Así se ve</span><span class="web__vista-nota">se actualiza sola mientras escribís</span></div>
+    {/* allow-scripts SIN allow-same-origin: el JavaScript del alumno corre,
+        pero en una página aparte, sin poder tocar la plataforma. Por eso los
+        tests viajan por postMessage y no se leen desde acá. */}
+    <iframe class="web__marco" data-vista sandbox="allow-scripts allow-modals" title={`Vista de: ${titulo}`}></iframe>
+  </div>
+
+  <div class="ejercicio__acciones">
+    <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-verify title="Verificar (Ctrl/Cmd + Enter)">✓ Verificar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
+    <button type="button" class="ejercicio__btn ejercicio__btn--teclado" data-toggle-teclas aria-pressed="false"
+            title="Mostrar u ocultar la barra de símbolos">⌨️ Símbolos</button>
+    <span class="ejercicio__enviar">
+      <button type="button" class="ejercicio__btn ejercicio__btn--enviar" data-enviar
+              title="Publicar tu código y tu consulta en #Consultas de Discord">💬 Enviar a mi profe</button>
+      <button type="button" class="ejercicio__btn ejercicio__btn--enviar-otras" data-enviar-otras
+              aria-expanded="false" aria-label="Otras formas de mandárselo"
+              title="Mandarlo por mail o copiar el mensaje">▾</button>
+    </span>
+  </div>
+
+  <div class="ejercicio__envio" data-envio hidden></div>
+
+  <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
+
+  {pistas.length > 0 && (
+    <details class="ejercicio__pistas">
+      <summary>💡 Pistas</summary>
+      <ol>
+        {pistas.map((p) => <li set:html={p} />)}
+      </ol>
+    </details>
+  )}
+</section>
+
+<script>
+  import '../scripts/ejercicio-web.ts';
+</script>

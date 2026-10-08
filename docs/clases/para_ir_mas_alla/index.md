@@ -12,8 +12,9 @@ Van **en el mismo orden en que se darían en el curso**, así cada una usa lo de
 | 2 | [📋 JSON](../bloque_3_persistencia/json.md) | Guardar diccionarios y listas enteros, con su forma. Es además el idioma de las APIs |
 | 3 | [🔗 Herencia y polimorfismo](../bloque_4_poo/poo_herencia.md) | Clases que reciben lo de otra y lo cambian |
 | 4 | [🧠 Lógica y eficiencia](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/logica-pensar/){ target=_blank } | Pensar antes de escribir, y medir cuánto le cuesta a tu solución |
-| 5 | [📊 Aplicaciones de Python](aplicaciones.md) 🚧 | Datos, gráficos y planillas con las librerías que usa todo el mundo |
-| 6 | [🔗 Referencias](referencias.md) | Adónde seguir por tu cuenta |
+| 5 | [🛍️ Tu catálogo con Python](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web/catalogo/){ target=_blank } 🆕 | Un catálogo de productos publicado en internet, con botón de WhatsApp, armado por Python desde una planilla |
+| 6 | [📊 Aplicaciones de Python](aplicaciones.md) 🚧 | Datos, gráficos y planillas con las librerías que usa todo el mundo |
+| 7 | [🔗 Referencias](referencias.md) | Adónde seguir por tu cuenta |
 
 !!! question "¿Por qué Archivos y JSON están acá, si antes eran clases del curso?"
     Porque el sistema de asistencias guarda los datos en una **base de datos** desde el principio.

@@ -43,9 +43,13 @@ interface Props {
    *  cargan antes de correr, así el alumno los importa como en VS Code, y se
    *  muestran plegados para el que quiera mirarlos. */
   archivos?: Record<string, string>;
+  /** Para los programas que arman una PÁGINA: lo que imprime al tocar Ejecutar
+   *  se muestra además como página, con este CSS. (La clase del catálogo: el
+   *  alumno ve aparecer las tarjetas que generó su Python.) */
+  vista?: string;
 }
 
-const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '', archivos } = Astro.props;
+const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '', archivos, vista } = Astro.props;
 
 const id = idEjercicio(titulo);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
@@ -62,6 +66,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   data-datos={datos ? enc(datos) : undefined}
   data-entradas={entradas ? enc(entradas) : undefined}
   data-archivos={archivos ? enc(JSON.stringify(archivos)) : undefined}
+  data-vista={vista !== undefined ? enc(vista) : undefined}
 >
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
@@ -197,6 +202,15 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   <div class="ejercicio__envio" data-envio hidden></div>
 
   <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
+
+  {/* Sin allow-scripts: es HTML que armó Python, no hace falta que corra nada.
+      Y con allow-same-origin, para poder medir el alto desde acá. */}
+  {vista !== undefined && (
+    <div class="web__vista" data-vista-py hidden>
+      <div class="web__vista-barra"><span>👁️ La página que armó tu programa</span></div>
+      <iframe class="web__marco" sandbox="allow-same-origin" title={`Vista de: ${titulo}`}></iframe>
+    </div>
+  )}
 
   {pistas.length > 0 && (
     <details class="ejercicio__pistas">

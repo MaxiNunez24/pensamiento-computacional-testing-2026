@@ -51,7 +51,8 @@ LISTA_DE = re.compile(r'\[\s*[\[({]')
 
 def revisar():
     faltan = []
-    for pagina in sorted(CLASES.glob('*.mdx')):
+    # Las clases de páginas web (el catálogo y lo que venga) viven en su carpeta.
+    for pagina in sorted([*CLASES.glob('*.mdx'), *(CLASES.parent / 'web').glob('*.mdx')]):
         texto = pagina.read_text(encoding='utf-8')
         for inicio in re.finditer(r'<EjercicioPython\b', texto):
             corte = texto.index('\n>', inicio.end())

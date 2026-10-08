@@ -219,6 +219,14 @@ export default defineConfig({
                 { label: '✏️ Pensar antes de escribir', link: '/clases/logica-pensar/' },
                 { label: '⏱️ Eficiencia', link: '/clases/logica-eficiencia/' },
                 { label: '🏁 Desafíos de optimización', link: '/clases/logica-desafios/' },
+                {
+                  // Páginas web: arranca por el catálogo (que se da en clase) y
+                  // de a poco se suman los bloques de HTML, CSS y JavaScript.
+                  label: '🌐 Páginas web',
+                  items: [
+                    { label: '🛍️ Tu catálogo con Python', link: '/web/catalogo/', badge: { text: 'nuevo', variant: 'success' } },
+                  ],
+                },
                 { label: '📊 Aplicaciones de Python', link: '/mas-alla/aplicaciones/', badge: { text: 'en preparación', variant: 'caution' } },
                 { label: '🔗 Referencias', link: '/mas-alla/referencias/' },
               ],
