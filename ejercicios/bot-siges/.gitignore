@@ -1,0 +1,3 @@
+# El entorno virtual NO se sube: se reconstruye con requirements.txt
+.venv/
+__pycache__/
