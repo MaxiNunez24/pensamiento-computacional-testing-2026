@@ -241,6 +241,9 @@
 | Vie 25/9 | 🚫 Sin clases (**Nerdearla**) | |
 | Mié 30/9 | **Cierre de POO I y II**, y una retrospectiva de lo que se vio en **Nerdearla**. Tarea: leer la clase del **bot del SiGeS** y la de **Excepciones**. **Clase grabada en video** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/poo-2/) |
 | Vie 2/10 | **Bot del SiGeS**: el problema, preparar la compu (entorno virtual, `pip`, Playwright) y la ejercitación hasta el **Control 1 (DNI)**. Vino una sola alumna, y se cortó antes porque el CFP cerró temprano. Tarea: leer y hacer **Excepciones**. **Clase grabada en video** (la segunda parte se regraba: salió sin imagen) | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/) |
+| Mié 7/10 | **Bot del SiGeS**, segunda parte. Tarea: terminarlo en casa, en la plataforma, **sin instalar nada** | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/bot-siges/) |
+| Vie 9/10 | **Excepciones**. Tarea: terminar la clase en casa | [💻](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/excepciones/) |
+| Mié 14/10 | Un desvío a pedido de una alumna: **aplicar lo del curso a algo útil**. El caso fue el catálogo de un emprendimiento familiar, armado en Canva. Arrancamos con **HTML y CSS** y seguimos con **Tu catálogo con Python**, que ahora tiene el estilo de ese catálogo | [🛍️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web/catalogo/) |
 
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.
