@@ -9,69 +9,174 @@ import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 
 export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 
-export const ESTILOS = `* { box-sizing: border-box; }
+export const ESTILOS = `@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700&display=swap");
+
+/* Los colores y las letras de la marca: para cambiar el estilo,
+   alcanza con cambiar estos valores. */
+:root {
+  --fondo: #d3cac8;
+  --texto: #5b6844;
+  --acento: #5f6f45;
+  --linea: #93a77c;
+  --marca: #ffffff;
+  --fondo-foto: #ecd3dc;
+  --letra: "Montserrat", system-ui, sans-serif;
+  --letra-marca: "Great Vibes", cursive;
+}
+
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: #faf7f2;
-  color: #2b2b2b;
+  font-family: var(--letra);
+  background: var(--fondo);
+  color: var(--texto);
 }
+
+/* La portada: el nombre de la marca, con una rama en cada esquina */
 .encabezado {
-  padding: 2rem 1rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 1rem 3rem;
   text-align: center;
-  background: #2f4858;
-  color: #fff;
 }
-.encabezado h1 { margin: 0; font-size: 2rem; }
+.encabezado h1 {
+  display: inline-block;
+  margin: 0;
+  padding: 0 0.5rem 0.75rem;
+  border-bottom: 2px solid var(--marca);
+  font-family: var(--letra-marca);
+  font-size: clamp(3rem, 13vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--marca);
+}
+.encabezado::before,
+.encabezado::after,
+.contacto::before,
+.contacto::after,
+.catalogo::before,
+.catalogo::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: clamp(64px, 18vw, 170px);
+  aspect-ratio: 1;
+  background: url("adornos/rama-blanca.svg") center / contain no-repeat;
+  pointer-events: none;
+}
+.encabezado::before { top: 0; left: 0; transform: scaleY(-1); }
+.encabezado::after { top: 0; right: 0; transform: scale(-1, -1); }
+
+/* Los productos: uno abajo del otro */
 .catalogo {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.25rem;
-  max-width: 1100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding: 2rem 1rem 3rem;
 }
+.catalogo::before,
+.catalogo::after { background-image: url("adornos/rama-verde.svg"); }
+.catalogo::before { top: 0; right: 0; transform: scale(-1, -1); }
+.catalogo::after { bottom: 0; left: 0; }
+
+/* Una tarjeta: la foto en un círculo, y abajo el texto */
 .producto {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.6rem;
   max-width: 320px;
-  padding: 1.25rem;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.08);
+  text-align: center;
 }
 .catalogo .producto { max-width: none; }
-body > .producto { margin: 1rem; }
+body > .producto { margin: 1.5rem auto; padding: 0 1rem; }
 .producto__foto {
-  padding: 0.75rem 0;
-  border-radius: 10px;
-  background: #f1ece4;
-  font-size: 3.5rem;
-  line-height: 1.2;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(260px, 75vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--fondo-foto);
+  font-size: 5rem;
 }
-img.producto__foto { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; padding: 0; }
-.producto h2 { margin: 0.25rem 0 0; font-size: 1.15rem; }
-.descripcion { flex: 1; margin: 0; color: #666; font-size: 0.92rem; }
-.precio { margin: 0; color: #2f4858; font-size: 1.3rem; font-weight: 700; }
-.consultar {
-  display: block;
-  padding: 0.6rem;
-  border-radius: 10px;
-  background: #25d366;
-  color: #fff;
+img.producto__foto { object-fit: cover; }
+.producto h2 {
+  width: 100%;
+  margin: 0.75rem 0 0;
+  padding-top: 1rem;
+  border-top: 3px solid var(--linea);
+  font-size: 1.25rem;
   font-weight: 600;
-  text-align: center;
+}
+.descripcion { margin: 0; line-height: 1.45; }
+.precio {
+  margin: 0.4rem 0 0;
+  padding: 0.35rem 1.2rem;
+  border-radius: 999px;
+  background: var(--acento);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.consultar {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.55rem 1.2rem;
+  border: 2px solid var(--acento);
+  border-radius: 999px;
+  color: var(--acento);
+  font-weight: 600;
   text-decoration: none;
 }
-.consultar:hover { background: #1ebe5a; }
+.consultar:hover { background: var(--acento); color: #fff; }
+
+/* En pantallas anchas: foto a un lado y texto al otro, y una sí y una no
+   se dan vuelta (el zigzag del catálogo de Canva) */
+@media (min-width: 640px) {
+  .catalogo .producto {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr auto auto auto auto 1fr;
+    column-gap: 2.5rem;
+    justify-items: center;
+  }
+  .catalogo .producto__foto { grid-column: 2; grid-row: 1 / -1; width: min(300px, 100%); }
+  .catalogo .producto h2 { grid-column: 1; grid-row: 2; }
+  .catalogo .descripcion { grid-column: 1; grid-row: 3; }
+  .catalogo .precio { grid-column: 1; grid-row: 4; }
+  .catalogo .consultar { grid-column: 1; grid-row: 5; }
+  .catalogo .producto:nth-child(even) .producto__foto { grid-column: 1; }
+  .catalogo .producto:nth-child(even) > :not(.producto__foto) { grid-column: 2; }
+}
+
+/* El cierre: cómo contactarte */
+.contacto {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 1rem 6rem;
+  text-align: center;
+}
+.contacto h2 {
+  margin: 0 0 1.25rem;
+  font-family: var(--letra-marca);
+  font-size: clamp(2.6rem, 10vw, 4rem);
+  font-weight: 400;
+  color: var(--marca);
+}
+.contacto p { margin: 1.25rem 0 0; text-decoration: underline; }
+.contacto::before { bottom: 0; left: 0; }
+.contacto::after { bottom: 0; right: 0; transform: scaleX(-1); }
 `;
 
 export const PRODUCTOS = `PRODUCTOS = [
-    {"nombre": "Taza de cerámica", "precio": "4500", "emoji": "☕", "descripcion": "Pintada a mano. Va al microondas."},
-    {"nombre": "Mate de calabaza", "precio": "7800", "emoji": "🧉", "descripcion": "Curado y listo para usar."},
-    {"nombre": "Vela aromática", "precio": "3200", "emoji": "🕯️", "descripcion": "Lavanda. Dura 30 horas."},
+    {"nombre": "Taza de cerámica", "precio": "4500", "emoji": "☕", "foto": "taza.svg", "descripcion": "Pintada a mano. Va al microondas."},
+    {"nombre": "Mate de calabaza", "precio": "7800", "emoji": "🧉", "foto": "mate.svg", "descripcion": "Curado y listo para usar."},
+    {"nombre": "Vela aromática", "precio": "3200", "emoji": "🕯️", "foto": "vela.svg", "descripcion": "Lavanda. Dura 30 horas."},
 ]`;
 
 export const LINK = `from urllib.parse import quote
@@ -79,13 +184,21 @@ export const LINK = `from urllib.parse import quote
 def link_whatsapp(numero, nombre):
     return f"https://wa.me/{numero}?text=" + quote(f"Hola, quiero consultar por: {nombre}")`;
 
+export const PRECIO = `def precio(texto):
+    return "$" + f"{int(texto):,}".replace(",", ".")`;
+
+export const FOTO = `def foto(producto):
+    if producto.get("foto"):
+        return f'<img class="producto__foto" src="fotos/{producto["foto"]}" alt="{producto["nombre"]}">'
+    return f'<div class="producto__foto">{producto["emoji"]}</div>'`;
+
 export const TARJETA_CON_BOTON = `def tarjeta(producto, numero):
     return f"""
 <article class="producto">
-  <div class="producto__foto">{producto['emoji']}</div>
+  {foto(producto)}
   <h2>{producto['nombre']}</h2>
   <p class="descripcion">{producto['descripcion']}</p>
-  <p class="precio">$ {producto['precio']}</p>
+  <p class="precio">{precio(producto['precio'])}</p>
   <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}">Consultar por WhatsApp</a>
 </article>
 """`;
@@ -122,6 +235,11 @@ falta es el idioma de las páginas web. Y es lo más fácil de todo.
 pero si cambia un precio, alguien la tiene que editar a mano; si agregás un producto, a mano. La
 que arma Python se actualiza sola: cambiás la planilla, corrés el programa, y está.
 :::
+
+El **look** también salió de un caso real: un catálogo que un emprendimiento armó en Canva, con
+fondo gris rosado, fotos recortadas en círculo, el precio en una píldora verde y ramitas de hojas en
+las esquinas. Los estilos de esta clase lo copian. La diferencia es que en Canva cada página se
+arma a mano, y acá se arma sola.
 
 ## Una página es un archivo de texto
 
@@ -345,7 +463,7 @@ assert html.index("Taza") < html.index("Mate") < html.index("Vela"), "Las tarjet
 assert tarjetas([]) == "", "Sin productos, no hay tarjetas: tendría que devolver un texto vacío"
 uno = [{"nombre": "Yerbera", "precio": "6200", "emoji": "🫙", "descripcion": "De lata."}]
 assert tarjetas(uno).count("<article") == 1, "Con un solo producto, una sola tarjeta"
-print("¡Todas las tarjetas! Tocá Ejecutar para ver la grilla.")
+print("¡Todas las tarjetas! Tocá Ejecutar para ver el catálogo.")
 `}
   pistas={[
     'Ya tenés <code>tarjeta(producto)</code> hecha, arriba. ¿Cuántas veces la tenés que llamar?',
@@ -422,6 +540,58 @@ Los diccionarios que salen son **iguales** a los de `PRODUCTOS`: por eso `tarjet
 entender sin cambiar nada.
 </EjercicioPython>
 
+## El precio, siempre igual
+
+En el catálogo de Canva del que salió el estilo, los precios estaban escritos a mano, y se
+desparejaron: `$7.900`, `$12,000`, `$10,000`. Unos con punto y otros con coma. Pasa siempre que algo
+se escribe a mano muchas veces.
+
+Con Python, en la planilla va **solo el número** (`12500`) y el formato lo pone el programa. Sale
+igual en todos los productos, porque lo escribe una sola función.
+
+Para separar los miles, un f-string tiene un truco: `:,` después del valor.
+
+```python
+f"{12500:,}"     # '12,500'
+```
+
+Dos detalles. Separa con **coma**, como en inglés, y acá usamos punto. Y solo funciona con
+**números**: lo que viene de la planilla es texto, aunque tenga cifras.
+
+<EjercicioPython
+  titulo="El precio, siempre igual"
+  dificultad="🌿"
+  starter={`def precio(texto):
+    # "12500"  ->  "$12.500"
+    return "$" + texto
+
+print(precio("12500"))
+`}
+  tests={`p = precio("12500")
+assert isinstance(p, str), "precio tiene que DEVOLVER el texto del precio, con return"
+assert p != "$12500", "Falta el separador de los miles: tendría que salir $12.500"
+assert p != "$12,500", "Separa los miles, pero con coma: acá va punto, $12.500"
+assert p == "$12.500", f'Para "12500" tendría que salir "$12.500" y salió "{p}"'
+assert precio("7800") == "$7.800", f'Para "7800" tendría que salir "$7.800" y salió "{precio("7800")}"'
+assert precio("950") == "$950", "Un precio de menos de mil no lleva punto: $950"
+assert precio("1250000") == "$1.250.000", "Con millones, un punto cada tres cifras: $1.250.000"
+print("¡Precios parejos! Ahora todos salen escritos igual.")
+`}
+  pistas={[
+    'Lo que llega es <code>"12500"</code>, entre comillas. ¿Es un número o un texto? ¿Con cuál de los dos sabe trabajar <code>:,</code>?',
+    'Si te sale <code>$12,500</code>, ya casi está: ¿qué método de los strings cambia un caracter por otro?',
+  ]}
+>
+`precio(texto)` recibe el precio **como viene de la planilla**, que es un texto, y lo devuelve listo
+para mostrar: con el signo pegado y un punto cada tres cifras.
+
+```python
+precio("12500")     # "$12.500"
+precio("7800")      # "$7.800"
+precio("950")       # "$950"
+```
+</EjercicioPython>
+
 ## El botón de WhatsApp, con el mensaje ya escrito
 
 El link de WhatsApp puede llevar **el mensaje ya escrito**, para que la persona solo toque enviar:
@@ -494,11 +664,83 @@ https://wa.me/5492215550000?text=Hola%2C%20quiero%20consultar%20por%3A%20Mate%20
 ```
 </EjercicioPython>
 
+## Con fotos de verdad
+
+Los emojis sirven para practicar, pero un catálogo de verdad lleva fotos. Para eso:
+
+1. Una carpeta `fotos/` al lado de la página, con una foto por producto.
+2. Una columna más en la planilla, `foto`, con el nombre del archivo: `taza.jpg`.
+3. En la tarjeta, en vez de la caja del emoji, una **imagen**:
+
+```html
+<img class="producto__foto" src="fotos/taza.jpg" alt="Taza de cerámica">
+```
+
+`<img>` es de las pocas etiquetas **que no se cierran**: no tiene contenido, solo atributos. `src`
+dice qué archivo mostrar, y `alt` lo describe para quien no puede ver la imagen. Los estilos ya la
+recortan en círculo.
+
+¿Y si un producto todavía no tiene foto? Que siga con el emoji. Ese producto puede tener la celda
+`foto` **vacía**, o directamente no tener la clave `foto`. `producto.get("foto")` cubre los dos casos:
+si la clave no está, devuelve `None` en vez de dar error.
+
+```python
+{"nombre": "Mate de calabaza", "emoji": "🧉", "foto": "mate.svg"}   # con foto
+{"nombre": "Bolso matero", "emoji": "👜", "foto": ""}               # celda vacía
+{"nombre": "Yerbera", "emoji": "🫙"}                                # sin la clave
+```
+
+<EjercicioPython
+  titulo="La foto, o el emoji"
+  fundamental
+  dificultad="🌿"
+  vista={ESTILOS}
+  starter={`def foto(producto):
+    # con foto: <img class="producto__foto" src="fotos/..." alt="...">
+    # sin foto: el emoji, como hasta ahora
+    return f'<div class="producto__foto">{producto["emoji"]}</div>'
+
+print(foto({"nombre": "Mate de calabaza", "emoji": "🧉", "foto": "mate.svg"}))
+print(foto({"nombre": "Bolso matero", "emoji": "👜", "foto": ""}))
+`}
+  tests={`con = foto({"nombre": "Mate de calabaza", "emoji": "🧉", "foto": "mate.svg"})
+assert isinstance(con, str), "foto tiene que DEVOLVER el HTML, con return"
+assert "<img" in con, "El mate tiene foto: tendría que salir una etiqueta <img>, y salió el emoji"
+assert 'src="fotos/mate.svg"' in con, 'La imagen tiene que buscar el archivo en la carpeta fotos: src="fotos/mate.svg"'
+assert 'alt="Mate de calabaza"' in con, 'Falta describir la imagen con el nombre del producto: alt="Mate de calabaza"'
+assert 'class="producto__foto"' in con, 'A la imagen le falta class="producto__foto": sin eso no se recorta en círculo'
+sin = foto({"nombre": "Bolso matero", "emoji": "👜", "foto": ""})
+assert "<img" not in sin and "👜" in sin, "El bolso tiene la celda de la foto vacía: tendría que seguir con el emoji"
+try:
+    sin_clave = foto({"nombre": "Yerbera", "emoji": "🫙"})
+except KeyError:
+    assert False, 'Un producto SIN la clave "foto" da error: ¿cómo preguntás por una clave que puede no estar?'
+assert "🫙" in sin_clave, 'Un producto sin la clave "foto" tendría que seguir con el emoji'
+print("¡Fotos de verdad! Tocá Ejecutar para ver las dos.")
+`}
+  pistas={[
+    '¿Qué tiene que pasar para que salga la imagen? ¿Y qué devuelve <code>.get("foto")</code> en cada uno de los tres productos de arriba?',
+    'Un texto vacío, en un <code>if</code>, ¿cuenta como verdadero o como falso? ¿Y <code>None</code>?',
+  ]}
+>
+`foto(producto)` devuelve **lo que va arriba de la tarjeta**: la imagen del producto si tiene foto,
+o la caja con el emoji si no tiene.
+
+```python
+foto({"nombre": "Mate de calabaza", "emoji": "🧉", "foto": "mate.svg"})
+# '<img class="producto__foto" src="fotos/mate.svg" alt="Mate de calabaza">'
+
+foto({"nombre": "Bolso matero", "emoji": "👜", "foto": ""})
+# '<div class="producto__foto">👜</div>'
+```
+</EjercicioPython>
+
 ## La página entera
 
 Una página completa tiene, además de las tarjetas, una **cabecera** con datos para el navegador
 (el título de la pestaña, que la letra se vea bien en el celular, de dónde sacar los estilos) y el
-**cuerpo**, que es lo que se ve:
+**cuerpo**, que es lo que se ve: arriba el nombre de la marca, en el medio los productos y abajo,
+como la última página del catálogo de Canva, cómo contactarte.
 
 ```html
 <!doctype html>
@@ -514,6 +756,11 @@ Una página completa tiene, además de las tarjetas, una **cabecera** con datos 
   <main class="catalogo">
     ...las tarjetas...
   </main>
+  <footer class="contacto">
+    <h2>¡Contactá conmigo!</h2>
+    <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
+    <p>Tu consulta no es molestia</p>
+  </footer>
 </body>
 </html>
 ```
@@ -527,6 +774,10 @@ No hace falta aprenderla de memoria: es siempre igual, y la vas a copiar. Lo que
   dificultad="🌿"
   vista={ESTILOS}
   datos={`${LINK}
+
+${PRECIO}
+
+${FOTO}
 
 ${TARJETA_CON_BOTON}
 
@@ -548,6 +799,11 @@ ${PRODUCTOS}`}
   <header class="encabezado"><h1>Mi catálogo</h1></header>
   <main class="catalogo">
   </main>
+  <footer class="contacto">
+    <h2>¡Contactá conmigo!</h2>
+    <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
+    <p>Tu consulta no es molestia</p>
+  </footer>
 </body>
 </html>
 """
@@ -563,21 +819,26 @@ assert "Mi catálogo" not in html, 'Quedó "Mi catálogo" escrito a mano en alg�
 assert html.count("<article") == 3, f"Hay 3 productos y la página tiene {html.count('<article')} tarjetas"
 main = html[html.index("<main"):html.index("</main>")]
 assert main.count("<article") == 3, "Las tarjetas tienen que ir ADENTRO del <main>, entre <main ...> y </main>"
-assert html.count("https://wa.me/5492215550000") == 3, "Cada tarjeta lleva su botón con el número que le pasan"
+assert main.count("https://wa.me/5492215550000") == 3, "Cada tarjeta lleva su botón con el número que le pasan"
+pie = html[html.index("</main>"):]
+assert "wa.me/5492215550000" in pie, "El botón del final, el de contacto, también tiene que llevar el número que le pasan"
 otra = pagina("Otra tienda", PRODUCTOS[:1], "5491144440000")
 assert otra.count("<article") == 1 and "wa.me/5491144440000" in otra, "Con otros datos tiene que salir otra página: ¿quedó algo fijo?"
+assert "5492215550000" not in otra, "Con otro número, quedó el 5492215550000 escrito a mano en algún lado: ¿en el botón de contacto?"
 print("¡Página completa! Tocá Ejecutar para verla entera.")
 `}
   pistas={[
     'El paso 1 es el ejercicio de "Todas las tarjetas". ¿Qué cambia ahora que <code>tarjeta</code> también recibe el número?',
     'En el texto de la página, ¿en qué dos lugares está escrito "Mi catálogo"? ¿Y en qué lugar, entre qué etiquetas, tienen que quedar las tarjetas?',
+    '¿Qué partes de la página cambian si la usa otra persona, con otro número de WhatsApp?',
   ]}
 >
 `pagina(titulo, productos, numero)` devuelve **la página completa**: con el título que le pasan
-(en la pestaña y arriba de todo) y una tarjeta por producto, cada una con su botón de WhatsApp.
+(en la pestaña y arriba de todo), una tarjeta por producto, cada una con su botón de WhatsApp, y el
+botón de contacto del final, también con ese número.
 
-`tarjeta(producto, numero)` ya está hecha, **con el botón**: es la tuya, más el link del ejercicio
-anterior. Mirala arriba, en lo que ya está cargado.
+`tarjeta(producto, numero)` ya está hecha, y junta todo lo de los ejercicios anteriores: la foto (o
+el emoji), el precio con su punto y el botón. Mirala arriba, en lo que ya está cargado.
 </EjercicioPython>
 
 ## Guardarla en un archivo
@@ -590,6 +851,10 @@ es casual: es el que buscan los servidores cuando entrás a una dirección sin n
   dificultad="🌿"
   datos={`import csv
 ${LINK}
+
+${PRECIO}
+
+${FOTO}
 
 ${TARJETA_CON_BOTON}
 
@@ -604,14 +869,15 @@ def pagina(titulo, productos, numero):
     return f"""<!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>{titulo}</title><link rel="stylesheet" href="estilos.css"></head>
-<body><header class="encabezado"><h1>{titulo}</h1></header><main class="catalogo">{tarjetas}</main></body>
+<body><header class="encabezado"><h1>{titulo}</h1></header><main class="catalogo">{tarjetas}</main>
+<footer class="contacto"><h2>¡Contactá conmigo!</h2><a class="consultar" href="https://wa.me/{numero}">Escribime por WhatsApp</a></footer></body>
 </html>
 """
 
 with open("productos.csv", "w", encoding="utf-8") as f:
-    f.write("nombre,precio,emoji,descripcion\\n")
-    f.write("Taza de cerámica,4500,☕,Pintada a mano.\\n")
-    f.write("Mate de calabaza,7800,🧉,Curado y listo para usar.\\n")
+    f.write("nombre,precio,emoji,foto,descripcion\\n")
+    f.write("Taza de cerámica,4500,☕,taza.svg,Pintada a mano.\\n")
+    f.write("Mate de calabaza,7800,🧉,,Curado y listo para usar.\\n")
 `}
   starter={`def generar(ruta_csv, ruta_html, titulo, numero):
     # 1. leer los productos de la planilla
@@ -653,31 +919,73 @@ la página y **la guarda** en `ruta_html`. No devuelve nada.
 Todo lo de arriba, junto, en tu compu.
 
 **1. Bajá el proyecto:** <a href={b + 'proyecto-catalogo/proyecto-catalogo.zip'} download>📦 proyecto-catalogo.zip</a>.
-Adentro de la carpeta `catalogo/` hay:
+Descomprimilo: adentro de la carpeta `catalogo/` hay:
 
 | Archivo | Qué es |
 |---|---|
 | `catalogo.py` | ✏️ **Tuyo.** Las funciones de los ejercicios, para completar |
 | `productos.csv` | La planilla: **acá van tus productos** |
+| `fotos/` | Las fotos de los productos. Vienen las de la taza, el mate y la vela |
 | `estilos.css` | Los estilos, ya hechos. Los mismos de los ejercicios |
+| `adornos/` | Las ramitas de hojas que usan los estilos |
 | `LEEME.md` | Estos mismos pasos |
 
 **2. Completá `catalogo.py`** con las funciones de los ejercicios: copialas de acá, una por una.
-Arriba de todo cambiá el título y **tu número de WhatsApp**.
+Son siete: `leer_productos`, `precio`, `link_whatsapp`, `foto`, `tarjeta`, `pagina` y `generar`.
 
-**3. Poné tus productos** en `productos.csv`. Se puede abrir con una planilla de cálculo (al
-guardar, elegí **CSV UTF-8**) o con cualquier editor de texto, como VS Code.
-
-**4. Generá la página.** En la terminal de VS Code, parado en la carpeta:
+**3. Generá la página.** En la terminal de VS Code, parado en la carpeta:
 
 ```bash
 python catalogo.py
 ```
 
-Aparece un `index.html` nuevo. **Abrilo con doble clic**: es tu catálogo, en tu navegador.
+Aparece un `index.html` nuevo. **Abrilo con doble clic**: es el catálogo de ejemplo, en tu
+navegador, igual al de los ejercicios.
+
+## Hacerlo tuyo
+
+El programa ya está terminado. Para que el catálogo sea el de tu emprendimiento **no se toca más
+código**: se cambian datos.
+
+| Quiero cambiar… | Dónde |
+|---|---|
+| El nombre de la marca | `TITULO`, arriba de todo en `catalogo.py` |
+| El número de WhatsApp | `NUMERO`, ahí mismo |
+| Los productos, los precios, las descripciones | `productos.csv` |
+| Las fotos | La carpeta `fotos/`, y su nombre en la columna `foto` de la planilla |
+| Los colores y la letra | Las variables de arriba de `estilos.css` (ver [Que se vea como tu marca](#que-se-vea-como-tu-marca)) |
+
+La planilla se puede abrir con una planilla de cálculo (al guardar, elegí **CSV UTF-8**) o con un
+editor de texto como VS Code. Así queda una fila:
+
+```text
+nombre,precio,emoji,foto,descripcion
+Taza de cerámica,4500,☕,taza.svg,Pintada a mano. Va al microondas.
+```
+
+- **El precio, solo el número**: `7900`, sin `$` ni puntos. El formato lo pone `precio()`.
+- **La foto**, el nombre del archivo que pusiste en `fotos/`. Si la dejás vacía, sale el emoji.
+- **No borres la primera línea**: son los nombres de las columnas.
+
+:::caution[Las fotos: tres cosas que en tu compu andan y publicadas no]
+- **El nombre, exactamente igual** en la planilla y en el archivo, mayúsculas incluidas. En Windows
+  `Taza.JPG` y `taza.jpg` son lo mismo; en GitHub Pages no, y la foto no aparece.
+- **Sin espacios ni tildes** en el nombre del archivo: `conjunto-negro.jpg`, no `Conjunto negro.jpg`.
+- **Livianas.** Una foto del celular pesa 3 o 4 MB, y con datos móviles el catálogo tarda en abrir.
+  Achicala a unos 800 píxeles de ancho: con cualquier editor de fotos, o en
+  [squoosh.app](https://squoosh.app), gratis y desde el navegador.
+
+Y como se recortan en círculo, conviene que sean **cuadradas**, con el producto en el medio.
+:::
+
+¿Querés sumar tu Instagram? En `pagina()`, abajo del botón de WhatsApp del final, un link más:
+
+```html
+<a class="consultar" href="https://instagram.com/tu_usuario">Instagram</a>
+```
 
 :::tip[Cada vez que cambie algo]
-¿Cambió un precio? ¿Llegó un producto nuevo? Editás la planilla y volvés a correr
+¿Cambió un precio? ¿Llegó un producto nuevo? Editás la planilla (y sumás la foto) y volvés a correr
 `python catalogo.py`. **Nunca tocás el HTML a mano.** Para eso lo armó Python.
 :::
 
@@ -687,51 +995,118 @@ GitHub publica páginas gratis: se llama **GitHub Pages**, y es justamente donde
 plataforma.
 
 1. En GitHub, creá un repositorio nuevo **público**, por ejemplo `catalogo`.
-2. Subí `index.html` y `estilos.css`. Con lo de Git que ya sabés (`git add`, `git commit`,
-   `git push`), o arrastrándolos en la página del repositorio, con **Add file → Upload files**.
+2. Subí **todo lo que hay en la carpeta `catalogo/`**: `index.html`, `estilos.css` y las carpetas
+   `fotos/` y `adornos/`. Con lo de Git que ya sabés (`git add`, `git commit`, `git push`), o en la
+   página del repositorio con **Add file → Upload files**: ahí se pueden arrastrar las carpetas
+   enteras.
 3. En el repositorio: **Settings → Pages**. En *Branch* elegí `main` y la carpeta `/ (root)`, y
    tocá **Save**.
 4. Esperá uno o dos minutos y recargá esa página: arriba aparece el link, algo así como
    `https://tu-usuario.github.io/catalogo/`.
 
-**Ese link es tu catálogo.** Se puede mandar por WhatsApp, poner en Instagram o imprimir en un QR.
-Cada vez que generes la página de nuevo, la volvés a subir y el link muestra la versión nueva.
+**Ese link es tu catálogo.** Se puede mandar por WhatsApp, poner en la bio de Instagram o imprimir
+en un QR.
+
+Para actualizarlo, generás la página de nuevo y subís `index.html` (y las fotos nuevas, si hay).
+Un archivo que se sube con el mismo nombre **reemplaza** al anterior. En uno o dos minutos, el link
+muestra la versión nueva.
 
 :::caution[Lo que se sube es público]
 Cualquiera con el link ve la página, y el repositorio también. Ahí no van datos que no pondrías en
 una vidriera: tu número de WhatsApp sí (es para que te escriban), una dirección particular no.
 :::
 
-## Desafío: con fotos de verdad
+## Que se vea como tu marca
 
-Los emojis sirven para practicar, pero un catálogo de verdad lleva fotos. Para eso:
+Los colores y las letras están **una sola vez**, arriba de todo en `estilos.css`, como
+**variables**:
 
-1. Una carpeta `fotos/` al lado de `index.html`, con una foto por producto.
-2. Una columna más en la planilla, `foto`, con el nombre del archivo: `taza.jpg`.
-3. En `tarjeta()`, en vez de la caja del emoji, una **imagen**:
-
-```html
-<img class="producto__foto" src="fotos/taza.jpg" alt="Taza de cerámica">
+```css
+:root {
+  --fondo: #d3cac8;
+  --texto: #5b6844;
+  --acento: #5f6f45;
+  --linea: #93a77c;
+  --marca: #ffffff;
+  --fondo-foto: #ecd3dc;
+  ...
+}
 ```
 
-`<img>` es de las pocas etiquetas **que no se cierran**: no tiene contenido, solo atributos. `src`
-dice qué archivo mostrar, y `alt` lo describe para quien no puede ver la imagen. Los estilos ya
-están preparados para que la foto ocupe el ancho de la tarjeta.
+El resto de los estilos no dice "verde": dice `var(--acento)`. Así que cambiando **un valor**,
+cambia en todas las partes donde se usa. Es la misma idea que una variable de Python, y está
+explicada en <a href={b + 'web/css-responsive/#variables-de-css'}>CSS IV · Variables de CSS</a>.
 
-¿Y si un producto todavía no tiene foto? Que siga con el emoji. Eso es un `if`: ya sabés.
+| Variable | Qué pinta |
+|---|---|
+| `--fondo` | El fondo de toda la página |
+| `--texto` | Los nombres y las descripciones |
+| `--acento` | La píldora del precio y los botones |
+| `--linea` | La línea arriba de cada nombre, y las ramitas verdes |
+| `--marca` | El nombre de la marca y el "¡Contactá conmigo!" |
+| `--fondo-foto` | El círculo de los productos que no tienen foto |
 
-Y para subirlo, la carpeta `fotos/` va también al repositorio.
+Los colores se escriben con un `#` y seis cifras. Para encontrar el de un color que te gusta,
+buscá **"color picker"** en Google: aparece una paleta que te da el código.
+
+<EjercicioWeb
+  titulo="Los colores de tu marca"
+  dificultad="🌱"
+  cssBase={ESTILOS}
+  html={`<header class="encabezado"><h1>Mi marca</h1></header>
+<main class="catalogo">
+  <article class="producto">
+    <img class="producto__foto" src="fotos/vela.svg" alt="Vela aromática">
+    <h2>Vela aromática</h2>
+    <p class="descripcion">Lavanda. Dura 30 horas.</p>
+    <p class="precio">$3.200</p>
+    <a class="consultar" href="https://wa.me/5492215550000">Consultar por WhatsApp</a>
+  </article>
+</main>
+`}
+  css={`:root {
+  --fondo: #d3cac8;
+  --acento: #5f6f45;
+}
+`}
+  tests={`var fondo = (regla(":root", "--fondo") || "").toLowerCase();
+var acento = (regla(":root", "--acento") || "").toLowerCase();
+assert(fondo, "Falta --fondo adentro de :root { }: ¿se borró sin querer?");
+assert(acento, "Falta --acento adentro de :root { }: ¿se borró sin querer?");
+assert(fondo !== "#d3cac8", "El fondo sigue siendo el gris rosado: cambiá el valor de --fondo");
+assert(acento !== "#5f6f45", "El acento sigue siendo el verde: cambiá el valor de --acento");
+assert(estilo("body", "background-color") !== "rgb(211, 202, 200)", "--fondo cambió, pero la página sigue gris rosado: ¿el color está bien escrito, con # y seis cifras?");
+assert(estilo(".precio", "background-color") !== "rgb(95, 111, 69)", "--acento cambió, pero el precio sigue verde: ¿el color está bien escrito, con # y seis cifras?");`}
+  pistas={[
+    'Mirá los estilos de la página (arriba, ya cargados): ¿qué partes nombran a <code>var(--acento)</code>?',
+    '¿Cambiaste el valor de la variable, o escribiste una regla nueva para un solo elemento? ¿Cuál de las dos cambia todo de una vez?',
+  ]}
+>
+Elegí los colores de **tu** marca: cambiá el valor de `--fondo` y el de `--acento`. Mirá cómo
+cambian juntos el fondo, la píldora del precio y el botón.
+
+Cuando te guste cómo queda, esos mismos dos renglones van arriba de todo en tu `estilos.css`.
+</EjercicioWeb>
+
+¿Y la letra cursiva del nombre? Es **Great Vibes**, de [Google Fonts](https://fonts.google.com),
+que tiene cientos de letras gratis. Para usar otra, elegila ahí y cambiá su nombre en dos lugares
+de `estilos.css`: en la primera línea (la del `@import`, que es la que la descarga) y en
+`--letra-marca`.
 
 ## Para llevar
 
 - **Una página web es un archivo de texto** con etiquetas: `<h2>` título, `<p>` párrafo, `<a href>`
   link, `<img src>` imagen. Casi todas se abren y se cierran.
+- **Lo que se repite, lo escribe una función**: por eso los precios salen todos iguales, y un
+  producto sin foto sigue con su emoji sin que nadie se acuerde.
 - **HTML dice qué es cada cosa, CSS cómo se ve, y Python la arma con los datos.** Por eso se
   actualiza sola: los datos viven en la planilla.
 - Un **f-string de tres comillas** arma un texto de varios renglones con los datos adentro.
 - `quote()` deja un texto listo para ir adentro de un link.
 - **GitHub Pages** publica gratis lo que subas a un repositorio. `index.html` es la página que
   abre la dirección.
+- **Los colores y las letras de la marca** están en las variables de arriba de `estilos.css`:
+  cambiar el estilo entero es cambiar esos valores.
 
 :::note[¿Querés más?]
 Esto es lo justo para el catálogo. HTML, CSS y JavaScript dan para mucho más —que la página se vea

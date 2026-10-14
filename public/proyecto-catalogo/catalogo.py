@@ -10,8 +10,9 @@
 #  3. En la terminal, parado en esta carpeta:   python catalogo.py
 #  4. Abrí index.html con doble clic.
 #
-#  Cada vez que cambie un precio o un producto: editás productos.csv y
-#  volvés a correr el paso 3. El HTML no se toca nunca a mano.
+#  Cada vez que cambie un precio o un producto: editás productos.csv (y
+#  ponés la foto en la carpeta fotos/) y volvés a correr el paso 3. El HTML
+#  no se toca nunca a mano.
 # ─────────────────────────────────────────────────────────────────────
 
 import csv
@@ -31,16 +32,25 @@ def leer_productos(ruta):
     return productos
 
 
+def precio(texto):
+    """Ejercicio "El precio, siempre igual"."""
+    return ""
+
+
 def link_whatsapp(numero, nombre):
     """Ejercicio "El botón de WhatsApp"."""
     return ""
 
 
-def tarjeta(producto, numero):
-    """La de "Una tarjeta, armada por Python", con el botón de WhatsApp.
+def foto(producto):
+    """Ejercicio "La foto, o el emoji"."""
+    return ""
 
-    La versión con el botón está en el ejercicio "La página entera", en lo que
-    ya viene cargado.
+
+def tarjeta(producto, numero):
+    """La tarjeta completa: con la foto, el precio y el botón de WhatsApp.
+
+    Está en el ejercicio "La página entera", en lo que ya viene cargado.
     """
     return ""
 
