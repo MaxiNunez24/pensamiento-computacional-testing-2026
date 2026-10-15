@@ -147,11 +147,13 @@ def main():
         print(f'  Personas: {len(listos)}')
         print('\n  Cómo es contra el sistema real:')
         print('   · Iniciá sesión vos en el navegador que se va a abrir.')
-        print('   · De cada persona, vos buscás el DNI y abrís "Agregar estudiante".')
-        print('   · El bot completa lo que sabe y para. NO guarda.')
-        print('   · Dirección, Vivienda y Contacto los completás vos: no están relevados.')
+        print('   · El bot busca el DNI, completa lo que viene de la planilla y para. NO guarda.')
+        print('   · Si la persona ya estaba cargada, NO pisa nada: te avisa qué difiere.')
+        print('   · Vivienda, Transportes, WhatsApp y Educación no vienen de la planilla:')
+        print('     quedan marcados en amarillo para vos. El bot no inventa datos.')
         print('   · Salud, discapacidad y restricción judicial el bot NO los toca nunca.')
-        print('   · Guardás vos, y la matrícula la genera una persona: quedan pre inscriptos.')
+        print('   · "Guardar estudiante", la encuesta y "Finalizar inscripción" son tuyos.')
+        print('   · "Generar matrícula inicial", nunca: quedan pre inscriptos.')
         if input('\n  Escribí CARGAR para continuar: ').strip() != 'CARGAR':
             print('  Cancelado. No se tocó nada.')
             return
@@ -172,12 +174,17 @@ def main():
         for i, datos in listos:
             quien = f'{datos["apellidos"]}, {datos["nombres"]}'
             if args.real:
-                # Contra el sistema real, cada persona empieza con una mano
-                # humana: buscar el DNI y abrir "Agregar estudiante". El bot
-                # completa un formulario que ya está en pantalla.
+                # El bot busca el DNI y abre el formulario. Si algo de eso no
+                # sale (el sistema lento, un cartel que no esperábamos), lo hace
+                # la persona y el bot sigue desde el formulario abierto: en una
+                # demo, mejor una mano humana que un programa trabado.
                 print(f'\n  fila {i:>3}  {quien}  (DNI {datos["dni"]})')
-                input('    Buscá ese DNI, abrí "Agregar estudiante" y apretá Enter... ')
-                print(f'    completando…', end=' ', flush=True)
+                print('    buscando el DNI…', end=' ', flush=True)
+                encontro, motivo = siges_real.buscar_dni(page, datos['dni'])
+                if not encontro:
+                    print(f'⚠️  {motivo}')
+                    input('    Buscalo vos, abrí "Agregar estudiante" y apretá Enter... ')
+                print('    completando…', end=' ', flush=True)
             else:
                 print(f'  fila {i:>3}  {quien:<38}', end=' ', flush=True)
             try:
@@ -191,7 +198,8 @@ def main():
             if ok and args.real:
                 bien += 1
                 print(f'✅ {detalle}')
-                input('    Revisá, completá eso y apretá "Guardar estudiante" vos. Enter para seguir... ')
+                input('    Revisá, completá lo marcado, apretá "Guardar estudiante" y hacé la encuesta.\n'
+                      '    Cuando vuelvas al listado del trayecto, Enter para seguir... ')
             elif ok:
                 bien += 1
                 print('✅')
