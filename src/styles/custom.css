@@ -1072,6 +1072,8 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   color: var(--sl-color-gray-2);
 }
 .web__vista-nota { font-weight: 400; color: var(--sl-color-gray-3); }
+/* El aviso de un link (vista-links.ts): se tiene que notar, es lo único que pasa al tocarlo. */
+.web__vista-nota.es-aviso { font-weight: 600; color: var(--sl-color-orange-high); text-align: right; }
 .web__consola pre {
   margin: 0;
   padding: 0.6rem 0.8rem;

@@ -207,7 +207,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
       Y con allow-same-origin, para poder medir el alto desde acá. */}
   {vista !== undefined && (
     <div class="web__vista" data-vista-py hidden>
-      <div class="web__vista-barra"><span>👁️ La página que armó tu programa</span></div>
+      <div class="web__vista-barra"><span>👁️ La página que armó tu programa</span><span class="web__vista-nota"></span></div>
       <iframe class="web__marco" sandbox="allow-same-origin" title={`Vista de: ${titulo}`}></iframe>
     </div>
   )}

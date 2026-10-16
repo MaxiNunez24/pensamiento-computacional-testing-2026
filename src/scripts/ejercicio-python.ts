@@ -29,6 +29,7 @@ import {
   autocompletado,
 } from './editor-comun';
 import { conectarAsistente } from './asistente';
+import { atajarLinks, avisarEnVista } from './vista-links';
 
 // ---------- Un ejercicio ----------
 
@@ -98,6 +99,7 @@ function initEjercicio(el: HTMLElement): void {
      programa se muestra también como página, con los estilos del ejercicio. */
   const cajaVista = el.querySelector<HTMLElement>('[data-vista-py]');
   const marcoVista = cajaVista?.querySelector('iframe');
+  const notaVista = cajaVista?.querySelector<HTMLElement>('.web__vista-nota') ?? null;
   const cssVista = b64decode(el.dataset.vista || '');
   const mostrarPagina = (html: string) => {
     if (!cajaVista || !marcoVista) return;
@@ -106,8 +108,11 @@ function initEjercicio(el: HTMLElement): void {
     marcoVista.onload = () => {
       // El alto del contenido y no scrollHeight, que nunca baja del alto del
       // marco: con cada Ejecutar, la vista crecía (ver ejercicio-web.ts).
-      const alto = Math.ceil(marcoVista.contentDocument?.documentElement.getBoundingClientRect().height || 200);
+      const doc = marcoVista.contentDocument;
+      const alto = Math.ceil(doc?.documentElement.getBoundingClientRect().height || 200);
       marcoVista.style.height = Math.min(Math.max(alto, 120), 640) + 'px';
+      // Sin esto, un link de la página cargaba el curso adentro de la vista.
+      if (doc) atajarLinks(doc, (texto) => avisarEnVista(notaVista, texto));
     };
     // Si imprimió una página entera, los estilos van en su <head>; si es un
     // pedazo (una tarjeta), lo envolvemos.

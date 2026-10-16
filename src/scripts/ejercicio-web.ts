@@ -23,6 +23,7 @@ import { medirCuandoSeaVisible } from './medir-editor';
 import {
   editorTheme, b64decode, aplicarPreferenciaTeclas, conectarTeclas, conectarToggleTeclas, conectarEnvio,
 } from './editor-comun';
+import { avisarEnVista, mensajeDeLink } from './vista-links';
 
 type Lang = 'html' | 'css' | 'js';
 const LENGUAJE = { html: () => html(), css: () => css(), js: () => javascript() };
@@ -108,6 +109,38 @@ const RUNTIME = `<script>
     });
     return valor;
   };
+
+  /* Links y formularios: el marco es srcdoc, y su dirección es la del curso.
+     Sin esto, href="#contacto" o un formulario que se envía cargaban el CURSO
+     adentro de la vista (ver vista-links.ts). Se decide AL FINAL: si el código
+     del alumno (o un test) ya frenó el evento, no se toca nada. Por eso el
+     oyente se agrega recién cuando arranca el evento: queda último en la fila,
+     después del suyo. El test de "El formulario que avisa" mira justamente
+     defaultPrevented; si lo frenáramos antes, pasaría sin preventDefault. */
+  var alFinal = function (tipo, hacer) {
+    window.addEventListener(tipo, function (e) {
+      window.addEventListener(tipo, function ultimo(e2) {
+        window.removeEventListener(tipo, ultimo);
+        if (e2 === e && !e.defaultPrevented) hacer(e);
+      });
+    }, true);
+  };
+  alFinal('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    e.preventDefault();
+    var href = (a.getAttribute('href') || '').trim();
+    var destino = href.charAt(0) === '#' && href.length > 1 ? document.getElementById(decodeURIComponent(href.slice(1))) : null;
+    if (destino) destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else if (href === '#') window.scrollTo({ top: 0, behavior: 'smooth' });
+    enviar({ tipo: 'link', href: href, existe: !!destino });
+  });
+  /* Un formulario que nadie frenó "recarga la página", como explica la clase de
+     eventos: la plataforma la rearma de cero, que es lo que haría el navegador. */
+  alFinal('submit', function (e) {
+    e.preventDefault();
+    enviar({ tipo: 'recarga' });
+  });
 
   function Falla(m) { this.message = m; }
   window.addEventListener('message', function (ev) {
@@ -195,6 +228,8 @@ function initEjercicio(el: HTMLElement): void {
 
   const editorEl = el.querySelector<HTMLElement>('[data-editor]');
   const marco = el.querySelector<HTMLIFrameElement>('[data-vista]');
+  // La de la vista: la caja de la consola también tiene una nota.
+  const nota = marco?.closest('.web__vista')?.querySelector<HTMLElement>('.web__vista-nota') ?? null;
   const salida = el.querySelector<HTMLElement>('[data-salida]');
   const btnVerify = el.querySelector<HTMLButtonElement>('[data-verify]');
   const btnReset = el.querySelector<HTMLButtonElement>('[data-reset]');
@@ -280,6 +315,14 @@ function initEjercicio(el: HTMLElement): void {
       marco.style.height = Math.min(Math.max(Number(d.alto), 120), 640) + 'px';
     } else if (d.tipo === 'lista') {
       alListo?.();
+    } else if (d.tipo === 'link') {
+      avisarEnVista(nota, mensajeDeLink(String(d.href), Boolean(d.existe)));
+    } else if (d.tipo === 'recarga') {
+      // Con los tests corriendo no: el test que lo provoca ya se ocupa de avisar.
+      if (!terminarTests) {
+        refrescar();
+        avisarEnVista(nota, '↻ El formulario se envió y la página se recargó: lo que mostró tu programa se borró');
+      }
     } else if (d.tipo === 'log') {
       if (consola && cajaConsola) {
         cajaConsola.hidden = false;
