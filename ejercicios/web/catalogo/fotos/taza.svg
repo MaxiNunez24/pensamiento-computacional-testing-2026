@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Una taza de cerámica con café">
+  <rect width="400" height="400" fill="#ecd3dc"/>
+  <ellipse cx="200" cy="300" rx="125" ry="18" fill="#dcbcc8"/>
+  <path d="M120 160 L135 285 Q200 302 265 285 L280 160 Z" fill="#4f7cac"/>
+  <path d="M278 185 Q330 190 322 230 Q315 265 268 255" stroke="#4f7cac" stroke-width="16" fill="none"/>
+  <ellipse cx="200" cy="160" rx="80" ry="16" fill="#3e6590"/>
+  <ellipse cx="200" cy="162" rx="70" ry="11" fill="#6b4226"/>
+  <path d="M170 130 Q160 110 175 95 M205 130 Q195 105 212 90 M240 130 Q230 112 245 98" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
+</svg>
