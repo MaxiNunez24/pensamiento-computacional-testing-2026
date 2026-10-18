@@ -211,11 +211,11 @@ Con estas reglas, ¿de qué color sale `<p id="bienvenida" class="destacado">Hol
   dificultad="🌿"
   html={TIENDA}
   css={`main .producto {
-  color: gray;
+    color: gray;
 }
 
 .oferta {
-  color: red;
+    color: red;
 }
 `}
   tests={`assert(estilo(".oferta", "color") === "rgb(255, 0, 0)", "El producto en oferta tiene que verse rojo. Ahora es " + estilo(".oferta", "color") + ": ¿qué regla le está ganando, y por qué?");

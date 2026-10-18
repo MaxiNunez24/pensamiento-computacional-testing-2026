@@ -79,9 +79,9 @@ reglas para el celular, y después, con `min-width`, lo que **cambia** cuando ha
   html={TARJETAS}
   cssBase={BASE}
   css={`.catalogo {
-  display: grid;
-  gap: 12px;
-  /* en el celular: una sola columna */
+    display: grid;
+    gap: 12px;
+    /* en el celular: una sola columna */
 }
 
 /* desde 600px de ancho: tres columnas iguales */
@@ -132,14 +132,14 @@ img {
   titulo="La foto que se sale"
   dificultad="🌱"
   html={`<article class="producto">
-  <h2>Mate de calabaza</h2>
-  <img src="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web-img/mate.svg" width="900" height="675" alt="Mate de calabaza marrón con bombilla plateada">
-  <p>$ 7800</p>
+    <h2>Mate de calabaza</h2>
+    <img src="https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web-img/mate.svg" width="900" height="675" alt="Mate de calabaza marrón con bombilla plateada">
+    <p>$ 7800</p>
 </article>
 `}
   cssBase={BASE}
   css={`.producto {
-  max-width: 320px;
+    max-width: 320px;
 }
 
 /* que la foto no se salga de la tarjeta, ni se deforme */
@@ -249,15 +249,15 @@ variables**: el modo oscuro es redefinir dos o tres, no reescribir la página.
 <p>Productos de campo, desde 1987.</p>
 `}
   css={`:root {
-  --fondo: #faf7f2;
-  --texto: #2b2b2b;
+    --fondo: #faf7f2;
+    --texto: #2b2b2b;
 }
 
 body {
-  font-family: system-ui, sans-serif;
-  padding: 16px;
-  background: var(--fondo);
-  color: var(--texto);
+    font-family: system-ui, sans-serif;
+    padding: 16px;
+    background: var(--fondo);
+    color: var(--texto);
 }
 
 /* en modo oscuro: fondo #1d2125 y texto #e6e6e6 */

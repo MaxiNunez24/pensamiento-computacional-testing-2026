@@ -61,9 +61,9 @@ en los bordes): mucho más cómodo que ponerle margen a cada uno.
   fundamental
   dificultad="🌱"
   html={`<nav class="menu">
-  <a href="#inicio">Inicio</a>
-  <a href="#productos">Productos</a>
-  <a href="#contacto">Contacto</a>
+    <a href="#inicio">Inicio</a>
+    <a href="#productos">Productos</a>
+    <a href="#contacto">Contacto</a>
 </nav>
 <p>Los tres links, uno al lado del otro.</p>
 `}
@@ -71,7 +71,7 @@ en los bordes): mucho más cómodo que ponerle margen a cada uno.
 .menu a { display: block; padding: 8px 12px; background: #2f4858; color: white; text-decoration: none; border-radius: 6px; }
 
 .menu {
-  /* los links en una fila, con 12px entre cada uno */
+    /* los links en una fila, con 12px entre cada uno */
 }
 `}
   tests={`assert(estilo(".menu", "display") === "flex", "El menú tiene que ser un contenedor flex: display en .menu (el contenedor, no los links)");
@@ -105,11 +105,11 @@ famosamente difícil.
   fundamental
   dificultad="🌿"
   html={`<header class="cabecera">
-  <strong class="logo">🧉 Don Pepe</strong>
-  <nav class="links">
-    <a href="#productos">Productos</a>
-    <a href="#contacto">Contacto</a>
-  </nav>
+    <strong class="logo">🧉 Don Pepe</strong>
+    <nav class="links">
+        <a href="#productos">Productos</a>
+        <a href="#contacto">Contacto</a>
+    </nav>
 </header>
 `}
   css={`body { margin: 0; font-family: system-ui, sans-serif; }
@@ -118,10 +118,10 @@ famosamente difícil.
 .links a { color: white; }
 
 .cabecera {
-  background: #2f4858;
-  color: white;
-  padding: 16px;
-  /* el logo a la izquierda, los links a la derecha, y centrados de alto */
+    background: #2f4858;
+    color: white;
+    padding: 16px;
+    /* el logo a la izquierda, los links a la derecha, y centrados de alto */
 }
 `}
   tests={`assert(estilo(".cabecera", "display") === "flex", "La cabecera tiene que ser un contenedor flex");
@@ -166,7 +166,7 @@ tarjetas en tres columnas: dos filas, solas.
   html={TARJETAS}
   cssBase={BASE_TARJETAS}
   css={`.catalogo {
-  /* una grilla de 3 columnas iguales, con 16px de separación */
+    /* una grilla de 3 columnas iguales, con 16px de separación */
 }
 `}
   tests={`assert(estilo(".catalogo", "display") === "grid", "El catálogo tiene que ser una grilla: display en .catalogo");
@@ -213,9 +213,9 @@ grilla de las tiendas online que muestran muchos productos chicos.
   html={TARJETAS}
   cssBase={BASE_TARJETAS}
   css={`.catalogo {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
 }
 `}
   tests={`var escrito = (regla(".catalogo", "grid-template-columns") || "").replace(/\\s+/g, "");

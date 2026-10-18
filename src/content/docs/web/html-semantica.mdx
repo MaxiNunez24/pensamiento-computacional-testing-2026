@@ -63,18 +63,18 @@ que un `<div>`.
   fundamental
   dificultad="🌱"
   html={`<div class="cabecera">
-  <h1>CFP 401 · Ensenada</h1>
+    <h1>CFP 401 · Ensenada</h1>
 </div>
 <div class="menu">
-  <a href="#cursos">Cursos</a>
-  <a href="#contacto">Contacto</a>
+    <a href="#cursos">Cursos</a>
+    <a href="#contacto">Contacto</a>
 </div>
 <div class="contenido">
-  <h2 id="cursos">Cursos</h2>
-  <p>Pensamiento Computacional y Testing de Aplicaciones.</p>
+    <h2 id="cursos">Cursos</h2>
+    <p>Pensamiento Computacional y Testing de Aplicaciones.</p>
 </div>
 <div class="pie" id="contacto">
-  <p>Calle 2 nro 401, Ensenada.</p>
+    <p>Calle 2 nro 401, Ensenada.</p>
 </div>
 `}
   tests={`assert($("header"), "La cabecera tiene que ser un <header> y no un <div>");
@@ -223,11 +223,11 @@ en el sistema de asistencias. Por ahora, el formulario se arma y se ve.
   dificultad="🌿"
   html={`<h1>Inscripción 2027</h1>
 <form>
-  <!-- 1. Nombre y apellido: texto -->
-  <!-- 2. DNI: número -->
-  <!-- 3. Correo: email -->
-  <!-- 4. Turno: Mañana o Tarde, para elegir de una lista -->
-  <!-- 5. el botón "Inscribirme" -->
+    <!-- 1. Nombre y apellido: texto -->
+    <!-- 2. DNI: número -->
+    <!-- 3. Correo: email -->
+    <!-- 4. Turno: Mañana o Tarde, para elegir de una lista -->
+    <!-- 5. el botón "Inscribirme" -->
 </form>
 `}
   tests={`assert($("form"), "Todo va adentro del <form>");

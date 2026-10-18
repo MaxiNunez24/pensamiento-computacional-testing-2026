@@ -283,9 +283,9 @@ navegador le da igual (no es Python), pero a vos te deja ver qué está adentro 
   dificultad="🌱"
   cssBase={ESTILOS}
   html={`<article class="producto">
-  <div class="producto__foto">☕</div>
-  <!-- 1. el nombre, en un título h2 -->
-  <!-- 2. el precio, en un párrafo con class="precio" -->
+    <div class="producto__foto">☕</div>
+    <!-- 1. el nombre, en un título h2 -->
+    <!-- 2. el precio, en un párrafo con class="precio" -->
 </article>
 `}
   tests={`assert($("article.producto"), 'La tarjeta tiene que estar adentro de <article class="producto">: ¿se borró sin querer?');
@@ -331,10 +331,10 @@ característica **sin el 0** + el número **sin el 15**. Un 221 15 555-0000 de L
   dificultad="🌱"
   cssBase={ESTILOS}
   html={`<article class="producto">
-  <div class="producto__foto">☕</div>
-  <h2>Taza de cerámica</h2>
-  <p class="precio">$ 4500</p>
-  <!-- el botón: un link a WhatsApp, con class="consultar" -->
+    <div class="producto__foto">☕</div>
+    <h2>Taza de cerámica</h2>
+    <p class="precio">$ 4500</p>
+    <!-- el botón: un link a WhatsApp, con class="consultar" -->
 </article>
 `}
   tests={`assert($("a"), "Falta el link: una etiqueta <a>");
@@ -394,10 +394,10 @@ string y da error.
     # producto es un diccionario, como el de abajo
     return f"""
 <article class="producto">
-  <div class="producto__foto">☕</div>
-  <h2>Taza de cerámica</h2>
-  <p class="descripcion">Pintada a mano. Va al microondas.</p>
-  <p class="precio">$ 4500</p>
+    <div class="producto__foto">☕</div>
+    <h2>Taza de cerámica</h2>
+    <p class="descripcion">Pintada a mano. Va al microondas.</p>
+    <p class="precio">$ 4500</p>
 </article>
 """
 
@@ -790,20 +790,20 @@ ${PRODUCTOS}`}
     return f"""<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mi catálogo</title>
-  <link rel="stylesheet" href="estilos.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi catálogo</title>
+    <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-  <header class="encabezado"><h1>Mi catálogo</h1></header>
-  <main class="catalogo">
-  </main>
-  <footer class="contacto">
-    <h2>¡Contactá conmigo!</h2>
-    <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
-    <p>Tu consulta no es molestia</p>
-  </footer>
+    <header class="encabezado"><h1>Mi catálogo</h1></header>
+    <main class="catalogo">
+    </main>
+    <footer class="contacto">
+        <h2>¡Contactá conmigo!</h2>
+        <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
+        <p>Tu consulta no es molestia</p>
+    </footer>
 </body>
 </html>
 """
@@ -1055,18 +1055,18 @@ buscá **"color picker"** en Google: aparece una paleta que te da el código.
   cssBase={ESTILOS}
   html={`<header class="encabezado"><h1>Mi marca</h1></header>
 <main class="catalogo">
-  <article class="producto">
-    <img class="producto__foto" src="fotos/vela.svg" alt="Vela aromática">
-    <h2>Vela aromática</h2>
-    <p class="descripcion">Lavanda. Dura 30 horas.</p>
-    <p class="precio">$3.200</p>
-    <a class="consultar" href="https://wa.me/5492215550000">Consultar por WhatsApp</a>
-  </article>
+    <article class="producto">
+        <img class="producto__foto" src="fotos/vela.svg" alt="Vela aromática">
+        <h2>Vela aromática</h2>
+        <p class="descripcion">Lavanda. Dura 30 horas.</p>
+        <p class="precio">$3.200</p>
+        <a class="consultar" href="https://wa.me/5492215550000">Consultar por WhatsApp</a>
+    </article>
 </main>
 `}
   css={`:root {
-  --fondo: #d3cac8;
-  --acento: #5f6f45;
+    --fondo: #d3cac8;
+    --acento: #5f6f45;
 }
 `}
   tests={`var fondo = (regla(":root", "--fondo") || "").toLowerCase();

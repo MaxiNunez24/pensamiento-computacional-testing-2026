@@ -59,21 +59,21 @@ valores, el primero es arriba y abajo, y el segundo los costados: `padding: 10px
   fundamental
   dificultad="🌱"
   html={`<article class="tarjeta">
-  <h2>Taza de cerámica</h2>
-  <p>Pintada a mano. Va al microondas.</p>
-  <p class="precio">$ 4500</p>
+    <h2>Taza de cerámica</h2>
+    <p>Pintada a mano. Va al microondas.</p>
+    <p class="precio">$ 4500</p>
 </article>
 `}
   css={`body {
-  font-family: system-ui, sans-serif;
-  background: #faf7f2;
+    font-family: system-ui, sans-serif;
+    background: #faf7f2;
 }
 
 .tarjeta {
-  background: white;
-  /* 1. 16px de aire adentro
-     2. un borde de 1px, sólido, color #dddddd
-     3. las esquinas redondeadas, 12px */
+    background: white;
+    /* 1. 16px de aire adentro
+       2. un borde de 1px, sólido, color #dddddd
+       3. las esquinas redondeadas, 12px */
 }
 `}
   tests={`var t = ".tarjeta";
@@ -121,20 +121,20 @@ una página.
   fundamental
   dificultad="🌱"
   html={`<div class="contenedor">
-  <h1>Almacén Don Pepe</h1>
-  <p>Productos de campo, desde 1987. Miel de la isla, dulces caseros, quesos de cabra y
-  embutidos de la zona. Atendemos de lunes a sábado.</p>
+    <h1>Almacén Don Pepe</h1>
+    <p>Productos de campo, desde 1987. Miel de la isla, dulces caseros, quesos de cabra y
+    embutidos de la zona. Atendemos de lunes a sábado.</p>
 </div>
 `}
   css={`body {
-  font-family: system-ui, sans-serif;
-  background: #faf7f2;
+    font-family: system-ui, sans-serif;
+    background: #faf7f2;
 }
 
 .contenedor {
-  background: white;
-  padding: 20px;
-  /* como mucho 400px de ancho, y centrada */
+    background: white;
+    padding: 20px;
+    /* como mucho 400px de ancho, y centrada */
 }
 `}
   tests={`var c = ".contenedor";
@@ -187,21 +187,21 @@ relleno se acomoda adentro. Es tan útil que casi todas las páginas lo ponen al
   titulo="La caja que se sale"
   dificultad="🌿"
   html={`<div class="marco">
-  <div class="caja">Esta caja tendría que entrar justo en el marco.</div>
+    <div class="caja">Esta caja tendría que entrar justo en el marco.</div>
 </div>
 `}
   css={`body { font-family: system-ui, sans-serif; }
 
 .marco {
-  max-width: 300px;
-  margin: 20px auto;
-  outline: 2px dashed #c0392b;
+    max-width: 300px;
+    margin: 20px auto;
+    outline: 2px dashed #c0392b;
 }
 
 .caja {
-  width: 100%;
-  padding: 20px;
-  border: 4px solid #2f4858;
+    width: 100%;
+    padding: 20px;
+    border: 4px solid #2f4858;
 }
 `}
   tests={`var marco = $(".marco").getBoundingClientRect(), caja = $(".caja").getBoundingClientRect();
@@ -249,11 +249,11 @@ Las tarjetas del catálogo están **pegadas una a la otra**. ¿Qué les falta?
   css={`body { font-family: system-ui, sans-serif; padding: 20px; }
 
 .boton {
-  /* 1. que sea una caja en el renglón
-     2. relleno: 12px arriba y abajo, 24px a los costados
-     3. fondo #25d366, letra blanca, en negrita
-     4. sin subrayado: text-decoration
-     5. esquinas redondeadas de 8px */
+    /* 1. que sea una caja en el renglón
+       2. relleno: 12px arriba y abajo, 24px a los costados
+       3. fondo #25d366, letra blanca, en negrita
+       4. sin subrayado: text-decoration
+       5. esquinas redondeadas de 8px */
 }
 `}
   tests={`var b = ".boton";
