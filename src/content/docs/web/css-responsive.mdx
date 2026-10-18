@@ -54,14 +54,14 @@ condición.
 
 ```css
 .catalogo {
-  display: grid;
-  grid-template-columns: 1fr;          /* en el celular: una columna */
+    display: grid;
+    grid-template-columns: 1fr;          /* en el celular: una columna */
 }
 
 @media (min-width: 600px) {
-  .catalogo {
-    grid-template-columns: repeat(3, 1fr);   /* desde 600px de ancho: tres */
-  }
+    .catalogo {
+        grid-template-columns: repeat(3, 1fr);   /* desde 600px de ancho: tres */
+    }
 }
 ```
 
@@ -123,8 +123,8 @@ arregla para siempre:
 
 ```css
 img {
-  max-width: 100%;   /* como mucho, el ancho de su contenedor */
-  height: auto;      /* y el alto, proporcional: que no se deforme */
+    max-width: 100%;   /* como mucho, el ancho de su contenedor */
+    height: auto;      /* y el alto, proporcional: que no se deforme */
 }
 ```
 
@@ -164,8 +164,8 @@ un día cambia el color de la marca, hay que buscarlos todos. Con **variables**,
 
 ```css
 :root {
-  --principal: #2f4858;
-  --fondo: #faf7f2;
+    --principal: #2f4858;
+    --fondo: #faf7f2;
 }
 
 h1      { color: var(--principal); }
@@ -222,20 +222,20 @@ los colores están en variables, alcanza con **cambiar las variables**:
 
 ```css
 :root {
-  --fondo: #faf7f2;
-  --texto: #2b2b2b;
+    --fondo: #faf7f2;
+    --texto: #2b2b2b;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --fondo: #1d2125;
-    --texto: #e6e6e6;
-  }
+    :root {
+        --fondo: #1d2125;
+        --texto: #e6e6e6;
+    }
 }
 
 body {
-  background: var(--fondo);
-  color: var(--texto);
+    background: var(--fondo);
+    color: var(--texto);
 }
 ```
 

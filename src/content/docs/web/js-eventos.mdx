@@ -35,7 +35,7 @@ programa puede **escuchar** un evento en un elemento, y decir qué hacer cuando 
 const boton = document.querySelector("#saludar");
 
 boton.addEventListener("click", function () {
-  console.log("¡Me tocaron!");
+    console.log("¡Me tocaron!");
 });
 ```
 
@@ -86,7 +86,7 @@ Con `classList.toggle` y un evento, se arma el "Ver más" de cualquier página: 
 
 ```js
 boton.addEventListener("click", function () {
-  detalle.classList.toggle("oculto");
+    detalle.classList.toggle("oculto");
 });
 ```
 
@@ -133,7 +133,7 @@ El evento `input` pasa **con cada letra** que se escribe en un campo. Y lo escri
 const buscador = document.querySelector("#buscar");
 
 buscador.addEventListener("input", function () {
-  console.log("Escribieron:", buscador.value);
+    console.log("Escribieron:", buscador.value);
 });
 ```
 
@@ -186,8 +186,8 @@ JavaScript, mandando los datos a un servidor. Si querés manejarlo vos, hay que 
 
 ```js
 formulario.addEventListener("submit", function (evento) {
-  evento.preventDefault();   // "no hagas lo de siempre: no recargues"
-  // ...lo tuyo
+    evento.preventDefault();   // "no hagas lo de siempre: no recargues"
+    // ...lo tuyo
 });
 ```
 
@@ -239,7 +239,7 @@ Al enviar el formulario, **sin recargar la página**:
 ]}>
 ```js
 boton.addEventListener("click", function () {
-  console.log("hola");
+    console.log("hola");
 });
 ```
 

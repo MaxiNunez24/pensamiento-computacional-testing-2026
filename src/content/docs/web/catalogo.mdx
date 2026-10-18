@@ -268,9 +268,9 @@ Una tarjeta entera es esto: una caja (`<article>`) con cosas adentro.
 
 ```html
 <article class="producto">
-  <div class="producto__foto">🧉</div>
-  <h2>Mate de calabaza</h2>
-  <p class="precio">$ 7800</p>
+    <div class="producto__foto">🧉</div>
+    <h2>Mate de calabaza</h2>
+    <p class="precio">$ 7800</p>
 </article>
 ```
 
@@ -374,7 +374,7 @@ Lo único nuevo: el texto de una tarjeta tiene **varios renglones**. Para eso, e
 nombre = "Vela aromática"
 html = f"""
 <article class="producto">
-  <h2>{nombre}</h2>
+    <h2>{nombre}</h2>
 </article>
 """
 ```
@@ -746,21 +746,21 @@ como la última página del catálogo de Canva, cómo contactarte.
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mi catálogo</title>
-  <link rel="stylesheet" href="estilos.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi catálogo</title>
+    <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-  <header class="encabezado"><h1>Mi catálogo</h1></header>
-  <main class="catalogo">
-    ...las tarjetas...
-  </main>
-  <footer class="contacto">
-    <h2>¡Contactá conmigo!</h2>
-    <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
-    <p>Tu consulta no es molestia</p>
-  </footer>
+    <header class="encabezado"><h1>Mi catálogo</h1></header>
+    <main class="catalogo">
+        ...las tarjetas...
+    </main>
+    <footer class="contacto">
+        <h2>¡Contactá conmigo!</h2>
+        <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
+        <p>Tu consulta no es molestia</p>
+    </footer>
 </body>
 </html>
 ```
@@ -1023,13 +1023,13 @@ Los colores y las letras están **una sola vez**, arriba de todo en `estilos.css
 
 ```css
 :root {
-  --fondo: #d3cac8;
-  --texto: #5b6844;
-  --acento: #5f6f45;
-  --linea: #93a77c;
-  --marca: #ffffff;
-  --fondo-foto: #ecd3dc;
-  ...
+    --fondo: #d3cac8;
+    --texto: #5b6844;
+    --acento: #5f6f45;
+    --linea: #93a77c;
+    --marca: #ffffff;
+    --fondo-foto: #ecd3dc;
+    ...
 }
 ```
 

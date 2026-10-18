@@ -176,9 +176,9 @@ Y con un `for`, uno por cada dato:
 ```js
 const compras = ["Yerba", "Azúcar", "Pan"];
 for (const cosa of compras) {
-  const item = document.createElement("li");
-  item.textContent = cosa;
-  lista.append(item);
+    const item = document.createElement("li");
+    item.textContent = cosa;
+    lista.append(item);
 }
 ```
 
@@ -220,11 +220,11 @@ separado es largo. Se puede escribir **el HTML entero en una template string** y
 ```js
 const catalogo = document.querySelector(".catalogo");
 for (const p of PRODUCTOS) {
-  catalogo.innerHTML += `
-    <article class="tarjeta">
-      <h2>${p.nombre}</h2>
-      <p>$ ${p.precio}</p>
-    </article>`;
+    catalogo.innerHTML += `
+        <article class="tarjeta">
+            <h2>${p.nombre}</h2>
+            <p>$ ${p.precio}</p>
+        </article>`;
 }
 ```
 
