@@ -1,0 +1,363 @@
+---
+title: "La vidriera"
+description: "Los catálogos de todo el curso en una sola página, cada uno con su QR para abrirlo desde el celular. La arma Python, con lo mismo que el catálogo."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+export const ESTILOS = `body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #1d2b36;
+    color: #f4f1ea;
+}
+
+.cabecera {
+    text-align: center;
+    padding: 28px 16px 8px;
+}
+
+.cabecera h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.cabecera p {
+    margin: 6px 0 0;
+    color: #c9d6df;
+}
+
+.vidriera {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.puesto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    max-width: 260px;
+    margin: 0 auto;
+    padding: 16px;
+    border-radius: 16px;
+    background: #f4f1ea;
+    color: #1d2b36;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.puesto__emoji {
+    font-size: 2.4rem;
+}
+
+.puesto h2 {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.puesto p {
+    margin: 0;
+    color: #5a6b78;
+}
+
+.puesto__qr {
+    width: 140px;
+    height: 140px;
+    margin-top: 6px;
+    border-radius: 8px;
+    background: white;
+}
+`;
+
+export const QR = `from urllib.parse import quote
+
+def qr(link):
+    return "https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=" + quote(link, safe="")
+`;
+
+export const TARJETA = `def tarjeta(emp):
+    return f"""<a class="puesto" href="{emp['link']}">
+    <span class="puesto__emoji">{emp['emoji']}</span>
+    <h2>{emp['emprendimiento']}</h2>
+    <p>{emp['rubro']}</p>
+    <img class="puesto__qr" src="{qr(emp['link'])}" alt="QR de {emp['emprendimiento']}">
+</a>
+"""
+`;
+
+export const PLANILLA = `with open("vidriera.csv", "w", encoding="utf-8") as f:
+    f.write("emprendimiento,rubro,emoji,link\\n")
+    f.write("Dulces de la Isla,Dulces caseros,🍯,https://example.com/dulces/\\n")
+    f.write("Hilos y Agujas,Tejidos a mano,🧶,https://example.com/hilos/\\n")
+    f.write("La Vela Encendida,Velas aromáticas,🕯️,https://example.com/velas/\\n")
+    f.write("Mates del Río,Mates y bombillas,🧉,https://example.com/mates/\\n")
+`;
+
+:::tip[Antes de empezar]
+Es lo mismo que [Tu catálogo con Python](../../web/catalogo/), con otros datos: si lo terminaste,
+esta clase sale rápido. Y tiene premio: **la página que armes es la que se va a ver en la Expo**.
+:::
+
+## El problema
+
+En la Expo, cada uno va a tener su catálogo publicado en internet. Pero quien pase por el puesto
+no va a tipear `https://alguien.github.io/mi-catalogo/` en el celular. Lo que se hace es mostrar
+un **código QR**: lo apunta con la cámara, y se le abre la página.
+
+Entonces la **vidriera** es una página con **una tarjeta por emprendimiento**: el nombre, a qué se
+dedica, y el QR de su catálogo. Y como los datos están en una planilla, la arma **Python**: si se
+suma alguien, se agrega una fila y se vuelve a generar.
+
+```text
+emprendimiento,rubro,emoji,link
+Dulces de la Isla,Dulces caseros,🍯,https://example.com/dulces/
+Hilos y Agujas,Tejidos a mano,🧶,https://example.com/hilos/
+```
+
+:::note[En la vidriera va el emprendimiento, no tu nombre]
+La página es pública. Por eso en la planilla va el **nombre del emprendimiento**, no el de quien lo
+hizo. Si alguien no quiere aparecer, no aparece: es su catálogo.
+:::
+
+## Un QR, a partir de un link
+
+Un QR es **un link dibujado**. Hay servicios que lo dibujan solos: se les pide una imagen y se les
+pasa el link **adentro de la dirección**, en `data=`:
+
+```text
+https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=https://example.com/dulces/
+```
+
+Esa dirección es **una imagen**: se puede usar en un `<img src="...">`. Pero hay una trampa. Una
+dirección usa `?`, `&` y `/` para separar sus partes, y un link de catálogo puede tener esos mismos
+caracteres. Si van tal cual, el servicio no sabe dónde termina el link.
+
+Ya lo resolviste una vez: en el catálogo, el mensaje de WhatsApp iba adentro de un link, y lo
+pasabas por **`quote`**. Acá es igual, con una diferencia: `quote` deja las `/` como están (porque
+casi siempre separan carpetas), y adentro de `data=` también hay que codificarlas. Para eso,
+`safe=""`:
+
+```python
+from urllib.parse import quote
+
+quote("https://example.com/dulces/")            # 'https%3A//example.com/dulces/'
+quote("https://example.com/dulces/", safe="")   # 'https%3A%2F%2Fexample.com%2Fdulces%2F'
+```
+
+<EjercicioPython
+  titulo="El QR de un link"
+  fundamental
+  dificultad="🌱"
+  starter={`from urllib.parse import quote
+
+def qr(link):
+    # la dirección de la imagen del QR de ese link:
+    # "https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=" + el link codificado
+    return ""
+
+print(qr("https://example.com/dulces/"))
+`}
+  tests={`from urllib.parse import urlparse, parse_qs
+
+base = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data="
+d = qr("https://example.com/dulces/")
+assert isinstance(d, str) and d, "qr tiene que DEVOLVER la dirección de la imagen, con return"
+assert d.startswith(base), f"La dirección tiene que empezar con {base}"
+assert "example.com" in d, "Falta el link adentro de la dirección, después de data="
+assert "data=https://" not in d, 'El link va tal cual: hay que pasarlo por quote, como el mensaje de WhatsApp del catálogo'
+assert "%2F" in d, 'Las / del link también se tienen que codificar: quote(link, safe="")'
+raro = "https://example.com/catalogo/?color=rojo&talle=M"
+datos = parse_qs(urlparse(qr(raro)).query)
+assert datos.get("data") == [raro], "Con un link que tiene ? y &, el servicio tiene que poder recuperarlo entero. ¿Lo codificaste todo, con safe=\\"\\"?"
+assert datos.get("size") == ["280x280"], "El tamaño se perdió: no toques el size=280x280 de la dirección"
+print("¡Listo! Cada link, su QR.")
+`}
+  pistas={[
+    'Es una suma de dos textos: la parte fija, y el link pasado por quote.',
+    '¿Qué le decías a quote para que no deje nada sin codificar?',
+  ]}
+>
+Completá `qr(link)`: que devuelva la dirección de la imagen del QR de ese link. Es la parte fija
+de arriba más el link **codificado entero**, con `quote(link, safe="")`.
+</EjercicioPython>
+
+## Una tarjeta por emprendimiento
+
+La tarjeta es un link entero (`<a>`), así en la computadora se puede hacer clic en cualquier parte,
+y adentro: el emoji, el nombre, el rubro y el QR.
+
+```html
+<a class="puesto" href="https://example.com/dulces/">
+    <span class="puesto__emoji">🍯</span>
+    <h2>Dulces de la Isla</h2>
+    <p>Dulces caseros</p>
+    <img class="puesto__qr" src="https://api.qrserver.com/..." alt="QR de Dulces de la Isla">
+</a>
+```
+
+Es la `tarjeta()` del catálogo, con otros datos. Y `qr()` ya está hecha, para usarla.
+
+<EjercicioPython
+  titulo="La tarjeta del puesto"
+  fundamental
+  dificultad="🌿"
+  vista={ESTILOS}
+  datos={QR}
+  starter={`def tarjeta(emp):
+    # emp es un diccionario: emprendimiento, rubro, emoji y link
+    return f"""<a class="puesto" href="https://example.com/dulces/">
+    <span class="puesto__emoji">🍯</span>
+    <h2>Dulces de la Isla</h2>
+    <p>Dulces caseros</p>
+</a>
+"""
+
+print(tarjeta({"emprendimiento": "Mates del Río", "rubro": "Mates y bombillas", "emoji": "🧉",
+               "link": "https://example.com/mates/"}))
+`}
+  tests={`emp = {"emprendimiento": "Hilos y Agujas", "rubro": "Tejidos a mano", "emoji": "🧶", "link": "https://example.com/hilos/"}
+t = tarjeta(emp)
+assert isinstance(t, str), "tarjeta tiene que DEVOLVER el HTML, con return"
+assert "Dulces" not in t, "Quedaron los dulces escritos a mano: la tarjeta tiene que salir de los datos de cada emprendimiento"
+assert '<a class="puesto" href="https://example.com/hilos/">' in t, 'La tarjeta es un link al catálogo: <a class="puesto" href="..."> con el link del emprendimiento'
+assert "<h2>Hilos y Agujas</h2>" in t, "Falta el nombre en el <h2>"
+assert "<p>Tejidos a mano</p>" in t, "Falta el rubro en el <p>"
+assert "🧶" in t, "Falta el emoji"
+assert 'class="puesto__qr"' in t, 'Falta el QR: una <img class="puesto__qr" ...>'
+assert f'src="{qr(emp["link"])}"' in t, "La imagen del QR tiene que ser qr(link): la dirección que arma la función de antes"
+assert 'alt="QR de Hilos y Agujas"' in t, 'La imagen necesita su texto alternativo: alt="QR de Hilos y Agujas"'
+print("¡Una tarjeta para cualquier emprendimiento! Tocá Ejecutar para verla.")
+`}
+  pistas={[
+    'Como en el catálogo: ¿de dónde sale cada dato, del texto escrito a mano o del diccionario?',
+    'Para el QR, adentro de las llaves podés llamar a una función: {qr(emp[\'link\'])}.',
+  ]}
+>
+Completá `tarjeta(emp)` para que salga **de los datos** del emprendimiento, y agregale el QR: una
+`<img class="puesto__qr">` con `src` igual a `qr(...)` del link, y `alt="QR de "` y el nombre.
+
+Recibe un diccionario como este:
+
+```python
+{"emprendimiento": "Hilos y Agujas", "rubro": "Tejidos a mano", "emoji": "🧶",
+ "link": "https://example.com/hilos/"}
+```
+
+y devuelve:
+
+```html
+<a class="puesto" href="https://example.com/hilos/">
+    <span class="puesto__emoji">🧶</span>
+    <h2>Hilos y Agujas</h2>
+    <p>Tejidos a mano</p>
+    <img class="puesto__qr" src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=https%3A%2F%2Fexample.com%2Fhilos%2F" alt="QR de Hilos y Agujas">
+</a>
+```
+</EjercicioPython>
+
+## La vidriera entera
+
+Falta leer la planilla y armar la página: **lo mismo que el catálogo**. Leer con `csv.DictReader`,
+una tarjeta por fila, y todas juntas adentro de la página.
+
+<OpcionMultiple titulo="Chequeo: se suma un emprendimiento" opciones={[
+  { texto: "Agregar una fila a la planilla y volver a correr el programa.", correcta: true, explicacion: "Exacto. Esa es la gracia de que la arme Python: los datos están en la planilla, y el programa no cambia nunca." },
+  { texto: "Copiar una tarjeta en el HTML y cambiarle los datos.", explicacion: "Andaría, pero es justo lo que evitamos: la próxima vez que se genere, esa tarjeta escrita a mano se pierde." },
+  { texto: "Agregar una tarjeta nueva en el código de Python.", explicacion: "No hace falta tocar el programa: tarjeta() sirve para cualquier emprendimiento. Lo único que cambia son los datos." },
+]}>
+Mañana se suma alguien más a la Expo. ¿Qué hay que hacer para que aparezca en la vidriera?
+</OpcionMultiple>
+
+<EjercicioPython
+  titulo="La vidriera"
+  fundamental
+  dificultad="🌳"
+  vista={ESTILOS}
+  datos={`${QR}
+${TARJETA}
+${PLANILLA}`}
+  starter={`import csv
+
+def leer_vidriera(ruta):
+    emprendimientos = []
+    # cada fila de la planilla, como diccionario, a la lista
+    return emprendimientos
+
+def pagina(emprendimientos):
+    tarjetas = ""
+    # una tarjeta por emprendimiento
+    return f"""<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Vidriera</title>
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Vidriera</h1>
+        <p>Los emprendimientos del curso de Pensamiento Computacional · CFP 401</p>
+    </header>
+    <main class="vidriera">
+{tarjetas}
+    </main>
+</body>
+</html>
+"""
+
+print(pagina(leer_vidriera("vidriera.csv")))
+`}
+  tests={`emps = leer_vidriera("vidriera.csv")
+assert isinstance(emps, list), "leer_vidriera tiene que devolver una lista"
+assert len(emps) != 5, "Salieron 5 y la planilla tiene 4: la primera línea son los títulos de las columnas"
+assert len(emps) == 4, f"La planilla tiene 4 emprendimientos y salieron {len(emps)}"
+assert emps[0]["emprendimiento"] == "Dulces de la Isla", 'El primero es "Dulces de la Isla". ¿Abriste con encoding="utf-8"?'
+assert emps[3]["emoji"] == "🧉", "Los emojis tienen que llegar bien: es lo que hace el encoding"
+p = pagina(emps)
+assert p.lstrip().lower().startswith("<!doctype html>"), "La página tiene que empezar con <!doctype html>"
+n = p.count('class="puesto"')
+assert n == 4, f"Tiene que haber una tarjeta por emprendimiento (4), y hay {n}"
+for e in emps:
+    assert e["emprendimiento"] in p, f'Falta {e["emprendimiento"]} en la vidriera'
+dos = pagina(emps[:2])
+assert dos.count('class="puesto"') == 2, "Con dos emprendimientos tienen que salir dos tarjetas: ¿la cuenta sale de la lista que recibe?"
+assert pagina(emps) == p, "Dos veces la misma lista tiene que dar la misma página: ¿quedó algo guardado afuera de la función?"
+print("¡La vidriera del curso! Así se va a ver en la Expo.")
+`}
+  pistas={[
+    'leer_vidriera es igual a leer_productos del catálogo. ¿Qué cambia, aparte del nombre?',
+    'Para juntar las tarjetas: recorré la lista y andá sumando cada tarjeta(emp) a tarjetas, con +=.',
+  ]}
+>
+Completá `leer_vidriera(ruta)` (una lista con un diccionario por fila) y `pagina(emprendimientos)`
+(todas las tarjetas, adentro de `<main class="vidriera">`). `tarjeta()`, `qr()` y la planilla
+`vidriera.csv` ya están.
+</EjercicioPython>
+
+## La vidriera de verdad
+
+Para la Expo, la planilla tiene los emprendimientos **del curso**:
+
+1. **Cuando tu catálogo esté publicado**, pasale al profe: el nombre del emprendimiento, el rubro
+   (dos o tres palabras), un emoji, y el link.
+2. Con todos juntos, en clase corremos el programa con **la planilla de verdad**, y la página que
+   sale es la que se muestra en la Expo, en la pantalla grande: cada QR lleva a un catálogo.
+
+:::note[Probá tu QR antes]
+Cuando aparezca tu tarjeta, **escaneala con tu celular**. Si no abre tu catálogo, hay algo mal en
+el link de la planilla: mejor encontrarlo ahora que con alguien enfrente.
+:::
+
+## Para llevar
+
+- Un **QR** es un link dibujado. Un servicio lo dibuja si le pasás el link adentro de su dirección,
+  **codificado**: `quote(link, safe="")`.
+- La vidriera es **el catálogo otra vez**: leer la planilla, una tarjeta por fila, la página entera.
+  Lo que aprendiste una vez, sirve para otras cosas.
+- Si los datos están en una planilla, sumar a alguien es **agregar una fila**, no tocar el programa.

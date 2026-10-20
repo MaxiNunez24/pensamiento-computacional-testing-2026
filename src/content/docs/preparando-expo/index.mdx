@@ -1,0 +1,58 @@
+---
+title: Preparando la Expo
+description: "Lo que vamos a mostrar en la Expo CFP del viernes 13/11, las clases para prepararlo, y lo que tiene que tener listo cada uno."
+---
+
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+:::tip[Viernes 13/11 · Expo CFP 2026]
+La Expo es para que la comunidad vea **qué se hace en cada curso**. Vamos a mostrar cosas que
+**usan de verdad**: los catálogos de sus emprendimientos, juegos para jugar desde el celular, y cómo
+se planifica un sistema real.
+:::
+
+## Qué vamos a mostrar
+
+| | Qué | Quién lo hace |
+|---|---|---|
+| 🛍️ | **La vidriera**: los catálogos del curso, cada uno con su **QR** para abrirlo en el celular | Cada uno publica el suyo; la página que los junta la arma Python |
+| 🎮 | **Jugá**: juegos para jugar en el celular de quien pasa. El primero, **cara o cruz** | La idea de la moneda es de un compañero; cada uno puede sumar el suyo |
+| 🧩 | **Cómo se planifica un sistema**: el Sistema de Gestión de Alumnos, desde el problema hasta cómo se va a ver | Lo presentamos entre todos, cada uno una parte |
+
+Todo va a estar en **una página propia para la Expo**, pensada para la pantalla grande y para el
+celular.
+
+## Las clases
+
+<CardGrid>
+  <LinkCard title="🪙 Juegos I · Cara o cruz" href={b + 'preparando-expo/moneda/'} description="Una moneda que sube girando y cae, después de que adivinaste. Azar, animaciones de CSS, y un panel secreto para cargarla." />
+  <LinkCard title="🛍️ La vidriera" href={b + 'preparando-expo/vidriera/'} description="Los catálogos del curso en una página, con su QR. La arma Python, igual que el catálogo." />
+</CardGrid>
+
+Antes de estas, hay que **terminar y publicar** [Tu catálogo con Python](../web/catalogo/): es lo
+que va en la vidriera.
+
+## Lo que tiene que tener listo cada uno
+
+- [ ] **Tu catálogo publicado** en GitHub Pages, con tus productos y tus fotos.
+- [ ] **Los datos para la vidriera**, para pasarle al profe: nombre del emprendimiento, rubro (dos o
+      tres palabras), un emoji y el link.
+- [ ] **Tu QR probado**: escanealo con el celular y fijate que abra tu catálogo.
+- [ ] **Un juego publicado** (la moneda, u otro tuyo), si querés sumarlo a la sección de juegos.
+- [ ] **Tu parte de la presentación** del sistema: la vamos a repartir en clase.
+
+## Hasta la Expo
+
+| Clase | Qué |
+|---|---|
+| Mié 21/10 | Terminar **Tu catálogo con Python** y publicarlo |
+| Vie 23/10 | **Juegos I · Cara o cruz** |
+| Mié 28/10 y vie 30/10 | **La vidriera**, pulir los catálogos y los juegos |
+| Mié 4/11 y vie 6/11 | Preparar la presentación del **Sistema de Gestión de Alumnos** |
+| Mié 11/11 | **Ensayo general** |
+| 🏆 **Vie 13/11** | **Expo CFP 2026** 🎪 |
+
+Es un plan, y se acomoda según cómo vayamos: lo que no entre en clase se puede adelantar en casa,
+porque todos los ejercicios corren acá mismo, sin instalar nada.

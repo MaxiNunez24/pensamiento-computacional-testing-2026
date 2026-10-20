@@ -42,8 +42,8 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLASES = os.path.join(RAIZ, 'src', 'content', 'docs', 'clases')
-# Las clases de páginas web (el catálogo y lo que venga) viven en su carpeta.
-CARPETAS = [CLASES, os.path.join(RAIZ, 'src', 'content', 'docs', 'web')]
+# Las clases de páginas web (el catálogo y lo que venga) y las de la Expo viven en su carpeta.
+CARPETAS = [CLASES, *(os.path.join(RAIZ, 'src', 'content', 'docs', c) for c in ('web', 'preparando-expo'))]
 
 # Los tres componentes que corren código del alumno contra tests.
 COMPONENTES = r'<(EjercicioPython|EncontrarElError|CompletarCodigo)\b(.*?)\n>'

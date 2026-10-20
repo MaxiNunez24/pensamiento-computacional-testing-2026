@@ -126,6 +126,18 @@ export default defineConfig({
               // Herramientas como "Kit para entrevistas": ya se hizo, y queda para la
               // próxima.)
               { label: '🗺️ Cómo trabaja cada uno', link: '/casos/' },
+              // Hasta la Expo (13/11) es lo que viene, por eso va arriba de los
+              // bloques. Se llama preparando-expo/ y no expo/ porque /expo/ queda
+              // libre para la página de la Expo en sí (src/pages/, diseño propio).
+              {
+                label: '🎪 Preparando la Expo',
+                badge: { text: 'nuevo', variant: 'success' },
+                items: [
+                  { label: '📝 Qué vamos a mostrar', link: '/preparando-expo/' },
+                  { label: '🪙 Juegos I · Cara o cruz', link: '/preparando-expo/moneda/' },
+                  { label: '🛍️ La vidriera', link: '/preparando-expo/vidriera/' },
+                ],
+              },
               // El cuestionario del CFP (/cuestionario/) NO va acá a propósito: se
               // llega solo por el link que se les manda. No es secreto —cualquiera
               // que tenga la URL entra— pero no tiene por qué aparecerle a un alumno

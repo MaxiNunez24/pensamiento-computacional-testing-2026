@@ -142,6 +142,11 @@ const RUNTIME = `<script>
     enviar({ tipo: 'recarga' });
   });
 
+  /* Los tests de juegos fijan el azar (Math.random = ...) para saber qué va a
+     salir. Se devuelve el de verdad al terminar, pasen o no: si no, después de
+     Verificar la moneda caía siempre del mismo lado. */
+  var azarReal = Math.random;
+
   function Falla(m) { this.message = m; }
   window.addEventListener('message', function (ev) {
     var d = ev.data;
@@ -164,8 +169,9 @@ const RUNTIME = `<script>
         'return (async function () {\\n' + d.tests + '\\n})();');
     } catch (e) { enviar({ tipo: 'tests', ok: false, nuestro: true, mensaje: 'El test tiene un error: ' + e.message }); return; }
     correr(assert, $, $$, texto, estilo, atributo, click, escribir, esperar, consola, regla).then(
-      function () { enviar({ tipo: 'tests', ok: true }); },
+      function () { Math.random = azarReal; enviar({ tipo: 'tests', ok: true }); },
       function (e) {
+        Math.random = azarReal;
         if (e instanceof Falla) enviar({ tipo: 'tests', ok: false, mensaje: e.message });
         else enviar({ tipo: 'tests', ok: false, nuestro: true, mensaje: String(e && e.message || e) });
       });
