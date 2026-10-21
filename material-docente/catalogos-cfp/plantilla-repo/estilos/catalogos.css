@@ -1,0 +1,144 @@
+/* Lo que suman los catálogos del CFP a los estilos del catálogo de la clase
+   (estilos.css, que es el mismo de "Tu catálogo con Python"). */
+
+/* ── En cada catálogo ─────────────────────────────────────────────── */
+
+.encabezado .logo {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--marca);
+}
+
+.encabezado .lema {
+    position: relative;      /* arriba de las ramas de las esquinas */
+    max-width: 32rem;
+    margin: 1rem auto 0;
+    color: var(--marca);
+    font-size: 1.05rem;
+}
+
+.contacto .red {
+    color: inherit;
+}
+
+.credito {
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+    font: 0.8rem system-ui, sans-serif;
+    opacity: 0.75;
+}
+
+/* ── La vidriera (la página de inicio) ───────────────────────────── */
+
+.vidriera-pagina {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #1d2b36;
+    color: #f4f1ea;
+}
+
+.cabecera {
+    padding: 28px 16px 8px;
+    text-align: center;
+}
+
+.cabecera h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.cabecera p {
+    margin: 6px 0 0;
+    color: #c9d6df;
+}
+
+.vidriera {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.puesto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px;
+    border-radius: 16px;
+    background: #f4f1ea;
+    color: #1d2b36;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.puesto__emoji {
+    font-size: 2.4rem;
+}
+
+.puesto h2 {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.puesto p {
+    margin: 0;
+    color: #5a6b78;
+}
+
+.puesto__qr {
+    width: 140px;
+    height: 140px;
+    margin-top: 6px;
+    border-radius: 8px;
+    background: white;
+}
+
+/* ── Los carteles para imprimir: dos por hoja A4 ──────────────────── */
+
+.imprimir {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    color: #1d2b36;
+}
+
+.cartel {
+    box-sizing: border-box;
+    height: 148mm;           /* media hoja A4 */
+    padding: 12mm;
+    border-bottom: 1px dashed #999;
+    text-align: center;
+    break-inside: avoid;
+}
+
+.cartel h2 {
+    margin: 0;
+    font-size: 26pt;
+}
+
+.cartel p {
+    margin: 2mm 0;
+    font-size: 13pt;
+}
+
+.cartel img {
+    width: 75mm;
+    height: 75mm;
+    margin: 4mm 0;
+}
+
+.cartel__pie small {
+    font-size: 9pt;
+    color: #5a6b78;
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}

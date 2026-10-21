@@ -1,0 +1,378 @@
+---
+title: "Catálogos para todo el CFP"
+description: "Un formulario de Google, una planilla, y un programa que arma un catálogo para cada emprendimiento aprobado. Lo mismo que tu catálogo, pero para cualquiera del CFP."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+export const SLUG = `import re
+import unicodedata
+
+def slug(nombre):
+    sin_tildes = "".join(c for c in unicodedata.normalize("NFD", nombre)
+                         if unicodedata.category(c) != "Mn")
+    return re.sub(r"[^a-z0-9]+", "-", sin_tildes.lower()).strip("-")
+`;
+
+export const FILAS = `FILAS = [
+    {"Nombre del emprendimiento": "Dulces de la Isla", "Producto 1 · Nombre": "Dulce de leche", "Aprobado": "TRUE"},
+    {"Nombre del emprendimiento": "Hilos y Agujas", "Producto 1 · Nombre": "Gorro de lana", "Aprobado": "TRUE"},
+    {"Nombre del emprendimiento": "La Vela Encendida", "Producto 1 · Nombre": "Vela de lavanda", "Aprobado": "FALSE"},
+    {"Nombre del emprendimiento": "Dulces de la Isla", "Producto 1 · Nombre": "Pastafrola", "Aprobado": "FALSE"},
+]
+`;
+
+:::tip[Antes de empezar]
+Es [Tu catálogo con Python](../../web/catalogo/) otra vez, pero para **cualquier emprendimiento
+del CFP**: si lo terminaste, vas a reconocer casi todo. Y es lo que se va a poder usar en la Expo:
+alguien completa un formulario y, cuando lo aprobamos, tiene su catálogo publicado.
+:::
+
+## El problema
+
+Tu catálogo lo armaste vos: escribiste tus productos en la planilla y corriste el programa. Pero en
+el CFP hay estudiantes de todos los cursos con emprendimientos: pastelería, tejido, cosmética,
+marroquinería. **Ellos no van a instalar Python.** Lo que sí pueden hacer es completar un
+**formulario de Google** desde el celular.
+
+Entonces el camino es este:
+
+1. La persona completa el formulario: el nombre del emprendimiento, su WhatsApp, y sus productos
+   con foto y precio.
+2. Google guarda cada respuesta en **una planilla**, una fila por respuesta.
+3. Alguien del CFP la **revisa** y tilda *Aprobado*.
+4. **Un programa** lee la planilla, arma un catálogo por cada emprendimiento aprobado, y lo publica.
+
+El paso 4 es lo que hacemos en esta clase. Y no es solo para los catálogos: importar una planilla
+que llega de un formulario es **lo mismo** que vamos a tener que hacer para cargar a todos los
+alumnos del CFP en el Sistema de Gestión.
+
+## Del formulario a la planilla
+
+En tu catálogo, la planilla tenía **una fila por producto**. La del formulario es distinta: tiene
+**una fila por respuesta**, y como cada respuesta trae varios productos, cada producto ocupa **varias
+columnas**:
+
+| Nombre del emprendimiento | WhatsApp para consultas | Producto 1 · Nombre | Producto 1 · Precio | Producto 2 · Nombre | Producto 2 · Precio | … | Aprobado |
+|---|---|---|---|---|---|---|---|
+| Dulces de la Isla | 2215550001 | Dulce de leche | 3500 | Mermelada | 3200 | … | ✅ |
+| Hilos y Agujas | 2215550002 | Gorro de lana | 8000 | | | … | ✅ |
+
+Así es como Google guarda un formulario: **una columna por pregunta**. El formulario tiene lugar para
+12 productos, así que la planilla tiene columnas para 12, y la mayoría quedan vacías. Por eso el
+número va en el título de cada pregunta: `Producto 1 · Nombre`, `Producto 2 · Nombre`… Si todas se
+llamaran "Nombre", no se sabría cuál es cuál.
+
+Cada fila se lee, como siempre, como un diccionario: el título de la columna es la clave.
+
+## Un nombre para la dirección
+
+Cada catálogo va en su propia dirección, con el nombre del emprendimiento:
+
+```text
+https://cfp401-ensenada.github.io/catalogos/dulces-de-la-isla/
+```
+
+Ese pedazo final se llama **slug**: el nombre sin mayúsculas, sin tildes, y con guiones en vez de
+espacios y símbolos. Las tildes se sacan **separando** cada letra de su tilde y tirando la tilde.
+Eso lo hace `unicodedata`, que viene con Python:
+
+```python
+import unicodedata
+
+unicodedata.normalize("NFD", "Río")     # 'Ri´o': la í se separa en i + ´
+unicodedata.category("´")               # 'Mn': una marca, no una letra
+```
+
+Y para cambiar "todo lo que no sea letra o número" por un guion está `re.sub`, de las expresiones
+regulares: `re.sub(r"[^a-z0-9]+", "-", texto)` reemplaza cada tramo de cosas que **no** son a-z ni
+0-9 por un guion.
+
+<EjercicioPython
+  titulo="El slug"
+  fundamental
+  dificultad="🌱"
+  starter={`import re
+import unicodedata
+
+def slug(nombre):
+    # 1. sacarle las tildes (normalize "NFD" y quedarse con lo que no es de categoría "Mn")
+    # 2. todo en minúscula
+    # 3. cada tramo que no sea a-z ni 0-9, un guion; y sin guiones en las puntas
+    return nombre
+
+print(slug("Dulces de la Isla"))
+print(slug("Café & Té Ñandú"))
+`}
+  tests={`assert slug("Dulces de la Isla") == "dulces-de-la-isla", f'"Dulces de la Isla" tendría que dar "dulces-de-la-isla", y da "{slug("Dulces de la Isla")}"'
+assert slug("Mates del Río") == "mates-del-rio", f'Sin tildes: "Mates del Río" da "mates-del-rio", y salió "{slug("Mates del Río")}"'
+assert slug("Café & Té Ñandú") == "cafe-te-nandu", f'La ñ también se separa (en n + ~), y el & con sus espacios es un solo guion: "cafe-te-nandu". Salió "{slug("Café & Té Ñandú")}"'
+assert slug("  Bijou Ensenada!! ") == "bijou-ensenada", f'Sin guiones en las puntas: "bijou-ensenada". Salió "{slug("  Bijou Ensenada!! ")}"'
+assert slug("Hilos y Agujas 2") == "hilos-y-agujas-2", "Los números se quedan"
+print("¡Cada emprendimiento, su dirección!")
+`}
+  pistas={[
+    'Son tres pasos, cada uno sobre el resultado del anterior. ¿Cuál va primero: sacar las tildes, o pasar a minúscula? ¿Importa?',
+    'Para el paso 1 podés recorrer las letras de normalize("NFD", nombre) y juntar con "".join las que NO son de categoría "Mn".',
+    'Para las puntas, los strings tienen un método que saca caracteres del principio y del final: strip("-").',
+  ]}
+>
+Completá `slug(nombre)`. Por ejemplo:
+
+```python
+slug("Dulces de la Isla")    # 'dulces-de-la-isla'
+slug("Café & Té Ñandú")      # 'cafe-te-nandu'
+slug("  Bijou Ensenada!! ")  # 'bijou-ensenada'
+```
+</EjercicioPython>
+
+## Los productos de una respuesta
+
+Para armar las tarjetas hace falta lo de siempre: **una lista de productos**, cada uno un
+diccionario. Hay que juntarlos recorriendo los números del 1 al 12, armando el título de cada
+columna con un f-string, y salteando los que no tienen nombre.
+
+<EjercicioPython
+  titulo="Los productos de una respuesta"
+  fundamental
+  dificultad="🌿"
+  starter={`def productos_de(fila):
+    productos = []
+    # del Producto 1 al Producto 12: si tiene nombre, a la lista
+    # con "nombre", "precio" y "descripcion"
+    return productos
+
+fila = {
+    "Nombre del emprendimiento": "Dulces de la Isla",
+    "Producto 1 · Nombre": "Dulce de leche", "Producto 1 · Precio": "3500", "Producto 1 · Descripción": "Frasco de 500 g.",
+    "Producto 2 · Nombre": "Mermelada", "Producto 2 · Precio": "3200", "Producto 2 · Descripción": "",
+    "Producto 3 · Nombre": "", "Producto 3 · Precio": "", "Producto 3 · Descripción": "",
+}
+print(productos_de(fila))
+`}
+  tests={`fila = {"Producto 1 · Nombre": "Dulce de leche", "Producto 1 · Precio": "3500", "Producto 1 · Descripción": "Frasco de 500 g.",
+        "Producto 2 · Nombre": "Mermelada", "Producto 2 · Precio": "3200", "Producto 2 · Descripción": "",
+        "Producto 3 · Nombre": "", "Producto 3 · Precio": "", "Producto 3 · Descripción": ""}
+p = productos_de(fila)
+assert isinstance(p, list), "productos_de tiene que devolver una lista"
+assert len(p) == 2, f"La respuesta tiene 2 productos con nombre (el 3 está vacío), y salieron {len(p)}"
+assert p[0] == {"nombre": "Dulce de leche", "precio": "3500", "descripcion": "Frasco de 500 g."}, f'El primero tendría que ser {{"nombre": "Dulce de leche", "precio": "3500", "descripcion": "Frasco de 500 g."}}, y es {p[0]}'
+assert p[1]["nombre"] == "Mermelada", "El segundo es la mermelada"
+salteado = {"Producto 1 · Nombre": "Gorro", "Producto 5 · Nombre": "Bufanda", "Producto 12 · Nombre": "Guantes"}
+nombres = [x["nombre"] for x in productos_de(salteado)]
+assert nombres == ["Gorro", "Bufanda", "Guantes"], f"Si completó el 1, el 5 y el 12, son esos tres, en orden; salieron {nombres}. ¿Llegás hasta el 12? ¿Y si falta la columna del precio?"
+assert productos_de({}) == [], "Una fila sin productos da una lista vacía"
+print("¡Productos listos para las tarjetas!")
+`}
+  pistas={[
+    'range(1, 13) da del 1 al 12. Con cada número n, ¿cómo armás el título "Producto 3 · Nombre" con un f-string?',
+    'Si a una fila le falta una columna, fila["..."] da error. ¿Qué método de los diccionarios devuelve algo por defecto en vez de explotar?',
+  ]}
+>
+Completá `productos_de(fila)`: la lista de los productos **que tienen nombre**, en orden, cada uno
+con `"nombre"`, `"precio"` y `"descripcion"`. Con la fila de ejemplo de abajo:
+
+```python
+[{"nombre": "Dulce de leche", "precio": "3500", "descripcion": "Frasco de 500 g."},
+ {"nombre": "Mermelada", "precio": "3200", "descripcion": ""}]
+```
+
+Ojo: si a la fila le falta una columna (porque nadie la completó), no tiene que explotar.
+</EjercicioPython>
+
+## ¿Qué es aprobar un catálogo?
+
+El catálogo se publica **en nombre del CFP**, así que antes de publicarlo lo mira una persona: el
+profe, preceptoría, o quien tenga la planilla. Aprobar **no es corregir** (es su catálogo, con sus
+palabras), es revisar que se pueda publicar:
+
+- que sea de un o una estudiante del CFP, y que haya aceptado publicarlo;
+- que lo que vende se pueda ofrecer en la cartelera del CFP;
+- que las fotos muestren productos, y no haya datos personales de más.
+
+Para aprobar, se tilda la casilla **Aprobado** en la planilla. Y el programa tiene que respetar dos
+reglas:
+
+1. **Sin la casilla, no se publica.**
+2. Si alguien quiere **cambiar** algo, completa el formulario de nuevo, con el mismo nombre. Esa
+   respuesta nueva **no se publica hasta que la aprueben**: mientras tanto, sigue la anterior. Y si
+   hay varias aprobadas, **gana la más nueva**.
+
+<OpcionMultiple titulo="Chequeo: un cambio sin revisar" opciones={[
+  { texto: "El catálogo de antes, con el precio viejo, hasta que alguien apruebe el cambio.", correcta: true, explicacion: "Exacto. Lo nuevo todavía no lo miró nadie: podría tener cualquier cosa. Hasta que se apruebe, queda lo que ya estaba revisado." },
+  { texto: "El catálogo nuevo, porque es lo más actualizado.", explicacion: "Sería lo más cómodo, pero entonces alcanzaría con aprobar una vez y después cambiar cualquier cosa sin que nadie lo vea." },
+  { texto: "Ninguno, hasta que se apruebe el nuevo.", explicacion: "Así, cambiar un precio te dejaría sin catálogo hasta que alguien revise. No hace falta: lo de antes ya estaba aprobado." },
+]}>
+Dulces de la Isla tenía su catálogo aprobado. Hoy completó el formulario de nuevo para subir un
+precio, y nadie lo revisó todavía. ¿Qué catálogo se ve en internet?
+</OpcionMultiple>
+
+<EjercicioPython
+  titulo="Las que se publican"
+  fundamental
+  dificultad="🌿"
+  datos={`${SLUG}
+${FILAS}`}
+  starter={`def ultimas_aprobadas(filas):
+    elegidas = {}
+    # {slug del emprendimiento: su respuesta aprobada más nueva}
+    # (las filas vienen en el orden en que se respondieron)
+    return elegidas
+
+for nombre, fila in ultimas_aprobadas(FILAS).items():
+    print(nombre, "→", fila["Producto 1 · Nombre"])
+`}
+  tests={`r = ultimas_aprobadas(FILAS)
+assert isinstance(r, dict), "ultimas_aprobadas tiene que devolver un diccionario"
+assert "la-vela-encendida" not in r, "La Vela Encendida no está aprobada: no se publica"
+assert set(r) == {"dulces-de-la-isla", "hilos-y-agujas"}, f"Se publican Dulces de la Isla y Hilos y Agujas, con su slug como clave; salió {sorted(r)}"
+assert r["dulces-de-la-isla"]["Producto 1 · Nombre"] == "Dulce de leche", "Dulces de la Isla mandó un cambio que todavía no se aprobó (la pastafrola): sigue publicada la respuesta de antes, la del dulce de leche"
+nueva = dict(FILAS[3], **{"Aprobado": "TRUE"})
+r2 = ultimas_aprobadas(FILAS + [nueva])
+assert r2["dulces-de-la-isla"]["Producto 1 · Nombre"] == "Pastafrola", "Cuando aprueban el cambio, gana la respuesta aprobada más nueva"
+assert ultimas_aprobadas([dict(FILAS[0], **{"Aprobado": "VERDADERO"})]) != {}, 'Según el idioma de la cuenta, Google escribe la casilla tildada como "TRUE" o como "VERDADERO": las dos son aprobado'
+print("¡Solo lo aprobado, y lo más nuevo!")
+`}
+  pistas={[
+    'Si recorrés las filas en orden y vas guardando en el diccionario con el slug como clave, ¿qué pasa cuando aparece otra respuesta del mismo emprendimiento?',
+    'Y para que un cambio sin aprobar no pise al anterior: ¿qué filas tenés que saltear antes de guardar?',
+  ]}
+>
+Completá `ultimas_aprobadas(filas)`: un diccionario con el **slug** de cada emprendimiento como clave
+y su **respuesta aprobada más nueva** como valor. `slug()` y las filas de ejemplo (`FILAS`) ya están.
+La casilla tildada llega como `"TRUE"` (o `"VERDADERO"`, según el idioma de la cuenta).
+
+```python
+FILAS = [
+    {"Nombre del emprendimiento": "Dulces de la Isla", "Producto 1 · Nombre": "Dulce de leche", "Aprobado": "TRUE"},
+    {"Nombre del emprendimiento": "Hilos y Agujas", "Producto 1 · Nombre": "Gorro de lana", "Aprobado": "TRUE"},
+    {"Nombre del emprendimiento": "La Vela Encendida", "Producto 1 · Nombre": "Vela de lavanda", "Aprobado": "FALSE"},
+    {"Nombre del emprendimiento": "Dulces de la Isla", "Producto 1 · Nombre": "Pastafrola", "Aprobado": "FALSE"},
+]
+
+ultimas_aprobadas(FILAS)
+# {"dulces-de-la-isla": {...la del dulce de leche...}, "hilos-y-agujas": {...}}
+```
+</EjercicioPython>
+
+## Nunca confíes en lo que llega de un formulario
+
+En tu catálogo, los datos los escribías vos. Acá los escribe **cualquiera**, en un formulario
+público. ¿Y si alguien, en la descripción de un producto, escribe esto?
+
+```html
+<script>alert("hola")</script>
+```
+
+Tu `tarjeta()` lo pega tal cual adentro del HTML, y el navegador no sabe que es "texto de un
+usuario": **lo ejecuta**. Un mensaje de alerta es una broma; pero ahí podría ir un programa que
+haga cualquier cosa, en una página publicada **en nombre del CFP**. Es uno de los ataques más comunes
+de la web, y se llama *inyección de código* (o XSS).
+
+La defensa es **escapar** el texto: cambiar los caracteres que el HTML usa para sus etiquetas por su
+versión "para mostrar". `<` pasa a ser `&lt;`, que el navegador **dibuja** como `<` pero no lo lee
+como el principio de una etiqueta. Python lo trae hecho:
+
+```python
+from html import escape
+
+escape('<script>alert("hola")</script>')
+# '&lt;script&gt;alert(&quot;hola&quot;)&lt;/script&gt;'
+```
+
+La regla: **todo lo que viene de afuera, pasa por `escape()` antes de ir al HTML.**
+
+<EjercicioPython
+  titulo="Que no puedan meter código"
+  fundamental
+  dificultad="🌳"
+  vista={`body { font-family: system-ui, sans-serif; padding: 16px; }
+.producto { max-width: 320px; padding: 12px 16px; border: 1px solid #ddd; border-radius: 12px; }
+.precio { font-weight: 700; }
+`}
+  starter={`def tarjeta(producto):
+    return f"""<article class="producto">
+    <h2>{producto['nombre']}</h2>
+    <p class="descripcion">{producto['descripcion']}</p>
+    <p class="precio">{producto['precio']}</p>
+</article>
+"""
+
+print(tarjeta({"nombre": "Pulsera tejida", "precio": "$1.800",
+               "descripcion": '<b>¡Oferta!</b> <script>alert("hola")</script>'}))
+`}
+  tests={`t = tarjeta({"nombre": "Pulsera tejida", "precio": "$1.800", "descripcion": '<script>alert("hola")</script>'})
+assert "<script>" not in t, "La descripción trae un <script> y quedó tal cual en el HTML: el navegador lo ejecutaría. Pasala por escape()"
+assert "&lt;script&gt;" in t, "El <script> tendría que verse como texto: escapado, &lt;script&gt;"
+t2 = tarjeta({"nombre": '<img src=x onerror="alert(1)">', "precio": "$1", "descripcion": "Normal"})
+assert "<img" not in t2, "También el nombre viene del formulario: escapalo"
+t3 = tarjeta({"nombre": "Aros", "precio": "<i>gratis</i>", "descripcion": "Normal"})
+assert "<i>" not in t3, "Y el precio: TODO lo que viene de afuera"
+assert '<article class="producto">' in t and "<h2>" in t, "Las etiquetas de la tarjeta (las tuyas) sí van tal cual: lo que se escapa es lo que escribió la persona"
+t4 = tarjeta({"nombre": "Mate", "precio": "$7.800", "descripcion": "Curado"})
+assert "<h2>Mate</h2>" in t4 and "Curado" in t4, "Un texto normal tiene que salir igual que antes"
+print("¡Blindada! Tocá Ejecutar: el código se ve como texto, no se ejecuta.")
+`}
+  pistas={[
+    '¿Qué partes de la tarjeta escribió la persona en el formulario, y cuáles escribiste vos?',
+    'Adentro de las llaves de un f-string podés llamar a una función: {escape(producto["nombre"])}. Acordate del import.',
+  ]}
+>
+`tarjeta(producto)` pega el nombre, la descripción y el precio tal cual vienen del formulario.
+Arreglala para que **todo lo que escribió la persona** pase por `escape()`. Tocá **Ejecutar** antes
+y después: la vista muestra la diferencia.
+
+```python
+tarjeta({"nombre": "Pulsera tejida", "precio": "$1.800", "descripcion": '<script>alert("hola")</script>'})
+```
+
+tiene que devolver la descripción **escapada**:
+
+```html
+<article class="producto">
+    <h2>Pulsera tejida</h2>
+    <p class="descripcion">&lt;script&gt;alert(&quot;hola&quot;)&lt;/script&gt;</p>
+    <p class="precio">$1.800</p>
+</article>
+```
+</EjercicioPython>
+
+## Probalo con una planilla de verdad
+
+El programa completo junta todo esto con lo de tu catálogo, y suma lo que aparece cuando se usa de
+verdad: los colores que eligió cada uno, su logo, las fotos (que hay que bajar de Google Drive y
+achicar, porque las del celular pesan varios MB), y una página con **un QR grande por emprendimiento
+para imprimir** y llevar al stand.
+
+**1. Bajá el proyecto:** <a href={b + 'proyecto-catalogos-cfp/proyecto-catalogos-cfp.zip'} download>📦 proyecto-catalogos-cfp.zip</a>.
+Trae `generar.py`, sus tests, los estilos, y `respuestas-ejemplo.xlsx`: una planilla con datos
+inventados, como la que arma el formulario.
+
+**2. En la terminal**, parado en la carpeta:
+
+```bash
+pip install -r requirements.txt
+python generar.py respuestas-ejemplo.xlsx
+```
+
+**3. Abrí `sitio/index.html`.** Fijate qué se publicó y qué no, y por qué: la planilla de ejemplo
+tiene una respuesta sin aprobar, un cambio sin revisar, un WhatsApp mal escrito, y alguien que
+intenta meter código.
+
+Leé `generar.py` de arriba abajo: cada función es algo que ya hiciste, en esta clase o en la del
+catálogo.
+
+## Para llevar
+
+- Un formulario de Google guarda **una fila por respuesta** y **una columna por pregunta**. Cada fila
+  se lee como un diccionario.
+- El **slug** es el nombre apto para una dirección: sin tildes (`unicodedata`), en minúscula y con
+  guiones (`re.sub`).
+- **Aprobar** es una casilla que tilda una persona. El programa publica solo lo aprobado, y de cada
+  emprendimiento, la respuesta aprobada **más nueva**.
+- **Nunca confíes en lo que llega de un formulario**: todo pasa por `escape()` antes de ir al HTML.
+- Y lo que sigue: que esto **corra solo**, cada hora, sin que nadie apriete nada. Eso es
+  [CI/CD](../ci-cd/).

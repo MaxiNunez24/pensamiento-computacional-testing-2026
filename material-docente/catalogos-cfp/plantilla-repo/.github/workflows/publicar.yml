@@ -1,0 +1,62 @@
+# Publica los catálogos: lee la planilla del formulario, corre los tests, arma
+# el sitio con generar.py y lo sube a GitHub Pages.
+name: Publicar los catálogos
+
+on:
+    schedule:
+        - cron: "17 * * * *"    # cada hora, en el minuto 17 (en hora UTC)
+    workflow_dispatch:           # el botón "Run workflow", para no esperar a la hora
+    push:
+        branches: [main]         # y cada vez que se cambia el código
+
+# Lo mínimo que necesita: leer el repo y publicar en Pages.
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+# Si se superponen dos corridas, la segunda espera a la primera.
+concurrency:
+    group: pages
+    cancel-in-progress: false
+
+jobs:
+    publicar:
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deploy.outputs.page_url }}
+        steps:
+            - name: Bajar el código
+              uses: actions/checkout@v4
+
+            - name: Instalar Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Instalar lo que hace falta
+              run: pip install -r requirements.txt
+
+            - name: Los tests (si alguno falla, no se publica nada)
+              run: pytest -q
+
+            - name: Preguntar la dirección del sitio
+              id: pages
+              uses: actions/configure-pages@v5
+
+            - name: Generar los catálogos
+              env:
+                  PLANILLA_ID: ${{ vars.PLANILLA_ID }}
+                  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+                  SITIO_URL: ${{ steps.pages.outputs.base_url }}
+              run: python generar.py
+
+            - name: Empaquetar el sitio
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: sitio
+
+            - name: Publicarlo
+              id: deploy
+              uses: actions/deploy-pages@v4

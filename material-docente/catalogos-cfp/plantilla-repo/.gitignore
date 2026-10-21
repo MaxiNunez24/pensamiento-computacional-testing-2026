@@ -1,0 +1,13 @@
+# Lo genera generar.py: GitHub lo arma y lo publica solo, no va al repo.
+sitio/
+
+# La llave de la cuenta de servicio de Google: NUNCA al repo (es público).
+credenciales.json
+
+# Las planillas bajadas a mano: tienen nombres, correos y teléfonos.
+*.xlsx
+*.csv
+
+__pycache__/
+.pytest_cache/
+.venv/

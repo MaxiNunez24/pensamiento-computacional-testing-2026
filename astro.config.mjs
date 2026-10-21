@@ -136,6 +136,8 @@ export default defineConfig({
                   { label: '📝 Qué vamos a mostrar', link: '/preparando-expo/' },
                   { label: '🪙 Juegos I · Cara o cruz', link: '/preparando-expo/moneda/' },
                   { label: '🛍️ La vidriera', link: '/preparando-expo/vidriera/' },
+                  { label: '🏪 Catálogos para todo el CFP', link: '/preparando-expo/catalogos-cfp/' },
+                  { label: '⚙️ CI/CD · Que lo publique GitHub', link: '/preparando-expo/ci-cd/' },
                 ],
               },
               // El cuestionario del CFP (/cuestionario/) NO va acá a propósito: se

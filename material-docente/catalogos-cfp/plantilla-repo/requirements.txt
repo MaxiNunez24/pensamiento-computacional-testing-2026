@@ -1,0 +1,9 @@
+# Leer la planilla bajada como .xlsx
+openpyxl==3.1.5
+# Achicar las fotos antes de publicarlas
+pillow
+# Leer la planilla y bajar las fotos de Google (con la cuenta de servicio)
+google-auth
+requests
+# Los tests
+pytest

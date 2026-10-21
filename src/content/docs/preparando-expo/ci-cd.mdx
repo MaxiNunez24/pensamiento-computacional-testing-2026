@@ -1,0 +1,284 @@
+---
+title: "CI/CD · Que lo publique GitHub"
+description: "Que los catálogos se publiquen solos: GitHub corre los tests y el programa cada hora, y si algo falla, no publica. Integración y entrega continuas, con un caso real."
+---
+
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import EscribirTest from '../../../components/EscribirTest.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+:::tip[Antes de empezar]
+Usa [Catálogos para todo el CFP](../catalogos-cfp/): el programa que arma los catálogos. Y lo que
+viste de tests en [Testing I](../../clases/testing-1/).
+:::
+
+## El problema
+
+Es la Expo, son las seis de la tarde, y alguien de Pastelería completa el formulario desde el
+celular. Una preceptora lo revisa y tilda *Aprobado*. ¿Y ahora?
+
+Hasta acá, el catálogo aparece cuando **alguien** baja la planilla, corre `generar.py` en su compu y
+sube el resultado. Si nadie lo hace, no aparece. Y si lo hace con un error en el programa, se publica
+roto.
+
+Lo que queremos: que **cada hora**, sin que nadie apriete nada, una computadora **pruebe** el
+programa, lo **corra** y **publique** el resultado. Y que si algo anda mal, **no publique nada**.
+
+## CI y CD
+
+Son dos ideas, y casi siempre van juntas:
+
+- **CI, integración continua** (*continuous integration*): cada vez que cambia el código, una
+  computadora **corre los tests** sola. Si alguno falla, avisa enseguida: el error aparece cuando se
+  cometió, y no tres semanas después.
+- **CD, entrega continua** (*continuous delivery/deployment*): si los tests pasan, esa misma
+  computadora **publica** el resultado. Sin pasos a mano, que es donde se cuelan los errores (subir
+  la carpeta equivocada, olvidarse un archivo).
+
+Juntas forman una **cañería** (*pipeline*): bajar el código → instalar lo que hace falta → los tests
+→ generar → publicar. Cada paso se hace solo si el anterior salió bien.
+
+## GitHub Actions
+
+GitHub tiene computadoras que presta gratis para esto. Se les dice qué hacer con un archivo en el
+repo, en `.github/workflows/`, escrito en **YAML**: un formato para escribir datos con sangría, como
+un diccionario de Python sin llaves.
+
+Este es el de los catálogos, por partes.
+
+### Cuándo corre: `on`
+
+```yaml
+on:
+    schedule:
+        - cron: "17 * * * *"    # cada hora, en el minuto 17
+    workflow_dispatch:           # el botón "Run workflow", para no esperar a la hora
+    push:
+        branches: [main]         # y cada vez que se cambia el código
+```
+
+Son los **disparadores**. Tres cosas lo hacen correr: el reloj, un botón, y un cambio en el código.
+
+El `cron` es una forma muy vieja (de los años 70) de decir "cada cuánto". Son cinco campos:
+**minuto, hora, día, mes y día de la semana**, y `*` quiere decir "cualquiera":
+
+| `cron` | Cuándo |
+|---|---|
+| `17 * * * *` | En el minuto 17 de cada hora |
+| `0 9 * * *` | Todos los días a las 9:00 (hora UTC: 6:00 en Argentina) |
+| `0 9 * * 1` | Los lunes a las 9:00 UTC |
+
+### Dónde y qué: `jobs` y `steps`
+
+```yaml
+jobs:
+    publicar:
+        runs-on: ubuntu-latest          # una compu con Linux, prestada, que se borra al terminar
+        steps:
+            - name: Bajar el código
+              uses: actions/checkout@v4
+
+            - name: Instalar Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Instalar lo que hace falta
+              run: pip install -r requirements.txt
+
+            - name: Los tests (si alguno falla, no se publica nada)
+              run: pytest -q
+
+            - name: Generar los catálogos
+              run: python generar.py
+
+            - name: Publicarlo
+              uses: actions/deploy-pages@v4
+```
+
+Cada **paso** (*step*) es una de dos cosas:
+
+- **`run`**: un comando, el mismo que escribirías en la terminal.
+- **`uses`**: una **acción** que ya hizo alguien (bajar el código, instalar Python, publicar en
+  GitHub Pages). Es como un `import`: usás algo hecho en vez de escribirlo.
+
+La compu que presta GitHub se llama **runner**. Arranca vacía, hace los pasos en orden, y al terminar
+se borra. Por eso el primer paso es bajar el código: no tiene nada.
+
+<OpcionMultiple titulo="Chequeo: un test que falla" opciones={[
+  { texto: "Se frena ahí: no genera ni publica nada, y en internet sigue el sitio de la vez anterior.", correcta: true, explicacion: "Exacto. Los pasos van en orden, y uno que falla corta la cañería. El sitio publicado no se toca: mejor un catálogo de hace una hora que uno roto. Y GitHub avisa por correo." },
+  { texto: "Publica igual, pero avisa que un test falló.", explicacion: "Así los tests no servirían de nada: avisarían de un error que ya está en internet. Los tests van ANTES de publicar justamente para frenarlo." },
+  { texto: "Se borra el sitio, para no mostrar algo con errores.", explicacion: "No hace falta: lo que está publicado ya pasó los tests la vez anterior. Lo que no se publica es lo nuevo." },
+]}>
+Alguien cambió `generar.py` y rompió el precio: ahora un test falla. ¿Qué pasa en la próxima corrida?
+</OpcionMultiple>
+
+## Los secretos
+
+Para leer la planilla, el programa necesita **permiso de Google**: una llave, un archivo JSON. Pero
+el repo es **público**: cualquiera puede leer todo lo que está ahí. Si la llave va en el código,
+cualquiera puede leer la planilla, con los correos y teléfonos de todos.
+
+Por eso GitHub tiene **secretos**: valores que se guardan en el repo (*Settings → Secrets*), que
+nadie puede ver, ni siquiera quien los cargó, y que el workflow recibe como variables:
+
+```yaml
+            - name: Generar los catálogos
+              env:
+                  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+              run: python generar.py
+```
+
+Y el programa lo lee de ahí, como cualquier variable del sistema:
+
+```python
+import os
+
+credenciales = os.environ.get("GOOGLE_CREDENTIALS")
+```
+
+<OpcionMultiple titulo="Chequeo: la llave" opciones={[
+  { texto: "En un secreto del repo, en Settings → Secrets.", correcta: true, explicacion: "Exacto. Ahí no la ve nadie, y el workflow la recibe cuando corre. En el código no aparece nunca." },
+  { texto: "En el código, pero en un archivo aparte, credenciales.json.", explicacion: "Si el archivo está en el repo, se publica con todo lo demás: el repo es público. Por eso credenciales.json está en el .gitignore." },
+  { texto: "En el código, pero en un comentario.", explicacion: "Un comentario se lee igual que el resto del archivo. Público es público." },
+]}>
+¿Dónde va la llave de Google para que el workflow pueda leer la planilla?
+</OpcionMultiple>
+
+:::caution[Si una llave se publica por error]
+Borrarla del repo **no alcanza**: queda en la historia de Git, y hay programas que recorren GitHub
+buscando llaves todo el día. Lo que hay que hacer es **anularla** (en Google, borrar esa clave y crear
+otra) y cargar la nueva como secreto.
+:::
+
+## Los tests que cuidan la publicación
+
+En la cañería, los tests son **la red de seguridad**: lo único que está entre un error y un catálogo
+roto en internet. Y un test que no prueba los casos difíciles es una red con agujeros.
+
+`precio()` convierte lo que escribió la persona en el formulario en lo que se muestra: `"4500"` →
+`"$4.500"`, y si lo dejó vacío, `"Consultar"`. Parece fácil, pero la gente escribe cualquier cosa.
+
+<EscribirTest
+  titulo="La red de seguridad del precio"
+  fundamental
+  dificultad="🌳"
+  correcta={`import re
+
+def precio(valor):
+    entero = str(valor).split(",")[0]
+    digitos = re.sub(r"\\D", "", entero)
+    if not digitos or int(digitos) == 0:
+        return "Consultar"
+    return "$" + f"{int(digitos):,}".replace(",", ".")`}
+  rotas={[
+    { pista: 'la versión que no pone el punto de los miles ("$4500")',
+      codigo: `import re
+
+def precio(valor):
+    entero = str(valor).split(",")[0]
+    digitos = re.sub(r"\\D", "", entero)
+    if not digitos or int(digitos) == 0:
+        return "Consultar"
+    return "$" + digitos` },
+    { pista: 'la versión que, con el precio vacío, explota en vez de decir "Consultar"',
+      codigo: `import re
+
+def precio(valor):
+    digitos = re.sub(r"\\D", "", str(valor).split(",")[0])
+    return "$" + f"{int(digitos):,}".replace(",", ".")` },
+    { pista: 'la versión que se come los centavos como si fueran pesos ("4500,50" → "$450.050")',
+      codigo: `import re
+
+def precio(valor):
+    digitos = re.sub(r"\\D", "", str(valor))
+    if not digitos or int(digitos) == 0:
+        return "Consultar"
+    return "$" + f"{int(digitos):,}".replace(",", ".")` },
+    { pista: 'la versión que no entiende un precio escrito con $ y punto ("$ 4.500")',
+      codigo: `def precio(valor):
+    valor = str(valor).split(",")[0]
+    if not valor or not valor.isdigit() or int(valor) == 0:
+        return "Consultar"
+    return "$" + f"{int(valor):,}".replace(",", ".")` },
+  ]}
+  starter={`# precio(valor) ya está escrita: vos NO la tocás.
+# Escribí los assert que la pongan a prueba con lo que la gente escribe de verdad.
+
+assert precio("4500") == "$4.500"
+`}
+  pistas={[
+    'Pensá en lo que escribe la gente en el formulario aunque diga "solo el número": ¿con signo? ¿con punto? ¿con centavos? ¿nada?',
+    'Un caso con más de un punto de miles también sirve: ¿qué da con 1250000?',
+    'Para "Consultar": ¿qué precios no tienen sentido mostrar como número?',
+  ]}
+>
+Escribí los `assert` que **pasen con la versión correcta** y **atrapen las cuatro versiones rotas**.
+Cada versión rota es un error que podría llegar a internet si nadie lo prueba.
+</EscribirTest>
+
+## El último control: los datos
+
+Los tests prueban **el programa**. Pero antes de publicar también hay que mirar **los datos**: una
+respuesta puede estar aprobada y tener igual algo que no anda (alguien editó la planilla a mano y
+dejó un WhatsApp de 6 números). El programa no tiene que publicarla rota: la **saltea** y deja dicho
+por qué, en el registro del workflow, para que alguien la arregle.
+
+<EjercicioPython
+  titulo="Revisar antes de publicar"
+  dificultad="🌿"
+  starter={`import re
+
+def revisar(fila):
+    problemas = []
+    # 1. sin "Nombre del emprendimiento": "falta el nombre"
+    # 2. "WhatsApp para consultas" sin exactamente 10 números: "el WhatsApp no tiene 10 números"
+    # 3. sin "Producto 1 · Nombre": "no tiene ningún producto"
+    return problemas
+
+print(revisar({"Nombre del emprendimiento": "Mates del Río", "WhatsApp para consultas": "221555",
+               "Producto 1 · Nombre": "Mate de calabaza"}))
+`}
+  tests={`bien = {"Nombre del emprendimiento": "Dulces de la Isla", "WhatsApp para consultas": "2215550001", "Producto 1 · Nombre": "Dulce de leche"}
+assert revisar(bien) == [], f"Una respuesta completa no tiene problemas, y salió {revisar(bien)}"
+assert revisar(dict(bien, **{"WhatsApp para consultas": "221555"})) == ["el WhatsApp no tiene 10 números"], "Con un WhatsApp de 6 números: [\\"el WhatsApp no tiene 10 números\\"]"
+assert revisar(dict(bien, **{"WhatsApp para consultas": "221 555-0001"})) == [], "Con espacios o guiones también son 10 números: contá solo los dígitos (re.sub)"
+assert revisar(dict(bien, **{"Nombre del emprendimiento": "  "})) == ["falta el nombre"], "Un nombre con solo espacios es un nombre vacío: strip()"
+sin_nada = {}
+assert revisar(sin_nada) == ["falta el nombre", "el WhatsApp no tiene 10 números", "no tiene ningún producto"], f"Sin nada, son los tres problemas, en ese orden; salió {revisar(sin_nada)}. ¿Usaste .get() para las columnas que faltan?"
+print("¡Lo roto no se publica, y queda dicho por qué!")
+`}
+  pistas={[
+    'Para contar solo los números del WhatsApp: re.sub(r"\\D", "", texto) borra todo lo que no es un dígito.',
+    'Son tres if separados, no if/elif: una respuesta puede tener los tres problemas a la vez.',
+  ]}
+>
+Completá `revisar(fila)`: la lista de lo que impide publicar esa respuesta, en este orden:
+`"falta el nombre"`, `"el WhatsApp no tiene 10 números"` (contando solo los dígitos) y
+`"no tiene ningún producto"`. Si está todo bien, la lista vacía. Por ejemplo:
+
+```python
+revisar({"Nombre del emprendimiento": "Mates del Río", "WhatsApp para consultas": "221555",
+         "Producto 1 · Nombre": "Mate de calabaza"})
+# ['el WhatsApp no tiene 10 números']
+```
+</EjercicioPython>
+
+## Ponerlo en marcha
+
+Todo esto ya está armado: el workflow, `generar.py` y sus tests, en el
+[proyecto de la clase anterior](../catalogos-cfp/#probalo-con-una-planilla-de-verdad). Para que
+corra de verdad hace falta, una sola vez, crear el repo en la organización del CFP, darle permiso de
+leer la planilla, y cargar el secreto. Los pasos están en el `README.md` del proyecto, y los hacemos
+juntos en clase.
+
+## Para llevar
+
+- **CI**: una computadora corre los tests cada vez que cambia el código. **CD**: si pasan, publica.
+  Juntas, una **cañería** que se corta en el primer paso que falla.
+- En GitHub, la cañería es un **workflow** en `.github/workflows/`, en YAML: **cuándo** corre (`on`:
+  el reloj con `cron`, un botón, un cambio) y **qué hace** (`steps`, con `run` o `uses`).
+- Los **tests van antes de publicar**: si uno falla, en internet queda lo de antes.
+- Las llaves y contraseñas van en **secretos**, nunca en el código. Si una se publica, se **anula**.
+- Antes de publicar se revisa el programa (los tests) y también **los datos**: lo roto se saltea, y
+  queda dicho por qué.
