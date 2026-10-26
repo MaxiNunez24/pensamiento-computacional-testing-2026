@@ -34,7 +34,7 @@ with zipfile.ZipFile(DESTINO, 'w', zipfile.ZIP_DEFLATED) as z:
             continue
         z.write(archivo, f'catalogos/{relativo.as_posix()}')
         archivos.append(relativo)
-    for extra in ('respuestas-ejemplo.xlsx', 'formulario.md'):
+    for extra in ('respuestas-ejemplo.xlsx', 'formulario.md', 'apps-script/Codigo.gs', 'apps-script/LEEME.md'):
         z.write(FUENTE / extra, f'catalogos/{extra}')
         archivos.append(extra)
 

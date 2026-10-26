@@ -53,11 +53,17 @@ on:
     schedule:
         - cron: "17 * * * *"    # cada hora, en el minuto 17
     workflow_dispatch:           # el botón "Run workflow", para no esperar a la hora
+    repository_dispatch:         # un aviso desde afuera: alguien envió el formulario
+        types: [publicar]
     push:
         branches: [main]         # y cada vez que se cambia el código
 ```
 
-Son los **disparadores**. Tres cosas lo hacen correr: el reloj, un botón, y un cambio en el código.
+Son los **disparadores**. Cuatro cosas lo hacen correr: el reloj, un botón, **un aviso desde
+afuera**, y un cambio en el código. El aviso lo manda un pequeño script que vive en el formulario de
+Google: cuando alguien lo envía, o cuando se tilda *Aprobado*, le dice a GitHub "publicá", y el
+catálogo está en internet en un par de minutos en vez de esperar a la hora. El reloj queda igual,
+por las dudas: si un aviso se pierde, a la hora se publica igual.
 
 El `cron` es una forma muy vieja (de los años 70) de decir "cada cuánto". Son cinco campos:
 **minuto, hora, día, mes y día de la semana**, y `*` quiere decir "cualquiera":

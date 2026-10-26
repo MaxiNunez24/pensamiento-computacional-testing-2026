@@ -61,6 +61,19 @@ def test_aprobado_acepta_como_lo_escribe_google():
         assert not g.esta_aprobada(respuesta(aprobado=valor))
 
 
+def test_otros_datos_uno_por_renglon():
+    texto = "Material: PLA\nmedidas: 10 x 15 cm\nesto no tiene dos puntos\nColor:\n  Tiempo de entrega :  3 días "
+    assert g.otros_datos(texto) == {"Material": "PLA", "Medidas": "10 x 15 cm", "Tiempo de entrega": "3 días"}
+    assert g.otros_datos("") == {}
+    assert g.otros_datos(None) == {}
+
+
+def test_que_mostrar():
+    assert all(g.que_mostrar(respuesta()).values()), "Sin contestar (o sin la columna), se muestra todo"
+    elegido = g.que_mostrar(respuesta(**{g.MOSTRAR: "Descripción, Foto"}))
+    assert elegido == {"precio": False, "descripcion": True, "foto": True, "whatsapp": False}
+
+
 # ── Qué se publica ──────────────────────────────────────────────────────
 
 def test_sin_aprobar_no_se_publica():
@@ -107,6 +120,28 @@ def test_la_pagina_tiene_una_tarjeta_por_producto_y_el_whatsapp():
     assert "$4.500" in html
 
 
+def test_detalles_acepta_cualquier_dato():
+    assert g.detalles() == ""
+    html = g.detalles(**{"Material": "PLA", "Tiempo de entrega": "3 días"})
+    assert html.count("<li>") == 2
+    assert "<strong>Tiempo de entrega:</strong> 3 días" in html
+    assert "&lt;b&gt;" in g.detalles(**{"Color": "<b>rojo</b>"})
+
+
+def test_los_otros_datos_aparecen_en_la_tarjeta():
+    fila = respuesta(**{"Producto 1 · Otros datos": "Material: PLA\nMedidas: 10 x 15 cm"})
+    html = g.pagina(fila, g.productos_de(fila))
+    assert '<ul class="detalles">' in html and "<strong>Medidas:</strong> 10 x 15 cm" in html
+
+
+def test_sin_precio_ni_whatsapp_si_no_los_eligio():
+    fila = respuesta(productos=2, **{g.MOSTRAR: "Descripción, Foto"})
+    html = g.pagina(fila, g.productos_de(fila))
+    assert 'class="precio"' not in html
+    assert "Consultar por WhatsApp" not in html
+    assert "Escribime por WhatsApp" in html, "El botón de contacto del final va siempre"
+
+
 def test_la_paleta_elegida_pinta_el_catalogo():
     fila = respuesta(**{g.ESTILO: "Mar"})
     assert g.PALETAS["Mar"]["--fondo"] in g.pagina(fila, g.productos_de(fila))
@@ -136,6 +171,17 @@ def test_dar_de_baja_borra_el_catalogo(tmp_path):
     assert (sitio / "dulces-de-la-isla").exists()
     g.generar([respuesta("Dulces de la Isla", aprobado="FALSE")], sitio, "https://ejemplo.github.io/catalogos/")
     assert not (sitio / "dulces-de-la-isla").exists()
+
+
+def test_leer_planilla_xlsx_respeta_los_renglones(tmp_path):
+    import openpyxl
+    libro = openpyxl.Workbook()
+    libro.active.append([g.NOMBRE, "Producto 1 · Otros datos", g.APROBADO, "Producto 1 · Precio"])
+    libro.active.append(["Impresiones 3D", "Material: PLA\nMedidas: 10 cm", True, 6500.0])
+    libro.save(tmp_path / "respuestas.xlsx")
+    fila = g.leer_planilla(tmp_path / "respuestas.xlsx")[0]
+    assert fila[g.APROBADO] == "TRUE" and fila["Producto 1 · Precio"] == "6500"
+    assert g.otros_datos(fila["Producto 1 · Otros datos"]) == {"Material": "PLA", "Medidas": "10 cm"}
 
 
 def test_leer_planilla_csv(tmp_path):

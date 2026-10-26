@@ -69,13 +69,22 @@ En el repo: *Settings → Secrets and variables → Actions*.
 *Actions → Publicar los catálogos → Run workflow*. En un par de minutos, si todo está en verde, el
 sitio está publicado. Desde ahí corre solo, cada hora.
 
+### 5. El script del formulario
+
+Los mails (con el link, el QR y el link para editar) y la publicación en minutos los hace un script
+que se pega en el formulario: `apps-script/Codigo.gs`, con sus pasos en `apps-script/LEEME.md`.
+
 ## A tener en cuenta
 
 - **El horario del cron es UTC**: `17 * * * *` es "en el minuto 17 de cada hora", a cualquier hora.
 - **GitHub apaga los workflows programados** de los repos públicos que pasan **60 días sin cambios**.
   Si pasa, avisa por correo: se reactiva desde *Actions*, con un botón.
-- **Para que alguien pueda cambiar su catálogo**, completa el formulario de nuevo con el mismo nombre
-  de emprendimiento. Hasta que se apruebe la respuesta nueva, sigue publicado el de antes.
+- **Para que alguien cambie su catálogo** (un precio, un producto), entra con su **link para
+  editar**: abre el formulario con todo lo que ya cargó. Como el emprendimiento ya está aprobado,
+  el cambio se publica solo. El link le llega por mail (lo manda el script del formulario, en
+  `apps-script/`), y si lo pierde está en la pestaña *Links para editar* de la planilla.
+- **Publicar en minutos:** el script del formulario dispara este workflow (`repository_dispatch`)
+  cada vez que alguien envía o se aprueba algo. Sin el script, corre igual cada hora.
 - **Para darlo de baja**, se destilda *Aprobado* en todas sus respuestas: en la próxima corrida
   desaparece.
 - La lectura desde Google (`leer_de_google` y `bajar_imagen`) se prueba de verdad recién con la

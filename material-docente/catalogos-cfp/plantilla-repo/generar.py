@@ -43,12 +43,19 @@ NOMBRE = "Nombre del emprendimiento"
 RUBRO = "Rubro"
 LEMA = "Contanos qué hacés"
 LOGO = "Logo"
-EMOJI = "Un emoji que lo represente"
+EMOJI = "Un emoji que lo represente"     # ya no está en el formulario: si viene, se usa
 WHATSAPP = "WhatsApp para consultas"
 INSTAGRAM = "Instagram"
 ESTILO = "Estilo del catálogo"
+MOSTRAR = "¿Qué querés mostrar de tus productos?"
 CONFORMIDAD = "Conformidad"
 APROBADO = "Aprobado"
+
+# Las opciones de MOSTRAR, tal cual están en el formulario. Google guarda las
+# tildadas juntas, separadas por coma: "Precio, Descripción, Foto".
+OPCIONES = {"precio": "Precio", "descripcion": "Descripción", "foto": "Foto",
+            "whatsapp": "Un botón de WhatsApp en cada producto"}
+EMOJI_POR_DEFECTO = "🛍️"
 
 # Los estilos que se pueden elegir en el formulario: los colores de la marca,
 # que el catálogo usa como variables de CSS (ver "Que se vea como tu marca").
@@ -123,6 +130,30 @@ def numero_whatsapp(valor):
     return None
 
 
+def que_mostrar(fila):
+    """Lo que eligió mostrar de sus productos: {"precio": True, "foto": False, ...}.
+    Si la pregunta no se contestó (o la planilla es de antes de que existiera), todo."""
+    elegido = texto(fila.get(MOSTRAR))
+    if not elegido:
+        return {clave: True for clave in OPCIONES}
+    return {clave: opcion in elegido for clave, opcion in OPCIONES.items()}
+
+
+def otros_datos(valor):
+    """"Material: PLA\\nMedidas: 10 x 15 cm" -> {"Material": "PLA", "Medidas": "10 x 15 cm"}.
+
+    Uno por renglón, con dos puntos. Los renglones sin dos puntos (o sin nada de
+    un lado) se ignoran: es texto libre, y la gente escribe de todo.
+    """
+    datos = {}
+    for renglon in str(valor or "").splitlines():
+        clave, dos_puntos, dato = renglon.partition(":")
+        clave, dato = texto(clave), texto(dato)
+        if dos_puntos and clave and dato:
+            datos[clave[0].upper() + clave[1:]] = dato
+    return datos
+
+
 def productos_de(fila):
     """La planilla tiene una columna por pregunta: Producto 1 · Nombre, Producto 1 · Precio...
     Devuelve la lista de productos que tienen nombre, en orden."""
@@ -136,6 +167,7 @@ def productos_de(fila):
             "nombre": nombre,
             "precio": precio(fila.get(f"Producto {n} · Precio")),
             "descripcion": texto(fila.get(f"Producto {n} · Descripción")),
+            "otros": otros_datos(fila.get(f"Producto {n} · Otros datos")),
             "foto": texto(fila.get(f"Producto {n} · Foto")),
         })
     return productos
@@ -177,9 +209,20 @@ def leer_planilla(ruta):
     for valores in filas:
         if all(v in (None, "") for v in valores):
             continue
-        resultado.append({t: ("TRUE" if v is True else "FALSE" if v is False else texto(v))
-                          for t, v in zip(titulos, valores) if t})
+        resultado.append({t: crudo(v) for t, v in zip(titulos, valores) if t})
     return resultado
+
+
+def crudo(valor):
+    """Una celda del .xlsx como texto, TAL CUAL: sin juntar los renglones. ("Otros datos" es uno
+    por renglón; texto() los juntaría en uno solo. La limpieza se hace después, campo por campo.)"""
+    if valor is True or valor is False:
+        return "TRUE" if valor else "FALSE"
+    if valor is None:
+        return ""
+    if isinstance(valor, float) and valor.is_integer():
+        return str(int(valor))
+    return str(valor)
 
 
 def sesion_de_google():
@@ -247,20 +290,39 @@ def qr(link):
     return "https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=" + quote(link, safe="")
 
 
-def tarjeta(producto, numero, emoji):
+def detalles(**datos):
+    """Los datos de más de un producto, los que haya puesto: material, medidas, talles...
+
+    Con **datos, la función recibe CUALQUIER dato con nombre, sin saber de
+    antemano cuáles son. Y como se la llama desarmando un diccionario
+    (detalles(**producto["otros"])), las claves pueden tener espacios:
+    "Tiempo de entrega" no sería un nombre válido escrito a mano, pero así sí.
+    """
+    if not datos:
+        return ""
+    renglones = "".join(f"\n            <li><strong>{escape(clave)}:</strong> {escape(valor)}</li>"
+                        for clave, valor in datos.items())
+    return f'\n        <ul class="detalles">{renglones}\n        </ul>'
+
+
+def tarjeta(producto, numero, emoji, mostrar=None):
+    """Una tarjeta. `mostrar` dice qué partes eligió mostrar (ver que_mostrar); sin nada, todas."""
+    mostrar = mostrar or {clave: True for clave in OPCIONES}
     nombre = escape(producto["nombre"])
-    if producto.get("archivo"):
+    if mostrar["foto"] and producto.get("archivo"):
         foto = f'<img class="producto__foto" src="fotos/{producto["archivo"]}" alt="{nombre}" loading="lazy">'
     else:
         foto = f'<div class="producto__foto">{escape(emoji)}</div>'
-    descripcion = f'\n        <p class="descripcion">{escape(producto["descripcion"])}</p>' if producto["descripcion"] else ""
+    descripcion = (f'\n        <p class="descripcion">{escape(producto["descripcion"])}</p>'
+                   if mostrar["descripcion"] and producto["descripcion"] else "")
+    precio_ = f'\n        <p class="precio">{escape(producto["precio"])}</p>' if mostrar["precio"] else ""
     mensaje = link_whatsapp(numero, f"Hola, vi tu catálogo y quería consultar por: {producto['nombre']}")
+    boton = (f'\n        <a class="consultar" href="{escape(mensaje)}">Consultar por WhatsApp</a>'
+             if mostrar["whatsapp"] else "")
     return f"""
     <article class="producto">
         {foto}
-        <h2>{nombre}</h2>{descripcion}
-        <p class="precio">{escape(producto["precio"])}</p>
-        <a class="consultar" href="{escape(mensaje)}">Consultar por WhatsApp</a>
+        <h2>{nombre}</h2>{descripcion}{detalles(**producto.get("otros", {}))}{precio_}{boton}
     </article>"""
 
 
@@ -268,10 +330,11 @@ def pagina(fila, productos, logo=None):
     """El catálogo de un emprendimiento. `productos` puede traer "archivo" (la foto ya bajada)."""
     nombre = texto(fila.get(NOMBRE))
     numero = numero_whatsapp(fila.get(WHATSAPP))
-    emoji = texto(fila.get(EMOJI)) or "🛍️"
+    emoji = texto(fila.get(EMOJI)) or EMOJI_POR_DEFECTO
     paleta = PALETAS.get(texto(fila.get(ESTILO)), PALETAS["Natural"])
     variables = " ".join(f"{k}: {v};" for k, v in paleta.items())
-    tarjetas = "".join(tarjeta(p, numero, emoji) for p in productos)
+    mostrar = que_mostrar(fila)
+    tarjetas = "".join(tarjeta(p, numero, emoji, mostrar) for p in productos)
     arriba = f'<img class="logo" src="{escape(logo)}" alt="Logo de {escape(nombre)}">\n        ' if logo else ""
     lema = texto(fila.get(LEMA))
     lema = f'\n        <p class="lema">{escape(lema)}</p>' if lema else ""
@@ -310,9 +373,11 @@ def vidriera(catalogos, url_base):
     tarjetas = ""
     for c in catalogos:
         link = url_base + c["slug"] + "/"
+        marca = (f'<img class="puesto__logo" src="{c["slug"]}/{c["logo"]}" alt="" loading="lazy">'
+                 if c.get("logo") else f'<span class="puesto__emoji">{escape(c["emoji"])}</span>')
         tarjetas += f"""
         <a class="puesto" href="{c['slug']}/">
-            <span class="puesto__emoji">{escape(c['emoji'])}</span>
+            {marca}
             <h2>{escape(c['nombre'])}</h2>
             <p>{escape(c['rubro'])}</p>
             <img class="puesto__qr" src="{qr(link)}" alt="QR de {escape(c['nombre'])}" loading="lazy">
@@ -381,13 +446,16 @@ def generar(filas, salida=SALIDA, url_base=SITIO_URL, sesion=None):
             continue
         carpeta = salida / nombre_carpeta
         productos = productos_de(fila)
+        con_fotos = que_mostrar(fila)["foto"]       # si eligió no mostrarlas, ni se bajan
         for p in productos:
-            p["archivo"] = bajar_imagen(sesion, p["foto"], carpeta / "fotos" / f"producto-{p['numero']}.jpg")
+            p["archivo"] = (bajar_imagen(sesion, p["foto"], carpeta / "fotos" / f"producto-{p['numero']}.jpg")
+                            if con_fotos else None)
         logo = bajar_imagen(sesion, texto(fila.get(LOGO)), carpeta / "fotos" / "logo.jpg")
         carpeta.mkdir(parents=True, exist_ok=True)
         (carpeta / "index.html").write_text(pagina(fila, productos, logo and f"fotos/{logo}"), encoding="utf-8")
         publicados.append({"slug": nombre_carpeta, "nombre": nombre, "rubro": texto(fila.get(RUBRO)),
-                           "emoji": texto(fila.get(EMOJI)) or "🛍️", "productos": len(productos)})
+                           "emoji": texto(fila.get(EMOJI)) or EMOJI_POR_DEFECTO, "productos": len(productos),
+                           "logo": logo and f"fotos/{logo}"})
     publicados.sort(key=lambda c: c["nombre"].lower())
     (salida / "index.html").write_text(vidriera(publicados, url_base), encoding="utf-8")
     (salida / "imprimir.html").write_text(para_imprimir(publicados, url_base), encoding="utf-8")

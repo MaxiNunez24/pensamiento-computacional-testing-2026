@@ -47,10 +47,31 @@ def foto(producto):
     return ""
 
 
+# Las columnas que ya tienen su lugar en la tarjeta. Todas las demás de la
+# planilla (material, medidas, talles... las que quieras) son datos de más.
+BASICAS = ["nombre", "precio", "emoji", "foto", "descripcion"]
+
+
+def extras(producto):
+    """Los datos de más del producto: las columnas que no son las de siempre, y que no están vacías."""
+    otros = {}
+    for clave, valor in producto.items():
+        if clave not in BASICAS and valor:
+            otros[clave] = valor
+    return otros
+
+
+def detalles(**datos):
+    """Ejercicio "Detalles a tu medida" (optativo). Mientras no lo hagas, no muestra nada."""
+    return ""
+
+
 def tarjeta(producto, numero):
     """La tarjeta completa: con la foto, el precio y el botón de WhatsApp.
 
-    Está en el ejercicio "La página entera", en lo que ya viene cargado.
+    Está en el ejercicio "La página entera", en lo que ya viene cargado. Si
+    hiciste "Detalles a tu medida", usá la de ese ejercicio: es igual, con un
+    renglón más abajo de la descripción, {detalles(**extras(producto))}.
     """
     return ""
 

@@ -183,6 +183,65 @@ con `"nombre"`, `"precio"` y `"descripcion"`. Con la fila de ejemplo de abajo:
 Ojo: si a la fila le falta una columna (porque nadie la completó), no tiene que explotar.
 </EjercicioPython>
 
+## Lo que cada uno quiera contar
+
+No hay una lista de datos que le sirva a todos: a quien imprime en 3D le importa el material, a
+quien teje los talles. Por eso cada producto tiene en el formulario una pregunta libre, **Otros
+datos**, y se completa uno por renglón, con dos puntos:
+
+```text
+Material: PLA biodegradable
+Medidas: 10 x 10 x 12 cm
+```
+
+Para la tarjeta, eso tiene que ser un diccionario: `{"Material": "PLA biodegradable", "Medidas": "10
+x 10 x 12 cm"}`. Y como es texto libre, la gente va a escribir de todo: renglones sin dos puntos,
+espacios de más, un dato vacío. Lo que no se entiende con certeza, se ignora.
+
+Después, la tarjeta lo muestra con `detalles(**otros)`, como el ejercicio optativo de [Tu
+catálogo](../../web/catalogo/#más-datos-de-cada-producto-optativo). Con un detalle que no se ve en
+el formulario: al desarmar un diccionario con `**`, las claves pueden tener espacios.
+`detalles(Tiempo de entrega="3 días")` es un error de sintaxis, pero
+`detalles(**{"Tiempo de entrega": "3 días"})` anda.
+
+<EjercicioPython
+  titulo="Otros datos, uno por renglón"
+  dificultad="🌿"
+  starter={`def otros_datos(texto):
+    datos = {}
+    # un renglón por dato, "Clave: valor"
+    # sin dos puntos, o con un lado vacío: se ignora
+    return datos
+
+print(otros_datos("Material: PLA biodegradable\\nMedidas: 10 x 10 x 12 cm"))
+`}
+  tests={`d = otros_datos("Material: PLA biodegradable\\nMedidas: 10 x 10 x 12 cm")
+assert isinstance(d, dict), "otros_datos tiene que devolver un diccionario"
+assert d == {"Material": "PLA biodegradable", "Medidas": "10 x 10 x 12 cm"}, f"Dos renglones, dos datos; salió {d}"
+assert otros_datos("  Talles :  S, M y L  ") == {"Talles": "S, M y L"}, "Sin espacios de más, ni en la clave ni en el valor: strip()"
+assert otros_datos("Hora: 10:30") == {"Hora": "10:30"}, 'El valor también puede tener dos puntos ("10:30"): se corta solo en los PRIMEROS'
+assert otros_datos("esto no tiene dos puntos\\nColor:\\n: sin clave") == {}, "Un renglón sin dos puntos, sin valor o sin clave, se ignora"
+assert otros_datos("") == {}, "Sin nada, el diccionario vacío"
+print("¡Texto libre, convertido en datos!")
+`}
+  pistas={[
+    'Para recorrer renglón por renglón, los strings tienen splitlines().',
+    '"Hora: 10:30".split(":", 1) corta solo en los primeros dos puntos. ¿Cuántas partes tiene que tener para que sea un dato?',
+  ]}
+>
+Completá `otros_datos(texto)`: un diccionario con un dato por renglón, cortando en los **primeros**
+dos puntos y sin espacios de más. Lo que no se entiende (sin dos puntos, sin clave o sin valor), se
+ignora.
+
+```python
+otros_datos("Material: PLA biodegradable\nMedidas: 10 x 10 x 12 cm")
+# {'Material': 'PLA biodegradable', 'Medidas': '10 x 10 x 12 cm'}
+
+otros_datos("Hora: 10:30")          # {'Hora': '10:30'}
+otros_datos("no tiene dos puntos")  # {}
+```
+</EjercicioPython>
+
 ## ¿Qué es aprobar un catálogo?
 
 El catálogo se publica **en nombre del CFP**, así que antes de publicarlo lo mira una persona: el
@@ -193,21 +252,31 @@ palabras), es revisar que se pueda publicar:
 - que lo que vende se pueda ofrecer en la cartelera del CFP;
 - que las fotos muestren productos, y no haya datos personales de más.
 
-Para aprobar, se tilda la casilla **Aprobado** en la planilla. Y el programa tiene que respetar dos
-reglas:
+Para aprobar, se tilda la casilla **Aprobado** en la planilla. Lo que se aprueba es **el
+emprendimiento**, una vez: los precios cambian seguido, y si cada cambio tuviera que esperar una
+revisión, un precio nuevo podría quedar trabado días.
+
+Para cambiar algo, nadie completa todo de nuevo: al enviar el formulario, a cada persona le llega
+por mail un **link para editar**, que lo abre **con todo lo que ya cargó**. Cambia el precio y envía.
+Google modifica **la misma fila** de la planilla, que sigue con *Aprobado* tildado, así que el cambio
+se publica solo. Si algo no se puede publicar, quien revisa destilda la casilla.
+
+El programa respeta tres reglas:
 
 1. **Sin la casilla, no se publica.**
-2. Si alguien quiere **cambiar** algo, completa el formulario de nuevo, con el mismo nombre. Esa
-   respuesta nueva **no se publica hasta que la aprueben**: mientras tanto, sigue la anterior. Y si
-   hay varias aprobadas, **gana la más nueva**.
+2. Los cambios hechos con el link para editar **se publican solos**: es la misma respuesta, ya
+   aprobada.
+3. Si alguien completa el formulario **de cero**, con el mismo nombre, es una respuesta nueva: **no
+   se publica hasta que la aprueben**, y mientras tanto sigue la anterior. Si hay varias aprobadas,
+   **gana la más nueva**.
 
-<OpcionMultiple titulo="Chequeo: un cambio sin revisar" opciones={[
-  { texto: "El catálogo de antes, con el precio viejo, hasta que alguien apruebe el cambio.", correcta: true, explicacion: "Exacto. Lo nuevo todavía no lo miró nadie: podría tener cualquier cosa. Hasta que se apruebe, queda lo que ya estaba revisado." },
-  { texto: "El catálogo nuevo, porque es lo más actualizado.", explicacion: "Sería lo más cómodo, pero entonces alcanzaría con aprobar una vez y después cambiar cualquier cosa sin que nadie lo vea." },
-  { texto: "Ninguno, hasta que se apruebe el nuevo.", explicacion: "Así, cambiar un precio te dejaría sin catálogo hasta que alguien revise. No hace falta: lo de antes ya estaba aprobado." },
+<OpcionMultiple titulo="Chequeo: un precio nuevo" opciones={[
+  { texto: "El precio nuevo, en unos minutos: es la misma respuesta, y el emprendimiento ya estaba aprobado.", correcta: true, explicacion: "Exacto. Editar la respuesta cambia la misma fila de la planilla, que sigue con Aprobado tildado. Por eso actualizar precios no depende de nadie." },
+  { texto: "El precio viejo, hasta que alguien apruebe el cambio.", explicacion: "Eso pasaría si completara el formulario de cero: sería una respuesta nueva. Con el link para editar, es la misma, y ya está aprobada." },
+  { texto: "Ninguno: al editar, el catálogo se da de baja hasta que lo revisen.", explicacion: "No hace falta: el emprendimiento ya fue aprobado. Si el cambio tuviera algo que no se puede publicar, quien revisa destilda la casilla." },
 ]}>
-Dulces de la Isla tenía su catálogo aprobado. Hoy completó el formulario de nuevo para subir un
-precio, y nadie lo revisó todavía. ¿Qué catálogo se ve en internet?
+Dulces de la Isla tenía su catálogo aprobado. Hoy entró con su **link para editar** y subió un
+precio. ¿Qué se ve en internet?
 </OpcionMultiple>
 
 <EjercicioPython
@@ -229,7 +298,7 @@ for nombre, fila in ultimas_aprobadas(FILAS).items():
 assert isinstance(r, dict), "ultimas_aprobadas tiene que devolver un diccionario"
 assert "la-vela-encendida" not in r, "La Vela Encendida no está aprobada: no se publica"
 assert set(r) == {"dulces-de-la-isla", "hilos-y-agujas"}, f"Se publican Dulces de la Isla y Hilos y Agujas, con su slug como clave; salió {sorted(r)}"
-assert r["dulces-de-la-isla"]["Producto 1 · Nombre"] == "Dulce de leche", "Dulces de la Isla mandó un cambio que todavía no se aprobó (la pastafrola): sigue publicada la respuesta de antes, la del dulce de leche"
+assert r["dulces-de-la-isla"]["Producto 1 · Nombre"] == "Dulce de leche", "Dulces de la Isla completó el formulario de cero (la pastafrola) y nadie lo aprobó todavía: sigue publicada la respuesta de antes, la del dulce de leche"
 nueva = dict(FILAS[3], **{"Aprobado": "TRUE"})
 r2 = ultimas_aprobadas(FILAS + [nueva])
 assert r2["dulces-de-la-isla"]["Producto 1 · Nombre"] == "Pastafrola", "Cuando aprueban el cambio, gana la respuesta aprobada más nueva"
@@ -359,7 +428,7 @@ python generar.py respuestas-ejemplo.xlsx
 ```
 
 **3. Abrí `sitio/index.html`.** Fijate qué se publicó y qué no, y por qué: la planilla de ejemplo
-tiene una respuesta sin aprobar, un cambio sin revisar, un WhatsApp mal escrito, y alguien que
+tiene una respuesta sin aprobar, una completada de cero que nadie revisó, un emprendimiento que no muestra precios y usa "Otros datos", un WhatsApp mal escrito, y alguien que
 intenta meter código.
 
 Leé `generar.py` de arriba abajo: cada función es algo que ya hiciste, en esta clase o en la del

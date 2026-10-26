@@ -43,6 +43,10 @@ No se toca más código: se cambian datos.
 - Si un producto no tiene foto, dejá la columna `foto` vacía: sale el emoji.
 - El nombre de la foto, **exactamente igual** en la planilla y en el archivo (mayúsculas
   incluidas), sin espacios ni tildes. Cuadradas y livianas (unos 800 píxeles de ancho).
+- **Datos de más** (material, medidas, talles, lo que necesites): agregá una columna a la planilla
+  con ese nombre (`tiempo_de_entrega`, con guiones bajos en vez de espacios). Si la dejás vacía en
+  un producto, ahí no aparece. Se muestran cuando completes `detalles()`, el ejercicio optativo
+  *Detalles a tu medida*: la planilla de ejemplo ya trae `material` y `tiempo_de_entrega`.
 
 Después de cada cambio: `python catalogo.py` de nuevo.
 

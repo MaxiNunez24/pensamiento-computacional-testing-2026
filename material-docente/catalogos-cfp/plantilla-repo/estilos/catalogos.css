@@ -82,6 +82,13 @@
     font-size: 2.4rem;
 }
 
+.puesto__logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .puesto h2 {
     margin: 0;
     font-size: 1.15rem;

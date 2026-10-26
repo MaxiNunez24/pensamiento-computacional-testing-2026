@@ -114,6 +114,9 @@ img.producto__foto { object-fit: cover; }
     font-weight: 600;
 }
 .descripcion { margin: 0; line-height: 1.45; }
+/* Los datos de más de cada producto (material, medidas...): ver "Más datos de cada producto" */
+.detalles { margin: 0; padding: 0; list-style: none; line-height: 1.5; font-size: 0.95rem; }
+.detalles strong { font-weight: 600; }
 .precio {
     margin: 0.4rem 0 0;
     padding: 0.35rem 1.2rem;
@@ -141,15 +144,16 @@ img.producto__foto { object-fit: cover; }
     .catalogo .producto {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr auto auto auto auto 1fr;
+        grid-template-rows: 1fr auto auto auto auto auto 1fr;
         column-gap: 2.5rem;
         justify-items: center;
     }
     .catalogo .producto__foto { grid-column: 2; grid-row: 1 / -1; width: min(300px, 100%); }
     .catalogo .producto h2 { grid-column: 1; grid-row: 2; }
     .catalogo .descripcion { grid-column: 1; grid-row: 3; }
-    .catalogo .precio { grid-column: 1; grid-row: 4; }
-    .catalogo .consultar { grid-column: 1; grid-row: 5; }
+    .catalogo .detalles { grid-column: 1; grid-row: 4; }
+    .catalogo .precio { grid-column: 1; grid-row: 5; }
+    .catalogo .consultar { grid-column: 1; grid-row: 6; }
     .catalogo .producto:nth-child(even) .producto__foto { grid-column: 1; }
     .catalogo .producto:nth-child(even) > :not(.producto__foto) { grid-column: 2; }
 }
@@ -202,6 +206,36 @@ export const TARJETA_CON_BOTON = `def tarjeta(producto, numero):
     <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}">Consultar por WhatsApp</a>
 </article>
 """`;
+
+export const EXTRAS = `# Las columnas que ya tienen su lugar en la tarjeta. Todas las demás son datos de más.
+BASICAS = ["nombre", "precio", "emoji", "foto", "descripcion"]
+
+def extras(producto):
+    otros = {}
+    for clave, valor in producto.items():
+        if clave not in BASICAS and valor:
+            otros[clave] = valor
+    return otros`;
+
+export const TARJETA_CON_DETALLES = `def tarjeta(producto, numero):
+    return f"""
+<article class="producto">
+    {foto(producto)}
+    <h2>{producto['nombre']}</h2>
+    <p class="descripcion">{producto['descripcion']}</p>
+    {detalles(**extras(producto))}
+    <p class="precio">{precio(producto['precio'])}</p>
+    <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}">Consultar por WhatsApp</a>
+</article>
+"""`;
+
+export const PRODUCTOS_CON_DETALLES = `PRODUCTOS = [
+    {"nombre": "Maceta geométrica", "precio": "6500", "emoji": "🪴", "foto": "", "descripcion": "Impresa en 3D.",
+     "material": "PLA biodegradable", "medidas": "10 x 10 x 12 cm", "colores": "Blanco, verde o terracota"},
+    {"nombre": "Taza de cerámica", "precio": "4500", "emoji": "☕", "foto": "taza.svg", "descripcion": "Pintada a mano.",
+     "material": "", "tiempo_de_entrega": "3 días"},
+    {"nombre": "Vela aromática", "precio": "3200", "emoji": "🕯️", "foto": "vela.svg", "descripcion": "Lavanda."},
+]`;
 
 :::tip[Esta clase es optativa, y es para hacer]
 No hace falta para el proyecto del curso. Pero al terminarla tenés **una página publicada en
@@ -998,6 +1032,115 @@ Y como se recortan en círculo, conviene que sean **cuadradas**, con el producto
 ¿Cambió un precio? ¿Llegó un producto nuevo? Editás la planilla (y sumás la foto) y volvés a correr
 `python catalogo.py`. **Nunca tocás el HTML a mano.** Para eso lo armó Python.
 :::
+
+## Más datos de cada producto (optativo)
+
+Cada emprendimiento tiene sus datos. Si hacés impresión 3D, importa el **material** y las
+**medidas**; si tejés, los **talles**; si cocinás, el **tiempo de entrega**. No hay una lista que le
+sirva a todos. Lo que sí se puede hacer es dejar que la planilla tenga **las columnas que vos
+quieras**, y que cada una aparezca en la tarjeta:
+
+```text
+nombre,precio,emoji,foto,descripcion,material,medidas
+Maceta geométrica,6500,🪴,,Impresa en 3D.,PLA biodegradable,10 x 10 x 12 cm
+```
+
+Pero entonces la función que arma esos renglones **no sabe qué datos le van a llegar**, ni cuántos.
+Para eso está lo que viste en [Funciones II](../../clases/funciones-2/#kwargs-lo-mismo-pero-con-nombre):
+**`**kwargs`**, que junta **todos los datos con nombre** que le pasen en un diccionario.
+
+```python
+def detalles(**datos):
+    print(datos)
+
+detalles(material="PLA", medidas="10 x 10 cm")   # {'material': 'PLA', 'medidas': '10 x 10 cm'}
+detalles()                                       # {}
+```
+
+Y al revés: si ya tenés un diccionario, `**` lo **desarma** en datos con nombre al llamar a la
+función. Estas dos líneas hacen lo mismo:
+
+```python
+detalles(material="PLA", medidas="10 x 10 cm")
+detalles(**{"material": "PLA", "medidas": "10 x 10 cm"})
+```
+
+Así la tarjeta le puede pasar a `detalles()` **las columnas de más de cada producto**, sean las que
+sean. `extras(producto)` (ya está hecha) se queda con las columnas que no son las de siempre, y
+la tarjeta la llama así: `{detalles(**extras(producto))}`.
+
+<EjercicioPython
+  titulo="Detalles a tu medida"
+  dificultad="🌳"
+  vista={ESTILOS}
+  datos={`${LINK}
+
+${PRECIO}
+
+${FOTO}
+
+${EXTRAS}
+
+${TARJETA_CON_DETALLES}
+
+${PRODUCTOS_CON_DETALLES}`}
+  starter={`def detalles(**datos):
+    # una lista <ul class="detalles"> con un <li> por dato: <li><strong>Material:</strong> PLA</li>
+    # sin datos, nada: ""
+    return ""
+
+print(tarjeta(PRODUCTOS[0], "5492215550000"))
+`}
+  tests={`try:
+    d = detalles(material="PLA", medidas="10 x 10 cm")
+except TypeError:
+    assert False, "detalles tiene que aceptar CUALQUIER dato con nombre, sin saber cuáles van a venir: def detalles(**datos)"
+assert isinstance(d, str), "detalles tiene que DEVOLVER el HTML, con return"
+assert d.strip().startswith('<ul class="detalles">') and d.strip().endswith("</ul>"), 'Los datos van en una lista: <ul class="detalles"> ... </ul>'
+assert "<li><strong>Material:</strong> PLA</li>" in d, "Cada dato es un renglón: <li><strong>Material:</strong> PLA</li> (el nombre con mayúscula y dos puntos)"
+assert "<li><strong>Medidas:</strong> 10 x 10 cm</li>" in d, "Falta el renglón de las medidas"
+assert d.index("Material") < d.index("Medidas"), "Los datos van en el orden en que llegan"
+assert d.count("<li>") == 2, f"Con dos datos, dos renglones; hay {d.count('<li>')}"
+try:
+    color = detalles(color="Rojo")
+except TypeError:
+    assert False, "Con un dato que no conocías (color), no puede fallar: para eso es **datos"
+assert "<li><strong>Color:</strong> Rojo</li>" in color, "Con color=\\"Rojo\\" tiene que salir <li><strong>Color:</strong> Rojo</li>"
+assert "<strong>Tiempo de entrega:</strong> 3 días" in detalles(tiempo_de_entrega="3 días"), 'Una columna con guiones bajos se lee mejor con espacios: tiempo_de_entrega es "Tiempo de entrega:"'
+assert detalles() == "", "Sin datos de más, nada: ni siquiera una lista vacía"
+t = tarjeta(PRODUCTOS[1], "5492215550000")
+assert "Tiempo de entrega" in t and "Material" not in t, "La taza tiene el material vacío: los datos vacíos no se muestran (eso ya lo hace extras)"
+print("¡Cada producto, con sus datos! Tocá Ejecutar para ver la maceta.")
+`}
+  pistas={[
+    'Adentro de la función, datos es un diccionario. ¿Cómo recorrías la clave y el valor a la vez?',
+    'Para el nombre: "tiempo_de_entrega".replace("_", " ") da "tiempo de entrega", y .capitalize() le pone la primera en mayúscula.',
+    'Sin datos, el diccionario está vacío. ¿Qué devolvés antes de armar la lista?',
+  ]}
+>
+Completá `detalles(**datos)`: una lista `<ul class="detalles">` con **un renglón por dato**, el
+nombre con mayúscula y dos puntos, y sin nada si no hay datos. `tarjeta()` ya la llama con los
+datos de más de cada producto.
+
+```python
+detalles(material="PLA", medidas="10 x 10 cm")
+```
+
+devuelve:
+
+```html
+<ul class="detalles">
+    <li><strong>Material:</strong> PLA</li>
+    <li><strong>Medidas:</strong> 10 x 10 cm</li>
+</ul>
+```
+
+Y si la columna tiene guiones bajos, se leen como espacios: `tiempo_de_entrega` es
+**Tiempo de entrega:**.
+</EjercicioPython>
+
+En tu proyecto, `catalogo.py` ya trae `extras()` y el lugar para `detalles()`: si la hacés, sumá
+columnas a tu planilla y aparecen solas en cada tarjeta.
 
 ## Publicarlo en internet, gratis
 
