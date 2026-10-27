@@ -13,11 +13,43 @@
 //   0-2  los tres def       5  html = pagina(...)     9  pagina llama a tarjeta
 //   10   tarjeta llama a precio    11  precio devuelve "$4500"    12  vuelve a tarjeta
 //   14   tarjeta devuelve a pagina 16  la tarjeta del mate         24  print(html)
+//
+// Lo que importa acá es la PILA. Los diccionarios taza y mate, en la columna de
+// la derecha, ocupaban tanto que la pila quedaba cortada abajo; y adentro de la
+// pila, {'nombre': 'Taza', 'precio': '4500'} se achicaba hasta no leerse. Así
+// que no se muestran sueltos (están en el código), y en la pila cada
+// diccionario se nombra por la variable que es: producto vale taza.
 import { registrar, desdeTraza } from 'motor-animaciones';
 import traza from './trazas/catalogo-llamadas.json';
 
+const OCULTAS = ['taza', 'mate'];
+
+function porNombre(pasos) {
+    const nombres = {};
+    for (const paso of pasos) {
+        for (const nombre of OCULTAS) {
+            const v = paso.variables?.[nombre];
+            if (v) nombres[v.repr] = nombre;
+        }
+    }
+    const nombrar = (v) => {
+        if (nombres[v.repr]) return { ...v, repr: nombres[v.repr] };
+        if (v.items) return { ...v, repr: `[${v.items.map((i) => nombres[i] ?? i).join(', ')}]` };
+        return v;
+    };
+    return pasos.map((paso) => ({
+        ...paso,
+        variables: Object.fromEntries(Object.entries(paso.variables ?? {}).filter(([n]) => !OCULTAS.includes(n))),
+        pila: paso.pila?.map((marco) => ({
+            ...marco,
+            variables: Object.fromEntries(Object.entries(marco.variables).map(([n, v]) => [n, nombrar(v)])),
+        })),
+    }));
+}
+
 registrar('catalogo-llamadas', desdeTraza({
     ...traza,
+    traza: porNombre(traza.traza),
     explicar: true,
     ritmo: 1.4,
     titulo: '¿Quién llama a quién?',
@@ -35,6 +67,7 @@ registrar('catalogo-llamadas', desdeTraza({
     explicaciones: {
         0: 'def no ejecuta la función: la guarda con su nombre, para usarla después.',
         2: 'Tres def, y todavía no corrió nada de adentro de ninguna.',
+        4: 'taza es un diccionario con el nombre y el precio de un producto. mate, otro igual.',
         5: 'Recién acá empieza a trabajar: se llama a pagina(), con la lista de productos.',
         9: 'pagina llama a tarjeta. pagina no se termina: espera, con sus variables, en la pila.',
         10: 'Y tarjeta llama a precio. Ahora esperan dos: pagina y tarjeta.',
