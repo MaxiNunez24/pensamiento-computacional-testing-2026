@@ -47,8 +47,13 @@ function fuenteDe(clase: string): string {
   return clave ? fuentes[clave] : '';
 }
 
+// Las animaciones cuentan solo si son lecciones con título (ver Animacion.astro):
+// las sueltas son de apoyo, y no tienen nada que "resolver".
+const LECCIONES = /<Animacion\b[^>]*\btitulo=/g;
+
 function cuantosEjercicios(clase: string): number {
-  return (fuenteDe(clase).match(COMPONENTES) || []).length;
+  const fuente = fuenteDe(clase);
+  return (fuente.match(COMPONENTES) || []).length + (fuente.match(LECCIONES) || []).length;
 }
 
 /* El mini parcial es una sola pieza <Evaluacion> y guarda con `pcp:eval:`, no

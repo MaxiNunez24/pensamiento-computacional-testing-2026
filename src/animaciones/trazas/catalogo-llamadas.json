@@ -1,0 +1,1711 @@
+{
+ "codigo": "def precio(texto):\n    return \"$\" + texto\n\n\ndef tarjeta(producto):\n    p = precio(producto[\"precio\"])\n    return producto[\"nombre\"] + \": \" + p + \". \"\n\n\ndef pagina(productos):\n    tarjetas = \"\"\n    for producto in productos:\n        tarjetas += tarjeta(producto)\n    return tarjetas\n\n\ntaza = {\"nombre\": \"Taza\", \"precio\": \"4500\"}\nmate = {\"nombre\": \"Mate\", \"precio\": \"7800\"}\nhtml = pagina([taza, mate])\nprint(html)\n",
+ "lenguaje": "python",
+ "traza": [
+  {
+   "linea": 1,
+   "variables": {},
+   "salida": ""
+  },
+  {
+   "linea": 5,
+   "variables": {},
+   "salida": ""
+  },
+  {
+   "linea": 10,
+   "variables": {},
+   "salida": ""
+  },
+  {
+   "linea": 17,
+   "variables": {},
+   "salida": ""
+  },
+  {
+   "linea": 18,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    }
+   },
+   "salida": ""
+  },
+  {
+   "linea": 19,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": ""
+  },
+  {
+   "linea": 11,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 11,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 12,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 12,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "''"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 13,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "''"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 6,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "''"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 6,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 2,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "''"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 6,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    },
+    {
+     "funcion": "precio",
+     "linea": 2,
+     "variables": {
+      "texto": {
+       "tipo": "str",
+       "repr": "'4500'"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 2,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "''"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 6,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    },
+    {
+     "funcion": "precio",
+     "linea": 2,
+     "variables": {
+      "texto": {
+       "tipo": "str",
+       "repr": "'4500'"
+      }
+     }
+    }
+   ],
+   "retorno": {
+    "funcion": "precio",
+    "valor": "'$4500'"
+   }
+  },
+  {
+   "linea": 7,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "''"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 7,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      },
+      "p": {
+       "tipo": "str",
+       "repr": "'$4500'"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 7,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "''"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 7,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      },
+      "p": {
+       "tipo": "str",
+       "repr": "'$4500'"
+      }
+     }
+    }
+   ],
+   "retorno": {
+    "funcion": "tarjeta",
+    "valor": "'Taza: $4500. '"
+   }
+  },
+  {
+   "linea": 12,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 12,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Taza'"
+        ],
+        [
+         "'precio'",
+         "'4500'"
+        ]
+       ],
+       "ref": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 13,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 6,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 6,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 2,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 6,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    },
+    {
+     "funcion": "precio",
+     "linea": 2,
+     "variables": {
+      "texto": {
+       "tipo": "str",
+       "repr": "'7800'"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 2,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 6,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    },
+    {
+     "funcion": "precio",
+     "linea": 2,
+     "variables": {
+      "texto": {
+       "tipo": "str",
+       "repr": "'7800'"
+      }
+     }
+    }
+   ],
+   "retorno": {
+    "funcion": "precio",
+    "valor": "'$7800'"
+   }
+  },
+  {
+   "linea": 7,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 7,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      },
+      "p": {
+       "tipo": "str",
+       "repr": "'$7800'"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 7,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 13,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    },
+    {
+     "funcion": "tarjeta",
+     "linea": 7,
+     "variables": {
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      },
+      "p": {
+       "tipo": "str",
+       "repr": "'$7800'"
+      }
+     }
+    }
+   ],
+   "retorno": {
+    "funcion": "tarjeta",
+    "valor": "'Mate: $7800. '"
+   }
+  },
+  {
+   "linea": 12,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 12,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. Mate: $7800. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 14,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 14,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. Mate: $7800. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 14,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "pagina",
+     "linea": 14,
+     "variables": {
+      "productos": {
+       "tipo": "list",
+       "repr": "[{'nombre': 'Taza', 'precio': '4500'}, {'nombre': 'Mate', 'precio': '7800'}]",
+       "items": [
+        "{'nombre': 'Taza', 'precio': '4500'}",
+        "{'nombre': 'Mate', 'precio': '7800'}"
+       ],
+       "ref": 3
+      },
+      "tarjetas": {
+       "tipo": "str",
+       "repr": "'Taza: $4500. Mate: $7800. '"
+      },
+      "producto": {
+       "tipo": "dict",
+       "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+       "pares": [
+        [
+         "'nombre'",
+         "'Mate'"
+        ],
+        [
+         "'precio'",
+         "'7800'"
+        ]
+       ],
+       "ref": 2
+      }
+     }
+    }
+   ],
+   "retorno": {
+    "funcion": "pagina",
+    "valor": "'Taza: $4500. Mate: $7800. '"
+   }
+  },
+  {
+   "linea": 20,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    },
+    "html": {
+     "tipo": "str",
+     "repr": "'Taza: $4500. Mate: $7800. '"
+    }
+   },
+   "salida": ""
+  },
+  {
+   "linea": 0,
+   "variables": {
+    "taza": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Taza', 'precio': '4500'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Taza'"
+      ],
+      [
+       "'precio'",
+       "'4500'"
+      ]
+     ],
+     "ref": 1
+    },
+    "mate": {
+     "tipo": "dict",
+     "repr": "{'nombre': 'Mate', 'precio': '7800'}",
+     "pares": [
+      [
+       "'nombre'",
+       "'Mate'"
+      ],
+      [
+       "'precio'",
+       "'7800'"
+      ]
+     ],
+     "ref": 2
+    },
+    "html": {
+     "tipo": "str",
+     "repr": "'Taza: $4500. Mate: $7800. '"
+    }
+   },
+   "salida": "Taza: $4500. Mate: $7800. \n"
+  }
+ ]
+}

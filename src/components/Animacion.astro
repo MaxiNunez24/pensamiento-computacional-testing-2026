@@ -1,0 +1,75 @@
+---
+/**
+ * Una animación del motor (github.com/MaxiNunez24/motor-animaciones).
+ *
+ *     <Animacion escena="catalogo-llamadas" leccion titulo="¿Quién llama a quién?">
+ *       Mirá cómo corre el catálogo, y contestá antes de ver qué pasa.
+ *     </Animacion>
+ *
+ * - `escena`: el nombre de src/animaciones/<escena>.js (se carga solo esa).
+ * - `leccion`: frena en las preguntas y tiene paso a paso (<motor-leccion>).
+ * - `titulo`: con título, una lección CUENTA COMO EJERCICIO: aparece en la
+ *   lista de ejercicios de la clase (🎬) y se da por hecha al contestar todas
+ *   sus preguntas. Sin título, es una animación suelta, de apoyo.
+ * - `fundamental`: como en los ejercicios, ⭐.
+ * - `autoplay`, `loop`: para las escenas que se miran y no se preguntan.
+ */
+import { idEjercicio } from '../scripts/id-ejercicio';
+
+interface Props {
+    escena: string;
+    leccion?: boolean;
+    titulo?: string;
+    fundamental?: boolean;
+    autoplay?: boolean;
+    loop?: boolean;
+}
+
+const { escena, leccion = false, titulo, fundamental = false, autoplay = false, loop = false } = Astro.props;
+const Etiqueta = leccion ? 'motor-leccion' : 'motor-escena';
+const atributos = {
+    escena,
+    'data-animacion': '',
+    ...(autoplay ? { autoplay: '' } : {}),
+    ...(loop ? { loop: '' } : {}),
+};
+---
+
+{titulo ? (
+    <section class="ejercicio animacion" id={idEjercicio(titulo)} data-titulo={titulo}
+        data-fundamental={fundamental ? '' : undefined}>
+        <header class="ejercicio__header">
+            <span class="ejercicio__dif" aria-hidden="true">🎬</span>
+            <h3 class="ejercicio__titulo">{titulo}</h3>
+            {fundamental && (
+                <span class="ejercicio__fundamental" title="Lo principal de la clase: si hacés solo algunos, que sean estos">⭐ Fundamental</span>
+            )}
+            <span class="ej-hecho" hidden>✓ Resuelto</span>
+        </header>
+        <div class="animacion__consigna"><slot /></div>
+        <Etiqueta {...atributos} class="animacion__motor" />
+    </section>
+) : (
+    <div class="animacion animacion--suelta">
+        <Etiqueta {...atributos} class="animacion__motor" />
+    </div>
+)}
+
+<script>
+    import '../scripts/animaciones';
+</script>
+
+<style>
+    /* Los colores del curso: el motor ya sigue solo el modo claro/oscuro de Starlight. */
+    .animacion__motor {
+        display: block;
+        --motor-acento: var(--sl-color-accent);
+        --motor-acento-oscuro: var(--sl-color-accent);   /* Starlight ya lo cambia en modo oscuro */
+    }
+    .animacion--suelta {
+        margin-block: 1.5rem;
+    }
+    .animacion__consigna :global(p) {
+        margin: 0 0 0.75rem;
+    }
+</style>

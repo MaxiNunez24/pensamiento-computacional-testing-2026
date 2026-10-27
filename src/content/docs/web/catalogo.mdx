@@ -6,6 +6,7 @@ description: "Un catálogo de productos publicado en internet, con botón de Wha
 import EjercicioPython from '../../../components/EjercicioPython.astro';
 import EjercicioWeb from '../../../components/EjercicioWeb.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+import Animacion from '../../../components/Animacion.astro';
 
 export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 
@@ -778,6 +779,23 @@ foto({"nombre": "Bolso matero", "emoji": "👜", "foto": ""})
 # '<div class="producto__foto">👜</div>'
 ```
 </EjercicioPython>
+
+## ¿Quién llama a quién?
+
+Hasta acá escribiste varias funciones, y otras ya venían hechas, arriba de cada ejercicio. Se
+juntan muchas, y es fácil perder el hilo: ¿cuál corre primero? ¿Quién usa a quién? ¿Adónde va lo que
+devuelve cada una?
+
+Antes de armar la página entera, mirá cómo corre un catálogo chico, con dos productos. Son las
+mismas funciones de la clase, más cortas: `pagina()` usa a `tarjeta()`, que usa a `precio()`. A la
+izquierda está el código, con la línea que corre marcada; a la derecha, las variables, y abajo **la
+pila**: una tarjeta por cada función que está trabajando en ese momento.
+
+<Animacion escena="catalogo-llamadas" leccion titulo="¿Quién llama a quién?" fundamental>
+La animación **frena y te pregunta** antes de mostrarte lo importante: contestá lo que creés que va
+a pasar, y después mirá si era así. Con **Paso a paso** va de a una línea, y con **⛶** se ve en
+pantalla completa.
+</Animacion>
 
 ## La página entera
 
