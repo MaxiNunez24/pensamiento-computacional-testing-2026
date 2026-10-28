@@ -52,6 +52,10 @@ const gruposWeb: Tecla[][] = [
     { ins: '=', ayuda: 'Valor de un atributo: class="precio"' },
     { ins: '"' },
     { ins: "'" },
+    // En un teclado en español está escondido (AltGr + la tecla de la llave de
+    // cierre, y a veces hay que apretar espacio después), y en JS se usa todo el
+    // tiempo para armar textos con variables.
+    { ins: '`', ayuda: 'Backtick: en JS arma un texto con variables: `Hola, ${nombre}`' },
   ],
   [
     { ins: '{', ayuda: 'Abre una regla de CSS, o un bloque de JS' },
@@ -98,6 +102,7 @@ const gruposPython: Tecla[][] = [
   [
     { ins: '"' },
     { ins: "'" },
+    { ins: '`', ayuda: 'Backtick: en Python casi no se usa; en JavaScript arma textos con variables' },
     { ins: '\\', ayuda: 'La barra de \\n (salto de línea)' },
     { ins: '#', ayuda: 'Comentario: Python ignora el resto de la línea' },
   ],
