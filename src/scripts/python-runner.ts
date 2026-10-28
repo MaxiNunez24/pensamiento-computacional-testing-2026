@@ -102,6 +102,41 @@ export async function runPython(
   return JSON.parse(raw) as RunResult;
 }
 
+// ---------- "Ver cómo corre" ----------
+
+export interface TrazaResult {
+  /** La llamada que se agregó al final (la sugerida, o la que escribió el alumno). */
+  llamada: string;
+  /** Lo que espera desdeTraza: { codigo, lenguaje, traza }. */
+  traza: { codigo: string; lenguaje: 'python'; traza: unknown[] };
+}
+
+/**
+ * Traza el código del alumno, paso a paso. Con `llamada` en null, la sugiere
+ * a partir de los tests (ver TRAZAR en pyodide-worker.ts).
+ */
+export async function trazarPython(opciones: {
+  code: string;
+  tests: string;
+  trazador: string;
+  llamada: string | null;
+  datos?: string;
+  entradas?: string[];
+  archivos?: Record<string, string>;
+  maxPasos?: number;
+}): Promise<TrazaResult> {
+  const { code, tests, trazador, llamada, datos = '', entradas = [], archivos = {}, maxPasos = 400 } = opciones;
+  const raw = await pedir({
+    modo: 'trazar', code, tests, trazador, datos, entradas, archivos,
+    llamada: llamada ?? '', sugerir: llamada === null, tope: maxPasos,
+  });
+  const res = JSON.parse(raw);
+  // Si falló algo que no es el programa del alumno (el trazador mismo), el
+  // worker devuelve {ok: false, err}, como en las otras corridas.
+  if (res.ok === false) throw new Error(res.err);
+  return res as TrazaResult;
+}
+
 // ---------- Medición de eficiencia ----------
 
 export interface Escenario {

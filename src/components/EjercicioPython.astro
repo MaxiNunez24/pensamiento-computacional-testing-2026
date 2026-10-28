@@ -47,9 +47,15 @@ interface Props {
    *  se muestra además como página, con este CSS. (La clase del catálogo: el
    *  alumno ve aparecer las tarjetas que generó su Python.) */
   vista?: string;
+  /** "Ver cómo corre": si el ejercicio solo define funciones, se agrega al
+   *  final una llamada para verlas trabajar. Sale sola de los tests; con esto
+   *  se fija otra (ej. `print(saludar("Ana"))`). */
+  llamada?: string;
+  /** Sin el botón "Ver cómo corre" (donde mirarlo paso a paso no aporta). */
+  sinTraza?: boolean;
 }
 
-const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '', archivos, vista } = Astro.props;
+const { titulo, dificultad = '', starter = '', tests, pistas = [], solucion, archivo, datos = '', entradas = '', archivos, vista, llamada, sinTraza = false } = Astro.props;
 
 const id = idEjercicio(titulo);
 const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
@@ -67,6 +73,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   data-entradas={entradas ? enc(entradas) : undefined}
   data-archivos={archivos ? enc(JSON.stringify(archivos)) : undefined}
   data-vista={vista !== undefined ? enc(vista) : undefined}
+  data-llamada={llamada !== undefined ? enc(llamada) : undefined}
 >
   <header class="ejercicio__header">
     {dificultad && <span class="ejercicio__dif" aria-hidden="true">{dificultad}</span>}
@@ -134,6 +141,10 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
   <div class="ejercicio__acciones">
     <button type="button" class="ejercicio__btn ejercicio__btn--run" data-run>▶ Ejecutar</button>
     <button type="button" class="ejercicio__btn ejercicio__btn--verify" data-verify title="Verificar (Ctrl/Cmd + Enter)">✓ Verificar</button>
+    {!sinTraza && (
+      <button type="button" class="ejercicio__btn ejercicio__btn--traza" data-traza
+              title="Mirá tu programa correr línea por línea, con sus variables">👣 Ver cómo corre</button>
+    )}
     <button type="button" class="ejercicio__btn ejercicio__btn--reset" data-reset>↺ Reiniciar</button>
     {/* Toggle de la barra de símbolos en escritorio: útil para quien pelea con
         la distribución del teclado. Se recuerda entre visitas y aplica a todos
@@ -203,6 +214,26 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 
   <pre class="ejercicio__salida" data-salida role="status" aria-live="polite" hidden></pre>
 
+  {/* "Ver cómo corre": el motor de animaciones se descarga recién al tocar el
+      botón. Ver scripts/ver-como-corre.ts. */}
+  {!sinTraza && (
+    <div class="ejercicio__traza" data-traza-panel hidden>
+      <div class="ejercicio__traza-barra">
+        <span>👣 Así corre tu programa, paso a paso</span>
+        <button type="button" class="ejercicio__traza-cerrar" data-traza-cerrar aria-label="Cerrar">✕</button>
+      </div>
+      <p class="ejercicio__traza-estado" data-traza-estado role="status" aria-live="polite"></p>
+      <motor-leccion class="ejercicio__traza-motor" data-traza-motor></motor-leccion>
+      <div class="ejercicio__traza-llamada" data-traza-llamada-caja hidden>
+        <label>
+          <span>👉 Probar con: lo que se agrega al final para ver tus funciones trabajando</span>
+          <textarea data-traza-llamada rows="1" spellcheck="false" autocapitalize="off"></textarea>
+        </label>
+        <button type="button" class="ejercicio__btn" data-traza-otra>↻ Volver a ver</button>
+      </div>
+    </div>
+  )}
+
   {/* Sin allow-scripts: es HTML que armó Python, no hace falta que corra nada.
       Y con allow-same-origin, para poder medir el alto desde acá. */}
   {vista !== undefined && (
@@ -233,3 +264,12 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
 <script>
   import '../scripts/ejercicio-python.ts';
 </script>
+
+<style>
+  /* Los colores del curso, como en <Animacion>. */
+  .ejercicio__traza-motor {
+    display: block;
+    --motor-acento: var(--sl-color-accent);
+    --motor-acento-oscuro: var(--sl-color-accent);
+  }
+</style>

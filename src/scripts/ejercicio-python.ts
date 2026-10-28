@@ -30,6 +30,7 @@ import {
 } from './editor-comun';
 import { conectarAsistente } from './asistente';
 import { atajarLinks, avisarEnVista } from './vista-links';
+import { conectarTraza } from './ver-como-corre';
 
 // ---------- Un ejercicio ----------
 
@@ -197,6 +198,7 @@ function initEjercicio(el: HTMLElement): void {
 
   conectarEnvio(el, getCode, leerEntradas);
   conectarAsistente(el, getCode);
+  conectarTraza(el, { getCode, leerEntradas, tests, datos, archivos, archivo });
 
   // Barra de símbolos: siempre en pantallas angostas, opcional en escritorio.
   conectarTeclas(el, view);

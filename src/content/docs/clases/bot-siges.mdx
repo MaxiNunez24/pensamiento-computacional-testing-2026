@@ -300,6 +300,10 @@ está lista para cargarse.
 
 <EjercicioPython
   titulo="¿Está listo para cargarse?"
+  llamada={`a = Alumno("40000004", "Paz", "Mateo",
+           "3/12/2004", "2215550004",
+           "Argentino", "Calle 47 nro 629")
+print(a.esta_listo())`}
   fundamental
   dificultad="🌱"
   starter={`class Alumno:
@@ -386,6 +390,10 @@ Hacé uno, dale ✓, **copialo a tu `alumno.py`**, y seguí con el siguiente.
 
 <EjercicioPython
   titulo="Control 1: el DNI"
+  llamada={`a = Alumno("4000000A", "Paz", "Mateo",
+           "3/12/2004", "2215550004",
+           "Argentino", "Calle 47 nro 629")
+print(a.problemas())`}
   fundamental
   dificultad="🌱"
   starter={`class Alumno:
@@ -447,6 +455,10 @@ los puntos. Es un método de los textos, como `.upper()` o `.strip()`.
 
 <EjercicioPython
   titulo="Control 2: la fecha de nacimiento"
+  llamada={`a = Alumno("40000004", "Paz", "Mateo",
+           "13/10/2072", "2215550004",
+           "Argentino", "Calle 47 nro 629")
+print(a.problemas())`}
   dificultad="🌿"
   datos={`from datetime import date, datetime
 
@@ -523,6 +535,10 @@ es `True` si la fecha todavía no llegó. `leer_fecha` viene en `ayudas.py`, y e
 
 <EjercicioPython
   titulo="Control 3: el celular"
+  llamada={`a = Alumno("40000004", "Paz", "Mateo",
+           "3/12/2004", "2215550",
+           "Argentino", "Calle 47 nro 629")
+print(a.problemas())`}
   dificultad="🌿"
   starter={`class Alumno:
     def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
@@ -577,6 +593,10 @@ Si no, un problema que diga **celular**.
 
 <EjercicioPython
   titulo="Control 4: la nacionalidad"
+  llamada={`a = Alumno("40000004", "Paz", "Mateo",
+           "3/12/2004", "2215550004",
+           "Completar", "Calle 47 nro 629")
+print(a.problemas())`}
   dificultad="🌱"
   starter={`class Alumno:
     def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):
@@ -630,6 +650,10 @@ ella), un problema que diga **nacionalidad**.
 
 <EjercicioPython
   titulo="Control 5: el domicilio"
+  llamada={`a = Alumno("40000010", "Paz", "Mateo",
+           "3/12/2004", "2215550004",
+           "Argentino", "40000010")
+print(a.problemas())`}
   dificultad="🌱"
   starter={`class Alumno:
     def __init__(self, dni, apellidos, nombres, fecha_nacimiento, celular, nacionalidad, domicilio):

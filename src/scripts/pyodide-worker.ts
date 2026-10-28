@@ -479,6 +479,128 @@ def _medir(code, datos, escenarios_json, tope):
     return json.dumps({"ok": err == "", "err": err, "escenarios": resultados})
 `;
 
+// "Ver cómo corre": arma el programa que se va a trazar y lo traza con el
+// trazador del motor de animaciones (que llega desde la página, la primera
+// vez, como texto: el motor no se puede importar en un worker porque registra
+// sus componentes en `customElements`).
+//
+// Un ejercicio que solo define funciones, trazado tal cual, muestra tres `def`
+// y nada más. Por eso se le agrega una llamada: la primera que hacen los tests
+// (`assert saludar("Ana") == ...` → `print(saludar("Ana"))`, o las líneas de
+// preparación: `a = Alumno(...)`, `a.marcar("P")`). El alumno la puede cambiar.
+//
+// Ojo: esto vive en un template literal de JS. Nada de barras invertidas.
+const TRAZAR = `
+import ast as _ast
+import json as _json
+
+_NL = chr(10)
+
+
+def _sugerir_llamada(codigo, tests):
+    try:
+        programa = _ast.parse(codigo).body
+        definidos = {n.name for n in programa
+                     if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef, _ast.ClassDef))}
+        arbol = _ast.parse(tests)
+    except SyntaxError:
+        return ""
+    if not definidos:
+        return ""
+
+    def llamadas(nodo):
+        return [n for n in _ast.walk(nodo)
+                if isinstance(n, _ast.Call) and isinstance(n.func, _ast.Name) and n.func.id in definidos]
+
+    # Si el programa ya usa sus funciones (un "para probar: opcion_alta(con)"
+    # al final), no hace falta agregar nada.
+    if any(llamadas(st) for st in programa
+           if not isinstance(st, (_ast.FunctionDef, _ast.AsyncFunctionDef, _ast.ClassDef))):
+        return ""
+
+    def usa(nodo):
+        return {n.id for n in _ast.walk(nodo) if isinstance(n, _ast.Name) and isinstance(n.ctx, _ast.Load)}
+
+    def asigna(nodo):
+        return {n.id for n in _ast.walk(nodo) if isinstance(n, _ast.Name) and isinstance(n.ctx, _ast.Store)}
+
+    def solo_lo_necesario(lineas):
+        # Las líneas que llaman a algo del alumno, las que usan lo que esas
+        # dejaron (a.marcar("P") después de a = Alumno(...)), y las que preparan
+        # lo que usan (dia = {...} antes de estado_de(dia, ...)).
+        sirve = [bool(llamadas(st)) for st, _ in lineas]
+        hechos = set()
+        for i, (st, _) in enumerate(lineas):
+            if not sirve[i] and usa(st) & hechos:
+                sirve[i] = True
+            if sirve[i]:
+                hechos |= asigna(st)
+        hace_falta = set()
+        for i in range(len(lineas) - 1, -1, -1):
+            st = lineas[i][0]
+            if not sirve[i] and asigna(st) & hace_falta:
+                sirve[i] = True
+            if sirve[i]:
+                hace_falta |= usa(st)
+        return [linea for linea, ok in zip(lineas, sirve) if ok]
+
+    # Las líneas sueltas de los tests (asignaciones y llamadas), hasta el primer
+    # assert que llama a algo del alumno. Lo compuesto (for, try, def) no se
+    # copia: se saltea.
+    lineas = []
+    for st in arbol.body:
+        texto = _ast.get_source_segment(tests, st) or ""
+        if "correr(" in texto or isinstance(st, (_ast.Import, _ast.ImportFrom)):
+            continue
+        if isinstance(st, _ast.Assert):
+            hay = llamadas(st.test)
+            if not hay:
+                continue
+            if any(llamadas(s) for s, _ in lineas):
+                break
+            llamada = _ast.get_source_segment(tests, hay[0])
+            previas = solo_lo_necesario(lineas + [(_ast.parse(llamada).body[0], llamada)])[:-1]
+            return _NL.join([t for _, t in previas] + ["print(" + llamada + ")"])
+        if isinstance(st, (_ast.Assign, _ast.AugAssign, _ast.AnnAssign, _ast.Expr)):
+            lineas.append((st, texto))
+        elif any(llamadas(s) for s, _ in lineas):
+            break
+    lineas = solo_lo_necesario(lineas)[:6]
+    if not any(llamadas(st) for st, _ in lineas):
+        return ""
+    ultima = lineas[-1][0]
+    textos = [t for _, t in lineas]
+    if (isinstance(ultima, _ast.Assign) and len(ultima.targets) == 1
+            and isinstance(ultima.targets[0], _ast.Name) and isinstance(ultima.value, _ast.Call)):
+        textos.append("print(" + ultima.targets[0].id + ")")
+    return _NL.join(textos)
+
+
+def _ver_como_corre(codigo, tests, datos, llamada, sugerir, entradas_json, max_pasos):
+    if sugerir:
+        llamada = _sugerir_llamada(codigo, tests)
+    partes = []
+    if datos.strip():
+        partes.append("# Esto ya estaba cargado:" + _NL + datos.strip())
+    partes.append(codigo.rstrip())
+    if llamada.strip():
+        partes.append("# Probar con:" + _NL + llamada.strip())
+    programa = (_NL + _NL).join(partes)
+    traza = _json.loads(_motor_trazar(programa, max_pasos, _json.loads(entradas_json)))
+    return _json.dumps({"llamada": llamada, "traza": traza}, ensure_ascii=False)
+`;
+
+type TrazarFn = (
+  code: string,
+  tests: string,
+  datos: string,
+  llamada: string,
+  sugerir: boolean,
+  entradasJson: string,
+  maxPasos: number,
+) => string;
+let trazar: TrazarFn | null = null;
+
 type RunUserFn = (
   code: string,
   tests: string,
@@ -523,13 +645,18 @@ self.onmessage = async (
     entradas?: string[];
     /** Otros archivos del proyecto, que el código del alumno importa. */
     archivos?: Record<string, string>;
-    /** 'medir' cuenta pasos en vez de correr tests (ejercicios de eficiencia). */
-    modo?: 'correr' | 'medir';
+    /** 'medir' cuenta pasos en vez de correr tests (ejercicios de eficiencia);
+     *  'trazar' anota cada paso para "Ver cómo corre". */
+    modo?: 'correr' | 'medir' | 'trazar';
     escenarios?: unknown[];
     tope?: number;
+    /** El trazador del motor de animaciones (src/pedagogico/trazador.py), como texto. */
+    trazador?: string;
+    llamada?: string;
+    sugerir?: boolean;
   }>,
 ) => {
-  const { id, code, tests, archivo, datos, entradas, archivos, modo, escenarios, tope } = ev.data;
+  const { id, code, tests, archivo, datos, entradas, archivos, modo, escenarios, tope, trazador, llamada, sugerir } = ev.data;
   await initPromise;
   if (!runUser || !medir) return; // ya se reportó init-error
 
@@ -575,8 +702,15 @@ self.onmessage = async (
   }
   let raw: string;
   try {
+    if (modo === 'trazar' && !trazar && pyodide) {
+      pyodide.runPython(trazador || '');
+      pyodide.runPython(TRAZAR);
+      trazar = (pyodide as unknown as { globals: { get: (n: string) => unknown } }).globals.get('_ver_como_corre') as TrazarFn;
+    }
     raw =
-      modo === 'medir'
+      modo === 'trazar'
+        ? trazar!(code, tests, datos || '', llamada || '', Boolean(sugerir), JSON.stringify(entradas || []), tope || 400)
+        : modo === 'medir'
         ? medir(code, datos || '', JSON.stringify(escenarios || []), tope || 200_000)
         : runUser(code, tests, archivo || '', datos || '', JSON.stringify(entradas || []));
   } catch (e) {

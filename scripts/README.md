@@ -8,6 +8,8 @@ python scripts/revisar-enunciados.py
 python scripts/verificar_ejercicios.py
 python scripts/verificar-docs-editor.py
 python scripts/verificar_render.py
+python scripts/verificar-ver-como-corre.py
+python scripts/revisar-animaciones.py
 ```
 
 | Script | Qué busca | Por qué existe |
@@ -16,6 +18,8 @@ python scripts/verificar_render.py
 | `verificar_ejercicios.py` | Que ningún test le muestre al alumno **un error nuestro** | Un alumno tuvo bien las dos líneas del ejercicio, le faltó el `print`, y la plataforma le mostró un `IndexError` de código nuestro |
 | `verificar-docs-editor.py` | Que los ejemplos del panel de documentación del editor **den lo que prometen** | El panel le muestra al alumno `"  Ana  ".strip() → "Ana"`. Un ejemplo equivocado ahí es peor que no tener panel: lo copia, le da otra cosa, y no sabe quién se equivocó. Así que no se leen, se corren |
 | `verificar_render.py` | Que las páginas se construyan y se vean | — |
+| `verificar-ver-como-corre.py` | Que **"👣 Ver cómo corre"** ande en todos los ejercicios de Python: que se trace el starter con la llamada sugerida y que el motor arme la escena | Un ejercicio que solo define funciones, trazado tal cual, muestra los `def` y nada más. Avisa dónde no se pudo sugerir una llamada: ahí va la prop `llamada` (o `sinTraza`) |
+| `revisar-animaciones.py` | Que cada `<Animacion>` tenga su escena y que las trazas estén al día con sus programas | Las preguntas de una lección van por número de paso: si cambia el programa y no se vuelve a trazar, quedan en otro lado |
 
 ## La regla del enunciado
 

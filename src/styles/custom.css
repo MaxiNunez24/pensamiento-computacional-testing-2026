@@ -1225,6 +1225,73 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   opacity: 0.7;
 }
 
+/* ---------- "Ver cómo corre" (scripts/ver-como-corre.ts) ---------- */
+
+.ejercicio__traza {
+  margin-top: 0.8rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.6rem;
+  overflow: hidden;
+}
+.ejercicio__traza-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--sl-color-gray-6);
+}
+.ejercicio__traza-cerrar {
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.3rem;
+}
+.ejercicio__traza-cerrar:hover {
+  background: var(--sl-color-gray-5);
+}
+.ejercicio__traza-estado {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+}
+.ejercicio__traza-estado[hidden] {
+  display: none;
+}
+.ejercicio__traza-llamada {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem 0.75rem;
+  border-top: 1px solid var(--sl-color-gray-5);
+}
+.ejercicio__traza-llamada[hidden] {
+  display: none;
+}
+.ejercicio__traza-llamada label {
+  flex: 1;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+.ejercicio__traza-llamada textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.45rem;
+  background: var(--sl-color-gray-7, var(--sl-color-black));
+  color: var(--sl-color-white);
+  font: 0.85rem/1.5 var(--sl-font-mono);
+  tab-size: 4;
+  resize: vertical;
+}
+
 /* ---------- "Encontrar el error" ---------- */
 
 .encontrar {
