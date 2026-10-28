@@ -21,6 +21,7 @@
 // diccionario se nombra por la variable que es: producto vale taza.
 import { registrar, desdeTraza } from 'motor-animaciones';
 import traza from './trazas/catalogo-llamadas.json';
+import { conLineaGrande } from '../scripts/linea-grande';
 
 const OCULTAS = ['taza', 'mate'];
 
@@ -47,7 +48,7 @@ function porNombre(pasos) {
     }));
 }
 
-registrar('catalogo-llamadas', desdeTraza({
+registrar('catalogo-llamadas', conLineaGrande(desdeTraza({
     ...traza,
     traza: porNombre(traza.traza),
     explicar: true,
@@ -57,10 +58,6 @@ registrar('catalogo-llamadas', desdeTraza({
     descripcion: 'Un catálogo chico, paso a paso: los def guardan las funciones sin ejecutarlas; '
         + 'pagina llama a tarjeta, que llama a precio, y cada una espera a que la otra le devuelva su resultado.',
     punteros: 'auto',
-    // Entero, el código de 20 líneas queda chico: en la columna de la clase de
-    // 7px, y en pantalla completa, en el proyector, tampoco se lee. La lupa lo
-    // acerca y sigue a la línea que corre, con 3 líneas de contexto.
-    lupa: true,
     capitulos: {
         0: 'Los def: guardar',
         5: 'Una llamada adentro de otra',
@@ -105,4 +102,4 @@ registrar('catalogo-llamadas', desdeTraza({
             explicacion: 'Cada tarjeta llama a precio, y hay dos productos. Una función se puede llamar todas las veces que haga falta.',
         },
     },
-}));
+})));

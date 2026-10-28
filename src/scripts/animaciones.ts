@@ -10,6 +10,7 @@
 // pregunta es para predecir antes de ver, no un examen.
 
 import { estaHecho, marcarHecho, pintarSello, actualizarResumen } from './progreso';
+import './rueda-motor';
 
 const escenas = import.meta.glob('../animaciones/*.js');
 
