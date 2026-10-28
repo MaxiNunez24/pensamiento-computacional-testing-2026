@@ -25,6 +25,11 @@ a mano cuando usa esos métodos: un `dia.txt` (dos renglones: `30111222,P` y
 `28999888,A`), `sqlite3` importado, y una `con` con la tabla `alumnos`
 (dni, nombre) y una sola fila: `30111222`, `Ana`.
 
+Los de JavaScript (DOCS_JS en `src/scripts/autocompletado-web.ts`) siguen la
+misma convención y se corren con Node, salvo los que usan la página (document,
+un botón, un evento): esos no se pueden correr sin navegador. Ya atrapó uno: un
+renglón que arrancaba con `[` después de otro sin `;`, y JS los leía juntos.
+
 Sale con código 1 si algún ejemplo miente. Además avisa (sin fallar) qué
 métodos del autocompletado todavía no tienen panel.
 """
@@ -143,6 +148,50 @@ sin_panel = [m for m in metodos if m not in con_panel]
 print(f'Métodos con panel: {len(con_panel)} de {len(metodos)}')
 if sin_panel:
     print(f'   (todavía sin panel: {", ".join(sin_panel)})')
+
+# --- Los de JavaScript (src/scripts/autocompletado-web.ts), con Node ---
+# Misma convención. Los que tocan la página (document, un botón, un evento,
+# localStorage, la consola) no se pueden correr sin un navegador: se saltean.
+# Los de listas, textos, Math y JSON sí, y son los que más fácil mienten.
+WEB = FUENTE.parent / 'autocompletado-web.ts'
+texto_web = WEB.read_text(encoding='utf-8')
+inicio = texto_web.index('const DOCS_JS')
+bloque_js = texto_web[inicio:texto_web.index('\n};', inicio)]
+DE_LA_PAGINA = re.compile(r'\b(document|boton|form|titulo|moneda|panel|campo\w*|resultado|tarjeta|evento|localStorage|console)\b')
+ejemplos_js = [(n, destildar(c)) for n, c in ENTRADA.findall(bloque_js)]
+corribles = [(n, e) for n, e in ejemplos_js if not DE_LA_PAGINA.search(e)]
+CORRER_JS = r'''
+const ejemplos = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+const problemas = [];
+for (const [nombre, ejemplo] of ejemplos) {
+    let cuerpo = '';
+    for (const linea of ejemplo.split('\n')) {
+        if (!linea.trim()) continue;
+        if (!linea.includes('→')) { cuerpo += linea + '\n'; continue; }
+        const [izq, der] = linea.split('→').map((s) => s.trim());
+        cuerpo += `__chequear(() => (${izq}), () => (${der}), ${JSON.stringify(izq)}, ${JSON.stringify(der)});\n`;
+    }
+    try {
+        new Function('__chequear', cuerpo)((a, b, izq, der) => {
+            const dio = JSON.stringify(a()), esperado = JSON.stringify(b());
+            if (dio !== esperado) problemas.push([nombre, `\`${izq}\` dice ${der} y da ${dio}`]);
+        });
+    } catch (e) {
+        problemas.push([nombre, `no corre: ${e.message}`]);
+    }
+}
+console.log(JSON.stringify(problemas));
+'''
+import json  # noqa: E402
+import subprocess  # noqa: E402
+corrida = subprocess.run(['node', '-e', CORRER_JS], input=json.dumps(corribles, ensure_ascii=False),
+                         capture_output=True, text=True, encoding='utf-8')
+if corrida.returncode != 0:
+    fallados.append(('(node)', corrida.stderr.strip()[:300]))
+else:
+    fallados += [tuple(p) for p in json.loads(corrida.stdout)]
+print(f'JavaScript: {len(corribles)} ejemplos corridos con Node, '
+      f'{len(ejemplos_js) - len(corribles)} de la página (se miran en el navegador).')
 
 if fallados:
     print(f'\n❌ {len(fallados)} ejemplo(s) no dicen la verdad:\n')

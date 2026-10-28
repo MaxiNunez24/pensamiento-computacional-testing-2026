@@ -24,6 +24,7 @@ import {
   editorTheme, b64decode, aplicarPreferenciaTeclas, conectarTeclas, conectarToggleTeclas, conectarEnvio,
 } from './editor-comun';
 import { avisarEnVista, mensajeDeLink } from './vista-links';
+import { autocompletadoWeb } from './autocompletado-web';
 
 type Lang = 'html' | 'css' | 'js';
 const LENGUAJE = { html: () => html(), css: () => css(), js: () => javascript() };
@@ -278,7 +279,7 @@ function initEjercicio(el: HTMLElement): void {
     const v = new EditorView({
       doc: guardado[lang] ?? starters[lang] ?? '',
       extensions: [
-        basicSetup, LENGUAJE[lang](), oneDark, editorTheme, keymap.of([indentWithTab]),
+        basicSetup, LENGUAJE[lang](), ...autocompletadoWeb(lang), oneDark, editorTheme, keymap.of([indentWithTab]),
         EditorView.updateListener.of((u) => {
           if (!u.docChanged) return;
           clearTimeout(timer);

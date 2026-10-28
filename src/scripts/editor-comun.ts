@@ -818,7 +818,7 @@ const METODOS: Completion[] = [
    preparado lo que el alumno ya tendría a mano: un `dia.txt` con dos renglones
    y una `con` con la tabla `alumnos` (dni, nombre) y una fila, Ana. Así el panel
    muestra el método y no tres renglones de preparación. */
-type Doc = { firma: string; que: string; ejemplo: string };
+export type Doc = { firma: string; que: string; ejemplo: string };
 
 const DOCS: Record<string, Doc> = {
   append: {
@@ -1057,8 +1057,12 @@ const DOCS: Record<string, Doc> = {
 
 /** Arma el panel de un método. CodeMirror lo llama cuando lo seleccionan. */
 function panelDoc(nombre: string) {
+  return panelDe(DOCS[nombre]);
+}
+
+/** El panel de cualquier opción (también las de HTML, CSS y JS: autocompletado-web.ts). */
+export function panelDe(doc: Doc) {
   return (): HTMLElement => {
-    const doc = DOCS[nombre];
     const caja = document.createElement('div');
     caja.className = 'pc-doc';
 
@@ -1136,7 +1140,7 @@ if (typeof document !== 'undefined') {
 }
 
 /** La flecha de una opción. Solo la llevan las que tienen panel. */
-function flechaDoc(completion: Completion, _estado: unknown, view: EditorView): Node | null {
+export function flechaDoc(completion: Completion, _estado: unknown, view: EditorView): Node | null {
   if (!completion.info) return null;
   const flecha = document.createElement('span');
   flecha.className = 'pc-doc-flecha';
