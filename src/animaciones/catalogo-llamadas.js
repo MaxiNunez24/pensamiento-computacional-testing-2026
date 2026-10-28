@@ -57,6 +57,10 @@ registrar('catalogo-llamadas', desdeTraza({
     descripcion: 'Un catálogo chico, paso a paso: los def guardan las funciones sin ejecutarlas; '
         + 'pagina llama a tarjeta, que llama a precio, y cada una espera a que la otra le devuelva su resultado.',
     punteros: 'auto',
+    // Entero, el código de 20 líneas queda chico: en la columna de la clase de
+    // 7px, y en pantalla completa, en el proyector, tampoco se lee. La lupa lo
+    // acerca y sigue a la línea que corre, con 3 líneas de contexto.
+    lupa: true,
     capitulos: {
         0: 'Los def: guardar',
         5: 'Una llamada adentro de otra',

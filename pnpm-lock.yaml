@@ -51,8 +51,8 @@ importers:
         specifier: ^11.15.0
         version: 11.15.0
       motor-animaciones:
-        specifier: github:MaxiNunez24/motor-animaciones#v0.6.0
-        version: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/da3bd2bca0acf13c169da926e46e34b6a71e74fa
+        specifier: github:MaxiNunez24/motor-animaciones#v0.8.0
+        version: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
@@ -1912,9 +1912,9 @@ packages:
   micromark@4.0.2:
     resolution: {integrity: sha512-zpe98Q6kvavpCr1NPVSCMebCKfD7CA2NqZ+rykeNhONIJBpc1tFKt9hucLGwha3jNTNI8lHpctWJWoimVF4PfA==}
 
-  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/da3bd2bca0acf13c169da926e46e34b6a71e74fa:
-    resolution: {gitHosted: true, integrity: sha512-iHr0wx/P8QMr1awizmRFYJCkSXsfk7uh0cH9C4sB8f0INEe2mVLl6FZdQZ+2CQWWbMSBWBes9RprINxe8vr+Qw==, tarball: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/da3bd2bca0acf13c169da926e46e34b6a71e74fa}
-    version: 0.6.0
+  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d:
+    resolution: {gitHosted: true, integrity: sha512-Bu4TQfCh1rBKUmzXi3M7MmMIiTgpF7lwLMzqKYIGUDGDHX50/yW5aFjf4n5kDH0Xbi5c4gfLO1oB20rf0jbBAg==, tarball: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d}
+    version: 0.8.0
 
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
@@ -4785,7 +4785,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/da3bd2bca0acf13c169da926e46e34b6a71e74fa: {}
+  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d: {}
 
   mrmime@2.0.1: {}
 
