@@ -11,7 +11,6 @@
 
 import { trazarPython, TimeoutError, pythonReady } from './python-runner';
 import { b64decode } from './editor-comun';
-import './rueda-motor';
 
 // El motor y la franja de la línea grande, que lo importa: los dos bajan juntos.
 type Motor = typeof import('motor-animaciones') & typeof import('./linea-grande');
