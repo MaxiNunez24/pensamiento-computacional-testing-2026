@@ -27,13 +27,9 @@ interface Props {
 
 const { escena, leccion = false, titulo, fundamental = false, autoplay = false, loop = false } = Astro.props;
 const Etiqueta = leccion ? 'motor-leccion' : 'motor-escena';
-// Los controles van siempre abajo: flotando, en la columna de la clase tapan la
-// parte de abajo del dibujo (la pila) justo cuando la lección frena a preguntar.
-// En pantalla completa el motor los hace flotar igual.
 const atributos = {
     escena,
     'data-animacion': '',
-    'controles-fijos': '',
     ...(autoplay ? { autoplay: '' } : {}),
     ...(loop ? { loop: '' } : {}),
 };

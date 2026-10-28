@@ -51,8 +51,8 @@ importers:
         specifier: ^11.15.0
         version: 11.15.0
       motor-animaciones:
-        specifier: github:MaxiNunez24/motor-animaciones#v0.8.0
-        version: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d
+        specifier: github:MaxiNunez24/motor-animaciones#61be7087746ea2a9e73a7f963d14196ab475faf3
+        version: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/61be7087746ea2a9e73a7f963d14196ab475faf3
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
@@ -1912,8 +1912,8 @@ packages:
   micromark@4.0.2:
     resolution: {integrity: sha512-zpe98Q6kvavpCr1NPVSCMebCKfD7CA2NqZ+rykeNhONIJBpc1tFKt9hucLGwha3jNTNI8lHpctWJWoimVF4PfA==}
 
-  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d:
-    resolution: {gitHosted: true, integrity: sha512-Bu4TQfCh1rBKUmzXi3M7MmMIiTgpF7lwLMzqKYIGUDGDHX50/yW5aFjf4n5kDH0Xbi5c4gfLO1oB20rf0jbBAg==, tarball: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d}
+  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/61be7087746ea2a9e73a7f963d14196ab475faf3:
+    resolution: {gitHosted: true, integrity: sha512-j2uyczRKILZbqZBtYlUrDdngUUq7NRcFS3Hv7SEt6/U2w7uvZofiOtQ4ksYBq76JU9bzzO281kTeUzzxZKhqkw==, tarball: https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/61be7087746ea2a9e73a7f963d14196ab475faf3}
     version: 0.8.0
 
   mrmime@2.0.1:
@@ -4785,7 +4785,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/15ec6b3821ba207ca41da03316f8c7684261fa4d: {}
+  motor-animaciones@https://codeload.github.com/MaxiNunez24/motor-animaciones/tar.gz/61be7087746ea2a9e73a7f963d14196ab475faf3: {}
 
   mrmime@2.0.1: {}
 
