@@ -30,6 +30,9 @@ const Etiqueta = leccion ? 'motor-leccion' : 'motor-escena';
 const atributos = {
     escena,
     'data-animacion': '',
+    // Sin la lupa de quien mira (v0.11.0): en las escenas de desdeTraza se ve
+    // vacía, sin el texto del código. Pedido al motor; sacar cuando se arregle.
+    'sin-lupa': '',
     ...(autoplay ? { autoplay: '' } : {}),
     ...(loop ? { loop: '' } : {}),
 };
