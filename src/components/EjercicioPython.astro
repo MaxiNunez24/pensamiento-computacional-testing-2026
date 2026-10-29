@@ -223,8 +223,7 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
         <button type="button" class="ejercicio__traza-cerrar" data-traza-cerrar aria-label="Cerrar">✕</button>
       </div>
       <p class="ejercicio__traza-estado" data-traza-estado role="status" aria-live="polite"></p>
-      {/* sin-lupa: ver Animacion.astro (la lupa de quien mira no muestra el texto del código). */}
-      <motor-leccion class="ejercicio__traza-motor" data-traza-motor sin-lupa></motor-leccion>
+      <motor-leccion class="ejercicio__traza-motor" data-traza-motor></motor-leccion>
       <div class="ejercicio__traza-llamada" data-traza-llamada-caja hidden>
         <label>
           <span>👉 Probar con: lo que se agrega al final para ver tus funciones trabajando</span>

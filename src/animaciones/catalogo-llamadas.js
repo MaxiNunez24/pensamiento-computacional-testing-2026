@@ -21,7 +21,6 @@
 // diccionario se nombra por la variable que es: producto vale taza.
 import { registrar, desdeTraza } from 'motor-animaciones';
 import traza from './trazas/catalogo-llamadas.json';
-import { conLineaGrande } from '../scripts/linea-grande';
 
 const OCULTAS = ['taza', 'mate'];
 
@@ -48,10 +47,15 @@ function porNombre(pasos) {
     }));
 }
 
-registrar('catalogo-llamadas', conLineaGrande(desdeTraza({
+registrar('catalogo-llamadas', desdeTraza({
     ...traza,
     traza: porNombre(traza.traza),
     explicar: true,
+    // La línea que corre, grande, en una franja abajo (el código entero arriba), y la
+    // escena del alto de lo que muestra. Del motor (v0.12.0): así los subtítulos la
+    // esquivan en pantalla completa.
+    lineaGrande: true,
+    alto: 'auto',
     ritmo: 1.4,
     titulo: '¿Quién llama a quién?',
     archivo: 'catalogo.py',
@@ -102,4 +106,4 @@ registrar('catalogo-llamadas', conLineaGrande(desdeTraza({
             explicacion: 'Cada tarjeta llama a precio, y hay dos productos. Una función se puede llamar todas las veces que haga falta.',
         },
     },
-})));
+}));

@@ -177,7 +177,7 @@ const escenas = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const malas = [];
 for (const {{ nombre, ...traza }} of escenas) {{
     try {{
-        const armar = desdeTraza({{ ...traza, explicar: true, lupa: true, ritmo: 1.2, archivo: 'tu_programa.py' }});
+        const armar = desdeTraza({{ ...traza, explicar: true, lineaGrande: true, alto: 'auto', ritmo: 1.2, archivo: 'tu_programa.py' }});
         for (const d of [{{ nombre: 'media', ancho: 650 }}, {{ nombre: 'ancha', ancho: 1600 }}, {{ nombre: 'angosta', ancho: 380 }}]) {{
             const e = armar(d);
             if (!e.linea.length) throw new Error('escena vacía en ' + d.nombre);

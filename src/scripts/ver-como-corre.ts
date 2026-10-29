@@ -12,11 +12,9 @@
 import { trazarPython, TimeoutError, pythonReady } from './python-runner';
 import { b64decode } from './editor-comun';
 
-// El motor y la franja de la línea grande, que lo importa: los dos bajan juntos.
-type Motor = typeof import('motor-animaciones') & typeof import('./linea-grande');
+type Motor = typeof import('motor-animaciones');
 let motor: Promise<Motor> | null = null;
-const cargarMotor = () =>
-  (motor ??= Promise.all([import('motor-animaciones'), import('./linea-grande')]).then(([m, l]) => ({ ...m, ...l })));
+const cargarMotor = () => (motor ??= import('motor-animaciones'));
 
 interface Contexto {
   getCode: () => string;
@@ -85,13 +83,16 @@ export function conectarTraza(el: HTMLElement, ctx: Contexto): void {
           };
         }
       }
-      // El código entero arriba, y la línea que corre, grande, abajo.
-      escena.escena = m.conLineaGrande(m.desdeTraza({
+      // El código entero arriba, la línea que corre grande abajo, y la escena del
+      // alto de lo que muestra (las dos cosas, del motor desde la v0.12.0).
+      escena.escena = m.desdeTraza({
         ...res.traza,
         explicar: true,
+        lineaGrande: true,
+        alto: 'auto',
         ritmo: 1.2,
         archivo: ctx.archivo || 'tu_programa.py',
-      }));
+      });
       avisar('');
       escena.reproducir();
     } catch (e) {

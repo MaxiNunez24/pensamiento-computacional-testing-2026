@@ -12,11 +12,15 @@
 //   9  print(b + 100)             10 TypeError
 import { registrar, desdeTraza } from 'motor-animaciones';
 import traza from './trazas/funciones-return-print.json';
-import { conLineaGrande } from '../scripts/linea-grande';
 
-registrar('funciones-return-print', conLineaGrande(desdeTraza({
+registrar('funciones-return-print', desdeTraza({
     ...traza,
     explicar: true,
+    // La línea que corre, grande, en una franja abajo (el código entero arriba), y la
+    // escena del alto de lo que muestra. Del motor (v0.12.0): así los subtítulos la
+    // esquivan en pantalla completa.
+    lineaGrande: true,
+    alto: 'auto',
     ritmo: 1.4,
     titulo: '¿return o print?',
     archivo: 'funciones.py',
@@ -33,7 +37,10 @@ registrar('funciones-return-print', conLineaGrande(desdeTraza({
         4: 'doble devuelve 9000: vuelve a quien la llamó, y queda guardado en a.',
         7: 'mostrar_doble mostró 9000 en la pantalla… pero no tiene return: devuelve None.',
         8: 'Por eso b vale None. El 9000 se vio, pero no quedó guardado en ningún lado.',
-        10: 'None + 100 no se puede: TypeError. Es el error de verdad cuando a una función le falta el return.',
+        // Corto a propósito: se junta con la respuesta de la pregunta 9 en un solo
+        // subtítulo, y con el cartel del error en pantalla no queda lugar libre para
+        // que suba si ocupa dos renglones (taparía la línea grande).
+        10: 'Le faltaba el return.',
     },
     preguntas: {
         2: {
@@ -52,7 +59,7 @@ registrar('funciones-return-print', conLineaGrande(desdeTraza({
             pregunta: 'b vale None. ¿Qué pasa con print(b + 100)?',
             opciones: ['Muestra 9100', 'Muestra None100', 'Da un error'],
             correcta: 2,
-            explicacion: 'None no es un número: no se le puede sumar 100. Python corta con un TypeError.',
+            explicacion: 'None no es un número.',
         },
     },
-})));
+}));
