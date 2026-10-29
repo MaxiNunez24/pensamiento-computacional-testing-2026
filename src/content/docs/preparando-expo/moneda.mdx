@@ -127,11 +127,14 @@ export const MONEDA = `/* La escena: perspective hace que el giro se vea en 3D, 
 }
 `;
 
-export const TIRAR = `function tirar(probCara = 0.5) {
-    if (Math.random() < probCara) {
-        return "cara";
+export const TIRAR = `function tirar(elegido, probGanar = 0.5) {
+    if (Math.random() < probGanar) {
+        return elegido;
     }
-    return "cruz";
+    if (elegido === "cara") {
+        return "cruz";
+    }
+    return "cara";
 }
 `;
 
@@ -166,7 +169,7 @@ Para hacerla hacen falta cuatro cosas, y cada una es una parte de esta clase:
 3. **La animación**: que suba, gire y caiga, con CSS.
 4. **El tiempo**: que el resultado aparezca cuando la moneda **cae**, no cuando la tocás.
 
-Y una quinta, para la Expo: **cargar la moneda**, para hacer que salga más una que la otra si
+Y una quinta, para la Expo: **cargar la moneda**, para elegir qué tan seguido gana quien juega si
 alguna vez la usamos para sortear un premio.
 
 ## El azar: Math.random()
@@ -231,70 +234,78 @@ En `Math.random() < 0.5`, el `0.5` es **la probabilidad de que salga cara**: la 
 Si lo cambiás por `0.8`, el número es menor que 0.8 **ocho de cada diez veces**, y sale cara mucho
 más seguido. Es una moneda cargada.
 
+Pero para un sorteo, lo que importa no es si sale cara o cruz: es **si gana quien juega**. Cargarla
+para la cara no sirve de nada si la persona eligió cruz. Entonces `tirar` tiene que saber **qué
+eligió**, y el número pasa a ser **la probabilidad de que gane**: si el azar cae debajo, sale lo que
+eligió; si no, lo otro.
+
 Conviene que ese número sea un **parámetro**, con un valor por defecto para la moneda pareja. Igual
 que en Python:
 
 ```python
-def tirar(prob_cara=0.5):
+def tirar(elegido, prob_ganar=0.5):
     ...
 ```
 
 ```js
-function tirar(probCara = 0.5) {
+function tirar(elegido, probGanar = 0.5) {
     // ...
 }
 ```
 
 <OpcionMultiple titulo="Chequeo: la moneda cargada" opciones={[
-  { texto: "Alrededor de 80, pero casi nunca 80 justo.", correcta: true, explicacion: "Exacto. La probabilidad dice qué pasa a la larga: con 100 tiradas pueden salir 76, o 83. Con 10.000, la proporción se pega mucho más a 0.8." },
+  { texto: "Alrededor de 80, pero casi nunca 80 justo.", correcta: true, explicacion: "Exacto. La probabilidad dice qué pasa a la larga: con 100 tiradas puede ganar 76, o 83. Con 10.000, la proporción se pega mucho más a 0.8." },
   { texto: "80, exactas.", explicacion: "Sería así si la moneda llevara la cuenta, pero cada tirada es independiente: no se acuerda de las anteriores." },
-  { texto: "No se puede decir nada: es al azar.", explicacion: "Algo sí se puede decir: que van a ser muchas más caras que cruces. El azar no es lo mismo que no saber nada." },
+  { texto: "No se puede decir nada: es al azar.", explicacion: "Algo sí se puede decir: que va a ganar muchas más veces de las que pierde. El azar no es lo mismo que no saber nada." },
 ]}>
-Con `tirar(0.8)`, si tirás la moneda **100 veces**, ¿cuántas caras salen?
+Con `tirar("cruz", 0.8)`, si tirás la moneda **100 veces**, ¿cuántas veces sale cruz (lo que eligió)?
 </OpcionMultiple>
 
 ### ¿Cómo se prueba una moneda cargada?
 
-No alcanza con tirarla una vez: puede salir cara de casualidad. **Se tira muchas veces y se cuenta.**
-Si la cargaste al 80%, de 4000 tiradas tienen que salir unas 3200 caras. Así la prueba el test del
-próximo ejercicio: es un **test estadístico**, y es como se prueba de verdad cualquier cosa al azar.
+No alcanza con tirarla una vez: puede ganar de casualidad. **Se tira muchas veces y se cuenta.**
+Si la cargaste al 80%, de 4000 tiradas tiene que ganar unas 3200. Así la prueba el test del próximo
+ejercicio: es un **test estadístico**, y es como se prueba de verdad cualquier cosa al azar.
 
 <EjercicioWeb
   titulo="La moneda cargada"
   fundamental
   dificultad="🌿"
   sinVista
-  js={`function tirar(probCara) {
-    // cara con probabilidad probCara (un número de 0 a 1); si no, cruz.
-    // Y si no le pasan nada, una moneda pareja.
+  js={`function tirar(elegido, probGanar) {
+    // Con probabilidad probGanar (un número de 0 a 1), sale lo que eligió.
+    // Si no, sale lo otro: si eligió "cara", "cruz", y al revés.
+    // Y si no le pasan probGanar, una moneda pareja.
 }
 
-console.log(tirar(0.8));
-console.log(tirar());
+console.log(tirar("cara", 0.8));
+console.log(tirar("cruz"));
 `}
   tests={`assert(typeof tirar === "function", "Falta la función tirar");
 for (var i = 0; i < 100; i++) {
-    assert(tirar(1) === "cara", "Con probCara 1 tiene que salir SIEMPRE cara, y salió " + JSON.stringify(tirar(1)) + ". ¿Comparás Math.random() con probCara?");
-    assert(tirar(0) === "cruz", "Con probCara 0 tiene que salir SIEMPRE cruz, y salió " + JSON.stringify(tirar(0)));
+    assert(tirar("cara", 1) === "cara" && tirar("cruz", 1) === "cruz", 'Con probGanar 1 gana SIEMPRE: tiene que salir lo que eligió. tirar("cara", 1) dio ' + JSON.stringify(tirar("cara", 1)) + ' y tirar("cruz", 1) dio ' + JSON.stringify(tirar("cruz", 1)) + ". ¿Comparás Math.random() con probGanar, y devolvés elegido?");
+    assert(tirar("cara", 0) === "cruz" && tirar("cruz", 0) === "cara", 'Con probGanar 0 pierde SIEMPRE: tiene que salir lo otro. tirar("cara", 0) dio ' + JSON.stringify(tirar("cara", 0)) + ' y tirar("cruz", 0) dio ' + JSON.stringify(tirar("cruz", 0)) + ". Si eligió cara, lo otro es cruz, y al revés");
 }
-var caras = 0;
+var gano = 0;
 for (var j = 0; j < 4000; j++) {
-    if (tirar(0.8) === "cara") caras++;
+    if (tirar("cruz", 0.8) === "cruz") gano++;
 }
-assert(caras > 3000 && caras < 3400, "Con probCara 0.8, de 4000 tiradas tendrían que salir unas 3200 caras, y salieron " + caras + ". ¿Sale cara cuando Math.random() es MENOR que probCara?");
-caras = 0;
+assert(gano > 3000 && gano < 3400, "Con probGanar 0.8, de 4000 tiradas tendría que ganar unas 3200, y ganó " + gano + ". ¿Sale lo que eligió cuando Math.random() es MENOR que probGanar?");
+var caras = 0;
 for (var k = 0; k < 4000; k++) {
-    if (tirar() === "cara") caras++;
+    if (tirar("cara") === "cara") caras++;
 }
-assert(caras > 1800 && caras < 2200, "Sin pasarle nada, la moneda tiene que ser pareja: de 4000 tiradas, unas 2000 caras. Salieron " + caras + ". ¿Le diste a probCara un valor por defecto?");`}
+assert(caras > 1800 && caras < 2200, "Sin pasarle probGanar, la moneda tiene que ser pareja: de 4000 tiradas, unas 2000 caras. Salieron " + caras + ". ¿Le diste a probGanar un valor por defecto?");`}
   pistas={[
-    'En la versión de antes, ¿qué número tenía que cambiar por probCara?',
-    'Si llaman a tirar() sin nada, probCara vale undefined. ¿Cómo le das un valor por defecto, como en Python?',
+    'En la versión de antes, ¿qué número es ahora probGanar? Si el azar cae debajo, ¿qué devolvés?',
+    'Si no gana, lo que sale depende de lo que eligió: un if más, que pregunte si elegido es "cara".',
+    'Si llaman a tirar("cara") sin el segundo, probGanar vale undefined. ¿Cómo le das un valor por defecto, como en Python?',
   ]}
 >
-Cambiá `tirar` para que reciba **`probCara`**, la probabilidad de que salga cara (de 0 a 1), y que
-sin nada sea una moneda pareja. `tirar(1)` es siempre cara, `tirar(0)` siempre cruz, y `tirar(0.8)`
-cara ocho de cada diez veces.
+Cambiá `tirar` para que reciba **lo que eligió** la persona (`"cara"` o `"cruz"`) y **`probGanar`**,
+la probabilidad de que gane (de 0 a 1): sale lo que eligió con esa probabilidad, y si no, lo otro. Sin
+`probGanar`, una moneda pareja. `tirar("cara", 1)` es siempre cara, `tirar("cara", 0)` siempre cruz,
+y `tirar("cruz", 0.8)` sale cruz ocho de cada diez veces.
 </EjercicioWeb>
 
 ## El juego: ganaste o perdiste
@@ -309,11 +320,11 @@ siempre lo mismo.
 
 ```js
 Math.random = function () { return 0.3; };   // de acá en más, "el azar" da 0.3
-// 0.3 es menor que 0.5: va a salir cara, seguro
+// 0.3 es menor que 0.5: con la moneda pareja, gana seguro
 ```
 
-Así el test sabe que va a salir cara, y puede revisar que diga *"Salió cara: ¡ganaste!"* si elegiste
-cara. Fijar el azar para poder probar es algo que se hace siempre en testing. Funciona **solo si tu
+Así el test sabe que ganás, y puede revisar que diga *"Salió cara: ¡ganaste!"* si elegiste cara. Con
+`0.9` sabe que perdés. Fijar el azar para poder probar es algo que se hace siempre en testing. Funciona **solo si tu
 programa usa `Math.random()`** para sortear: por eso el `tirar` de antes.
 
 <EjercicioWeb
@@ -327,19 +338,21 @@ programa usa `Math.random()`** para sortear: por eso el `tirar` de antes.
 <p id="resultado"></p>
 `}
   js={`${TIRAR}
-// Al elegir cara o cruz: tirar la moneda y mostrar en #resultado, por ejemplo,
-// "Salió cara: ¡ganaste!" (con la clase gano) o "Salió cruz: perdiste" (con la clase perdio)
+// Al elegir cara o cruz: tirar la moneda con lo que eligió, tirar(elegido), y mostrar en
+// #resultado, por ejemplo, "Salió cara: ¡ganaste!" (con la clase gano) o "Salió cruz: perdiste"
+// (con la clase perdio)
 `}
   tests={`Math.random = function () { return 0.3; };
 click("#elijo-cara");
-assert(texto("#resultado") === "Salió cara: ¡ganaste!", 'Salió cara (el test fijó el azar) y elegiste cara: tendría que decir "Salió cara: ¡ganaste!", y dice "' + texto("#resultado") + '"');
+assert(texto("#resultado") === "Salió cara: ¡ganaste!", 'Elegiste cara y ganaste (el test fijó el azar en 0.3): tendría que decir "Salió cara: ¡ganaste!", y dice "' + texto("#resultado") + '". ¿Le pasás a tirar lo que eligió?');
 assert($("#resultado").classList.contains("gano"), "Al ganar, #resultado lleva la clase gano");
-click("#elijo-cruz");
-assert(texto("#resultado") === "Salió cara: perdiste", 'Salió cara y elegiste cruz: tendría que decir "Salió cara: perdiste", y dice "' + texto("#resultado") + '"');
-assert($("#resultado").classList.contains("perdio") && !$("#resultado").classList.contains("gano"), "Al perder, #resultado lleva la clase perdio, y ya no la gano: si no, queda verde y rojo a la vez");
 Math.random = function () { return 0.9; };
 click("#elijo-cruz");
-assert(texto("#resultado") === "Salió cruz: ¡ganaste!", 'Salió cruz y elegiste cruz: tendría que decir "Salió cruz: ¡ganaste!", y dice "' + texto("#resultado") + '"');
+assert(texto("#resultado") === "Salió cara: perdiste", 'Elegiste cruz y perdiste (el azar en 0.9), así que salió cara: tendría que decir "Salió cara: perdiste", y dice "' + texto("#resultado") + '"');
+assert($("#resultado").classList.contains("perdio") && !$("#resultado").classList.contains("gano"), "Al perder, #resultado lleva la clase perdio, y ya no la gano: si no, queda verde y rojo a la vez");
+Math.random = function () { return 0.3; };
+click("#elijo-cruz");
+assert(texto("#resultado") === "Salió cruz: ¡ganaste!", 'Elegiste cruz y ganaste: tendría que decir "Salió cruz: ¡ganaste!", y dice "' + texto("#resultado") + '"');
 assert($("#resultado").classList.contains("gano") && !$("#resultado").classList.contains("perdio"), "Al ganar después de perder, sacale la clase perdio");`}
   pistas={[
     'Los dos botones hacen casi lo mismo: ¿y si escribís una sola función jugar(elegido), y cada botón la llama con lo suyo?',
@@ -470,7 +483,8 @@ En el juego, ¿en qué momento se decide si sale cara o cruz?
 const moneda = document.querySelector(".moneda");
 const resultado = document.querySelector("#resultado");
 
-// Al tocar Tirar: sortear, borrar el resultado anterior y hacer girar la moneda (clase girando).
+// Al tocar Tirar: sortear con tirar("cara") (acá nadie elige, y con la moneda pareja da lo
+// mismo qué le pases), borrar el resultado anterior y hacer girar la moneda (clase girando).
 // Cuando CAE (animationend): sacarle la clase girando y mostrar "Salió cara" o "Salió cruz".
 `}
   tests={`var moneda = $(".moneda");
@@ -480,7 +494,7 @@ click("#tirar");
 assert(moneda.classList.contains("girando"), "Al tocar Tirar, la moneda tiene que empezar a girar: agregale la clase girando");
 assert((texto("#resultado") || "").indexOf("Salió") === -1, "El resultado aparece con la moneda en el aire: mostralo cuando termine la animación, en animationend");
 cae();
-assert(texto("#resultado") === "Salió cara", 'Cuando la moneda cae (salió cara: el test fijó el azar), tiene que decir "Salió cara", y dice "' + texto("#resultado") + '"');
+assert(texto("#resultado") === "Salió cara", 'Cuando la moneda cae (salió cara: el test fijó el azar), tiene que decir "Salió cara", y dice "' + texto("#resultado") + '". ¿Sorteaste con tirar("cara")?');
 assert(!moneda.classList.contains("girando"), "Cuando cae, sacale la clase girando: si no, la próxima vez no vuelve a girar (ya la tiene)");
 Math.random = function () { return 0.7; };
 click("#tirar");
@@ -520,8 +534,9 @@ Y la regla de oro del ejercicio anterior: **se sortea al tocar, y se muestra al 
   js={`${TIRAR}
 // Al elegir cara o cruz:
 // 1. si la moneda está en el aire, no hacer nada (que no se pueda tirar dos veces)
-// 2. sortear, borrar el resultado anterior, y hacerla girar hacia el lado que salió
-//    (gira-cara o gira-cruz; y sacarle muestra-cruz, por si había quedado de antes)
+// 2. sortear con lo que eligió, tirar(elegido), borrar el resultado anterior, y hacerla girar
+//    hacia el lado que salió (gira-cara o gira-cruz; y sacarle muestra-cruz, por si había
+//    quedado de antes)
 // Cuando cae (animationend):
 // 3. sacarle la clase gira-..., y si salió cruz, dejarla mostrando la cruz (muestra-cruz)
 // 4. "Salió cara: ¡ganaste!" / "Salió cruz: perdiste", con la clase gano o perdio
@@ -530,9 +545,9 @@ Y la regla de oro del ejercicio anterior: **se sortea al tocar, y se muestra al 
   tests={`var moneda = $(".moneda");
 assert(moneda, "Falta la moneda: no borres el HTML");
 var cae = function () { moneda.dispatchEvent(new Event("animationend", { bubbles: true })); };
-Math.random = function () { return 0.3; };
+Math.random = function () { return 0.8; };
 click("#elijo-cruz");
-assert(moneda.classList.contains("gira-cara"), "Salió cara (el test fijó el azar): la moneda tiene que girar hacia la cara, con la clase gira-cara. Tiene: " + JSON.stringify(moneda.className));
+assert(moneda.classList.contains("gira-cara"), "Elegiste cruz y perdiste (el test fijó el azar en 0.8), así que salió cara: la moneda tiene que girar hacia la cara, con la clase gira-cara. Tiene: " + JSON.stringify(moneda.className) + ". ¿Le pasás a tirar lo que eligió?");
 assert((texto("#resultado") || "").indexOf("Salió") === -1, "El resultado aparece con la moneda en el aire: escribilo cuando cae, en animationend");
 click("#elijo-cara");
 cae();
@@ -541,9 +556,9 @@ assert($("#resultado").classList.contains("perdio"), "Al perder, #resultado llev
 assert(!moneda.classList.contains("gira-cara"), "Cuando cae, sacale la clase gira-cara: si no, la próxima vez no vuelve a girar");
 assert(!moneda.classList.contains("muestra-cruz"), "Salió cara: la moneda no tiene que quedar mostrando la cruz");
 assert(texto("#marcador") === "Aciertos: 0 de 1", 'Después de una tirada perdida: "Aciertos: 0 de 1" (el clic con la moneda en el aire no cuenta). Dice: "' + texto("#marcador") + '"');
-Math.random = function () { return 0.8; };
+Math.random = function () { return 0.3; };
 click("#elijo-cruz");
-assert(moneda.classList.contains("gira-cruz"), "Salió cruz: la moneda tiene que girar hacia la cruz, con la clase gira-cruz. Tiene: " + JSON.stringify(moneda.className));
+assert(moneda.classList.contains("gira-cruz"), "Elegiste cruz y ganaste (el azar en 0.3), así que salió cruz: la moneda tiene que girar hacia la cruz, con la clase gira-cruz. Tiene: " + JSON.stringify(moneda.className));
 cae();
 assert(texto("#resultado") === "Salió cruz: ¡ganaste!", 'Salió cruz y elegiste cruz: "Salió cruz: ¡ganaste!". Dice: "' + texto("#resultado") + '"');
 assert($("#resultado").classList.contains("gano") && !$("#resultado").classList.contains("perdio"), "Al ganar, #resultado lleva la clase gano, y ya no la perdio");
@@ -566,9 +581,9 @@ si ganaste. Con el marcador de aciertos, y sin que se pueda tirar de nuevo con l
 
 ## Para la Expo: el panel secreto
 
-Si en la Expo usamos la moneda para sortear un premio, quizás queramos que **salga más una que la
-otra**. Para eso, un **panel secreto**: una barra para elegir la probabilidad de cara, que aparece
-y desaparece con una tecla, así el público no la ve.
+Si en la Expo usamos la moneda para sortear un premio, quizás queramos que **se gane más (o menos)
+seguido**. Para eso, un **panel secreto**: una barra para elegir la probabilidad de ganar, que
+aparece y desaparece con una tecla, así el público no la ve.
 
 Dos cosas nuevas, chiquitas:
 
@@ -595,17 +610,19 @@ Dos cosas nuevas, chiquitas:
   titulo="El panel secreto"
   dificultad="🌳"
   cssBase={BASE}
-  html={`<button id="tirar">Tirar</button>
+  html={`<button id="elijo-cara">Cara</button>
+<button id="elijo-cruz">Cruz</button>
 <p id="resultado"></p>
 <div id="panel" class="panel oculto">
-    <label for="prob">Probabilidad de cara: <span id="porcentaje">50%</span></label>
+    <label for="prob">Probabilidad de ganar: <span id="porcentaje">50%</span></label>
     <input id="prob" type="range" min="0" max="100" value="50">
 </div>
 `}
   js={`${TIRAR}
 // 1. La tecla P (minúscula o mayúscula) muestra y oculta el panel (la clase oculto)
 // 2. Al mover la barra, #porcentaje dice el valor con un %: "80%"
-// 3. Tirar usa la probabilidad de la barra, y muestra "Salió cara" o "Salió cruz"
+// 3. Al elegir cara o cruz, tirar con lo que eligió y la probabilidad de la barra, y
+//    mostrar "Salió cara" o "Salió cruz"
 `}
   tests={`var panel = $("#panel");
 var tecla = function (k) { document.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true })); };
@@ -617,24 +634,25 @@ assert(panel.classList.contains("oculto"), "Al apretar la P otra vez (y si es ma
 escribir("#prob", "80");
 assert(texto("#porcentaje") === "80%", 'Con la barra en 80, #porcentaje tiene que decir "80%", y dice "' + texto("#porcentaje") + '"');
 Math.random = function () { return 0.75; };
-click("#tirar");
-assert(texto("#resultado") === "Salió cara", 'Con la barra en 80 y el azar en 0.75, sale cara (0.75 es menor que 0.80), y dice "' + texto("#resultado") + '". ¿Dividiste el valor de la barra por 100?');
+click("#elijo-cruz");
+assert(texto("#resultado") === "Salió cruz", 'Con la barra en 80 y el azar en 0.75, gana (0.75 es menor que 0.80): eligió cruz, así que sale cruz. Dice "' + texto("#resultado") + '". ¿Dividiste el valor de la barra por 100? ¿Le pasás a tirar lo que eligió?');
 escribir("#prob", "0");
 Math.random = function () { return 0.01; };
-click("#tirar");
-assert(texto("#resultado") === "Salió cruz", 'Con la barra en 0, sale siempre cruz, y dice "' + texto("#resultado") + '"');
+click("#elijo-cara");
+assert(texto("#resultado") === "Salió cruz", 'Con la barra en 0 pierde siempre: eligió cara, así que sale cruz. Dice "' + texto("#resultado") + '"');
 escribir("#prob", "100");
 Math.random = function () { return 0.999; };
-click("#tirar");
-assert(texto("#resultado") === "Salió cara", 'Con la barra en 100, sale siempre cara, y dice "' + texto("#resultado") + '"');`}
+click("#elijo-cara");
+assert(texto("#resultado") === "Salió cara", 'Con la barra en 100 gana siempre: eligió cara, así que sale cara. Dice "' + texto("#resultado") + '"');`}
   pistas={[
     'Para mostrar y ocultar con la misma tecla, classList tiene un método que agrega la clase si no está, y la saca si está: toggle.',
-    'El valor de la barra lo leés en el momento de tirar: document.querySelector("#prob").value. ¿Por cuánto lo dividís?',
+    'El valor de la barra lo leés en el momento de tirar: document.querySelector("#prob").value. ¿Por cuánto lo dividís? Y es el segundo valor de tirar, después de lo que eligió.',
   ]}
 >
 Agregale el panel secreto: la **P** lo muestra y lo oculta, la barra dice su porcentaje en
-`#porcentaje`, y **Tirar** usa esa probabilidad. Abrí el panel con la P (hacé clic en la vista
-primero, para que las teclas lleguen ahí) y probá con la barra en 0 y en 100.
+`#porcentaje`, y al elegir **Cara** o **Cruz** se tira con esa probabilidad de ganar. Abrí el panel
+con la P (hacé clic en la vista primero, para que las teclas lleguen ahí) y probá con la barra en 0
+y en 100: en 0 sale siempre lo contrario de lo que elegís, y en 100 siempre lo que elegís.
 </EjercicioWeb>
 
 ## Tu juego para la Expo
@@ -718,7 +736,8 @@ tener que juntarlos: que la moneda completa use la probabilidad de la barra.
 ## Para llevar
 
 - **`Math.random()`** da un número de 0 a casi 1. `Math.random() < p` es verdad con probabilidad
-  `p`: así se carga una moneda.
+  `p`: así se carga una moneda. Para un sorteo, `p` es la probabilidad de **ganar**: sale lo que
+  eligió, o lo otro.
 - Algo al azar **se prueba tirándolo muchas veces** (un test estadístico), o **fijando el azar**:
   reemplazando `Math.random` por una función que devuelve siempre lo mismo.
 - **`transform`** mueve (`translateY`) y gira (`rotateY`). **`@keyframes`** dice cómo está en cada

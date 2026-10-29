@@ -91,7 +91,7 @@ const qrCurso = await qr(linkCurso);
         <p class="moneda-juego__marcador" data-marcador>Aciertos: 0 de 0</p>
         <!-- El panel secreto, para los sorteos del stand: aparece con la tecla P. -->
         <div class="panel-secreto" data-panel hidden>
-          <label for="prob">Probabilidad de cara: <span data-porcentaje>50%</span></label>
+          <label for="prob">Probabilidad de ganar: <span data-porcentaje>50%</span></label>
           <input id="prob" type="range" min="0" max="100" value="50" data-prob />
         </div>
       </div>
@@ -169,17 +169,22 @@ const qrCurso = await qr(linkCurso);
     const prob = juego.querySelector<HTMLInputElement>('[data-prob]')!;
     const porcentaje = juego.querySelector<HTMLElement>('[data-porcentaje]')!;
     let salio: 'cara' | 'cruz' | null = null;
-    let elegido = '';
+    let elegido: 'cara' | 'cruz' = 'cara';
     let aciertos = 0;
     let tiradas = 0;
 
-    const tirar = (probCara: number) => (Math.random() < probCara ? 'cara' : 'cruz');
+    // La probabilidad es la de GANAR, no la de que salga cara: con la barra en
+    // 80, quien juega gana 8 de cada 10, elija lo que elija. Como en la clase.
+    const tirar = (elegido: 'cara' | 'cruz', probGanar = 0.5): 'cara' | 'cruz' => {
+      if (Math.random() < probGanar) return elegido;
+      return elegido === 'cara' ? 'cruz' : 'cara';
+    };
 
     juego.querySelectorAll<HTMLButtonElement>('[data-elijo]').forEach((boton) => {
       boton.addEventListener('click', () => {
         if (salio) return; // está en el aire
-        elegido = boton.dataset.elijo!;
-        salio = tirar(Number(prob.value) / 100);
+        elegido = boton.dataset.elijo as 'cara' | 'cruz';
+        salio = tirar(elegido, Number(prob.value) / 100);
         resultado.textContent = '';
         resultado.className = 'moneda-juego__resultado';
         moneda.classList.remove('muestra-cruz');

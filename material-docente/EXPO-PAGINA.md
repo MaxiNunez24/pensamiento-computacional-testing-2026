@@ -34,7 +34,7 @@ En `src/data/expo/juegos.json`:
 ```
 
 La moneda está siempre, jugable en la página misma. **El panel secreto se abre con la tecla P**:
-una barra para la probabilidad de cara, para los sorteos del stand. En el celular no hay tecla P,
+una barra para la probabilidad de GANAR (no de que salga cara: con 80, quien juega gana 8 de cada 10, elija lo que elija), para los sorteos del stand. En el celular no hay tecla P,
 así que no lo ve nadie.
 
 ## El día de la Expo, sin internet
