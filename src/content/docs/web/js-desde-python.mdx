@@ -234,8 +234,9 @@ assert(masCaro([4500, 7800, 3200]) === 7800, "masCaro([4500, 7800, 3200]) tiene 
 assert(masCaro([12500, 300]) === 12500, "Si el más caro es el primero: masCaro([12500, 300]) tiene que dar 12500 y dio " + masCaro([12500, 300]));
 assert(masCaro([10, 20, 30, 40]) === 40, "Si es el último: masCaro([10, 20, 30, 40]) tiene que dar 40");
 assert(masCaro([-5, -2, -9]) === -2, "Con números negativos: masCaro([-5, -2, -9]) tiene que dar -2. ¿Con qué valor arrancaste a comparar?");
-var codigo = masCaro.toString();
-assert(codigo.indexOf("Math.max") === -1, "Sin Math.max: recorré la lista");`}
+// Sin los comentarios: el del enunciado dice "Sin Math.max" y suele quedar adentro de la función.
+var codigo = masCaro.toString().replace(/\\/\\*[\\s\\S]*?\\*\\//g, "").replace(/\\/\\/.*/g, "");
+assert(!/Math\\s*\\.\\s*max/.test(codigo), "Sin Math.max: recorré la lista");`}
   pistas={[
     'Antes de mirar ningún precio, ¿cuál es "el más caro hasta ahora"? ¿Funciona si todos son negativos?',
     'Al recorrer, ¿cuándo cambia "el más caro hasta ahora"?',
