@@ -1,0 +1,92 @@
+---
+/**
+ * Para la lona de la Expo: /expo/pantalla/
+ *
+ * La animación del Sistema de Gestión de Alumnos ocupando toda la ventana, en
+ * loop y sin controles (como en motor-animaciones/ejemplos/expo/pantalla.html),
+ * y en una esquina el QR a /expo/, para quien quiera verlo todo en su celular.
+ * La lona atrae, las PC de adelante retienen.
+ *
+ * Se abre en la notebook del proyector y se pone el navegador en pantalla
+ * completa con F11. Sin internet también anda (ver el LEEME de la Expo):
+ * el motor, la escena y el QR van adentro de la página.
+ */
+import Expo from '../../layouts/Expo.astro';
+import { qr, direccion } from '../../data/expo/expo';
+
+const linkExpo = direccion(Astro.site, 'expo/');
+const qrExpo = await qr(linkExpo);
+---
+
+<Expo
+  titulo="El Sistema de Gestión de Alumnos · Expo CFP 401"
+  descripcion="La animación del Sistema de Gestión de Alumnos, para la pantalla grande de la Expo."
+>
+  <motor-escena
+    escena="expo-siges"
+    pantalla
+    loop
+    autoplay
+    sin-controles
+    sin-lupa
+    sin-sonido
+    tema="oscuro"
+    movimiento="completo"
+  ></motor-escena>
+
+  <aside class="esquina" aria-label="Escaneá para ver todo en tu celular">
+    <span class="esquina__qr" set:html={qrExpo} role="img" aria-label="Código QR de la página de la Expo" />
+    <p>Escaneá y mirá<br /><strong>todo en tu celular</strong></p>
+  </aside>
+</Expo>
+
+<script>
+  import 'motor-animaciones';
+  import '../../animaciones/expo-siges.js';
+</script>
+
+<style>
+  motor-escena {
+    --motor-acento: var(--oro);
+    --motor-acento-oscuro: var(--oro);
+  }
+  /* El QR en la esquina de ARRIBA a la derecha: abajo tapaba la tarjeta de la
+     merienda y el subtítulo; arriba, al costado del título, no hay nada. Chico
+     para no tapar el dibujo, pero se escanea desde un par de metros. */
+  .esquina {
+    position: fixed;
+    right: 16px;
+    top: 16px;
+    /* Encima del motor: con `pantalla`, la escena es fixed con z-index 1000. */
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px 10px 10px;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    background: rgb(13 16 23 / 0.88);
+    backdrop-filter: blur(6px);
+  }
+  .esquina__qr {
+    display: block;
+    width: clamp(90px, 8vw, 140px);
+    padding: 6px;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .esquina__qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .esquina p {
+    margin: 0;
+    font-size: clamp(0.9rem, 1.4vw, 1.3rem);
+    line-height: 1.3;
+    color: var(--suave);
+  }
+  .esquina strong {
+    color: var(--oro);
+  }
+</style>

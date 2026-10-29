@@ -1,0 +1,618 @@
+---
+/**
+ * La página de la Expo CFP (viernes 13/11/2026): /expo/
+ *
+ * Para el celular de quien escanea el QR del stand. La regla del stand: que
+ * toque algo en los primeros quince segundos, y que en un minuto se lleve una
+ * idea. Por eso arriba van tres botones grandes, y cada parte se entiende
+ * sola, sin que nadie explique.
+ *
+ * Lo que se muestra (decidido el 20/10): la vidriera de los catálogos del
+ * curso, juegos, y cómo se planificó el Sistema de Gestión de Alumnos. El bot
+ * del SiGeS NO va: es interno. En la vidriera, el nombre del emprendimiento,
+ * nunca el de quien lo hizo.
+ *
+ * Para la lona (proyector) está /expo/pantalla/: la animación del sistema,
+ * sola y en loop.
+ */
+import Expo from '../../layouts/Expo.astro';
+import { vidriera, vidrieraDeEjemplo, juegos, qr, direccion } from '../../data/expo/expo';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const vidrieraConQr = await Promise.all(vidriera.map(async (e) => ({ ...e, svg: await qr(e.link) })));
+const linkCurso = direccion(Astro.site, '');
+const qrCurso = await qr(linkCurso);
+---
+
+<Expo
+  titulo="Expo CFP 401 · Pensamiento Computacional"
+  descripcion="Lo que programamos este año en el CFP 401 de Ensenada: catálogos para emprendimientos, juegos, y el sistema de gestión de alumnos."
+>
+  <header class="portada">
+    <p class="portada__cfp">CFP 401 · Ensenada · Expo 2026</p>
+    <h1>Esto lo programamos <span>nosotros</span></h1>
+    <p class="portada__bajada">
+      En marzo no sabíamos qué era una variable. Ahora hacemos páginas para emprendimientos, juegos,
+      y un sistema para el CFP. Tocá lo que quieras.
+    </p>
+    <nav class="botones" aria-label="Partes de la página">
+      <a class="boton boton--oro" href="#vidriera"><span aria-hidden="true">🛍️</span> La vidriera</a>
+      <a class="boton boton--menta" href="#juegos"><span aria-hidden="true">🎮</span> Jugá</a>
+      <a class="boton boton--coral" href="#sistema"><span aria-hidden="true">🧩</span> El sistema</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ================= La vidriera ================= -->
+    <section id="vidriera" class="parte">
+      <h2><span aria-hidden="true">🛍️</span> La vidriera</h2>
+      <p class="parte__bajada">
+        Cada estudiante armó el catálogo de un emprendimiento: una página con sus productos, hecha
+        con Python a partir de una planilla. <strong>Escaneá un QR o tocá una tarjeta</strong> para
+        verlo.
+      </p>
+      {vidrieraDeEjemplo && (
+        <p class="aviso">
+          Estos son de <strong>ejemplo</strong>: acá van a estar los catálogos del curso, con su QR.
+        </p>
+      )}
+      <div class="vidriera">
+        {vidrieraConQr.map((e) => (
+          <a class="puesto" href={e.link} target="_blank" rel="noopener">
+            <span class="puesto__emoji" aria-hidden="true">{e.emoji}</span>
+            <span class="puesto__nombre">{e.emprendimiento}</span>
+            <span class="puesto__rubro">{e.rubro}</span>
+            <span class="puesto__qr" set:html={e.svg} aria-label={`Código QR del catálogo de ${e.emprendimiento}`} role="img" />
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ================= Los juegos ================= -->
+    <section id="juegos" class="parte">
+      <h2><span aria-hidden="true">🎮</span> Jugá</h2>
+      <p class="parte__bajada">
+        La idea fue de un compañero del curso: una moneda que sube girando y cae. Elegí cara o cruz.
+      </p>
+
+      <div class="moneda-juego" data-moneda>
+        <div class="escena-moneda">
+          <div class="moneda">
+            <div class="lado cara">CARA</div>
+            <div class="lado cruz">CRUZ</div>
+          </div>
+        </div>
+        <p class="moneda-juego__pregunta">¿Qué va a salir?</p>
+        <div class="moneda-juego__botones">
+          <button type="button" class="boton boton--oro" data-elijo="cara">Cara</button>
+          <button type="button" class="boton boton--menta" data-elijo="cruz">Cruz</button>
+        </div>
+        <p class="moneda-juego__resultado" data-resultado aria-live="polite"></p>
+        <p class="moneda-juego__marcador" data-marcador>Aciertos: 0 de 0</p>
+        <!-- El panel secreto, para los sorteos del stand: aparece con la tecla P. -->
+        <div class="panel-secreto" data-panel hidden>
+          <label for="prob">Probabilidad de cara: <span data-porcentaje>50%</span></label>
+          <input id="prob" type="range" min="0" max="100" value="50" data-prob />
+        </div>
+      </div>
+
+      {juegos.length > 0 && (
+        <>
+          <h3 class="subtitulo">Más juegos del curso</h3>
+          <div class="juegos">
+            {juegos.map((j) => (
+              <a class="juego" href={j.link} target="_blank" rel="noopener">
+                <span class="juego__emoji" aria-hidden="true">{j.emoji}</span>
+                <span class="juego__nombre">{j.nombre}</span>
+                <span class="juego__texto">{j.descripcion}</span>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </section>
+
+    <!-- ================= El sistema ================= -->
+    <section id="sistema" class="parte">
+      <h2><span aria-hidden="true">🧩</span> Cómo se planifica un sistema</h2>
+      <p class="parte__bajada">
+        Hoy la asistencia del CFP se toma en papel y se pasa a mano a varias planillas. Estamos
+        haciendo un <strong>Sistema de Gestión de Alumnos</strong> para que se cargue una sola vez.
+        Antes de programar, lo planificamos: así se va a ver.
+      </p>
+      <div class="animacion">
+        <motor-escena escena="expo-siges" autoplay loop tema="oscuro" sin-lupa></motor-escena>
+      </div>
+      <ol class="pasos">
+        <li><strong>Entender el problema.</strong> Entrevistamos a quienes toman asistencia y arman las planillas.</li>
+        <li><strong>Dibujar cómo va a funcionar.</strong> Quién carga qué, desde dónde, y qué sale solo.</li>
+        <li><strong>Partirlo en pedazos.</strong> Cada clase, una parte: los alumnos, la asistencia, la base de datos.</li>
+        <li><strong>Programarlo y probarlo.</strong> Con tests que avisan si algo se rompe.</li>
+      </ol>
+    </section>
+
+    <!-- ================= Probá vos ================= -->
+    <section id="proba" class="parte parte--proba">
+      <div class="proba">
+        <div>
+          <h2><span aria-hidden="true">🐍</span> Probá vos</h2>
+          <p>
+            El curso está abierto: ejercicios que se corrigen solos, en el navegador, sin instalar
+            nada. Escaneá el QR y empezá por el primero.
+          </p>
+          <a class="boton boton--oro" href={`${base}/`}>Entrar al curso</a>
+        </div>
+        <span class="proba__qr" set:html={qrCurso} role="img" aria-label="Código QR del curso" />
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p>Pensamiento Computacional · CFP 401 · Ensenada · 2026</p>
+  </footer>
+</Expo>
+
+<script>
+  // La animación del sistema: el motor y la escena bajan solos, en su propio archivo.
+  import 'motor-animaciones';
+  import '../../animaciones/expo-siges.js';
+
+  // ---- La moneda: lo mismo que la clase "Juegos I · Cara o cruz" ----
+  // Se sortea al tocar, y se muestra al caer (animationend). El panel secreto
+  // (tecla P) carga la probabilidad, para los sorteos del stand.
+  const juego = document.querySelector<HTMLElement>('[data-moneda]');
+  if (juego) {
+    const moneda = juego.querySelector<HTMLElement>('.moneda')!;
+    const resultado = juego.querySelector<HTMLElement>('[data-resultado]')!;
+    const marcador = juego.querySelector<HTMLElement>('[data-marcador]')!;
+    const panel = juego.querySelector<HTMLElement>('[data-panel]')!;
+    const prob = juego.querySelector<HTMLInputElement>('[data-prob]')!;
+    const porcentaje = juego.querySelector<HTMLElement>('[data-porcentaje]')!;
+    let salio: 'cara' | 'cruz' | null = null;
+    let elegido = '';
+    let aciertos = 0;
+    let tiradas = 0;
+
+    const tirar = (probCara: number) => (Math.random() < probCara ? 'cara' : 'cruz');
+
+    juego.querySelectorAll<HTMLButtonElement>('[data-elijo]').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        if (salio) return; // está en el aire
+        elegido = boton.dataset.elijo!;
+        salio = tirar(Number(prob.value) / 100);
+        resultado.textContent = '';
+        resultado.className = 'moneda-juego__resultado';
+        moneda.classList.remove('muestra-cruz');
+        moneda.classList.add('gira-' + salio);
+      });
+    });
+
+    moneda.addEventListener('animationend', () => {
+      if (!salio) return;
+      moneda.classList.remove('gira-cara', 'gira-cruz');
+      if (salio === 'cruz') moneda.classList.add('muestra-cruz');
+      tiradas++;
+      const gano = salio === elegido;
+      if (gano) aciertos++;
+      resultado.textContent = `Salió ${salio}: ${gano ? '¡ganaste!' : 'perdiste'}`;
+      resultado.classList.add(gano ? 'gano' : 'perdio');
+      marcador.textContent = `Aciertos: ${aciertos} de ${tiradas}`;
+      salio = null;
+    });
+
+    document.addEventListener('keydown', (evento) => {
+      if (evento.key === 'p' || evento.key === 'P') panel.hidden = !panel.hidden;
+    });
+    prob.addEventListener('input', () => {
+      porcentaje.textContent = prob.value + '%';
+    });
+  }
+</script>
+
+<style>
+  /* ---------- Portada ---------- */
+  .portada {
+    padding: 56px 16px 32px;
+    text-align: center;
+    background:
+      radial-gradient(circle at 20% 0%, rgb(242 193 78 / 0.18), transparent 45%),
+      radial-gradient(circle at 85% 10%, rgb(79 209 181 / 0.16), transparent 40%);
+  }
+  .portada__cfp {
+    margin: 0 0 8px;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--suave);
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.1rem, 8vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  h1 span {
+    color: var(--oro);
+  }
+  .portada__bajada {
+    max-width: 36rem;
+    margin: 16px auto 28px;
+    font-size: 1.1rem;
+    color: var(--suave);
+  }
+  .botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* ---------- Botones ---------- */
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 52px;
+    padding: 12px 22px;
+    border: 0;
+    border-radius: 999px;
+    /* No `font: 700 1.05rem/1 inherit`: inherit no vale adentro del atajo, y
+       el navegador tira la regla entera. */
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1;
+    text-decoration: none;
+    color: #10131a;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .boton:hover {
+    transform: translateY(-2px);
+  }
+  .boton:active {
+    transform: translateY(1px);
+  }
+  .boton:focus-visible {
+    outline: 3px solid var(--texto);
+    outline-offset: 3px;
+  }
+  .boton--oro {
+    background: var(--oro);
+  }
+  .boton--menta {
+    background: var(--menta);
+  }
+  .boton--coral {
+    background: var(--coral);
+  }
+
+  /* ---------- Partes ---------- */
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  .parte {
+    padding: 48px 0 8px;
+    scroll-margin-top: 8px;
+  }
+  h2 {
+    margin: 0 0 8px;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    line-height: 1.15;
+  }
+  .parte__bajada {
+    max-width: 44rem;
+    margin: 0 0 24px;
+    color: var(--suave);
+    font-size: 1.05rem;
+  }
+  .parte__bajada strong {
+    color: var(--texto);
+  }
+  .aviso {
+    margin: -8px 0 20px;
+    padding: 10px 14px;
+    border: 1px dashed var(--oro);
+    border-radius: 12px;
+    color: var(--oro);
+    font-size: 0.95rem;
+  }
+  .subtitulo {
+    margin: 32px 0 12px;
+    font-size: 1.2rem;
+  }
+
+  /* ---------- Vidriera ---------- */
+  .vidriera {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 16px;
+  }
+  .puesto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 20px 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+    color: var(--texto);
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .puesto:hover,
+  .puesto:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--oro);
+  }
+  .puesto__emoji {
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+  .puesto__nombre {
+    font-weight: 800;
+    font-size: 1.15rem;
+  }
+  .puesto__rubro {
+    color: var(--suave);
+    font-size: 0.95rem;
+  }
+  .puesto__qr {
+    display: block;
+    width: 150px;
+    margin-top: 12px;
+    padding: 6px;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .puesto__qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---------- La moneda (el CSS de la clase) ---------- */
+  .moneda-juego {
+    padding: 8px 16px 24px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+    text-align: center;
+  }
+  .escena-moneda {
+    perspective: 700px;
+    display: grid;
+    place-items: center;
+    padding: 150px 0 16px;
+  }
+  .moneda {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    transform-style: preserve-3d;
+  }
+  .moneda .lado {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font: 700 1.4rem system-ui, sans-serif;
+    letter-spacing: 0.08em;
+    color: #6b4f00;
+    background: radial-gradient(circle at 35% 30%, #fff1b8, #e0b12a 60%, #9c7300);
+    box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.25), inset 0 0 0 10px rgba(107, 79, 0, 0.35);
+    backface-visibility: hidden;
+  }
+  .moneda .cruz {
+    transform: rotateY(180deg);
+  }
+  .moneda.muestra-cruz {
+    transform: rotateY(180deg);
+  }
+  @keyframes sale-cara {
+    0% {
+      transform: translateY(0) rotateY(0);
+      animation-timing-function: ease-out;
+    }
+    50% {
+      transform: translateY(-130px) rotateY(900deg) scale(1.1);
+      animation-timing-function: ease-in;
+    }
+    100% {
+      transform: translateY(0) rotateY(1800deg);
+    }
+  }
+  @keyframes sale-cruz {
+    0% {
+      transform: translateY(0) rotateY(0);
+      animation-timing-function: ease-out;
+    }
+    50% {
+      transform: translateY(-130px) rotateY(990deg) scale(1.1);
+      animation-timing-function: ease-in;
+    }
+    100% {
+      transform: translateY(0) rotateY(1980deg);
+    }
+  }
+  .moneda.gira-cara {
+    animation: sale-cara 1.4s;
+  }
+  .moneda.gira-cruz {
+    animation: sale-cruz 1.4s;
+  }
+  .moneda-juego__pregunta {
+    margin: 4px 0 12px;
+    font-weight: 600;
+  }
+  .moneda-juego__botones {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .moneda-juego__botones .boton {
+    min-width: 120px;
+    justify-content: center;
+  }
+  .moneda-juego__resultado {
+    min-height: 1.6em;
+    margin: 16px 0 4px;
+    font-size: 1.4rem;
+    font-weight: 800;
+  }
+  .moneda-juego__resultado.gano {
+    color: var(--menta);
+  }
+  .moneda-juego__resultado.perdio {
+    color: var(--coral);
+  }
+  .moneda-juego__marcador {
+    margin: 0;
+    color: var(--suave);
+  }
+  .panel-secreto {
+    max-width: 320px;
+    margin: 16px auto 0;
+    padding: 12px;
+    border: 2px dashed var(--borde);
+    border-radius: 12px;
+  }
+  .panel-secreto input {
+    width: 100%;
+  }
+
+  /* ---------- Más juegos ---------- */
+  .juegos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+    gap: 16px;
+  }
+  .juego {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2px 12px;
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+    color: var(--texto);
+    text-decoration: none;
+  }
+  .juego__emoji {
+    grid-row: span 2;
+    font-size: 2rem;
+  }
+  .juego__nombre {
+    font-weight: 800;
+  }
+  .juego__texto {
+    color: var(--suave);
+    font-size: 0.95rem;
+  }
+
+  /* ---------- El sistema ---------- */
+  .animacion {
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+  }
+  .animacion motor-escena {
+    display: block;
+    --motor-acento: var(--oro);
+    --motor-acento-oscuro: var(--oro);
+  }
+  .pasos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 12px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: paso;
+  }
+  .pasos li {
+    position: relative;
+    padding: 14px 14px 14px 52px;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    background: var(--superficie);
+    color: var(--suave);
+    counter-increment: paso;
+  }
+  .pasos li::before {
+    content: counter(paso);
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--coral);
+    color: #10131a;
+    font-weight: 800;
+  }
+  .pasos strong {
+    color: var(--texto);
+  }
+
+  /* ---------- Probá vos ---------- */
+  .parte--proba {
+    padding-bottom: 48px;
+  }
+  .proba {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+    border-radius: var(--radio);
+    background: linear-gradient(135deg, rgb(242 193 78 / 0.16), rgb(79 209 181 / 0.12));
+    border: 1px solid var(--borde);
+  }
+  .proba > div {
+    flex: 1 1 260px;
+  }
+  .proba p {
+    color: var(--suave);
+  }
+  .proba__qr {
+    display: block;
+    width: 180px;
+    padding: 8px;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .proba__qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---------- Pie ---------- */
+  .pie {
+    padding: 24px 16px 40px;
+    text-align: center;
+    color: var(--suave);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--borde);
+  }
+  .pie p {
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .moneda.gira-cara,
+    .moneda.gira-cruz {
+      animation-duration: 0.01s;
+    }
+  }
+</style>
