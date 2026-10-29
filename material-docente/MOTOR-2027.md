@@ -51,7 +51,11 @@ Lo que falta es lo de **la web** (JS, DOM, CSS, HTTP) y lo de **IA**, que es jus
    rectangular que sigue a la línea que corre, lo más grande que entre, con el código entero
    arriba. Podría ser una opción de `desdeTraza` (`lineaGrande: true`), para que la usen también la
    landing y los videos.
-4. **Un CHANGELOG** y la regla de que cada versión publicada lleve su tag. El curso se fija por tag
+4. **El cartel de un error, adentro del cuadro y a su medida.** En `desdeTraza` va debajo de la
+   consola y puede caer más abajo de los 900: se recortaba y el error no se veía (el curso agranda
+   la escena para mostrarlo). Además mide siempre 96 de alto, y un mensaje largo
+   (`TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'`) se sale por abajo.
+5. **Un CHANGELOG** y la regla de que cada versión publicada lleve su tag. El curso se fija por tag
    y cada actualización se revisa a mano.
 
 ## 4. Para 2027: Programador Web

@@ -36,7 +36,9 @@ function hastaDondeLlega(escena: Escena): number {
       fondo = Math.max(fondo, props.y + alto);
       continue;
     }
-    const alto = tipo.tamano?.(props).alto ?? props.tamano ?? 0;
+    // `tamano` es la letra, no el alto: en la caja del error (96 de alto, letra
+    // de 34) la franja quedaba encima del cartel rojo. Primero el alto.
+    const alto = tipo.tamano?.(props).alto ?? props.alto ?? props.tamano ?? 0;
     // Como en desdeTraza: las listas llevan los índices y la flechita abajo.
     fondo = Math.max(fondo, props.y + alto / 2 + 40);
   }
@@ -74,8 +76,11 @@ export function conLineaGrande(armar: Armar): Armar {
     // escena: con un programa corto, desdeTraza deja la mitad de abajo vacía.
     // Lo que crece (la pila) se mide en su momento más alto. En angosto no se
     // toca: ahí la consola va pegada abajo a propósito.
+    // Sin tope en el alto de la escena: el cartel de un error puede caer más
+    // abajo de los 900 (el motor lo ubica debajo de la consola), y ahí se
+    // recortaba. Así la escena crece y lo muestra entero, con la franja debajo.
     const fondo = angosta ? escena.alto : hastaDondeLlega(escena);
-    const y0 = Math.min(escena.alto, Number.isFinite(fondo) ? fondo : escena.alto);
+    const y0 = Number.isFinite(fondo) ? fondo : escena.alto;
 
     escena.piezas.lineaGrande = espejo({
       fuente: 'codigo',

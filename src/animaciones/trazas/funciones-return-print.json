@@ -1,0 +1,163 @@
+{
+ "codigo": "def mostrar_doble(precio):\n    print(precio * 2)\n\n\ndef doble(precio):\n    return precio * 2\n\n\na = doble(4500)\nb = mostrar_doble(4500)\nprint(a + 100)\nprint(b + 100)\n",
+ "lenguaje": "python",
+ "traza": [
+  {
+   "linea": 1,
+   "variables": {},
+   "salida": ""
+  },
+  {
+   "linea": 5,
+   "variables": {},
+   "salida": ""
+  },
+  {
+   "linea": 9,
+   "variables": {},
+   "salida": ""
+  },
+  {
+   "linea": 6,
+   "variables": {},
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "doble",
+     "linea": 6,
+     "variables": {
+      "precio": {
+       "tipo": "int",
+       "repr": "4500"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 6,
+   "variables": {},
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "doble",
+     "linea": 6,
+     "variables": {
+      "precio": {
+       "tipo": "int",
+       "repr": "4500"
+      }
+     }
+    }
+   ],
+   "retorno": {
+    "funcion": "doble",
+    "valor": "9000"
+   }
+  },
+  {
+   "linea": 10,
+   "variables": {
+    "a": {
+     "tipo": "int",
+     "repr": "9000"
+    }
+   },
+   "salida": ""
+  },
+  {
+   "linea": 2,
+   "variables": {
+    "a": {
+     "tipo": "int",
+     "repr": "9000"
+    }
+   },
+   "salida": "",
+   "pila": [
+    {
+     "funcion": "mostrar_doble",
+     "linea": 2,
+     "variables": {
+      "precio": {
+       "tipo": "int",
+       "repr": "4500"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "linea": 2,
+   "variables": {
+    "a": {
+     "tipo": "int",
+     "repr": "9000"
+    }
+   },
+   "salida": "9000\n",
+   "pila": [
+    {
+     "funcion": "mostrar_doble",
+     "linea": 2,
+     "variables": {
+      "precio": {
+       "tipo": "int",
+       "repr": "4500"
+      }
+     }
+    }
+   ],
+   "retorno": {
+    "funcion": "mostrar_doble",
+    "valor": "None"
+   }
+  },
+  {
+   "linea": 11,
+   "variables": {
+    "a": {
+     "tipo": "int",
+     "repr": "9000"
+    },
+    "b": {
+     "tipo": "NoneType",
+     "repr": "None"
+    }
+   },
+   "salida": "9000\n"
+  },
+  {
+   "linea": 12,
+   "variables": {
+    "a": {
+     "tipo": "int",
+     "repr": "9000"
+    },
+    "b": {
+     "tipo": "NoneType",
+     "repr": "None"
+    }
+   },
+   "salida": "9000\n9100\n"
+  },
+  {
+   "linea": 12,
+   "variables": {
+    "a": {
+     "tipo": "int",
+     "repr": "9000"
+    },
+    "b": {
+     "tipo": "NoneType",
+     "repr": "None"
+    }
+   },
+   "salida": "9000\n9100\n",
+   "excepcion": {
+    "tipo": "TypeError",
+    "mensaje": "unsupported operand type(s) for +: 'NoneType' and 'int'"
+   }
+  }
+ ]
+}
