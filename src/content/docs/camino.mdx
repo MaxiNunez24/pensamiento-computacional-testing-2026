@@ -4,7 +4,7 @@ description: Las clases en el orden en que se dan, y cuánto llevás hecho de ca
 ---
 
 import Camino from '../../components/Camino.astro';
-import { CLASES_WEB } from '../../data/recorrido-web';
+import { BLOQUES_WEB, CATALOGO } from '../../data/recorrido-web';
 
 El menú de la izquierda está ordenado **por temas**, que es como se busca algo cuando ya lo viste:
 *"¿dónde estaba lo de diccionarios?"*.
@@ -91,7 +91,8 @@ queda señalada con **estás acá**.
     nombre: 'Llevarlo a la web',
     meta: 'De qué está hecha una página, y el mismo sistema desde el navegador y el celular',
     paradas: [
-      ...CLASES_WEB,
+      CATALOGO,
+      ...BLOQUES_WEB,
       { clase: 'flask-1', nombre: 'Flask I: rutas y plantillas', estado: 'preparacion',
         nota: 'Arranca por cómo funciona la web: pedido y respuesta, con su animación. Accesible desde el primer template: el tótem lo usa todo el CFP' },
       { clase: 'flask-2', nombre: 'Flask II: formularios', estado: 'preparacion',

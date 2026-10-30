@@ -239,6 +239,7 @@ var guardado = localStorage.getItem("favoritos");
 assert(typeof guardado === "string", 'No hay nada guardado con la clave "favoritos"');
 assert(guardado.charAt(0) === "[", 'Lo guardado tiene que ser la lista en JSON, y es: ' + guardado + ". localStorage guarda texto: ¿cómo pasás una lista a texto JSON?");
 var leida = leerFavoritos();
+assert(typeof leida !== "string", "leerFavoritos devolvió un texto, no una lista. En la consola se ven igual, pero getItem siempre da texto: ¿cómo lo convertís de vuelta en lista?");
 assert(Array.isArray(leida) && leida.join("|") === "Vela|Bolso|Mate", "Después de guardar, leerFavoritos tiene que devolver la misma lista. Devolvió: " + JSON.stringify(leida));
 guardarFavoritos([]);
 assert(leerFavoritos().length === 0, "Guardar una lista vacía también tiene que funcionar");`}
@@ -274,7 +275,8 @@ console.log(total(CARRITO));   // 18600
 `}
   tests={`assert(typeof total === "function", "Falta la función total");
 assert(total([{ nombre: "Taza", cantidad: 2 }, { nombre: "Vela", cantidad: 3 }]) === 18600, "2 tazas (4500) y 3 velas (3200) suman 18600, y dio " + total([{ nombre: "Taza", cantidad: 2 }, { nombre: "Vela", cantidad: 3 }]));
-assert(total([]) === 0, "Un carrito vacío suma 0");
+var dioVacio = total([]);
+assert(dioVacio === 0, "Un carrito vacío suma 0, y dio " + dioVacio + (dioVacio === 18600 ? ". ¿Estás recorriendo carrito, el que recibe la función, o la constante CARRITO?" : ""));
 assert(total([{ nombre: "Bolso", cantidad: 1 }]) === 12500, "Un bolso solo: 12500");
 assert(total([{ nombre: "Mate", cantidad: 1 }, { nombre: "Maceta", cantidad: 2 }]) === 19600, "Un mate y dos macetas: 7800 + 11800 = 19600");`}
   pistas={[

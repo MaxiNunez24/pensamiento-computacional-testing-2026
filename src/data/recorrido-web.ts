@@ -1,6 +1,6 @@
-// Las clases de Páginas web, en orden. Las usan /web/, por bloques, y el camino
-// del curso, todas seguidas en "Llevarlo a la web". Una clase nueva es una línea
-// acá, y aparece en los dos.
+// Las clases de Páginas web, en orden. En /web/ cada bloque es una etapa, y en el
+// camino del curso un grupo adentro de "Llevarlo a la web". Una clase nueva es una
+// línea acá, y aparece en los dos.
 
 export const CATALOGO = {
     ruta: 'web/catalogo',
@@ -50,5 +50,3 @@ export const BLOQUES_WEB = [
         ],
     },
 ];
-
-export const CLASES_WEB = [CATALOGO, ...BLOQUES_WEB.flatMap((bloque) => bloque.paradas)];

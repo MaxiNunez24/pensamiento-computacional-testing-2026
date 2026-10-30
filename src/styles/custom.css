@@ -2988,6 +2988,11 @@ html.pc-editor-ajustado .cm-editor .cm-content {
   color: var(--sl-color-gray-3); margin-left: 2.1rem;
 }
 
+/* Un grupo de clases adentro de una etapa (HTML, CSS y JavaScript). */
+.camino__grupo .camino__etapa { margin: 0.2rem 0; }
+.camino__grupo .camino__etapa-tit { font-size: 0.95rem; font-weight: 600; }
+.camino__grupo .camino__etapa-tit small { margin-left: 0; }
+
 .camino__paradas { list-style: none; padding: 0 0 0 0.75rem; margin: 0; }
 /* La línea del camino: une las paradas de una etapa. */
 .camino__paradas { border-left: 2px solid var(--sl-color-gray-5); }
