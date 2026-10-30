@@ -4,6 +4,7 @@ description: "Las optativas del curso: no hacen falta para el proyecto, y están
 ---
 
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import Camino from '../../../components/Camino.astro';
 
 export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 
@@ -14,15 +15,36 @@ funciones y objetos, todo lo que hay acá está a una clase de distancia.
 
 Van **en el mismo orden en que se darían en el curso**, así cada una usa lo de la anterior.
 
+<Camino titulo="Tu avance en las optativas" etapas={[
+  {
+    nombre: '🐍 Más Python',
+    meta: 'Guardar los datos y ordenar mejor las clases',
+    paradas: [
+      { clase: 'archivos', nombre: '💾 Manejo de archivos',
+        nota: 'Que los datos no se pierdan al cerrar el programa.' },
+      { clase: 'json', nombre: '📋 JSON',
+        nota: 'Guardar diccionarios y listas enteros, con su forma. Es además el idioma de las APIs.' },
+      { clase: 'poo-herencia', nombre: '🔗 Herencia y polimorfismo',
+        nota: 'Clases que reciben lo de otra y lo cambian.' },
+    ],
+  },
+  {
+    nombre: '🧠 Lógica',
+    meta: 'Encarar un problema, y resolverlo mejor',
+    paradas: [
+      { clase: 'logica-pensar', nombre: '✏️ Pensar antes de escribir',
+        nota: 'Cómo encarar un ejercicio que no sabés resolver.' },
+      { clase: 'logica-eficiencia', nombre: '⏱️ Eficiencia',
+        nota: 'Dos soluciones correctas, y cuál conviene.' },
+      { clase: 'logica-desafios', nombre: '🏁 Desafíos de optimización',
+        nota: 'Para quien quiera medirse.' },
+    ],
+  },
+]} />
+
+## Y además
+
 <CardGrid>
-  <LinkCard title="💾 Manejo de archivos" href={b + 'clases/archivos/'} description="Que los datos no se pierdan al cerrar el programa." />
-  <LinkCard title="📋 JSON" href={b + 'clases/json/'} description="Guardar diccionarios y listas enteros, con su forma. Es además el idioma de las APIs." />
-  <LinkCard title="🔗 Herencia y polimorfismo" href={b + 'clases/poo-herencia/'} description="Clases que reciben lo de otra y lo cambian." />
-  <LinkCard title="✏️ Pensar antes de escribir" href={b + 'clases/logica-pensar/'} description="Cómo encarar un ejercicio que no sabés resolver." />
-  <LinkCard title="⏱️ Eficiencia" href={b + 'clases/logica-eficiencia/'} description="Dos soluciones correctas, y cuál conviene." />
-  <LinkCard title="🏁 Desafíos de optimización" href={b + 'clases/logica-desafios/'} description="Para quien quiera medirse." />
-  <LinkCard title="🛍️ Tu catálogo con Python" href={b + 'web/catalogo/'} description="Un catálogo de productos publicado en internet, con botón de WhatsApp, armado por Python desde una planilla." />
-  <LinkCard title="🌐 Páginas web, de cero" href={b + 'web/'} description="HTML, CSS y JavaScript desde la primera etiqueta, en once clases, con la página en vivo mientras escribís." />
   <LinkCard title="📊 Aplicaciones de Python 🚧" href={b + 'mas-alla/aplicaciones/'} description="numpy, pandas, matplotlib, yfinance y openpyxl. En preparación." />
   <LinkCard title="🔗 Referencias" href={b + 'mas-alla/referencias/'} description="Adónde seguir por tu cuenta. Todo gratis." />
 </CardGrid>

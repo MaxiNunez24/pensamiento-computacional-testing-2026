@@ -2963,10 +2963,18 @@ html.pc-editor-ajustado .cm-editor .cm-content {
 :root[data-theme='dark'] .camino__barra-fill { background: #4caf50; }
 .camino__mensaje { margin: 0.6rem 0 0; font-size: 0.88rem; color: var(--sl-color-gray-2); }
 
-.camino__etapa { margin-bottom: 1.6rem; }
+.camino__etapa { margin-bottom: 1rem; }
+.camino__etapa-cabeza {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 0.75rem;
+  padding: 0.4rem 0.5rem; border-radius: 0.4rem;
+  cursor: pointer;
+}
+.camino__etapa-cabeza:hover { background: var(--sl-color-gray-6); }
+.camino__etapa[open] > .camino__etapa-cabeza { margin-bottom: 0.4rem; }
 .camino__etapa-tit {
+  flex: 1; min-width: 12rem;
   display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;
-  font-size: 1.05rem; margin: 0 0 0.6rem;
+  font-size: 1.05rem; margin: 0;
 }
 .camino__num {
   flex: none;

@@ -3,14 +3,13 @@ title: Páginas web, de cero
 description: "HTML, CSS y JavaScript desde el principio, con ejercicios que muestran la página mientras la escribís. Para quien quiera hacer sus propias páginas."
 ---
 
-import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import Camino from '../../../components/Camino.astro';
+import { BLOQUES_WEB, CATALOGO } from '../../../data/recorrido-web';
 
-export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
-
-:::tip[Optativo, y para hacer]
-No hace falta para el proyecto del curso. Es para quien quiera **hacer sus propias páginas**: un
-catálogo, la página de un emprendimiento, un portfolio. Todos los ejercicios corren acá mismo y
-**muestran la página mientras la escribís**.
+:::tip[El arranque de Llevarlo a la web]
+Antes de que el sistema tenga su página, hay que saber de qué está hecha una. Y de paso, sirve para
+**hacer tus propias páginas**: un catálogo, la página de un emprendimiento, un portfolio. Todos los
+ejercicios corren acá mismo y **muestran la página mientras la escribís**.
 :::
 
 Una página web está hecha de tres cosas, y cada una tiene su lenguaje:
@@ -26,37 +25,13 @@ páginas solas a partir de los datos**.
 
 ## Por dónde empezar
 
-<CardGrid>
-  <LinkCard title="🛍️ Tu catálogo con Python" href={b + 'web/catalogo/'} description="El atajo: lo mínimo de HTML y un catálogo publicado en internet, armado por Python. Se da en una clase." />
-</CardGrid>
+Si querés **entender todo desde cero**, seguí los bloques en orden: cada uno usa lo del anterior.
+Si no, el catálogo es el atajo: lo mínimo de HTML y una página publicada. Se da en una clase.
 
-Si querés **entender todo desde cero**, seguí los bloques en orden. Cada uno usa lo del anterior.
-
-### 🧱 HTML: la estructura
-
-<CardGrid>
-  <LinkCard title="HTML I · Tu primera página" href={b + 'web/html-estructura/'} description="Qué es una etiqueta, el esqueleto de toda página, títulos y párrafos." />
-  <LinkCard title="HTML II · Listas, links e imágenes" href={b + 'web/html-contenido/'} description="Todo lo que va adentro de una página de verdad." />
-  <LinkCard title="HTML III · Etiquetas con significado, tablas y formularios" href={b + 'web/html-semantica/'} description="Una página ordenada, la planilla de asistencia, y un formulario de inscripción." />
-</CardGrid>
-
-### 🎨 CSS: cómo se ve
-
-<CardGrid>
-  <LinkCard title="CSS I · Colores, letras y la cascada" href={b + 'web/css-selectores/'} description="Cómo se elige qué pintar, y qué pasa cuando dos reglas se pelean." />
-  <LinkCard title="CSS II · El modelo de caja" href={b + 'web/css-caja/'} description="Todo es una caja: el relleno, el borde, el margen, y cómo centrar." />
-  <LinkCard title="CSS III · Flexbox y Grid" href={b + 'web/css-flex-grid/'} description="Poner cosas una al lado de la otra, y la grilla del catálogo." />
-  <LinkCard title="CSS IV · Que se vea bien en el celular" href={b + 'web/css-responsive/'} description="Media queries, variables y modo oscuro." />
-</CardGrid>
-
-### ⚡ JavaScript: que responda
-
-<CardGrid>
-  <LinkCard title="JavaScript I · Para quien ya sabe Python" href={b + 'web/js-desde-python/'} description="Todo lo que ya sabés, escrito de otra forma. Al lado de su equivalente en Python." />
-  <LinkCard title="JavaScript II · Leer y cambiar la página" href={b + 'web/js-dom/'} description="El DOM: que tu programa toque la página." />
-  <LinkCard title="JavaScript III · Eventos" href={b + 'web/js-eventos/'} description="Que pase algo al hacer clic o al escribir: un buscador para el catálogo." />
-  <LinkCard title="JavaScript IV · Datos, JSON y localStorage" href={b + 'web/js-datos/'} description="Filtrar, ordenar, y que la página se acuerde de cosas." />
-</CardGrid>
+<Camino titulo="Tu avance en Páginas web" etapas={[
+  { nombre: '🛍️ El atajo', meta: 'Lo mínimo para tener una página publicada', paradas: [CATALOGO] },
+  ...BLOQUES_WEB,
+]} />
 
 :::note[Cómo son los ejercicios]
 Escribís en el editor y **abajo ves la página como la mostraría el navegador**, actualizada mientras

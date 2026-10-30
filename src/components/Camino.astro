@@ -11,11 +11,17 @@
  * construir el sitio. Así el día que se agregue un ejercicio, el número
  * acompaña solo — una lista de totales escrita a mano se desactualiza en dos
  * semanas y después miente.
+ *
+ * También lo usan las portadas de "Para ir más allá" y de Páginas web, con sus
+ * propias etapas. Las páginas fuera de clases/ van con `ruta`.
  */
 import { idEjercicio } from '../scripts/id-ejercicio';
 
 interface Parada {
-  clase: string;
+  /** Una página de clases/ */
+  clase?: string;
+  /** Una página de otra carpeta, como 'web/catalogo' */
+  ruta?: string;
   nombre: string;
   /** vista | ahora | viene | optativa | preparacion */
   estado?: string;
@@ -33,17 +39,17 @@ const { etapas, titulo = 'El camino del curso' } = Astro.props as {
 };
 
 // Los .mdx crudos, para contar los ejercicios de cada clase.
-const fuentes = import.meta.glob('../content/docs/clases/*.mdx', {
+const fuentes = import.meta.glob(['../content/docs/clases/*.mdx', '../content/docs/web/*.mdx'], {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>;
 
 const COMPONENTES =
-  /<(EjercicioPython|CompletarCodigo|OpcionMultiple|EncontrarElError|OrdenarPasos|EjercicioEficiencia|DiagramaClases|DiagramaLibre|Clasificar|EscribirTest)\b/g;
+  /<(EjercicioPython|EjercicioWeb|CompletarCodigo|OpcionMultiple|EncontrarElError|OrdenarPasos|EjercicioEficiencia|DiagramaClases|DiagramaLibre|Clasificar|EscribirTest)\b/g;
 
-function fuenteDe(clase: string): string {
-  const clave = Object.keys(fuentes).find((k) => k.endsWith(`/${clase}.mdx`));
+function fuenteDe(ruta: string): string {
+  const clave = Object.keys(fuentes).find((k) => k.endsWith(`/${ruta}.mdx`));
   return clave ? fuentes[clave] : '';
 }
 
@@ -51,16 +57,16 @@ function fuenteDe(clase: string): string {
 // las sueltas son de apoyo, y no tienen nada que "resolver".
 const LECCIONES = /<Animacion\b[^>]*\btitulo=/g;
 
-function cuantosEjercicios(clase: string): number {
-  const fuente = fuenteDe(clase);
+function cuantosEjercicios(ruta: string): number {
+  const fuente = fuenteDe(ruta);
   return (fuente.match(COMPONENTES) || []).length + (fuente.match(LECCIONES) || []).length;
 }
 
 /* El mini parcial es una sola pieza <Evaluacion> y guarda con `pcp:eval:`, no
    con `pcp:done:`. Contarlo como "0 ejercicios" sería mentira: no tiene
    ejercicios sueltos, tiene una entrega. Se muestra como lo que es. */
-function esEvaluacion(clase: string): boolean {
-  return fuenteDe(clase).includes('<Evaluacion');
+function esEvaluacion(ruta: string): boolean {
+  return fuenteDe(ruta).includes('<Evaluacion');
 }
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -68,12 +74,18 @@ const id = idEjercicio(titulo);
 
 const conTotales = etapas.map((e) => ({
   ...e,
-  paradas: e.paradas.map((p) => ({
-    ...p,
-    total: p.estado === 'preparacion' ? 0 : cuantosEjercicios(p.clase),
-    evaluacion: esEvaluacion(p.clase),
-  })),
+  paradas: e.paradas.map((p) => {
+    const ruta = p.ruta ?? `clases/${p.clase}`;
+    return {
+      ...p,
+      ruta,
+      total: p.estado === 'preparacion' ? 0 : cuantosEjercicios(ruta),
+      evaluacion: esEvaluacion(ruta),
+    };
+  }),
 }));
+const totalDe = (etapa: (typeof conTotales)[number]) =>
+  etapa.paradas.reduce((n, p) => n + p.total, 0);
 const totalCurso = conTotales
   .flatMap((e) => e.paradas)
   .filter((p) => p.estado !== 'optativa')
@@ -92,18 +104,26 @@ const totalCurso = conTotales
   </div>
 
   {conTotales.map((etapa, i) => (
-    <section class="camino__etapa">
-      <h3 class="camino__etapa-tit">
-        <span class="camino__num">{i + 1}</span>
-        {etapa.nombre}
-        <small>{etapa.meta}</small>
-      </h3>
+    <details class="camino__etapa" data-etapa open>
+      <summary class="camino__etapa-cabeza">
+        <h3 class="camino__etapa-tit">
+          <span class="camino__num">{i + 1}</span>
+          {etapa.nombre}
+          <small>{etapa.meta}</small>
+        </h3>
+        {totalDe(etapa) > 0 && (
+          <span class="camino__progreso">
+            <span class="camino__mini"><span class="camino__mini-fill" data-etapa-mini></span></span>
+            <span class="camino__cuenta" data-etapa-cuenta>0/{totalDe(etapa)}</span>
+          </span>
+        )}
+      </summary>
 
       <ol class="camino__paradas">
         {etapa.paradas.map((p) => (
           <li
             class={'camino__parada' + (p.estado ? ' es-' + p.estado : '')}
-            data-clase={p.clase}
+            data-ruta={p.ruta}
             data-total={String(p.total)}
           >
             {/* "preparacion": la clase todavía no tiene página. Va sin link
@@ -116,7 +136,7 @@ const totalCurso = conTotales
                 {p.nota && <span class="camino__nota">{p.nota}</span>}
               </span>
             ) : (
-              <a href={`${base}/clases/${p.clase}/`}>
+              <a href={`${base}/${p.ruta}/`}>
                 <span class="camino__nombre">{p.nombre}</span>
                 {p.nota && <span class="camino__nota">{p.nota}</span>}
               </a>
@@ -138,7 +158,7 @@ const totalCurso = conTotales
           </li>
         ))}
       </ol>
-    </section>
+    </details>
   ))}
 </div>
 
@@ -146,11 +166,11 @@ const totalCurso = conTotales
   document.querySelectorAll('[data-camino]').forEach((camino) => {
     const base = camino.dataset.base;
 
-    /* Se cuentan las claves `pcp:done:` de cada clase. A propósito NO hace
+    /* Se cuentan las claves `pcp:done:` de cada página. A propósito NO hace
        falta saber los títulos: alcanza con contar las que empiezan con la ruta
-       de esa clase, así el día que cambie un enunciado la cuenta sigue bien. */
-    function resueltosDe(clase) {
-      const prefijo = `pcp:done:${base}/clases/${clase}/::`;
+       de esa página, así el día que cambie un enunciado la cuenta sigue bien. */
+    function resueltosDe(ruta) {
+      const prefijo = `pcp:done:${base}/${ruta}/::`;
       let n = 0;
       try {
         for (let i = 0; i < localStorage.length; i++) {
@@ -166,10 +186,11 @@ const totalCurso = conTotales
       let total = 0;
       let primeraSinTerminar = null;
 
-      camino.querySelectorAll('[data-clase]').forEach((li) => {
+      camino.querySelectorAll('[data-ruta]').forEach((li) => {
         const tot = Number(li.dataset.total) || 0;
-        const n = Math.min(resueltosDe(li.dataset.clase), tot);
+        const n = Math.min(resueltosDe(li.dataset.ruta), tot);
         const opcional = li.classList.contains('es-optativa');
+        li.dataset.hechos = String(n);
 
         const cuenta = li.querySelector('[data-cuenta]');
         const mini = li.querySelector('[data-mini]');
@@ -192,6 +213,17 @@ const totalCurso = conTotales
       // pregunta que trae a alguien a esta página.
       if (primeraSinTerminar) primeraSinTerminar.classList.add('is-aca');
 
+      // El total de cada bloque: se ve también con el bloque plegado.
+      camino.querySelectorAll('[data-etapa]').forEach((etapa) => {
+        const cuenta = etapa.querySelector('[data-etapa-cuenta]');
+        if (!cuenta) return;
+        const filas = [...etapa.querySelectorAll('[data-ruta]')];
+        const hechosEtapa = filas.reduce((suma, li) => suma + Number(li.dataset.hechos), 0);
+        const totalEtapa = filas.reduce((suma, li) => suma + Number(li.dataset.total), 0);
+        cuenta.textContent = `${hechosEtapa}/${totalEtapa}`;
+        etapa.querySelector('[data-etapa-mini]').style.width = (hechosEtapa / totalEtapa) * 100 + '%';
+      });
+
       const pct = total ? Math.round((hechos / total) * 100) : 0;
       camino.querySelector('[data-hechos]').textContent = String(hechos);
       camino.querySelector('[data-pct]').textContent = ` · ${pct}%`;
@@ -209,6 +241,12 @@ const totalCurso = conTotales
     }
 
     pintar();
+    // Plegados de entrada, salvo el bloque donde estás: es lo que se viene a
+    // buscar. Una sola vez: después, cada bloque queda como lo deje quien mira.
+    const aca = camino.querySelector('.is-aca');
+    camino.querySelectorAll('[data-etapa]').forEach((etapa) => {
+      etapa.open = Boolean(aca) && etapa.contains(aca);
+    });
     // Al volver de resolver ejercicios en otra pestaña, se actualiza solo.
     document.addEventListener('visibilitychange', () => { if (!document.hidden) pintar(); });
     window.addEventListener('pageshow', pintar);
