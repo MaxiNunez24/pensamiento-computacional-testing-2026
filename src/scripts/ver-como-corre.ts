@@ -16,6 +16,10 @@ type Motor = typeof import('motor-animaciones');
 let motor: Promise<Motor> | null = null;
 const cargarMotor = () => (motor ??= import('motor-animaciones'));
 
+// La consola del motor no parte las líneas, y una etiqueta de HTML se sale del
+// cuadro. Se parten acá, como en una terminal: a lo ancho que entra.
+const partirSalida = (salida?: string) => salida?.replace(/[^\n]{44}(?=[^\n])/g, '$&\n');
+
 interface Contexto {
   getCode: () => string;
   leerEntradas: () => string[];
@@ -87,6 +91,7 @@ export function conectarTraza(el: HTMLElement, ctx: Contexto): void {
       // alto de lo que muestra (las dos cosas, del motor desde la v0.12.0).
       escena.escena = m.desdeTraza({
         ...res.traza,
+        traza: res.traza.traza.map((paso) => ({ ...paso, salida: partirSalida(paso.salida) })),
         explicar: true,
         lineaGrande: true,
         alto: 'auto',

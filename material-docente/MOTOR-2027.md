@@ -55,6 +55,9 @@ borró su propia franja (`linea-grande.ts`).
 2. **Que la lupa de quien mira arranque sobre algo.** Arranca en el centro de la escena, que en una
    traza cae justo en el hueco entre el código y la pila: al prenderla parece vacía, y parece rota.
    Mejor sobre la línea marcada, o sobre la pieza que acaba de cambiar.
+3. **Que la consola parta las líneas largas.** Hoy se salen del cuadro (una etiqueta de HTML ocupa
+   unos 70 caracteres). El curso las parte a 44 antes de pasarle la traza (`partirSalida` en
+   `ver-como-corre.ts`); cuando lo haga el motor, se borra.
 
 ## 4. Para 2027: Programador Web
 
