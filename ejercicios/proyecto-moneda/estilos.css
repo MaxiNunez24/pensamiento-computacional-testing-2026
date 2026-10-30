@@ -1,0 +1,89 @@
+/* Sale de la clase: no editar acá (ver scripts/armar-zip-moneda.py). */
+
+body { font-family: system-ui, sans-serif; padding: 16px; text-align: center; }
+button { font: inherit; padding: 8px 16px; margin: 4px; border-radius: 8px; border: 0; background: #2f4858; color: white; cursor: pointer; }
+#resultado { font-size: 1.3rem; font-weight: 600; min-height: 1.6em; }
+.gano { color: #1e8449; }
+.perdio { color: #c0392b; }
+.oculto { display: none; }
+.panel { margin: 16px auto 0; padding: 12px; max-width: 320px; border: 2px dashed #bbb; border-radius: 12px; }
+
+h1 {
+    margin: 8px 0 0;
+}
+
+/* La escena: perspective hace que el giro se vea en 3D, de costado. */
+.escena {
+    perspective: 700px;
+    display: grid;
+    place-items: center;
+    padding: 150px 0 16px;
+}
+
+/* La moneda son dos caras pegadas espalda con espalda. */
+.moneda {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    transform-style: preserve-3d;
+}
+
+.moneda .lado {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font: 700 1.4rem system-ui, sans-serif;
+    letter-spacing: 0.08em;
+    color: #6b4f00;
+    background: radial-gradient(circle at 35% 30%, #fff1b8, #e0b12a 60%, #9c7300);
+    box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.25), inset 0 0 0 10px rgba(107, 79, 0, 0.35);
+    backface-visibility: hidden;   /* de espaldas, no se ve: así se ve la otra */
+}
+
+.moneda .cruz {
+    transform: rotateY(180deg);    /* la cruz está dada vuelta, detrás de la cara */
+}
+
+/* Quieta, mostrando la cruz. */
+.moneda.muestra-cruz {
+    transform: rotateY(180deg);
+}
+
+/* Sube girando y cae. Termina en una vuelta entera (cara) o en media vuelta más (cruz). */
+@keyframes sale-cara {
+    0% {
+        transform: translateY(0) rotateY(0);
+        animation-timing-function: ease-out;
+    }
+    50% {
+        transform: translateY(-130px) rotateY(900deg) scale(1.1);
+        animation-timing-function: ease-in;
+    }
+    100% {
+        transform: translateY(0) rotateY(1800deg);
+    }
+}
+
+@keyframes sale-cruz {
+    0% {
+        transform: translateY(0) rotateY(0);
+        animation-timing-function: ease-out;
+    }
+    50% {
+        transform: translateY(-130px) rotateY(990deg) scale(1.1);
+        animation-timing-function: ease-in;
+    }
+    100% {
+        transform: translateY(0) rotateY(1980deg);
+    }
+}
+
+.moneda.gira-cara {
+    animation: sale-cara 1.4s;
+}
+
+.moneda.gira-cruz {
+    animation: sale-cruz 1.4s;
+}

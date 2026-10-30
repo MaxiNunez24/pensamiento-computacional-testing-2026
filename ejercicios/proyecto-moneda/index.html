@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cara o cruz</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <h1>¿Cara o cruz?</h1>
+
+    <div class="escena">
+        <div class="moneda">
+            <div class="lado cara">CARA</div>
+            <div class="lado cruz">CRUZ</div>
+        </div>
+    </div>
+
+    <p>¿Qué va a salir?</p>
+    <button id="elijo-cara">Cara</button>
+    <button id="elijo-cruz">Cruz</button>
+    <p id="resultado"></p>
+    <p id="marcador">Aciertos: 0 de 0</p>
+
+    <!-- El panel secreto: aparece y desaparece con la tecla P. -->
+    <div id="panel" class="panel oculto">
+        <label for="prob">Probabilidad de ganar: <span id="porcentaje">50%</span></label>
+        <input id="prob" type="range" min="0" max="100" value="50">
+    </div>
+
+    <!-- Al final, para que el programa encuentre todo lo de arriba ya armado. -->
+    <script src="juego.js"></script>
+</body>
+</html>
