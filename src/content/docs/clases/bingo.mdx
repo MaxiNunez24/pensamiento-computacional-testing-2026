@@ -119,13 +119,24 @@ partida idéntica para encontrar un bug.
   starter={`def verificar_ganador(carton, sorteados):\n    return carton.issubset(sorteados)\n\ndef jugar_partida(carton, secuencia):\n    pass`}
   tests={`assert jugar_partida({1, 2}, [5, 1, 7, 2, 9]) == 4, "el cartón se completa en la 4ta bolilla"\nassert jugar_partida({3}, [3]) == 1, "gana en la primera"\nassert jugar_partida({1, 2}, [1, 3, 4]) is None, "si nunca se completa, devolvé None"\nassert jugar_partida(set(), [9]) == 0, "un cartón vacío ya está completo antes de empezar"\nprint("¡Partida OK!")`}
   pistas={[
-    "Vas sacando bolillas y guardando las que salieron. ¿Después de cada una, qué preguntás?",
+    "Recorré la lista de a una bolilla y andá guardando las que salieron. ¿Después de cada una, qué preguntás?",
     "Te piden el NÚMERO de bolilla, no la bolilla en sí. ¿Cómo llevás esa cuenta?",
     "Mirá los dos últimos tests: uno nunca gana y el otro gana antes de sacar nada. ¿Tu solución contempla los dos?",
   ]}
 >
 Completá `jugar_partida` para que devuelva **en qué bolilla** se completó el cartón (contando desde
 1), o `None` si nunca se completa.
+
+`secuencia` es una **lista** con las bolillas en el orden en que salen. Ya viene sorteada: acá no hay
+que sortear nada, solo recorrerla.
+
+```python
+carton = {1, 2}
+
+jugar_partida(carton, [5, 1, 7, 2, 9])   # 4      ← el 2 salió en la 4ª
+jugar_partida(carton, [1, 3, 4])         # None   ← el 2 nunca salió
+jugar_partida(set(), [9])                # 0      ← vacío: ya está completo
+```
 
 `verificar_ganador` ya está resuelta arriba: usala.
 </EjercicioPython>
