@@ -1,0 +1,234 @@
+---
+title: "Juegos II · El Bingo del stand"
+description: "El Bingo de la clase de Python, pasado a JavaScript: el cartón, quién ganó, y de qué tamaño conviene el cartón según cuánta gente juega. Son las piezas del Bingo de la Expo."
+---
+
+import EjercicioWeb from '../../../components/EjercicioWeb.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const BASE = `body { font-family: system-ui, sans-serif; padding: 16px; }
+#carton { display: flex; flex-wrap: wrap; gap: 8px; }
+#carton span { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; border: 2px solid #2f4858; font-weight: 700; font-size: 1.2rem; }
+#carton .marcado { background: #2f4858; color: white; }
+`;
+
+En la clase de Python armaron un Bingo por etapas. En la Expo va a haber uno de verdad: en la
+pantalla grande salen las bolillas, y cada persona juega con su cartón, **en el celular o impreso**.
+
+El celular no entiende Python: entiende **JavaScript**. Así que estas son las mismas piezas, pasadas
+a JavaScript. Son las que usa el Bingo del stand.
+
+:::note[Es tarea]
+Hacela en casa, a tu ritmo. La corregimos juntos en la próxima clase, y ahí vemos el Bingo
+funcionando con las piezas de todos.
+:::
+
+## Del set de Python al Set de JavaScript
+
+El cartón eran números **sin repetir**, y para eso estaba el `set`. JavaScript tiene lo mismo, con
+otros nombres:
+
+| Python | JavaScript | Para qué |
+|---|---|---|
+| `numeros = set()` | `const numeros = new Set();` | Un conjunto vacío |
+| `numeros.add(7)` | `numeros.add(7);` | Agregar (si ya estaba, no pasa nada) |
+| `7 in numeros` | `numeros.has(7)` | ¿Está? |
+| `len(numeros)` | `numeros.size` | Cuántos hay |
+| `sorted(numeros)` | `[...numeros].sort((a, b) => a - b)` | Pasarlo a lista, ordenada |
+
+Y el número al azar, que en Python era `random.randint(1, 30)`:
+
+```js
+Math.floor(Math.random() * 30) + 1   // un entero entre 1 y 30
+```
+
+`Math.random()` da desde 0 hasta casi 1; por 30, desde 0 hasta casi 30; `Math.floor` le saca los
+decimales (de 0 a 29), y el `+ 1` lo corre a 1 a 30.
+
+<OpcionMultiple titulo="Chequeo: ordenar números" opciones={[
+  { texto: "[10, 2, 9]", correcta: true, explicacion: "Así es. Sin decirle cómo, sort() ordena como si fueran palabras: \"10\" va antes que \"2\" porque el 1 va antes que el 2. Por eso, para números, siempre (a, b) => a - b." },
+  { texto: "[2, 9, 10]", explicacion: "Eso es lo que da con (a, b) => a - b. Sin eso, sort() compara como texto, y \"10\" va antes que \"2\"." },
+  { texto: "[10, 9, 2]", explicacion: "Así quedaría de mayor a menor, con (a, b) => b - a." },
+]}>
+¿Qué da `[10, 9, 2].sort()`, sin nada adentro de los paréntesis?
+</OpcionMultiple>
+
+<EjercicioWeb
+  titulo="Bingo · El cartón"
+  fundamental
+  dificultad="🌱"
+  js={`function generarCarton(cantidad = 6, maximo = 30) {
+    // 1. un Set vacío
+    // 2. mientras tenga menos de "cantidad" números, sumarle uno al azar entre 1 y "maximo"
+    // 3. devolverlo como lista, ordenada de menor a mayor
+}
+
+console.log(generarCarton());
+`}
+  tests={`assert(typeof generarCarton === "function", "Falta la función generarCarton");
+var c = generarCarton();
+assert(Array.isArray(c), "generarCarton tiene que devolver una lista (un array), y devolvió " + JSON.stringify(c) + ". Si es un Set, pasalo a lista con [...numeros]");
+assert(c.length === 6, "Sin parámetros, el cartón tiene 6 números, y el tuyo tiene " + c.length);
+assert(c.every(function (n) { return Number.isInteger(n) && n >= 1 && n <= 30; }), "Todos los números tienen que ser enteros entre 1 y 30: " + JSON.stringify(c));
+assert(new Set(c).size === c.length, "Hay números repetidos en el cartón: " + JSON.stringify(c));
+for (var i = 1; i < c.length; i++) assert(c[i - 1] < c[i], "El cartón tiene que estar ordenado de menor a mayor: " + JSON.stringify(c) + ". ¿Usaste sort((a, b) => a - b)?");
+var chico = generarCarton(5, 25);
+assert(chico.length === 5 && chico.every(function (n) { return n >= 1 && n <= 25; }), "Con generarCarton(5, 25) tienen que salir 5 números entre 1 y 25, y salió " + JSON.stringify(chico));
+var lleno = generarCarton(30, 30);
+assert(lleno.length === 30, "Con generarCarton(30, 30) tienen que salir los 30 números, y salieron " + lleno.length);
+assert(lleno.indexOf(10) !== 1, "Quedó ordenado como si fueran palabras (1, 10, 11... antes que 2): sort() sin nada adentro compara texto. Para números, sort((a, b) => a - b)");
+for (var k = 1; k < 30; k++) assert(lleno[k - 1] < lleno[k], "Con generarCarton(30, 30), el cartón tiene que quedar ordenado de menor a mayor: " + JSON.stringify(lleno));
+assert(lleno[0] === 1 && lleno[29] === 30, "Con generarCarton(30, 30) tienen que salir todos, del 1 al 30: ¿llegan el 1 y el 30? Revisá el + 1");
+var distintos = new Set();
+for (var j = 0; j < 10; j++) distintos.add(generarCarton().join(","));
+assert(distintos.size > 1, "Diez cartones salieron iguales: ¿de verdad es al azar? ¿Usaste Math.random()?");`}
+  pistas={[
+    'En Python era un while que seguía mientras el cartón tuviera menos números de los que querías. ¿Qué te dice cuántos hay en un Set?',
+    'Para un entero entre 1 y maximo: Math.floor(Math.random() * maximo) + 1. ¿Se puede repetir? Sí, pero al Set no le importa: no lo agrega dos veces.',
+    'Si con 30 de 30 nunca sale el 30 (o sale el 0), revisá el + 1.',
+  ]}
+>
+Completá `generarCarton(cantidad, maximo)`: una lista con `cantidad` números **distintos** entre 1 y
+`maximo`, ordenada de menor a mayor. Sin parámetros, 6 números del 1 al 30:
+
+```js
+generarCarton()        // [3, 7, 12, 19, 22, 30]   (cada vez, otros)
+generarCarton(5, 25)   // [2, 9, 14, 18, 23]
+```
+</EjercicioWeb>
+
+## ¿Ganó?
+
+En Python se ganaba cuando **todos** los números del cartón ya habían salido: `carton.issubset(sorteados)`,
+o `all(n in sorteados for n in carton)`. En JavaScript, las listas tienen `every`: le pasás una
+pregunta para **cada** elemento, y da `true` si la respuesta es sí para todos.
+
+```js
+[4, 8, 12].every((n) => n % 2 === 0)   // true: todos son pares
+[4, 7, 12].every((n) => n % 2 === 0)   // false: el 7 no
+```
+
+Y para preguntar si un número está en una lista, `includes`, que es el `in` de Python:
+
+```js
+[5, 9, 22].includes(9)   // true
+```
+
+<EjercicioWeb
+  titulo="Bingo · ¿Ganó?"
+  fundamental
+  dificultad="🌿"
+  js={`function verificarGanador(carton, sorteados) {
+    // true si TODOS los números del cartón están entre los sorteados
+}
+
+console.log(verificarGanador([3, 7, 12], [12, 1, 7, 3]));   // true
+console.log(verificarGanador([3, 7, 12], [12, 1, 7]));      // false
+`}
+  tests={`assert(typeof verificarGanador === "function", "Falta la función verificarGanador");
+assert(verificarGanador([3, 7, 12], [12, 1, 7, 3]) === true, "Con el cartón [3, 7, 12] y sorteados [12, 1, 7, 3] ganó: salieron los tres. Tiene que dar true");
+assert(verificarGanador([3, 7, 12], [12, 1, 7]) === false, "Con el cartón [3, 7, 12] y sorteados [12, 1, 7] todavía no ganó: falta el 3. Tiene que dar false");
+assert(verificarGanador([5], [5]) === true, "Con justo los del cartón, ganó");
+assert(verificarGanador([5, 9], []) === false, "Sin bolillas sorteadas no gana nadie");
+assert(verificarGanador([1, 2, 3, 4, 5, 6], [6, 5, 4, 3, 2, 1, 30, 29]) === true, "El orden en que salieron no importa: [1..6] con sorteados [6, 5, 4, 3, 2, 1, 30, 29] ganó");`}
+  pistas={[
+    'Decilo en una frase que empiece con "gana cuando todos...". ¿Qué método de las listas pregunta algo para todos los elementos?',
+    'Adentro de every, la pregunta para cada número n del cartón es: ¿está en sorteados? ¿Con qué método se pregunta eso?',
+    'Acordate del return: la función tiene que DEVOLVER el true o el false.',
+  ]}
+>
+Completá `verificarGanador(carton, sorteados)`: `true` si **todos** los números del cartón ya
+salieron, `false` si falta alguno. Las dos son listas.
+</EjercicioWeb>
+
+## ¿De qué tamaño el cartón?
+
+El Bingo de la clase tenía cartones de **15 números del 1 al 90**, como el de verdad. Para la Expo
+eso no sirve, y no por gusto: **lo simulamos**. Se jugaron miles de partidas en la compu, con una
+bolilla cada 6 segundos, para ver cuánto tardaba alguien en ganar:
+
+| Cartón | Jugadores | Bolillas hasta el primer Bingo | Tiempo |
+|---|---|---|---|
+| 15 de 90 | 15 | unas 75 | **7 minutos y medio** |
+| 6 de 30 | 15 | unas 20 | 2 minutos |
+| 5 de 25 | 5 | unas 18 | casi 2 minutos |
+| 7 de 35 | 40 | unas 22 | 2 minutos |
+
+En un stand, nadie se queda siete minutos parado. Y además: **con más gente, alguien completa antes**.
+Por eso el cartón se elige según cuántos juegan, para que la partida dure siempre unos dos minutos.
+
+<EjercicioWeb
+  titulo="Bingo · El cartón según la gente"
+  fundamental
+  dificultad="🌿"
+  js={`function elegirCarton(jugadores) {
+    // hasta 5 jugadores:  5 números del 1 al 25
+    // de 6 a 20:          6 números del 1 al 30
+    // más de 20:          7 números del 1 al 35
+    // devolver un objeto: { cantidad: ..., maximo: ... }
+}
+
+console.log(elegirCarton(12));   // { cantidad: 6, maximo: 30 }
+`}
+  tests={`assert(typeof elegirCarton === "function", "Falta la función elegirCarton");
+var r = elegirCarton(12);
+assert(r && typeof r === "object", "elegirCarton tiene que devolver un objeto como { cantidad: 6, maximo: 30 }, y devolvió " + JSON.stringify(r));
+assert(r.cantidad === 6 && r.maximo === 30, "Con 12 jugadores va 6 de 30, y devolviste " + JSON.stringify(r));
+var casos = [[1, 5, 25], [5, 5, 25], [6, 6, 30], [20, 6, 30], [21, 7, 35], [60, 7, 35]];
+casos.forEach(function (c) {
+    var e = elegirCarton(c[0]);
+    assert(e.cantidad === c[1] && e.maximo === c[2], "Con " + c[0] + " jugadores va { cantidad: " + c[1] + ", maximo: " + c[2] + " }, y devolviste " + JSON.stringify(e) + ". Revisá los bordes: ¿el 5, el 6, el 20 y el 21 caen donde tienen que caer?");
+});`}
+  pistas={[
+    'Son tres casos: un if, un else if y un else. ¿Cuál es la pregunta de cada uno?',
+    '"Hasta 5" incluye al 5, y "de 6 a 20" incluye al 20: ¿usaste <= o <?',
+    'Un objeto en JavaScript se escribe con llaves: return { cantidad: 6, maximo: 30 };',
+  ]}
+>
+Completá `elegirCarton(jugadores)`: según cuántos juegan, devuelve **de qué tamaño** es el cartón,
+como un objeto con `cantidad` y `maximo`. Después se usa así: `generarCarton(t.cantidad, t.maximo)`.
+</EjercicioWeb>
+
+## El cartón en la pantalla (optativo)
+
+Lo último: que el cartón **se vea**, con los números que ya salieron marcados. Es lo que muestra el
+celular de quien juega.
+
+<EjercicioWeb
+  titulo="Bingo · Dibujar el cartón"
+  dificultad="🌳"
+  cssBase={BASE}
+  html={`<div id="carton"></div>
+`}
+  js={`function dibujarCarton(carton, sorteados) {
+    const lugar = document.querySelector("#carton");
+    // 1. vaciar #carton (lugar.innerHTML = "")
+    // 2. por cada número del cartón, un <span> con el número adentro
+    // 3. si ya salió, el <span> lleva la clase "marcado"
+}
+
+dibujarCarton([3, 7, 12, 19, 22, 30], [7, 22, 15]);
+`}
+  tests={`assert(typeof dibujarCarton === "function", "Falta la función dibujarCarton");
+dibujarCarton([3, 7, 12, 19, 22, 30], [7, 22, 15]);
+var numeros = $$("#carton span");
+assert(numeros.length === 6, "El cartón tiene 6 números, y en #carton hay " + numeros.length + " <span>");
+assert(numeros.map(function (s) { return s.textContent.trim(); }).join(",") === "3,7,12,19,22,30", "Cada <span> lleva su número, en orden: 3, 7, 12, 19, 22, 30");
+var marcados = numeros.filter(function (s) { return s.classList.contains("marcado"); }).map(function (s) { return s.textContent.trim(); });
+assert(marcados.join(",") === "7,22", "Tienen que estar marcados el 7 y el 22, que ya salieron (el 15 no es del cartón), y están marcados: " + JSON.stringify(marcados));
+dibujarCarton([1, 2], []);
+assert($$("#carton span").length === 2, "Cada vez que se dibuja, #carton se vacía primero: si no, se acumulan los números de antes");`}
+  pistas={[
+    'Para crear el <span>: document.createElement("span"). Para ponerle el número: .textContent. Para meterlo en #carton: lugar.appendChild(...).',
+    'Para la clase: span.classList.add("marcado"), pero solo si sorteados.includes(numero).',
+    'Si al dibujar dos veces se juntan los números, falta vaciar #carton al principio.',
+  ]}
+>
+Completá `dibujarCarton(carton, sorteados)`: un `<span>` por número adentro de `#carton`, y los que
+ya salieron con la clase `marcado`. Los estilos ya están: los marcados se pintan solos.
+</EjercicioWeb>
+
+---
+
+Con estas cuatro piezas está el Bingo del celular: `elegirCarton` dice el tamaño, `generarCarton`
+arma el cartón, `dibujarCarton` lo muestra, y `verificarGanador` dice si cantar **¡Bingo!**

@@ -135,6 +135,7 @@ export default defineConfig({
                 items: [
                   { label: '📝 Qué vamos a mostrar', link: '/preparando-expo/' },
                   { label: '🪙 Juegos I · Cara o cruz', link: '/preparando-expo/moneda/' },
+                  { label: '🎱 Juegos II · El Bingo del stand', link: '/preparando-expo/bingo/' },
                   { label: '🛍️ La vidriera', link: '/preparando-expo/vidriera/' },
                   { label: '🏪 Catálogos para todo el CFP', link: '/preparando-expo/catalogos-cfp/' },
                   { label: '⚙️ CI/CD · Que lo publique GitHub', link: '/preparando-expo/ci-cd/' },
