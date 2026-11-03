@@ -16,6 +16,7 @@
  *   codigo:<hash>  → slug          (para entrar al editor solo con el código)
  *   hash:<slug>    → hash          (para borrar el código viejo al regenerar)
  *   foto:<id>      → la imagen, con { slug, tipo } en la metadata
+ *   expo:temas     → [texto, ...]  (los temas para los directivos, de /expo/stand/)
  *
  * Despliegue y pasos: worker/README.md, sección "Worker de los catálogos".
  */
@@ -25,6 +26,7 @@ const ORIGENES_EDITOR = [
     'https://maxinunez24.github.io',
     'http://localhost:4778',
     'http://127.0.0.1:4778',
+    'http://localhost:4321', // el sitio del curso en desarrollo: la página del stand
 ];
 
 const SLUG_OK = /^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/;
@@ -36,6 +38,8 @@ const MAX_DETALLES = 8;
 const MAX_FOTO = 700 * 1024;
 const MAX_GIF = 2560 * 1024; // un GIF no se achica en el editor sin perder la animación: va tal cual
 const TIPOS_FOTO = ['image/jpeg', 'image/webp', 'image/png', 'image/gif'];
+const MAX_TEMAS = 30;
+const MAX_TEMA = 500;
 
 function respuesta(datos, estado, cabeceras, extra = {}) {
     return new Response(JSON.stringify(datos), {
@@ -320,6 +324,20 @@ export default {
                     cursor = pagina.list_complete ? null : pagina.cursor;
                 } while (cursor);
                 return respuesta(lista, 200, cabeceras);
+            }
+            /* Los temas para hablar con los directivos, de la página del stand (/expo/stand/). No son
+             * de ningún catálogo, pero usan la misma clave: van acá para no estar en el repo público. */
+            if (url.pathname === '/admin/expo/temas') {
+                if (request.method === 'GET') {
+                    const temas = JSON.parse((await env.CATALOGOS.get('expo:temas')) || '[]');
+                    return respuesta({ temas }, 200, cabeceras);
+                }
+                if (request.method === 'PUT') {
+                    const datos = (await cuerpoJson(request)) || {};
+                    const temas = (Array.isArray(datos.temas) ? datos.temas : []).map((t) => texto(t, MAX_TEMA)).filter(Boolean).slice(0, MAX_TEMAS);
+                    await env.CATALOGOS.put('expo:temas', JSON.stringify(temas));
+                    return respuesta({ temas }, 200, cabeceras);
+                }
             }
             const datos = (await cuerpoJson(request)) || {};
             const slug = String(datos.slug || '').trim().toLowerCase();

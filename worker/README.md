@@ -17,7 +17,8 @@ siguen andando.
 emprendimientos del CFP). Lo usan tres páginas del repo
 [cfp401-ensenada/catalogos](https://github.com/cfp401-ensenada/catalogos): `editar/` (entrar con el
 código y cambiar productos), `admin/` (dar de alta y regenerar códigos) y cada catálogo, con
-`catalogo.js`.
+`catalogo.js`. Con la misma clave de administración guarda también los temas para hablar con los
+directivos de la página del stand (`/expo/stand/` del curso), para que no estén en el repo.
 
 A diferencia de los otros, **se despliega con wrangler**, desde la raíz del repo:
 

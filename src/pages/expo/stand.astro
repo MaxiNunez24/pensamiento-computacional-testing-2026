@@ -1,0 +1,768 @@
+---
+/**
+ * /expo/stand/: el modelo 3D del stand de la Expo, para mostrarlo en clase y a los directivos.
+ *
+ * Página aparte, sin el menú del curso, como /armar-tu-catalogo/. Las medidas del lugar
+ * son supuestas: se cambian con los controles y se recalculan el modelo, la planta y la
+ * lista de lo que hay que conseguir. Three.js r128 sale del CDN, como scripts comunes
+ * (sin módulos), así que el modelo necesita internet. Enlazada desde "Preparando la Expo".
+ */
+const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <title>Stand Expo · CFP 401</title>
+        <meta name="description" content="Modelo a escala del stand de Pensamiento Computacional para la Expo CFP del 13 de noviembre." />
+        <meta name="robots" content="noindex" />
+        <link rel="icon" href={import.meta.env.BASE_URL.replace(/\/$/, '') + '/favicon.ico'} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600&display=swap" />
+        <script is:inline>
+            // El tema elegido se aplica antes de pintar, para que no parpadee
+            try {
+                const tema = localStorage.getItem('stand:tema');
+                if (tema) document.documentElement.dataset.tema = tema;
+            } catch (e) {}
+        </script>
+    </head>
+    <body>
+        <button type="button" class="tema" id="tema" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+        <main class="hoja">
+            <header class="cabeza">
+                <span class="etiqueta">Expo · viernes 13 de noviembre · borrador 1</span>
+                <h1>Stand de Pensamiento Computacional</h1>
+                <p>Modelo a escala. El público se queda del lado de las mesas y el equipo trabaja detrás. Las medidas del lugar son supuestas hasta tomarlas en el espacio real: se cambian con los controles y todo se recalcula.</p>
+            </header>
+
+            <section class="trabajo" aria-label="Modelo 3D del stand">
+                <div class="visor" id="visor">
+                    <div class="vistas" id="vistas">
+                        <button type="button" data-vista="general" aria-pressed="true">General</button>
+                        <button type="button" data-vista="publico" aria-pressed="false">Desde el público</button>
+                        <button type="button" data-vista="arriba" aria-pressed="false">Desde arriba</button>
+                        <button type="button" data-vista="equipo" aria-pressed="false">Desde atrás</button>
+                    </div>
+                    <div class="pines" id="pines"></div>
+                </div>
+                <aside class="panel">
+                    <div class="campo">
+                        <label for="ancho">Ancho del espacio <output id="ancho-v"></output></label>
+                        <input id="ancho" type="range" min="3" max="7" step="0.5" value="4.5" />
+                    </div>
+                    <div class="campo">
+                        <label for="fondo">Fondo del espacio <output id="fondo-v"></output></label>
+                        <input id="fondo" type="range" min="2.5" max="5" step="0.25" value="3.5" />
+                    </div>
+                    <div class="campo">
+                        <label for="monitores">Monitores al frente <output id="monitores-v"></output></label>
+                        <input id="monitores" type="range" min="3" max="5" step="1" value="3" />
+                    </div>
+                    <div class="campo">
+                        <label for="dist">Proyector a la lona <output id="dist-v"></output></label>
+                        <input id="dist" type="range" min="1.5" max="2.75" step="0.05" value="2.6" />
+                    </div>
+                    <div class="campo">
+                        <label for="rel">Relación de proyección <output id="rel-v"></output></label>
+                        <input id="rel" type="range" min="0.6" max="2" step="0.1" value="1.5" />
+                        <small>Sale de la ficha del proyector. 1,5 es un valor común.</small>
+                    </div>
+                    <div class="lectura">
+                        <span class="nota">Imagen sobre la lona</span>
+                        <strong id="imagen"></strong>
+                        <p class="aviso" id="avisos"></p>
+                    </div>
+                    <div class="casillas">
+                        <label><input id="personas" type="checkbox" checked /> Personas</label>
+                        <label><input id="haz" type="checkbox" checked /> Haz de luz</label>
+                        <label><input id="pines-ver" type="checkbox" checked /> Nombres</label>
+                    </div>
+                    <ol class="referencias" id="referencias"></ol>
+                </aside>
+            </section>
+
+            <div class="dos">
+                <section class="bloque">
+                    <h2>Planta</h2>
+                    <div id="planta"></div>
+                    <p class="nota">Mesas supuestas de 1,2 × 0,6 m. Se muestra el espacio del equipo y la entrada lateral.</p>
+                </section>
+                <section class="bloque">
+                    <h2>Qué hay que conseguir</h2>
+                    <div class="tabla">
+                        <table>
+                            <thead><tr><th>Qué</th><th>Cant.</th><th>Estado</th><th>Nota</th></tr></thead>
+                            <tbody id="lista"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <section class="bloque" aria-labelledby="temas-titulo">
+                <h2 id="temas-titulo">Para hablar con los directivos</h2>
+                <form class="clave" id="form-clave">
+                    <label for="clave">Con la clave de administración de los catálogos</label>
+                    <div class="fila">
+                        <input id="clave" type="password" autocomplete="current-password" required />
+                        <button type="submit" class="principal">Ver los temas</button>
+                    </div>
+                    <p class="error" id="error-clave" role="alert"></p>
+                </form>
+                <div id="temas" hidden>
+                    <ol class="charla" id="temas-lista"></ol>
+                    <p class="nota" id="temas-vacio" hidden>Todavía no hay temas cargados.</p>
+                    <div class="fila"><button type="button" id="editar-temas">Editar</button></div>
+                </div>
+                <form id="form-temas" hidden>
+                    <label for="temas-texto">Un tema por renglón</label>
+                    <textarea id="temas-texto" rows="8"></textarea>
+                    <div class="fila">
+                        <button type="submit" class="principal">Guardar</button>
+                        <button type="button" id="cancelar-temas">Cancelar</button>
+                    </div>
+                    <p class="error" id="error-temas" role="alert"></p>
+                </form>
+            </section>
+        </main>
+        <footer class="pie">Hecho por el curso de <a href={curso}>Pensamiento Computacional</a> del CFP 401</footer>
+
+        <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script is:inline src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+        <script is:inline>
+            const $ = (s) => document.querySelector(s);
+            const coma = (n, d = 1) => n.toLocaleString('es-AR', { minimumFractionDigits: d, maximumFractionDigits: d });
+            const MESA = { a: 1.2, f: 0.6, h: 0.75 };
+            const LONA = { a: 2.4, h: 1.8, y: 0.9 };
+            const ENTRADA = 0.9;
+            const ROLES = ['Juegos', 'Bolillas', 'Sistema', 'Libre', 'Libre'];
+            const P = { ancho: 4.5, fondo: 3.5, monitores: 3, dist: 2.6, rel: 1.5 };
+
+            /* ---------- El tema ---------- */
+            (function () {
+                const raiz = document.documentElement;
+                const boton = $('#tema');
+                const oscuro = () =>
+                    raiz.dataset.tema ? raiz.dataset.tema === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+                const pintar = () => (boton.textContent = oscuro() ? '☀️' : '🌙');
+                boton.addEventListener('click', () => {
+                    raiz.dataset.tema = oscuro() ? 'claro' : 'oscuro';
+                    try {
+                        localStorage.setItem('stand:tema', raiz.dataset.tema);
+                    } catch (e) {}
+                    pintar();
+                });
+                pintar();
+            })();
+
+            function calcular() {
+                const A = P.ancho, F = P.fondo;
+                const nMesas = Math.max(1, Math.floor((A - ENTRADA) / MESA.a));
+                const largo = nMesas * MESA.a;
+                const x0 = (A - ENTRADA - largo) / 2;
+                const paso = largo / (P.monitores + 1);
+                const puestos = ROLES.slice(0, P.monitores).map((rol, i) => ({ rol, x: x0 + paso * (i + 0.5) }));
+                const q15 = x0 + paso * (P.monitores + 0.5);
+                const lonaX = A / 2;
+                const imgA = P.dist / P.rel, imgH = imgA * 9 / 16;
+                const zMesa = F - MESA.f / 2;
+                const zAtras = Math.min(F * 0.42, F - 1.6);
+                return { A, F, nMesas, largo, x0, paso, puestos, q15, lonaX, imgA, imgH, zMesa, zAtras };
+            }
+
+            function avisos(c) {
+                const a = [];
+                if (c.imgA > LONA.a - 0.05) a.push('La imagen es más ancha que la lona.');
+                if (c.imgH > LONA.h - 0.05) a.push('La imagen es más alta que la lona.');
+                if (c.paso < 0.5) a.push('Los monitores quedan muy juntos para estas mesas.');
+                return a.join(' ');
+            }
+
+            function pintarLectura(c) {
+                $('#ancho-v').textContent = coma(P.ancho) + ' m';
+                $('#fondo-v').textContent = coma(P.fondo, 2) + ' m';
+                $('#monitores-v').textContent = P.monitores;
+                $('#dist-v').textContent = coma(P.dist, 2) + ' m';
+                $('#rel-v').textContent = coma(P.rel) + ':1';
+                $('#imagen').textContent = coma(c.imgA, 2) + ' × ' + coma(c.imgH, 2) + ' m';
+                $('#avisos').textContent = avisos(c);
+            }
+
+            function pintarLista(c) {
+                const m = P.monitores, pcs = m - 1;
+                const enchufes = m + pcs + 3 + 2;
+                const filas = [
+                    ['Lona o pantalla, 2,4 × 1,8 m', 1, 'confirmar', 'Medida supuesta. Confirmar cómo se cuelga.'],
+                    ['Proyector', 1, 'confirmar', 'Falta el modelo: define el tamaño de la imagen.'],
+                    ['Mesita o soporte para el proyector', 1, 'falta', 'Alto cercano a 1,2 m.'],
+                    ['Notebook', 1, 'ya', 'Maneja la lona y el Bingo.'],
+                    ['Mesas del frente', c.nMesas, 'confirmar', 'Medida supuesta: 1,2 × 0,6 m.'],
+                    ['Mesa de atrás', 1, 'confirmar', 'Para la notebook y lo que haga falta.'],
+                    ['Manteles hasta el piso', c.nMesas + 1, 'confirmar', 'Esconden las PC y los cables.'],
+                    ['PC de escritorio', pcs, 'confirmar', 'Debajo de las mesas, del lado del equipo.'],
+                    ['Monitores', m, 'confirmar', 'Uno lo usa el Bingo.'],
+                    ['Teclado y mouse', pcs, 'confirmar', 'Quedan al alcance del público.'],
+                    ['Caja para elevar el monitor del Bingo', 1, 'falta', 'Unos 25 cm, para verlo por encima de la gente.'],
+                    ['HDMI largo para el monitor del Bingo', 1, 'falta', 'Desde el divisor hasta las mesas del frente.'],
+                    ['Divisor HDMI 1 a 2', 1, 'falta', 'Lleva la misma imagen a la lona y al monitor. La pantalla de la notebook queda privada.'],
+                    ['Impresora Q15', 1, 'ya', 'Para los cartones impresos.'],
+                    ['Rollos térmicos de 57 mm', 3, 'falta', 'Un cartón de 4 cm rinde unos 75 por rollo. Falta medir el margen de Fun Print.'],
+                    ['Zapatillas de 5 tomas', Math.ceil(enchufes / 5), 'falta', enchufes + ' enchufes con dos de repuesto. Sumar alargues.'],
+                    ['Carteles A3 con QR', c.nMesas, 'falta', 'Pegados al frente de cada mesa.'],
+                    ['Cartel de auspiciantes', 1, 'falta', 'Con las tiendas que aportan vales.'],
+                    ['Tela oscura detrás de la pantalla', 1, 'confirmar', 'Solo si seguimos delante de la reja vidriada. Unos 3 × 2,5 m.'],
+                    ['Lona impresa del curso', 1, 'confirmar', 'La de años anteriores, para la pared lateral.'],
+                ];
+                const nombre = { ya: 'Ya está', confirmar: 'A confirmar', falta: 'A conseguir' };
+                $('#lista').innerHTML = filas.map(([q, n, e, nota]) =>
+                    `<tr><td>${q}</td><td class="n">${n}</td><td><span class="estado ${e}">${nombre[e]}</span></td><td>${nota}</td></tr>`).join('');
+            }
+
+            function pintarPlanta(c) {
+                const s = 96, mX = 60, mY = 34;
+                const W = c.A * s + mX + 24, H = (c.F + 0.9) * s + mY + 18;
+                const X = (x) => mX + x * s, Z = (z) => mY + z * s;
+                const r = (x, z, a, f, cl) => `<rect class="${cl}" x="${X(x)}" y="${Z(z)}" width="${a * s}" height="${f * s}"/>`;
+                const t = (x, y, txt, cl = '', anc = 'middle') => `<text class="${cl}" x="${x}" y="${y}" text-anchor="${anc}">${txt}</text>`;
+                let o = '';
+                o += r(0, 0, c.A, c.F - MESA.f, 'zona');
+                o += t(X(c.A - 0.1), Z(c.F - MESA.f) - 8, 'solo equipo', 'tenue', 'end');
+                o += r(c.lonaX - LONA.a / 2, -0.06, LONA.a, 0.06, 'pared');
+                o += t(X(c.lonaX), Z(0.22), 'lona');
+                const izq = X(c.lonaX - c.imgA / 2), der = X(c.lonaX + c.imgA / 2);
+                o += `<polygon class="haz" points="${izq},${Z(0)} ${der},${Z(0)} ${X(c.lonaX)},${Z(P.dist)}"/>`;
+                o += r(c.lonaX - 0.15, P.dist - 0.1, 0.3, 0.2, 'pieza');
+                o += t(X(c.lonaX) + 26, Z(P.dist) + 4, 'proyector', '', 'start');
+                o += r(0.1, c.zAtras - MESA.a / 2, MESA.f, MESA.a, 'mesa');
+                o += t(X(0.1 + MESA.f / 2), Z(c.zAtras) + 4, 'notebook');
+                for (let i = 0; i < c.nMesas; i++) o += r(c.x0 + i * MESA.a, c.F - MESA.f, MESA.a, MESA.f, 'mesa');
+                c.puestos.forEach((p) => {
+                    o += r(p.x - 0.22, c.F - 0.4, 0.44, 0.05, 'pieza');
+                    if (c.paso >= 0.55) o += t(X(p.x), Z(c.F) - 8, p.rol);
+                });
+                o += r(c.q15 - 0.07, c.F - 0.38, 0.14, 0.14, 'pieza');
+                if (c.paso >= 0.55) o += t(X(c.q15), Z(c.F) - 8, 'Q15');
+                o += t(X(c.A - ENTRADA / 2), Z(c.F) - 34, 'entrada');
+                o += `<path class="cota" d="M${X(c.A - ENTRADA / 2)} ${Z(c.F) + 8} V${Z(c.F) - 24} m-5 7 l5 -7 l5 7"/>`;
+                o += t(X(c.A / 2), Z(c.F + 0.62), 'público', 'tenue');
+                o += `<path class="cota" d="M${X(0)} 14 H${X(c.A)} M${X(0)} 9 v10 M${X(c.A)} 9 v10"/>`;
+                o += t(X(c.A / 2), 11, coma(c.A) + ' m');
+                o += `<path class="cota" d="M22 ${Z(0)} V${Z(c.F)} M17 ${Z(0)} h10 M17 ${Z(c.F)} h10"/>`;
+                o += t(38, Z(c.F / 2), coma(c.F, 2) + ' m', '', 'start');
+                $('#planta').innerHTML = `<svg class="planta" viewBox="0 0 ${W} ${H}" role="img" aria-label="Planta del stand">${o}</svg>`;
+            }
+
+            const REFS = (c) => {
+                const lista = [
+                    { n: 'Lona', v: [c.lonaX, 2.86, 0.1] },
+                    { n: 'Proyector', v: [c.lonaX, 1.78, P.dist - 0.4] },
+                    { n: 'Notebook', v: [0.4, 1.12, c.zAtras] },
+                ];
+                c.puestos.forEach((p) => lista.push({ n: p.rol === 'Libre' ? 'Monitor libre' : 'Monitor ' + p.rol.toLowerCase(), v: [p.x, p.rol === 'Bolillas' ? 1.62 : 1.34, c.F - 0.4] }));
+                lista.push({ n: 'Q15', v: [c.q15, 0.98, c.F - 0.3] });
+                lista.push({ n: 'Carteles y QR', v: [c.x0 + 0.3, 0.32, c.F + 0.02] });
+                lista.push({ n: 'Entrada del equipo', v: [c.A - ENTRADA / 2, 0.25, c.F] });
+                return lista;
+            };
+
+            function pintarReferencias(c) {
+                $('#referencias').innerHTML = REFS(c).map((r, i) => `<li><span>${i + 1}</span><span>${r.n}</span></li>`).join('');
+            }
+
+            /* ---------- 3D ---------- */
+            let escena, camara, render3d, controles, mundo, hazGrupo, gente, pinesData = [];
+
+            const textura = (w, h, dibujar) => {
+                const c = document.createElement('canvas');
+                c.width = w; c.height = h;
+                dibujar(c.getContext('2d'), w, h);
+                const t = new THREE.CanvasTexture(c);
+                t.anisotropy = 4;
+                return t;
+            };
+
+            function caja(a, h, f, color, x, y, z, grupo = mundo) {
+                const m = new THREE.Mesh(new THREE.BoxGeometry(a, h, f), new THREE.MeshStandardMaterial({ color, roughness: 0.85 }));
+                m.position.set(x, y, z);
+                m.castShadow = m.receiveShadow = true;
+                grupo.add(m);
+                return m;
+            }
+
+            function plano(a, h, mat, x, y, z, rotX = 0, rotY = 0, grupo = mundo) {
+                const m = new THREE.Mesh(new THREE.PlaneGeometry(a, h), mat);
+                m.position.set(x, y, z);
+                m.rotation.set(rotX, rotY, 0);
+                grupo.add(m);
+                return m;
+            }
+
+            function pantallaBingo(ctx, w, h) {
+                ctx.fillStyle = '#0d3b43'; ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#fff'; ctx.font = '700 62px "Archivo Narrow", sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('Bingo del stand', w / 2, 74);
+                [7, 19, 3, 26, 12, 30, 22].forEach((n, i) => {
+                    const x = 70 + (i % 7) * 72 + 6, y = 142;
+                    ctx.fillStyle = i === 6 ? '#f4b740' : '#2aa9b5'; ctx.beginPath(); ctx.arc(x, y, 30, 0, 7); ctx.fill();
+                    ctx.fillStyle = '#10272a'; ctx.font = '700 30px "Archivo Narrow", sans-serif'; ctx.fillText(n, x, y + 11);
+                });
+                ctx.fillStyle = '#fff'; ctx.fillRect(w / 2 - 42, 196, 84, 84);
+                ctx.fillStyle = '#10272a';
+                for (let i = 0; i < 7; i++) for (let j = 0; j < 7; j++) if ((i * 3 + j * 5) % 3) ctx.fillRect(w / 2 - 36 + i * 10.3, 202 + j * 10.3, 9, 9);
+            }
+
+            function pantallaRol(rol) {
+                return textura(320, 200, (ctx, w, h) => {
+                    const fondos = { Juegos: '#5b3fa8', Bolillas: '#0d3b43', Sistema: '#17528a', Libre: '#3b4a4c' };
+                    ctx.fillStyle = fondos[rol]; ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+                    ctx.font = '700 56px "Archivo Narrow", sans-serif';
+                    ctx.fillText(rol, w / 2, rol === 'Bolillas' ? 62 : 112);
+                    if (rol === 'Bolillas') {
+                        ctx.font = '700 104px "Archivo Narrow", sans-serif'; ctx.fillStyle = '#f4b740'; ctx.fillText('22', w / 2, 172);
+                    }
+                });
+            }
+
+            function cartelQR(i) {
+                return textura(300, 212, (ctx, w, h) => {
+                    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = '#0c5f68'; ctx.font = '700 38px "Archivo Narrow", sans-serif'; ctx.textAlign = 'left';
+                    const textos = ['Jugá al Bingo', 'Mirá los catálogos', 'Probá vos', 'Conocé el curso'];
+                    const lineas = textos[i % textos.length].split(' ');
+                    lineas.forEach((l, k) => ctx.fillText(l, 16, 58 + k * 40));
+                    ctx.fillStyle = '#10272a';
+                    for (let a = 0; a < 11; a++) for (let b = 0; b < 11; b++) if ((a * a + b * 7 + i) % 3 !== 1) ctx.fillRect(166 + a * 11, 44 + b * 11, 10, 10);
+                });
+            }
+
+            function persona(x, z, color, alto = 1.68) {
+                const g = new THREE.Group();
+                const cuerpo = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, alto - 0.28, 14), new THREE.MeshStandardMaterial({ color, roughness: 0.9 }));
+                cuerpo.position.y = (alto - 0.28) / 2; cuerpo.castShadow = true;
+                const cabeza = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), new THREE.MeshStandardMaterial({ color: '#c99a78', roughness: 0.8 }));
+                cabeza.position.y = alto - 0.13; cabeza.castShadow = true;
+                g.add(cuerpo, cabeza); g.position.set(x, 0, z);
+                gente.add(g);
+            }
+
+            function construir() {
+                if (!escena) return;
+                const c = calcular();
+                if (mundo) escena.remove(mundo);
+                mundo = new THREE.Group();
+                hazGrupo = new THREE.Group();
+                gente = new THREE.Group();
+                mundo.add(hazGrupo, gente);
+                escena.add(mundo);
+                const { A, F } = c;
+                const CREMA = '#e8dfc8', AZULEJO = '#a8694b', MANTEL = '#1b9aa6', OSCURO = '#1d2526';
+
+                const piso = plano(A + 8, F + 9, new THREE.MeshStandardMaterial({ color: '#bdb4a6', roughness: 0.95 }), A / 2, 0, (F + 3) / 2, -Math.PI / 2);
+                piso.receiveShadow = true;
+                plano(A, F - MESA.f, new THREE.MeshBasicMaterial({ color: '#1b9aa6', transparent: true, opacity: 0.1 }), A / 2, 0.004, (F - MESA.f) / 2, -Math.PI / 2);
+
+                const REJA = '#1f3a30', largoReja = A + 3, xReja = A / 2 + 0.05;
+                plano(largoReja, 3.1, new THREE.MeshBasicMaterial({ color: '#f5f8f0' }), xReja, 1.55, -0.04);
+                for (let y = 0.16; y < 3.1; y += 0.17) caja(largoReja, 0.016, 0.03, REJA, xReja, y, -0.015);
+                for (let x = -1; x < A + 2; x += 1.05) caja(0.05, 3.1, 0.05, REJA, x, 1.55, -0.015);
+                caja(0.1, 3.1, F + 1.2, CREMA, -0.05, 1.55, (F + 1.2) / 2);
+                caja(0.02, 1.1, F + 1.2, AZULEJO, 0.01, 0.55, (F + 1.2) / 2);
+                const lonaImpresa = textura(600, 340, (ctx, w, h) => {
+                    ctx.fillStyle = '#ecebe6'; ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = '#2a2d2e'; ctx.textAlign = 'center';
+                    ctx.font = '700 40px "Archivo Narrow", sans-serif';
+                    ctx.fillText('Pensamiento Computacional y', w / 2, 56);
+                    ctx.fillText('Testing de Aplicaciones', w / 2, 100);
+                    ctx.fillStyle = '#b9b9b3';
+                    [[50, 130], [230, 130], [410, 130], [50, 230], [230, 230], [410, 230]].forEach(([x, y]) => ctx.fillRect(x, y, 140, 76));
+                });
+                plano(2, 1.13, new THREE.MeshBasicMaterial({ map: lonaImpresa }), 0.032, 1.72, Math.max(1.1, c.zAtras), 0, Math.PI / 2);
+
+                caja(LONA.a, LONA.h, 0.02, '#f6f6f2', c.lonaX, LONA.y + LONA.h / 2, 0.07);
+                caja(LONA.a + 0.12, 0.05, 0.05, '#555f60', c.lonaX, LONA.y + LONA.h + 0.03, 0.08);
+                caja(LONA.a + 0.12, 0.05, 0.05, '#555f60', c.lonaX, LONA.y - 0.03, 0.08);
+                const yImg = LONA.y + LONA.h / 2;
+                const img = new THREE.MeshBasicMaterial({ map: textura(640, 360, pantallaBingo) });
+                plano(c.imgA, c.imgH, img, c.lonaX, yImg, 0.083);
+
+                for (let i = 0; i < c.nMesas; i++) {
+                    const x = c.x0 + i * MESA.a + MESA.a / 2;
+                    caja(MESA.a - 0.01, 0.04, MESA.f + 0.02, MANTEL, x, MESA.h, c.zMesa);
+                    caja(MESA.a - 0.01, MESA.h, 0.012, MANTEL, x, MESA.h / 2, F + 0.01);
+                    [-1, 1].forEach((l) => caja(0.04, MESA.h, 0.04, '#6c7476', x + l * 0.54, MESA.h / 2, c.zMesa - 0.26));
+                    const cartel = new THREE.MeshBasicMaterial({ map: cartelQR(i) });
+                    plano(0.42, 0.3, cartel, x, 0.42, F + 0.018);
+                }
+                caja(0.012, MESA.h, MESA.f, MANTEL, c.x0 - 0.005, MESA.h / 2, c.zMesa);
+                caja(0.012, MESA.h, MESA.f, MANTEL, c.x0 + c.largo + 0.005, MESA.h / 2, c.zMesa);
+
+                c.puestos.forEach((p) => {
+                    const bol = p.rol === 'Bolillas';
+                    const ancho = bol ? 0.68 : 0.54, alto = ancho * 0.6;
+                    const base = bol ? MESA.h + 0.27 : MESA.h + 0.02;
+                    const z = F - 0.42;
+                    if (bol) caja(0.42, 0.25, 0.26, '#8d7a5f', p.x, MESA.h + 0.145, z);
+                    caja(0.18, 0.015, 0.14, OSCURO, p.x, base + 0.008, z);
+                    caja(0.035, 0.12, 0.03, OSCURO, p.x, base + 0.07, z);
+                    caja(ancho + 0.03, alto + 0.03, 0.025, OSCURO, p.x, base + 0.13 + alto / 2, z);
+                    plano(ancho, alto, new THREE.MeshBasicMaterial({ map: pantallaRol(p.rol) }), p.x, base + 0.13 + alto / 2, z + 0.014);
+                    if (!bol) {
+                        caja(0.4, 0.018, 0.13, '#2b3334', p.x - 0.03, MESA.h + 0.03, F - 0.11);
+                        caja(0.06, 0.022, 0.1, '#2b3334', p.x + 0.23, MESA.h + 0.03, F - 0.11);
+                        caja(0.18, 0.4, 0.38, '#242c2d', p.x, 0.2, F - 0.34);
+                    }
+                });
+
+                caja(0.14, 0.11, 0.14, '#f2f1ec', c.q15, MESA.h + 0.075, F - 0.3);
+                caja(0.09, 0.002, 0.14, '#ffffff', c.q15, MESA.h + 0.1, F - 0.17);
+
+                const zb = c.zAtras;
+                caja(MESA.f, 0.04, MESA.a, MANTEL, 0.4, MESA.h, zb);
+                [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => caja(0.04, MESA.h, 0.04, '#6c7476', 0.4 + a * 0.26, MESA.h / 2, zb + b * 0.54));
+                caja(0.32, 0.018, 0.23, '#3c4546', 0.42, MESA.h + 0.03, zb);
+                const tapa = caja(0.012, 0.21, 0.32, '#3c4546', 0.29, MESA.h + 0.14, zb);
+                tapa.rotation.z = -0.25;
+                caja(0.18, 0.4, 0.38, '#242c2d', 0.4, 0.2, zb + 0.3);
+
+                const yP = 1.25;
+                const pie = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, yP - 0.05, 10), new THREE.MeshStandardMaterial({ color: '#555f60' }));
+                pie.position.set(c.lonaX, (yP - 0.05) / 2, P.dist); pie.castShadow = true; mundo.add(pie);
+                caja(0.42, 0.02, 0.42, '#555f60', c.lonaX, 0.012, P.dist);
+                caja(0.34, 0.02, 0.28, '#555f60', c.lonaX, yP - 0.05, P.dist);
+                caja(0.3, 0.1, 0.24, '#e7e7e2', c.lonaX, yP + 0.02, P.dist);
+                const lente = new THREE.Vector3(c.lonaX, yP + 0.03, P.dist - 0.13);
+                const esq = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => new THREE.Vector3(c.lonaX + a * c.imgA / 2, yImg + b * c.imgH / 2, 0.09));
+                const v = [];
+                for (let i = 0; i < 4; i++) v.push(lente, esq[i], esq[(i + 1) % 4]);
+                const geo = new THREE.BufferGeometry().setFromPoints(v);
+                hazGrupo.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: '#ffe9a8', transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false })));
+                hazGrupo.visible = $('#haz').checked;
+
+                const colores = ['#c8553d', '#3d6fb4', '#d9a02c', '#6b4fa0', '#3e8e6c'];
+                [0.03, 0.97].forEach((t, i) => persona(c.x0 + c.largo * t, F + 0.55, colores[i]));
+                persona(A - 0.35, F + 1.05, colores[2]);
+                persona(A - ENTRADA - 0.3, F - 0.95, '#2e3a3c', 1.72);
+                persona(0.95, zb + 0.2, '#2e3a3c', 1.66);
+                gente.visible = $('#personas').checked;
+
+                pinesData = REFS(c).map((r, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'pin';
+                    el.innerHTML = `<b>${i + 1}</b><span>${r.n}</span>`;
+                    return { el, v: new THREE.Vector3(...r.v) };
+                });
+                $('#pines').replaceChildren(...pinesData.map((p) => p.el));
+                dibujar();
+            }
+
+            function dibujar() {
+                if (!render3d) return;
+                render3d.render(escena, camara);
+                const caj = $('#visor').getBoundingClientRect();
+                const ver = $('#pines-ver').checked;
+                $('#pines').hidden = !ver;
+                if (!ver) return;
+                pinesData.forEach((p) => {
+                    const q = p.v.clone().project(camara);
+                    p.el.hidden = q.z > 1;
+                    p.el.style.transform = `translate(${((q.x + 1) / 2 * caj.width).toFixed(1)}px, ${((1 - q.y) / 2 * caj.height).toFixed(1)}px) translate(-8px, -50%)`;
+                });
+            }
+
+            function fondoEscena() {
+                if (!escena) return;
+                escena.background = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--escena').trim());
+                dibujar();
+            }
+
+            const VISTAS = {
+                general: (c) => ({ p: [c.A + 3.2, 3.5, c.F + 3.6], t: [c.A / 2 - 0.1, 0.8, c.F / 2 + 0.2] }),
+                publico: (c) => ({ p: [c.A / 2, 1.6, c.F + 2.9], t: [c.A / 2, 1.3, 0] }),
+                arriba: (c) => ({ p: [c.A / 2, Math.max(c.A, c.F) * 2.1, c.F / 2 + 0.31], t: [c.A / 2, 0, c.F / 2 + 0.3] }),
+                equipo: (c) => ({ p: [c.A - 0.45, 1.65, 0.45], t: [c.A / 2 - 0.2, 0.95, c.F + 0.4] }),
+            };
+
+            function irA(nombre, suave = true) {
+                document.querySelectorAll('#vistas button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.vista === nombre));
+                if (!camara) return;
+                const d = VISTAS[nombre](calcular());
+                const p = new THREE.Vector3(...d.p), t = new THREE.Vector3(...d.t);
+                const quieto = !suave || matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (quieto) { camara.position.copy(p); controles.target.copy(t); controles.update(); dibujar(); return; }
+                const p0 = camara.position.clone(), t0 = controles.target.clone(), ini = performance.now();
+                const paso = (ahora) => {
+                    const u = Math.min(1, (ahora - ini) / 450), e = u * u * (3 - 2 * u);
+                    camara.position.lerpVectors(p0, p, e);
+                    controles.target.lerpVectors(t0, t, e);
+                    controles.update(); dibujar();
+                    if (u < 1) requestAnimationFrame(paso);
+                };
+                requestAnimationFrame(paso);
+            }
+
+            function iniciar3D() {
+                const visor = $('#visor');
+                try {
+                    if (!window.THREE) throw new Error('sin three');
+                    render3d = new THREE.WebGLRenderer({ antialias: true });
+                } catch (e) {
+                    render3d = null;
+                    const a = document.createElement('div');
+                    a.className = 'sin3d';
+                    a.textContent = 'Este dispositivo no puede mostrar el modelo 3D. La planta de abajo tiene las mismas medidas.';
+                    visor.append(a);
+                    $('#vistas').hidden = true;
+                    return;
+                }
+                escena = new THREE.Scene();
+                camara = new THREE.PerspectiveCamera(42, 1.5, 0.05, 80);
+                render3d.setPixelRatio(Math.min(devicePixelRatio, 2));
+                render3d.shadowMap.enabled = true;
+                render3d.shadowMap.type = THREE.PCFSoftShadowMap;
+                visor.prepend(render3d.domElement);
+                escena.add(new THREE.HemisphereLight('#ffffff', '#b8b0a4', 0.85));
+                const sol = new THREE.DirectionalLight('#ffffff', 0.7);
+                sol.position.set(3, 6, 6);
+                sol.castShadow = true;
+                sol.shadow.mapSize.set(2048, 2048);
+                Object.assign(sol.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, far: 20 });
+                sol.shadow.bias = -0.0005;
+                escena.add(sol);
+                controles = new THREE.OrbitControls(camara, render3d.domElement);
+                controles.maxPolarAngle = Math.PI / 2 - 0.03;
+                controles.minDistance = 1; controles.maxDistance = 16;
+                controles.addEventListener('change', dibujar);
+                const ajustar = () => {
+                    const r = visor.getBoundingClientRect();
+                    render3d.setSize(r.width, r.height, false);
+                    camara.aspect = r.width / r.height;
+                    camara.updateProjectionMatrix();
+                    dibujar();
+                };
+                new ResizeObserver(ajustar).observe(visor);
+                fondoEscena();
+                // El fondo de la escena sigue al tema: el del sistema o el del botón
+                new MutationObserver(fondoEscena).observe(document.documentElement, { attributes: true, attributeFilter: ['data-tema'] });
+                matchMedia('(prefers-color-scheme: dark)').addEventListener('change', fondoEscena);
+                construir();
+                irA('general', false);
+                ajustar();
+            }
+
+            function actualizar() {
+                const d = $('#dist');
+                d.max = (P.fondo - 0.75).toFixed(2);
+                if (P.dist > +d.max) { P.dist = +d.max; d.value = d.max; }
+                const c = calcular();
+                pintarLectura(c); pintarLista(c); pintarPlanta(c); pintarReferencias(c);
+                construir();
+            }
+
+            ['ancho', 'fondo', 'monitores', 'dist', 'rel'].forEach((id) => {
+                const e = $('#' + id);
+                e.addEventListener('input', () => { P[id] = +e.value; actualizar(); });
+            });
+            $('#vistas').addEventListener('click', (e) => { const v = e.target.dataset.vista; if (v) irA(v); });
+            $('#personas').addEventListener('change', (e) => { if (gente) gente.visible = e.target.checked; dibujar(); });
+            $('#haz').addEventListener('change', (e) => { if (hazGrupo) hazGrupo.visible = e.target.checked; dibujar(); });
+            $('#pines-ver').addEventListener('change', dibujar);
+
+            actualizar();
+            iniciar3D();
+            if (document.fonts) document.fonts.ready.then(construir);
+
+            /* ---------- Los temas para los directivos ----------
+             * No están en el repo: los guarda el Worker de los catálogos y los da con la clave
+             * de administración. En desarrollo, ?worker=http://127.0.0.1:8787 usa uno local. */
+            (function () {
+                let WORKER = 'https://catalogos.maxinunez434.workers.dev';
+                if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                    try {
+                        const pedido = new URLSearchParams(location.search).get('worker');
+                        if (pedido === 'no') localStorage.removeItem('catalogos:worker');
+                        else if (pedido) localStorage.setItem('catalogos:worker', pedido);
+                        WORKER = localStorage.getItem('catalogos:worker') || WORKER;
+                    } catch (e) {}
+                }
+                let clave = '';
+                let temas = [];
+
+                function pedir(metodo, cuerpo) {
+                    return fetch(WORKER + '/admin/expo/temas', {
+                        method: metodo,
+                        headers: { 'X-Admin': clave, 'Content-Type': 'application/json' },
+                        body: cuerpo ? JSON.stringify(cuerpo) : undefined,
+                    }).then((r) => r.json().then((datos) => {
+                        if (!r.ok) throw new Error(datos.error || 'No se pudo');
+                        return datos;
+                    }), () => { throw new Error('No hay conexión con el servidor'); });
+                }
+
+                function mostrar(lista) {
+                    temas = lista;
+                    $('#temas-lista').replaceChildren(...lista.map((t) => {
+                        const li = document.createElement('li');
+                        li.textContent = t;
+                        return li;
+                    }));
+                    $('#temas-vacio').hidden = lista.length > 0;
+                    $('#form-clave').hidden = true;
+                    $('#form-temas').hidden = true;
+                    $('#temas').hidden = false;
+                }
+
+                $('#form-clave').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    clave = $('#clave').value;
+                    $('#error-clave').textContent = '';
+                    pedir('GET').then((datos) => {
+                        try { sessionStorage.setItem('stand:admin', clave); } catch (err) {}
+                        mostrar(datos.temas);
+                    }).catch((error) => {
+                        try { sessionStorage.removeItem('stand:admin'); } catch (err) {}
+                        $('#error-clave').textContent = error.message;
+                    });
+                });
+                $('#editar-temas').addEventListener('click', () => {
+                    $('#temas-texto').value = temas.join('\n');
+                    $('#temas').hidden = true;
+                    $('#form-temas').hidden = false;
+                    $('#temas-texto').focus();
+                });
+                $('#cancelar-temas').addEventListener('click', () => mostrar(temas));
+                $('#form-temas').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    $('#error-temas').textContent = '';
+                    const lista = $('#temas-texto').value.split('\n').map((t) => t.trim()).filter(Boolean);
+                    pedir('PUT', { temas: lista }).then((datos) => mostrar(datos.temas))
+                        .catch((error) => { $('#error-temas').textContent = error.message; });
+                });
+
+                // Con la clave ya puesta en esta pestaña, entra solo
+                try {
+                    const guardada = sessionStorage.getItem('stand:admin');
+                    if (guardada) { $('#clave').value = guardada; $('#form-clave').requestSubmit(); }
+                } catch (e) {}
+            })();
+        </script>
+    </body>
+</html>
+
+<style is:global>
+    /* Mesa de trabajo de un plano: el modelo grande a la izquierda, las medidas al costado, la planta y la lista debajo. */
+    :root {
+        --fondo: #f1f5f4; --superficie: #ffffff; --texto: #16292b; --suave: #566b6d; --linea: #cfdcda;
+        --mantel: #0c7f8a; --azulejo: #b04a22; --escena: #dfe7e5; --ok: #1f7a4d;
+        --titulo: "Archivo Narrow", "Arial Narrow", sans-serif;
+        --cuerpo: "Public Sans", "Segoe UI", sans-serif;
+        --dato: "IBM Plex Mono", Consolas, monospace;
+        color-scheme: light;
+    }
+    /* Modo oscuro: el del sistema, salvo que se elija otro con el botón */
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-tema='claro']) {
+            --fondo: #0f181a; --superficie: #172426; --texto: #e6efee; --suave: #9ab0b0; --linea: #2c3f41;
+            --mantel: #3cbecb; --azulejo: #ea9069; --escena: #1b2a2c; --ok: #5fc794; color-scheme: dark;
+        }
+    }
+    :root[data-tema='oscuro'] {
+        --fondo: #0f181a; --superficie: #172426; --texto: #e6efee; --suave: #9ab0b0; --linea: #2c3f41;
+        --mantel: #3cbecb; --azulejo: #ea9069; --escena: #1b2a2c; --ok: #5fc794; color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--fondo); color: var(--texto); font: 400 15px/1.5 var(--cuerpo); }
+    .tema {
+        position: fixed; top: 12px; right: 12px; z-index: 5; width: 44px; height: 44px; border-radius: 50%;
+        border: 1px solid var(--linea); background: var(--superficie); font-size: 1.2rem; cursor: pointer;
+    }
+    .hoja {
+        max-width: 1240px; margin: 0 auto; display: grid; gap: 28px; padding-block: 24px 24px;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+    .cabeza { display: grid; gap: 6px; padding-right: 52px; }
+    .cabeza p { margin: 0; max-width: 70ch; color: var(--suave); }
+    .etiqueta { font: 500 12px/1.3 var(--dato); letter-spacing: .06em; text-transform: uppercase; color: var(--mantel); }
+    h1, h2 { font-family: var(--titulo); font-weight: 700; line-height: 1.1; margin: 0; text-wrap: balance; }
+    h1 { font-size: clamp(30px, 5vw, 44px); }
+    h2 { font-size: 24px; }
+    .trabajo { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+    .visor {
+        position: relative; height: min(68vh, 620px); min-height: 380px; background: var(--escena);
+        border: 1px solid var(--linea); overflow: hidden;
+    }
+    .visor canvas { display: block; width: 100%; height: 100%; }
+    .vistas { position: absolute; left: 10px; top: 10px; display: flex; flex-wrap: wrap; gap: 6px; z-index: 3; max-width: calc(100% - 20px); }
+    .vistas button {
+        font: 500 13px/1 var(--cuerpo); color: var(--texto); background: var(--superficie);
+        border: 1px solid var(--linea); padding: 9px 11px; cursor: pointer;
+    }
+    .vistas button[aria-pressed="true"] { background: var(--mantel); border-color: var(--mantel); color: var(--superficie); }
+    button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--azulejo); outline-offset: 2px; }
+    .pines { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+    .pin {
+        position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 5px; white-space: nowrap;
+        font: 500 11px/1 var(--dato); color: #16292b; background: rgba(255, 255, 255, .9); padding: 3px 6px 3px 3px;
+        border: 1px solid rgba(22, 41, 43, .25);
+    }
+    .pin b { background: #0c7f8a; color: #fff; min-width: 16px; height: 16px; display: grid; place-items: center; font-weight: 500; }
+    .sin3d { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; }
+    .panel { display: grid; gap: 18px; background: var(--superficie); border: 1px solid var(--linea); padding: 16px; min-width: 0; }
+    .campo { display: grid; gap: 4px; }
+    .campo label { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; font-size: 14px; }
+    .campo output { font: 500 14px var(--dato); color: var(--mantel); }
+    .campo input[type="range"] { width: 100%; accent-color: var(--mantel); margin: 0; }
+    .campo small, .nota { color: var(--suave); font-size: 13px; }
+    .lectura { display: grid; gap: 2px; border-top: 1px solid var(--linea); padding-top: 12px; }
+    .lectura strong { font: 500 19px/1.3 var(--dato); font-variant-numeric: tabular-nums; }
+    .aviso { color: var(--azulejo); font-size: 13px; font-weight: 600; margin: 0; }
+    .aviso:empty { display: none; }
+    .casillas { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; }
+    .casillas label { display: flex; align-items: center; gap: 6px; }
+    .referencias { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 14px; border-top: 1px solid var(--linea); padding-top: 12px; }
+    .referencias li { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: baseline; }
+    .referencias span:first-child { font: 500 12px var(--dato); color: var(--mantel); }
+    .dos { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px; align-items: start; }
+    .bloque { display: grid; gap: 12px; min-width: 0; }
+    .planta { width: 100%; height: auto; display: block; background: var(--superficie); border: 1px solid var(--linea); }
+    .planta text { font-family: var(--dato); font-size: 12px; fill: var(--texto); }
+    .planta .tenue { fill: var(--suave); }
+    .planta .pared { fill: var(--suave); }
+    .planta .mesa { fill: var(--mantel); fill-opacity: .22; stroke: var(--mantel); stroke-width: 1.5; }
+    .planta .pieza { fill: var(--texto); }
+    .planta .zona { fill: var(--mantel); fill-opacity: .06; stroke: var(--mantel); stroke-dasharray: 5 5; }
+    .planta .haz { fill: var(--azulejo); fill-opacity: .13; }
+    .planta .cota { stroke: var(--suave); stroke-width: 1; fill: none; }
+    .tabla { overflow-x: auto; border: 1px solid var(--linea); background: var(--superficie); }
+    table { border-collapse: collapse; width: 100%; font-size: 14px; }
+    th { text-align: left; font: 500 12px var(--dato); letter-spacing: .04em; text-transform: uppercase; color: var(--suave); }
+    th, td { padding: 8px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    td.n { font: 500 14px var(--dato); text-align: right; font-variant-numeric: tabular-nums; }
+    .estado { font: 500 12px var(--dato); white-space: nowrap; color: var(--suave); }
+    .estado.ya { color: var(--ok); }
+    .estado.falta { color: var(--azulejo); }
+    .charla { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 6px; max-width: 75ch; }
+    .clave, #form-temas { display: grid; gap: 8px; max-width: 75ch; }
+    .clave label, #form-temas label { font-weight: 600; font-size: 14px; }
+    .fila { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .clave input, #form-temas textarea {
+        font: inherit; color: inherit; background: var(--superficie); border: 1px solid var(--linea); padding: 9px 11px;
+    }
+    .clave input { flex: 1; min-width: 12rem; }
+    #form-temas textarea { width: 100%; resize: vertical; }
+    .bloque button:not(.tema) {
+        font: 600 14px/1 var(--cuerpo); color: var(--mantel); background: var(--superficie);
+        border: 1px solid var(--mantel); padding: 10px 14px; cursor: pointer;
+    }
+    .bloque button.principal { background: var(--mantel); color: var(--superficie); }
+    .error { color: var(--azulejo); font-size: 13px; font-weight: 600; margin: 0; min-height: 1.2em; }
+    .pie { text-align: center; color: var(--suave); font-size: 0.85rem; padding: 16px 16px 32px; }
+    .pie a { color: var(--mantel); font-weight: 600; }
+    @media (max-width: 960px) { .trabajo, .dos { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 640px) { .pin span { display: none; } .pin { padding: 2px; } .visor { height: 58vh; } }
+</style>
