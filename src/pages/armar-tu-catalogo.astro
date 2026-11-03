@@ -1,0 +1,154 @@
+---
+/**
+ * /armar-tu-catalogo/: el panel del catálogo para los emprendimientos del CFP.
+ *
+ * Página aparte, sin el menú del curso: la abre quien tiene un emprendimiento, no
+ * un alumno. Elige cómo se ve su catálogo y descarga la carpeta, que se publica
+ * en el repo de la organización. Los productos los carga después en el editor,
+ * con su código. Está enlazada desde "Tu catálogo con Python".
+ */
+import PanelCatalogo from '../components/PanelCatalogo.astro';
+
+const editor = 'https://cfp401-ensenada.github.io/catalogos/editar/';
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Armá tu catálogo · CFP 401</title>
+        <meta name="description" content="Elegí cómo se ve el catálogo de tu emprendimiento: nombre, WhatsApp, colores y foto de fondo." />
+        <meta name="robots" content="noindex" />
+        <!-- La letra del nombre de la marca, para que la muestra se vea como el catálogo -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" />
+        <script is:inline>
+            // El tema elegido se aplica antes de pintar, para que no parpadee
+            try {
+                const tema = localStorage.getItem('armar-catalogo:tema');
+                if (tema) document.documentElement.dataset.tema = tema;
+            } catch (e) {}
+        </script>
+    </head>
+    <body>
+        <button type="button" class="tema" id="tema" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+        <main class="hoja">
+            <header class="cabeza">
+                <span class="etiqueta">CFP 401 · Catálogos de emprendimientos</span>
+                <h1>Armá tu catálogo</h1>
+                <p>
+                    Elegí cómo se ve: el nombre de tu emprendimiento, tu WhatsApp y los colores. Si no sabés qué
+                    colores elegir, tocá <strong>Sugerir colores</strong> hasta que alguno te guste.
+                </p>
+            </header>
+
+            <PanelCatalogo modo="emprendedor" />
+
+            <section class="pasos">
+                <h2>Cuando lo descargues</h2>
+                <ol>
+                    <li>Mandale el archivo a quien te está ayudando desde el CFP: lo publicamos y te pasamos el link.</li>
+                    <li>
+                        Tus productos, precios y fotos los cargás vos, desde el celular, en
+                        <a href={editor}>el editor</a>, con el código que te dimos.
+                    </li>
+                    <li>Cada vez que cambies algo ahí, en un minuto se ve en tu catálogo.</li>
+                </ol>
+            </section>
+        </main>
+        <footer class="pie">Hecho por el curso de Pensamiento Computacional del CFP 401</footer>
+        <script is:inline>
+            (function () {
+                const raiz = document.documentElement;
+                const boton = document.getElementById('tema');
+                const oscuro = () =>
+                    raiz.dataset.tema ? raiz.dataset.tema === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+                const pintar = () => (boton.textContent = oscuro() ? '☀️' : '🌙');
+                boton.addEventListener('click', () => {
+                    raiz.dataset.tema = oscuro() ? 'claro' : 'oscuro';
+                    try {
+                        localStorage.setItem('armar-catalogo:tema', raiz.dataset.tema);
+                    } catch (e) {}
+                    pintar();
+                });
+                pintar();
+            })();
+        </script>
+    </body>
+</html>
+
+<style is:global>
+    /* El panel usa las variables de colores del sitio del curso: acá van con valores propios. */
+    :root {
+        --sl-color-black: #ffffff;
+        --sl-color-white: #1f2a24;
+        --sl-color-gray-3: #5d6a62;
+        --sl-color-gray-4: #b9b2a6;
+        --sl-color-gray-5: #d9d4cb;
+        --sl-color-gray-7: #fbfaf7;
+        --sl-color-accent: #2f6b4f;
+        --sl-color-orange: #b45309;
+        --sl-color-orange-low: #fff4e5;
+        --sl-color-red-high: #b3412b;
+        --pagina: #f4f2ee;
+        --suave: #5d6a62;
+        --enlace: #2f6b4f;
+        color-scheme: light;
+    }
+    /* Modo oscuro: el del sistema, salvo que se elija otro con el botón */
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-tema='claro']) {
+            --sl-color-black: #141916;
+            --sl-color-white: #e8ece9;
+            --sl-color-gray-3: #a2b0a7;
+            --sl-color-gray-4: #4a5750;
+            --sl-color-gray-5: #34403a;
+            --sl-color-gray-7: #1d2420;
+            --sl-color-accent: #6cc39a;
+            --sl-color-orange: #f0a35e;
+            --sl-color-orange-low: #3a2a16;
+            --sl-color-red-high: #f08a72;
+            --pagina: #101411;
+            --suave: #a2b0a7;
+            --enlace: #6cc39a;
+            color-scheme: dark;
+        }
+    }
+    :root[data-tema='oscuro'] {
+        --sl-color-black: #141916;
+        --sl-color-white: #e8ece9;
+        --sl-color-gray-3: #a2b0a7;
+        --sl-color-gray-4: #4a5750;
+        --sl-color-gray-5: #34403a;
+        --sl-color-gray-7: #1d2420;
+        --sl-color-accent: #6cc39a;
+        --sl-color-orange: #f0a35e;
+        --sl-color-orange-low: #3a2a16;
+        --sl-color-red-high: #f08a72;
+        --pagina: #101411;
+        --suave: #a2b0a7;
+        --enlace: #6cc39a;
+        color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: var(--pagina);
+        color: var(--sl-color-white);
+        font: 16px/1.55 system-ui, 'Segoe UI', sans-serif;
+    }
+    .tema {
+        position: fixed; top: 12px; right: 12px; z-index: 2; width: 44px; height: 44px; border-radius: 50%;
+        border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-gray-7); font-size: 1.2rem; cursor: pointer;
+    }
+    .tema:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+    .hoja { max-width: 760px; margin: 0 auto; padding: 32px 16px 24px; display: grid; gap: 8px; }
+    .cabeza { display: grid; gap: 8px; }
+    .cabeza p { margin: 0; }
+    .etiqueta { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--suave); }
+    h1 { margin: 0; font-size: 2.2rem; line-height: 1.1; }
+    h2 { margin: 0 0 8px; font-size: 1.25rem; }
+    .pasos ol { margin: 0; padding-left: 1.3rem; display: grid; gap: 6px; }
+    a { color: var(--enlace); font-weight: 600; }
+    .pie { text-align: center; color: var(--suave); font-size: 0.85rem; padding: 16px 16px 32px; }
+</style>

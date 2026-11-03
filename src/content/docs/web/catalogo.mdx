@@ -7,6 +7,7 @@ import EjercicioPython from '../../../components/EjercicioPython.astro';
 import EjercicioWeb from '../../../components/EjercicioWeb.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 import Animacion from '../../../components/Animacion.astro';
+import PanelCatalogo from '../../../components/PanelCatalogo.astro';
 
 export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
 
@@ -21,16 +22,30 @@ export const ESTILOS = `@import url("https://fonts.googleapis.com/css2?family=Gr
     --linea: #93a77c;
     --marca: #ffffff;
     --fondo-foto: #ecd3dc;
+    --sobre-acento: #ffffff;
     --letra: "Montserrat", system-ui, sans-serif;
     --letra-marca: "Great Vibes", cursive;
+    /* Una foto de fondo (opcional): url("fondo.jpg"). El velo la aclara para que
+       se lea el texto: 0 es sin velo, 0.7 casi tapa la foto. */
+    --imagen-de-fondo: none;
+    --velo: 0;
 }
 
 * { box-sizing: border-box; }
 body {
     margin: 0;
     font-family: var(--letra);
-    background: var(--fondo);
+    background: var(--imagen-de-fondo) center / cover no-repeat fixed, var(--fondo);
     color: var(--texto);
+}
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: var(--fondo);
+    opacity: var(--velo);
+    pointer-events: none;
 }
 
 /* La portada: el nombre de la marca, con una rama en cada esquina */
@@ -123,7 +138,7 @@ img.producto__foto { object-fit: cover; }
     padding: 0.35rem 1.2rem;
     border-radius: 999px;
     background: var(--acento);
-    color: #fff;
+    color: var(--sobre-acento);
     font-size: 1.25rem;
     font-weight: 700;
 }
@@ -137,7 +152,7 @@ img.producto__foto { object-fit: cover; }
     font-weight: 600;
     text-decoration: none;
 }
-.consultar:hover { background: var(--acento); color: #fff; }
+.consultar:hover { background: var(--acento); color: var(--sobre-acento); }
 
 /* En pantallas anchas: foto a un lado y texto al otro, y una sí y una no
    se dan vuelta (el zigzag del catálogo de Canva) */
@@ -204,7 +219,7 @@ export const TARJETA_CON_BOTON = `def tarjeta(producto, numero):
     <h2>{producto['nombre']}</h2>
     <p class="descripcion">{producto['descripcion']}</p>
     <p class="precio">{precio(producto['precio'])}</p>
-    <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}">Consultar por WhatsApp</a>
+    <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}" target="_blank">Consultar por WhatsApp</a>
 </article>
 """`;
 
@@ -226,7 +241,7 @@ export const TARJETA_CON_DETALLES = `def tarjeta(producto, numero):
     <p class="descripcion">{producto['descripcion']}</p>
     {detalles(**extras(producto))}
     <p class="precio">{precio(producto['precio'])}</p>
-    <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}">Consultar por WhatsApp</a>
+    <a class="consultar" href="{link_whatsapp(numero, producto['nombre'])}" target="_blank">Consultar por WhatsApp</a>
 </article>
 """`;
 
@@ -820,7 +835,7 @@ como la última página del catálogo de Canva, cómo contactarte.
     </main>
     <footer class="contacto">
         <h2>¡Contactá conmigo!</h2>
-        <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
+        <a class="consultar" href="https://wa.me/5492215550000" target="_blank">Escribime por WhatsApp</a>
         <p>Tu consulta no es molestia</p>
     </footer>
 </body>
@@ -863,7 +878,7 @@ ${PRODUCTOS}`}
     </main>
     <footer class="contacto">
         <h2>¡Contactá conmigo!</h2>
-        <a class="consultar" href="https://wa.me/5492215550000">Escribime por WhatsApp</a>
+        <a class="consultar" href="https://wa.me/5492215550000" target="_blank">Escribime por WhatsApp</a>
         <p>Tu consulta no es molestia</p>
     </footer>
 </body>
@@ -932,7 +947,7 @@ def pagina(titulo, productos, numero):
 <html lang="es">
 <head><meta charset="utf-8"><title>{titulo}</title><link rel="stylesheet" href="estilos.css"></head>
 <body><header class="encabezado"><h1>{titulo}</h1></header><main class="catalogo">{tarjetas}</main>
-<footer class="contacto"><h2>¡Contactá conmigo!</h2><a class="consultar" href="https://wa.me/{numero}">Escribime por WhatsApp</a></footer></body>
+<footer class="contacto"><h2>¡Contactá conmigo!</h2><a class="consultar" href="https://wa.me/{numero}" target="_blank">Escribime por WhatsApp</a></footer></body>
 </html>
 """
 
@@ -978,24 +993,42 @@ la página y **la guarda** en `ruta_html`. No devuelve nada.
 
 ## Tu catálogo de verdad
 
-Todo lo de arriba, junto, en tu compu.
+Todo lo de arriba, junto, en tu compu. **No hace falta copiar las funciones**: el panel arma tu
+proyecto con lo que resolviste acá. Cada función va **tal cual la escribiste** si el ejercicio
+está Resuelto, y si no, va la de la clase. En el archivo, cada una dice de dónde salió.
 
-**1. Bajá el proyecto:** <a href={b + 'proyecto-catalogo/proyecto-catalogo.zip'} download>📦 proyecto-catalogo.zip</a>.
+**1. Completá el panel y bajá tu proyecto.** La dirección del editor te la da tu profe, junto con
+tu código: si todavía no la tenés, dejala vacía.
+
+<PanelCatalogo modo="clase" soluciones={{ LINK, PRECIO, FOTO, EXTRAS, TARJETA_CON_DETALLES }} />
+
+:::caution[En la compu donde hiciste los ejercicios]
+Tus soluciones están guardadas **en este navegador**. Si estás en otra compu, primero tocá
+**Sincronizar** y bajá tu avance: si no, van todas las de la clase. El panel te dice cuántas son
+tuyas antes de descargar.
+:::
+
 Descomprimilo: adentro de la carpeta `catalogo/` hay:
 
 | Archivo | Qué es |
 |---|---|
-| `catalogo.py` | ✏️ **Tuyo.** Las funciones de los ejercicios, para completar |
+| `catalogo.py` | ✏️ **Tuyo.** Tus funciones, ya armadas, con tu marca y tu WhatsApp |
 | `productos.csv` | La planilla: **acá van tus productos** |
 | `fotos/` | Las fotos de los productos. Vienen las de la taza, el mate y la vela |
-| `estilos.css` | Los estilos, ya hechos. Los mismos de los ejercicios |
+| `estilos.css` | Los estilos, con tus colores |
+| `catalogo.js` | Lo que trae a la página los cambios del editor |
 | `adornos/` | Las ramitas de hojas que usan los estilos |
+| `fondo.jpg` | Tu foto de fondo, si elegiste una |
 | `LEEME.md` | Estos mismos pasos |
 
-**2. Completá `catalogo.py`** con las funciones de los ejercicios: copialas de acá, una por una.
-Son siete: `leer_productos`, `precio`, `link_whatsapp`, `foto`, `tarjeta`, `pagina` y `generar`.
+:::tip[¿Ya tenías la carpeta del catálogo?]
+Descomprimí el proyecto nuevo **en otra carpeta** y pasale tu `productos.csv` y tus fotos: así no
+se pisa nada. Si el panel no anda en tu navegador, está el
+<a href={b + 'proyecto-catalogo/proyecto-catalogo.zip'} download>proyecto de antes</a>, para
+completar copiando las funciones.
+:::
 
-**3. Generá la página.** En la terminal de VS Code, parado en la carpeta:
+**2. Generá la página.** En la terminal de VS Code, parado en la carpeta:
 
 ```bash
 python catalogo.py
@@ -1011,8 +1044,8 @@ código**: se cambian datos.
 
 | Quiero cambiar… | Dónde |
 |---|---|
-| El nombre de la marca | `TITULO`, arriba de todo en `catalogo.py` |
-| El número de WhatsApp | `NUMERO`, ahí mismo |
+| El nombre de la marca | `TITULO`, arriba de todo en `catalogo.py` (ya lo completó el panel) |
+| El número de WhatsApp | `NUMERO`, ahí mismo (también) |
 | Los productos, los precios, las descripciones | `productos.csv` |
 | Las fotos | La carpeta `fotos/`, y su nombre en la columna `foto` de la planilla |
 | Los colores y la letra | Las variables de arriba de `estilos.css` (ver [Que se vea como tu marca](#que-se-vea-como-tu-marca)) |
@@ -1048,7 +1081,8 @@ Y como se recortan en círculo, conviene que sean **cuadradas**, con el producto
 
 :::tip[Cada vez que cambie algo]
 ¿Cambió un precio? ¿Llegó un producto nuevo? Editás la planilla (y sumás la foto) y volvés a correr
-`python catalogo.py`. **Nunca tocás el HTML a mano.** Para eso lo armó Python.
+`python catalogo.py`. **Nunca tocás el HTML a mano.** Para eso lo armó Python. Y ya publicado, ni
+eso: lo cambiás en el editor ([Cambiar productos desde el celular](#cambiar-productos-desde-el-celular)).
 :::
 
 ## Más datos de cada producto (optativo)
@@ -1166,10 +1200,10 @@ GitHub publica páginas gratis: se llama **GitHub Pages**, y es justamente donde
 plataforma.
 
 1. En GitHub, creá un repositorio nuevo **público**, por ejemplo `catalogo`.
-2. Subí **todo lo que hay en la carpeta `catalogo/`**: `index.html`, `estilos.css` y las carpetas
-   `fotos/` y `adornos/`. Con lo de Git que ya sabés (`git add`, `git commit`, `git push`), o en la
-   página del repositorio con **Add file → Upload files**: ahí se pueden arrastrar las carpetas
-   enteras.
+2. Subí **todo lo que hay en la carpeta `catalogo/`**: `index.html`, `estilos.css`, `catalogo.js`
+   y las carpetas `fotos/` y `adornos/` (y `fondo.jpg`, si hay). Con lo de Git que ya sabés
+   (`git add`, `git commit`, `git push`), o en la página del repositorio con **Add file → Upload
+   files**: ahí se pueden arrastrar las carpetas enteras.
 3. En el repositorio: **Settings → Pages**. En *Branch* elegí `main` y la carpeta `/ (root)`, y
    tocá **Save**.
 4. Esperá uno o dos minutos y recargá esa página: arriba aparece el link, algo así como
@@ -1178,13 +1212,40 @@ plataforma.
 **Ese link es tu catálogo.** Se puede mandar por WhatsApp, poner en la bio de Instagram o imprimir
 en un QR.
 
-Para actualizarlo, generás la página de nuevo y subís `index.html` (y las fotos nuevas, si hay).
-Un archivo que se sube con el mismo nombre **reemplaza** al anterior. En uno o dos minutos, el link
-muestra la versión nueva.
-
 :::caution[Lo que se sube es público]
 Cualquiera con el link ve la página, y el repositorio también. Ahí no van datos que no pondrías en
 una vidriera: tu número de WhatsApp sí (es para que te escriban), una dirección particular no.
+:::
+
+## Cambiar productos desde el celular
+
+Ya publicado, cambiar un precio no debería obligarte a abrir VS Code, correr Python y volver a
+subir la página. Para eso está **el editor**: una página donde entrás con tu **código** y cambiás
+productos, precios y fotos, desde la compu o el celular. En un minuto se ve en tu catálogo.
+
+1. Pedile a tu profe tu **dirección** y tu **código** (algo como `dulces-de-la-isla` y
+   `K7F2-AB9C`). El código es como una contraseña: con él cualquiera cambia tu catálogo, así que
+   no lo compartas. Si se pierde, tu profe te da uno nuevo y el viejo deja de andar.
+2. Si bajaste el proyecto sin la dirección, ponela en `CATALOGO`, arriba de `catalogo.py`. Corré
+   `python catalogo.py` y volvé a subir `index.html` y `catalogo.js`. **Es la última vez.**
+3. Entrá al [editor](https://cfp401-ensenada.github.io/catalogos/editar/) con tu código.
+4. Tocá **Importar productos.csv** y elegí tu planilla: aparecen tus productos.
+5. Cambiá un precio, sumá un producto con una foto del celular y tocá **Guardar cambios**.
+6. Abrí tu catálogo publicado y recargalo: ahí está.
+
+:::note[¿Cómo funciona?]
+Python sigue armando la página con `productos.csv`. Pero al abrirla, `catalogo.js` le pregunta a un
+servidor chiquito (un *Worker*) si hay productos cargados en el editor: si hay, arma las tarjetas
+con esos, **con las mismas clases que `tarjeta()`**, así `estilos.css` les queda igual. Si no hay
+internet, queda la página que armó Python.
+
+Las fotos que ya estaban en tu carpeta `fotos/` siguen andando: en el editor se ven con un 📁.
+:::
+
+:::tip[¿Conocés a alguien con un emprendimiento?]
+Esto mismo, sin Python, para cualquier emprendimiento del CFP:
+<a href={b + 'armar-tu-catalogo/'}>Armá tu catálogo</a>. Elige los colores, se publica, y carga sus
+productos desde el celular con su código.
 :::
 
 ## Que se vea como tu marca

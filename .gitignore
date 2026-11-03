@@ -32,3 +32,6 @@ material-docente/capturas_bot/
 # El contenido privado de /casos/: vive en el KV del Worker y en la maquina del
 # profe, nunca en el repositorio (que es publico).
 contenido-privado/
+
+# Estado local y temporales de wrangler (Worker de los catálogos)
+.wrangler/

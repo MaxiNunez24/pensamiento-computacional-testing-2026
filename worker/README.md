@@ -1,5 +1,5 @@
-Hay **cuatro** Workers, independientes entre sí a propósito. Si uno se rompe, los otros
-tres siguen andando.
+Hay **cinco** Workers, independientes entre sí a propósito. Si uno se rompe, los otros
+siguen andando.
 
 | Archivo | Para qué |
 |---|---|
@@ -7,6 +7,39 @@ tres siguen andando.
 | `sync-progreso.js` | El botón *Sincronizar* sube y baja el avance entre dispositivos |
 | `tablero.js` | El tablero del proyecto y el foro de soluciones anónimas |
 | `cuestionario.js` | El cuestionario que contesta el equipo del CFP |
+| `catalogos.js` | Los productos y las fotos de los catálogos, que se cambian en el editor con un código |
+
+---
+
+# Worker de los catálogos
+
+`catalogos.js` guarda los productos y las fotos de cada catálogo (los de los alumnos y los de los
+emprendimientos del CFP). Lo usan tres páginas del repo
+[cfp401-ensenada/catalogos](https://github.com/cfp401-ensenada/catalogos): `editar/` (entrar con el
+código y cambiar productos), `admin/` (dar de alta y regenerar códigos) y cada catálogo, con
+`catalogo.js`.
+
+A diferencia de los otros, **se despliega con wrangler**, desde la raíz del repo:
+
+```bash
+npx wrangler deploy -c worker/wrangler.catalogos.toml
+```
+
+Queda en `https://catalogos.maxinunez434.workers.dev`, con sus datos en el KV `CATALOGOS`.
+
+**La clave de administración** es un secreto que se escribe una sola vez, y no va al repo:
+
+```bash
+npx wrangler secret put ADMIN_CLAVE -c worker/wrangler.catalogos.toml
+```
+
+Sin ella, `admin/` dice "Clave de administración incorrecta" y no se puede dar de alta nada. Para
+cambiarla, el mismo comando.
+
+**Probarlo en la compu**, sin tocar los datos de verdad: `npx wrangler dev -c
+worker/wrangler.catalogos.toml` con un `.dev.vars` (fuera del repo) que diga `ADMIN_CLAVE=...`. En
+la página de prueba, servida en `http://127.0.0.1:4778`, se le dice a `catalogo.js` que use el
+Worker local con `localStorage.setItem('catalogos:worker', 'http://127.0.0.1:8787')`.
 
 ---
 

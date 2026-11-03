@@ -1,0 +1,341 @@
+---
+/* El panel que arma el catálogo para descargar, en el navegador y en el momento.
+ *
+ * Dos modos, con el mismo formulario:
+ *   - "clase": el proyecto de Python de "Tu catálogo con Python". Cada función va
+ *     tal como la resolvió el alumno (si el ejercicio está Resuelto en este
+ *     navegador), o la de la clase si no. tarjeta() y pagina() van siempre las
+ *     de la clase: son las que muestran los detalles y suman el editor.
+ *   - "emprendedor": la carpeta de un catálogo del CFP, lista para subir al repo
+ *     de la organización. Sin Python: los productos los trae catalogo.js.
+ *
+ * Nada sale de la compu: el ZIP se arma acá (fflate) con los archivos del sitio.
+ */
+interface Props {
+    modo: 'clase' | 'emprendedor';
+    /* Modo clase: las soluciones de la clase, las constantes de catalogo.mdx (LINK, PRECIO, FOTO, EXTRAS, TARJETA_CON_DETALLES). */
+    soluciones?: Record<string, string>;
+}
+const { modo, soluciones = {} } = Astro.props;
+---
+
+<section class="panel-catalogo not-content" data-modo={modo} data-soluciones={JSON.stringify(soluciones)}>
+    <h3 class="panel-catalogo__titulo">
+        {modo === 'clase' ? '📦 Armá tu proyecto' : 'Tu catálogo'}
+    </h3>
+    <form class="panel-catalogo__form" novalidate>
+        <div class="panel-catalogo__campos">
+            <label>
+                <span>Nombre de la marca</span>
+                <input name="nombre" maxlength="60" required placeholder="Dulces de la Isla" />
+            </label>
+            <label>
+                <span>WhatsApp <small>10 números: característica sin el 0 y número sin el 15</small></span>
+                <input name="whatsapp" inputmode="numeric" maxlength="10" required placeholder="2215550000" />
+            </label>
+            <label>
+                <span>
+                    Dirección del catálogo
+                    <small>
+                        {
+                            modo === 'clase'
+                                ? 'te la da tu profe con tu código, para cambiar productos desde el celular. Si todavía no la tenés, dejala vacía'
+                                : 'la que te dimos junto con tu código'
+                        }
+                    </small>
+                </span>
+                <input name="catalogo" maxlength="40" placeholder="dulces-de-la-isla" required={modo === 'emprendedor'} />
+            </label>
+            <label class="panel-catalogo__color">
+                <span>Color de fondo</span>
+                <input name="fondo" type="color" value="#d3cac8" />
+            </label>
+            <label class="panel-catalogo__color">
+                <span>Color de los botones y el precio</span>
+                <input name="acento" type="color" value="#5f6f45" />
+            </label>
+            <label class="panel-catalogo__color">
+                <span>Color de las letras</span>
+                <input name="texto" type="color" value="#5b6844" />
+            </label>
+            <label>
+                <span>Foto de fondo <small>opcional</small></span>
+                <input name="foto" type="file" accept="image/*" />
+            </label>
+        </div>
+
+        <div class="panel-catalogo__paletas">
+            <button type="button" class="panel-catalogo__chico" data-accion="sugerir">🎨 Sugerir colores</button>
+            <button type="button" class="panel-catalogo__chico" data-accion="foto" hidden>🖼️ Colores de la foto</button>
+            <span class="panel-catalogo__paleta" role="status"></span>
+        </div>
+
+        <div class="panel-catalogo__muestra" aria-hidden="true">
+            <span class="panel-catalogo__muestra-nombre">Tu marca</span>
+            <span class="panel-catalogo__muestra-producto">Taza de cerámica</span>
+            <span class="panel-catalogo__muestra-precio">$4.500</span>
+            <span class="panel-catalogo__muestra-boton">Consultar por WhatsApp</span>
+        </div>
+        <div class="panel-catalogo__aviso" hidden>
+            <p class="panel-catalogo__aviso-texto" role="status"></p>
+            <div class="panel-catalogo__paletas">
+                <button type="button" class="panel-catalogo__chico" data-accion="cambiar-fondo">Mejor cambiar el fondo</button>
+                <button type="button" class="panel-catalogo__chico" data-accion="mis-colores">Volver a mis colores</button>
+                <button type="button" class="panel-catalogo__chico" data-accion="ajustar" hidden>Ajustar para que se lea</button>
+            </div>
+        </div>
+
+        {
+            modo === 'clase' && (
+                <div class="panel-catalogo__funciones">
+                    <p class="panel-catalogo__resumen" />
+                    <ul class="panel-catalogo__lista" />
+                </div>
+            )
+        }
+
+        <p class="panel-catalogo__error" role="alert"></p>
+        <button type="submit" class="panel-catalogo__boton">
+            {modo === 'clase' ? 'Descargar mi proyecto' : 'Descargar mi catálogo'}
+        </button>
+    </form>
+</section>
+
+<style>
+    .panel-catalogo {
+        border: 1px solid var(--sl-color-gray-5);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-block: 1.5rem;
+        background: var(--sl-color-gray-7, var(--sl-color-black));
+    }
+    .panel-catalogo__titulo { margin: 0 0 1rem; font-size: 1.2rem; }
+    .panel-catalogo__form { display: grid; gap: 1rem; }
+    .panel-catalogo__campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.9rem; }
+    .panel-catalogo label { display: grid; gap: 0.3rem; font-weight: 600; font-size: 0.95rem; }
+    .panel-catalogo small { font-weight: 400; color: var(--sl-color-gray-3); }
+    .panel-catalogo input:not([type='color']) {
+        font: inherit; padding: 0.5rem 0.65rem; border-radius: 8px;
+        border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-black); color: var(--sl-color-white);
+    }
+    .panel-catalogo input[type='color'] { width: 4rem; height: 2.4rem; border: 0; padding: 0; background: none; }
+    .panel-catalogo__muestra {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem;
+        padding: 1rem 1.25rem; border-radius: 10px; background-size: cover; background-position: center;
+    }
+    .panel-catalogo__muestra-nombre { font: 400 2rem 'Great Vibes', cursive, serif; flex-basis: 100%; }
+    .panel-catalogo__muestra-producto { font: 600 1rem system-ui, sans-serif; }
+    .panel-catalogo__muestra-precio {
+        font: 700 1rem system-ui, sans-serif; color: #fff; padding: 0.3rem 1rem; border-radius: 999px;
+    }
+    .panel-catalogo__muestra-boton {
+        font: 600 0.9rem system-ui, sans-serif; padding: 0.35rem 1rem; border: 2px solid; border-radius: 999px;
+    }
+    .panel-catalogo__aviso {
+        display: grid; gap: 0.4rem; padding: 0.75rem 1rem; border-radius: 10px;
+        border: 1px solid var(--sl-color-orange, #d97706); background: var(--sl-color-orange-low, transparent);
+    }
+    .panel-catalogo__aviso[hidden],
+    .panel-catalogo__chico[hidden] { display: none; }
+    .panel-catalogo__paletas { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .panel-catalogo__chico {
+        font: inherit; font-size: 0.92rem; font-weight: 600; cursor: pointer; padding: 0.4rem 0.9rem;
+        border-radius: 999px; border: 1px solid var(--sl-color-gray-4); background: var(--sl-color-black); color: var(--sl-color-white);
+    }
+    .panel-catalogo__chico:hover { border-color: var(--sl-color-accent); }
+    .panel-catalogo__paleta { font-size: 0.9rem; color: var(--sl-color-gray-3); }
+    .panel-catalogo__aviso-texto { margin: 0; }
+    .panel-catalogo label.panel-catalogo__casilla { display: flex; gap: 0.5rem; align-items: center; font-weight: 400; }
+    .panel-catalogo__lista { list-style: none; margin: 0.4rem 0 0; padding: 0; display: grid; gap: 0.2rem; font-size: 0.92rem; }
+    .panel-catalogo__resumen { margin: 0; font-weight: 600; }
+    .panel-catalogo__error { margin: 0; min-height: 1.2em; color: var(--sl-color-red-high, #f88); font-weight: 600; }
+    .panel-catalogo__boton {
+        justify-self: start; font: inherit; font-weight: 700; cursor: pointer; padding: 0.65rem 1.4rem;
+        border-radius: 999px; border: 0; background: var(--sl-color-accent); color: var(--sl-color-black);
+    }
+    .panel-catalogo__boton:disabled { opacity: 0.6; cursor: wait; }
+</style>
+
+<script>
+    import {
+        PALETAS,
+        armarCarpetaEmprendedor,
+        armarProyectoClase,
+        arreglarFondo,
+        coloresLegibles,
+        funcionesDelAlumno,
+        paletaDeFoto,
+    } from '../scripts/armar-catalogo';
+
+    for (const panel of document.querySelectorAll<HTMLElement>('.panel-catalogo')) {
+        const modo = panel.dataset.modo as 'clase' | 'emprendedor';
+        const form = panel.querySelector('form')!;
+        const campo = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+        const error = panel.querySelector<HTMLElement>('.panel-catalogo__error')!;
+        const boton = panel.querySelector<HTMLButtonElement>('.panel-catalogo__boton')!;
+        const muestra = panel.querySelector<HTMLElement>('.panel-catalogo__muestra')!;
+        let urlFoto = '';
+
+        const parametros = new URLSearchParams(location.search);
+        if (parametros.get('catalogo')) campo('catalogo').value = parametros.get('catalogo')!;
+        if (parametros.get('nombre')) campo('nombre').value = parametros.get('nombre')!;
+
+        /* Si un color no se lee, se ajusta en el selector mismo (al soltarlo), y se puede volver atrás. */
+        let respetar = false;
+        let originales: { fondo: string; texto: string; acento: string } | null = null;
+        const actuales = () => ({ fondo: campo('fondo').value, texto: campo('texto').value, acento: campo('acento').value });
+        const aviso = panel.querySelector<HTMLElement>('.panel-catalogo__aviso')!;
+        const textoAviso = panel.querySelector<HTMLElement>('.panel-catalogo__aviso-texto')!;
+        const botonDe = (accion: string) => panel.querySelector<HTMLElement>(`[data-accion="${accion}"]`)!;
+        const avisar = (texto: string, botones: string[]) => {
+            aviso.hidden = !texto;
+            textoAviso.textContent = texto;
+            for (const a of ['cambiar-fondo', 'mis-colores', 'ajustar']) botonDe(a).hidden = !botones.includes(a);
+        };
+        const ajustar = () => {
+            if (respetar) return;
+            const elegidos = actuales();
+            const c = coloresLegibles(elegidos);
+            if (!c.avisos.length) return;
+            originales = elegidos;
+            campo('texto').value = c.texto;
+            campo('acento').value = c.acento;
+            avisar(
+                c.avisos.join(' ') + ' Ya está cambiado arriba, en la muestra y en lo que descargues.',
+                c.texto !== elegidos.texto ? ['cambiar-fondo', 'mis-colores'] : ['mis-colores'],
+            );
+            pintarMuestra();
+        };
+
+        /* La muestra usa los mismos colores que van a ir al ZIP: los ajustados, si hizo falta. */
+        const pintarMuestra = () => {
+            const c = coloresLegibles({ ...actuales(), respetarColores: respetar });
+            const parte = (clase: string) => panel.querySelector<HTMLElement>(`.panel-catalogo__muestra-${clase}`)!;
+            parte('nombre').textContent = campo('nombre').value || 'Tu marca';
+            parte('nombre').style.color = c.marca;
+            parte('producto').style.color = c.texto;
+            parte('precio').style.background = c.acento;
+            parte('precio').style.color = c.sobreAcento;
+            parte('boton').style.color = c.acento;
+            muestra.style.backgroundColor = c.fondo;
+            muestra.style.backgroundImage = urlFoto
+                ? `linear-gradient(${c.fondo}8c, ${c.fondo}8c), url("${urlFoto}")`
+                : '';
+        };
+        form.addEventListener('input', pintarMuestra);
+        for (const n of ['fondo', 'texto', 'acento']) campo(n).addEventListener('change', ajustar);
+
+        /* Los botones de colores escriben en los mismos selectores: lo que se ve es lo que se descarga. */
+        const ponerColores = (p: { fondo: string; texto: string; acento: string }) => {
+            campo('fondo').value = p.fondo;
+            campo('texto').value = p.texto;
+            campo('acento').value = p.acento;
+            respetar = false;
+            avisar('', []);
+            ajustar();
+            pintarMuestra();
+        };
+        const estadoPaleta = panel.querySelector<HTMLElement>('.panel-catalogo__paleta')!;
+        let siguiente = 0;
+        panel.addEventListener('click', async (e) => {
+            const accion = (e.target as HTMLElement).closest<HTMLElement>('[data-accion]')?.dataset.accion;
+            if (accion === 'sugerir') {
+                const p = PALETAS[siguiente % PALETAS.length];
+                ponerColores(p);
+                estadoPaleta.textContent = `${p.nombre} · ${(siguiente % PALETAS.length) + 1} de ${PALETAS.length}. Tocá de nuevo para ver otra.`;
+                siguiente++;
+            } else if (accion === 'foto' && campo('foto').files?.[0]) {
+                ponerColores(await paletaDeFoto(campo('foto').files[0]));
+                estadoPaleta.textContent = 'Colores sacados de tu foto.';
+            } else if (accion === 'cambiar-fondo' && originales) {
+                // Las letras como las eligió, y el fondo que se ajusta a ellas
+                const o = originales;
+                ponerColores({ fondo: arreglarFondo(o.fondo, o.texto), texto: o.texto, acento: o.acento });
+                originales = o;
+                if (aviso.hidden) avisar('Cambié el fondo para que se lean tus letras.', ['mis-colores']);
+            } else if (accion === 'mis-colores' && originales) {
+                respetar = true;
+                campo('fondo').value = originales.fondo;
+                campo('texto').value = originales.texto;
+                campo('acento').value = originales.acento;
+                avisar('Van tus colores tal cual: algunas partes van a costar leerse.', ['ajustar']);
+                pintarMuestra();
+            } else if (accion === 'ajustar') {
+                respetar = false;
+                avisar('', []);
+                ajustar();
+                pintarMuestra();
+            }
+        });
+        campo('whatsapp').addEventListener('input', (e) => {
+            const i = e.target as HTMLInputElement;
+            i.value = i.value.replace(/\D/g, '');
+        });
+        campo('catalogo').addEventListener('input', (e) => {
+            const i = e.target as HTMLInputElement;
+            i.value = i.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+        });
+        campo('foto').addEventListener('change', () => {
+            if (urlFoto) URL.revokeObjectURL(urlFoto);
+            const archivo = campo('foto').files?.[0];
+            urlFoto = archivo ? URL.createObjectURL(archivo) : '';
+            panel.querySelector<HTMLElement>('[data-accion="foto"]')!.hidden = !archivo;
+            pintarMuestra();
+        });
+        pintarMuestra();
+
+        if (modo === 'clase') {
+            const funciones = funcionesDelAlumno();
+            const tuyas = funciones.filter((f) => f.tuya).length;
+            panel.querySelector('.panel-catalogo__resumen')!.textContent =
+                `✏️ ${tuyas} ${tuyas === 1 ? 'función tuya' : 'funciones tuyas'} · 📎 ${funciones.length - tuyas} de la clase`;
+            panel.querySelector('.panel-catalogo__lista')!.replaceChildren(
+                ...funciones.map((f) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${f.tuya ? '✏️' : '📎'} ${f.nombre}() · ${f.motivo}`;
+                    return li;
+                }),
+            );
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            error.textContent = '';
+            const datos = {
+                nombre: campo('nombre').value.trim(),
+                whatsapp: campo('whatsapp').value.trim(),
+                catalogo: campo('catalogo').value.trim(),
+                fondo: campo('fondo').value,
+                acento: campo('acento').value,
+                texto: campo('texto').value,
+                respetarColores: respetar,
+                foto: campo('foto').files?.[0] ?? null,
+            };
+            if (!datos.nombre) return void (error.textContent = 'Falta el nombre de la marca.');
+            if (!/^\d{10}$/.test(datos.whatsapp)) {
+                return void (error.textContent = 'El WhatsApp son 10 números: la característica sin el 0 y el número sin el 15 (2215550000).');
+            }
+            if (datos.catalogo && !/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/.test(datos.catalogo)) {
+                return void (error.textContent = 'La dirección va en minúsculas, con números y guiones, como dulces-de-la-isla.');
+            }
+            if (modo === 'emprendedor' && !datos.catalogo) {
+                return void (error.textContent = 'Falta la dirección del catálogo: es la que te dimos junto con tu código.');
+            }
+            boton.disabled = true;
+            try {
+                const soluciones = JSON.parse(panel.dataset.soluciones || '{}');
+                const { nombreArchivo, blob } =
+                    modo === 'clase' ? await armarProyectoClase(datos, soluciones) : await armarCarpetaEmprendedor(datos);
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = nombreArchivo;
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 10_000);
+            } catch (err) {
+                error.textContent = `No se pudo armar: ${(err as Error).message}`;
+            } finally {
+                boton.disabled = false;
+            }
+        });
+    }
+</script>

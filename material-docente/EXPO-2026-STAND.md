@@ -110,6 +110,7 @@ stand hay lugar para todos y nadie tiene que exponerse más de lo que quiere.
 - [ ] **Notebook** con todo instalado y probado (la del 11/11, no otra)
 - [ ] **Impresora** + papel **Oficio** (la planilla es Legal apaisada)
 - [ ] Zapatilla y alargue
+- [ ] **Comprar divisor HDMI 1 a 2** (lona y monitor de bolillas) y HDMI largo
 - [ ] Cartel con QR (A4 o A3)
 - [ ] 10 planillas impresas de repuesto
 - [ ] Datos de demo **inventados** — nunca alumnos reales

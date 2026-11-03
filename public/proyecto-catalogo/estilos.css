@@ -9,16 +9,30 @@
     --linea: #93a77c;
     --marca: #ffffff;
     --fondo-foto: #ecd3dc;
+    --sobre-acento: #ffffff;
     --letra: "Montserrat", system-ui, sans-serif;
     --letra-marca: "Great Vibes", cursive;
+    /* Una foto de fondo (opcional): url("fondo.jpg"). El velo la aclara para que
+       se lea el texto: 0 es sin velo, 0.7 casi tapa la foto. */
+    --imagen-de-fondo: none;
+    --velo: 0;
 }
 
 * { box-sizing: border-box; }
 body {
     margin: 0;
     font-family: var(--letra);
-    background: var(--fondo);
+    background: var(--imagen-de-fondo) center / cover no-repeat fixed, var(--fondo);
     color: var(--texto);
+}
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: var(--fondo);
+    opacity: var(--velo);
+    pointer-events: none;
 }
 
 /* La portada: el nombre de la marca, con una rama en cada esquina */
@@ -111,7 +125,7 @@ img.producto__foto { object-fit: cover; }
     padding: 0.35rem 1.2rem;
     border-radius: 999px;
     background: var(--acento);
-    color: #fff;
+    color: var(--sobre-acento);
     font-size: 1.25rem;
     font-weight: 700;
 }
@@ -125,7 +139,7 @@ img.producto__foto { object-fit: cover; }
     font-weight: 600;
     text-decoration: none;
 }
-.consultar:hover { background: var(--acento); color: #fff; }
+.consultar:hover { background: var(--acento); color: var(--sobre-acento); }
 
 /* En pantallas anchas: foto a un lado y texto al otro, y una sí y una no
    se dan vuelta (el zigzag del catálogo de Canva) */

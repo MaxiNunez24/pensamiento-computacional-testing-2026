@@ -1,0 +1,17 @@
+# El Worker de los catálogos. A diferencia de los otros tres (que se pegan en el panel de
+# Cloudflare), este se despliega con wrangler, desde la raíz del repo:
+#
+#     npx wrangler deploy -c worker/wrangler.catalogos.toml
+#
+# La clave de administración va como secreto, y nunca en este archivo:
+#
+#     npx wrangler secret put ADMIN_CLAVE -c worker/wrangler.catalogos.toml
+name = "catalogos"
+main = "catalogos.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+preview_urls = false
+
+[[kv_namespaces]]
+binding = "CATALOGOS"
+id = "bc632419111e4cc78a7501a05c12e26d"
