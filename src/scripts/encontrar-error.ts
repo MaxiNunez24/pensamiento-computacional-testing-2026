@@ -9,7 +9,6 @@ import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
 import { estaHecho, marcarHecho, pintarSello, actualizarResumen } from './progreso';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
 import { medirCuandoSeaVisible } from './medir-editor';
@@ -104,7 +103,7 @@ function initEncontrar(el: HTMLElement): void {
       cajaEditor.hidden = false;
       editor = new EditorView({
         doc: codigo.replace(/\n$/, ''),
-        extensions: [basicSetup, ...autocompletado(''), python(), oneDark, editorTheme, keymap.of([indentWithTab])],
+        extensions: [basicSetup, ...autocompletado(''), python(), editorTheme, keymap.of([indentWithTab])],
         parent: cajaEditor,
       });
       medirCuandoSeaVisible(editor);

@@ -8,7 +8,6 @@ import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
 import { runPython, ensureWorker, pythonReady, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
 import { medirCuandoSeaVisible } from './medir-editor';
 import {
@@ -85,7 +84,7 @@ function initProbador(el: HTMLElement): void {
   const alEditar = EditorView.updateListener.of((u) => {
     if (u.docChanged) autoguardar();
   });
-  const extensiones = [basicSetup, python(), oneDark, editorTheme, keymap.of([indentWithTab]), alEditar];
+  const extensiones = [basicSetup, python(), editorTheme, keymap.of([indentWithTab]), alEditar];
 
   const vista = new EditorView({
     doc: guardado.codigo ?? starter,

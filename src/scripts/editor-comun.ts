@@ -6,9 +6,11 @@
 // copias del estado cada componente se enteraba solo de sus propios botones.
 
 import { EditorView } from 'codemirror';
-import { tooltips } from '@codemirror/view';
+import { tooltips, ViewPlugin } from '@codemirror/view';
 import { indentMore, indentLess } from '@codemirror/commands';
 import { indentUnit } from '@codemirror/language';
+import { Compartment } from '@codemirror/state';
+import { oneDark } from '@codemirror/theme-one-dark';
 
 // Casilla a la que el alumno manda su código (un solo lugar para cambiarla).
 export const EMAIL_PROFE = 'maxinunez434@gmail.com';
@@ -18,6 +20,69 @@ export const EMAIL_PROFE = 'maxinunez434@gmail.com';
 // Pasos para levantarlo: worker/README.md
 export const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.workers.dev/';
 
+// El editor sigue el modo claro u oscuro de la página: oneDark con el oscuro, y
+// con el claro un fondo claro y los colores de fábrica de CodeMirror (basicSetup
+// los trae de respaldo para cuando no hay otro resaltado). Starlight deja el
+// tema ya resuelto en <html data-theme="dark|light">, también cuando el alumno
+// eligió "Automático", así que alcanza con mirar ese atributo.
+const temaClaro = EditorView.theme(
+  {
+    '&': { color: '#24292f', backgroundColor: '#f6f8fa' },
+    '.cm-content': { caretColor: '#24292f' },
+    '.cm-cursor, .cm-dropCursor': { borderLeftColor: '#24292f' },
+    '&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection':
+      { backgroundColor: '#cfe0f7' },
+    '.cm-gutters': { backgroundColor: '#f6f8fa', color: '#8c959f', border: 'none' },
+    '.cm-activeLine': { backgroundColor: '#eaeef2' },
+    '.cm-activeLineGutter': { backgroundColor: '#eaeef2', color: '#57606a' },
+    '.cm-matchingBracket, .cm-nonmatchingBracket': { backgroundColor: '#d8e3ee', outline: '1px solid #afb8c1' },
+  },
+  { dark: false },
+);
+
+const oscuroEnLaPagina = () =>
+  typeof document !== 'undefined' && document.documentElement.dataset.theme !== 'light';
+const temaElegido = new Compartment();
+const temaSegunLaPagina = () => (oscuroEnLaPagina() ? oneDark : temaClaro);
+
+// Todos los editores abiertos, para cambiarles el tema juntos cuando se toca el
+// botón de la página. Un solo observador para todos, que se arma con el primero.
+const editoresAbiertos = new Set<EditorView>();
+let observandoElTema = false;
+const seguirElTema = ViewPlugin.fromClass(
+  class {
+    constructor(readonly view: EditorView) {
+      editoresAbiertos.add(view);
+      if (observandoElTema) return;
+      observandoElTema = true;
+      new MutationObserver(() => {
+        const tema = temaSegunLaPagina();
+        for (const v of editoresAbiertos) v.dispatch({ effects: temaElegido.reconfigure(tema) });
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+    destroy() {
+      editoresAbiertos.delete(this.view);
+    }
+  },
+);
+
+// Los colores del panel de documentación de las sugerencias, según el tema.
+// `&dark` y `&light` solo existen en baseTheme (en theme no), y CodeMirror los
+// elige solo según el tema que esté puesto. Les ganan a los de fábrica: llegan
+// a 0,4,0 de especificidad contra 0,3,0.
+const colorDelPanel = EditorView.baseTheme({
+  '&dark .cm-tooltip.cm-completionInfo': {
+    border: '1px solid #3e4451',
+    background: '#21252b',
+    boxShadow: '0 6px 18px rgb(0 0 0 / 0.35)',
+  },
+  '&light .cm-tooltip.cm-completionInfo': {
+    border: '1px solid #d0d7de',
+    background: '#ffffff',
+    boxShadow: '0 6px 18px rgb(31 35 40 / 0.15)',
+  },
+});
+
 // Theme propio: fija tipografía e interlineado del editor con alta especificidad,
 // para que los estilos de Starlight no desfasen las líneas ni el cursor. El
 // line-height va en .cm-content/.cm-gutters (lo que CodeMirror mide por línea).
@@ -26,7 +91,10 @@ export const WORKER_CONSULTAS = 'https://crimson-recipe-6ead.maxinunez434.worker
 // editorTheme) la reciben sin tocar cada uno. CodeMirror trae 2 espacios de
 // fábrica; Python, VS Code y cualquier linter usan 4, y un alumno que copia de
 // acá a VS Code no tiene que encontrarse con otra indentación.
-export const editorTheme = [indentUnit.of('    '),
+//
+// También trae el tema claro u oscuro (ver temaClaro): va primero, así lo de
+// abajo le gana donde se pisan.
+export const editorTheme = [temaElegido.of(temaSegunLaPagina()), seguirElTema, colorDelPanel, indentUnit.of('    '),
   /* Los carteles (sugerencias y su panel de documentación) se dibujan en <body>
      y no adentro del editor. Starlight le pone `isolation: isolate` a la
      columna del medio (.main-pane): todo lo de adentro queda en una capa que
@@ -82,12 +150,10 @@ export const editorTheme = [indentUnit.of('    '),
      El ancho no se toca a propósito: lo calcula CodeMirror según el lugar que
      haya, y en una pantalla angosta lo achica solo. Un `max-width` nuestro lo
      único que haría es pelearse con eso. */
+  // Los colores van aparte, en colorDelPanel: dependen del tema.
   '.cm-tooltip.cm-completionInfo': {
     padding: '0',
-    border: '1px solid #3e4451',
     borderRadius: '0.4rem',
-    background: '#21252b',
-    boxShadow: '0 6px 18px rgb(0 0 0 / 0.35)',
     // Red de seguridad para el celular: el panel más largo, angosto, llegó a
     // 493px y se salía por arriba. Con el tope scrollea para abajo, que con el
     // dedo es natural; y CodeMirror mide el alto ya topado para ubicarlo.

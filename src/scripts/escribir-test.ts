@@ -13,7 +13,6 @@ import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
 import { estaHecho, marcarHecho, guardarCodigo, leerCodigo, pintarSello } from './progreso';
 import { runPython, pythonReady, TimeoutError } from './python-runner';
 import { editorTheme, b64decode, aplicarPreferenciaTeclas, conectarTeclas, conectarEnvio, autocompletado} from './editor-comun';
@@ -53,7 +52,7 @@ export function conectarEscribirTest(el: HTMLElement): void {
   const guardado = leerCodigo(titulo);
   const view = new EditorView({
     doc: guardado != null ? guardado : starter,
-    extensions: [basicSetup, ...autocompletado(''), python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
+    extensions: [basicSetup, ...autocompletado(''), python(), editorTheme, keymap.of([indentWithTab]), autoguardar],
     parent: editorEl,
   });
   (el as unknown as { __cmView: EditorView }).__cmView = view;

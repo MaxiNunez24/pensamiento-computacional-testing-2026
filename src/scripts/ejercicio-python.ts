@@ -6,7 +6,6 @@ import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
 import {
   estaHecho,
   marcarHecho,
@@ -76,7 +75,7 @@ function initEjercicio(el: HTMLElement): void {
   const view = new EditorView({
     doc: guardado != null ? guardado : starter,
     // keymap.of([indentWithTab]) hace que Tab indente en vez de saltar el foco.
-    extensions: [basicSetup, ...autocompletado(datos), python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
+    extensions: [basicSetup, ...autocompletado(datos), python(), editorTheme, keymap.of([indentWithTab]), autoguardar],
     parent: editorEl,
   });
   // Handle del editor accesible desde el DOM (útil para tests y para setear

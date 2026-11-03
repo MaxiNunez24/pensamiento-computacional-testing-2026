@@ -23,7 +23,6 @@ import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
 import { Compartment, EditorState } from '@codemirror/state';
 import { runPython, ensureWorker, TimeoutError, RUN_TIMEOUT_MS } from './python-runner';
 import { medirCuandoSeaVisible } from './medir-editor';
@@ -177,7 +176,6 @@ function initEvaluacion(el: HTMLElement): void {
       extensions: [
         basicSetup,
         python(),
-        oneDark,
         editorTheme,
         keymap.of([indentWithTab]),
         bloqueo.of([]),

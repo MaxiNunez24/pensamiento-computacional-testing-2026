@@ -10,7 +10,6 @@ import { EditorView, basicSetup } from 'codemirror';
 import { keymap } from '@codemirror/view';
 import { indentWithTab } from '@codemirror/commands';
 import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
 import {
   estaHecho,
   marcarHecho,
@@ -174,7 +173,7 @@ function initEficiencia(el: HTMLElement): void {
 
   const view = new EditorView({
     doc: guardado != null ? guardado : starter,
-    extensions: [basicSetup, ...autocompletado(datos), python(), oneDark, editorTheme, keymap.of([indentWithTab]), autoguardar],
+    extensions: [basicSetup, ...autocompletado(datos), python(), editorTheme, keymap.of([indentWithTab]), autoguardar],
     parent: editorEl,
   });
   (el as unknown as { __cmView: EditorView }).__cmView = view;

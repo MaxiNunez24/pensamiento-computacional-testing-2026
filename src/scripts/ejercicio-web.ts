@@ -15,7 +15,6 @@ import { indentWithTab } from '@codemirror/commands';
 import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 import { javascript } from '@codemirror/lang-javascript';
-import { oneDark } from '@codemirror/theme-one-dark';
 import {
   estaHecho, marcarHecho, guardarCodigo, leerCodigo, borrarCodigo, pintarSello, actualizarResumen,
 } from './progreso';
@@ -279,7 +278,7 @@ function initEjercicio(el: HTMLElement): void {
     const v = new EditorView({
       doc: guardado[lang] ?? starters[lang] ?? '',
       extensions: [
-        basicSetup, LENGUAJE[lang](), ...autocompletadoWeb(lang), oneDark, editorTheme, keymap.of([indentWithTab]),
+        basicSetup, LENGUAJE[lang](), ...autocompletadoWeb(lang), editorTheme, keymap.of([indentWithTab]),
         EditorView.updateListener.of((u) => {
           if (!u.docChanged) return;
           clearTimeout(timer);

@@ -294,15 +294,32 @@ body.pc-resizing * {
    método, armado en editor-comun.ts). Aparece al costado SOLO de la opción que
    está seleccionada, así que no le estorba al que ya sabe lo que busca.
 
-   Los colores van fijos y no con las variables de Starlight porque el editor
-   lleva `oneDark` SIEMPRE, tenga la página el tema que tenga: si acá usáramos
-   los tokens del sitio, en modo claro saldría un panel blanco pegado a un
-   editor oscuro.
+   Los colores son los del editor y no los de Starlight: el editor sigue el
+   tema de la página (oneDark en el oscuro, uno claro en el claro, ver
+   editor-comun.ts), y estas variables lo acompañan. También las usan la franja
+   de botones de arriba del código, la pestaña elegida de los ejercicios web y
+   el recuadro de "Completar el código", que se tienen que ver como parte del
+   editor.
 
    El recuadro en sí (fondo, borde, padding) NO se estila acá sino en el theme
    de editor-comun.ts: la regla de fábrica de CodeMirror llega a 0,3,0 de
    especificidad y le gana a cualquier cosa que pongamos en este archivo.
 --------------------------------------------------------------------------- */
+/* Oscuro: los de oneDark. Claro: los del theme claro de editor-comun.ts. */
+:root {
+  --pc-editor-fondo: #282c34;
+  --pc-editor-texto: #abb2bf;
+  --pc-editor-suave: #7f848e;
+  --pc-editor-azul: #61afef;
+  --pc-editor-verde: #98c379;
+}
+:root[data-theme='light'] {
+  --pc-editor-fondo: #f6f8fa;
+  --pc-editor-texto: #24292f;
+  --pc-editor-suave: #6e7781;
+  --pc-editor-azul: #0550ae;
+  --pc-editor-verde: #116329;
+}
 /* El renglón vacío entre cada línea del ejemplo: es el margin-top que Starlight
    le pone a cada bloque hermano de su prosa, el mismo que ya descolocaba el
    cursor (ver la regla de .cm-line más abajo). Le llegaba porque el panel vivía
@@ -347,12 +364,12 @@ html:not(.pc-doc-abierta) .cm-tooltip.cm-completionInfo {
   font-size: 1.15em;
   line-height: 1;
   font-style: normal;
-  color: #7f848e;
+  color: var(--pc-editor-suave);
   cursor: pointer;
   transition: color 0.15s ease;
 }
 .pc-doc-flecha:hover {
-  color: #abb2bf;
+  color: var(--pc-editor-texto);
 }
 /* Lo que gira es solo el símbolo: es chico, y entra en el renglón en
    cualquier ángulo del giro. */
@@ -362,7 +379,7 @@ html:not(.pc-doc-abierta) .cm-tooltip.cm-completionInfo {
 }
 /* Abierto: la flecha de la opción elegida se da vuelta y se prende. */
 html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha {
-  color: #61afef;
+  color: var(--pc-editor-azul);
 }
 html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   transform: rotate(180deg);
@@ -381,13 +398,13 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 }
 .pc-doc__firma {
   display: block;
-  color: #61afef;
+  color: var(--pc-editor-azul);
   font-weight: 600;
   margin-bottom: 0.4em;
 }
 .pc-doc__que {
   margin: 0 0 0.6em;
-  color: #abb2bf;
+  color: var(--pc-editor-texto);
   font-family: var(--sl-font, inherit);
   font-size: 1em;
   /* El contenedor viene en `pre-line` de fábrica: sin esto, el texto largo
@@ -398,8 +415,8 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   margin: 0;
   padding: 0.5em 0.65em;
   border-radius: 0.3rem;
-  background: #282c34;
-  color: #abb2bf;
+  background: var(--pc-editor-fondo);
+  color: var(--pc-editor-texto);
   font-size: 0.92em; /* un pelo más chico: es código, y así se separa del texto */
   /* Partir y no scrollear: los ejemplos de base de datos pasan los 400px del
      panel (y en el celular el panel mide 268). Un scroll de costado adentro de
@@ -414,7 +431,7 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   text-indent: -1.5em;
 }
 .pc-doc__flecha {
-  color: #98c379;
+  color: var(--pc-editor-verde);
   font-weight: 400;
 }
 /* CLAVE (caret/selección "una línea más abajo"): Starlight le mete "margin-top"
@@ -488,14 +505,14 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   padding: 0.85rem 1rem;
   border: 1px solid var(--sl-color-gray-5);
   border-radius: 0.5rem;
-  background: #282c34; /* mismo tono que el editor (one-dark) para consistencia */
+  background: var(--pc-editor-fondo); /* el mismo fondo que el editor, en los dos temas */
   overflow-x: auto;
   line-height: 1.7; /* aire extra: los inputs son un poco más altos que el texto */
 }
 .completar__codigo code {
   font-family: var(--__sl-font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
   font-size: 0.95rem;
-  color: #abb2bf;
+  color: var(--pc-editor-texto);
   background: none;
   white-space: pre;
 }
@@ -506,7 +523,7 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
 .completar__hueco {
   font-family: inherit;
   font-size: inherit;
-  color: #fff;
+  color: var(--pc-editor-texto);
   background: rgba(97, 175, 239, 0.12);
   border: 1px solid var(--sl-color-accent, #61afef);
   border-radius: 0.3rem;
@@ -1041,7 +1058,7 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
   cursor: pointer;
 }
 .web__pestana[aria-selected='true'] {
-  background: #282c34; /* el fondo del editor: la pestaña elegida "es" el editor */
+  background: var(--pc-editor-fondo); /* el fondo del editor: la pestaña elegida "es" el editor */
   color: var(--sl-color-white);
   border-color: var(--sl-color-accent);
 }
@@ -1429,14 +1446,14 @@ html.pc-doc-abierta li[aria-selected='true'] .pc-doc-flecha__icono {
    Antes había ahí 32px negros que nadie había puesto: la misma regla de
    Starlight le daba 16px de margen a .cm-editor (que ahora tiene antes al grupo
    de botones) y otros 16px a .cm-scroller, adentro. Ahora el lugar es a
-   propósito y del color del editor (#282c34, el fondo de oneDark), así se ve
-   como parte de él. Mide lo justo para que los botones no tapen la primera
-   línea, que en el celular llega hasta abajo de ellos. */
+   propósito y del color del editor (--pc-editor-fondo), así se ve como parte
+   de él. Mide lo justo para que los botones no tapen la primera línea, que en
+   el celular llega hasta abajo de ellos. */
 [data-editor],
 [data-editor-tests],
 [data-editor-completo] {
   padding-top: 28px;
-  background: #282c34;
+  background: var(--pc-editor-fondo);
 }
 [data-editor] > .cm-editor,
 [data-editor-tests] > .cm-editor,
