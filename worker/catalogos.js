@@ -152,6 +152,29 @@ function mismaClave(a, b) {
     return distinto === 0;
 }
 
+/* Un límite de pedidos por IP (binding de Cloudflare, ver wrangler.catalogos.toml). Sin él, alguien
+ * podría probar códigos sin parar: 32^8 combinaciones no se terminan nunca a 20 por minuto. Se
+ * cuenta ANTES de mirar si el código es bueno, así pasado el límite no se aprende nada. */
+async function excedido(limite, request) {
+    if (!limite) return false;
+    const { success } = await limite.limit({ key: request.headers.get('CF-Connecting-IP') || 'sin-ip' });
+    return !success;
+}
+
+const DEMASIADOS = { error: 'Demasiados intentos seguidos. Esperá un minuto y probá de nuevo.' };
+
+/* El tipo de una imagen se mira en sus primeros bytes, no en lo que dice el pedido: así no se puede
+ * subir una página con trampa diciendo que es una foto. */
+function tipoReal(bytes) {
+    const b = new Uint8Array(bytes.slice(0, 12));
+    const letras = (desde, hasta) => String.fromCharCode(...b.slice(desde, hasta));
+    if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+    if (b[0] === 0x89 && letras(1, 4) === 'PNG') return 'image/png';
+    if (letras(0, 4) === 'GIF8') return 'image/gif';
+    if (letras(0, 4) === 'RIFF' && letras(8, 12) === 'WEBP') return 'image/webp';
+    return null;
+}
+
 async function cuerpoJson(request) {
     try {
         return await request.json();
@@ -187,16 +210,24 @@ export default {
         if (publico && partes[0] === 'foto' && partes.length === 2 && /^[a-z0-9]{12,32}$/.test(partes[1])) {
             const { value, metadata } = await env.CATALOGOS.getWithMetadata('foto:' + partes[1], 'arrayBuffer');
             if (!value) return new Response('No existe esa foto', { status: 404, headers: cabeceras });
+            const tipo = metadata && TIPOS_FOTO.includes(metadata.tipo) ? metadata.tipo : 'image/jpeg';
             return new Response(value, {
                 headers: {
                     ...cabeceras,
-                    'Content-Type': (metadata && metadata.tipo) || 'image/jpeg',
+                    'Content-Type': tipo,
                     'Cache-Control': 'public, max-age=31536000, immutable',
+                    // Que el navegador la trate siempre como imagen, nunca como página
+                    'X-Content-Type-Options': 'nosniff',
+                    'Content-Security-Policy': "default-src 'none'; sandbox",
                 },
             });
         }
 
         if (!esEditor) return respuesta({ error: 'Origen no permitido' }, 403, cabeceras);
+
+        if (['/entrar', '/catalogo', '/foto'].includes(url.pathname) && (await excedido(env.LIMITE_CODIGO, request))) {
+            return respuesta(DEMASIADOS, 429, cabeceras);
+        }
 
         // ---- El editor: entrar con el código, guardar, subir fotos ----
         if (request.method === 'POST' && url.pathname === '/entrar') {
@@ -225,10 +256,10 @@ export default {
         if (request.method === 'POST' && url.pathname === '/foto') {
             const slug = await slugDelCodigo(env, request.headers.get('X-Codigo'));
             if (!slug) return respuesta({ error: 'Ese código no es de ningún catálogo' }, 401, cabeceras);
-            const tipo = (request.headers.get('Content-Type') || '').split(';')[0];
-            if (!TIPOS_FOTO.includes(tipo)) return respuesta({ error: 'La foto tiene que ser JPG, WEBP, PNG o GIF' }, 415, cabeceras);
             const bytes = await request.arrayBuffer();
-            if (!bytes.byteLength || bytes.byteLength > (tipo === 'image/gif' ? MAX_GIF : MAX_FOTO)) {
+            const tipo = tipoReal(bytes);
+            if (!tipo) return respuesta({ error: 'La foto tiene que ser JPG, WEBP, PNG o GIF' }, 415, cabeceras);
+            if (bytes.byteLength > (tipo === 'image/gif' ? MAX_GIF : MAX_FOTO)) {
                 return respuesta({ error: 'La foto pesa demasiado' }, 413, cabeceras);
             }
             const id = nuevoId();
@@ -238,6 +269,7 @@ export default {
 
         // ---- Administración: alta, códigos y lista ----
         if (partes[0] === 'admin') {
+            if (await excedido(env.LIMITE_ADMIN, request)) return respuesta(DEMASIADOS, 429, cabeceras);
             if (!env.ADMIN_CLAVE || !mismaClave(request.headers.get('X-Admin') || '', env.ADMIN_CLAVE)) {
                 return respuesta({ error: 'Clave de administración incorrecta' }, 401, cabeceras);
             }
@@ -268,6 +300,20 @@ export default {
                 const cat = { slug, nombre, enlace, productos: limpiarProductos(datos.productos), actualizado: new Date().toISOString() };
                 await env.CATALOGOS.put('cat:' + slug, JSON.stringify(cat));
                 return respuesta({ slug, nombre, codigo: await asignarCodigo(env, slug) }, 200, cabeceras);
+            }
+            /* La baja borra todo lo del catálogo: sus datos, su código y sus fotos. Pide la dirección
+             * escrita de nuevo, para que no se borre uno por un clic de más. La carpeta del repo de la
+             * organización se borra aparte. */
+            if (request.method === 'POST' && url.pathname === '/admin/baja') {
+                if (datos.confirmar !== slug) return respuesta({ error: 'Para dar de baja, escribí la dirección del catálogo' }, 400, cabeceras);
+                const cat = await leerCatalogo(env, slug);
+                if (!cat) return respuesta({ error: 'No existe ese catálogo' }, 404, cabeceras);
+                for (const id of fotosDe(cat.productos)) await env.CATALOGOS.delete('foto:' + id);
+                const hash = await env.CATALOGOS.get('hash:' + slug);
+                if (hash) await env.CATALOGOS.delete('codigo:' + hash);
+                await env.CATALOGOS.delete('hash:' + slug);
+                await env.CATALOGOS.delete('cat:' + slug);
+                return respuesta({ slug, nombre: cat.nombre }, 200, cabeceras);
             }
             if (request.method === 'POST' && url.pathname === '/admin/codigo') {
                 if (!(await leerCatalogo(env, slug))) return respuesta({ error: 'No existe ese catálogo' }, 404, cabeceras);

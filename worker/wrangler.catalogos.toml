@@ -12,6 +12,18 @@ compatibility_date = "2026-09-01"
 workers_dev = true
 preview_urls = false
 
+# Límites de pedidos por IP (ver excedido() en catalogos.js). El período solo puede ser 10 o 60.
+# Entrar, guardar y subir fotos: 20 por minuto. La administración: 10 por minuto.
+[[ratelimits]]
+name = "LIMITE_CODIGO"
+namespace_id = "4011"
+simple = { limit = 20, period = 60 }
+
+[[ratelimits]]
+name = "LIMITE_ADMIN"
+namespace_id = "4012"
+simple = { limit = 10, period = 60 }
+
 [[kv_namespaces]]
 binding = "CATALOGOS"
 id = "bc632419111e4cc78a7501a05c12e26d"
