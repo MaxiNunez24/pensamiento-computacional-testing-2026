@@ -90,6 +90,17 @@ function texto(valor, maximo) {
     return String(valor ?? '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, maximo);
 }
 
+/* Qué parte de la foto se ve en el círculo: x e y en porcentaje (50 es el centro) y cuánto se acerca. */
+function limpiarEncuadre(e) {
+    if (!e || typeof e !== 'object') return undefined;
+    const numero = (v, min, max, siNo) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? Math.min(max, Math.max(min, Math.round(n * 100) / 100)) : siNo;
+    };
+    const r = { x: numero(e.x, 0, 100, 50), y: numero(e.y, 0, 100, 50), zoom: numero(e.zoom, 1, 3, 1) };
+    return r.x === 50 && r.y === 50 && r.zoom === 1 ? undefined : r;
+}
+
 function limpiarProducto(p) {
     if (!p || typeof p !== 'object') return null;
     const nombre = texto(p.nombre, 80);
@@ -104,6 +115,7 @@ function limpiarProducto(p) {
         descripcion: texto(p.descripcion, 240),
         emoji: texto(p.emoji, 8),
         foto: FOTO_OK.test(foto) ? foto : '',
+        encuadre: FOTO_OK.test(foto) ? limpiarEncuadre(p.encuadre) : undefined,
         detalles: detalles
             .map((d) => [texto(d && d[0], 30), texto(d && d[1], 120)])
             .filter(([clave, valor]) => clave && valor)
@@ -121,8 +133,29 @@ function limpiarProductos(lista) {
     return [...porClave.values()];
 }
 
-function fotosDe(productos) {
-    return new Set(productos.map((p) => p.foto).filter((f) => f.startsWith('w:')).map((f) => f.slice(2)));
+/* Cómo se ve el catálogo, elegido en el editor: nombre, WhatsApp, colores y foto de fondo. Los
+ * colores llegan ya ajustados para que se lean (lo hace el editor con colores.js). */
+function limpiarAspecto(a) {
+    if (!a || typeof a !== 'object') return null;
+    const color = (c) => (/^#[0-9a-fA-F]{6}$/.test(c) ? c.toLowerCase() : null);
+    const r = {
+        nombre: texto(a.nombre, 60),
+        numero: /^\d{10,15}$/.test(a.numero || '') ? a.numero : '',
+        fondo: color(a.fondo),
+        texto: color(a.texto),
+        acento: color(a.acento),
+        marca: color(a.marca),
+        sobreAcento: color(a.sobreAcento),
+        imagen: /^w:[a-z0-9]{12,32}$/.test(a.imagen || '') ? a.imagen : '',
+        velo: Math.min(0.9, Math.max(0, Number(a.velo) || 0)),
+    };
+    return r.fondo && r.texto && r.acento && r.marca && r.sobreAcento ? r : null;
+}
+
+/* Las fotos que usa un catálogo: las de sus productos y la de fondo. */
+function fotosDe(productos, aspecto) {
+    const fotos = productos.map((p) => p.foto).concat(aspecto && aspecto.imagen ? [aspecto.imagen] : []);
+    return new Set(fotos.filter((f) => f.startsWith('w:')).map((f) => f.slice(2)));
 }
 
 async function leerCatalogo(env, slug) {
@@ -201,7 +234,7 @@ export default {
             const cat = SLUG_OK.test(partes[1]) ? await leerCatalogo(env, partes[1]) : null;
             if (!cat) return respuesta({ error: 'No existe ese catálogo' }, 404, cabeceras);
             return respuesta(
-                { nombre: cat.nombre, productos: cat.productos, actualizado: cat.actualizado },
+                { nombre: cat.nombre, productos: cat.productos, aspecto: cat.aspecto || null, actualizado: cat.actualizado },
                 200,
                 cabeceras,
                 { 'Cache-Control': 'public, max-age=15' },
@@ -244,11 +277,13 @@ export default {
             const cat = slug ? await leerCatalogo(env, slug) : null;
             if (!cat) return respuesta({ error: 'Ese código no es de ningún catálogo' }, 401, cabeceras);
             const productos = limpiarProductos(datos.productos);
-            const quedan = fotosDe(productos);
-            for (const id of fotosDe(cat.productos)) {
+            // Sin "aspecto" en el pedido, queda el que estaba; con null, vuelve al diseño original
+            const aspecto = 'aspecto' in datos ? limpiarAspecto(datos.aspecto) : cat.aspecto || null;
+            const quedan = fotosDe(productos, aspecto);
+            for (const id of fotosDe(cat.productos, cat.aspecto)) {
                 if (!quedan.has(id)) await env.CATALOGOS.delete('foto:' + id);
             }
-            const nuevo = { ...cat, productos, actualizado: new Date().toISOString() };
+            const nuevo = { ...cat, productos, aspecto, actualizado: new Date().toISOString() };
             await env.CATALOGOS.put('cat:' + slug, JSON.stringify(nuevo));
             return respuesta(nuevo, 200, cabeceras);
         }
@@ -308,7 +343,7 @@ export default {
                 if (datos.confirmar !== slug) return respuesta({ error: 'Para dar de baja, escribí la dirección del catálogo' }, 400, cabeceras);
                 const cat = await leerCatalogo(env, slug);
                 if (!cat) return respuesta({ error: 'No existe ese catálogo' }, 404, cabeceras);
-                for (const id of fotosDe(cat.productos)) await env.CATALOGOS.delete('foto:' + id);
+                for (const id of fotosDe(cat.productos, cat.aspecto)) await env.CATALOGOS.delete('foto:' + id);
                 const hash = await env.CATALOGOS.get('hash:' + slug);
                 if (hash) await env.CATALOGOS.delete('codigo:' + hash);
                 await env.CATALOGOS.delete('hash:' + slug);
