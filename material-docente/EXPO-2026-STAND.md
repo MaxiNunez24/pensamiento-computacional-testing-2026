@@ -126,3 +126,39 @@ stand hay lugar para todos y nadie tiene que exponerse más de lo que quiere.
 3. **Que los alumnos se congelen.** Mitigación: el guion de arriba, ensayado el 11/11, y que cada
    uno tenga UNA sola cosa que decir.
 4. **Que la impresora falle.** Mitigación: las 10 planillas impresas de antes.
+
+---
+
+## 7. Chuleta del Bingo
+
+**Páginas** (todas bajo `/ejercicios/expo/`):
+
+| Página | Dónde va |
+|---|---|
+| `bingo/operador/` | La pantalla de la notebook (no se proyecta). Entra con la clave de administración |
+| `proyector/` | La lona: el botón "Abrir la pantalla del proyector" del operador la abre; pasarla al proyector y F11 |
+| `bingo/?r=…&t=…` | El cartón en el celular: se llega con el QR de la ronda |
+| `bingo/?r=…&t=…&imprimir=1` | El celular de la impresora térmica (QR aparte en el operador) |
+
+**Atajos del operador** (F9 los prende y los apaga, por si hay que escribir en otro lado):
+
+| Tecla | Qué hace |
+|---|---|
+| `Espacio` | Sacar una bolilla |
+| `A` | Automático: saca sola cada tantos segundos (se frena al validar un Bingo) |
+| `N` | Ronda nueva (dos veces si hay una en juego) |
+| `V` | Ir al casillero del código · `Enter` lo valida · `Esc` sale |
+| `M` | Moneda de desempate (siempre 50 %) |
+| `C` / `X` | Moneda libre: la persona eligió cara / cruz |
+| `0`–`9` | Probabilidad de la moneda libre (0 = 100 %); no se ve en la lona |
+| `Esc` | Sacar la moneda de la pantalla |
+| `Ctrl` + `←` `→` | Pasar el carrusel de la lona |
+| `Ctrl` + `↑` | Lo del carrusel pasa a la pantalla grande; otra vez, a toda la lona |
+| `Ctrl` + `↓` | Un paso atrás: deja la lona entera, y después vuelve a lo automático |
+
+**Reglas que conviene saber:** un cartón pedido después de la primera bolilla **no vale** (lo
+rechaza el operador solo, y desde la primera bolilla el QR ya no da cartones de esa ronda). Cada
+persona puede cambiar su cartón 2 veces por ronda, antes de marcar un número. Validar funciona sin
+internet; pedir cartones, no. Con una ronda abierta o en juego, la lona pone el Bingo en grande sola.
+
+Todo esto, más los links y las consultas, está también en el panel privado: `/expo/panel/`.

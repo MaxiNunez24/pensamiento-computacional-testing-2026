@@ -1,0 +1,514 @@
+---
+/**
+ * El cartón del Bingo en el celular: /expo/bingo/?r=RONDA&t=6-30
+ *
+ * Se llega con el QR de la ronda, que está en la lona. El cartón lo entrega el Worker, firmado
+ * (ver src/scripts/bingo-cartones.js), y queda guardado en el celular: si se recarga la página, es el
+ * mismo. Las bolillas se miran en la pantalla grande y los números se marcan tocándolos, como en
+ * papel: el celular no consulta nada mientras se juega.
+ *
+ * Con &imprimir=1 es la página del celular de la impresora: cada "Cartón nuevo" arma una imagen de
+ * 57 mm (384 puntos, lo que imprime la térmica) para mandarla a Fun Print. Los que se imprimieron
+ * quedan en ese celular (localStorage), por si hay que reimprimir uno.
+ *
+ * Desde la primera bolilla, el Worker ya no da cartones de esa ronda (responde 409): igual no valdrían.
+ */
+import Expo from '../../../layouts/Expo.astro';
+---
+
+<Expo titulo="Tu cartón · Bingo de la Expo CFP 401" descripcion="Tu cartón para el Bingo del stand de Pensamiento Computacional.">
+  <main class="hoja">
+    <header>
+      <p class="etiqueta">Expo CFP 401 · Pensamiento Computacional</p>
+      <h1>Bingo <span class="ronda" data-ronda></span></h1>
+    </header>
+
+    <p class="estado" data-estado aria-live="polite">Buscando tu cartón…</p>
+
+    <!-- ===== Para jugar ===== -->
+    <section class="juego" data-juego hidden>
+      <ol class="carton" data-carton></ol>
+      <p class="ayuda">Mirá las bolillas en la pantalla grande y <strong>tocá tus números</strong> para marcarlos.</p>
+      <button type="button" class="boton boton--borde boton--chico" data-cambiar hidden></button>
+      <div class="codigo-caja">
+        <p>Si completás todos, gritá <strong>¡BINGO!</strong> y mostrá tu código:</p>
+        <p class="codigo" data-codigo></p>
+      </div>
+    </section>
+
+    <!-- ===== Para imprimir (el celular del stand) ===== -->
+    <section class="imprimir" data-imprimir hidden>
+      <button type="button" class="boton" data-nuevo>Cartón nuevo</button>
+      <img class="vista" data-vista alt="" hidden />
+      <div class="acciones" data-acciones hidden>
+        <button type="button" class="boton" data-compartir>Mandar a Fun Print</button>
+        <a class="boton boton--borde" data-bajar download>Guardar la imagen</a>
+      </div>
+      <p class="ayuda" data-cuantos></p>
+      <div class="historial" data-historial hidden>
+        <h2>Ya impresos <small>en este celular</small></h2>
+        <ol data-impresos></ol>
+        <button type="button" class="boton boton--borde boton--chico" data-borrar-historial>Borrar el historial</button>
+      </div>
+    </section>
+  </main>
+</Expo>
+
+<script>
+  import { RONDA_OK, TAMANOS } from '../../../scripts/bingo-cartones.js';
+  import { WORKER, describirTamano } from '../../../scripts/bingo-expo';
+
+  const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
+  const parametros = new URLSearchParams(location.search);
+  const ronda = (parametros.get('r') || '').toUpperCase();
+  const tamano = parametros.get('t') || '';
+  const imprimir = parametros.has('imprimir');
+
+  interface Carton {
+    codigo: string;
+    numeros: number[];
+    marcados?: number[];
+    cambios?: number;
+  }
+
+  // Cada persona puede cambiar su cartón dos veces por ronda. El límite vive en el celular: quien
+  // lo saltee (con otra pestaña, por ejemplo) no gana nada, porque un cartón pedido después de la
+  // primera bolilla no vale (lo rechaza el operador al validar).
+  const CAMBIOS = 2;
+
+  const estado = $('[data-estado]');
+
+  // La ronda ya tiene bolillas: el Worker no da más cartones (y el operador no los aceptaría)
+  class RondaEmpezada extends Error {}
+
+  async function pedirCarton(): Promise<Carton> {
+    const url = new URL(WORKER + '/bingo/carton');
+    url.searchParams.set('ronda', ronda);
+    url.searchParams.set('tamano', tamano);
+    const r = await fetch(url);
+    const datos = await r.json().catch(() => ({}));
+    if (r.status === 409 && datos.empezo) throw new RondaEmpezada(datos.error);
+    if (!r.ok) throw new Error(datos.error || 'No se pudo');
+    return { codigo: datos.codigo, numeros: datos.numeros };
+  }
+
+  // ---------- Para jugar ----------
+  const guardado = `bingo:carton:${ronda}-${tamano}`;
+
+  function guardar(carton: Carton) {
+    try {
+      localStorage.setItem(guardado, JSON.stringify(carton));
+    } catch {
+      /* sin guardar: igual se juega */
+    }
+  }
+
+  // El botón se va apenas se marca un número: si ya salen bolillas, un cartón nuevo no valdría
+  function mostrarCambiar(carton: Carton) {
+    const boton = $<HTMLButtonElement>('[data-cambiar]');
+    const quedan = CAMBIOS - (carton.cambios ?? 0);
+    boton.hidden = quedan <= 0 || (carton.marcados?.length ?? 0) > 0;
+    boton.textContent = `Cambiar mi cartón (te ${quedan === 1 ? 'queda 1' : `quedan ${quedan}`})`;
+  }
+
+  function dibujar(carton: Carton) {
+    const lista = $('[data-carton]');
+    lista.style.setProperty('--cantidad', String(carton.numeros.length));
+    lista.replaceChildren(
+      ...carton.numeros.map((n) => {
+        const li = document.createElement('li');
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.textContent = String(n);
+        boton.setAttribute('aria-pressed', String(carton.marcados?.includes(n) ?? false));
+        boton.addEventListener('click', () => {
+          const marcados = new Set(carton.marcados ?? []);
+          if (marcados.has(n)) marcados.delete(n);
+          else marcados.add(n);
+          carton.marcados = [...marcados];
+          boton.setAttribute('aria-pressed', String(marcados.has(n)));
+          guardar(carton);
+          mostrarCambiar(carton);
+          const lleno = carton.numeros.every((x) => marcados.has(x));
+          $('.codigo-caja').classList.toggle('lleno', lleno);
+        });
+        li.append(boton);
+        return li;
+      }),
+    );
+    $('[data-codigo]').textContent = carton.codigo;
+    $('.codigo-caja').classList.toggle('lleno', carton.numeros.every((x) => carton.marcados?.includes(x)));
+    mostrarCambiar(carton);
+  }
+
+  async function jugar() {
+    let carton: Carton | null = null;
+    try {
+      carton = JSON.parse(localStorage.getItem(guardado) || 'null');
+    } catch {
+      /* nada */
+    }
+    if (!carton) {
+      carton = await pedirCarton();
+      guardar(carton);
+    }
+    estado.textContent = describirTamano(tamano);
+    $('[data-juego]').hidden = false;
+    dibujar(carton);
+
+    const cambiar = $<HTMLButtonElement>('[data-cambiar]');
+    cambiar.addEventListener('click', async () => {
+      if (!carton) return;
+      if (!confirm('¿Cambiar el cartón? Hacelo antes de la primera bolilla: si la ronda ya arrancó, el cartón nuevo no vale.')) return;
+      cambiar.disabled = true;
+      try {
+        const nuevo = await pedirCarton();
+        carton = { ...nuevo, cambios: (carton.cambios ?? 0) + 1 };
+        guardar(carton);
+        dibujar(carton);
+      } catch (error) {
+        if (error instanceof RondaEmpezada) {
+          // Ya no se puede cambiar en esta ronda: el botón no vuelve
+          carton.cambios = CAMBIOS;
+          guardar(carton);
+          mostrarCambiar(carton);
+          estado.textContent = 'La ronda ya arrancó: tu cartón de siempre sigue valiendo.';
+        } else {
+          estado.textContent = 'No se pudo cambiar el cartón. ¿Tenés internet? El de siempre sigue valiendo.';
+        }
+      } finally {
+        cambiar.disabled = false;
+      }
+    });
+  }
+
+  // ---------- Para imprimir: la imagen de 57 mm ----------
+  // 384 puntos de ancho es lo que imprime la térmica. Solo negro sobre blanco: los grises salen
+  // como puntitos y los números se leen peor.
+  function imagen(carton: Carton, deRonda = ronda) {
+    const ancho = 384;
+    const cantidad = carton.numeros.length;
+    const celda = Math.floor(ancho / cantidad);
+    const alto = 34 + celda + 44;
+    const lienzo = document.createElement('canvas');
+    lienzo.width = ancho;
+    lienzo.height = alto;
+    const c = lienzo.getContext('2d')!;
+    c.fillStyle = '#fff';
+    c.fillRect(0, 0, ancho, alto);
+    c.fillStyle = '#000';
+    c.textBaseline = 'middle';
+    c.font = '700 22px system-ui, sans-serif';
+    c.textAlign = 'left';
+    c.fillText('BINGO · CFP 401', 4, 16);
+    c.textAlign = 'right';
+    c.fillText('Ronda ' + deRonda, ancho - 4, 16);
+    c.textAlign = 'center';
+    c.lineWidth = 4;
+    carton.numeros.forEach((n, i) => {
+      const x = (ancho - celda * cantidad) / 2 + celda * i + celda / 2;
+      const y = 34 + celda / 2;
+      c.beginPath();
+      c.arc(x, y, celda / 2 - 4, 0, Math.PI * 2);
+      c.stroke();
+      c.font = `800 ${Math.round(celda * 0.5)}px system-ui, sans-serif`;
+      c.fillText(String(n), x, y + 2);
+    });
+    c.font = '700 28px ui-monospace, Consolas, monospace';
+    c.fillText(carton.codigo, ancho / 2, 34 + celda + 24);
+    return lienzo;
+  }
+
+  interface Impreso extends Carton {
+    ronda: string;
+    tamano: string;
+    hora: number;
+  }
+  const HISTORIAL = 'bingo:impresos';
+  let archivo: File | null = null;
+
+  function leerHistorial(): Impreso[] {
+    try {
+      return JSON.parse(localStorage.getItem(HISTORIAL) || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  // Los de esta ronda primero; se guardan los últimos 100
+  function dibujarHistorial() {
+    const lista = leerHistorial();
+    const deEsta = lista.filter((x) => x.ronda === ronda).length;
+    $('[data-cuantos]').textContent = deEsta ? `Cartones de esta ronda: ${deEsta}` : '';
+    $('[data-historial]').hidden = lista.length === 0;
+    const orden = [...lista].sort((a, b) => Number(b.ronda === ronda) - Number(a.ronda === ronda) || b.hora - a.hora);
+    $('[data-impresos]').replaceChildren(
+      ...orden.map((x) => {
+        const li = document.createElement('li');
+        if (x.ronda !== ronda) li.className = 'otra';
+        const texto = document.createElement('span');
+        const hora = new Date(x.hora).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        texto.innerHTML = '<strong></strong><small></small>';
+        texto.querySelector('strong')!.textContent = x.codigo;
+        texto.querySelector('small')!.textContent = `Ronda ${x.ronda} · ${hora} · ${x.numeros.join(' ')}`;
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'boton boton--borde boton--chico';
+        boton.textContent = 'Reimprimir';
+        boton.addEventListener('click', () => mostrarImagen(x, x.ronda));
+        li.append(texto, boton);
+        return li;
+      }),
+    );
+  }
+
+  async function mostrarImagen(carton: Carton, deRonda: string) {
+    const lienzo = imagen(carton, deRonda);
+    const blob = await new Promise<Blob>((ok) => lienzo.toBlob((b) => ok(b!), 'image/png'));
+    archivo = new File([blob], `bingo-${deRonda}-${carton.codigo}.png`, { type: 'image/png' });
+    const url = URL.createObjectURL(blob);
+    const vista = $<HTMLImageElement>('[data-vista]');
+    vista.src = url;
+    vista.alt = `Cartón ${carton.codigo}: ${carton.numeros.join(', ')}`;
+    vista.hidden = false;
+    const bajar = $<HTMLAnchorElement>('[data-bajar]');
+    bajar.href = url;
+    bajar.download = archivo.name;
+    $('[data-acciones]').hidden = false;
+    $('[data-compartir]').hidden = !navigator.canShare?.({ files: [archivo] });
+    vista.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  async function cartonNuevo() {
+    const boton = $<HTMLButtonElement>('[data-nuevo]');
+    boton.disabled = true;
+    estado.textContent = 'Pidiendo el cartón…';
+    try {
+      const carton = await pedirCarton();
+      const lista = leerHistorial();
+      lista.push({ codigo: carton.codigo, numeros: carton.numeros, ronda, tamano, hora: Date.now() });
+      try {
+        localStorage.setItem(HISTORIAL, JSON.stringify(lista.slice(-100)));
+      } catch {
+        /* sin historial: se imprime igual */
+      }
+      await mostrarImagen(carton, ronda);
+      dibujarHistorial();
+      estado.textContent = `${describirTamano(tamano)} · se piden antes de la primera bolilla`;
+    } catch (error) {
+      estado.textContent =
+        error instanceof RondaEmpezada
+          ? 'Esta ronda ya arrancó: los cartones nuevos son para la próxima (escaneá el QR nuevo del operador).'
+          : 'No se pudo pedir el cartón: ' + (error instanceof Error ? error.message : '¿hay internet?');
+    } finally {
+      boton.disabled = false;
+    }
+  }
+
+  $('[data-nuevo]').addEventListener('click', cartonNuevo);
+  $('[data-borrar-historial]').addEventListener('click', () => {
+    if (!confirm('¿Borrar la lista de cartones impresos de este celular?')) return;
+    try {
+      localStorage.removeItem(HISTORIAL);
+    } catch {
+      /* nada */
+    }
+    dibujarHistorial();
+  });
+  $('[data-compartir]').addEventListener('click', () => {
+    if (archivo) navigator.share({ files: [archivo] }).catch(() => {});
+  });
+
+  // ---------- Arranque ----------
+  if (!RONDA_OK.test(ronda) || !TAMANOS.includes(tamano)) {
+    estado.textContent = 'Este no es el QR de una ronda. Escaneá el de la pantalla grande del stand.';
+  } else {
+    $('[data-ronda]').textContent = '· Ronda ' + ronda;
+    if (imprimir) {
+      estado.textContent = describirTamano(tamano);
+      $('[data-imprimir]').hidden = false;
+      dibujarHistorial();
+    } else {
+      jugar().catch((error) => {
+        estado.textContent =
+          error instanceof RondaEmpezada
+            ? error.message
+            : 'No pude traer tu cartón. ¿Tenés internet? Si no, pedí uno impreso en el stand.';
+      });
+    }
+  }
+</script>
+
+<style>
+  .hoja {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: grid;
+    gap: 20px;
+    text-align: center;
+  }
+  .etiqueta {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--suave);
+  }
+  h1 {
+    margin: 4px 0 0;
+    font-size: 2.4rem;
+    color: var(--oro);
+  }
+  .ronda {
+    font-size: 1rem;
+    color: var(--suave);
+    font-weight: 600;
+  }
+  .estado,
+  .ayuda {
+    margin: 0;
+    color: var(--suave);
+  }
+  .juego,
+  .imprimir {
+    display: grid;
+    gap: 20px;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  .carton {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+    gap: 12px;
+  }
+  /* Los botones los crea el script: sin la marca de Astro, van con :global */
+  .carton :global(button) {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px solid var(--oro);
+    background: transparent;
+    color: var(--texto);
+    font: 800 2.2rem system-ui, sans-serif;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .carton :global(button[aria-pressed='true']) {
+    background: radial-gradient(circle at 35% 30%, #fff6d6, var(--oro) 55%, #b8871a);
+    color: #3a2a00;
+  }
+  .codigo-caja {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+  }
+  .codigo-caja p {
+    margin: 0;
+  }
+  .codigo-caja.lleno {
+    border-color: var(--oro);
+    box-shadow: 0 0 0 4px rgb(242 193 78 / 0.3);
+  }
+  .codigo {
+    font: 800 2.2rem ui-monospace, Consolas, monospace;
+    letter-spacing: 0.08em;
+    color: var(--oro);
+  }
+  .boton {
+    display: inline-flex;
+    justify-content: center;
+    padding: 14px 20px;
+    border-radius: 999px;
+    border: 2px solid var(--oro);
+    background: var(--oro);
+    color: #10131a;
+    font: 700 1.1rem system-ui, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .boton--borde {
+    background: transparent;
+    color: var(--oro);
+  }
+  .boton--chico {
+    justify-self: center;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+  }
+  .boton:disabled {
+    opacity: 0.5;
+  }
+  .vista {
+    width: 100%;
+    image-rendering: pixelated;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .acciones {
+    display: grid;
+    gap: 10px;
+  }
+  .historial {
+    display: grid;
+    gap: 10px;
+    text-align: left;
+  }
+  .historial h2 {
+    margin: 12px 0 0;
+    font-size: 1.2rem;
+  }
+  .historial h2 small {
+    color: var(--suave);
+    font-weight: 400;
+    font-size: 0.85rem;
+  }
+  .historial ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  /* Los renglones los crea el script: van con :global */
+  .historial :global(li) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    background: var(--superficie);
+  }
+  .historial :global(li.otra) {
+    opacity: 0.6;
+  }
+  .historial :global(li span) {
+    display: grid;
+  }
+  .historial :global(li strong) {
+    font: 800 1.1rem ui-monospace, Consolas, monospace;
+    color: var(--oro);
+  }
+  .historial :global(li small) {
+    color: var(--suave);
+  }
+  .historial :global(li button) {
+    flex: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 2px solid var(--oro);
+    background: transparent;
+    color: var(--oro);
+    font: 700 0.9rem system-ui, sans-serif;
+    cursor: pointer;
+  }
+</style>

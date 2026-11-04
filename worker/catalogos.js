@@ -17,9 +17,18 @@
  *   hash:<slug>    → hash          (para borrar el código viejo al regenerar)
  *   foto:<id>      → la imagen, con { slug, tipo } en la metadata
  *   expo:temas     → [texto, ...]  (los temas para los directivos, de /expo/stand/)
+ *   expo:consultas → [{ texto, grupo, hecho }, ...]  (el checklist del panel privado, /expo/panel/)
+ *   panel:img:<id> → una imagen del panel (bocetos, sponsors), con { titulo, grupo, tipo } en la metadata
+ *   bingo:empezo:<ronda> → cuándo salió la primera bolilla (se borra sola a las 12 horas)
+ *
+ * También entrega los cartones del Bingo de la Expo (/bingo/carton): firmados, sin guardar nada.
+ * Ver src/scripts/bingo-cartones.js, que es el mismo archivo con el que el operador los valida.
+ * Lo único que se escribe es cuándo empezó cada ronda: una escritura por ronda.
  *
  * Despliegue y pasos: worker/README.md, sección "Worker de los catálogos".
  */
+
+import { claveBingo, emitirCarton, RONDA_OK, TAMANOS } from '../src/scripts/bingo-cartones.js';
 
 const ORIGENES_EDITOR = [
     'https://cfp401-ensenada.github.io',
@@ -40,6 +49,8 @@ const MAX_GIF = 2560 * 1024; // un GIF no se achica en el editor sin perder la a
 const TIPOS_FOTO = ['image/jpeg', 'image/webp', 'image/png', 'image/gif'];
 const MAX_TEMAS = 30;
 const MAX_TEMA = 500;
+const MAX_CONSULTAS = 200;
+const MAX_IMAGEN_PANEL = 1024 * 1024; // las del panel viajan todas juntas en base64: mejor livianas (WEBP)
 
 function respuesta(datos, estado, cabeceras, extra = {}) {
     return new Response(JSON.stringify(datos), {
@@ -51,7 +62,7 @@ function respuesta(datos, estado, cabeceras, extra = {}) {
 function cors(origen, abierto) {
     return {
         'Access-Control-Allow-Origin': abierto ? '*' : origen,
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, X-Codigo, X-Admin',
         'Access-Control-Max-Age': '86400',
         Vary: 'Origin',
@@ -226,7 +237,7 @@ export default {
         const partes = url.pathname.split('/').filter(Boolean);
         const origen = request.headers.get('Origin') || '';
         const esEditor = ORIGENES_EDITOR.includes(origen);
-        const publico = request.method === 'GET' && (partes[0] === 'catalogo' || partes[0] === 'foto');
+        const publico = request.method === 'GET' && ['catalogo', 'foto', 'bingo'].includes(partes[0]);
         const cabeceras = cors(esEditor ? origen : '', publico);
 
         if (request.method === 'OPTIONS') {
@@ -258,6 +269,27 @@ export default {
                     'Content-Security-Policy': "default-src 'none'; sandbox",
                 },
             });
+        }
+
+        // ---- El Bingo de la Expo: un cartón firmado para el celular de quien juega ----
+        if (publico && url.pathname === '/bingo/carton') {
+            const ronda = url.searchParams.get('ronda') || '';
+            const tamano = url.searchParams.get('tamano') || '';
+            if (!RONDA_OK.test(ronda) || !TAMANOS.includes(tamano)) {
+                return respuesta({ error: 'Ese no es el QR de una ronda.' }, 400, cabeceras);
+            }
+            if (!env.ADMIN_CLAVE) return respuesta({ error: 'Falta configurar el Worker.' }, 503, cabeceras);
+            // Con la ronda ya en juego no se entregan cartones: igual no valdrían (los rechaza el operador)
+            const empezo = Number(await env.CATALOGOS.get('bingo:empezo:' + ronda));
+            if (empezo && Date.now() > empezo) {
+                return respuesta({ error: 'Esta ronda ya arrancó. Esperá el QR de la próxima.', empezo: true }, 409, cabeceras);
+            }
+            const carton = await emitirCarton(await claveBingo(env.ADMIN_CLAVE), ronda, tamano, Date.now());
+            return respuesta({ ...carton, ronda, tamano }, 200, cabeceras, { 'Cache-Control': 'no-store' });
+        }
+        // La hora del Worker: el operador la compara con la de la notebook, que puede estar corrida.
+        if (publico && url.pathname === '/bingo/hora') {
+            return respuesta({ ahora: Date.now() }, 200, cabeceras, { 'Cache-Control': 'no-store' });
         }
 
         if (!esEditor) return respuesta({ error: 'Origen no permitido' }, 403, cabeceras);
@@ -338,6 +370,64 @@ export default {
                     await env.CATALOGOS.put('expo:temas', JSON.stringify(temas));
                     return respuesta({ temas }, 200, cabeceras);
                 }
+            }
+            /* El panel privado (/expo/panel/): el checklist y las imágenes llegan en UN pedido, porque
+             * la administración tiene un límite de 10 pedidos por minuto. Las imágenes van en base64. */
+            if (request.method === 'GET' && url.pathname === '/admin/panel') {
+                let consultas = JSON.parse((await env.CATALOGOS.get('expo:consultas')) || 'null');
+                if (!consultas) {
+                    // La primera vez, el checklist arranca con los temas de la página del stand
+                    const temas = JSON.parse((await env.CATALOGOS.get('expo:temas')) || '[]');
+                    consultas = temas.map((t) => ({ texto: t, grupo: 'Directivos', hecho: false }));
+                }
+                const imagenes = [];
+                for (const k of (await env.CATALOGOS.list({ prefix: 'panel:img:' })).keys) {
+                    const bytes = await env.CATALOGOS.get(k.name, 'arrayBuffer');
+                    if (!bytes) continue;
+                    let binario = '';
+                    const vista = new Uint8Array(bytes);
+                    for (let i = 0; i < vista.length; i += 0x8000) binario += String.fromCharCode(...vista.subarray(i, i + 0x8000));
+                    imagenes.push({ id: k.name.slice(10), ...k.metadata, datos: btoa(binario) });
+                }
+                return respuesta({ consultas, imagenes }, 200, cabeceras, { 'Cache-Control': 'no-store' });
+            }
+            // Subir o borrar una imagen del panel (lo usa scripts/subir-panel.py)
+            if (partes[1] === 'panel' && partes[2] === 'imagen' && ['PUT', 'DELETE'].includes(request.method)) {
+                const id = partes[3] || '';
+                if (!/^[a-z0-9-]{1,40}$/.test(id)) return respuesta({ error: 'Nombre de imagen inválido' }, 400, cabeceras);
+                if (request.method === 'DELETE') {
+                    await env.CATALOGOS.delete('panel:img:' + id);
+                    return respuesta({ id }, 200, cabeceras);
+                }
+                const bytes = await request.arrayBuffer();
+                const tipo = tipoReal(bytes);
+                if (!tipo || tipo === 'image/gif') return respuesta({ error: 'La imagen tiene que ser WEBP, PNG o JPG' }, 415, cabeceras);
+                if (bytes.byteLength > MAX_IMAGEN_PANEL) return respuesta({ error: 'La imagen pesa demasiado' }, 413, cabeceras);
+                const metadata = { titulo: texto(url.searchParams.get('titulo'), 120), grupo: texto(url.searchParams.get('grupo'), 60), tipo };
+                await env.CATALOGOS.put('panel:img:' + id, bytes, { metadata });
+                return respuesta({ id, ...metadata }, 200, cabeceras);
+            }
+            if (request.method === 'PUT' && url.pathname === '/admin/panel/consultas') {
+                const datos = (await cuerpoJson(request)) || {};
+                const consultas = (Array.isArray(datos.consultas) ? datos.consultas : [])
+                    .map((c) => ({ texto: texto(c && c.texto, MAX_TEMA), grupo: texto(c && c.grupo, 40) || 'Otros', hecho: Boolean(c && c.hecho) }))
+                    .filter((c) => c.texto)
+                    .slice(0, MAX_CONSULTAS);
+                await env.CATALOGOS.put('expo:consultas', JSON.stringify(consultas));
+                return respuesta({ consultas }, 200, cabeceras);
+            }
+            /* La primera bolilla de una ronda: desde ahí, /bingo/carton deja de entregar cartones de esa
+             * ronda. Si el operador deshace la primera bolilla, se borra. */
+            if (url.pathname === '/admin/bingo/empezo' && ['POST', 'DELETE'].includes(request.method)) {
+                const ronda = url.searchParams.get('ronda') || '';
+                if (!RONDA_OK.test(ronda)) return respuesta({ error: 'Esa no es una ronda.' }, 400, cabeceras);
+                if (request.method === 'DELETE') {
+                    await env.CATALOGOS.delete('bingo:empezo:' + ronda);
+                    return respuesta({ ronda, empezo: null }, 200, cabeceras);
+                }
+                const inicio = Number(url.searchParams.get('inicio')) || Date.now();
+                await env.CATALOGOS.put('bingo:empezo:' + ronda, String(inicio), { expirationTtl: 12 * 60 * 60 });
+                return respuesta({ ronda, empezo: inicio }, 200, cabeceras);
             }
             const datos = (await cuerpoJson(request)) || {};
             const slug = String(datos.slug || '').trim().toLowerCase();

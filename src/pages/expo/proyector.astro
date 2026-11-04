@@ -1,0 +1,1035 @@
+---
+/**
+ * La pantalla del proyector en la Expo: /expo/proyector/
+ *
+ * Va en la segunda salida de la notebook (pantalla extendida): de ahí, por el divisor HDMI, a la
+ * lona y al monitor de las bolillas. La maneja la página del operador (/expo/bingo/operador/), que
+ * queda en la pantalla de la notebook: nadie tiene que apuntarle con el mouse a esta.
+ *
+ * El diseño elegido (boceto 2 + la idea del 5): una pantalla grande a la izquierda y un carrusel a la
+ * derecha (Bingo, Catálogos, Stand 3D), con la barra del proyector y los sponsors abajo. Entre rondas,
+ * lo grande es la animación del sistema; con una ronda abierta o en juego, el Bingo pasa solo a la
+ * pantalla grande y el sistema entra al carrusel. A mano, con Ctrl + flechas (acá o desde el operador):
+ *
+ *   ←/→  pasa el carrusel
+ *   ↑    lo que muestra el carrusel pasa a la pantalla grande; otra vez, a toda la lona
+ *   ↓    un paso atrás: deja la lona entera, y después vuelve a lo automático
+ */
+import Expo from '../../layouts/Expo.astro';
+import { qr, direccion, vidriera, vidrieraDeEjemplo } from '../../data/expo/expo';
+
+const catalogos = await Promise.all(vidriera.map(async (e) => ({ ...e, qr: await qr(e.link) })));
+const qrExpo = await qr(direccion(Astro.site, 'expo/'));
+
+// Los que apoyan el stand: si hay más de uno, se turnan cada 8 segundos
+const sponsors = ['Puerto Informático'];
+---
+
+<Expo titulo="Proyector · Expo CFP 401" descripcion="La pantalla del proyector del stand de Pensamiento Computacional.">
+  <div class="lona" data-lona>
+    <header class="cabeza">
+      <h1>Pensamiento Computacional y Testing de Aplicaciones 2026</h1>
+    </header>
+
+    <nav class="carrusel__nombres" data-nombres aria-hidden="true"></nav>
+
+    <!-- ============ El Bingo ============ -->
+    <section class="panel bingo" data-tarjeta="bingo" data-nombre="Bingo" data-fase="espera" aria-label="Bingo">
+      <h2 class="panel__titulo">Bingo</h2>
+
+      <div class="bingo__espera">
+        <p class="bingo__grande">Ya empieza<br />una ronda</p>
+        <p class="bingo__chico">Jugá gratis desde tu celular</p>
+      </div>
+
+      <div class="bingo__abierta">
+        <span class="bingo__qr" data-qr></span>
+        <div class="bingo__textos">
+          <p class="bingo__grande bingo__llamado">¡Sumate!</p>
+          <p class="bingo__chico"><strong>Escaneá y jugá gratis</strong><br /><span data-tamano></span></p>
+          <p class="bingo__nota" data-impreso></p>
+        </div>
+      </div>
+
+      <div class="bingo__jugando">
+        <div class="bingo__arriba">
+          <span class="bolilla" data-ultima></span>
+          <p class="bingo__cuenta" data-cuenta></p>
+        </div>
+        <ol class="tablero" data-tablero></ol>
+      </div>
+
+      <div class="bingo__aviso" data-aviso hidden>
+        <p class="bingo__grande" data-aviso-titulo></p>
+        <p class="bingo__chico" data-aviso-texto></p>
+        <div class="bingo__numeros" data-aviso-numeros></div>
+      </div>
+
+      <div class="bingo__moneda" data-moneda hidden>
+        <div class="escena-moneda">
+          <div class="moneda" data-moneda-cuerpo>
+            <div class="lado cara">CARA</div>
+            <div class="lado cruz">CRUZ</div>
+          </div>
+        </div>
+        <p class="bingo__chico" data-moneda-lados></p>
+        <p class="bingo__grande bingo__resultado" data-moneda-resultado></p>
+      </div>
+    </section>
+
+    <!-- ============ ¿Qué construimos? El sistema ============ -->
+    <section class="panel" data-tarjeta="sistema" data-nombre="El sistema" aria-label="El Sistema de Gestión de Alumnos">
+      <h2 class="panel__titulo">¿Qué construimos?</h2>
+      <p class="panel__bajada">Animaciones de catálogo y sistema de gestión</p>
+      <div class="panel__escena">
+        <motor-escena escena="expo-siges" loop autoplay sin-controles sin-lupa sin-sonido tema="oscuro" movimiento="completo"></motor-escena>
+      </div>
+      <p class="panel__esquina"><span class="qr-chico" set:html={qrExpo} aria-hidden="true" /> Todo en tu celular</p>
+    </section>
+
+    <!-- ============ Los catálogos ============ -->
+    <section class="panel" data-tarjeta="catalogos" data-nombre="Catálogos" aria-label="Los catálogos">
+      <h2 class="panel__titulo">Catálogos</h2>
+      <p class="panel__bajada">Para emprendedores del CFP{vidrieraDeEjemplo && ' (de ejemplo)'}</p>
+      <div class="vidriera" data-vidriera>
+        {catalogos.map((c, i) => (
+          <article class="vidriera__item" hidden={i > 0}>
+            <span class="vidriera__emoji" aria-hidden="true">{c.emoji}</span>
+            <p class="vidriera__nombre">{c.emprendimiento}</p>
+            <p class="vidriera__rubro">{c.rubro}</p>
+            <span class="vidriera__qr" set:html={c.qr} role="img" aria-label={`QR del catálogo de ${c.emprendimiento}`} />
+          </article>
+        ))}
+      </div>
+      <p class="vidriera__todos"><span class="qr-chico" set:html={qrExpo} aria-hidden="true" /> Todos en tu celular</p>
+    </section>
+
+    <!-- ============ El stand en 3D ============ -->
+    <section class="panel" data-tarjeta="stand" data-nombre="Stand 3D" aria-label="El stand en 3D">
+      <h2 class="panel__titulo">El stand</h2>
+      <p class="panel__bajada">Qué vas a encontrar acá</p>
+      <svg class="stand" viewBox="0 0 400 260" aria-hidden="true">
+        <g stroke="#a3adbd" stroke-width="2" fill="none" stroke-linejoin="round">
+          <path d="M60 170L200 230L340 170L200 110Z" fill="#1d2433" />
+          <path d="M60 170V80L200 20V110" fill="#141a26" />
+          <path d="M200 20L340 80V170" fill="#10151f" />
+          <path d="M95 112l60-26v34l-60 26z" fill="#f2c14e33" stroke="#f2c14e" />
+          <path d="M150 175l40 17l40-17l-40-17z" fill="#4fd1b544" stroke="#4fd1b5" />
+          <path d="M235 158l30 13l30-13l-30-13z" fill="#7aa7ff44" stroke="#7aa7ff" />
+        </g>
+      </svg>
+      <ul class="stand__lista">
+        <li><span>🎱</span> Bingo gratis</li>
+        <li><span>🛍️</span> Catálogos de emprendedores</li>
+        <li><span>🖨️</span> Tu foto impresa</li>
+        <li><span>🧩</span> El sistema del CFP</li>
+      </ul>
+    </section>
+
+    <!-- ============ Abajo: la meta y los que apoyan ============ -->
+    <footer class="pie">
+      <div class="barra">
+        <p class="barra__que">🎯 Juntamos para un proyector de techo para el CFP<small>cada catálogo e impresión suma</small></p>
+        <div class="barra__tubo" data-barra-tubo hidden><i data-barra-relleno></i></div>
+        <p class="barra__cuanto" data-barra-cuanto hidden></p>
+      </div>
+      <div class="apoyo">
+        <span>Con el apoyo de</span>
+        <span class="apoyo__nombres">
+          {sponsors.map((s, i) => <strong class="apoyo__nombre" hidden={i > 0}>{s}</strong>)}
+        </span>
+      </div>
+    </footer>
+  </div>
+
+  <p class="ayuda" data-ayuda>Pasá esta ventana a la pantalla del proyector y apretá <kbd>F11</kbd></p>
+</Expo>
+
+<script>
+  import 'motor-animaciones';
+  import '../../animaciones/expo-siges.js';
+  import QRCode from 'qrcode';
+  import { canal, accionDeVista, describirTamano, linkDeRonda, type Estado, type Mensaje } from '../../scripts/bingo-expo';
+
+  const $ = <T extends Element = HTMLElement>(sel: string, raiz: ParentNode = document) => raiz.querySelector<T>(sel)!;
+  const turnar = (elementos: HTMLElement[], cada: number) => {
+    let i = 0;
+    if (elementos.length > 1) {
+      setInterval(() => {
+        elementos[i].hidden = true;
+        i = (i + 1) % elementos.length;
+        elementos[i].hidden = false;
+      }, cada);
+    }
+  };
+
+  // ---------- Dónde va cada tarjeta: la pantalla grande o el carrusel ----------
+  const lona = $('[data-lona]');
+  const tarjetas = new Map([...document.querySelectorAll<HTMLElement>('[data-tarjeta]')].map((t) => [t.dataset.tarjeta!, t]));
+  const ORDEN = ['bingo', 'catalogos', 'stand', 'sistema'];
+  const CADA = 12000; // cuánto queda cada tarjeta en el carrusel
+
+  let forzada: string | null = null; // la que se pasó a mano a la pantalla grande
+  let completa = false; // la pantalla grande ocupa toda la lona
+  let enCarrusel = 'catalogos';
+  let bingoActivo = false;
+  let reloj: ReturnType<typeof setInterval> | null = null;
+
+  const principal = () => forzada ?? (bingoActivo ? 'bingo' : 'sistema');
+  const delCarrusel = () => ORDEN.filter((n) => n !== principal());
+
+  function ubicar() {
+    const grande = principal();
+    const opciones = delCarrusel();
+    if (!opciones.includes(enCarrusel)) enCarrusel = opciones[0];
+    for (const [nombre, tarjeta] of tarjetas) {
+      tarjeta.dataset.lugar = nombre === grande ? 'escenario' : nombre === enCarrusel && !completa ? 'carrusel' : 'oculta';
+    }
+    lona.classList.toggle('completa', completa);
+    $('[data-nombres]').replaceChildren(
+      ...opciones.map((n) => {
+        const s = document.createElement('span');
+        s.textContent = tarjetas.get(n)!.dataset.nombre!;
+        s.classList.toggle('activo', n === enCarrusel);
+        return s;
+      }),
+    );
+    try {
+      localStorage.setItem('proyector:vista', JSON.stringify({ forzada, completa }));
+    } catch {
+      /* nada */
+    }
+  }
+
+  function pasar(paso: number) {
+    const opciones = delCarrusel();
+    enCarrusel = opciones[(opciones.indexOf(enCarrusel) + paso + opciones.length) % opciones.length];
+    ubicar();
+  }
+  function arrancarCarrusel() {
+    if (reloj) clearInterval(reloj);
+    reloj = setInterval(() => pasar(1), CADA);
+  }
+
+  function mover(accion: string) {
+    if (accion === 'anterior' || accion === 'siguiente') {
+      pasar(accion === 'anterior' ? -1 : 1);
+      arrancarCarrusel(); // a mano: el próximo cambio solo, recién en 12 segundos
+      return;
+    }
+    if (accion === 'agrandar') {
+      if (forzada === null) {
+        const antes = principal();
+        forzada = enCarrusel;
+        enCarrusel = antes; // la que estaba en grande queda a la vista en el carrusel
+      } else {
+        completa = true;
+      }
+    }
+    if (accion === 'achicar') {
+      if (completa) completa = false;
+      else forzada = null;
+    }
+    ubicar();
+  }
+
+  try {
+    const guardada = JSON.parse(localStorage.getItem('proyector:vista') || 'null');
+    if (guardada && (guardada.forzada === null || ORDEN.includes(guardada.forzada))) ({ forzada, completa } = guardada);
+  } catch {
+    /* nada */
+  }
+  ubicar();
+  arrancarCarrusel();
+
+  document.addEventListener('keydown', (evento) => {
+    const mensaje = accionDeVista(evento);
+    if (mensaje?.tipo === 'vista') {
+      evento.preventDefault();
+      mover(mensaje.accion);
+    }
+  });
+
+  // El cartelito de ayuda se va solo, o al pasar a pantalla completa
+  const ayuda = $('[data-ayuda]');
+  setTimeout(() => ayuda.remove(), 12000);
+  window.addEventListener('resize', () => {
+    if (innerHeight === screen.height) ayuda.remove();
+  });
+
+  // ---------- Lo que se turna: catálogos y sponsors ----------
+  turnar([...document.querySelectorAll<HTMLElement>('.vidriera__item')], 8000);
+  turnar([...document.querySelectorAll<HTMLElement>('.apoyo__nombre')], 8000);
+
+  // ---------- La barra del proyector ----------
+  // Cuando la calculadora tenga su ruta pública con el total (cacheada unos 15 s en el Worker), va acá.
+  // Mientras tanto la barra muestra solo la meta, sin números.
+  const TOTAL_URL = '';
+  async function actualizarBarra() {
+    if (!TOTAL_URL) return;
+    try {
+      const { juntado, meta } = await (await fetch(TOTAL_URL)).json();
+      if (!(meta > 0)) return;
+      $('[data-barra-relleno]').style.width = `${Math.min(100, (juntado / meta) * 100)}%`;
+      $('[data-barra-cuanto]').innerHTML = `$${Number(juntado).toLocaleString('es-AR')} <small>de $${Number(meta).toLocaleString('es-AR')}</small>`;
+      $('[data-barra-tubo]').hidden = $('[data-barra-cuanto]').hidden = false;
+    } catch {
+      /* sin internet: queda como estaba */
+    }
+  }
+  actualizarBarra();
+  setInterval(actualizarBarra, 15000);
+
+  // ---------- El Bingo: dibuja lo que manda el operador ----------
+  const bingo = $('.bingo');
+  const tablero = $('[data-tablero]');
+  const aviso = $('[data-aviso]');
+  const monedaCaja = $('[data-moneda]');
+  const moneda = $('[data-moneda-cuerpo]');
+  let qrDe = '';
+  let ultimaMoneda = 0;
+  let estado: Estado | null = null;
+  let ultimoCambio = Date.now();
+  let volver: ReturnType<typeof setTimeout> | null = null;
+
+  // Con un ganador ya anunciado, el Bingo se queda en grande un rato y vuelve al carrusel solo
+  const DESPUES_DEL_BINGO = 90000;
+  function revisarActivo() {
+    const e = estado;
+    const terminada = !!e && e.ganadores.some((g) => !g.fuera) && !e.moneda && Date.now() - ultimoCambio > DESPUES_DEL_BINGO;
+    const activo = !!e?.ronda && !terminada;
+    if (volver) clearTimeout(volver);
+    if (activo && e!.ganadores.length) volver = setTimeout(revisarActivo, DESPUES_DEL_BINGO + 500);
+    if (activo !== bingoActivo) {
+      bingoActivo = activo;
+      ubicar();
+    }
+  }
+
+  async function dibujar(nuevo: Estado) {
+    const antes = estado;
+    estado = nuevo;
+    ultimoCambio = Date.now();
+    const { ronda, tamano, sorteadas } = nuevo;
+    bingo.dataset.fase = !ronda ? 'espera' : sorteadas.length === 0 ? 'abierta' : 'jugando';
+    revisarActivo();
+
+    if (ronda && qrDe !== ronda + tamano) {
+      qrDe = ronda + tamano;
+      $('[data-qr]').innerHTML = await QRCode.toString(linkDeRonda(ronda, tamano), {
+        type: 'svg',
+        margin: 1,
+        errorCorrectionLevel: 'M',
+        color: { dark: '#10131a', light: '#ffffff' },
+      });
+    }
+    $('[data-tamano]').textContent = describirTamano(tamano);
+    $('[data-impreso]').textContent = nuevo.impreso;
+
+    // El tablero: todos los números de la ronda, con los que salieron pintados
+    const maximo = Number(tamano.split('-')[1]);
+    if (tablero.children.length !== maximo) {
+      tablero.style.setProperty('--columnas', String(maximo / 5));
+      tablero.replaceChildren(
+        ...Array.from({ length: maximo }, (_, i) => {
+          const li = document.createElement('li');
+          li.textContent = String(i + 1);
+          return li;
+        }),
+      );
+    }
+    [...tablero.children].forEach((li, i) => {
+      li.classList.toggle('salio', sorteadas.includes(i + 1));
+      li.classList.toggle('ultima', sorteadas.at(-1) === i + 1);
+    });
+    const ultima = $('[data-ultima]');
+    const nuevaBolilla = sorteadas.at(-1);
+    if (ultima.textContent !== String(nuevaBolilla ?? '')) {
+      ultima.textContent = String(nuevaBolilla ?? '');
+      ultima.classList.remove('cae');
+      void ultima.offsetWidth; // para que la animación vuelva a arrancar
+      ultima.classList.add('cae');
+    }
+    $('[data-cuenta]').textContent = sorteadas.length ? `Bolilla ${sorteadas.length} de ${maximo}` : '';
+
+    dibujarAviso(nuevo);
+
+    // La moneda: se anima una vez por tirada
+    if (nuevo.moneda && nuevo.moneda.id !== ultimaMoneda) {
+      ultimaMoneda = nuevo.moneda.id;
+      if (antes) tirarMoneda(nuevo);
+      else mostrarMoneda(nuevo); // recién abierta la ventana: sin animación
+    }
+    if (!nuevo.moneda) monedaCaja.hidden = true;
+  }
+
+  function dibujarAviso({ ganadores }: Estado) {
+    const quedan = ganadores.filter((g) => !g.fuera);
+    if (quedan.length === 0) {
+      aviso.hidden = true;
+      return;
+    }
+    const primera = Math.min(...quedan.map((g) => g.bolilla));
+    const empatados = quedan.filter((g) => g.bolilla === primera);
+    aviso.hidden = false;
+    const numeros = $('[data-aviso-numeros]');
+    if (empatados.length === 1) {
+      $('[data-aviso-titulo]').textContent = '¡BINGO!';
+      $('[data-aviso-texto]').textContent = `Ganó el cartón ${empatados[0].codigo}`;
+      numeros.replaceChildren(
+        ...empatados[0].numeros.map((n) => {
+          const s = document.createElement('span');
+          s.className = 'bolilla bolilla--chica';
+          s.textContent = String(n);
+          return s;
+        }),
+      );
+    } else {
+      $('[data-aviso-titulo]').textContent = '¡Empate!';
+      $('[data-aviso-texto]').textContent = `${empatados.map((g) => g.codigo).join(' · ')}: lo decide la moneda`;
+      numeros.replaceChildren();
+    }
+  }
+
+  function textosMoneda(e: Estado) {
+    const m = e.moneda!;
+    $('[data-moneda-lados]').textContent = m.modo === 'desempate' ? `Cara: ${m.cara} · Cruz: ${m.cruz}` : 'Cara o cruz';
+    return m.modo === 'desempate' ? `Ganó ${m.salio === 'cara' ? m.cara : m.cruz}` : `¡Salió ${m.salio}!`;
+  }
+
+  function mostrarMoneda(e: Estado) {
+    monedaCaja.hidden = false;
+    aviso.hidden = true;
+    moneda.classList.toggle('muestra-cruz', e.moneda!.salio === 'cruz');
+    $('[data-moneda-resultado]').textContent = textosMoneda(e);
+  }
+
+  function tirarMoneda(e: Estado) {
+    monedaCaja.hidden = false;
+    aviso.hidden = true;
+    textosMoneda(e);
+    $('[data-moneda-resultado]').textContent = '';
+    moneda.classList.remove('muestra-cruz', 'gira-cara', 'gira-cruz');
+    void moneda.offsetWidth;
+    moneda.classList.add('gira-' + e.moneda!.salio);
+  }
+
+  moneda.addEventListener('animationend', () => {
+    if (!estado?.moneda) return;
+    moneda.classList.remove('gira-cara', 'gira-cruz');
+    moneda.classList.toggle('muestra-cruz', estado.moneda.salio === 'cruz');
+    $('[data-moneda-resultado]').textContent = textosMoneda(estado);
+  });
+
+  canal.addEventListener('message', ({ data }: MessageEvent<Mensaje>) => {
+    if (data.tipo === 'estado') dibujar(data.estado);
+    if (data.tipo === 'vista') mover(data.accion);
+  });
+  // Recién abierta: le pide al operador cómo va la ronda
+  canal.postMessage({ tipo: 'hola' } satisfies Mensaje);
+</script>
+
+<style>
+  /* ---------- La lona: pantalla grande, carrusel y pie ---------- */
+  .lona {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 3fr 1.05fr;
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      'cabeza cabeza'
+      'escenario nombres'
+      'escenario carrusel'
+      'pie pie';
+    gap: 1.2vh 1vw;
+    padding: 2vh 1.2vw 1.4vh;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 15% 0%, rgb(242 193 78 / 0.12), transparent 40%),
+      radial-gradient(circle at 90% 100%, rgb(79 209 181 / 0.1), transparent 45%),
+      var(--fondo);
+  }
+  .lona.completa {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'cabeza'
+      'escenario'
+      'escenario'
+      'pie';
+  }
+  .lona.completa .carrusel__nombres {
+    display: none;
+  }
+  .cabeza {
+    grid-area: cabeza;
+  }
+  .cabeza h1 {
+    margin: 0;
+    text-align: center;
+    font-size: clamp(1.1rem, 3.6vh, 3rem);
+    line-height: 1.15;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .panel[data-lugar='escenario'] {
+    grid-area: escenario;
+    animation: crece 0.7s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  /* Lo que pasa a la pantalla grande aparece creciendo, desde el lado del carrusel */
+  @keyframes crece {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+      transform-origin: right center;
+    }
+  }
+  .panel[data-lugar='carrusel'] {
+    grid-area: carrusel;
+    animation: entra 0.5s ease-out;
+  }
+  .panel[data-lugar='oculta'] {
+    display: none;
+  }
+  @keyframes entra {
+    from {
+      opacity: 0;
+      transform: translateX(3%);
+    }
+  }
+  .carrusel__nombres {
+    grid-area: nombres;
+    display: flex;
+    gap: 0.4vw;
+    font-size: clamp(0.7rem, 1.7vh, 1.4rem);
+  }
+  .carrusel__nombres :global(span) {
+    padding: 0.35em 0.9em;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    color: var(--suave);
+    transition:
+      background 0.3s,
+      color 0.3s;
+  }
+  .carrusel__nombres :global(span.activo) {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: #10131a;
+    font-weight: 700;
+  }
+
+  /* El pie: la meta del proyector y los que apoyan (boceto 1) */
+  .pie {
+    grid-area: pie;
+    display: grid;
+    grid-template-columns: 3fr 1.05fr;
+    gap: 1vw;
+    font-size: clamp(0.8rem, 2vh, 1.6rem);
+  }
+  .barra,
+  .apoyo {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    min-height: 6vh;
+    padding: 0.8vh 1.2vw;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: rgb(22 27 37 / 0.7);
+  }
+  .barra__que {
+    margin: 0;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .barra__que small {
+    display: block;
+    font-weight: 400;
+    color: var(--suave);
+    font-size: 0.8em;
+  }
+  .barra__tubo {
+    flex: 1;
+    height: 2vh;
+    border-radius: 999px;
+    background: #0b0e14;
+    border: 1px solid var(--borde);
+    overflow: hidden;
+  }
+  .barra__tubo i {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--menta), var(--oro));
+    transition: width 1.5s ease-out;
+  }
+  .barra__cuanto {
+    margin: 0;
+    font-weight: 800;
+    color: var(--oro);
+    white-space: nowrap;
+  }
+  .barra__cuanto :global(small) {
+    color: var(--suave);
+    font-weight: 400;
+  }
+  .apoyo {
+    justify-content: center;
+    color: var(--suave);
+  }
+  .apoyo__nombre {
+    color: var(--texto);
+    font-size: 1.15em;
+    animation: aparece 0.6s ease-out;
+  }
+  .apoyo__nombre[hidden] {
+    display: none;
+  }
+
+  /* ---------- Las tarjetas ---------- */
+  .panel {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5cqmin;
+    padding: 3cqmin;
+    border: 2px solid var(--borde);
+    border-radius: var(--radio);
+    background: rgb(22 27 37 / 0.7);
+    container-type: size;
+    overflow: hidden;
+    text-align: center;
+  }
+  .panel__titulo {
+    margin: 0;
+    font-size: 9cqmin;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .panel__bajada {
+    margin: 0;
+    font-size: 5cqmin;
+    color: var(--suave);
+  }
+  /* En la pantalla grande, los títulos no necesitan ser tan grandes: el espacio es para el contenido */
+  .panel[data-lugar='escenario'] .panel__titulo {
+    font-size: 6cqmin;
+  }
+  .panel[data-lugar='escenario'] .panel__bajada {
+    font-size: 3.4cqmin;
+  }
+  .panel__escena {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+  }
+  .panel__escena motor-escena {
+    width: 100%;
+    max-height: 100%;
+  }
+  .panel__esquina {
+    position: absolute;
+    top: 2.5cqmin;
+    right: 2.5cqmin;
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 0.8cqmin;
+    font-size: 2.6cqmin;
+    font-weight: 700;
+    color: var(--suave);
+  }
+  .panel[data-lugar='carrusel'] .panel__esquina {
+    display: none;
+  }
+  .qr-chico {
+    display: block;
+    width: 11cqmin;
+    padding: 0.8cqmin;
+    border-radius: 1.2cqmin;
+    background: #fff;
+  }
+  .panel__esquina .qr-chico {
+    width: 13cqmin;
+  }
+  .qr-chico :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* El stand: un dibujo y lo que hay (cuando el modelo 3D esté cerrado, va el de verdad) */
+  .stand {
+    flex: 1;
+    min-height: 0;
+    width: 90%;
+  }
+  .stand__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.5cqmin;
+    font-size: 5cqmin;
+    text-align: left;
+  }
+  .stand__lista span {
+    display: inline-block;
+    width: 1.5em;
+  }
+
+  /* ---------- El Bingo ---------- */
+  .bingo .panel__titulo {
+    font-size: 12cqmin;
+    color: var(--oro);
+  }
+  .bingo__espera,
+  .bingo__abierta,
+  .bingo__jugando {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2cqmin;
+  }
+  .bingo[data-fase='espera'] .bingo__espera,
+  .bingo[data-fase='abierta'] .bingo__abierta,
+  .bingo[data-fase='jugando'] .bingo__jugando {
+    display: flex;
+  }
+  .bingo__textos {
+    display: grid;
+    gap: 2cqmin;
+  }
+  .bingo__llamado {
+    display: none;
+  }
+  @container (aspect-ratio > 1.25) {
+    .bingo__abierta,
+    .bingo__jugando {
+      flex-direction: row;
+      gap: 6cqmin;
+    }
+    .bingo__textos {
+      text-align: left;
+    }
+    .bingo__llamado {
+      display: block;
+      color: var(--oro);
+    }
+    .bingo__qr {
+      width: 62cqmin;
+    }
+    .bingo__arriba {
+      flex-direction: column;
+    }
+    .bingo__jugando .bolilla {
+      width: 40cqmin;
+      font-size: 20cqmin;
+    }
+    .tablero {
+      width: auto;
+      flex: 1;
+      max-width: 120cqmin;
+    }
+    .tablero :global(li) {
+      font-size: 6cqmin;
+      padding: 1.6cqmin 0;
+    }
+    .panel__titulo + .bingo__espera .bingo__grande {
+      font-size: 14cqmin;
+    }
+  }
+  .bingo__grande {
+    margin: 0;
+    font-size: 11cqmin;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .bingo__chico {
+    margin: 0;
+    font-size: 5.5cqmin;
+    line-height: 1.3;
+  }
+  .bingo__nota {
+    margin: 0;
+    font-size: 4.5cqmin;
+    color: var(--suave);
+  }
+  .bingo__qr {
+    display: block;
+    width: 52cqmin;
+    padding: 1.5cqmin;
+    border-radius: 2cqmin;
+    background: #fff;
+  }
+  .bingo__qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .bingo__arriba {
+    display: flex;
+    align-items: center;
+    gap: 4cqmin;
+  }
+  .bingo__cuenta {
+    margin: 0;
+    font-size: 6cqmin;
+    color: var(--suave);
+  }
+  .bolilla {
+    width: 30cqmin;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 15cqmin;
+    font-weight: 800;
+    color: #3a2a00;
+    background: radial-gradient(circle at 35% 30%, #fff6d6, var(--oro) 55%, #b8871a);
+    box-shadow: 0 1.5cqmin 4cqmin rgb(0 0 0 / 0.45);
+  }
+  .bolilla:empty {
+    visibility: hidden;
+  }
+  .bolilla.cae {
+    animation: cae 0.6s cubic-bezier(0.3, 1.5, 0.6, 1);
+  }
+  @keyframes cae {
+    from {
+      transform: translateY(-40%) scale(0.4);
+      opacity: 0;
+    }
+  }
+  /* Los que crea el script no llevan la marca de Astro: van con :global, dentro de su caja */
+  .bingo__numeros :global(.bolilla) {
+    width: 11cqmin;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 5.5cqmin;
+    font-weight: 800;
+    color: #3a2a00;
+    background: radial-gradient(circle at 35% 30%, #fff6d6, var(--oro) 55%, #b8871a);
+  }
+  .tablero {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(var(--columnas, 6), 1fr);
+    gap: 1.2cqmin;
+  }
+  .tablero :global(li) {
+    display: grid;
+    place-items: center;
+    padding: 1cqmin 0;
+    border-radius: 1.5cqmin;
+    font-size: 5cqmin;
+    font-weight: 700;
+    color: #5d6779;
+    background: rgb(255 255 255 / 0.04);
+  }
+  .tablero :global(li.salio) {
+    color: #10131a;
+    background: var(--menta);
+  }
+  .tablero :global(li.ultima) {
+    background: var(--oro);
+  }
+
+  .bingo__aviso,
+  .bingo__moneda {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3cqmin;
+    padding: 4cqmin;
+    background: rgb(13 16 23 / 0.94);
+  }
+  .bingo__aviso[hidden],
+  .bingo__moneda[hidden] {
+    display: none;
+  }
+  .bingo__aviso .bingo__grande {
+    font-size: 16cqmin;
+    color: var(--oro);
+  }
+  .bingo__numeros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2cqmin;
+  }
+  .bingo__resultado {
+    min-height: 1.2em;
+    color: var(--menta);
+  }
+
+  /* La moneda: la de la clase "Juegos I", medida con el panel */
+  .escena-moneda {
+    perspective: 120cqmin;
+    display: grid;
+    place-items: center;
+    padding-top: 18cqmin;
+  }
+  .moneda {
+    position: relative;
+    width: 30cqmin;
+    height: 30cqmin;
+    transform-style: preserve-3d;
+  }
+  .moneda .lado {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 5.5cqmin;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #6b4f00;
+    background: radial-gradient(circle at 35% 30%, #fff1b8, #e0b12a 60%, #9c7300);
+    box-shadow:
+      inset 0 0 0 1.6cqmin rgba(255, 255, 255, 0.25),
+      inset 0 0 0 2cqmin rgba(107, 79, 0, 0.35);
+    backface-visibility: hidden;
+  }
+  .moneda .cruz,
+  .moneda.muestra-cruz {
+    transform: rotateY(180deg);
+  }
+  @keyframes sale-cara {
+    0% {
+      transform: translateY(0) rotateY(0);
+      animation-timing-function: ease-out;
+    }
+    50% {
+      transform: translateY(-18cqmin) rotateY(900deg) scale(1.1);
+      animation-timing-function: ease-in;
+    }
+    100% {
+      transform: translateY(0) rotateY(1800deg);
+    }
+  }
+  @keyframes sale-cruz {
+    0% {
+      transform: translateY(0) rotateY(0);
+      animation-timing-function: ease-out;
+    }
+    50% {
+      transform: translateY(-18cqmin) rotateY(990deg) scale(1.1);
+      animation-timing-function: ease-in;
+    }
+    100% {
+      transform: translateY(0) rotateY(1980deg);
+    }
+  }
+  .moneda.gira-cara {
+    animation: sale-cara 2s;
+  }
+  .moneda.gira-cruz {
+    animation: sale-cruz 2s;
+  }
+
+  /* ---------- La vidriera ---------- */
+  .vidriera {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: grid;
+    place-items: center;
+  }
+  .vidriera__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1cqmin;
+    animation: aparece 0.6s ease-out;
+  }
+  .vidriera__item[hidden] {
+    display: none;
+  }
+  @keyframes aparece {
+    from {
+      opacity: 0;
+      transform: translateY(3cqmin);
+    }
+  }
+  .vidriera__emoji {
+    font-size: 12cqmin;
+    line-height: 1;
+  }
+  .vidriera__nombre {
+    margin: 0;
+    font-size: 7.5cqmin;
+    font-weight: 800;
+  }
+  .vidriera__rubro {
+    margin: 0;
+    font-size: 5cqmin;
+    color: var(--suave);
+  }
+  .vidriera__qr {
+    display: block;
+    padding: 1cqmin;
+    border-radius: 1.5cqmin;
+    background: #fff;
+  }
+  .vidriera__qr {
+    width: 34cqmin;
+    margin-top: 1.5cqmin;
+  }
+  .vidriera__qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .vidriera__todos {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 2cqmin;
+    font-size: 4.5cqmin;
+    color: var(--suave);
+  }
+
+  .ayuda {
+    position: fixed;
+    left: 50%;
+    bottom: 3vh;
+    translate: -50% 0;
+    margin: 0;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--oro);
+    color: #10131a;
+    font-weight: 700;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bolilla.cae,
+    .vidriera__item,
+    .panel[data-lugar='carrusel'],
+    .panel[data-lugar='escenario'],
+    .apoyo__nombre {
+      animation: none;
+    }
+  }
+</style>

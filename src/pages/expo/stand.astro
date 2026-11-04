@@ -6,8 +6,10 @@
  * son supuestas: se cambian con los controles y se recalculan el modelo, la planta y la
  * lista de lo que hay que conseguir. Three.js r128 sale del CDN, como scripts comunes
  * (sin módulos), así que el modelo necesita internet. Enlazada desde "Preparando la Expo".
+ * Los temas para los directivos ya no van acá: están en el panel privado (/expo/panel/).
  */
-const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const curso = base + '/preparando-expo/';
 ---
 
 <!doctype html>
@@ -100,32 +102,6 @@ const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
                     </div>
                 </section>
             </div>
-
-            <section class="bloque" aria-labelledby="temas-titulo">
-                <h2 id="temas-titulo">Para hablar con los directivos</h2>
-                <form class="clave" id="form-clave">
-                    <label for="clave">Con la clave de administración de los catálogos</label>
-                    <div class="fila">
-                        <input id="clave" type="password" autocomplete="current-password" required />
-                        <button type="submit" class="principal">Ver los temas</button>
-                    </div>
-                    <p class="error" id="error-clave" role="alert"></p>
-                </form>
-                <div id="temas" hidden>
-                    <ol class="charla" id="temas-lista"></ol>
-                    <p class="nota" id="temas-vacio" hidden>Todavía no hay temas cargados.</p>
-                    <div class="fila"><button type="button" id="editar-temas">Editar</button></div>
-                </div>
-                <form id="form-temas" hidden>
-                    <label for="temas-texto">Un tema por renglón</label>
-                    <textarea id="temas-texto" rows="8"></textarea>
-                    <div class="fila">
-                        <button type="submit" class="principal">Guardar</button>
-                        <button type="button" id="cancelar-temas">Cancelar</button>
-                    </div>
-                    <p class="error" id="error-temas" role="alert"></p>
-                </form>
-            </section>
         </main>
         <footer class="pie">Hecho por el curso de <a href={curso}>Pensamiento Computacional</a> del CFP 401</footer>
 
@@ -195,14 +171,15 @@ const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
                 const enchufes = m + pcs + 3 + 2;
                 const filas = [
                     ['Lona o pantalla, 2,4 × 1,8 m', 1, 'confirmar', 'Medida supuesta. Confirmar cómo se cuelga.'],
-                    ['Proyector', 1, 'confirmar', 'Falta el modelo: define el tamaño de la imagen.'],
+                    ['Proyector', 1, 'confirmar', 'El Android de casa solo se ve bien con mucha oscuridad: depende de la cortina. Si no, conseguir otro.'],
                     ['Mesita o soporte para el proyector', 1, 'falta', 'Alto cercano a 1,2 m.'],
                     ['Notebook', 1, 'ya', 'Maneja la lona y el Bingo.'],
                     ['Mesas del frente', c.nMesas, 'confirmar', 'Medida supuesta: 1,2 × 0,6 m.'],
                     ['Mesa de atrás', 1, 'confirmar', 'Para la notebook y lo que haga falta.'],
-                    ['Manteles hasta el piso', c.nMesas + 1, 'confirmar', 'Esconden las PC y los cables.'],
+                    ['Lonas o manteles hasta el piso', c.nMesas + 1, 'falta', 'Esconden las PC y los cables. Comprarlas.'],
                     ['PC de escritorio', pcs, 'confirmar', 'Debajo de las mesas, del lado del equipo.'],
                     ['Monitores', m, 'confirmar', 'Uno lo usa el Bingo.'],
+                    ['TV donada', 1, 'confirmar', 'Ver si funciona y si nadie la reservó para la Expo. Sería otro monitor (el stand en 3D, por ejemplo).'],
                     ['Teclado y mouse', pcs, 'confirmar', 'Quedan al alcance del público.'],
                     ['Caja para elevar el monitor del Bingo', 1, 'falta', 'Unos 25 cm, para verlo por encima de la gente.'],
                     ['HDMI largo para el monitor del Bingo', 1, 'falta', 'Desde el divisor hasta las mesas del frente.'],
@@ -212,7 +189,7 @@ const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
                     ['Zapatillas de 5 tomas', Math.ceil(enchufes / 5), 'falta', enchufes + ' enchufes con dos de repuesto. Sumar alargues.'],
                     ['Carteles A3 con QR', c.nMesas, 'falta', 'Pegados al frente de cada mesa.'],
                     ['Cartel de auspiciantes', 1, 'falta', 'Con las tiendas que aportan vales.'],
-                    ['Tela oscura detrás de la pantalla', 1, 'confirmar', 'Solo si seguimos delante de la reja vidriada. Unos 3 × 2,5 m.'],
+                    ['Cortina o tela blackout', 1, 'confirmar', 'Para la reja de atrás, con un recorte para la puerta. Unos 3 × 2,5 m. Preguntar a los directivos.'],
                     ['Lona impresa del curso', 1, 'confirmar', 'La de años anteriores, para la pared lateral.'],
                 ];
                 const nombre = { ya: 'Ya está', confirmar: 'A confirmar', falta: 'A conseguir' };
@@ -299,18 +276,53 @@ const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
                 return m;
             }
 
-            function pantallaBingo(ctx, w, h) {
-                ctx.fillStyle = '#0d3b43'; ctx.fillRect(0, 0, w, h);
-                ctx.fillStyle = '#fff'; ctx.font = '700 62px "Archivo Narrow", sans-serif'; ctx.textAlign = 'center';
-                ctx.fillText('Bingo del stand', w / 2, 74);
-                [7, 19, 3, 26, 12, 30, 22].forEach((n, i) => {
-                    const x = 70 + (i % 7) * 72 + 6, y = 142;
-                    ctx.fillStyle = i === 6 ? '#f4b740' : '#2aa9b5'; ctx.beginPath(); ctx.arc(x, y, 30, 0, 7); ctx.fill();
-                    ctx.fillStyle = '#10272a'; ctx.font = '700 30px "Archivo Narrow", sans-serif'; ctx.fillText(n, x, y + 11);
+            /* Lo que se proyecta: el diseño elegido para /expo/proyector/ (pantalla grande con el sistema,
+             * carrusel a la derecha con el Bingo, y abajo la meta del proyector y los sponsors). */
+            function pantallaLona(ctx, w, h) {
+                const redondo = (x, y, a, b, r, relleno, borde) => {
+                    ctx.beginPath(); ctx.roundRect(x, y, a, b, r);
+                    if (relleno) { ctx.fillStyle = relleno; ctx.fill(); }
+                    if (borde) { ctx.strokeStyle = borde; ctx.lineWidth = 2; ctx.stroke(); }
+                };
+                ctx.fillStyle = '#0d1017'; ctx.fillRect(0, 0, w, h);
+                ctx.textAlign = 'center'; ctx.fillStyle = '#eef1f6';
+                ctx.font = '700 17px "Archivo Narrow", sans-serif';
+                ctx.fillText('PENSAMIENTO COMPUTACIONAL Y TESTING DE APLICACIONES 2026', w / 2, 22);
+                // La pantalla grande: el sistema
+                redondo(8, 32, 462, 272, 10, '#161b25', '#262e3d');
+                ctx.font = '700 22px "Archivo Narrow", sans-serif'; ctx.fillText('¿QUÉ CONSTRUIMOS?', 239, 62);
+                [['Tótem', '#4fd1b5', 40], ['Servidor', '#f2c14e', 184], ['Planilla', '#7aa7ff', 328]].forEach(([n, c, x]) => {
+                    redondo(x, 130, 110, 70, 10, '#0d1017', c);
+                    ctx.fillStyle = '#eef1f6'; ctx.font = '700 19px "Archivo Narrow", sans-serif'; ctx.fillText(n, x + 55, 172);
                 });
-                ctx.fillStyle = '#fff'; ctx.fillRect(w / 2 - 42, 196, 84, 84);
-                ctx.fillStyle = '#10272a';
-                for (let i = 0; i < 7; i++) for (let j = 0; j < 7; j++) if ((i * 3 + j * 5) % 3) ctx.fillRect(w / 2 - 36 + i * 10.3, 202 + j * 10.3, 9, 9);
+                ctx.strokeStyle = '#f2c14e'; ctx.setLineDash([7, 6]); ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(152, 165); ctx.lineTo(182, 165); ctx.moveTo(296, 165); ctx.lineTo(326, 165); ctx.stroke();
+                ctx.setLineDash([]);
+                // El carrusel: el Bingo
+                redondo(478, 32, 154, 272, 10, '#161b25', '#262e3d');
+                ctx.fillStyle = '#f2c14e'; ctx.font = '700 20px "Archivo Narrow", sans-serif'; ctx.fillText('BINGO', 555, 58);
+                const bolilla = ctx.createRadialGradient(538, 88, 4, 548, 98, 32);
+                bolilla.addColorStop(0, '#fff6d6'); bolilla.addColorStop(0.6, '#f2c14e'); bolilla.addColorStop(1, '#b8871a');
+                ctx.fillStyle = bolilla; ctx.beginPath(); ctx.arc(555, 102, 30, 0, 7); ctx.fill();
+                ctx.fillStyle = '#3a2a00'; ctx.font = '800 30px "Archivo Narrow", sans-serif'; ctx.fillText('22', 555, 113);
+                for (let i = 0; i < 30; i++) {
+                    const x = 494 + (i % 6) * 21.5, y = 146 + Math.floor(i / 6) * 18;
+                    redondo(x, y, 18, 15, 3, [3, 8, 12, 17, 22, 27].includes(i) ? '#4fd1b5' : '#232a37');
+                }
+                ctx.fillStyle = '#fff'; ctx.fillRect(531, 244, 48, 48);
+                ctx.fillStyle = '#10131a';
+                for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) if ((i * 3 + j * 5) % 3) ctx.fillRect(534 + i * 7.2, 247 + j * 7.2, 6, 6);
+                // Abajo: la meta del proyector y los sponsors
+                redondo(8, 312, 462, 40, 10, '#161b25', '#262e3d');
+                ctx.textAlign = 'left'; ctx.fillStyle = '#eef1f6'; ctx.font = '700 14px "Archivo Narrow", sans-serif';
+                ctx.fillText('Proyector para el CFP', 20, 337);
+                redondo(170, 326, 280, 12, 6, '#0b0e14');
+                const meta = ctx.createLinearGradient(170, 0, 280, 0);
+                meta.addColorStop(0, '#4fd1b5'); meta.addColorStop(1, '#f2c14e');
+                redondo(170, 326, 110, 12, 6, meta);
+                redondo(478, 312, 154, 40, 10, '#161b25', '#262e3d');
+                ctx.textAlign = 'center'; ctx.fillStyle = '#a3adbd'; ctx.font = '600 13px "Archivo Narrow", sans-serif';
+                ctx.fillText('Con el apoyo de', 555, 328); ctx.fillStyle = '#eef1f6'; ctx.fillText('Puerto Informático', 555, 344);
             }
 
             function pantallaRol(rol) {
@@ -385,7 +397,7 @@ const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
                 caja(LONA.a + 0.12, 0.05, 0.05, '#555f60', c.lonaX, LONA.y + LONA.h + 0.03, 0.08);
                 caja(LONA.a + 0.12, 0.05, 0.05, '#555f60', c.lonaX, LONA.y - 0.03, 0.08);
                 const yImg = LONA.y + LONA.h / 2;
-                const img = new THREE.MeshBasicMaterial({ map: textura(640, 360, pantallaBingo) });
+                const img = new THREE.MeshBasicMaterial({ map: textura(640, 360, pantallaLona) });
                 plano(c.imgA, c.imgH, img, c.lonaX, yImg, 0.083);
 
                 for (let i = 0; i < c.nMesas; i++) {
@@ -573,80 +585,6 @@ const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
             actualizar();
             iniciar3D();
             if (document.fonts) document.fonts.ready.then(construir);
-
-            /* ---------- Los temas para los directivos ----------
-             * No están en el repo: los guarda el Worker de los catálogos y los da con la clave
-             * de administración. En desarrollo, ?worker=http://127.0.0.1:8787 usa uno local. */
-            (function () {
-                let WORKER = 'https://catalogos.maxinunez434.workers.dev';
-                if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-                    try {
-                        const pedido = new URLSearchParams(location.search).get('worker');
-                        if (pedido === 'no') localStorage.removeItem('catalogos:worker');
-                        else if (pedido) localStorage.setItem('catalogos:worker', pedido);
-                        WORKER = localStorage.getItem('catalogos:worker') || WORKER;
-                    } catch (e) {}
-                }
-                let clave = '';
-                let temas = [];
-
-                function pedir(metodo, cuerpo) {
-                    return fetch(WORKER + '/admin/expo/temas', {
-                        method: metodo,
-                        headers: { 'X-Admin': clave, 'Content-Type': 'application/json' },
-                        body: cuerpo ? JSON.stringify(cuerpo) : undefined,
-                    }).then((r) => r.json().then((datos) => {
-                        if (!r.ok) throw new Error(datos.error || 'No se pudo');
-                        return datos;
-                    }), () => { throw new Error('No hay conexión con el servidor'); });
-                }
-
-                function mostrar(lista) {
-                    temas = lista;
-                    $('#temas-lista').replaceChildren(...lista.map((t) => {
-                        const li = document.createElement('li');
-                        li.textContent = t;
-                        return li;
-                    }));
-                    $('#temas-vacio').hidden = lista.length > 0;
-                    $('#form-clave').hidden = true;
-                    $('#form-temas').hidden = true;
-                    $('#temas').hidden = false;
-                }
-
-                $('#form-clave').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    clave = $('#clave').value;
-                    $('#error-clave').textContent = '';
-                    pedir('GET').then((datos) => {
-                        try { sessionStorage.setItem('stand:admin', clave); } catch (err) {}
-                        mostrar(datos.temas);
-                    }).catch((error) => {
-                        try { sessionStorage.removeItem('stand:admin'); } catch (err) {}
-                        $('#error-clave').textContent = error.message;
-                    });
-                });
-                $('#editar-temas').addEventListener('click', () => {
-                    $('#temas-texto').value = temas.join('\n');
-                    $('#temas').hidden = true;
-                    $('#form-temas').hidden = false;
-                    $('#temas-texto').focus();
-                });
-                $('#cancelar-temas').addEventListener('click', () => mostrar(temas));
-                $('#form-temas').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    $('#error-temas').textContent = '';
-                    const lista = $('#temas-texto').value.split('\n').map((t) => t.trim()).filter(Boolean);
-                    pedir('PUT', { temas: lista }).then((datos) => mostrar(datos.temas))
-                        .catch((error) => { $('#error-temas').textContent = error.message; });
-                });
-
-                // Con la clave ya puesta en esta pestaña, entra solo
-                try {
-                    const guardada = sessionStorage.getItem('stand:admin');
-                    if (guardada) { $('#clave').value = guardada; $('#form-clave').requestSubmit(); }
-                } catch (e) {}
-            })();
         </script>
     </body>
 </html>
@@ -746,21 +684,6 @@ const curso = import.meta.env.BASE_URL.replace(/\/$/, '') + '/preparando-expo/';
     .estado { font: 500 12px var(--dato); white-space: nowrap; color: var(--suave); }
     .estado.ya { color: var(--ok); }
     .estado.falta { color: var(--azulejo); }
-    .charla { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 6px; max-width: 75ch; }
-    .clave, #form-temas { display: grid; gap: 8px; max-width: 75ch; }
-    .clave label, #form-temas label { font-weight: 600; font-size: 14px; }
-    .fila { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .clave input, #form-temas textarea {
-        font: inherit; color: inherit; background: var(--superficie); border: 1px solid var(--linea); padding: 9px 11px;
-    }
-    .clave input { flex: 1; min-width: 12rem; }
-    #form-temas textarea { width: 100%; resize: vertical; }
-    .bloque button:not(.tema) {
-        font: 600 14px/1 var(--cuerpo); color: var(--mantel); background: var(--superficie);
-        border: 1px solid var(--mantel); padding: 10px 14px; cursor: pointer;
-    }
-    .bloque button.principal { background: var(--mantel); color: var(--superficie); }
-    .error { color: var(--azulejo); font-size: 13px; font-weight: 600; margin: 0; min-height: 1.2em; }
     .pie { text-align: center; color: var(--suave); font-size: 0.85rem; padding: 16px 16px 32px; }
     .pie a { color: var(--mantel); font-weight: 600; }
     @media (max-width: 960px) { .trabajo, .dos { grid-template-columns: minmax(0, 1fr); } }

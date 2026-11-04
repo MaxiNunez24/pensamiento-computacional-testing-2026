@@ -1,0 +1,737 @@
+---
+/**
+ * El operador del Bingo: /expo/bingo/operador/
+ *
+ * Va en la pantalla de la NOTEBOOK, que no se proyecta (pantalla extendida): lo que pasa acá no lo
+ * ve el público. Desde acá se abre la ventana del proyector, se sacan las bolillas, se validan los
+ * cartones y se tira la moneda. Todo con el teclado: nadie tiene que apuntar con el mouse.
+ *
+ * Pide la clave de administración (la de los catálogos): con ella se validan los cartones, que
+ * vienen firmados por el Worker (ver src/scripts/bingo-cartones.js). Validar no necesita internet.
+ */
+import Expo from '../../../layouts/Expo.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Expo titulo="Operador del Bingo · Expo CFP 401" descripcion="La pantalla privada del Bingo del stand.">
+  <main class="hoja">
+    <form class="tarjeta entrar" data-entrar>
+      <h1>Operador del Bingo</h1>
+      <label for="clave">Clave de administración <small>la de los catálogos</small></label>
+      <input id="clave" type="password" autocomplete="current-password" required />
+      <button type="submit" class="boton boton--oro">Entrar</button>
+      <p class="error" data-error-clave role="alert"></p>
+    </form>
+
+    <div class="panel" data-panel hidden>
+      <header class="barra">
+        <button type="button" class="boton" data-abrir>Abrir la pantalla del proyector</button>
+        <span class="estado" data-hora></span>
+        <span class="estado" data-atajos-estado></span>
+      </header>
+
+      <div class="columnas">
+        <div class="columna">
+          <!-- ===== La ronda ===== -->
+          <section class="tarjeta">
+            <h2>Ronda <span class="codigo" data-ronda>—</span></h2>
+            <div class="fila">
+              <label for="jugadores">¿Cuántos juegan, más o menos?</label>
+              <input id="jugadores" type="number" min="1" max="200" value="10" class="corto" />
+              <span data-tamano-elegido></span>
+            </div>
+            <div class="fila">
+              <label for="impreso">Debajo del QR</label>
+              <input id="impreso" maxlength="60" />
+            </div>
+            <button type="button" class="boton boton--oro" data-nueva>Ronda nueva <kbd>N</kbd></button>
+            <p class="nota" data-nueva-aviso></p>
+            <details data-imprimir hidden>
+              <summary>Cartones impresos: QR para el celular del stand</summary>
+              <div class="qr-imprimir" data-qr-imprimir></div>
+              <p class="nota">Se escanea con el celular de la impresora. Cada cartón se pide <strong>antes</strong> de la primera bolilla.</p>
+            </details>
+          </section>
+
+          <!-- ===== Las bolillas ===== -->
+          <section class="tarjeta">
+            <h2>Bolillas</h2>
+            <div class="fila">
+              <span class="bolilla" data-ultima></span>
+              <div>
+                <p class="grande" data-cuenta>Todavía no salió ninguna</p>
+                <p class="nota" data-salieron></p>
+              </div>
+            </div>
+            <div class="fila">
+              <button type="button" class="boton boton--oro" data-sacar>Sacar bolilla <kbd>Espacio</kbd></button>
+              <button type="button" class="boton" data-auto>Automático <kbd>A</kbd></button>
+              <label class="fila-chica">cada <input type="number" min="3" max="30" value="8" class="mini" data-segundos /> s</label>
+            </div>
+            <button type="button" class="enlace" data-deshacer>Deshacer la última bolilla</button>
+          </section>
+        </div>
+
+        <div class="columna">
+          <!-- ===== Validar ===== -->
+          <section class="tarjeta">
+            <h2>¿Bingo? Validar <kbd>V</kbd></h2>
+            <form class="fila" data-validar>
+              <input id="codigo" class="codigo-entrada" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="11" placeholder="XXXX-XXXX" aria-label="Código del cartón" />
+              <button type="submit" class="boton boton--oro">Validar</button>
+            </form>
+            <div class="resultado" data-resultado aria-live="polite"></div>
+            <ol class="ganadores" data-ganadores></ol>
+          </section>
+
+          <!-- ===== La moneda ===== -->
+          <section class="tarjeta">
+            <h2>Moneda</h2>
+            <button type="button" class="boton boton--oro" data-desempate disabled>Desempatar <kbd>M</kbd></button>
+            <p class="nota">El desempate es siempre mitad y mitad: lo de abajo no lo toca.</p>
+            <hr />
+            <p><strong>Para jugar en el stand</strong>: quien juega elige y vos apretás.</p>
+            <div class="fila">
+              <button type="button" class="boton" data-libre="cara">Eligió cara <kbd>C</kbd></button>
+              <button type="button" class="boton" data-libre="cruz">Eligió cruz <kbd>X</kbd></button>
+            </div>
+            <label for="prob">Que gane quien elige: <strong data-porcentaje>50 %</strong> <small>teclas 0 a 9</small></label>
+            <input id="prob" type="range" min="0" max="100" step="10" value="50" />
+            <p class="resultado" data-moneda-resultado aria-live="polite"></p>
+            <button type="button" class="enlace" data-sacar-moneda>Sacar la moneda de la pantalla <kbd>Esc</kbd></button>
+          </section>
+        </div>
+      </div>
+
+      <!-- ===== Lo que sale por el proyector ===== -->
+      <section class="tarjeta">
+        <div class="fila">
+          <h2>Lo que se ve en la lona</h2>
+          <button type="button" class="enlace" data-vista-previa>Esconder</button>
+        </div>
+        <div class="previa" data-previa>
+          <iframe src={`${base}/expo/proyector/`} title="Vista previa del proyector" tabindex="-1"></iframe>
+        </div>
+      </section>
+
+      <section class="tarjeta atajos">
+        <h2>Atajos <small>F9 los prende y los apaga</small></h2>
+        <ul>
+          <li><kbd>Espacio</kbd> bolilla · <kbd>A</kbd> automático · <kbd>N</kbd> ronda nueva (dos veces si hay una en juego)</li>
+          <li><kbd>V</kbd> escribir un código · <kbd>Enter</kbd> validarlo · <kbd>Esc</kbd> salir del casillero</li>
+          <li><kbd>M</kbd> desempate · <kbd>C</kbd> / <kbd>X</kbd> moneda libre · <kbd>0</kbd>–<kbd>9</kbd> probabilidad (0 = 100 %) · <kbd>Esc</kbd> sacar la moneda</li>
+          <li><kbd>Ctrl</kbd> + <kbd>←</kbd> <kbd>→</kbd> pasar el carrusel de la lona · <kbd>Ctrl</kbd> + <kbd>↑</kbd> a la pantalla grande (otra vez: toda la lona) · <kbd>Ctrl</kbd> + <kbd>↓</kbd> un paso atrás</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</Expo>
+
+<script>
+  import QRCode from 'qrcode';
+  import { claveBingo, elegirCarton, leerCarton, nuevaRonda } from '../../../scripts/bingo-cartones.js';
+  import { WORKER, canal, ESTADO_INICIAL, accionDeVista, describirTamano, linkDeRonda, type Estado, type Mensaje } from '../../../scripts/bingo-expo';
+
+  const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
+  const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+  let estado: Estado = { ...ESTADO_INICIAL };
+  try {
+    const guardado = JSON.parse(localStorage.getItem('bingo:operador') || 'null');
+    if (guardado) estado = { ...ESTADO_INICIAL, ...guardado };
+  } catch {
+    /* empieza de cero */
+  }
+  let clave: CryptoKey | null = null;
+  let claveTexto = '';
+  let desfase = 0; // hora del Worker − hora de la notebook
+  let atajos = true;
+  let auto: ReturnType<typeof setInterval> | null = null;
+  let confirmarNueva = 0;
+
+  const ahora = () => Date.now() + desfase;
+  const azar = (n: number) => crypto.getRandomValues(new Uint32Array(1))[0] % n;
+
+  function cambiar() {
+    try {
+      localStorage.setItem('bingo:operador', JSON.stringify(estado));
+    } catch {
+      /* nada */
+    }
+    canal.postMessage({ tipo: 'estado', estado } satisfies Mensaje);
+    dibujar();
+  }
+
+  canal.addEventListener('message', ({ data }: MessageEvent<Mensaje>) => {
+    if (data.tipo === 'hola') canal.postMessage({ tipo: 'estado', estado } satisfies Mensaje);
+  });
+
+  // ---------- Entrar ----------
+  async function entrar(texto: string) {
+    $('[data-error-clave]').textContent = '';
+    let aviso = '';
+    try {
+      const r = await fetch(WORKER + '/admin/expo/temas', { headers: { 'X-Admin': texto } });
+      if (r.status === 401 || r.status === 403) throw new Error('Esa no es la clave.');
+      const t0 = Date.now();
+      const { ahora: delWorker } = await (await fetch(WORKER + '/bingo/hora')).json();
+      desfase = delWorker - (t0 + Date.now()) / 2;
+      aviso = Math.abs(desfase) > 3000 ? `La hora de la notebook está corrida ${Math.round(desfase / 1000)} s: ya está compensado.` : 'Hora en orden.';
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Esa no es la clave.') {
+        $('[data-error-clave]').textContent = error.message;
+        return;
+      }
+      aviso = 'Sin internet: no pude comprobar la clave ni la hora. Si un cartón bueno no valida, revisá la clave.';
+    }
+    clave = await claveBingo(texto);
+    claveTexto = texto;
+    try {
+      sessionStorage.setItem('stand:admin', texto);
+    } catch {
+      /* nada */
+    }
+    $('[data-hora]').textContent = aviso;
+    $('[data-entrar]').hidden = true;
+    $('[data-panel]').hidden = false;
+    cambiar();
+  }
+  $('[data-entrar]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    entrar($<HTMLInputElement>('#clave').value);
+  });
+  try {
+    const guardada = sessionStorage.getItem('stand:admin');
+    if (guardada) entrar(guardada);
+  } catch {
+    /* nada */
+  }
+
+  // ---------- El proyector ----------
+  $('[data-abrir]').addEventListener('click', () => {
+    window.open(`${BASE}/expo/proyector/`, 'expo-proyector', 'popup=yes,width=1280,height=720');
+  });
+  $('[data-vista-previa]').addEventListener('click', (e) => {
+    const previa = $('[data-previa]');
+    previa.hidden = !previa.hidden;
+    (e.target as HTMLElement).textContent = previa.hidden ? 'Mostrar' : 'Esconder';
+  });
+
+  // ---------- La ronda ----------
+  const jugadores = $<HTMLInputElement>('#jugadores');
+  const impreso = $<HTMLInputElement>('#impreso');
+  const tamanoElegido = () => {
+    const { cantidad, maximo } = elegirCarton(Number(jugadores.value) || 1);
+    return `${cantidad}-${maximo}`;
+  };
+  jugadores.addEventListener('input', () => {
+    $('[data-tamano-elegido]').textContent = '→ ' + describirTamano(tamanoElegido());
+  });
+  jugadores.dispatchEvent(new Event('input'));
+  impreso.value = estado.impreso;
+  impreso.addEventListener('change', () => {
+    estado.impreso = impreso.value.trim();
+    cambiar();
+  });
+
+  function rondaNueva() {
+    const enJuego = estado.ronda && estado.sorteadas.length > 0 && estado.ganadores.length === 0;
+    if (enJuego && Date.now() - confirmarNueva > 4000) {
+      confirmarNueva = Date.now();
+      $('[data-nueva-aviso]').textContent = 'Hay una ronda en juego: apretá N otra vez para empezar otra.';
+      return;
+    }
+    pararAuto();
+    $('[data-nueva-aviso]').textContent = '';
+    $('[data-resultado]').replaceChildren();
+    estado = { ...estado, ronda: nuevaRonda(), tamano: tamanoElegido(), sorteadas: [], inicio: null, ganadores: [], moneda: null };
+    cambiar();
+  }
+  $('[data-nueva]').addEventListener('click', rondaNueva);
+
+  // ---------- Las bolillas ----------
+  // Con la primera bolilla, el Worker deja de dar cartones de esta ronda: a quien escanea tarde le dice
+  // que espere la próxima, en vez de darle uno que no va a valer. Sin internet no pasa nada: el
+  // operador igual rechaza los cartones tardíos al validar.
+  function avisarEmpezo(ronda: string, inicio: number | null) {
+    const url = new URL(WORKER + '/admin/bingo/empezo');
+    url.searchParams.set('ronda', ronda);
+    if (inicio) url.searchParams.set('inicio', String(inicio));
+    fetch(url, { method: inicio ? 'POST' : 'DELETE', headers: { 'X-Admin': claveTexto } }).catch(() => {});
+  }
+
+  function sacar() {
+    if (!estado.ronda) {
+      $('[data-cuenta]').textContent = 'Primero, una ronda nueva (N)';
+      return;
+    }
+    const maximo = Number(estado.tamano.split('-')[1]);
+    const quedan = Array.from({ length: maximo }, (_, i) => i + 1).filter((n) => !estado.sorteadas.includes(n));
+    if (quedan.length === 0) return pararAuto();
+    if (estado.sorteadas.length === 0) {
+      estado.inicio = ahora();
+      avisarEmpezo(estado.ronda, estado.inicio);
+    }
+    estado.sorteadas = [...estado.sorteadas, quedan[azar(quedan.length)]];
+    cambiar();
+  }
+  function pararAuto() {
+    if (auto) clearInterval(auto);
+    auto = null;
+    $('[data-auto]').classList.remove('activo');
+  }
+  function alternarAuto() {
+    if (auto) return pararAuto();
+    const segundos = Math.max(3, Number($<HTMLInputElement>('[data-segundos]').value) || 8);
+    sacar();
+    auto = setInterval(sacar, segundos * 1000);
+    $('[data-auto]').classList.add('activo');
+  }
+  $('[data-sacar]').addEventListener('click', sacar);
+  $('[data-auto]').addEventListener('click', alternarAuto);
+  const deshacer = $('[data-deshacer]');
+  deshacer.addEventListener('click', () => {
+    if (!estado.sorteadas.length) return;
+    if (!deshacer.dataset.seguro) {
+      deshacer.dataset.seguro = '1';
+      deshacer.textContent = `¿Seguro? Se saca el ${estado.sorteadas.at(-1)}`;
+      return;
+    }
+    delete deshacer.dataset.seguro;
+    deshacer.textContent = 'Deshacer la última bolilla';
+    estado.sorteadas = estado.sorteadas.slice(0, -1);
+    if (estado.sorteadas.length === 0) {
+      estado.inicio = null;
+      avisarEmpezo(estado.ronda, null);
+    }
+    cambiar();
+  });
+
+  // ---------- Validar ----------
+  const codigo = $<HTMLInputElement>('#codigo');
+  function resultado(clase: string, texto: string, numeros: number[] = []) {
+    const caja = $('[data-resultado]');
+    const p = document.createElement('p');
+    p.className = clase;
+    p.textContent = texto;
+    const fila = document.createElement('div');
+    fila.className = 'numeros';
+    numeros.forEach((n) => {
+      const s = document.createElement('span');
+      s.textContent = String(n);
+      if (estado.sorteadas.includes(n)) s.className = 'salio';
+      fila.append(s);
+    });
+    caja.replaceChildren(p, fila);
+  }
+
+  $('[data-validar]').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!clave || !estado.ronda) return resultado('mal', 'No hay ninguna ronda en juego.');
+    const carton = await leerCarton(clave, codigo.value, estado.ronda, estado.tamano, ahora());
+    if (!carton) return resultado('mal', 'Ese código no es de esta ronda. ¿Está bien copiado? ¿Es de una ronda anterior?');
+    if (estado.inicio !== null && carton.emitido > estado.inicio) {
+      return resultado('mal', `${carton.codigo}: se pidió después de la primera bolilla. No vale.`, carton.numeros);
+    }
+    const faltan = carton.numeros.filter((n) => !estado.sorteadas.includes(n));
+    if (faltan.length) return resultado('mal', `${carton.codigo}: todavía le faltan ${faltan.join(', ')}.`, carton.numeros);
+    pararAuto();
+    const bolilla = Math.max(...carton.numeros.map((n) => estado.sorteadas.indexOf(n) + 1));
+    if (!estado.ganadores.some((g) => g.codigo === carton.codigo)) {
+      estado.ganadores = [...estado.ganadores, { codigo: carton.codigo, numeros: carton.numeros, bolilla }];
+    }
+    resultado('bien', `¡${carton.codigo} es Bingo! Completó con la bolilla ${bolilla}.`, carton.numeros);
+    codigo.value = '';
+    codigo.blur();
+    cambiar();
+  });
+
+  // ---------- La moneda ----------
+  const prob = $<HTMLInputElement>('#prob');
+  prob.addEventListener('input', () => ($('[data-porcentaje]').textContent = prob.value + ' %'));
+
+  function empatados() {
+    const quedan = estado.ganadores.filter((g) => !g.fuera);
+    if (quedan.length < 2) return [];
+    const primera = Math.min(...quedan.map((g) => g.bolilla));
+    return quedan.filter((g) => g.bolilla === primera);
+  }
+
+  function desempatar() {
+    const [a, b] = empatados();
+    if (!a || !b) return;
+    // Mitad y mitad, siempre: hay premios y cartones cobrados
+    const salio = azar(2) === 0 ? 'cara' : 'cruz';
+    const pierde = salio === 'cara' ? b : a;
+    estado.ganadores = estado.ganadores.map((g) => (g.codigo === pierde.codigo ? { ...g, fuera: true } : g));
+    estado.moneda = { id: Date.now(), modo: 'desempate', salio, cara: a.codigo, cruz: b.codigo };
+    $('[data-moneda-resultado]').textContent = `Ganó ${salio === 'cara' ? a.codigo : b.codigo} (salió ${salio}).`;
+    cambiar();
+  }
+  $('[data-desempate]').addEventListener('click', desempatar);
+
+  function libre(elegido: 'cara' | 'cruz') {
+    const gana = azar(100) < Number(prob.value);
+    const salio = gana ? elegido : elegido === 'cara' ? 'cruz' : 'cara';
+    estado.moneda = { id: Date.now(), modo: 'libre', salio, cara: 'Cara', cruz: 'Cruz' };
+    $('[data-moneda-resultado]').textContent = `Eligió ${elegido}, sale ${salio}: ${gana ? 'gana' : 'pierde'}.`;
+    cambiar();
+  }
+  document.querySelectorAll<HTMLButtonElement>('[data-libre]').forEach((b) => b.addEventListener('click', () => libre(b.dataset.libre as 'cara' | 'cruz')));
+
+  function sacarMoneda() {
+    if (!estado.moneda) return;
+    estado.moneda = null;
+    cambiar();
+  }
+  $('[data-sacar-moneda]').addEventListener('click', sacarMoneda);
+
+  // ---------- Lo que se ve acá ----------
+  let qrImprimirDe = '';
+  async function dibujar() {
+    $('[data-ronda]').textContent = estado.ronda ?? '—';
+    const ultima = estado.sorteadas.at(-1);
+    $('[data-ultima]').textContent = ultima ? String(ultima) : '';
+    $('[data-cuenta]').textContent = estado.ronda
+      ? estado.sorteadas.length
+        ? `Bolilla ${estado.sorteadas.length} · ${describirTamano(estado.tamano)}`
+        : `Ronda abierta: el QR está en la lona · ${describirTamano(estado.tamano)}`
+      : 'Todavía no hay ronda';
+    $('[data-salieron]').textContent = estado.sorteadas.length ? 'Salieron: ' + estado.sorteadas.join(', ') : '';
+
+    const lista = $('[data-ganadores]');
+    lista.replaceChildren(
+      ...[...estado.ganadores]
+        .sort((x, y) => x.bolilla - y.bolilla)
+        .map((g) => {
+          const li = document.createElement('li');
+          li.textContent = `${g.codigo} · completó con la bolilla ${g.bolilla}${g.fuera ? ' · perdió el desempate' : ''}`;
+          if (g.fuera) li.className = 'fuera';
+          return li;
+        }),
+    );
+    const hayEmpate = empatados().length > 1;
+    $<HTMLButtonElement>('[data-desempate]').disabled = !hayEmpate;
+    $('[data-desempate]').classList.toggle('llama', hayEmpate);
+
+    const detalles = $('[data-imprimir]');
+    detalles.hidden = !estado.ronda;
+    if (estado.ronda && qrImprimirDe !== estado.ronda + estado.tamano) {
+      qrImprimirDe = estado.ronda + estado.tamano;
+      $('[data-qr-imprimir]').innerHTML = await QRCode.toString(linkDeRonda(estado.ronda, estado.tamano, true), {
+        type: 'svg',
+        margin: 1,
+        color: { dark: '#10131a', light: '#ffffff' },
+      });
+    }
+    $('[data-atajos-estado]').textContent = atajos ? 'Atajos prendidos (F9)' : 'Atajos APAGADOS (F9)';
+    $('[data-atajos-estado]').classList.toggle('apagado', !atajos);
+  }
+
+  // ---------- El teclado ----------
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'F9') {
+      evento.preventDefault();
+      atajos = !atajos;
+      return dibujar();
+    }
+    if (!atajos) return;
+    const escribiendo = (evento.target as HTMLElement).matches('input, textarea, select');
+    if (escribiendo) {
+      if (evento.key === 'Escape') (evento.target as HTMLElement).blur();
+      return;
+    }
+    const vista = accionDeVista(evento);
+    if (vista) {
+      evento.preventDefault();
+      canal.postMessage(vista);
+      // La vista previa es otra ventana (un iframe): también le avisa el canal
+      return;
+    }
+    if (evento.ctrlKey || evento.altKey || evento.metaKey || $('[data-panel]').hidden) return;
+    const tecla = evento.key.toLowerCase();
+    if (tecla === ' ') {
+      evento.preventDefault();
+      sacar();
+    } else if (tecla === 'a') alternarAuto();
+    else if (tecla === 'n') rondaNueva();
+    else if (tecla === 'v') {
+      evento.preventDefault();
+      codigo.focus();
+    } else if (tecla === 'm') desempatar();
+    else if (tecla === 'c') libre('cara');
+    else if (tecla === 'x') libre('cruz');
+    else if (tecla === 'escape') sacarMoneda();
+    else if (/^[0-9]$/.test(tecla)) {
+      prob.value = tecla === '0' ? '100' : String(Number(tecla) * 10);
+      prob.dispatchEvent(new Event('input'));
+    }
+  });
+</script>
+
+<style>
+  .hoja {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px;
+    display: grid;
+    gap: 16px;
+  }
+  .panel {
+    display: grid;
+    gap: 16px;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  .tarjeta > .boton {
+    justify-self: start;
+  }
+  .columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 16px;
+  }
+  .columna {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  .tarjeta {
+    display: grid;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+  }
+  .entrar {
+    max-width: 420px;
+  }
+  h1,
+  h2,
+  p {
+    margin: 0;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  small,
+  .nota {
+    color: var(--suave);
+    font-size: 0.88rem;
+    font-weight: 400;
+  }
+  .fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .fila-chica {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--suave);
+  }
+  .barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .estado {
+    color: var(--suave);
+    font-size: 0.9rem;
+  }
+  .estado.apagado {
+    color: var(--coral);
+    font-weight: 700;
+  }
+  input {
+    font: inherit;
+    color: inherit;
+    background: var(--fondo);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+  input.corto {
+    width: 6rem;
+  }
+  input.mini {
+    width: 4rem;
+  }
+  input[type='range'] {
+    padding: 0;
+    accent-color: var(--oro);
+  }
+  .codigo-entrada {
+    flex: 1;
+    min-width: 12rem;
+    font: 700 1.6rem ui-monospace, Consolas, monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .codigo {
+    font-family: ui-monospace, Consolas, monospace;
+    color: var(--oro);
+  }
+  .boton {
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 2px solid var(--borde);
+    background: transparent;
+    color: var(--texto);
+  }
+  .boton--oro {
+    border-color: var(--oro);
+    background: var(--oro);
+    color: #10131a;
+  }
+  .boton:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .boton.activo {
+    border-color: var(--menta);
+    color: var(--menta);
+  }
+  .boton.llama {
+    animation: llama 1s infinite alternate;
+  }
+  @keyframes llama {
+    to {
+      box-shadow: 0 0 0 6px rgb(242 193 78 / 0.35);
+    }
+  }
+  .enlace {
+    justify-self: start;
+    font: inherit;
+    cursor: pointer;
+    border: 0;
+    padding: 4px 0;
+    background: none;
+    color: var(--menta);
+    text-decoration: underline;
+  }
+  kbd {
+    font: 600 0.8em ui-monospace, Consolas, monospace;
+    padding: 1px 6px;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    opacity: 0.8;
+  }
+  .bolilla {
+    width: 84px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #3a2a00;
+    background: radial-gradient(circle at 35% 30%, #fff6d6, var(--oro) 55%, #b8871a);
+  }
+  .bolilla:empty {
+    opacity: 0.2;
+  }
+  .grande {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  .error,
+  .resultado :global(.mal) {
+    color: var(--coral);
+    font-weight: 700;
+  }
+  .resultado :global(.bien) {
+    color: var(--menta);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .resultado {
+    display: grid;
+    gap: 8px;
+    min-height: 1.5em;
+  }
+  .resultado :global(.numeros) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .resultado :global(.numeros span) {
+    width: 40px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 2px solid var(--borde);
+    font-weight: 700;
+  }
+  .resultado :global(.numeros span.salio) {
+    border-color: var(--menta);
+    background: var(--menta);
+    color: #10131a;
+  }
+  .ganadores {
+    margin: 0;
+    padding-left: 1.4em;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .ganadores :global(.fuera) {
+    color: var(--suave);
+    text-decoration: line-through;
+  }
+  .qr-imprimir {
+    width: 180px;
+    padding: 6px;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .qr-imprimir :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid var(--borde);
+  }
+  .previa {
+    aspect-ratio: 16 / 9;
+    max-width: 960px;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .previa[hidden] {
+    display: none;
+  }
+  .previa iframe {
+    width: 1920px;
+    height: 1080px;
+    border: 0;
+    transform-origin: 0 0;
+    transform: scale(var(--escala, 0.5));
+    pointer-events: none;
+  }
+  .atajos ul {
+    margin: 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 6px;
+    color: var(--suave);
+  }
+</style>
+
+<script>
+  // La vista previa es la página del proyector a 1920 × 1080, achicada para que entre
+  const previa = document.querySelector<HTMLElement>('[data-previa]')!;
+  new ResizeObserver(() => previa.style.setProperty('--escala', String(previa.clientWidth / 1920))).observe(previa);
+</script>

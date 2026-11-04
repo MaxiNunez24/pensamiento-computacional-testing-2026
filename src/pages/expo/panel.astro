@@ -1,0 +1,1000 @@
+---
+/**
+ * /expo/panel/: el panel privado del stand, con la clave de administración de los catálogos.
+ *
+ * Página aparte, sin el menú del curso (como /expo/stand/). Junta lo que el profe necesita a mano en
+ * clase y en la Expo: las páginas del stand y sus atajos, los links para compartir, el paso a paso de
+ * los catálogos y las consultas para los directivos y los sponsors.
+ *
+ * Este archivo está en el repo público: acá va solo lo que no es secreto. El checklist de consultas y
+ * las imágenes (bocetos, opciones para los sponsors) los guarda el Worker de los catálogos y los
+ * entrega con la clave (GET /admin/panel). Se cargan con scripts/subir-panel.py desde
+ * contenido-privado/expo/, que no se sube.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Los links para compartir son siempre los publicados, aunque la página corra en desarrollo
+const sitio = new URL(base + '/', Astro.site).href;
+const catalogos = 'https://cfp401-ensenada.github.io/catalogos/';
+
+const paginas = [
+    { titulo: 'Operador del Bingo', detalle: 'La pantalla de la notebook, la que no se proyecta', href: `${base}/expo/bingo/operador/`, icono: '🎱' },
+    { titulo: 'Pantalla del proyector', detalle: 'Se abre desde el operador; pasarla a la lona y F11', href: `${base}/expo/proyector/`, icono: '📽️' },
+    { titulo: 'Stand en 3D', detalle: 'El modelo a escala, con la planta y lo que hay que conseguir', href: `${base}/expo/stand/`, icono: '🧊' },
+    { titulo: 'Vista pública de la Expo', detalle: 'Lo que ve cualquiera que entra al link', href: `${base}/expo/`, icono: '🌐' },
+    { titulo: 'Animación sin internet', detalle: 'La escena del sistema a pantalla completa, para un monitor', href: `${base}/expo/pantalla/`, icono: '🎬' },
+];
+
+const links = [
+    { titulo: 'La Expo', para: 'Público · directivos', url: `${sitio}expo/`, nota: 'Vidriera de catálogos y juegos' },
+    { titulo: 'El curso', para: 'Alumnos', url: sitio, nota: 'Los ejercicios y el camino' },
+    { titulo: 'Preparando la Expo', para: 'Alumnos', url: `${sitio}preparando-expo/`, nota: 'Las clases de la Expo' },
+    { titulo: 'Armá tu catálogo', para: 'Emprendedores', url: `${sitio}armar-tu-catalogo/`, nota: 'El primer paso para tener catálogo' },
+    { titulo: 'Editor de catálogos', para: 'Emprendedores', url: `${catalogos}editar/`, nota: 'Productos, precios y fotos, con su código' },
+    { titulo: 'La teoría', para: 'Alumnos', url: 'https://maxinunez24.github.io/pensamiento-computacional-testing-2026/', nota: 'El sitio de las clases' },
+];
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <title>Panel del stand · Expo CFP 401</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="icon" href={base + '/favicon.ico'} />
+        <script is:inline>
+            // El tema elegido se aplica antes de pintar, para que no parpadee
+            try {
+                const tema = localStorage.getItem('panel:tema');
+                if (tema) document.documentElement.dataset.tema = tema;
+            } catch (e) {}
+        </script>
+    </head>
+    <body>
+        <header class="barra">
+            <span class="marca">Panel del stand <small>Expo CFP 401</small></span>
+            <nav class="pestanas" id="pestanas" hidden>
+                <a href="#expo">Expo</a>
+                <a href="#links">Links</a>
+                <a href="#catalogos">Catálogos</a>
+                <a href="#consultas">Consultas</a>
+            </nav>
+            <button type="button" class="redondo" id="tema" aria-label="Cambiar entre modo claro y oscuro">🌙</button>
+            <button type="button" class="redondo" id="salir" aria-label="Salir" title="Salir" hidden>⏏</button>
+        </header>
+
+        <!-- ===== La puerta ===== -->
+        <main class="puerta" id="puerta">
+            <form class="tarjeta" id="form-clave">
+                <h1>Panel del stand</h1>
+                <p>Con la clave de administración de los catálogos.</p>
+                <input id="clave" type="password" autocomplete="current-password" aria-label="Clave" required />
+                <button type="submit" class="principal">Entrar</button>
+                <p class="error" id="error-clave" role="alert"></p>
+            </form>
+        </main>
+
+        <main class="hoja" id="hoja" hidden>
+            <!-- ===== Expo ===== -->
+            <section id="expo" class="seccion">
+                <h2>Para la Expo</h2>
+                <div class="grilla">
+                    {paginas.map((p) => (
+                        <a class="tarjeta pagina" href={p.href} target="_blank" rel="noopener">
+                            <span class="icono">{p.icono}</span>
+                            <strong>{p.titulo}</strong>
+                            <span>{p.detalle}</span>
+                        </a>
+                    ))}
+                </div>
+
+                <details class="tarjeta" open>
+                    <summary><h3>Atajos del operador</h3> <small>F9 los prende y los apaga</small></summary>
+                    <table class="atajos">
+                        <tbody>
+                            <tr><td><kbd>Espacio</kbd></td><td>Sacar una bolilla</td></tr>
+                            <tr><td><kbd>A</kbd></td><td>Automático: saca sola cada tantos segundos (se frena al validar un Bingo)</td></tr>
+                            <tr><td><kbd>N</kbd></td><td>Ronda nueva (dos veces si hay una en juego)</td></tr>
+                            <tr><td><kbd>V</kbd> · <kbd>Enter</kbd> · <kbd>Esc</kbd></td><td>Ir al casillero del código · validarlo · salir del casillero</td></tr>
+                            <tr><td><kbd>M</kbd></td><td>Moneda de desempate (siempre 50 %)</td></tr>
+                            <tr><td><kbd>C</kbd> / <kbd>X</kbd></td><td>Moneda libre: la persona eligió cara / cruz</td></tr>
+                            <tr><td><kbd>0</kbd>–<kbd>9</kbd></td><td>Probabilidad de la moneda libre (0 = 100 %). No se ve en la lona</td></tr>
+                            <tr><td><kbd>Esc</kbd></td><td>Sacar la moneda de la pantalla</td></tr>
+                            <tr><td><kbd>Ctrl</kbd> + <kbd>←</kbd> <kbd>→</kbd></td><td>Pasar el carrusel de la lona</td></tr>
+                            <tr><td><kbd>Ctrl</kbd> + <kbd>↑</kbd></td><td>Lo que muestra el carrusel pasa a la pantalla grande; otra vez, a toda la lona</td></tr>
+                            <tr><td><kbd>Ctrl</kbd> + <kbd>↓</kbd></td><td>Un paso atrás: deja la lona entera, y después vuelve a lo automático</td></tr>
+                        </tbody>
+                    </table>
+                </details>
+
+                <details class="tarjeta">
+                    <summary><h3>Reglas que conviene saber</h3></summary>
+                    <ul class="reglas">
+                        <li>Un cartón pedido <strong>después de la primera bolilla no vale</strong>: lo rechaza el operador solo, y desde la primera bolilla el QR deja de dar cartones de esa ronda.</li>
+                        <li>Cada persona puede <strong>cambiar su cartón 2 veces</strong> por ronda, mientras no marque ningún número.</li>
+                        <li>El tamaño del cartón se elige según la gente: hasta 5 personas, 5 números del 1 al 25; hasta 20, 6 del 1 al 30; más, 7 del 1 al 35.</li>
+                        <li>Validar funciona <strong>sin internet</strong>; pedir cartones, no.</li>
+                        <li>Con una ronda en juego, la lona pone el Bingo grande sola. Ctrl + flechas manda igual.</li>
+                        <li>El celular de la impresora guarda los cartones que imprimió, por si hay que reimprimir uno.</li>
+                    </ul>
+                </details>
+            </section>
+
+            <!-- ===== Links ===== -->
+            <section id="links" class="seccion">
+                <h2>Links para compartir</h2>
+                <p class="nota">Copiar, mandar por WhatsApp o mostrar el QR en grande para que lo escaneen.</p>
+                <div class="grilla">
+                    {links.map((l) => (
+                        <article class="tarjeta enlace" data-url={l.url} data-titulo={l.titulo}>
+                            <span class="para">{l.para}</span>
+                            <strong>{l.titulo}</strong>
+                            <span>{l.nota}</span>
+                            <code>{l.url.replace('https://', '')}</code>
+                            <div class="botones">
+                                <button type="button" data-accion="copiar">Copiar</button>
+                                <button type="button" data-accion="compartir">Compartir</button>
+                                <button type="button" data-accion="qr">QR</button>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
+            <!-- ===== Catálogos ===== -->
+            <section id="catalogos" class="seccion">
+                <h2>Cómo se arma un catálogo</h2>
+                <p class="nota">De punta a punta, para un emprendimiento del CFP.</p>
+                <ol class="pasos">
+                    <li class="tarjeta">
+                        <strong>El emprendedor elige cómo se ve</strong>
+                        <span>Nombre, WhatsApp, colores y foto de fondo. Lo descarga y te manda el archivo.</span>
+                        <div class="botones"><a href={`${sitio}armar-tu-catalogo/`} target="_blank" rel="noopener">Armá tu catálogo</a><button type="button" data-qr-de={`${sitio}armar-tu-catalogo/`} data-titulo="Armá tu catálogo">QR</button></div>
+                    </li>
+                    <li class="tarjeta">
+                        <strong>Vos lo publicás</strong>
+                        <span>La carpeta va al repo de la organización, con la dirección corta (ej. <code>dulces-de-la-isla</code>).</span>
+                        <div class="botones"><a href="https://github.com/cfp401-ensenada/catalogos" target="_blank" rel="noopener">Repo de catálogos</a></div>
+                    </li>
+                    <li class="tarjeta">
+                        <strong>Lo das de alta y sale el código</strong>
+                        <span>En la administración de catálogos, con esta misma clave. El código es lo único que necesita para editar.</span>
+                        <div class="botones"><a href={`${catalogos}admin/`} target="_blank" rel="noopener">Administración</a></div>
+                    </li>
+                    <li class="tarjeta">
+                        <strong>Le pasás el link y el código</strong>
+                        <span>Su catálogo queda en <code>cfp401-ensenada.github.io/catalogos/&lt;dirección&gt;/</code>. Los productos los carga desde el celular.</span>
+                        <div class="botones"><a href={`${catalogos}editar/`} target="_blank" rel="noopener">Editor</a><button type="button" data-qr-de={`${catalogos}editar/`} data-titulo="Editor de catálogos">QR</button></div>
+                    </li>
+                    <li class="tarjeta">
+                        <strong>Si pierde el código o se da de baja</strong>
+                        <span>En la administración: "nuevo código" invalida el viejo; la baja borra datos, código y fotos (la carpeta del repo, aparte).</span>
+                    </li>
+                </ol>
+                <p class="nota">La clase completa: <a href={`${base}/preparando-expo/catalogos-cfp/`} target="_blank" rel="noopener">Catálogos para todo el CFP</a>.</p>
+            </section>
+
+            <!-- ===== Consultas ===== -->
+            <section id="consultas" class="seccion">
+                <h2>Consultas <small class="guardado" id="guardado"></small></h2>
+                <div id="checklist"></div>
+                <form class="tarjeta agregar" id="form-agregar">
+                    <input id="nueva" placeholder="Algo más para preguntar…" aria-label="Consulta nueva" required />
+                    <input id="nueva-grupo" list="grupos" placeholder="Grupo" aria-label="Grupo" />
+                    <datalist id="grupos"></datalist>
+                    <button type="submit" class="principal">Agregar</button>
+                </form>
+
+                <h3>Para mostrar</h3>
+                <div id="galeria"></div>
+                <p class="nota" id="sin-imagenes" hidden>Todavía no hay imágenes cargadas (scripts/subir-panel.py).</p>
+            </section>
+        </main>
+
+        <!-- QR en grande / imagen en grande -->
+        <dialog class="grande" id="grande">
+            <button type="button" class="redondo cerrar" id="cerrar" aria-label="Cerrar">✕</button>
+            <button type="button" class="redondo flecha" id="anterior" aria-label="Anterior">‹</button>
+            <figure id="grande-contenido"></figure>
+            <button type="button" class="redondo flecha" id="siguiente" aria-label="Siguiente">›</button>
+        </dialog>
+
+        <script>
+            import QRCode from 'qrcode';
+            import { WORKER } from '../../scripts/bingo-expo';
+
+            const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
+
+            // ---------- Tema ----------
+            const raiz = document.documentElement;
+            const oscuro = () => (raiz.dataset.tema ? raiz.dataset.tema === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches);
+            const pintarTema = () => ($('#tema').textContent = oscuro() ? '☀️' : '🌙');
+            $('#tema').addEventListener('click', () => {
+                raiz.dataset.tema = oscuro() ? 'claro' : 'oscuro';
+                try {
+                    localStorage.setItem('panel:tema', raiz.dataset.tema);
+                } catch {
+                    /* sin recordar */
+                }
+                pintarTema();
+            });
+            pintarTema();
+
+            // ---------- La clave ----------
+            interface Consulta {
+                texto: string;
+                grupo: string;
+                hecho: boolean;
+            }
+            interface Imagen {
+                id: string;
+                titulo?: string;
+                grupo?: string;
+                tipo?: string;
+                datos: string;
+            }
+
+            let clave = '';
+            let consultas: Consulta[] = [];
+
+            async function pedir(ruta: string, metodo = 'GET', cuerpo?: unknown) {
+                let r: Response;
+                try {
+                    r = await fetch(WORKER + ruta, {
+                        method: metodo,
+                        headers: { 'X-Admin': clave, 'Content-Type': 'application/json' },
+                        body: cuerpo ? JSON.stringify(cuerpo) : undefined,
+                    });
+                } catch {
+                    throw new Error('No hay conexión con el servidor');
+                }
+                const datos = await r.json().catch(() => ({}));
+                if (r.status === 401) throw new Error('Esa no es la clave.');
+                if (!r.ok) throw new Error(datos.error || 'No se pudo');
+                return datos;
+            }
+
+            async function entrar(valor: string) {
+                clave = valor;
+                $('#error-clave').textContent = '';
+                try {
+                    const datos = await pedir('/admin/panel');
+                    try {
+                        sessionStorage.setItem('stand:admin', clave);
+                    } catch {
+                        /* habrá que ponerla de nuevo */
+                    }
+                    // Si vino de una página privada (el stand), vuelve ahí
+                    const volver = new URLSearchParams(location.search).get('volver');
+                    if (volver && volver.startsWith('/') && !volver.startsWith('//')) {
+                        location.replace(volver);
+                        return;
+                    }
+                    $('#puerta').hidden = true;
+                    $('#hoja').hidden = false;
+                    $('#pestanas').hidden = false;
+                    $('#salir').hidden = false;
+                    consultas = datos.consultas;
+                    dibujarConsultas();
+                    dibujarGaleria(datos.imagenes);
+                    if (location.hash) document.querySelector(location.hash)?.scrollIntoView({ behavior: 'instant' });
+                } catch (error) {
+                    try {
+                        sessionStorage.removeItem('stand:admin');
+                    } catch {
+                        /* nada */
+                    }
+                    $('#error-clave').textContent = error instanceof Error ? error.message : 'No se pudo';
+                }
+            }
+
+            $('#form-clave').addEventListener('submit', (e) => {
+                e.preventDefault();
+                entrar($<HTMLInputElement>('#clave').value);
+            });
+            $('#salir').addEventListener('click', () => {
+                try {
+                    sessionStorage.removeItem('stand:admin');
+                } catch {
+                    /* nada */
+                }
+                location.reload();
+            });
+
+            // ---------- Consultas ----------
+            // Se guardan solas unos segundos después del último cambio: la administración tiene un
+            // límite de 10 pedidos por minuto, y tildar cinco cosas seguidas es un solo guardado.
+            let espera = 0;
+            function guardarLuego() {
+                $('#guardado').textContent = 'sin guardar…';
+                clearTimeout(espera);
+                espera = window.setTimeout(async () => {
+                    try {
+                        await pedir('/admin/panel/consultas', 'PUT', { consultas });
+                        $('#guardado').textContent = 'guardado ✓';
+                    } catch (error) {
+                        $('#guardado').textContent = 'no se guardó: ' + (error instanceof Error ? error.message : '');
+                        guardarLuego();
+                    }
+                }, 5000);
+            }
+            addEventListener('beforeunload', (e) => {
+                if ($('#guardado').textContent === 'sin guardar…') e.preventDefault();
+            });
+
+            function dibujarConsultas() {
+                const grupos = [...new Set(consultas.map((c) => c.grupo))];
+                $('#grupos').replaceChildren(...grupos.map((g) => Object.assign(document.createElement('option'), { value: g })));
+                $('#checklist').replaceChildren(
+                    ...grupos.map((grupo) => {
+                        const caja = document.createElement('div');
+                        caja.className = 'tarjeta grupo';
+                        const items = consultas.filter((c) => c.grupo === grupo);
+                        const titulo = document.createElement('h3');
+                        titulo.textContent = `${grupo} `;
+                        const cuenta = document.createElement('small');
+                        cuenta.textContent = `${items.filter((c) => c.hecho).length} de ${items.length}`;
+                        titulo.append(cuenta);
+                        const lista = document.createElement('ul');
+                        lista.className = 'checklist';
+                        for (const c of items) {
+                            const li = document.createElement('li');
+                            const etiqueta = document.createElement('label');
+                            const tilde = Object.assign(document.createElement('input'), { type: 'checkbox', checked: c.hecho });
+                            tilde.addEventListener('change', () => {
+                                c.hecho = tilde.checked;
+                                dibujarConsultas();
+                                guardarLuego();
+                            });
+                            const texto = document.createElement('span');
+                            texto.textContent = c.texto;
+                            etiqueta.append(tilde, texto);
+                            const borrar = Object.assign(document.createElement('button'), { type: 'button', textContent: '✕', title: 'Borrar' });
+                            borrar.className = 'borrar';
+                            borrar.addEventListener('click', () => {
+                                if (!confirm(`¿Borrar "${c.texto}"?`)) return;
+                                consultas = consultas.filter((x) => x !== c);
+                                dibujarConsultas();
+                                guardarLuego();
+                            });
+                            li.append(etiqueta, borrar);
+                            lista.append(li);
+                        }
+                        caja.append(titulo, lista);
+                        return caja;
+                    }),
+                );
+            }
+
+            $('#form-agregar').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const texto = $<HTMLInputElement>('#nueva').value.trim();
+                const grupo = $<HTMLInputElement>('#nueva-grupo').value.trim() || 'Otros';
+                if (!texto) return;
+                consultas.push({ texto, grupo, hecho: false });
+                $<HTMLInputElement>('#nueva').value = '';
+                dibujarConsultas();
+                guardarLuego();
+            });
+
+            // ---------- En grande: QR o imágenes ----------
+            const grande = $<HTMLDialogElement>('#grande');
+            let serie: HTMLElement[] = [];
+            let actual = 0;
+            function mostrarGrande(elementos: HTMLElement[], desde = 0) {
+                serie = elementos;
+                actual = desde;
+                $('#anterior').hidden = $('#siguiente').hidden = serie.length < 2;
+                pintarGrande();
+                if (!grande.open) grande.showModal();
+            }
+            function pintarGrande() {
+                $('#grande-contenido').replaceChildren(serie[actual].cloneNode(true));
+            }
+            const mover = (paso: number) => {
+                actual = (actual + paso + serie.length) % serie.length;
+                pintarGrande();
+            };
+            $('#anterior').addEventListener('click', () => mover(-1));
+            $('#siguiente').addEventListener('click', () => mover(1));
+            $('#cerrar').addEventListener('click', () => grande.close());
+            grande.addEventListener('click', (e) => {
+                if (e.target === grande) grande.close();
+            });
+            grande.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') mover(-1);
+                if (e.key === 'ArrowRight') mover(1);
+            });
+
+            async function qrGrande(url: string, titulo: string) {
+                const caja = document.createElement('div');
+                caja.className = 'qr-grande';
+                caja.innerHTML = await QRCode.toString(url, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' });
+                const pie = document.createElement('figcaption');
+                pie.innerHTML = `<strong></strong><span></span>`;
+                pie.querySelector('strong')!.textContent = titulo;
+                pie.querySelector('span')!.textContent = url.replace('https://', '');
+                caja.append(pie);
+                mostrarGrande([caja]);
+            }
+
+            // ---------- Links ----------
+            for (const tarjeta of document.querySelectorAll<HTMLElement>('.enlace')) {
+                const { url = '', titulo = '' } = tarjeta.dataset;
+                const compartir = tarjeta.querySelector<HTMLButtonElement>('[data-accion="compartir"]')!;
+                compartir.hidden = !navigator.share;
+                tarjeta.querySelector('[data-accion="copiar"]')!.addEventListener('click', async (e) => {
+                    const boton = e.currentTarget as HTMLButtonElement;
+                    try {
+                        await navigator.clipboard.writeText(url);
+                        boton.textContent = '¡Copiado!';
+                    } catch {
+                        boton.textContent = 'No se pudo';
+                    }
+                    setTimeout(() => (boton.textContent = 'Copiar'), 1500);
+                });
+                compartir.addEventListener('click', () => navigator.share({ title: titulo, url }).catch(() => {}));
+                tarjeta.querySelector('[data-accion="qr"]')!.addEventListener('click', () => qrGrande(url, titulo));
+            }
+            for (const boton of document.querySelectorAll<HTMLElement>('[data-qr-de]')) {
+                boton.addEventListener('click', () => qrGrande(boton.dataset.qrDe!, boton.dataset.titulo || ''));
+            }
+
+            // ---------- Galería (llega del Worker) ----------
+            function dibujarGaleria(imagenes: Imagen[]) {
+                $('#sin-imagenes').hidden = imagenes.length > 0;
+                const grupos = [...new Set(imagenes.map((i) => i.grupo || 'Otras'))];
+                const figuras: HTMLElement[] = [];
+                $('#galeria').replaceChildren(
+                    ...grupos.map((grupo) => {
+                        const caja = document.createElement('div');
+                        const titulo = document.createElement('h4');
+                        titulo.textContent = grupo;
+                        const grilla = document.createElement('div');
+                        grilla.className = 'miniaturas';
+                        for (const img of imagenes.filter((i) => (i.grupo || 'Otras') === grupo)) {
+                            const figura = document.createElement('figure');
+                            const foto = document.createElement('img');
+                            foto.src = `data:${img.tipo || 'image/webp'};base64,${img.datos}`;
+                            foto.alt = img.titulo || img.id;
+                            foto.loading = 'lazy';
+                            const pie = document.createElement('figcaption');
+                            pie.textContent = img.titulo || img.id;
+                            figura.append(foto, pie);
+                            const indice = figuras.push(figura) - 1;
+                            const boton = document.createElement('button');
+                            boton.type = 'button';
+                            boton.className = 'miniatura';
+                            boton.append(figura);
+                            boton.addEventListener('click', () => mostrarGrande(figuras, indice));
+                            grilla.append(boton);
+                        }
+                        caja.append(titulo, grilla);
+                        return caja;
+                    }),
+                );
+            }
+
+            // Con la clave ya puesta en esta pestaña (o en el operador), entra solo
+            try {
+                const guardada = sessionStorage.getItem('stand:admin');
+                if (guardada) {
+                    $<HTMLInputElement>('#clave').value = guardada;
+                    entrar(guardada);
+                }
+            } catch {
+                /* sin sessionStorage */
+            }
+        </script>
+    </body>
+</html>
+
+<style is:global>
+    :root {
+        --fondo: #f3f5f8;
+        --superficie: #ffffff;
+        --texto: #172030;
+        --suave: #5b6576;
+        --linea: #d9dee7;
+        --acento: #b07d0f;
+        --acento-fondo: #f2c14e;
+        --ok: #1f7a4d;
+        --radio: 14px;
+        color-scheme: light;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-tema='claro']) {
+            --fondo: #0d1017;
+            --superficie: #161b25;
+            --texto: #eef1f6;
+            --suave: #a3adbd;
+            --linea: #262e3d;
+            --acento: #f2c14e;
+            --ok: #5fc794;
+            color-scheme: dark;
+        }
+    }
+    :root[data-tema='oscuro'] {
+        --fondo: #0d1017;
+        --superficie: #161b25;
+        --texto: #eef1f6;
+        --suave: #a3adbd;
+        --linea: #262e3d;
+        --acento: #f2c14e;
+        --ok: #5fc794;
+        color-scheme: dark;
+    }
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 72px;
+    }
+    body {
+        margin: 0;
+        background: var(--fondo);
+        color: var(--texto);
+        line-height: 1.5;
+    }
+    [hidden] {
+        display: none !important;
+    }
+    a {
+        color: var(--acento);
+    }
+    button,
+    .botones a {
+        font: inherit;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--linea);
+        background: var(--superficie);
+        color: var(--texto);
+        cursor: pointer;
+        text-decoration: none;
+    }
+    button:hover,
+    .botones a:hover {
+        border-color: var(--acento);
+    }
+    .principal {
+        background: var(--acento-fondo);
+        border-color: var(--acento-fondo);
+        color: #10131a;
+    }
+    input {
+        font: inherit;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--linea);
+        background: var(--fondo);
+        color: var(--texto);
+        min-width: 0;
+    }
+    code {
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 0.85em;
+        overflow-wrap: anywhere;
+    }
+    kbd {
+        font: 600 0.85em ui-monospace, Consolas, monospace;
+        padding: 2px 7px;
+        border-radius: 6px;
+        border: 1px solid var(--linea);
+        border-bottom-width: 3px;
+        background: var(--fondo);
+        white-space: nowrap;
+    }
+
+    /* ---------- barra de arriba ---------- */
+    .barra {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        background: color-mix(in srgb, var(--fondo) 88%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--linea);
+    }
+    .marca {
+        font-weight: 800;
+        white-space: nowrap;
+    }
+    .marca small {
+        display: block;
+        font-weight: 500;
+        color: var(--suave);
+        font-size: 0.75rem;
+    }
+    .pestanas {
+        display: flex;
+        gap: 4px;
+        margin-left: auto;
+        overflow-x: auto;
+    }
+    .pestanas a {
+        padding: 6px 12px;
+        border-radius: 999px;
+        color: var(--texto);
+        text-decoration: none;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .pestanas a:hover {
+        background: var(--superficie);
+    }
+    .redondo {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        flex: none;
+        display: grid;
+        place-items: center;
+    }
+    #tema {
+        margin-left: auto;
+    }
+    .pestanas:not([hidden]) + #tema {
+        margin-left: 0;
+    }
+
+    /* ---------- puerta ---------- */
+    .puerta {
+        min-height: 70vh;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+    }
+    .puerta form {
+        display: grid;
+        gap: 12px;
+        width: min(380px, 100%);
+    }
+    .puerta h1,
+    .puerta p {
+        margin: 0;
+    }
+    .error {
+        color: #d4483b;
+        min-height: 1.5em;
+    }
+
+    /* ---------- hoja ---------- */
+    .hoja {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 8px 16px 64px;
+    }
+    .seccion {
+        padding-top: 24px;
+        display: grid;
+        gap: 14px;
+    }
+    .seccion h2 {
+        margin: 0;
+        font-size: 1.6rem;
+    }
+    .seccion h3,
+    .seccion h4 {
+        margin: 0;
+    }
+    .nota {
+        margin: 0;
+        color: var(--suave);
+    }
+    .tarjeta {
+        background: var(--superficie);
+        border: 1px solid var(--linea);
+        border-radius: var(--radio);
+        padding: 16px;
+    }
+    .grilla {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 12px;
+    }
+    .pagina {
+        display: grid;
+        gap: 4px;
+        color: var(--texto);
+        text-decoration: none;
+    }
+    .pagina:hover {
+        border-color: var(--acento);
+    }
+    .pagina .icono {
+        font-size: 1.6rem;
+    }
+    .pagina span:last-child {
+        color: var(--suave);
+        font-size: 0.92rem;
+    }
+    summary {
+        cursor: pointer;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    summary small {
+        color: var(--suave);
+    }
+    .atajos {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    .atajos td {
+        padding: 7px 8px;
+        border-top: 1px solid var(--linea);
+        vertical-align: top;
+    }
+    .atajos td:first-child {
+        white-space: nowrap;
+        width: 1%;
+    }
+    .reglas {
+        margin: 10px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+    }
+
+    /* ---------- links ---------- */
+    .enlace {
+        display: grid;
+        gap: 4px;
+        align-content: start;
+    }
+    .enlace .para {
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--acento);
+        font-weight: 700;
+    }
+    .enlace > span:not(.para) {
+        color: var(--suave);
+        font-size: 0.92rem;
+    }
+    .botones {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+    }
+
+    /* ---------- catálogos ---------- */
+    .pasos {
+        list-style: none;
+        counter-reset: paso;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+    }
+    .pasos li {
+        counter-increment: paso;
+        display: grid;
+        gap: 4px;
+        padding-left: 60px;
+        position: relative;
+    }
+    .pasos li::before {
+        content: counter(paso);
+        position: absolute;
+        left: 16px;
+        top: 14px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        background: var(--acento-fondo);
+        color: #10131a;
+    }
+    .pasos li span {
+        color: var(--suave);
+    }
+
+    /* ---------- consultas ---------- */
+    .guardado {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--suave);
+    }
+    #checklist {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 12px;
+        align-items: start;
+    }
+    .grupo h3 small {
+        color: var(--suave);
+        font-weight: 500;
+    }
+    .checklist {
+        list-style: none;
+        margin: 8px 0 0;
+        padding: 0;
+    }
+    .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        border-top: 1px solid var(--linea);
+    }
+    .checklist label {
+        flex: 1;
+        display: flex;
+        gap: 10px;
+        padding: 9px 0;
+        cursor: pointer;
+    }
+    .checklist input {
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+        accent-color: var(--ok);
+        flex: none;
+    }
+    .checklist input:checked + span {
+        color: var(--suave);
+        text-decoration: line-through;
+    }
+    .borrar {
+        border: 0;
+        background: none;
+        color: var(--suave);
+        padding: 9px 4px;
+        opacity: 0.5;
+    }
+    .borrar:hover {
+        opacity: 1;
+        color: #d4483b;
+    }
+    .agregar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .agregar #nueva {
+        flex: 3 1 240px;
+    }
+    .agregar #nueva-grupo {
+        flex: 1 1 120px;
+    }
+    #galeria {
+        display: grid;
+        gap: 16px;
+    }
+    .miniaturas {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 10px;
+        margin-top: 8px;
+    }
+    .miniatura {
+        padding: 0;
+        border-radius: var(--radio);
+        overflow: hidden;
+        text-align: left;
+    }
+    .miniatura figure {
+        margin: 0;
+    }
+    .miniatura img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9.5;
+        object-fit: cover;
+        object-position: top;
+    }
+    .miniatura figcaption {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    /* ---------- en grande ---------- */
+    .grande {
+        width: min(96vw, 1400px);
+        max-height: 94vh;
+        padding: 0;
+        border: 0;
+        border-radius: var(--radio);
+        background: var(--superficie);
+        color: var(--texto);
+        overflow: hidden;
+    }
+    .grande::backdrop {
+        background: rgb(0 0 0 / 0.75);
+    }
+    .grande figure {
+        margin: 0;
+    }
+    .grande figure img {
+        display: block;
+        width: 100%;
+        max-height: 86vh;
+        object-fit: contain;
+        background: #000;
+    }
+    .grande figcaption {
+        padding: 10px 16px;
+    }
+    .grande .cerrar {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+    .grande .flecha {
+        position: absolute;
+        top: 50%;
+        translate: 0 -50%;
+        z-index: 2;
+        font-size: 1.6rem;
+    }
+    #anterior {
+        left: 10px;
+    }
+    #siguiente {
+        right: 10px;
+    }
+    .qr-grande {
+        display: grid;
+        justify-items: center;
+        gap: 10px;
+        padding: 32px 16px 20px;
+    }
+    .qr-grande svg {
+        width: min(70vh, 80vw);
+        height: auto;
+        background: #fff;
+        border-radius: 12px;
+    }
+    .qr-grande figcaption {
+        display: grid;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+    .qr-grande figcaption span {
+        color: var(--suave);
+        font-size: 0.95rem;
+        overflow-wrap: anywhere;
+    }
+    /* En el celular, las pestañas bajan a su propio renglón */
+    @media (max-width: 720px) {
+        html {
+            scroll-padding-top: 112px;
+        }
+        .barra {
+            flex-wrap: wrap;
+            gap: 6px 8px;
+            padding: 8px 12px;
+        }
+        .pestanas {
+            order: 3;
+            width: 100%;
+            margin: 0;
+            justify-content: space-between;
+        }
+        .pestanas a {
+            padding: 6px 8px;
+            font-size: 0.95rem;
+        }
+        .pestanas:not([hidden]) + #tema,
+        #tema {
+            margin-left: auto;
+        }
+    }
+</style>
