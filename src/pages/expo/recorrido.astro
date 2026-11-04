@@ -1,0 +1,397 @@
+---
+/**
+ * /expo/recorrido/: la bitácora del stand, de la idea a la Expo.
+ *
+ * Para mostrar en clase (y a quien pregunte en la Expo) cómo se fue armando todo, con las pruebas
+ * que salieron mal incluidas: los bocetos que no se eligieron y las fotos con IA que cambiaban poco.
+ * Las fechas salen del historial de git. Las personas de las fotos de prueba son inventadas por la
+ * misma IA: no son fotos de nadie. Las opciones para los sponsors NO van: son para negociar.
+ *
+ * Las imágenes están en public/expo/recorrido/ (WEBP livianos).
+ */
+import Expo from '../../layouts/Expo.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const img = (nombre: string) => `${base}/expo/recorrido/${nombre}.webp`;
+
+const bocetos = [
+  ['boceto-1', '1 · Columna fija'],
+  ['boceto-2', '2 · Carrusel (el elegido)'],
+  ['boceto-3', '3 · Pantalla completa + ventanita'],
+  ['boceto-4', '4 · Cinta de bolillas'],
+  ['boceto-5', '5 · Se acomoda al momento'],
+];
+---
+
+<Expo titulo="El recorrido · Expo CFP 401" descripcion="Cómo se armó el stand de Pensamiento Computacional para la Expo del CFP 401: de la idea a la Expo.">
+  <header class="portada">
+    <p class="portada__cfp">CFP 401 · Ensenada · Expo 2026</p>
+    <h1>El recorrido</h1>
+    <p class="portada__bajada">
+      Cómo se armó el stand, paso a paso. Con lo que salió bien y con lo que hubo que probar de nuevo, que fue
+      bastante.
+    </p>
+  </header>
+
+  <main class="linea">
+    <!-- ================= El plan ================= -->
+    <article class="hito">
+      <p class="hito__fecha">24/8</p>
+      <div class="hito__cuerpo">
+        <h2>La Expo es el 13/11: se planifica el stand</h2>
+        <p>
+          La regla que ordena todo: <strong>que quien pasa toque algo en los primeros 15 segundos, y que en un
+          minuto se lleve una idea.</strong> Un stand con un póster y alguien explicando no funciona; uno donde la
+          gente <em>hace</em> algo, sí.
+        </p>
+        <p>
+          Después vino el modelo a escala del stand, para decidir dónde va cada mesa, cada monitor y el proyector.
+          <a href={`${base}/expo/stand/`}>Se puede recorrer en 3D</a> y cambiarle las medidas.
+        </p>
+      </div>
+    </article>
+
+    <!-- ================= Catálogos ================= -->
+    <article class="hito">
+      <p class="hito__fecha">7/10 → 3/11</p>
+      <div class="hito__cuerpo">
+        <h2>Catálogos para emprendedores</h2>
+        <p>
+          Primero, <strong>tu catálogo con Python</strong>: un programa que arma la página de un emprendimiento.
+          Después, con el estilo de un catálogo que una compañera había diseñado en Canva. Y al final, para
+          <strong>cualquier emprendimiento del CFP</strong>: eligen cómo se ve en
+          <a href={`${base}/armar-tu-catalogo/`}>Armá tu catálogo</a> y cargan sus productos desde el celular, con un
+          código propio.
+        </p>
+      </div>
+    </article>
+
+    <!-- ================= Juegos ================= -->
+    <article class="hito">
+      <p class="hito__fecha">20/10 → 3/11</p>
+      <div class="hito__cuerpo">
+        <h2>Los juegos: la moneda y el Bingo</h2>
+        <p>
+          La moneda que sube girando y cae fue idea de un compañero. Después, el <strong>Bingo en JavaScript</strong>:
+          el cartón, quién ganó y de qué tamaño conviene el cartón según cuánta gente juega (con 5 personas, 5
+          números; con más de 20, 7).
+        </p>
+      </div>
+    </article>
+
+    <!-- ================= La página de la Expo ================= -->
+    <article class="hito">
+      <p class="hito__fecha">29/10</p>
+      <div class="hito__cuerpo">
+        <h2>La página de la Expo y la animación del sistema</h2>
+        <p>
+          <a href={`${base}/expo/`}>Una página para el celular</a> de quien escanea el QR del stand: la vidriera de
+          catálogos, los juegos y cómo se planificó el Sistema de Gestión de Alumnos, contado con una animación.
+        </p>
+      </div>
+    </article>
+
+    <!-- ================= El Bingo del stand ================= -->
+    <article class="hito">
+      <p class="hito__fecha">3/11 → 4/11</p>
+      <div class="hito__cuerpo">
+        <h2>El Bingo del stand: sin papel y sin trampa</h2>
+        <p>
+          Se juega con el celular: escaneás el QR de la ronda y te llega un cartón. Quien no tiene celular, lo pide
+          impreso en la impresora térmica. El problema: <strong>¿cómo se sabe que un cartón es de verdad, si nadie
+          lo guarda?</strong> ¿Y si alguien recarga hasta conseguir uno casi lleno?
+        </p>
+        <div class="fotos fotos--celu">
+          <a href={img('bingo-celular')} target="_blank" rel="noopener">
+            <img src={img('bingo-celular')} alt="El cartón en el celular: seis números para tocar y el código para cantar Bingo" loading="lazy" />
+          </a>
+          <a href={img('bingo-impreso')} target="_blank" rel="noopener">
+            <img src={img('bingo-impreso')} alt="El cartón impreso: la imagen de 57 mm que sale de la térmica" loading="lazy" />
+          </a>
+        </div>
+        <p>La respuesta, en un minuto:</p>
+        <div class="animacion">
+          <motor-escena escena="expo-bingo" autoplay loop tema="oscuro" sin-lupa></motor-escena>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= El proyector ================= -->
+    <article class="hito">
+      <p class="hito__fecha">4/11</p>
+      <div class="hito__cuerpo">
+        <h2>La pantalla del proyector: cinco bocetos</h2>
+        <p>
+          La primera versión tenía tres paneles iguales, y desperdiciaba mucho espacio. Antes de programar otra,
+          se dibujaron <strong>cinco formas de repartir la pantalla</strong>, para elegir una mirándolas:
+        </p>
+        <div class="fotos fotos--bocetos">
+          {bocetos.map(([archivo, nombre]) => (
+            <figure>
+              <a href={img(archivo)} target="_blank" rel="noopener"><img src={img(archivo)} alt={`Boceto ${nombre}`} loading="lazy" /></a>
+              <figcaption>{nombre}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <p>
+          Ganó el 2, con una idea del 5: <strong>cuando hay una ronda de Bingo, el Bingo pasa solo a la pantalla
+          grande</strong>. Así quedó:
+        </p>
+        <div class="fotos">
+          <figure>
+            <a href={img('proyector-entre-rondas')} target="_blank" rel="noopener"><img src={img('proyector-entre-rondas')} alt="El proyector entre rondas: la animación del sistema grande y el carrusel a la derecha" loading="lazy" /></a>
+            <figcaption>Entre rondas</figcaption>
+          </figure>
+          <figure>
+            <a href={img('proyector-ronda-en-juego')} target="_blank" rel="noopener"><img src={img('proyector-ronda-en-juego')} alt="El proyector con una ronda en juego: la última bolilla y el tablero en grande" loading="lazy" /></a>
+            <figcaption>Con una ronda en juego</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= Fotos con IA ================= -->
+    <article class="hito">
+      <p class="hito__fecha">3/11 → 4/11</p>
+      <div class="hito__cuerpo">
+        <h2>Tu foto, con IA: cuatro intentos</h2>
+        <p>
+          La idea: te sacás una foto en el stand, elegís un estilo y te la llevás impresa. Todo en la PC del stand,
+          sin pagar por imagen y sin que la foto salga a internet. <strong>Las personas de estas pruebas no
+          existen</strong>: las inventó la misma IA, para no usar la cara de nadie.
+        </p>
+
+        <h3>1 · Muy parecida, pero casi igual</h3>
+        <p>
+          Doce estilos. La cara salía idéntica… y el estilo casi no cambiaba nada: el superhéroe sin capa, el
+          caballero sin armadura. La IA estaba copiando demasiado la foto.
+        </p>
+        <a class="hoja" href={img('ia-1-primera-prueba')} target="_blank" rel="noopener"><img src={img('ia-1-primera-prueba')} alt="Primera prueba: tres personas inventadas y un perro en doce estilos; los estilos cambian poco" loading="lazy" /></a>
+
+        <h3>2 · Aflojar la guía</h3>
+        <p>Se le dijo que siguiera menos la foto. Mejor: aparecen el casco de astronauta y el grabado antiguo.</p>
+        <a class="hoja" href={img('ia-2-ajuste')} target="_blank" rel="noopener"><img src={img('ia-2-ajuste')} alt="Segunda prueba: con menos guía, el astronauta y el grabado se transforman más" loading="lazy" /></a>
+
+        <h3>3 · Otra forma de reconocer la cara</h3>
+        <p>
+          En vez de copiar los contornos de toda la foto, ahora la compu marca solo <strong>dónde van los ojos, la
+          nariz y la boca</strong>, y resume la cara en 512 números. La ropa y el fondo quedan libres: astronauta
+          de cuerpo entero, armadura, pixel art. Tarda unos 9 segundos por foto.
+        </p>
+        <a class="hoja" href={img('ia-3-instantid')} target="_blank" rel="noopener"><img src={img('ia-3-instantid')} alt="Tercera prueba: las tres personas de astronauta, caballero, pixel art, anime y grabado, muy parecidas a su foto" loading="lazy" /></a>
+        <p class="nota">
+          ¿Ven algo raro? Al superhéroe de la tercera fila le sale un brazo de la espalda. <strong>La IA se
+          equivoca</strong>: por eso, en el stand, alguien mira cada foto antes de imprimirla.
+        </p>
+
+        <h3>4 · El perro</h3>
+        <p>
+          Con las mascotas no hay ojos-nariz-boca que buscar: se usa la forma de la foto. Con mucha guía, el perro
+          quedaba en la misma pose; con muy poca (la fila de arriba), cambia todo y se sigue pareciendo, si le
+          decimos cómo es: <em>"un perro marrón y blanco"</em>.
+        </p>
+        <a class="hoja" href={img('ia-4-perro')} target="_blank" rel="noopener"><img src={img('ia-4-perro')} alt="El perro de superhéroe, astronauta, caballero, pixel art, personaje animado y gaucho" loading="lazy" /></a>
+
+        <h3>Y así sale en la impresora</h3>
+        <p>La térmica imprime solo negro, con 384 puntos de ancho: los grises se hacen con puntitos.</p>
+        <a class="hoja" href={img('ia-5-termica')} target="_blank" rel="noopener"><img src={img('ia-5-termica')} alt="Las mismas pruebas en blanco y negro, como salen en la impresora térmica" loading="lazy" /></a>
+
+        <p>Cómo funciona, en un minuto:</p>
+        <div class="animacion">
+          <motor-escena escena="expo-fotos-ia" autoplay loop tema="oscuro" sin-lupa></motor-escena>
+        </div>
+      </div>
+    </article>
+
+    <!-- ================= Lo que falta ================= -->
+    <article class="hito hito--falta">
+      <p class="hito__fecha">Falta</p>
+      <div class="hito__cuerpo">
+        <h2>Lo que falta para el 13/11</h2>
+        <ul>
+          <li>La pantalla para aprobar cada foto y mandarla a la impresora, y un QR para que cada uno se la lleve.</li>
+          <li>La barra de lo que juntamos para el proyector de techo del CFP.</li>
+          <li>El ensayo con todo armado, el 11/11.</li>
+        </ul>
+      </div>
+    </article>
+  </main>
+
+  <footer class="pie">
+    <p><a href={`${base}/expo/`}>La página de la Expo</a> · Pensamiento Computacional · CFP 401 · Ensenada · 2026</p>
+  </footer>
+</Expo>
+
+<script>
+  // Las animaciones: el motor y las escenas bajan solos, en su propio archivo
+  import 'motor-animaciones';
+  import '../../animaciones/expo-bingo.js';
+  import '../../animaciones/expo-fotos-ia.js';
+</script>
+
+<style>
+  .portada {
+    padding: 56px 16px 24px;
+    text-align: center;
+    background:
+      radial-gradient(circle at 20% 0%, rgb(242 193 78 / 0.18), transparent 45%),
+      radial-gradient(circle at 85% 10%, rgb(79 209 181 / 0.16), transparent 40%);
+  }
+  .portada__cfp {
+    margin: 0 0 8px;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--suave);
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.1rem, 8vw, 3.6rem);
+    line-height: 1.05;
+  }
+  .portada__bajada {
+    max-width: 36rem;
+    margin: 16px auto 0;
+    font-size: 1.1rem;
+    color: var(--suave);
+  }
+
+  /* ---------- La línea de tiempo ---------- */
+  .linea {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: grid;
+    gap: 8px;
+  }
+  .hito {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    position: relative;
+  }
+  .hito::before {
+    content: '';
+    position: absolute;
+    left: 54px;
+    top: 44px;
+    bottom: -8px;
+    width: 2px;
+    background: var(--borde);
+  }
+  .hito:last-child::before {
+    display: none;
+  }
+  .hito__fecha {
+    margin: 18px 0 0;
+    justify-self: center;
+    align-self: start;
+    position: relative;
+    z-index: 1;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--oro);
+    color: #10131a;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  .hito--falta .hito__fecha {
+    background: var(--coral);
+  }
+  .hito__cuerpo {
+    min-width: 0;
+    padding: 16px 20px 20px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+  }
+  .hito__cuerpo h2 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+  }
+  .hito__cuerpo h3 {
+    margin: 22px 0 6px;
+    color: var(--oro);
+  }
+  .hito__cuerpo p,
+  .hito__cuerpo ul {
+    margin: 0 0 12px;
+    color: var(--texto);
+  }
+  .hito__cuerpo a {
+    color: var(--oro);
+  }
+  .nota {
+    padding: 10px 14px;
+    border-left: 4px solid var(--coral);
+    border-radius: 8px;
+    background: rgb(255 122 107 / 0.08);
+  }
+
+  /* ---------- Imágenes ---------- */
+  .fotos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin: 0 0 12px;
+  }
+  .fotos--celu {
+    grid-template-columns: repeat(2, minmax(0, 260px));
+    justify-content: center;
+  }
+  .fotos--bocetos {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+  .fotos figure {
+    margin: 0;
+  }
+  .fotos figcaption {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    color: var(--suave);
+  }
+  .fotos img,
+  .hoja img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+  }
+  .hoja {
+    display: block;
+    margin: 0 0 12px;
+  }
+  .animacion {
+    margin: 0 0 8px;
+    border-radius: var(--radio);
+    overflow: hidden;
+  }
+  .animacion motor-escena {
+    display: block;
+    width: 100%;
+  }
+  .pie {
+    padding: 24px 16px 40px;
+    text-align: center;
+    color: var(--suave);
+  }
+  .pie a {
+    color: var(--oro);
+  }
+
+  @media (max-width: 640px) {
+    .hito {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .hito::before {
+      display: none;
+    }
+    .hito__fecha {
+      justify-self: start;
+      margin: 12px 0 0;
+    }
+  }
+</style>

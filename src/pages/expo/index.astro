@@ -160,6 +160,7 @@ const qrCurso = await qr(linkCurso);
   </main>
 
   <footer class="pie">
+    <p><a href={`${base}/expo/recorrido/`}>Cómo se armó este stand</a></p>
     <p>Pensamiento Computacional · CFP 401 · Ensenada · 2026</p>
   </footer>
 </Expo>
@@ -625,6 +626,12 @@ const qrCurso = await qr(linkCurso);
   }
   .pie p {
     margin: 0;
+  }
+  .pie a {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--oro);
+    font-weight: 700;
   }
 
   @media (prefers-reduced-motion: reduce) {
