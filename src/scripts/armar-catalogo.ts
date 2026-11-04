@@ -202,6 +202,16 @@ ${bloques.join('\n\n\n')}
 
 generar("productos.csv", "index.html", TITULO, NUMERO)
 print("Listo: se generó index.html. Abrilo con doble clic para verlo.")
+
+# Sin la dirección, la página no le pregunta nada al editor: muestra solo productos.csv.
+# (Sin emojis en los print: en algunas terminales de Windows hacen fallar el programa.)
+if not CATALOGO:
+    print()
+    print("*** OJO: tu página NO está conectada al editor (CATALOGO está vacío).")
+    print("   Lo que cambies en el editor no se va a ver en tu página.")
+    print("   Para conectarla: pedile a tu profe la dirección de tu catálogo,")
+    print("   ponela arriba, en CATALOGO, volvé a correr python catalogo.py")
+    print("   y subí de nuevo index.html y catalogo.js.")
 `;
 }
 
