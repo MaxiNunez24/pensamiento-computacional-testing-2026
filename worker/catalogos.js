@@ -20,6 +20,9 @@
  *   expo:consultas → [{ texto, grupo, hecho }, ...]  (el checklist del panel privado, /expo/panel/)
  *   panel:img:<id> → una imagen del panel (bocetos, sponsors), con { titulo, grupo, tipo } en la metadata
  *   bingo:empezo:<ronda> → cuándo salió la primera bolilla (se borra sola a las 12 horas)
+ *   fotoia:<id>    → una foto del estudio con IA del stand, con { tipo, hash del token } en la metadata.
+ *                    Se borra sola: a las 3 horas si solo se imprimió, o el 16/11 si la persona quiso
+ *                    llevársela con el QR. Quien tiene el QR (id + token) también la puede borrar antes.
  *
  * También entrega los cartones del Bingo de la Expo (/bingo/carton): firmados, sin guardar nada.
  * Ver src/scripts/bingo-cartones.js, que es el mismo archivo con el que el operador los valida.
@@ -50,7 +53,11 @@ const TIPOS_FOTO = ['image/jpeg', 'image/webp', 'image/png', 'image/gif'];
 const MAX_TEMAS = 30;
 const MAX_TEMA = 500;
 const MAX_CONSULTAS = 200;
-const MAX_IMAGEN_PANEL = 1024 * 1024; // las del panel viajan todas juntas en base64: mejor livianas (WEBP)
+const MAX_IMAGEN_PANEL = 1024 * 1024;
+const MAX_FOTO_IA = 1536 * 1024;
+const ID_FOTO_IA = /^[a-z0-9]{24}$/;
+// Hasta cuándo queda una foto que la persona se quiso llevar: el lunes 16/11 a la noche (hora argentina)
+const FIN_FOTOS_IA = Date.UTC(2026, 10, 17, 3, 0, 0) / 1000; // las del panel viajan todas juntas en base64: mejor livianas (WEBP)
 
 function respuesta(datos, estado, cabeceras, extra = {}) {
     return new Response(JSON.stringify(datos), {
@@ -63,7 +70,7 @@ function cors(origen, abierto) {
     return {
         'Access-Control-Allow-Origin': abierto ? '*' : origen,
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, X-Codigo, X-Admin',
+        'Access-Control-Allow-Headers': 'Content-Type, X-Codigo, X-Admin, X-Borrar',
         'Access-Control-Max-Age': '86400',
         Vary: 'Origin',
     };
@@ -237,7 +244,7 @@ export default {
         const partes = url.pathname.split('/').filter(Boolean);
         const origen = request.headers.get('Origin') || '';
         const esEditor = ORIGENES_EDITOR.includes(origen);
-        const publico = request.method === 'GET' && ['catalogo', 'foto', 'bingo'].includes(partes[0]);
+        const publico = request.method === 'GET' && ['catalogo', 'foto', 'bingo', 'fotos-ia'].includes(partes[0]);
         const cabeceras = cors(esEditor ? origen : '', publico);
 
         if (request.method === 'OPTIONS') {
@@ -271,6 +278,22 @@ export default {
             });
         }
 
+        // ---- Las fotos con IA del stand: la de cada persona, por su QR ----
+        if (publico && partes[0] === 'fotos-ia' && partes.length === 2 && ID_FOTO_IA.test(partes[1])) {
+            const { value, metadata } = await env.CATALOGOS.getWithMetadata('fotoia:' + partes[1], 'arrayBuffer');
+            if (!value) return respuesta({ error: 'Esta foto ya no está: se borró.' }, 404, cabeceras);
+            return new Response(value, {
+                headers: {
+                    ...cabeceras,
+                    'Content-Type': metadata && TIPOS_FOTO.includes(metadata.tipo) ? metadata.tipo : 'image/jpeg',
+                    // Sin caché: si la persona la borra, que deje de verse de verdad
+                    'Cache-Control': 'no-store',
+                    'X-Content-Type-Options': 'nosniff',
+                    'Content-Security-Policy': "default-src 'none'; sandbox",
+                },
+            });
+        }
+
         // ---- El Bingo de la Expo: un cartón firmado para el celular de quien juega ----
         if (publico && url.pathname === '/bingo/carton') {
             const ronda = url.searchParams.get('ronda') || '';
@@ -296,6 +319,18 @@ export default {
 
         if (['/entrar', '/catalogo', '/foto'].includes(url.pathname) && (await excedido(env.LIMITE_CODIGO, request))) {
             return respuesta(DEMASIADOS, 429, cabeceras);
+        }
+
+        // Borrar una foto con IA: lo puede hacer quien tiene su QR (el token va en un encabezado)
+        if (request.method === 'DELETE' && partes[0] === 'fotos-ia' && partes.length === 2 && ID_FOTO_IA.test(partes[1])) {
+            if (await excedido(env.LIMITE_CODIGO, request)) return respuesta(DEMASIADOS, 429, cabeceras);
+            const { metadata } = await env.CATALOGOS.getWithMetadata('fotoia:' + partes[1]);
+            if (!metadata) return respuesta({ borrada: true }, 200, cabeceras);
+            if (!mismaClave(await hashDe(request.headers.get('X-Borrar') || ''), metadata.hash || '')) {
+                return respuesta({ error: 'Ese no es el QR de esta foto.' }, 403, cabeceras);
+            }
+            await env.CATALOGOS.delete('fotoia:' + partes[1]);
+            return respuesta({ borrada: true }, 200, cabeceras);
         }
 
         // ---- El editor: entrar con el código, guardar, subir fotos ----
@@ -390,6 +425,25 @@ export default {
                     imagenes.push({ id: k.name.slice(10), ...k.metadata, datos: btoa(binario) });
                 }
                 return respuesta({ consultas, imagenes }, 200, cabeceras, { 'Cache-Control': 'no-store' });
+            }
+            /* Una foto del estudio con IA (la sube el servidor local del stand, D:\Programas\ia-fotos\estudio).
+             * hasta=hora: solo para imprimirla (3 horas). hasta=expo: la persona se la lleva con el QR
+             * (hasta el 16/11). Con id y token de una que ya subió, la vuelve a guardar con el plazo nuevo. */
+            if (request.method === 'PUT' && url.pathname === '/admin/fotos-ia') {
+                const bytes = await request.arrayBuffer();
+                const tipo = tipoReal(bytes);
+                if (!tipo || tipo === 'image/gif') return respuesta({ error: 'La foto tiene que ser JPG, WEBP o PNG' }, 415, cabeceras);
+                if (bytes.byteLength > MAX_FOTO_IA) return respuesta({ error: 'La foto pesa demasiado' }, 413, cabeceras);
+                const pedidoId = url.searchParams.get('id') || '';
+                const pedidoToken = url.searchParams.get('token') || '';
+                const reusa = ID_FOTO_IA.test(pedidoId) && /^[a-z0-9]{24}$/.test(pedidoToken);
+                const id = reusa ? pedidoId : azar(24, 'abcdefghijklmnopqrstuvwxyz0123456789');
+                const token = reusa ? pedidoToken : azar(24, 'abcdefghijklmnopqrstuvwxyz0123456789');
+                const ahora = Math.floor(Date.now() / 1000);
+                const expo = url.searchParams.get('hasta') === 'expo' && FIN_FOTOS_IA > ahora + 3 * 3600;
+                const plazo = expo ? { expiration: FIN_FOTOS_IA } : { expirationTtl: 3 * 3600 };
+                await env.CATALOGOS.put('fotoia:' + id, bytes, { ...plazo, metadata: { tipo, hash: await hashDe(token) } });
+                return respuesta({ id, token, hasta: expo ? 'expo' : 'hora' }, 200, cabeceras);
             }
             // Subir o borrar una imagen del panel (lo usa scripts/subir-panel.py)
             if (partes[1] === 'panel' && partes[2] === 'imagen' && ['PUT', 'DELETE'].includes(request.method)) {

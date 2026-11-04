@@ -1,0 +1,202 @@
+---
+/**
+ * Tu foto con IA del stand: /expo/foto/#ID.TOKEN
+ *
+ * Se llega con el QR que muestra el operador del estudio de fotos. El id y el token van después del
+ * #: esa parte de la dirección no viaja a ningún servidor (ni a GitHub Pages), solo la lee esta
+ * página. Con el token se puede borrar la foto; si no, se borra sola (ver worker/catalogos.js).
+ *
+ * Con ?imprimir es la página del celular de la impresora: la misma foto pasada a la térmica (384
+ * puntos, solo negro; &trazo=lineas para los estilos de trazo) para mandarla a Fun Print.
+ */
+import Expo from '../../layouts/Expo.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Expo titulo="Tu foto · Expo CFP 401" descripcion="Tu foto con IA del stand de Pensamiento Computacional.">
+  <main class="hoja">
+    <header>
+      <p class="etiqueta">Expo CFP 401 · Pensamiento Computacional</p>
+      <h1 data-titulo>Tu foto</h1>
+    </header>
+
+    <p class="estado" data-estado aria-live="polite">Buscando tu foto…</p>
+
+    <figure class="foto" data-figura hidden>
+      <img data-imagen alt="Tu foto con IA" />
+    </figure>
+
+    <div class="acciones" data-acciones hidden>
+      <button type="button" class="boton" data-compartir hidden>Compartir</button>
+      <a class="boton boton--borde" data-bajar download>Guardar en el celular</a>
+    </div>
+
+    <section class="aviso" data-aviso hidden>
+      <p><strong>Nadie más la ve:</strong> solo quien tiene este QR. Se borra sola el lunes 16/11.</p>
+      <button type="button" class="enlace" data-borrar>Borrar mi foto ahora</button>
+    </section>
+
+    <p class="pie">
+      <a href={`${base}/expo/recorrido/`}>¿Cómo se hizo?</a> · Esto se aprende en 2027: <strong>Usuaria/o de IA generativa</strong>, en el CFP 401.
+    </p>
+  </main>
+</Expo>
+
+<script>
+  import { WORKER } from '../../scripts/bingo-expo';
+  import { aTermica, type ModoTermica } from '../../scripts/termica';
+
+  const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
+  const parametros = new URLSearchParams(location.search);
+  const imprimir = parametros.has('imprimir');
+  const trazo: ModoTermica = parametros.get('trazo') === 'lineas' ? 'lineas' : 'tramado';
+  const [id = '', token = ''] = location.hash.slice(1).split('.');
+  const estado = $('[data-estado]');
+  let archivo: File | null = null;
+
+  async function mostrar() {
+    if (!/^[a-z0-9]{24}$/.test(id)) {
+      estado.textContent = 'Este no es el QR de una foto. Escaneá el que te muestran en el stand.';
+      return;
+    }
+    const r = await fetch(`${WORKER}/fotos-ia/${id}`, { cache: 'no-store' });
+    if (!r.ok) {
+      estado.textContent = r.status === 404 ? 'Esta foto ya no está: se borró.' : 'No se pudo traer la foto. ¿Tenés internet?';
+      return;
+    }
+    let blob = await r.blob();
+    if (imprimir) {
+      const lienzo = aTermica(await createImageBitmap(blob), trazo);
+      blob = await new Promise<Blob>((ok) => lienzo.toBlob((b) => ok(b!), 'image/png'));
+      $('[data-titulo]').textContent = 'Para imprimir';
+      estado.textContent = 'Así sale en la térmica: mandala a Fun Print.';
+      $('[data-figura]').classList.add('foto--termica');
+    } else {
+      estado.textContent = '¡Acá está! Guardala antes del lunes 16/11.';
+      $('[data-aviso]').hidden = false;
+    }
+    const extension = imprimir ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg';
+    archivo = new File([blob], `foto-expo-cfp401-${id.slice(0, 6)}.${extension}`, { type: blob.type });
+    const url = URL.createObjectURL(blob);
+    $<HTMLImageElement>('[data-imagen]').src = url;
+    const bajar = $<HTMLAnchorElement>('[data-bajar]');
+    bajar.href = url;
+    bajar.download = archivo.name;
+    const compartir = $('[data-compartir]');
+    compartir.hidden = !navigator.canShare?.({ files: [archivo] });
+    if (imprimir) compartir.textContent = 'Mandar a Fun Print';
+    $('[data-figura]').hidden = false;
+    $('[data-acciones]').hidden = false;
+  }
+
+  $('[data-compartir]').addEventListener('click', () => {
+    if (archivo) navigator.share({ files: [archivo] }).catch(() => {});
+  });
+
+  $('[data-borrar]').addEventListener('click', async () => {
+    if (!confirm('¿Borrar tu foto? Después no se puede recuperar.')) return;
+    try {
+      const r = await fetch(`${WORKER}/fotos-ia/${id}`, { method: 'DELETE', headers: { 'X-Borrar': token } });
+      if (!r.ok) throw new Error();
+      $('[data-figura]').hidden = $('[data-acciones]').hidden = $('[data-aviso]').hidden = true;
+      estado.textContent = 'Listo: tu foto se borró.';
+    } catch {
+      estado.textContent = 'No se pudo borrar. ¿Tenés internet? Probá de nuevo en un rato.';
+    }
+  });
+
+  mostrar().catch(() => {
+    estado.textContent = 'No se pudo traer la foto. ¿Tenés internet?';
+  });
+</script>
+
+<style>
+  .hoja {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: grid;
+    gap: 18px;
+    text-align: center;
+  }
+  .etiqueta {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--suave);
+  }
+  h1 {
+    margin: 4px 0 0;
+    font-size: 2.4rem;
+    color: var(--oro);
+  }
+  .estado {
+    margin: 0;
+    color: var(--suave);
+  }
+  [hidden] {
+    display: none !important;
+  }
+  .foto {
+    margin: 0;
+  }
+  .foto img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+  }
+  .foto--termica img {
+    image-rendering: pixelated;
+    background: #fff;
+    border-radius: 8px;
+  }
+  .acciones {
+    display: grid;
+    gap: 10px;
+  }
+  .boton {
+    display: inline-flex;
+    justify-content: center;
+    padding: 14px 20px;
+    border-radius: 999px;
+    border: 2px solid var(--oro);
+    background: var(--oro);
+    color: #10131a;
+    font: 700 1.1rem system-ui, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .boton--borde {
+    background: transparent;
+    color: var(--oro);
+  }
+  .aviso {
+    padding: 14px 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+  }
+  .aviso p {
+    margin: 0 0 8px;
+  }
+  .enlace {
+    border: 0;
+    background: none;
+    color: var(--coral);
+    font: 600 1rem system-ui, sans-serif;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .pie {
+    margin: 8px 0 0;
+    font-size: 0.9rem;
+    color: var(--suave);
+  }
+  .pie a {
+    color: var(--oro);
+  }
+</style>
