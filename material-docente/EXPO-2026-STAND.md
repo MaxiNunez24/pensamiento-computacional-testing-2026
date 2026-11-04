@@ -162,3 +162,17 @@ persona puede cambiar su cartón 2 veces por ronda, antes de marcar un número. 
 internet; pedir cartones, no. Con una ronda abierta o en juego, la lona pone el Bingo en grande sola.
 
 Todo esto, más los links y las consultas, está también en el panel privado: `/expo/panel/`.
+
+**Atajos del estudio de fotos** (en la PC del stand: `abrir-estudio.bat`, carpeta `ia-fotos`):
+
+| Tecla | Qué hace |
+|---|---|
+| `Espacio` | Sacar la foto (cuenta 3, 2, 1) |
+| `←` `↑` `↓` `→` | Elegir el estilo, como en la grilla |
+| `M` | Persona o mascota/objeto (`Esc` sale del casillero de "qué es") |
+| `Enter` | Generar (unos 9 segundos) |
+| `R` | Otra versión del mismo estilo |
+| `A` | Aprobar e imprimir: el QR de la impresora sale chico, abajo de la foto, por 15 s |
+| `I` | Volver a mostrar el QR de la impresora |
+| `Q` | QR para llevársela, grande y solo (se borra el 16/11) |
+| `Esc` | Sacar los QR de la pantalla |
