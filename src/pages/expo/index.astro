@@ -112,6 +112,18 @@ const qrCurso = await qr(linkCurso);
       )}
     </section>
 
+    <!-- ================= El Bingo ================= -->
+    <section id="bingo" class="parte">
+      <h2><span aria-hidden="true">🎱</span> El Bingo del stand</h2>
+      <p class="parte__bajada">
+        Se juega gratis con el celular, y nadie guarda tu cartón. ¿Cómo sabe entonces que es tuyo, y que
+        no lo pediste cuando ya salían las bolillas?
+      </p>
+      <div class="animacion">
+        <motor-escena escena="expo-bingo" autoplay loop tema="oscuro" sin-lupa></motor-escena>
+      </div>
+    </section>
+
     <!-- ================= El sistema ================= -->
     <section id="sistema" class="parte">
       <h2><span aria-hidden="true">🧩</span> Cómo se planifica un sistema</h2>
@@ -153,9 +165,10 @@ const qrCurso = await qr(linkCurso);
 </Expo>
 
 <script>
-  // La animación del sistema: el motor y la escena bajan solos, en su propio archivo.
+  // Las animaciones (el sistema y el Bingo): el motor y las escenas bajan solos, en su propio archivo.
   import 'motor-animaciones';
   import '../../animaciones/expo-siges.js';
+  import '../../animaciones/expo-bingo.js';
 
   // ---- La moneda: lo mismo que la clase "Juegos I · Cara o cruz" ----
   // Se sortea al tocar, y se muestra al caer (animationend). El panel secreto
