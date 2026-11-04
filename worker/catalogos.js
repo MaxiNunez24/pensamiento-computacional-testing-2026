@@ -155,7 +155,7 @@ function limpiarProductos(lista) {
     return [...porClave.values()];
 }
 
-/* Cómo se ve el catálogo, elegido en el editor: nombre, WhatsApp, colores y foto de fondo. Los
+/* Cómo se ve el catálogo, elegido en el editor: nombre, WhatsApp, colores y foto de fondo (con su encuadre). Los
  * colores llegan ya ajustados para que se lean (lo hace el editor con colores.js). */
 function limpiarAspecto(a) {
     if (!a || typeof a !== 'object') return null;
@@ -171,6 +171,9 @@ function limpiarAspecto(a) {
         imagen: /^w:[a-z0-9]{12,32}$/.test(a.imagen || '') ? a.imagen : '',
         velo: Math.min(0.9, Math.max(0, Number(a.velo) || 0)),
     };
+    // Qué parte de la foto de fondo se ve, como en las fotos de los productos
+    const encuadre = r.imagen ? limpiarEncuadre(a.encuadre) : undefined;
+    if (encuadre) r.encuadre = encuadre;
     return r.fondo && r.texto && r.acento && r.marca && r.sobreAcento ? r : null;
 }
 
