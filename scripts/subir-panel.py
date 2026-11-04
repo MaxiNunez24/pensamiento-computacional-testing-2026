@@ -37,6 +37,8 @@ def pedir(worker, clave, metodo, ruta, cuerpo=None, tipo="application/json"):
         "Content-Type": tipo,
         # El Worker solo atiende la administración desde las páginas del curso
         "Origin": "https://maxinunez24.github.io",
+        # Sin esto Cloudflare corta con "error code: 1010": bloquea el User-Agent de Python por ser de bot
+        "User-Agent": "subir-panel (Expo CFP 401)",
     })
     try:
         with urllib.request.urlopen(pedido) as r:
