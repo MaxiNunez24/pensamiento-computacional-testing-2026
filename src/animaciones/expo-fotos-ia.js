@@ -1,6 +1,6 @@
 // Las fotos con IA del stand: cómo dibuja una compu tu cara.
 //
-// Para la Expo CFP del 13/11/2026, y de puente al curso de IA generativa de 2027. Cuenta lo que hace
+// Para la Expo CFP del 13/11/2026, y de puente al curso de Usuaria/o de IA generativa de 2027. Cuenta lo que hace
 // el estudio de fotos (ComfyUI + InstantID, en la PC del stand) sin nombres técnicos: la compu
 // encuentra tu cara y la resume en una "huella" de números; el estilo se pide con palabras; y la
 // imagen nace del ruido en 4 pasos, guiada por las dos cosas. Todo en la PC: la foto no sale a
@@ -66,14 +66,14 @@ registrar('expo-fotos-ia', function (disposicion) {
             titulo: { x: 320, y: 50, tamano: 30, texto: '¿Cómo dibuja una compu\ntu cara?' },
             bajada: { x: 320, y: 128, tamano: 26 },
             cierre1: { x: 320, y: 470, tamano: 44, texto: 'Esto se aprende.' },
-            cierre2: { x: 320, y: 620, tamano: 32, texto: 'Curso de IA generativa\nCFP 401 · 2027' },
+            cierre2: { x: 320, y: 620, tamano: 32, texto: 'Curso de Usuaria/o\nde IA generativa\nCFP 401 · 2027' },
             firma: { x: 320, y: 1060, tamano: 24, texto: 'Pensamiento Computacional y Testing\nCFP 401 Ensenada' },
         }
         : {
             titulo: { x: 800, y: 58, tamano: 44, texto: '¿Cómo dibuja una compu tu cara?' },
             bajada: { x: 800, y: 108, tamano: 28 },
             cierre1: { x: 800, y: 400, tamano: 76, texto: 'Esto se aprende.' },
-            cierre2: { x: 800, y: 490, tamano: 40, texto: 'Curso de IA generativa · CFP 401 · 2027' },
+            cierre2: { x: 800, y: 490, tamano: 40, texto: 'Curso de Usuaria/o de IA generativa · CFP 401 · 2027' },
             firma: { x: 800, y: 820, tamano: 26, texto: 'Pensamiento Computacional y Testing · CFP 401 Ensenada' },
         };
     const pantalla = {
@@ -175,7 +175,7 @@ registrar('expo-fotos-ia', function (disposicion) {
             'Te sacás una foto en el stand. La compu encuentra tu cara (los ojos, la nariz y la boca) y la resume en ' +
             'una huella de 512 números. Elegís un estilo, que se pide con palabras. La imagen arranca siendo ruido y en ' +
             'cuatro pasos, guiada por tu huella y por el estilo, se convierte en vos de astronauta, en unos 9 segundos, ' +
-            'en la PC del stand y sin internet. Esto se aprende en el curso de IA generativa del CFP 401 en 2027.',
+            'en la PC del stand y sin internet. Esto se aprende en el curso de Usuaria/o de IA generativa del CFP 401 en 2027.',
         ancho: W,
         alto: H,
         pausaFinal: 0.6,
