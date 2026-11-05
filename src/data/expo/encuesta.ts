@@ -27,9 +27,9 @@ export const DIAS = [
 export const HORARIO = {
     /** cuánto dura una clase, en minutos */
     duracion: 200,
-    /** el día va de las 8 a las 22 */
-    desde: 8 * 60,
-    hasta: 22 * 60,
+    /** el día va de las 12 a las 20 (lo que se puede en el CFP) */
+    desde: 12 * 60,
+    hasta: 20 * 60,
     /** se mueve de a 10 minutos */
     paso: 10,
     /** hasta cuántos bloques elige cada persona */

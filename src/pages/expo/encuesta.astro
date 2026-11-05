@@ -46,14 +46,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <fieldset class="horarios">
         <legend>¿En qué horario? <small>cada clase dura 3 h 20 min: corré el bloque y agregá todos los que te sirvan (hasta {HORARIO.maximo})</small></legend>
-        <!-- El día de 8 a 22: los bloques agregados en dorado y el que se está eligiendo, con borde -->
-        <div class="dia" data-dia aria-hidden="true">
+        <!-- El día de 12 a 20, hora por hora: los bloques agregados en dorado y el que se está eligiendo, con borde -->
+        <div class="dia" data-dia aria-hidden="true" style={`--tramos: ${(HORARIO.hasta - HORARIO.desde) / 60}`}>
           <div class="dia__pista" data-pista>
             <span class="bloque bloque--eligiendo" data-eligiendo></span>
           </div>
           <div class="dia__horas">
-            {Array.from({ length: (HORARIO.hasta - HORARIO.desde) / 120 + 1 }, (_, i) => (
-              <span style={`left: ${((i * 120) / (HORARIO.hasta - HORARIO.desde)) * 100}%`}>{HORARIO.desde / 60 + i * 2}</span>
+            {Array.from({ length: (HORARIO.hasta - HORARIO.desde) / 60 + 1 }, (_, i) => (
+              <span style={`left: ${((i * 60) / (HORARIO.hasta - HORARIO.desde)) * 100}%`}>{HORARIO.desde / 60 + i}</span>
             ))}
           </div>
         </div>
@@ -78,7 +78,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <fieldset>
         <legend>¿Algo más que quieras contarnos? <small>opcional</small></legend>
-        <textarea name="comentario" rows="2" maxlength="300" placeholder="Ej. solo puedo después de las 18"></textarea>
+        <textarea name="comentario" rows="2" maxlength="300" placeholder="Ej. los martes solo puedo después de las 15"></textarea>
       </fieldset>
 
       <fieldset class="avisar">
@@ -346,7 +346,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     position: relative;
     height: 44px;
     border-radius: 10px;
-    background: repeating-linear-gradient(90deg, var(--fondo) 0 calc(100% / 7 - 1px), var(--borde) calc(100% / 7 - 1px) calc(100% / 7));
+    background: repeating-linear-gradient(90deg, var(--fondo) 0 calc(100% / var(--tramos) - 1px), var(--borde) calc(100% / var(--tramos) - 1px) calc(100% / var(--tramos)));
     border: 1px solid var(--borde);
     overflow: hidden;
   }
@@ -360,6 +360,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .dia__pista :global(.bloque--elegido) {
     background: var(--oro);
     opacity: 0.85;
+    /* un filo del color del fondo: dos bloques pegados se ven como dos */
+    box-sizing: border-box;
+    border: 2px solid var(--superficie);
   }
   .bloque--eligiendo {
     border: 3px solid var(--menta);

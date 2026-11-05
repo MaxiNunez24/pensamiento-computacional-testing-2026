@@ -74,9 +74,9 @@ const ENCUESTA = {
     cursos: ['ia', 'web', 'los-dos'],
     dias: ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
     // Los horarios son bloques de una clase (3 h 20 min) y se guarda cuándo empiezan, en minutos desde
-    // las 0:00: de las 8:00 hasta las 18:40 (que termina a las 22), de a 10 minutos, hasta 5 por persona.
+    // las 0:00: de las 12:00 hasta las 16:40 (que termina a las 20), de a 10 minutos, hasta 5 por persona.
     // Igual que HORARIO en src/data/expo/encuesta.ts
-    horario: { desde: 8 * 60, ultimo: 22 * 60 - 200, paso: 10, maximo: 5 },
+    horario: { desde: 12 * 60, ultimo: 20 * 60 - 200, paso: 10, maximo: 5 },
 };
 
 /* Lo de la cooperadora: el monto recaudado y el listado informativo de lo que necesita cada curso. */
