@@ -19,12 +19,27 @@ export const DIAS = [
     { codigo: 'sabado', texto: 'Sábado' },
 ] as const;
 
-export const HORARIOS = [
-    { codigo: 'manana', texto: 'Mañana', detalle: '8 a 12' },
-    { codigo: 'mediodia', texto: 'Mediodía', detalle: '12 a 14' },
-    { codigo: 'tarde', texto: 'Tarde', detalle: '14 a 18' },
-    { codigo: 'noche', texto: 'Noche', detalle: '18 a 22' },
-] as const;
+/**
+ * Los horarios: cada uno es un bloque de una clase entera (3 h 20 min, como las del CFP), que la
+ * persona corre a lo largo del día. Se guarda solo cuándo empieza, en minutos desde las 0:00
+ * (13:20 → 800). El Worker valida lo mismo (ENCUESTA en worker/catalogos.js).
+ */
+export const HORARIO = {
+    /** cuánto dura una clase, en minutos */
+    duracion: 200,
+    /** el día va de las 8 a las 22 */
+    desde: 8 * 60,
+    hasta: 22 * 60,
+    /** se mueve de a 10 minutos */
+    paso: 10,
+    /** hasta cuántos bloques elige cada persona */
+    maximo: 5,
+} as const;
+
+/** 800 → "13:20" */
+export const hora = (minutos: number) => `${Math.floor(minutos / 60)}:${String(minutos % 60).padStart(2, '0')}`;
+/** 800 → "13:20 a 16:40" */
+export const franja = (inicio: number) => `${hora(inicio)} a ${hora(inicio + HORARIO.duracion)}`;
 
 /** Una respuesta como la guarda el Worker (claves cortas: van en la metadata de KV, que tiene 1 KB). */
 export interface Respuesta {
@@ -32,8 +47,8 @@ export interface Respuesta {
     c: string;
     /** días */
     d: string[];
-    /** horarios */
-    h: string[];
+    /** horarios: cuándo empieza cada bloque, en minutos desde las 0:00 */
+    h: number[];
     /** fecha, AAAA-MM-DDTHH:MM (UTC) */
     f: string;
     /** nombre, solo con consentimiento */

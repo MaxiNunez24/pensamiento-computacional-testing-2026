@@ -211,7 +211,7 @@ const links = [
                 </div>
                 <div class="grilla" id="encuesta-conteos"></div>
                 <div class="tarjeta" id="encuesta-cruce-caja">
-                    <h3>Día × horario <small>cuántas personas pueden en cada combinación</small></h3>
+                    <h3>Día × hora <small>cuántas personas pueden ese día a esa hora (8 = de 8 a 9)</small></h3>
                     <div class="tabla-ancha"><table class="cruce" id="encuesta-cruce"></table></div>
                 </div>
                 <div class="tarjeta">
@@ -304,7 +304,7 @@ const links = [
         <script>
             import QRCode from 'qrcode';
             import { WORKER } from '../../scripts/bingo-expo';
-            import { CURSOS, DIAS, HORARIOS, type Respuesta } from '../../data/expo/encuesta';
+            import { CURSOS, DIAS, HORARIO, franja, type Respuesta } from '../../data/expo/encuesta';
 
             const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
 
@@ -384,7 +384,7 @@ const links = [
                     dibujarCooperadora();
                     vales = datos.vales || [];
                     dibujarVales();
-                    respuestas = datos.encuesta || [];
+                    respuestas = normalizar(datos.encuesta || []);
                     dibujarEncuesta();
                     if (location.hash) document.querySelector(location.hash)?.scrollIntoView({ behavior: 'instant' });
                 } catch (error) {
@@ -801,6 +801,8 @@ const links = [
             // ---------- Encuesta 2027 ----------
             let respuestas: Respuesta[] = [];
             const nombreDe = (lista: readonly { codigo: string; texto: string }[], codigo: string) => lista.find((o) => o.codigo === codigo)?.texto || codigo;
+            // Las respuestas de prueba de antes ("mañana", "tarde"…) no son bloques: se ignoran sus horarios
+            const normalizar = (lista: Respuesta[]) => lista.map((r) => ({ ...r, h: (r.h || []).filter((m) => typeof m === 'number') }));
 
             function conteo(titulo: string, opciones: readonly { codigo: string; texto: string }[], valores: (r: Respuesta) => string[]) {
                 const caja = nuevo('div', { className: 'tarjeta' });
@@ -819,27 +821,63 @@ const links = [
                 return caja;
             }
 
+            // ¿Sus bloques, juntos, cubren de `desde` a `hasta` sin huecos?
+            function puede(r: Respuesta, desde: number, hasta: number) {
+                let hastaDonde = desde;
+                for (const inicio of [...r.h].sort((a, b) => a - b)) {
+                    if (inicio > hastaDonde) break;
+                    hastaDonde = Math.max(hastaDonde, inicio + HORARIO.duracion);
+                    if (hastaDonde >= hasta) return true;
+                }
+                return hastaDonde >= hasta;
+            }
+
             function dibujarEncuesta() {
                 const n = respuestas.length;
                 $('#encuesta-total').textContent = `${n} ${n === 1 ? 'respuesta' : 'respuestas'}`;
+                // Las mejores clases posibles: para cada día y cada hora de empezar, cuántas personas
+                // pueden la clase ENTERA (sus bloques juntos la cubren de punta a punta: 13:20-16:40 y
+                // 15:00-18:20 sirven para una de 14:00 a 17:20)
+                const candidatas: { dia: string; inicio: number; cuantos: number }[] = [];
+                for (const d of DIAS) {
+                    for (let inicio = HORARIO.desde; inicio <= HORARIO.hasta - HORARIO.duracion; inicio += HORARIO.paso) {
+                        const cuantos = respuestas.filter((r) => r.d.includes(d.codigo) && puede(r, inicio, inicio + HORARIO.duracion)).length;
+                        if (cuantos) candidatas.push({ dia: d.texto, inicio, cuantos });
+                    }
+                }
+                candidatas.sort((a, b) => b.cuantos - a.cuantos || a.inicio - b.inicio);
+                const mejores = nuevo('div', { className: 'tarjeta' });
+                mejores.append(nuevo('h3', { textContent: 'Mejores horarios para la clase' }), nuevo('p', { className: 'nota', textContent: 'Quiénes pueden la clase entera (3 h 20) ese día.' }));
+                const listaMejores = nuevo('ol', { className: 'mejores' });
+                listaMejores.append(
+                    ...candidatas.slice(0, 8).map((c) => {
+                        const li = nuevo('li');
+                        li.append(nuevo('strong', { textContent: `${c.dia} ${franja(c.inicio)}` }), ` · ${c.cuantos} ${c.cuantos === 1 ? 'persona' : 'personas'}`);
+                        return li;
+                    }),
+                );
+                if (!candidatas.length) listaMejores.append(nuevo('li', { className: 'nota', textContent: 'Todavía nada.' }));
+                mejores.append(listaMejores);
                 $('#encuesta-conteos').replaceChildren(
                     // "Los dos" cuenta para los dos cursos y también se muestra aparte
                     conteo('Curso', CURSOS, (r) => (r.c === 'los-dos' ? ['ia', 'web', 'los-dos'] : [r.c])),
                     conteo('Días', DIAS, (r) => r.d),
-                    conteo('Horarios', HORARIOS, (r) => r.h),
+                    mejores,
                 );
-                // El cruce: en cada casillero, cuántas personas pueden ese día en ese horario
+                // El cruce: en cada casillero, cuántas personas pueden ese día a esa hora
+                const HORAS = Array.from({ length: (HORARIO.hasta - HORARIO.desde) / 60 }, (_, i) => HORARIO.desde + i * 60);
+                const enLaHora = (r: Respuesta, dia: string, h: number) => r.d.includes(dia) && puede(r, h, h + 60);
                 const tabla = $('#encuesta-cruce');
-                const max = Math.max(1, ...DIAS.flatMap((d) => HORARIOS.map((h) => respuestas.filter((r) => r.d.includes(d.codigo) && r.h.includes(h.codigo)).length)));
+                const max = Math.max(1, ...DIAS.flatMap((d) => HORAS.map((h) => respuestas.filter((r) => enLaHora(r, d.codigo, h)).length)));
                 const cabeza = nuevo('tr');
-                cabeza.append(nuevo('th'), ...HORARIOS.map((h) => nuevo('th', { textContent: h.texto })));
+                cabeza.append(nuevo('th'), ...HORAS.map((h) => nuevo('th', { textContent: String(h / 60) })));
                 tabla.replaceChildren(
                     cabeza,
                     ...DIAS.map((d) => {
                         const fila = nuevo('tr');
                         fila.append(nuevo('th', { textContent: d.texto }));
-                        for (const h of HORARIOS) {
-                            const cuantos = respuestas.filter((r) => r.d.includes(d.codigo) && r.h.includes(h.codigo)).length;
+                        for (const h of HORAS) {
+                            const cuantos = respuestas.filter((r) => enLaHora(r, d.codigo, h)).length;
                             const celda = nuevo('td', { textContent: String(cuantos) });
                             celda.style.setProperty('--intensidad', String(cuantos / max));
                             fila.append(celda);
@@ -864,7 +902,7 @@ const links = [
                 const boton = e.currentTarget as HTMLButtonElement;
                 boton.disabled = true;
                 try {
-                    respuestas = (await pedir('/admin/encuesta')).respuestas;
+                    respuestas = normalizar((await pedir('/admin/encuesta')).respuestas);
                     dibujarEncuesta();
                 } catch (error) {
                     alert(error instanceof Error ? error.message : 'No se pudo');
@@ -880,7 +918,7 @@ const links = [
                         r.f,
                         nombreDe(CURSOS, r.c),
                         r.d.map((d) => nombreDe(DIAS, d)).join(' '),
-                        r.h.map((h) => nombreDe(HORARIOS, h)).join(' '),
+                        r.h.map(franja).join(' / '),
                         r.n || '',
                         r.w || '',
                         r.k || '',
@@ -1508,9 +1546,16 @@ const links = [
         width: 100%;
         text-align: center;
     }
+    .mejores {
+        margin: 6px 0 0;
+        padding-left: 1.4em;
+        display: grid;
+        gap: 6px;
+    }
     .cruce th,
     .cruce td {
-        padding: 8px;
+        padding: 6px 4px;
+        min-width: 2.2em;
         border: 1px solid var(--linea);
     }
     .cruce th {

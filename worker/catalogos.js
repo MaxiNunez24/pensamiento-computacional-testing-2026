@@ -73,7 +73,10 @@ const ID_VALE = /^[a-z0-9]{12}$/;
 const ENCUESTA = {
     cursos: ['ia', 'web', 'los-dos'],
     dias: ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
-    horarios: ['manana', 'mediodia', 'tarde', 'noche'],
+    // Los horarios son bloques de una clase (3 h 20 min) y se guarda cuándo empiezan, en minutos desde
+    // las 0:00: de las 8:00 hasta las 18:40 (que termina a las 22), de a 10 minutos, hasta 5 por persona.
+    // Igual que HORARIO en src/data/expo/encuesta.ts
+    horario: { desde: 8 * 60, ultimo: 22 * 60 - 200, paso: 10, maximo: 5 },
 };
 
 /* Lo de la cooperadora: el monto recaudado y el listado informativo de lo que necesita cada curso. */
@@ -112,7 +115,10 @@ function limpiarRespuesta(d) {
     const elegidos = (lista, validos) => [...new Set((Array.isArray(lista) ? lista : []).filter((x) => validos.includes(x)))];
     const curso = ENCUESTA.cursos.includes(d.curso) ? d.curso : '';
     const dias = elegidos(d.dias, ENCUESTA.dias);
-    const horarios = elegidos(d.horarios, ENCUESTA.horarios);
+    const { desde, ultimo, paso, maximo } = ENCUESTA.horario;
+    const horarios = [...new Set((Array.isArray(d.horarios) ? d.horarios : []).filter((m) => Number.isInteger(m) && m >= desde && m <= ultimo && (m - desde) % paso === 0))]
+        .sort((a, b) => a - b)
+        .slice(0, maximo);
     if (!curso || !dias.length || !horarios.length) return null;
     const r = { c: curso, d: dias, h: horarios, f: new Date().toISOString().slice(0, 16) };
     if (d.consentimiento === true) {

@@ -8,7 +8,7 @@
  * Las respuestas las guarda el Worker de los catálogos (POST /encuesta) y se cuentan en el panel.
  */
 import Expo from '../../layouts/Expo.astro';
-import { CURSOS, DIAS, HORARIOS } from '../../data/expo/encuesta';
+import { CURSOS, DIAS, HORARIO } from '../../data/expo/encuesta';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
@@ -44,16 +44,36 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend>¿En qué horario? <small>todos los que te sirvan</small></legend>
-        <div class="fichas">
-          {HORARIOS.map((h) => (
-            <label class="ficha">
-              <input type="checkbox" name="horarios" value={h.codigo} />
-              <span>{h.texto} <small>{h.detalle}</small></span>
-            </label>
-          ))}
+      <fieldset class="horarios">
+        <legend>¿En qué horario? <small>cada clase dura 3 h 20 min: corré el bloque y agregá todos los que te sirvan (hasta {HORARIO.maximo})</small></legend>
+        <!-- El día de 8 a 22: los bloques agregados en dorado y el que se está eligiendo, con borde -->
+        <div class="dia" data-dia aria-hidden="true">
+          <div class="dia__pista" data-pista>
+            <span class="bloque bloque--eligiendo" data-eligiendo></span>
+          </div>
+          <div class="dia__horas">
+            {Array.from({ length: (HORARIO.hasta - HORARIO.desde) / 120 + 1 }, (_, i) => (
+              <span style={`left: ${((i * 120) / (HORARIO.hasta - HORARIO.desde)) * 100}%`}>{HORARIO.desde / 60 + i * 2}</span>
+            ))}
+          </div>
         </div>
+        <div class="eleccion">
+          <button type="button" class="flechita" data-mover="-1" aria-label="10 minutos antes">◀</button>
+          <output class="eleccion__franja" data-franja aria-live="polite"></output>
+          <button type="button" class="flechita" data-mover="1" aria-label="10 minutos después">▶</button>
+        </div>
+        <input
+          type="range"
+          class="deslizador"
+          data-inicio
+          min={HORARIO.desde}
+          max={HORARIO.hasta - HORARIO.duracion}
+          step={HORARIO.paso}
+          value="800"
+          aria-label="Cuándo empieza la clase"
+        />
+        <button type="button" class="agregar" data-agregar>+ Agregar este horario</button>
+        <ul class="elegidos" data-elegidos></ul>
       </fieldset>
 
       <fieldset>
@@ -86,9 +106,80 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <script>
   import { WORKER } from '../../scripts/bingo-expo';
+  import { HORARIO, franja } from '../../data/expo/encuesta';
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
   const form = $<HTMLFormElement>('[data-form]');
+
+  // ---------- Los horarios: un bloque de 3 h 20 que se corre por el día ----------
+  const largo = HORARIO.hasta - HORARIO.desde;
+  const ultimo = HORARIO.hasta - HORARIO.duracion;
+  const deslizador = $<HTMLInputElement>('[data-inicio]');
+  const elegidos: number[] = [];
+  const ajustar = (m: number) => Math.max(HORARIO.desde, Math.min(ultimo, HORARIO.desde + Math.round((m - HORARIO.desde) / HORARIO.paso) * HORARIO.paso));
+  const ubicar = (bloque: HTMLElement, inicio: number) => {
+    bloque.style.left = `${((inicio - HORARIO.desde) / largo) * 100}%`;
+    bloque.style.width = `${(HORARIO.duracion / largo) * 100}%`;
+  };
+
+  function dibujarHorarios() {
+    const inicio = Number(deslizador.value);
+    ubicar($('[data-eligiendo]'), inicio);
+    $('[data-franja]').textContent = franja(inicio);
+    // los agregados, en la pista y en la lista
+    const pista = $('[data-pista]');
+    pista.querySelectorAll('.bloque--elegido').forEach((b) => b.remove());
+    for (const m of elegidos) {
+      const b = document.createElement('span');
+      b.className = 'bloque bloque--elegido';
+      ubicar(b, m);
+      pista.prepend(b);
+    }
+    const lista = $('[data-elegidos]');
+    lista.replaceChildren(
+      ...elegidos.map((m) => {
+        const li = document.createElement('li');
+        const quitar = document.createElement('button');
+        quitar.type = 'button';
+        quitar.textContent = '✕';
+        quitar.setAttribute('aria-label', `Quitar ${franja(m)}`);
+        quitar.addEventListener('click', () => {
+          elegidos.splice(elegidos.indexOf(m), 1);
+          dibujarHorarios();
+        });
+        li.append(franja(m), quitar);
+        return li;
+      }),
+    );
+    const agregar = $<HTMLButtonElement>('[data-agregar]');
+    const repetido = elegidos.includes(inicio);
+    const lleno = elegidos.length >= HORARIO.maximo;
+    agregar.disabled = repetido || lleno;
+    agregar.textContent = lleno ? `Ya elegiste ${HORARIO.maximo}: quitá uno para cambiarlo` : repetido ? 'Ese ya está agregado' : '+ Agregar este horario';
+  }
+  deslizador.addEventListener('input', dibujarHorarios);
+  for (const flecha of document.querySelectorAll<HTMLButtonElement>('[data-mover]')) {
+    flecha.addEventListener('click', () => {
+      deslizador.value = String(ajustar(Number(deslizador.value) + Number(flecha.dataset.mover) * HORARIO.paso));
+      dibujarHorarios();
+    });
+  }
+  // Tocar el día pone el bloque centrado ahí
+  $('[data-dia]').addEventListener('click', (e) => {
+    const caja = $('[data-pista]').getBoundingClientRect();
+    const minuto = HORARIO.desde + ((e.clientX - caja.left) / caja.width) * largo;
+    deslizador.value = String(ajustar(minuto - HORARIO.duracion / 2));
+    dibujarHorarios();
+  });
+  $('[data-agregar]').addEventListener('click', () => {
+    const inicio = Number(deslizador.value);
+    if (elegidos.includes(inicio) || elegidos.length >= HORARIO.maximo) return;
+    elegidos.push(inicio);
+    elegidos.sort((a, b) => a - b);
+    $('[data-error]').textContent = '';
+    dibujarHorarios();
+  });
+  dibujarHorarios();
   const consentimiento = $<HTMLInputElement>('[data-consentimiento]');
   consentimiento.addEventListener('change', () => ($('[data-contacto]').hidden = !consentimiento.checked));
 
@@ -108,7 +199,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     const cuerpo = {
       curso: datos.get('curso'),
       dias: datos.getAll('dias'),
-      horarios: datos.getAll('horarios'),
+      horarios: elegidos,
       comentario: datos.get('comentario'),
       consentimiento: consentimiento.checked,
       nombre: consentimiento.checked ? datos.get('nombre') : '',
@@ -116,7 +207,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     };
     const error = $('[data-error]');
     if (!cuerpo.dias.length) return void (error.textContent = 'Marcá al menos un día.');
-    if (!cuerpo.horarios.length) return void (error.textContent = 'Marcá al menos un horario.');
+    if (!cuerpo.horarios.length) return void (error.textContent = 'Agregá al menos un horario (el botón «+ Agregar este horario»).');
     error.textContent = '';
     const boton = $<HTMLButtonElement>('[data-enviar]');
     boton.disabled = true;
@@ -246,6 +337,122 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     outline: 3px solid var(--menta);
     outline-offset: 2px;
   }
+  /* ---------- horarios ---------- */
+  .dia {
+    cursor: pointer;
+    padding-top: 4px;
+  }
+  .dia__pista {
+    position: relative;
+    height: 44px;
+    border-radius: 10px;
+    background: repeating-linear-gradient(90deg, var(--fondo) 0 calc(100% / 7 - 1px), var(--borde) calc(100% / 7 - 1px) calc(100% / 7));
+    border: 1px solid var(--borde);
+    overflow: hidden;
+  }
+  .dia__pista :global(.bloque) {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    border-radius: 7px;
+    transition: left 0.15s ease;
+  }
+  .dia__pista :global(.bloque--elegido) {
+    background: var(--oro);
+    opacity: 0.85;
+  }
+  .bloque--eligiendo {
+    border: 3px solid var(--menta);
+    background: color-mix(in srgb, var(--menta) 18%, transparent);
+    z-index: 1;
+  }
+  .dia__horas {
+    position: relative;
+    height: 1.3em;
+    font-size: 0.8rem;
+    color: var(--suave);
+  }
+  .dia__horas span {
+    position: absolute;
+    transform: translateX(-50%);
+  }
+  .dia__horas span:first-child {
+    transform: none;
+  }
+  .dia__horas span:last-child {
+    transform: translateX(-100%);
+  }
+  .eleccion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .eleccion__franja {
+    font-size: 1.5rem;
+    font-weight: 800;
+    min-width: 8.5em;
+    text-align: center;
+  }
+  .flechita {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--borde);
+    background: none;
+    color: var(--texto);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .deslizador {
+    width: 100%;
+    accent-color: var(--menta);
+  }
+  .agregar {
+    padding: 12px 16px;
+    border-radius: 999px;
+    border: 2px solid var(--menta);
+    background: none;
+    color: var(--menta);
+    font: 700 1rem system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .agregar:disabled {
+    border-color: var(--borde);
+    color: var(--suave);
+    cursor: default;
+  }
+  .elegidos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .elegidos:empty {
+    display: none;
+  }
+  .elegidos :global(li) {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 6px 6px 14px;
+    border-radius: 999px;
+    background: var(--oro);
+    color: #10131a;
+    font-weight: 700;
+  }
+  .elegidos :global(button) {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgb(0 0 0 / 0.15);
+    color: #10131a;
+    cursor: pointer;
+  }
+
   textarea,
   .contacto input {
     font: inherit;
