@@ -1,0 +1,290 @@
+---
+/**
+ * Un vale de donación para la Expo: /expo/vale/#ID
+ *
+ * Los crea Maxi desde el panel (/expo/panel/, pestaña Vales) y manda el link a quien dona. El id va
+ * después del #: esa parte no viaja a GitHub Pages, solo la lee esta página y se la pide al Worker de
+ * los catálogos. Se puede guardar como imagen (para compartirla o imprimirla en la térmica con Fun
+ * Print) o imprimir en papel.
+ */
+import Expo from '../../layouts/Expo.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Expo titulo="Vale de donación · Expo CFP 401" descripcion="Un vale de agradecimiento por una donación para la Expo del CFP 401.">
+  <main class="hoja">
+    <p class="estado" data-estado aria-live="polite">Buscando el vale…</p>
+
+    <article class="vale" data-vale hidden>
+      <p class="etiqueta">Expo CFP 401 · Ensenada · 13 de noviembre de 2026</p>
+      <h1>Vale de donación</h1>
+      <p class="gracias">¡Gracias,<br /><strong data-quien></strong>!</p>
+      <p class="curso" data-curso></p>
+      <div class="dona">
+        <span>Se compromete a donar</span>
+        <strong data-que></strong>
+      </div>
+      <p class="mensaje" data-mensaje></p>
+      <p class="destino">💚 Todo lo recaudado en la Expo va a la cooperadora del CFP 401.</p>
+      <p class="firma">Pensamiento Computacional y Testing de Aplicaciones</p>
+    </article>
+
+    <div class="acciones" data-acciones hidden>
+      <button type="button" class="boton" data-imagen>Guardar como imagen</button>
+      <button type="button" class="boton boton--borde" data-imprimir>Imprimir</button>
+    </div>
+
+    <p class="pie"><a href={`${base}/expo/`}>La Expo del CFP 401</a></p>
+  </main>
+</Expo>
+
+<script>
+  import { WORKER } from '../../scripts/bingo-expo';
+
+  const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
+  const id = location.hash.slice(1);
+  const estado = $('[data-estado]');
+
+  interface Vale {
+    id: string;
+    quien: string;
+    curso: string;
+    que: string;
+    cantidad: string;
+    mensaje: string;
+  }
+  let vale: Vale | null = null;
+  const loQueDona = (v: Vale) => (v.cantidad ? `${v.cantidad} × ${v.que}` : v.que);
+
+  async function mostrar() {
+    if (!/^[a-z0-9]{12}$/.test(id)) {
+      estado.textContent = 'Este link no es de un vale. Pedile el link de nuevo a quien te lo mandó.';
+      return;
+    }
+    const r = await fetch(`${WORKER}/vales/${id}`, { cache: 'no-store' });
+    if (!r.ok) {
+      estado.textContent = r.status === 404 ? 'Este vale ya no existe.' : 'No se pudo traer el vale. ¿Tenés internet?';
+      return;
+    }
+    vale = (await r.json()) as Vale;
+    $('[data-quien]').textContent = vale.quien;
+    $('[data-curso]').textContent = vale.curso ? `Curso de ${vale.curso}` : '';
+    $('[data-curso]').hidden = !vale.curso;
+    $('[data-que]').textContent = loQueDona(vale);
+    $('[data-mensaje]').textContent = vale.mensaje;
+    $('[data-mensaje]').hidden = !vale.mensaje;
+    document.title = `Vale de ${vale.quien} · Expo CFP 401`;
+    estado.hidden = true;
+    $('[data-vale]').hidden = false;
+    $('[data-acciones]').hidden = false;
+  }
+
+  // ---------- Como imagen: blanco y negro, para el celular o para la térmica ----------
+  function partir(ctx: CanvasRenderingContext2D, texto: string, ancho: number) {
+    const lineas: string[] = [];
+    for (const parrafo of texto.split('\n')) {
+      let linea = '';
+      for (const palabra of parrafo.split(' ')) {
+        const prueba = linea ? `${linea} ${palabra}` : palabra;
+        if (ctx.measureText(prueba).width > ancho && linea) {
+          lineas.push(linea);
+          linea = palabra;
+        } else linea = prueba;
+      }
+      lineas.push(linea);
+    }
+    return lineas;
+  }
+
+  function dibujar(v: Vale) {
+    const W = 768; // el doble de los 384 puntos de la térmica: se ve bien en el celular y se achica justo
+    const M = 48;
+    const lienzo = document.createElement('canvas');
+    const ctx = lienzo.getContext('2d')!;
+    // Primero se mide (alto 0) y después se dibuja de verdad
+    const pasada = (dibujando: boolean) => {
+      let y = M;
+      const escribir = (texto: string, tamano: number, peso = 400, aire = 0.35) => {
+        ctx.font = `${peso} ${tamano}px system-ui, sans-serif`;
+        for (const linea of partir(ctx, texto, W - 2 * M)) {
+          y += tamano;
+          if (dibujando) ctx.fillText(linea, W / 2, y);
+          y += tamano * aire;
+        }
+      };
+      const raya = () => {
+        y += 18;
+        if (dibujando) ctx.fillRect(M, y, W - 2 * M, 4);
+        y += 22;
+      };
+      escribir('EXPO CFP 401 · ENSENADA · 13/11/2026', 24, 600);
+      raya();
+      escribir('Vale de donación', 60, 800);
+      y += 10;
+      escribir(`¡Gracias, ${v.quien}!`, 44, 700);
+      if (v.curso) escribir(`Curso de ${v.curso}`, 30);
+      raya();
+      escribir('Se compromete a donar', 28);
+      escribir(loQueDona(v), 48, 800);
+      raya();
+      if (v.mensaje) {
+        escribir(v.mensaje, 28, 400, 0.45);
+        y += 12;
+      }
+      escribir('Todo lo recaudado va a la cooperadora del CFP 401.', 26, 600);
+      y += 8;
+      escribir('Pensamiento Computacional y Testing de Aplicaciones', 22);
+      return y + M;
+    };
+    lienzo.width = W;
+    lienzo.height = 2000;
+    const alto = pasada(false);
+    lienzo.height = alto;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, alto);
+    ctx.fillStyle = '#000';
+    ctx.textAlign = 'center';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(12, 12, W - 24, alto - 24);
+    pasada(true);
+    return lienzo;
+  }
+
+  $('[data-imagen]').addEventListener('click', async () => {
+    if (!vale) return;
+    const blob = await new Promise<Blob>((ok) => dibujar(vale!).toBlob((b) => ok(b!), 'image/png'));
+    const archivo = new File([blob], `vale-expo-cfp401-${vale.id.slice(0, 6)}.png`, { type: 'image/png' });
+    if (navigator.canShare?.({ files: [archivo] })) {
+      navigator.share({ files: [archivo] }).catch(() => {});
+      return;
+    }
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: archivo.name });
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  $('[data-imprimir]').addEventListener('click', () => print());
+
+  mostrar().catch(() => {
+    estado.textContent = 'No se pudo traer el vale. ¿Tenés internet?';
+  });
+</script>
+
+<style>
+  .hoja {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: grid;
+    gap: 18px;
+    text-align: center;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  .estado {
+    margin: 40px 0 0;
+    color: var(--suave);
+  }
+  .vale {
+    display: grid;
+    gap: 12px;
+    padding: 28px 22px;
+    border: 2px solid var(--oro);
+    border-radius: var(--radio);
+    background:
+      radial-gradient(circle at 0% 0%, rgb(242 193 78 / 0.14), transparent 45%),
+      radial-gradient(circle at 100% 100%, rgb(79 209 181 / 0.12), transparent 45%),
+      var(--superficie);
+  }
+  .vale p {
+    margin: 0;
+  }
+  .etiqueta {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--suave);
+  }
+  h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    color: var(--oro);
+  }
+  .gracias {
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+  .curso {
+    color: var(--suave);
+  }
+  .dona {
+    display: grid;
+    gap: 4px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px dashed var(--borde);
+  }
+  .dona span {
+    color: var(--suave);
+    font-size: 0.9rem;
+  }
+  .dona strong {
+    font-size: 1.6rem;
+    color: var(--menta);
+  }
+  .mensaje {
+    font-style: italic;
+  }
+  .destino {
+    font-weight: 600;
+  }
+  .firma {
+    font-size: 0.85rem;
+    color: var(--suave);
+  }
+  .acciones {
+    display: grid;
+    gap: 10px;
+  }
+  .boton {
+    display: inline-flex;
+    justify-content: center;
+    padding: 14px 20px;
+    border-radius: 999px;
+    border: 2px solid var(--oro);
+    background: var(--oro);
+    color: #10131a;
+    font: 700 1.1rem system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .boton--borde {
+    background: transparent;
+    color: var(--oro);
+  }
+  .pie {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .pie a {
+    color: var(--oro);
+  }
+  /* En papel: solo el vale, en blanco y negro */
+  @media print {
+    .acciones,
+    .pie {
+      display: none !important;
+    }
+    .vale {
+      background: #fff;
+      color: #000;
+      border-color: #000;
+    }
+    .vale *,
+    h1,
+    .dona strong {
+      color: #000 !important;
+    }
+  }
+</style>

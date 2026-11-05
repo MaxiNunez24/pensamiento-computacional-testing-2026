@@ -19,7 +19,7 @@ const catalogos = 'https://cfp401-ensenada.github.io/catalogos/';
 const paginas = [
     { titulo: 'Operador del Bingo', detalle: 'La pantalla de la notebook, la que no se proyecta', href: `${base}/expo/bingo/operador/`, icono: '🎱' },
     { titulo: 'Pantalla del proyector', detalle: 'Se abre desde el operador; pasarla a la lona y F11', href: `${base}/expo/proyector/`, icono: '📽️' },
-    { titulo: 'Estudio de fotos con IA', detalle: 'Solo en la PC del stand: antes, abrir-estudio.bat (en la carpeta ia-fotos)', href: 'http://127.0.0.1:8791/', icono: '📸' },
+    { titulo: 'Estudio de fotos con IA', detalle: 'En la PC de la IA: abrir-estudio.bat. Desde la notebook o el celu (con Tailscale): la dirección https://maxi-pc… que muestra su ventana', href: 'http://127.0.0.1:8791/', icono: '📸' },
     { titulo: 'Stand en 3D', detalle: 'El modelo a escala, con la planta y lo que hay que conseguir', href: `${base}/expo/stand/`, icono: '🧊' },
     { titulo: 'Vista pública de la Expo', detalle: 'Lo que ve cualquiera que entra al link', href: `${base}/expo/`, icono: '🌐' },
     { titulo: 'Animación sin internet', detalle: 'La escena del sistema a pantalla completa, para un monitor', href: `${base}/expo/pantalla/`, icono: '🎬' },
@@ -28,6 +28,7 @@ const paginas = [
 const links = [
     { titulo: 'La Expo', para: 'Público · directivos', url: `${sitio}expo/`, nota: 'Vidriera de catálogos y juegos' },
     { titulo: 'El recorrido del stand', para: 'Alumnos · directivos', url: `${sitio}expo/recorrido/`, nota: 'Cómo se armó todo, con las pruebas' },
+    { titulo: 'Encuesta cursos 2027', para: 'Público · interesados', url: `${sitio}expo/encuesta/`, nota: 'Qué días y horarios prefieren' },
     { titulo: 'El curso', para: 'Alumnos', url: sitio, nota: 'Los ejercicios y el camino' },
     { titulo: 'Preparando la Expo', para: 'Alumnos', url: `${sitio}preparando-expo/`, nota: 'Las clases de la Expo' },
     { titulo: 'Armá tu catálogo', para: 'Emprendedores', url: `${sitio}armar-tu-catalogo/`, nota: 'El primer paso para tener catálogo' },
@@ -57,6 +58,9 @@ const links = [
             <span class="marca">Panel del stand <small>Expo CFP 401</small></span>
             <nav class="pestanas" id="pestanas" hidden>
                 <a href="#expo">Expo</a>
+                <a href="#cooperadora">Cooperadora</a>
+                <a href="#vales">Vales</a>
+                <a href="#encuesta">Encuesta</a>
                 <a href="#links">Links</a>
                 <a href="#catalogos">Catálogos</a>
                 <a href="#consultas">Consultas</a>
@@ -76,7 +80,7 @@ const links = [
             </form>
         </main>
 
-        <main class="hoja" id="hoja" hidden>
+        <main class="hoja" id="hoja" data-sitio={sitio} hidden>
             <!-- ===== Expo ===== -->
             <section id="expo" class="seccion">
                 <h2>Para la Expo</h2>
@@ -139,6 +143,76 @@ const links = [
                     </ul>
                 </details>
             </section>
+
+            <!-- ===== Cooperadora ===== -->
+            <section id="cooperadora" class="seccion">
+                <h2>Cooperadora <small class="guardado" id="guardado-coop"></small></h2>
+                <p class="nota">Lo que se ve en la barra de abajo del proyector: cuánto se recaudó (sin meta ni total) y, de a uno, lo que necesita cada curso. Se actualiza solo en unos 20 segundos.</p>
+                <div class="tarjeta recaudado">
+                    <label for="recaudado"><strong>Recaudado</strong> <small>en pesos, sin puntos. En 0 no se muestra</small></label>
+                    <div class="fila">
+                        <span class="peso">$</span>
+                        <input id="recaudado" type="number" inputmode="numeric" min="0" step="1" />
+                        <button type="button" data-sumar="100">+100</button>
+                        <button type="button" data-sumar="150">+150</button>
+                        <button type="button" data-sumar="1000">+1000</button>
+                    </div>
+                </div>
+                <div class="tarjeta">
+                    <h3>Lo que necesita cada curso <small id="cuenta-listado"></small></h3>
+                    <p class="nota">Solo informativo: no lleva precios ni se tilda.</p>
+                    <ul class="checklist" id="listado"></ul>
+                    <form class="agregar" id="form-listado">
+                        <input id="item-texto" placeholder="Qué necesitan (ej. tinturas, hilo, tornillos)" aria-label="Qué necesitan" required maxlength="80" />
+                        <input id="item-curso" list="cursos-cfp" placeholder="Curso" aria-label="Curso" maxlength="50" />
+                        <button type="submit" class="principal">Agregar</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ===== Vales ===== -->
+            <section id="vales" class="seccion">
+                <h2>Vales de donación</h2>
+                <p class="nota">Para quien dona algo para la Expo. Creás el vale, le mandás el link y lo puede guardar o imprimir.</p>
+                <form class="tarjeta formulario" id="form-vale">
+                    <input type="hidden" id="vale-id" />
+                    <label>Quién dona <input id="vale-quien" required maxlength="80" placeholder="Ej. Instructora de Peluquería" /></label>
+                    <label>Curso <input id="vale-curso" list="cursos-cfp" maxlength="60" placeholder="Ej. Peluquería" /></label>
+                    <label>Qué dona <input id="vale-que" required maxlength="120" placeholder="Ej. llaveros impresos" /></label>
+                    <label>Cuántos <input id="vale-cantidad" maxlength="30" placeholder="Ej. 20" /></label>
+                    <label class="ancho">Mensaje <textarea id="vale-mensaje" maxlength="400" rows="3"></textarea></label>
+                    <div class="botones ancho">
+                        <button type="submit" class="principal" id="vale-guardar">Crear vale</button>
+                        <button type="button" id="vale-cancelar" hidden>Cancelar</button>
+                        <span class="nota" id="vale-estado" role="status"></span>
+                    </div>
+                </form>
+                <div class="grilla" id="lista-vales"></div>
+                <p class="nota" id="sin-vales">Todavía no hay vales.</p>
+            </section>
+
+            <!-- ===== Encuesta 2027 ===== -->
+            <section id="encuesta" class="seccion">
+                <h2>Encuesta 2027 <small class="guardado" id="encuesta-total"></small></h2>
+                <p class="nota">Qué días y horarios prefieren los interesados en los cursos del año que viene. El QR está en el proyector (tarjeta de las fotos con IA) y en la página pública de la Expo.</p>
+                <div class="botones">
+                    <a href={`${base}/expo/encuesta/`} target="_blank" rel="noopener">Abrir la encuesta</a>
+                    <button type="button" data-qr-de={`${sitio}expo/encuesta/`} data-titulo="Cursos 2027: ¿qué días podés?">QR</button>
+                    <button type="button" id="encuesta-actualizar">Actualizar</button>
+                    <button type="button" id="encuesta-csv">Descargar CSV</button>
+                </div>
+                <div class="grilla" id="encuesta-conteos"></div>
+                <div class="tarjeta" id="encuesta-cruce-caja">
+                    <h3>Día × horario <small>cuántas personas pueden en cada combinación</small></h3>
+                    <div class="tabla-ancha"><table class="cruce" id="encuesta-cruce"></table></div>
+                </div>
+                <div class="tarjeta">
+                    <h3>Para avisarles <small id="encuesta-cuantos-contacto"></small></h3>
+                    <p class="nota">Solo quienes marcaron que se los podía guardar. Es para avisarles de las inscripciones: no se publica ni se comparte.</p>
+                    <ul class="contactos" id="encuesta-contactos"></ul>
+                </div>
+            </section>
+            <datalist id="cursos-cfp"></datalist>
 
             <!-- ===== Links ===== -->
             <section id="links" class="seccion">
@@ -222,6 +296,7 @@ const links = [
         <script>
             import QRCode from 'qrcode';
             import { WORKER } from '../../scripts/bingo-expo';
+            import { CURSOS, DIAS, HORARIOS, type Respuesta } from '../../data/expo/encuesta';
 
             const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
 
@@ -297,6 +372,12 @@ const links = [
                     consultas = datos.consultas;
                     dibujarConsultas();
                     dibujarGaleria(datos.imagenes);
+                    cooperadora = { recaudado: 0, listado: [], ...datos.cooperadora };
+                    dibujarCooperadora();
+                    vales = datos.vales || [];
+                    dibujarVales();
+                    respuestas = datos.encuesta || [];
+                    dibujarEncuesta();
                     if (location.hash) document.querySelector(location.hash)?.scrollIntoView({ behavior: 'instant' });
                 } catch (error) {
                     try {
@@ -459,6 +540,285 @@ const links = [
             for (const boton of document.querySelectorAll<HTMLElement>('[data-qr-de]')) {
                 boton.addEventListener('click', () => qrGrande(boton.dataset.qrDe!, boton.dataset.titulo || ''));
             }
+
+            // ---------- Cooperadora ----------
+            interface Item {
+                texto: string;
+                curso: string;
+            }
+            let cooperadora: { recaudado: number; listado: Item[] } = { recaudado: 0, listado: [] };
+            const sitio = $('#hoja').dataset.sitio!;
+            const nuevo = <K extends keyof HTMLElementTagNameMap>(etiqueta: K, props: Partial<HTMLElementTagNameMap[K]> = {}) =>
+                Object.assign(document.createElement(etiqueta), props);
+
+            // Los cursos que ya se escribieron (en el listado o en los vales), para no tipearlos de nuevo
+            function sugerirCursos() {
+                const cursos = new Set([...cooperadora.listado.map((i) => i.curso), ...vales.map((v) => v.curso)].filter(Boolean));
+                $('#cursos-cfp').replaceChildren(...[...cursos].map((c) => nuevo('option', { value: c })));
+            }
+
+            // Igual que las consultas: se guarda solo unos segundos después del último cambio
+            let esperaCoop = 0;
+            function guardarCoopLuego() {
+                $('#guardado-coop').textContent = 'sin guardar…';
+                clearTimeout(esperaCoop);
+                esperaCoop = window.setTimeout(async () => {
+                    try {
+                        await pedir('/admin/cooperadora', 'PUT', cooperadora);
+                        $('#guardado-coop').textContent = 'guardado ✓';
+                    } catch (error) {
+                        $('#guardado-coop').textContent = 'no se guardó: ' + (error instanceof Error ? error.message : '');
+                        guardarCoopLuego();
+                    }
+                }, 3000);
+            }
+            addEventListener('beforeunload', (e) => {
+                if ($('#guardado-coop').textContent === 'sin guardar…') e.preventDefault();
+            });
+
+            function dibujarCooperadora() {
+                $<HTMLInputElement>('#recaudado').value = String(cooperadora.recaudado || 0);
+                $('#cuenta-listado').textContent = cooperadora.listado.length ? `${cooperadora.listado.length}` : '';
+                $('#listado').replaceChildren(
+                    ...cooperadora.listado.map((item, i) => {
+                        const li = nuevo('li');
+                        const texto = nuevo('span', { className: 'item' });
+                        texto.append(nuevo('strong', { textContent: item.texto }), item.curso ? ` · ${item.curso}` : '');
+                        const subir = nuevo('button', { type: 'button', className: 'borrar', textContent: '↑', title: 'Subir' });
+                        subir.disabled = i === 0;
+                        subir.addEventListener('click', () => {
+                            [cooperadora.listado[i - 1], cooperadora.listado[i]] = [cooperadora.listado[i], cooperadora.listado[i - 1]];
+                            dibujarCooperadora();
+                            guardarCoopLuego();
+                        });
+                        const borrar = nuevo('button', { type: 'button', className: 'borrar', textContent: '✕', title: 'Borrar' });
+                        borrar.addEventListener('click', () => {
+                            cooperadora.listado.splice(i, 1);
+                            dibujarCooperadora();
+                            guardarCoopLuego();
+                        });
+                        li.append(texto, subir, borrar);
+                        return li;
+                    }),
+                );
+                sugerirCursos();
+            }
+            $('#recaudado').addEventListener('input', () => {
+                cooperadora.recaudado = Math.max(0, Math.round(Number($<HTMLInputElement>('#recaudado').value) || 0));
+                guardarCoopLuego();
+            });
+            for (const boton of document.querySelectorAll<HTMLElement>('[data-sumar]')) {
+                boton.addEventListener('click', () => {
+                    cooperadora.recaudado += Number(boton.dataset.sumar);
+                    $<HTMLInputElement>('#recaudado').value = String(cooperadora.recaudado);
+                    guardarCoopLuego();
+                });
+            }
+            $('#form-listado').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const texto = $<HTMLInputElement>('#item-texto').value.trim();
+                if (!texto) return;
+                cooperadora.listado.push({ texto, curso: $<HTMLInputElement>('#item-curso').value.trim() });
+                $<HTMLInputElement>('#item-texto').value = '';
+                dibujarCooperadora();
+                guardarCoopLuego();
+                $('#item-texto').focus();
+            });
+
+            // ---------- Vales ----------
+            interface Vale {
+                id: string;
+                quien: string;
+                curso: string;
+                que: string;
+                cantidad: string;
+                mensaje: string;
+                creado: string;
+            }
+            let vales: Vale[] = [];
+            const MENSAJE_VALE = '¡Gracias por sumarte a la Expo! Tu donación ayuda a la cooperadora del CFP 401 y a todos sus cursos.';
+            const linkVale = (v: Vale) => `${sitio}expo/vale/#${v.id}`;
+            const campoVale = (nombre: string) => $<HTMLInputElement>('#vale-' + nombre);
+
+            function limpiarFormVale() {
+                for (const c of ['id', 'quien', 'curso', 'que', 'cantidad']) campoVale(c).value = '';
+                campoVale('mensaje').value = MENSAJE_VALE;
+                $('#vale-guardar').textContent = 'Crear vale';
+                $('#vale-cancelar').hidden = true;
+            }
+            limpiarFormVale();
+            $('#vale-cancelar').addEventListener('click', limpiarFormVale);
+
+            $('#form-vale').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const datos = Object.fromEntries(['id', 'quien', 'curso', 'que', 'cantidad', 'mensaje'].map((c) => [c, campoVale(c).value.trim()]));
+                $('#vale-estado').textContent = 'Guardando…';
+                try {
+                    const { vale } = await pedir('/admin/vales', 'PUT', datos);
+                    const i = vales.findIndex((v) => v.id === vale.id);
+                    if (i >= 0) vales[i] = vale;
+                    else vales.push(vale);
+                    limpiarFormVale();
+                    dibujarVales();
+                    $('#vale-estado').textContent = i >= 0 ? 'Vale corregido ✓ (el link es el mismo)' : 'Vale creado ✓ Mandale el link:';
+                    document.querySelector(`[data-vale="${vale.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } catch (error) {
+                    $('#vale-estado').textContent = error instanceof Error ? error.message : 'No se pudo';
+                }
+            });
+
+            function dibujarVales() {
+                $('#sin-vales').hidden = vales.length > 0;
+                $('#lista-vales').replaceChildren(
+                    ...[...vales].reverse().map((v) => {
+                        const tarjeta = nuevo('article', { className: 'tarjeta enlace' });
+                        tarjeta.dataset.vale = v.id;
+                        tarjeta.append(
+                            nuevo('span', { className: 'para', textContent: v.curso || 'Sin curso' }),
+                            nuevo('strong', { textContent: v.quien }),
+                            nuevo('span', { textContent: (v.cantidad ? `${v.cantidad} × ` : '') + v.que }),
+                            nuevo('code', { textContent: linkVale(v).replace('https://', '') }),
+                        );
+                        const botones = nuevo('div', { className: 'botones' });
+                        const boton = (texto: string, accion: () => void) => {
+                            const b = nuevo('button', { type: 'button', textContent: texto });
+                            b.addEventListener('click', accion);
+                            botones.append(b);
+                            return b;
+                        };
+                        const abrir = nuevo('a', { href: linkVale(v), target: '_blank', rel: 'noopener', textContent: 'Ver' });
+                        botones.append(abrir);
+                        const copiar = boton('Copiar', async () => {
+                            try {
+                                await navigator.clipboard.writeText(linkVale(v));
+                                copiar.textContent = '¡Copiado!';
+                            } catch {
+                                copiar.textContent = 'No se pudo';
+                            }
+                            setTimeout(() => (copiar.textContent = 'Copiar'), 1500);
+                        });
+                        boton('WhatsApp', () => {
+                            const texto = `¡Hola! Este es tu vale de donación para la Expo del CFP 401. ¡Muchas gracias! ${linkVale(v)}`;
+                            open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+                        });
+                        boton('QR', () => qrGrande(linkVale(v), `Vale de ${v.quien}`));
+                        boton('Corregir', () => {
+                            for (const c of ['id', 'quien', 'curso', 'que', 'cantidad', 'mensaje'] as const) campoVale(c).value = v[c] || '';
+                            $('#vale-guardar').textContent = 'Guardar cambios';
+                            $('#vale-cancelar').hidden = false;
+                            $('#form-vale').scrollIntoView({ behavior: 'smooth' });
+                        });
+                        boton('Borrar', async () => {
+                            if (!confirm(`¿Borrar el vale de ${v.quien}? El link deja de andar.`)) return;
+                            try {
+                                await pedir('/admin/vales/' + v.id, 'DELETE');
+                                vales = vales.filter((x) => x.id !== v.id);
+                                dibujarVales();
+                            } catch (error) {
+                                alert(error instanceof Error ? error.message : 'No se pudo');
+                            }
+                        }).classList.add('peligro');
+                        tarjeta.append(botones);
+                        return tarjeta;
+                    }),
+                );
+                sugerirCursos();
+            }
+
+            // ---------- Encuesta 2027 ----------
+            let respuestas: Respuesta[] = [];
+            const nombreDe = (lista: readonly { codigo: string; texto: string }[], codigo: string) => lista.find((o) => o.codigo === codigo)?.texto || codigo;
+
+            function conteo(titulo: string, opciones: readonly { codigo: string; texto: string }[], valores: (r: Respuesta) => string[]) {
+                const caja = nuevo('div', { className: 'tarjeta' });
+                caja.append(nuevo('h3', { textContent: titulo }));
+                const total = respuestas.length || 1;
+                const lista = nuevo('ul', { className: 'barras' });
+                for (const o of opciones) {
+                    const n = respuestas.filter((r) => valores(r).includes(o.codigo)).length;
+                    const li = nuevo('li');
+                    const barra = nuevo('i');
+                    barra.style.width = `${(n / total) * 100}%`;
+                    li.append(nuevo('span', { textContent: o.texto }), nuevo('b', { textContent: String(n) }), barra);
+                    lista.append(li);
+                }
+                caja.append(lista);
+                return caja;
+            }
+
+            function dibujarEncuesta() {
+                const n = respuestas.length;
+                $('#encuesta-total').textContent = `${n} ${n === 1 ? 'respuesta' : 'respuestas'}`;
+                $('#encuesta-conteos').replaceChildren(
+                    // "Los dos" cuenta para los dos cursos y también se muestra aparte
+                    conteo('Curso', CURSOS, (r) => (r.c === 'los-dos' ? ['ia', 'web', 'los-dos'] : [r.c])),
+                    conteo('Días', DIAS, (r) => r.d),
+                    conteo('Horarios', HORARIOS, (r) => r.h),
+                );
+                // El cruce: en cada casillero, cuántas personas pueden ese día en ese horario
+                const tabla = $('#encuesta-cruce');
+                const max = Math.max(1, ...DIAS.flatMap((d) => HORARIOS.map((h) => respuestas.filter((r) => r.d.includes(d.codigo) && r.h.includes(h.codigo)).length)));
+                const cabeza = nuevo('tr');
+                cabeza.append(nuevo('th'), ...HORARIOS.map((h) => nuevo('th', { textContent: h.texto })));
+                tabla.replaceChildren(
+                    cabeza,
+                    ...DIAS.map((d) => {
+                        const fila = nuevo('tr');
+                        fila.append(nuevo('th', { textContent: d.texto }));
+                        for (const h of HORARIOS) {
+                            const cuantos = respuestas.filter((r) => r.d.includes(d.codigo) && r.h.includes(h.codigo)).length;
+                            const celda = nuevo('td', { textContent: String(cuantos) });
+                            celda.style.setProperty('--intensidad', String(cuantos / max));
+                            fila.append(celda);
+                        }
+                        return fila;
+                    }),
+                );
+                const conContacto = respuestas.filter((r) => r.n || r.w);
+                $('#encuesta-cuantos-contacto').textContent = `${conContacto.length}`;
+                $('#encuesta-contactos').replaceChildren(
+                    ...conContacto.map((r) => {
+                        const li = nuevo('li');
+                        li.append(nuevo('strong', { textContent: r.n || 'Sin nombre' }), ` · ${nombreDe(CURSOS, r.c)}`);
+                        if (r.w) li.append(' · ', nuevo('a', { href: `https://wa.me/${r.w.length === 10 ? '549' + r.w : r.w}`, target: '_blank', rel: 'noopener', textContent: r.w }));
+                        return li;
+                    }),
+                );
+                if (!conContacto.length) $('#encuesta-contactos').append(nuevo('li', { className: 'nota', textContent: 'Nadie todavía.' }));
+            }
+
+            $('#encuesta-actualizar').addEventListener('click', async (e) => {
+                const boton = e.currentTarget as HTMLButtonElement;
+                boton.disabled = true;
+                try {
+                    respuestas = (await pedir('/admin/encuesta')).respuestas;
+                    dibujarEncuesta();
+                } catch (error) {
+                    alert(error instanceof Error ? error.message : 'No se pudo');
+                }
+                boton.disabled = false;
+            });
+
+            $('#encuesta-csv').addEventListener('click', () => {
+                const celda = (s: string) => `"${String(s ?? '').replace(/"/g, '""')}"`;
+                const filas = [
+                    ['fecha', 'curso', 'dias', 'horarios', 'nombre', 'whatsapp', 'comentario'],
+                    ...respuestas.map((r) => [
+                        r.f,
+                        nombreDe(CURSOS, r.c),
+                        r.d.map((d) => nombreDe(DIAS, d)).join(' '),
+                        r.h.map((h) => nombreDe(HORARIOS, h)).join(' '),
+                        r.n || '',
+                        r.w || '',
+                        r.k || '',
+                    ]),
+                ];
+                // Con BOM, para que Excel lea bien las tildes
+                const csv = '﻿' + filas.map((f) => f.map(celda).join(';')).join('\r\n');
+                const a = nuevo('a', { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: 'encuesta-cursos-2027.csv' });
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+            });
 
             // ---------- Galería (llega del Worker) ----------
             function dibujarGaleria(imagenes: Imagen[]) {
@@ -702,6 +1062,10 @@ const links = [
         margin: 0;
         font-size: 1.6rem;
     }
+    /* Que una tabla ancha (el cruce de la encuesta) se deslice adentro de su caja y no estire la página */
+    .seccion > * {
+        min-width: 0;
+    }
     .seccion h3,
     .seccion h4 {
         margin: 0;
@@ -924,6 +1288,121 @@ const links = [
         font-size: 0.9rem;
     }
 
+    /* ---------- cooperadora ---------- */
+    .recaudado {
+        display: grid;
+        gap: 8px;
+    }
+    .recaudado small,
+    .seccion h3 small {
+        color: var(--suave);
+        font-weight: 500;
+    }
+    .fila {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+    .peso {
+        font-size: 1.6rem;
+        font-weight: 800;
+    }
+    #recaudado {
+        font-size: 1.6rem;
+        font-weight: 800;
+        width: 11ch;
+    }
+    .item {
+        flex: 1;
+        padding: 9px 0;
+    }
+    .borrar:disabled {
+        visibility: hidden;
+    }
+
+    /* ---------- vales ---------- */
+    .formulario {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 10px 12px;
+    }
+    .formulario label {
+        display: grid;
+        gap: 4px;
+        font-weight: 600;
+    }
+    .formulario .ancho {
+        grid-column: 1 / -1;
+    }
+    .formulario .botones {
+        align-items: center;
+        margin: 0;
+    }
+    textarea {
+        font: inherit;
+        font-weight: 400;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--linea);
+        background: var(--fondo);
+        color: var(--texto);
+        resize: vertical;
+    }
+    .peligro:hover {
+        border-color: #d4483b;
+        color: #d4483b;
+    }
+
+    /* ---------- encuesta ---------- */
+    .barras {
+        list-style: none;
+        margin: 10px 0 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+    }
+    .barras li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 2px 8px;
+    }
+    .barras i {
+        grid-column: 1 / -1;
+        display: block;
+        height: 8px;
+        min-width: 2px;
+        border-radius: 999px;
+        background: var(--acento-fondo);
+    }
+    .tabla-ancha {
+        overflow-x: auto;
+    }
+    .cruce {
+        border-collapse: collapse;
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+    }
+    .cruce th,
+    .cruce td {
+        padding: 8px;
+        border: 1px solid var(--linea);
+    }
+    .cruce th {
+        font-size: 0.9rem;
+    }
+    .cruce td {
+        font-weight: 700;
+        background: color-mix(in srgb, var(--acento-fondo) calc(var(--intensidad, 0) * 85%), transparent);
+    }
+    .contactos {
+        margin: 8px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+    }
+
     /* ---------- en grande ---------- */
     .grande {
         width: min(96vw, 1400px);
@@ -1006,7 +1485,6 @@ const links = [
             order: 3;
             width: 100%;
             margin: 0;
-            justify-content: space-between;
         }
         .pestanas a {
             padding: 6px 8px;

@@ -20,6 +20,12 @@
  *   expo:consultas → [{ texto, grupo, hecho }, ...]  (el checklist del panel privado, /expo/panel/)
  *   panel:img:<id> → una imagen del panel (bocetos, sponsors), con { titulo, grupo, tipo } en la metadata
  *   bingo:empezo:<ronda> → cuándo salió la primera bolilla (se borra sola a las 12 horas)
+ *   expo:cooperadora → { recaudado, listado: [{ texto, curso }], actualizado }  (la barra del proyector:
+ *                    todo lo recaudado va a la cooperadora; el listado es solo informativo)
+ *   expo:vales     → [{ id, quien, curso, que, cantidad, mensaje, creado }, ...]  (los vales de donación:
+ *                    los carga Maxi desde el panel; cada uno se ve en /expo/vale/#<id>)
+ *   encuesta:<id>  → '1', con la respuesta en la metadata (así la lista entera sale de UN list(), sin
+ *                    leer cada una): la encuesta de días y horarios para los cursos 2027
  *   fotoia:<id>    → una foto del estudio con IA del stand, con { tipo, hash del token } en la metadata.
  *                    Se borra sola: a las 3 horas si solo se imprimió, o el 16/11 si la persona quiso
  *                    llevársela con el QR. Quien tiene el QR (id + token) también la puede borrar antes.
@@ -58,6 +64,60 @@ const MAX_FOTO_IA = 1536 * 1024;
 const ID_FOTO_IA = /^[a-z0-9]{24}$/;
 // Hasta cuándo queda una foto que la persona se quiso llevar: el lunes 16/11 a la noche (hora argentina)
 const FIN_FOTOS_IA = Date.UTC(2026, 10, 17, 3, 0, 0) / 1000; // las del panel viajan todas juntas en base64: mejor livianas (WEBP)
+const MAX_LISTADO = 40;
+const MAX_VALES = 300;
+const ID_VALE = /^[a-z0-9]{12}$/;
+// La encuesta 2027: qué se puede elegir (lo que llega distinto, se descarta)
+const ENCUESTA = {
+    cursos: ['ia', 'web', 'los-dos'],
+    dias: ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
+    horarios: ['manana', 'mediodia', 'tarde', 'noche'],
+};
+
+/* Lo de la cooperadora: el monto recaudado y el listado informativo de lo que necesita cada curso. */
+function limpiarCooperadora(d) {
+    const recaudado = Math.max(0, Math.min(1e9, Math.round(Number(d && d.recaudado) || 0)));
+    const listado = (Array.isArray(d && d.listado) ? d.listado : [])
+        .map((i) => ({ texto: texto(i && i.texto, 80), curso: texto(i && i.curso, 50) }))
+        .filter((i) => i.texto)
+        .slice(0, MAX_LISTADO);
+    return { recaudado, listado, actualizado: new Date().toISOString() };
+}
+
+/* Un vale de donación: quién dona, de qué curso, qué y cuántos, y un mensaje (opcional). */
+function limpiarVale(v, id, creado) {
+    if (!v || typeof v !== 'object') return null;
+    const r = {
+        id,
+        quien: texto(v.quien, 80),
+        curso: texto(v.curso, 60),
+        que: texto(v.que, 120),
+        cantidad: texto(v.cantidad, 30),
+        mensaje: texto(v.mensaje, 400),
+        creado,
+    };
+    return r.quien && r.que ? r : null;
+}
+
+/* Una respuesta de la encuesta. Nombre y WhatsApp solo si marcó que se los podemos guardar. */
+function limpiarRespuesta(d) {
+    if (!d || typeof d !== 'object') return null;
+    const elegidos = (lista, validos) => [...new Set((Array.isArray(lista) ? lista : []).filter((x) => validos.includes(x)))];
+    const curso = ENCUESTA.cursos.includes(d.curso) ? d.curso : '';
+    const dias = elegidos(d.dias, ENCUESTA.dias);
+    const horarios = elegidos(d.horarios, ENCUESTA.horarios);
+    if (!curso || !dias.length || !horarios.length) return null;
+    const r = { c: curso, d: dias, h: horarios, f: new Date().toISOString().slice(0, 16) };
+    if (d.consentimiento === true) {
+        const nombre = texto(d.nombre, 60);
+        const whatsapp = String(d.whatsapp || '').replace(/\D/g, '').slice(0, 15);
+        if (nombre) r.n = nombre;
+        if (whatsapp.length >= 8) r.w = whatsapp;
+    }
+    const comentario = texto(d.comentario, 300);
+    if (comentario) r.k = comentario;
+    return r;
+}
 
 function respuesta(datos, estado, cabeceras, extra = {}) {
     return new Response(JSON.stringify(datos), {
@@ -183,6 +243,17 @@ function fotosDe(productos, aspecto) {
     return new Set(fotos.filter((f) => f.startsWith('w:')).map((f) => f.slice(2)));
 }
 
+async function respuestasEncuesta(env) {
+    const respuestas = [];
+    let cursor;
+    do {
+        const pagina = await env.CATALOGOS.list({ prefix: 'encuesta:', cursor });
+        for (const k of pagina.keys) if (k.metadata) respuestas.push(k.metadata);
+        cursor = pagina.list_complete ? null : pagina.cursor;
+    } while (cursor);
+    return respuestas;
+}
+
 async function leerCatalogo(env, slug) {
     return JSON.parse((await env.CATALOGOS.get('cat:' + slug)) || 'null');
 }
@@ -247,7 +318,7 @@ export default {
         const partes = url.pathname.split('/').filter(Boolean);
         const origen = request.headers.get('Origin') || '';
         const esEditor = ORIGENES_EDITOR.includes(origen);
-        const publico = request.method === 'GET' && ['catalogo', 'foto', 'bingo', 'fotos-ia'].includes(partes[0]);
+        const publico = request.method === 'GET' && ['catalogo', 'foto', 'bingo', 'fotos-ia', 'cooperadora', 'vales'].includes(partes[0]);
         const cabeceras = cors(esEditor ? origen : '', publico);
 
         if (request.method === 'OPTIONS') {
@@ -318,7 +389,30 @@ export default {
             return respuesta({ ahora: Date.now() }, 200, cabeceras, { 'Cache-Control': 'no-store' });
         }
 
+        // ---- La cooperadora: cuánto se recaudó y el listado (lo muestran el proyector y /expo/) ----
+        if (publico && url.pathname === '/cooperadora') {
+            const datos = JSON.parse((await env.CATALOGOS.get('expo:cooperadora')) || 'null') || { recaudado: 0, listado: [] };
+            return respuesta(datos, 200, cabeceras, { 'Cache-Control': 'public, max-age=15' });
+        }
+        // ---- Un vale de donación, por su link (el id no se puede adivinar) ----
+        if (publico && partes[0] === 'vales' && partes.length === 2 && ID_VALE.test(partes[1])) {
+            const vales = JSON.parse((await env.CATALOGOS.get('expo:vales')) || '[]');
+            const vale = vales.find((v) => v.id === partes[1]);
+            if (!vale) return respuesta({ error: 'No existe este vale.' }, 404, cabeceras);
+            return respuesta(vale, 200, cabeceras, { 'Cache-Control': 'no-store' });
+        }
+
         if (!esEditor) return respuesta({ error: 'Origen no permitido' }, 403, cabeceras);
+
+        // ---- La encuesta 2027: cualquiera la contesta desde el sitio del curso ----
+        if (request.method === 'POST' && url.pathname === '/encuesta') {
+            if (await excedido(env.LIMITE_CODIGO, request)) return respuesta(DEMASIADOS, 429, cabeceras);
+            const r = limpiarRespuesta(await cuerpoJson(request));
+            if (!r) return respuesta({ error: 'Elegí un curso, al menos un día y al menos un horario.' }, 400, cabeceras);
+            const id = Date.now().toString(36) + azar(6, 'abcdefghijklmnopqrstuvwxyz0123456789');
+            await env.CATALOGOS.put('encuesta:' + id, '1', { metadata: r });
+            return respuesta({ ok: true }, 200, cabeceras);
+        }
 
         if (['/entrar', '/catalogo', '/foto'].includes(url.pathname) && (await excedido(env.LIMITE_CODIGO, request))) {
             return respuesta(DEMASIADOS, 429, cabeceras);
@@ -427,7 +521,11 @@ export default {
                     for (let i = 0; i < vista.length; i += 0x8000) binario += String.fromCharCode(...vista.subarray(i, i + 0x8000));
                     imagenes.push({ id: k.name.slice(10), ...k.metadata, datos: btoa(binario) });
                 }
-                return respuesta({ consultas, imagenes }, 200, cabeceras, { 'Cache-Control': 'no-store' });
+                // También la cooperadora, los vales y la encuesta: todo en el mismo pedido
+                const cooperadora = JSON.parse((await env.CATALOGOS.get('expo:cooperadora')) || 'null') || { recaudado: 0, listado: [] };
+                const vales = JSON.parse((await env.CATALOGOS.get('expo:vales')) || '[]');
+                const encuesta = await respuestasEncuesta(env);
+                return respuesta({ consultas, imagenes, cooperadora, vales, encuesta }, 200, cabeceras, { 'Cache-Control': 'no-store' });
             }
             /* Una foto del estudio con IA (la sube el servidor local del stand, D:\Programas\ia-fotos\estudio).
              * hasta=hora: solo para imprimirla (3 horas). hasta=expo: la persona se la lleva con el QR
@@ -472,6 +570,36 @@ export default {
                     .slice(0, MAX_CONSULTAS);
                 await env.CATALOGOS.put('expo:consultas', JSON.stringify(consultas));
                 return respuesta({ consultas }, 200, cabeceras);
+            }
+            // La barra de la cooperadora: el monto y el listado, desde el panel
+            if (url.pathname === '/admin/cooperadora' && request.method === 'PUT') {
+                const datos = limpiarCooperadora(await cuerpoJson(request));
+                await env.CATALOGOS.put('expo:cooperadora', JSON.stringify(datos));
+                return respuesta(datos, 200, cabeceras);
+            }
+            /* Los vales de donación: GET la lista, PUT uno (nuevo, o el mismo id para corregirlo),
+             * DELETE /admin/vales/<id> para sacarlo. */
+            if (partes[1] === 'vales') {
+                const vales = JSON.parse((await env.CATALOGOS.get('expo:vales')) || '[]');
+                if (request.method === 'GET' && partes.length === 2) return respuesta({ vales }, 200, cabeceras, { 'Cache-Control': 'no-store' });
+                if (request.method === 'PUT' && partes.length === 2) {
+                    const d = (await cuerpoJson(request)) || {};
+                    const previo = ID_VALE.test(d.id || '') ? vales.find((v) => v.id === d.id) : null;
+                    const vale = limpiarVale(d, previo ? previo.id : azar(12, 'abcdefghijkmnpqrstuvwxyz23456789'), previo ? previo.creado : new Date().toISOString());
+                    if (!vale) return respuesta({ error: 'Falta quién dona o qué dona.' }, 400, cabeceras);
+                    if (!previo && vales.length >= MAX_VALES) return respuesta({ error: 'Ya hay demasiados vales.' }, 400, cabeceras);
+                    const nuevos = previo ? vales.map((v) => (v.id === vale.id ? vale : v)) : [...vales, vale];
+                    await env.CATALOGOS.put('expo:vales', JSON.stringify(nuevos));
+                    return respuesta({ vale }, 200, cabeceras);
+                }
+                if (request.method === 'DELETE' && partes.length === 3) {
+                    await env.CATALOGOS.put('expo:vales', JSON.stringify(vales.filter((v) => v.id !== partes[2])));
+                    return respuesta({ borrado: partes[2] }, 200, cabeceras);
+                }
+            }
+            // Las respuestas de la encuesta 2027, todas (vienen en la metadata de cada clave)
+            if (request.method === 'GET' && url.pathname === '/admin/encuesta') {
+                return respuesta({ respuestas: await respuestasEncuesta(env) }, 200, cabeceras, { 'Cache-Control': 'no-store' });
             }
             /* La primera bolilla de una ronda: desde ahí, /bingo/carton deja de entregar cartones de esa
              * ronda. Si el operador deshace la primera bolilla, se borra. */

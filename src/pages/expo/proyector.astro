@@ -20,6 +20,7 @@ import { qr, direccion, vidriera, vidrieraDeEjemplo } from '../../data/expo/expo
 
 const catalogos = await Promise.all(vidriera.map(async (e) => ({ ...e, qr: await qr(e.link) })));
 const qrExpo = await qr(direccion(Astro.site, 'expo/'));
+const qrEncuesta = await qr(direccion(Astro.site, 'expo/encuesta/'));
 
 // Los que apoyan el stand: si hay más de uno, se turnan cada 8 segundos
 const sponsors = ['Puerto Informático'];
@@ -87,6 +88,16 @@ const sponsors = ['Puerto Informático'];
       <p class="panel__esquina"><span class="qr-chico" set:html={qrExpo} aria-hidden="true" /> Todo en tu celular</p>
     </section>
 
+    <!-- ============ Las fotos con IA: el ruido que se vuelve tu cara ============ -->
+    <section class="panel" data-tarjeta="fotos" data-nombre="Fotos con IA" aria-label="Las fotos con IA">
+      <h2 class="panel__titulo">Tu foto con IA</h2>
+      <p class="panel__bajada">Sacate una foto y llevátela impresa</p>
+      <div class="panel__escena">
+        <motor-escena escena="expo-fotos-ia" loop autoplay sin-controles sin-lupa sin-sonido tema="oscuro" movimiento="completo"></motor-escena>
+      </div>
+      <p class="panel__esquina"><span class="qr-chico" set:html={qrEncuesta} aria-hidden="true" /> Cursos 2027: ¿qué días podés?</p>
+    </section>
+
     <!-- ============ Los catálogos ============ -->
     <section class="panel" data-tarjeta="catalogos" data-nombre="Catálogos" aria-label="Los catálogos">
       <h2 class="panel__titulo">Catálogos</h2>
@@ -126,11 +137,11 @@ const sponsors = ['Puerto Informático'];
       </ul>
     </section>
 
-    <!-- ============ Abajo: la meta y los que apoyan ============ -->
+    <!-- ============ Abajo: lo recaudado para la cooperadora y los que apoyan ============ -->
     <footer class="pie">
       <div class="barra">
-        <p class="barra__que">🎯 Juntamos para un proyector de techo para el CFP<small>cada catálogo e impresión suma</small></p>
-        <div class="barra__tubo" data-barra-tubo hidden><i data-barra-relleno></i></div>
+        <p class="barra__que">💚 Todo lo recaudado va a la cooperadora del CFP<small>cada catálogo, impresión y cartón suma</small></p>
+        <p class="barra__listado" data-listado hidden></p>
         <p class="barra__cuanto" data-barra-cuanto hidden></p>
       </div>
       <div class="apoyo">
@@ -148,8 +159,9 @@ const sponsors = ['Puerto Informático'];
 <script>
   import 'motor-animaciones';
   import '../../animaciones/expo-siges.js';
+  import '../../animaciones/expo-fotos-ia.js';
   import QRCode from 'qrcode';
-  import { canal, accionDeVista, describirTamano, linkDeRonda, type Estado, type Mensaje } from '../../scripts/bingo-expo';
+  import { canal, accionDeVista, describirTamano, linkDeRonda, WORKER, type Estado, type Mensaje } from '../../scripts/bingo-expo';
 
   const $ = <T extends Element = HTMLElement>(sel: string, raiz: ParentNode = document) => raiz.querySelector<T>(sel)!;
   const turnar = (elementos: HTMLElement[], cada: number) => {
@@ -166,16 +178,19 @@ const sponsors = ['Puerto Informático'];
   // ---------- Dónde va cada tarjeta: la pantalla grande o el carrusel ----------
   const lona = $('[data-lona]');
   const tarjetas = new Map([...document.querySelectorAll<HTMLElement>('[data-tarjeta]')].map((t) => [t.dataset.tarjeta!, t]));
-  const ORDEN = ['bingo', 'catalogos', 'stand', 'sistema'];
+  const ORDEN = ['bingo', 'catalogos', 'fotos', 'stand', 'sistema'];
   const CADA = 12000; // cuánto queda cada tarjeta en el carrusel
+  // Entre rondas, en la pantalla grande se turnan el sistema y las fotos con IA (cada una dura ~1 minuto)
+  const TURNO_GRANDE = 110000;
 
   let forzada: string | null = null; // la que se pasó a mano a la pantalla grande
   let completa = false; // la pantalla grande ocupa toda la lona
   let enCarrusel = 'catalogos';
   let bingoActivo = false;
   let reloj: ReturnType<typeof setInterval> | null = null;
+  let grandeEntreRondas: 'sistema' | 'fotos' = 'sistema';
 
-  const principal = () => forzada ?? (bingoActivo ? 'bingo' : 'sistema');
+  const principal = () => forzada ?? (bingoActivo ? 'bingo' : grandeEntreRondas);
   const delCarrusel = () => ORDEN.filter((n) => n !== principal());
 
   function ubicar() {
@@ -241,6 +256,14 @@ const sponsors = ['Puerto Informático'];
   }
   ubicar();
   arrancarCarrusel();
+  setInterval(() => {
+    grandeEntreRondas = grandeEntreRondas === 'sistema' ? 'fotos' : 'sistema';
+    if (forzada === null && !bingoActivo) {
+      // La que entra a lo grande arranca desde el principio, no por la mitad
+      tarjetas.get(grandeEntreRondas)!.querySelector<HTMLElement & { irA?: (t: number) => void }>('motor-escena')?.irA?.(0);
+      ubicar();
+    }
+  }, TURNO_GRANDE);
 
   document.addEventListener('keydown', (evento) => {
     const mensaje = accionDeVista(evento);
@@ -261,24 +284,47 @@ const sponsors = ['Puerto Informático'];
   turnar([...document.querySelectorAll<HTMLElement>('.vidriera__item')], 8000);
   turnar([...document.querySelectorAll<HTMLElement>('.apoyo__nombre')], 8000);
 
-  // ---------- La barra del proyector ----------
-  // Cuando la calculadora tenga su ruta pública con el total (cacheada unos 15 s en el Worker), va acá.
-  // Mientras tanto la barra muestra solo la meta, sin números.
-  const TOTAL_URL = '';
+  // ---------- La barra de la cooperadora ----------
+  // Lo carga Maxi desde el panel (/expo/panel/, pestaña Cooperadora): cuánto se recaudó (sin meta ni
+  // total, lo pidieron los directivos) y un listado SOLO informativo de lo que necesita cada curso,
+  // que se va turnando.
+  let listado: { texto: string; curso: string }[] = [];
+  let enListado = 0;
   async function actualizarBarra() {
-    if (!TOTAL_URL) return;
     try {
-      const { juntado, meta } = await (await fetch(TOTAL_URL)).json();
-      if (!(meta > 0)) return;
-      $('[data-barra-relleno]').style.width = `${Math.min(100, (juntado / meta) * 100)}%`;
-      $('[data-barra-cuanto]').innerHTML = `$${Number(juntado).toLocaleString('es-AR')} <small>de $${Number(meta).toLocaleString('es-AR')}</small>`;
-      $('[data-barra-tubo]').hidden = $('[data-barra-cuanto]').hidden = false;
+      const datos = await (await fetch(`${WORKER}/cooperadora`)).json();
+      const cuanto = $('[data-barra-cuanto]');
+      cuanto.hidden = !(datos.recaudado > 0);
+      cuanto.innerHTML = `$${Number(datos.recaudado).toLocaleString('es-AR')} <small>recaudados</small>`;
+      listado = Array.isArray(datos.listado) ? datos.listado : [];
+      if (enListado >= listado.length) enListado = 0;
+      mostrarListado();
     } catch {
       /* sin internet: queda como estaba */
     }
   }
+  function mostrarListado() {
+    const caja = $('[data-listado]');
+    caja.hidden = listado.length === 0;
+    if (!listado.length) return;
+    const item = listado[enListado];
+    caja.innerHTML = '';
+    const chico = document.createElement('small');
+    chico.textContent = 'Lo que se necesita';
+    const texto = document.createElement('span');
+    texto.textContent = item.curso ? `${item.texto} · ${item.curso}` : item.texto;
+    caja.append(chico, texto);
+    caja.classList.remove('cambia');
+    void caja.offsetWidth;
+    caja.classList.add('cambia');
+  }
   actualizarBarra();
-  setInterval(actualizarBarra, 15000);
+  setInterval(actualizarBarra, 20000);
+  setInterval(() => {
+    if (listado.length < 2) return;
+    enListado = (enListado + 1) % listado.length;
+    mostrarListado();
+  }, 6000);
 
   // ---------- El Bingo: dibuja lo que manda el operador ----------
   const bingo = $('.bingo');
@@ -518,7 +564,7 @@ const sponsors = ['Puerto Informático'];
     font-weight: 700;
   }
 
-  /* El pie: la meta del proyector y los que apoyan (boceto 1) */
+  /* El pie: lo recaudado para la cooperadora y los que apoyan (boceto 1) */
   .pie {
     grid-area: pie;
     display: grid;
@@ -548,24 +594,32 @@ const sponsors = ['Puerto Informático'];
     color: var(--suave);
     font-size: 0.8em;
   }
-  .barra__tubo {
+  /* Lo que necesita cada curso: uno por vez, en el medio de la barra */
+  .barra__listado {
     flex: 1;
-    height: 2vh;
-    border-radius: 999px;
-    background: #0b0e14;
-    border: 1px solid var(--borde);
+    min-width: 0;
+    margin: 0;
+    padding-left: 1vw;
+    border-left: 1px solid var(--borde);
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
-  .barra__tubo i {
+  .barra__listado :global(small) {
     display: block;
-    height: 100%;
-    width: 0;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--menta), var(--oro));
-    transition: width 1.5s ease-out;
+    color: var(--suave);
+    font-size: 0.8em;
+  }
+  .barra__listado :global(span) {
+    font-weight: 700;
+    color: var(--menta);
+  }
+  .barra__listado.cambia :global(span) {
+    animation: aparece 0.6s ease-out;
   }
   .barra__cuanto {
-    margin: 0;
+    margin: 0 0 0 auto;
+    font-size: 1.3em;
     font-weight: 800;
     color: var(--oro);
     white-space: nowrap;

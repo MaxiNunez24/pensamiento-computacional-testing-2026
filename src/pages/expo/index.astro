@@ -39,6 +39,7 @@ const qrCurso = await qr(linkCurso);
       <a class="boton boton--oro" href="#vidriera"><span aria-hidden="true">🛍️</span> La vidriera</a>
       <a class="boton boton--menta" href="#juegos"><span aria-hidden="true">🎮</span> Jugá</a>
       <a class="boton boton--coral" href="#sistema"><span aria-hidden="true">🧩</span> El sistema</a>
+      <a class="boton boton--oro" href="#cursos-2027"><span aria-hidden="true">📅</span> Cursos 2027</a>
     </nav>
   </header>
 
@@ -124,6 +125,28 @@ const qrCurso = await qr(linkCurso);
       </div>
     </section>
 
+    <!-- ================= Las fotos con IA ================= -->
+    <section id="fotos" class="parte">
+      <h2><span aria-hidden="true">📸</span> Tu foto con IA</h2>
+      <p class="parte__bajada">
+        En el stand te sacás una foto, elegís un estilo y te la llevás impresa. ¿Cómo hace una compu para
+        dibujarte? Arranca de puro ruido y en cuatro pasos te encuentra.
+      </p>
+      <div class="animacion">
+        <motor-escena escena="expo-fotos-ia" autoplay loop tema="oscuro" sin-lupa></motor-escena>
+      </div>
+    </section>
+
+    <!-- ================= Cursos 2027 ================= -->
+    <section id="cursos-2027" class="parte">
+      <h2><span aria-hidden="true">📅</span> Cursos 2027</h2>
+      <p class="parte__bajada">
+        El año que viene el CFP 401 suma <strong>Usuaria/o de IA generativa</strong> y <strong>Programador/a Web</strong>.
+        Estamos armando los horarios: contanos qué días y a qué hora podrías. Es anónima y tarda un minuto.
+      </p>
+      <p><a class="boton boton--menta" href={`${base}/expo/encuesta/`}><span aria-hidden="true">📝</span> Contestar la encuesta</a></p>
+    </section>
+
     <!-- ================= El sistema ================= -->
     <section id="sistema" class="parte">
       <h2><span aria-hidden="true">🧩</span> Cómo se planifica un sistema</h2>
@@ -170,6 +193,7 @@ const qrCurso = await qr(linkCurso);
   import 'motor-animaciones';
   import '../../animaciones/expo-siges.js';
   import '../../animaciones/expo-bingo.js';
+  import '../../animaciones/expo-fotos-ia.js';
 
   // ---- La moneda: lo mismo que la clase "Juegos I · Cara o cruz" ----
   // Se sortea al tocar, y se muestra al caer (animationend). El panel secreto

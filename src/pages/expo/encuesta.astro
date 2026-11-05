@@ -1,0 +1,298 @@
+---
+/**
+ * La encuesta de los cursos 2027: /expo/encuesta/
+ *
+ * Para saber qué días y horarios le sirven a la gente interesada en los cursos del año que viene
+ * (Usuaria/o de IA generativa y Programador/a Web). Es anónima: nombre y WhatsApp son opcionales y
+ * solo se guardan si la persona marca que se los podemos guardar para avisarle de las inscripciones.
+ * Las respuestas las guarda el Worker de los catálogos (POST /encuesta) y se cuentan en el panel.
+ */
+import Expo from '../../layouts/Expo.astro';
+import { CURSOS, DIAS, HORARIOS } from '../../data/expo/encuesta';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Expo titulo="Cursos 2027 · CFP 401" descripcion="¿Qué días y horarios te sirven para los cursos 2027 del CFP 401? Contestá en un minuto.">
+  <main class="hoja">
+    <header>
+      <p class="etiqueta">CFP 401 · Ensenada · Cursos 2027</p>
+      <h1>¿Cuándo podrías cursar?</h1>
+      <p class="bajada">Estamos armando los horarios del año que viene. Contestá en un minuto: <strong>es anónima</strong>.</p>
+    </header>
+
+    <form class="formulario" data-form>
+      <fieldset>
+        <legend>¿Qué curso te interesa?</legend>
+        {CURSOS.map((c) => (
+          <label class="opcion">
+            <input type="radio" name="curso" value={c.codigo} required />
+            <span><strong>{c.texto}</strong>{c.detalle && <small>{c.detalle}</small>}</span>
+          </label>
+        ))}
+      </fieldset>
+
+      <fieldset>
+        <legend>¿Qué días podrías? <small>marcá todos los que te sirvan</small></legend>
+        <div class="fichas">
+          {DIAS.map((d) => (
+            <label class="ficha">
+              <input type="checkbox" name="dias" value={d.codigo} />
+              <span>{d.texto}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>¿En qué horario? <small>todos los que te sirvan</small></legend>
+        <div class="fichas">
+          {HORARIOS.map((h) => (
+            <label class="ficha">
+              <input type="checkbox" name="horarios" value={h.codigo} />
+              <span>{h.texto} <small>{h.detalle}</small></span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>¿Algo más que quieras contarnos? <small>opcional</small></legend>
+        <textarea name="comentario" rows="2" maxlength="300" placeholder="Ej. solo puedo después de las 18"></textarea>
+      </fieldset>
+
+      <fieldset class="avisar">
+        <label class="opcion">
+          <input type="checkbox" name="consentimiento" data-consentimiento />
+          <span><strong>Quiero que me avisen cuando abran las inscripciones</strong><small>Tu nombre y WhatsApp se usan solo para eso: no se publican ni se comparten.</small></span>
+        </label>
+        <div class="contacto" data-contacto hidden>
+          <label>Nombre <input name="nombre" maxlength="60" autocomplete="given-name" /></label>
+          <label>WhatsApp <input name="whatsapp" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="221 555 0000" /></label>
+        </div>
+      </fieldset>
+
+      <p class="error" data-error role="alert"></p>
+      <button type="submit" class="boton" data-enviar>Enviar</button>
+    </form>
+
+    <section class="gracias" data-gracias hidden>
+      <p class="grande">¡Gracias! 💚</p>
+      <p>Con lo que contesten armamos los horarios de 2027.</p>
+      <p><a href={`${base}/expo/`}>Mirá lo que hicimos este año</a></p>
+    </section>
+  </main>
+</Expo>
+
+<script>
+  import { WORKER } from '../../scripts/bingo-expo';
+
+  const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
+  const form = $<HTMLFormElement>('[data-form]');
+  const consentimiento = $<HTMLInputElement>('[data-consentimiento]');
+  consentimiento.addEventListener('change', () => ($('[data-contacto]').hidden = !consentimiento.checked));
+
+  // Que quien la contestó desde este celular no la mande dos veces sin querer
+  try {
+    if (localStorage.getItem('encuesta2027:enviada')) {
+      $('[data-gracias]').hidden = false;
+      form.hidden = true;
+    }
+  } catch {
+    /* sin recordar */
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const datos = new FormData(form);
+    const cuerpo = {
+      curso: datos.get('curso'),
+      dias: datos.getAll('dias'),
+      horarios: datos.getAll('horarios'),
+      comentario: datos.get('comentario'),
+      consentimiento: consentimiento.checked,
+      nombre: consentimiento.checked ? datos.get('nombre') : '',
+      whatsapp: consentimiento.checked ? datos.get('whatsapp') : '',
+    };
+    const error = $('[data-error]');
+    if (!cuerpo.dias.length) return void (error.textContent = 'Marcá al menos un día.');
+    if (!cuerpo.horarios.length) return void (error.textContent = 'Marcá al menos un horario.');
+    error.textContent = '';
+    const boton = $<HTMLButtonElement>('[data-enviar]');
+    boton.disabled = true;
+    boton.textContent = 'Enviando…';
+    try {
+      const r = await fetch(`${WORKER}/encuesta`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo) });
+      const respuesta = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(respuesta.error || 'No se pudo enviar.');
+      try {
+        localStorage.setItem('encuesta2027:enviada', '1');
+      } catch {
+        /* nada */
+      }
+      form.hidden = true;
+      $('[data-gracias]').hidden = false;
+      scrollTo({ top: 0 });
+    } catch (err) {
+      error.textContent = err instanceof Error && err.message !== 'Failed to fetch' ? err.message : 'No se pudo enviar. ¿Tenés internet?';
+      boton.disabled = false;
+      boton.textContent = 'Enviar';
+    }
+  });
+</script>
+
+<style>
+  .hoja {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: grid;
+    gap: 20px;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  header {
+    text-align: center;
+  }
+  .etiqueta {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--suave);
+  }
+  h1 {
+    margin: 6px 0;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    color: var(--oro);
+  }
+  .bajada {
+    margin: 0;
+    color: var(--suave);
+  }
+  .formulario {
+    display: grid;
+    gap: 16px;
+  }
+  fieldset {
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+    display: grid;
+    gap: 10px;
+  }
+  legend {
+    padding: 0 6px;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  legend small,
+  .opcion small,
+  .ficha small {
+    color: var(--suave);
+    font-weight: 400;
+    font-size: 0.85rem;
+  }
+  .opcion {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+  .opcion span {
+    display: grid;
+  }
+  .opcion input {
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    flex: none;
+    accent-color: var(--oro);
+  }
+  .fichas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ficha input {
+    position: absolute;
+    opacity: 0;
+  }
+  .ficha span {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 2px solid var(--borde);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .ficha input:checked + span {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: #10131a;
+  }
+  .ficha input:checked + span small {
+    color: #10131a;
+  }
+  .ficha input:focus-visible + span {
+    outline: 3px solid var(--menta);
+    outline-offset: 2px;
+  }
+  textarea,
+  .contacto input {
+    font: inherit;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+    background: var(--fondo);
+    color: var(--texto);
+  }
+  .contacto {
+    display: grid;
+    gap: 10px;
+  }
+  .contacto label {
+    display: grid;
+    gap: 4px;
+    font-weight: 600;
+  }
+  .error {
+    margin: 0;
+    min-height: 1.4em;
+    color: var(--coral);
+    text-align: center;
+  }
+  .boton {
+    padding: 16px 20px;
+    border-radius: 999px;
+    border: 2px solid var(--oro);
+    background: var(--oro);
+    color: #10131a;
+    font: 800 1.2rem system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .boton:disabled {
+    opacity: 0.6;
+  }
+  .gracias {
+    text-align: center;
+    padding: 28px 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+  }
+  .gracias .grande {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--oro);
+    margin-top: 0;
+  }
+  .gracias a {
+    color: var(--oro);
+  }
+</style>
