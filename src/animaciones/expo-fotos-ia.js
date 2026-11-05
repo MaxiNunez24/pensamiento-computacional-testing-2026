@@ -6,7 +6,8 @@
 // imagen nace del ruido en 4 pasos, guiada por las dos cosas. Todo en la PC: la foto no sale a
 // internet.
 //
-// El ruido es un cuadro GRANDE a la derecha, con cara de QR gigante, que paso a paso se va
+// El ruido es un cuadro GRANDE a la derecha, como la interferencia de una tele sin señal (parece
+// un QR gigante, y así se lo cuenta), que titila y paso a paso se va
 // volviendo la imagen: primero aparecen las manchas grandes (dónde va el casco, dónde la cara) y
 // al final los detalles. Así trabaja de verdad este tipo de IA, y desde lejos se ve.
 //
@@ -85,35 +86,31 @@ function promedio(img, b) {
     return out;
 }
 
-// El ruido del comienzo, con cara de QR: blanco y negro al azar y los tres cuadrados de las esquinas
-function ruidoQR() {
-    const r = azar(401);
-    const esquina = (x, y) => {
-        for (const [ox, oy] of [[0, 0], [N - 7, 0], [0, N - 7]]) {
-            const i = x - ox, j = y - oy;
-            if (i >= 0 && i < 7 && j >= 0 && j < 7) {
-                const borde = i === 0 || i === 6 || j === 0 || j === 6;
-                const centro = i >= 2 && i <= 4 && j >= 2 && j <= 4;
-                return borde || centro ? 1 : 0;
-            }
-        }
-        return null;
-    };
+// El ruido del comienzo: la "lluvia" de una tele sin señal. Grises al azar, franjas que suben
+// (cada cuadro corre las franjas 3 filas) y alguna fila "rota" con un tinte de color, como la
+// interferencia. Se arman varios cuadros y se alternan, para que titile.
+const CUADROS_RUIDO = 8;
+function interferencia(cuadro) {
+    const r = azar(401 + cuadro * 97);
+    const franja = (y) => Math.sin(((y + cuadro * 3) / N) * Math.PI * 4) * 35;
+    const rotas = new Set([Math.floor(r() * N), Math.floor(r() * N)]);
     const out = [];
     for (let y = 0; y < N; y++) {
+        const rota = rotas.has(y);
         for (let x = 0; x < N; x++) {
-            const e = esquina(x, y);
-            const negro = e === null ? r() < 0.5 : e === 1;
-            out.push(negro ? [17, 17, 17] : [245, 245, 245]);
+            const v = 25 + r() * 205 + franja(y);
+            const c = rota ? [v * 0.75, v * 1.1 + 25, v * 1.15 + 35] : [v, v, v];
+            out.push(c.map((n) => Math.max(0, Math.min(255, n))));
         }
     }
     return out;
 }
 
 // Los 5 momentos: el ruido, y en cada paso la imagen más nítida con menos ruido encima
+// (el primero se reemplaza por el cuadro de interferencia que toque)
 function estados() {
     const img = astronauta();
-    const lista = [ruidoQR()];
+    const lista = [interferencia(0)];
     [[8, 0.6], [4, 0.35], [2, 0.15], [1, 0]].forEach(([b, ruido], k) => {
         const r = azar(1000 + k);
         lista.push(promedio(img, b).map((c) => {
@@ -126,12 +123,15 @@ function estados() {
 
 const mosaico = definirPieza({
     nombre: 'mosaico',
-    predeterminados: { lado: 600, paso: 0 },
+    // vibra: cuando avanza, la interferencia titila (cambia de cuadro). También titila sola
+    // mientras se va aclarando hacia el paso 1.
+    predeterminados: { lado: 600, paso: 0, vibra: 0 },
     crear(grupo) {
         const marco = el('rect', { fill: '#000', rx: 10 }, grupo);
         const celdas = [];
         for (let i = 0; i < N * N; i++) celdas.push(el('rect', { 'shape-rendering': 'crispEdges' }, grupo));
-        return { marco, celdas, estados: estados() };
+        const ruido = Array.from({ length: CUADROS_RUIDO }, (_, c) => interferencia(c));
+        return { marco, celdas, estados: estados(), ruido };
     },
     actualizar(partes, p) {
         const t = p.lado / N;
@@ -140,7 +140,9 @@ const mosaico = definirPieza({
         const paso = Math.max(0, Math.min(4, p.paso));
         const k = Math.min(3, Math.floor(paso));
         const f = paso - k;
-        const a = partes.estados[k], b = partes.estados[k + 1];
+        const cuadro = Math.floor(p.vibra + Math.min(paso, 1) * 14) % CUADROS_RUIDO;
+        const a = k === 0 ? partes.ruido[cuadro] : partes.estados[k];
+        const b = partes.estados[k + 1];
         partes.celdas.forEach((celda, i) => {
             const c = a[i].map((v, j) => Math.round(v + (b[i][j] - v) * f));
             poner(celda, {
@@ -275,13 +277,15 @@ registrar('expo-fotos-ia', function (disposicion) {
         { capitulo: 'Del ruido a la imagen' },
         ...bajada('Del ruido a la imagen'),
         mirar('ruido', '<'),
-        { subtitulo: 'La imagen arranca siendo puro ruido: puntos al azar, como un QR gigante que no dice nada.', en: '<' },
+        { subtitulo: 'La imagen arranca siendo puro ruido, como una tele sin señal. Parece un QR gigante, pero no dice nada.', en: '<' },
         { pieza: ['mosaico', 'pasoTexto'], a: { opacidad: 1, escala: 1 }, dur: 0.7, curva: 'salir', en: '<0.3' },
+        { pieza: 'mosaico', a: { vibra: 8 }, dur: 0.7, curva: 'lineal', en: '<' },
 
         ...leer('En cada paso saca un poco de ruido, guiada por tu huella y por las palabras del estilo.'),
         { pieza: ['huellaGuia', 'estiloGuia'], a: { progreso: 1 }, dur: 0.9, en: '<0.4' },
+        { pieza: 'mosaico', a: { vibra: 18 }, dur: 0.9, curva: 'lineal', en: '<' },
         aparecer('cuenta', { en: '<' }),
-        { espera: 0.6 },
+        { pieza: 'mosaico', a: { vibra: 26 }, dur: 0.6, curva: 'lineal' },
         ...paso(1),
         ...paso(2),
         ...paso(3),
@@ -308,7 +312,7 @@ registrar('expo-fotos-ia', function (disposicion) {
         descripcion:
             'Te sacás una foto en el stand. La compu encuentra tu cara (los ojos, la nariz y la boca) y la resume en ' +
             'una huella de 512 números. Elegís un estilo, que se pide con palabras. La imagen arranca siendo ruido, ' +
-            'como un QR gigante, y en cuatro pasos, guiada por tu huella y por el estilo, se va aclarando: primero las ' +
+            'como una tele sin señal (parece un QR gigante, pero no dice nada), y en cuatro pasos, guiada por tu huella y por el estilo, se va aclarando: primero las ' +
             'manchas grandes y al final los detalles, hasta que sos astronauta, en unos 9 segundos, en la PC del stand ' +
             'y sin internet. Esto se aprende en el curso de Usuaria/o de IA generativa del CFP 401 en 2027.',
         ancho: W,

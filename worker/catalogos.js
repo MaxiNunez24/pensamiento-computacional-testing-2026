@@ -20,8 +20,9 @@
  *   expo:consultas → [{ texto, grupo, hecho }, ...]  (el checklist del panel privado, /expo/panel/)
  *   panel:img:<id> → una imagen del panel (bocetos, sponsors), con { titulo, grupo, tipo } en la metadata
  *   bingo:empezo:<ronda> → cuándo salió la primera bolilla (se borra sola a las 12 horas)
- *   expo:cooperadora → { recaudado, listado: [{ texto, curso }], actualizado }  (la barra del proyector:
- *                    todo lo recaudado va a la cooperadora; el listado es solo informativo)
+ *   expo:cooperadora → { recaudado, listado: [{ texto, curso }], botones: [{ nombre, monto }], actualizado }
+ *                    (la barra del proyector: todo lo recaudado va a la cooperadora; el listado es solo
+ *                    informativo; los botones son los cobros rápidos del panel y no salen en lo público)
  *   expo:vales     → [{ id, quien, curso, que, cantidad, mensaje, creado }, ...]  (los vales de donación:
  *                    los carga Maxi desde el panel; cada uno se ve en /expo/vale/#<id>)
  *   encuesta:<id>  → '1', con la respuesta en la metadata (así la lista entera sale de UN list(), sin
@@ -65,6 +66,7 @@ const ID_FOTO_IA = /^[a-z0-9]{24}$/;
 // Hasta cuándo queda una foto que la persona se quiso llevar: el lunes 16/11 a la noche (hora argentina)
 const FIN_FOTOS_IA = Date.UTC(2026, 10, 17, 3, 0, 0) / 1000; // las del panel viajan todas juntas en base64: mejor livianas (WEBP)
 const MAX_LISTADO = 40;
+const MAX_BOTONES = 12;
 const MAX_VALES = 300;
 const ID_VALE = /^[a-z0-9]{12}$/;
 // La encuesta 2027: qué se puede elegir (lo que llega distinto, se descarta)
@@ -81,7 +83,12 @@ function limpiarCooperadora(d) {
         .map((i) => ({ texto: texto(i && i.texto, 80), curso: texto(i && i.curso, 50) }))
         .filter((i) => i.texto)
         .slice(0, MAX_LISTADO);
-    return { recaudado, listado, actualizado: new Date().toISOString() };
+    // Los botones de cobro del panel ("+$150 Impresión"): los que se usan una y otra vez
+    const botones = (Array.isArray(d && d.botones) ? d.botones : [])
+        .map((b) => ({ nombre: texto(b && b.nombre, 30), monto: Math.round(Number(b && b.monto) || 0) }))
+        .filter((b) => b.monto > 0 && b.monto <= 1e7)
+        .slice(0, MAX_BOTONES);
+    return { recaudado, listado, botones, actualizado: new Date().toISOString() };
 }
 
 /* Un vale de donación: quién dona, de qué curso, qué y cuántos, y un mensaje (opcional). */
@@ -392,7 +399,8 @@ export default {
         // ---- La cooperadora: cuánto se recaudó y el listado (lo muestran el proyector y /expo/) ----
         if (publico && url.pathname === '/cooperadora') {
             const datos = JSON.parse((await env.CATALOGOS.get('expo:cooperadora')) || 'null') || { recaudado: 0, listado: [] };
-            return respuesta(datos, 200, cabeceras, { 'Cache-Control': 'public, max-age=15' });
+            const { botones, ...publicos } = datos; // los cobros rápidos son del panel
+            return respuesta(publicos, 200, cabeceras, { 'Cache-Control': 'public, max-age=15' });
         }
         // ---- Un vale de donación, por su link (el id no se puede adivinar) ----
         if (publico && partes[0] === 'vales' && partes.length === 2 && ID_VALE.test(partes[1])) {

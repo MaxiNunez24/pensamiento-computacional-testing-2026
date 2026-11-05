@@ -153,10 +153,18 @@ const links = [
                     <div class="fila">
                         <span class="peso">$</span>
                         <input id="recaudado" type="number" inputmode="numeric" min="0" step="1" />
-                        <button type="button" data-sumar="100">+100</button>
-                        <button type="button" data-sumar="150">+150</button>
-                        <button type="button" data-sumar="1000">+1000</button>
                     </div>
+                    <div class="cobros">
+                        <strong>Cobros rápidos</strong>
+                        <small>cada toque suma ese monto</small>
+                        <button type="button" class="editar-cobros" id="editar-cobros" aria-pressed="false">✏️ Editar</button>
+                    </div>
+                    <div class="fila" id="botones-cobro"></div>
+                    <form class="agregar" id="form-cobro" hidden>
+                        <input id="cobro-nombre" placeholder="Para qué (ej. Impresión, Cartón)" aria-label="Para qué es el cobro" maxlength="30" />
+                        <input id="cobro-monto" type="number" inputmode="numeric" min="1" step="1" placeholder="Monto" aria-label="Monto en pesos" required />
+                        <button type="submit" class="principal">Agregar botón</button>
+                    </form>
                 </div>
                 <div class="tarjeta">
                     <h3>Lo que necesita cada curso <small id="cuenta-listado"></small></h3>
@@ -546,7 +554,18 @@ const links = [
                 texto: string;
                 curso: string;
             }
-            let cooperadora: { recaudado: number; listado: Item[] } = { recaudado: 0, listado: [] };
+            interface Cobro {
+                nombre: string;
+                monto: number;
+            }
+            // Los de siempre, hasta que se editen; después se guardan con la cooperadora (los ve todo el panel)
+            const COBROS_DE_ENTRADA: Cobro[] = [
+                { nombre: '', monto: 100 },
+                { nombre: '', monto: 150 },
+                { nombre: '', monto: 1000 },
+            ];
+            let cooperadora: { recaudado: number; listado: Item[]; botones?: Cobro[] } = { recaudado: 0, listado: [] };
+            let editandoCobros = false;
             const sitio = $('#hoja').dataset.sitio!;
             const nuevo = <K extends keyof HTMLElementTagNameMap>(etiqueta: K, props: Partial<HTMLElementTagNameMap[K]> = {}) =>
                 Object.assign(document.createElement(etiqueta), props);
@@ -602,18 +621,72 @@ const links = [
                     }),
                 );
                 sugerirCursos();
+                dibujarCobros();
             }
             $('#recaudado').addEventListener('input', () => {
                 cooperadora.recaudado = Math.max(0, Math.round(Number($<HTMLInputElement>('#recaudado').value) || 0));
                 guardarCoopLuego();
             });
-            for (const boton of document.querySelectorAll<HTMLElement>('[data-sumar]')) {
-                boton.addEventListener('click', () => {
-                    cooperadora.recaudado += Number(boton.dataset.sumar);
-                    $<HTMLInputElement>('#recaudado').value = String(cooperadora.recaudado);
-                    guardarCoopLuego();
-                });
+
+            // ---------- Cobros rápidos: botones que suman un monto, editables ----------
+            const pesos = (n: number) => '$' + n.toLocaleString('es-AR');
+            function dibujarCobros() {
+                const botones = cooperadora.botones ?? COBROS_DE_ENTRADA;
+                $('#botones-cobro').replaceChildren(
+                    ...botones.map((cobro, i) => {
+                        const boton = nuevo('button', { type: 'button', className: 'cobro' });
+                        boton.append(nuevo('strong', { textContent: '+' + pesos(cobro.monto) }));
+                        if (cobro.nombre) boton.append(nuevo('small', { textContent: cobro.nombre }));
+                        if (editandoCobros) {
+                            boton.classList.add('cobro--borrar');
+                            boton.title = 'Borrar este botón';
+                            boton.append(nuevo('span', { className: 'cobro__x', textContent: '✕' }));
+                            boton.addEventListener('click', () => {
+                                cooperadora.botones = botones.filter((_, j) => j !== i);
+                                dibujarCobros();
+                                guardarCoopLuego();
+                            });
+                        } else {
+                            boton.addEventListener('click', () => {
+                                cooperadora.recaudado += cobro.monto;
+                                $<HTMLInputElement>('#recaudado').value = String(cooperadora.recaudado);
+                                // un destello, para saber que tomó el toque
+                                boton.classList.remove('cobro--sumo');
+                                void boton.offsetWidth;
+                                boton.classList.add('cobro--sumo');
+                                guardarCoopLuego();
+                            });
+                        }
+                        return boton;
+                    }),
+                );
+                if (!botones.length) $('#botones-cobro').append(nuevo('small', { className: 'nota', textContent: 'Sin botones: agregá uno con ✏️ Editar.' }));
             }
+            $('#editar-cobros').addEventListener('click', () => {
+                editandoCobros = !editandoCobros;
+                $('#editar-cobros').setAttribute('aria-pressed', String(editandoCobros));
+                $('#editar-cobros').textContent = editandoCobros ? '✓ Listo' : '✏️ Editar';
+                $('#form-cobro').hidden = !editandoCobros;
+                dibujarCobros();
+            });
+            $('#form-cobro').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const monto = Math.round(Number($<HTMLInputElement>('#cobro-monto').value) || 0);
+                if (monto <= 0) return;
+                const botones = [...(cooperadora.botones ?? COBROS_DE_ENTRADA)];
+                if (botones.length >= 12) {
+                    alert('Hasta 12 botones: borrá alguno primero.');
+                    return;
+                }
+                botones.push({ nombre: $<HTMLInputElement>('#cobro-nombre').value.trim(), monto });
+                botones.sort((a, b) => a.monto - b.monto);
+                cooperadora.botones = botones;
+                $<HTMLInputElement>('#cobro-nombre').value = '';
+                $<HTMLInputElement>('#cobro-monto').value = '';
+                dibujarCobros();
+                guardarCoopLuego();
+                $('#cobro-nombre').focus();
+            });
             $('#form-listado').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const texto = $<HTMLInputElement>('#item-texto').value.trim();
@@ -1312,6 +1385,57 @@ const links = [
         font-size: 1.6rem;
         font-weight: 800;
         width: 11ch;
+    }
+    .cobros {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 10px;
+        margin-top: 6px;
+    }
+    .editar-cobros {
+        margin-left: auto;
+    }
+    .cobro {
+        display: grid;
+        justify-items: center;
+        min-width: 92px;
+        padding: 10px 14px;
+        position: relative;
+    }
+    .cobro strong {
+        font-size: 1.15rem;
+    }
+    .cobro small {
+        color: var(--suave);
+        font-size: 0.8rem;
+    }
+    .cobro--borrar {
+        border-style: dashed;
+    }
+    .cobro__x {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #c0392b;
+        color: #fff;
+        font-size: 0.75rem;
+        display: grid;
+        place-items: center;
+    }
+    .cobro--sumo {
+        animation: sumo 0.5s ease-out;
+    }
+    @keyframes sumo {
+        from {
+            box-shadow: 0 0 0 0 color-mix(in srgb, var(--acento) 70%, transparent);
+        }
+        to {
+            box-shadow: 0 0 0 12px transparent;
+        }
     }
     .item {
         flex: 1;

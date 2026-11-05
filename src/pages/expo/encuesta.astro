@@ -185,8 +185,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     display: grid;
     gap: 10px;
   }
+  /* float saca al legend del borde (si no, el navegador lo dibuja cortando la línea de arriba)
+     y, dentro de la grilla, queda como la primera fila: el título adentro del recuadro */
   legend {
-    padding: 0 6px;
+    float: left;
+    width: 100%;
+    padding: 0;
     font-weight: 700;
     font-size: 1.1rem;
   }
