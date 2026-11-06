@@ -53,7 +53,8 @@ Esto es lo que conviene entender bien, porque es lo que te va a salvar si algo f
     F --> V1["🖥️ Pantalla del público"]
     F --> V2["🖥️ Pantalla del equipo"]
     J["🎮 PC de juegos<br/>(sin internet)"]
-    I -- WiFi --> T["📲 Tablet + 🖨️ Q15"]
+    C["📲 Celu del profe (A35)"] -- "su propia zona WiFi" --> Q["🖨️ Q15"]
+    C -- "datos móviles" --> I
     G["🙋 Celus del público"] -- "sus propios datos" --> I
     style F fill:#2b8a3e,color:#fff
     style N fill:#1c6ea4,color:#fff`} />
@@ -73,7 +74,7 @@ Tres ideas para quedarse:
   titulo="¿Por qué no se satura?"
   fundamental
   opciones={[
-    { texto: "Porque el público usa sus propios datos, no la red del stand", correcta: true, explicacion: "Exacto: la red del stand solo la usan la notebook, la PC de la IA y la tablet. Son tres aparatos, no doscientos." },
+    { texto: "Porque el público usa sus propios datos, no la red del stand", correcta: true, explicacion: "Exacto: la red del stand solo la usan la notebook y la PC de la IA. Son dos aparatos, no doscientos." },
     { texto: "Porque el WiFi de la escuela es muy rápido", explicacion: "No contamos con eso: con toda la Expo conectada, seguramente ande lento. Por eso el público no depende de él." },
     { texto: "Porque la IA corre en internet", explicacion: "Al revés: la IA corre en la PC del stand. Por internet viaja solo la foto terminada." },
   ]}
@@ -107,7 +108,7 @@ fijo que es la cámara. Del otro lado de la mesa, alguien del equipo maneja todo
 | <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd> | Elegir el estilo |
 | <kbd>Enter</kbd> / <kbd>R</kbd> | Generar / otra versión del mismo estilo |
 | <kbd>Q</kbd> | QR grande en la pantalla del público para llevársela al celu |
-| <kbd>A</kbd> | Aprobar e imprimir: el QR para la tablet sale **solo en la pantalla del equipo** |
+| <kbd>A</kbd> | Aprobar e imprimir: el QR para la impresora sale **solo en la pantalla del equipo** |
 
 **Cómo explicarlo** (con tus palabras, esto es una guía):
 
@@ -238,10 +239,11 @@ minutos, vuelve solo.
 
 ## 🧾 La caja y la impresora
 
-- La **impresora térmica (Q15)** imprime en papel de ticket, sin tinta. Se maneja desde la **tablet**
-  con la app Fun Print: la tablet escanea el QR de impresión que aparece en la pantalla del equipo,
+- La **impresora térmica (Q15)** imprime en papel de ticket, sin tinta. Se maneja desde el **celular
+  del profe** con la app Fun Print: el celu escanea el QR de impresión que aparece en la pantalla del equipo,
   baja la foto y la manda a la impresora.
-- La impresora y la tablet tienen que estar **en la misma red WiFi**.
+- La impresora se conecta a la **zona WiFi del mismo celular**, no al WiFi de la escuela: así imprimir
+  no depende de que la red de la Expo ande bien.
 - **Precios:** una impresión $100, dos por $150. Los cartones digitales son gratis.
 - **Todo lo que se cobra va para la cooperadora.** La barra de la lona muestra cuánto se juntó.
 - En la lona también está el QR de la **encuesta 2027**: días y horarios que prefiere la gente para
@@ -255,7 +257,7 @@ minutos, vuelve solo.
 | No llega la foto del celular | Todo lo demás | Fijate que el A32 tenga la página de la cámara abierta y el cable puesto. En la pantalla del equipo, elegí otra cámara o "Subir una foto" |
 | La foto salió con la cara de otro | — | Otra foto, y esta vez elegí bien la cara con el número |
 | Un juego se colgó | Los otros juegos | Esc dos veces vuelve al menú. Si no, Alt+F4 y abrí el menú de nuevo |
-| La tablet no encuentra la impresora | El resto | Las dos en el mismo WiFi. Apagá y prendé la impresora |
+| El celu no encuentra la impresora | El resto | Fijate que la zona WiFi del celu esté prendida. Apagá y prendé la impresora |
 
 <OpcionMultiple
   titulo="Se cortó internet"
