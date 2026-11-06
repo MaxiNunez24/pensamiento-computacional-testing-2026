@@ -139,6 +139,7 @@ export default defineConfig({
                   { label: '🛍️ La vidriera', link: '/preparando-expo/vidriera/' },
                   { label: '🏪 Catálogos para todo el CFP', link: '/preparando-expo/catalogos-cfp/' },
                   { label: '⚙️ CI/CD · Que lo publique GitHub', link: '/preparando-expo/ci-cd/' },
+                  { label: '🧭 El stand, pieza por pieza', link: '/preparando-expo/el-stand/' },
                 ],
               },
               // El cuestionario del CFP (/cuestionario/) NO va acá a propósito: se

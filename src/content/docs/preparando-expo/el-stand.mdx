@@ -1,0 +1,287 @@
+---
+title: "El stand, pieza por pieza"
+description: "Última clase antes de la Expo: cómo está armado y conectado el stand, qué hace cada estación, cómo se explica al público y qué hacer si algo falla. Y el prompt para hacer tu juego con IA."
+---
+
+import Mermaid from '../../../components/Mermaid.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+:::tip[Viernes 13/11, de 16 a 21 h]
+Es la última clase antes de la Expo. Hoy no programamos: hoy aprendemos a **atender el stand**. Al
+final de la clase tenés que poder explicar cualquier estación y saber qué hacer si algo se corta.
+:::
+
+## 🙋 El problema
+
+Son las 17 h, el stand está lleno, y una señora te pregunta:
+
+> —¿Y esto cómo funciona? ¿La compu me dibujó a mí? ¿Dónde queda mi foto?
+
+Al mismo tiempo se corta el WiFi de la escuela, y un nene quiere jugar al juego que hizo tu
+compañero. **Nadie del equipo puede decir "no sé, eso lo armó el profe".** Para eso es esta clase:
+recorremos el stand pieza por pieza, qué hace cada cosa, cómo está conectada y qué decir.
+
+## 🗺️ El stand de un vistazo
+
+El espacio mide **2,75 m de frente** (el lado del público) y **3,86 m de fondo**. Adelante van **dos
+mesas**: el público se queda del lado de afuera y el equipo trabaja detrás. Al fondo, la **lona**
+donde proyectamos.
+
+Hay **tres estaciones** y una caja:
+
+| Estación | Dónde | Qué hace la gente |
+|---|---|---|
+| 📸 **Fotos con IA** | Mesa del frente | Se saca una foto y la ve transformada por una inteligencia artificial |
+| 🎮 **Juegos hechos con IA** | Mesa del frente | Juega los juegos que hicieron ustedes |
+| 🎱 **Bingo** | La lona del fondo | Juega con su cartón en el celular o impreso |
+| 🧾 **Caja e impresora** | Junto a las mesas | Paga impresiones, se lleva su foto o su cartón impreso |
+
+Y en la lona, además del Bingo, va rotando **la planificación del Sistema de Gestión de Alumnos**,
+la vidriera de catálogos y los QR para participar.
+
+## 🔌 Cómo está conectado todo
+
+Esto es lo que conviene entender bien, porque es lo que te va a salvar si algo falla:
+
+<Mermaid code={`flowchart LR
+    I(("🌐 Internet")) -- "WiFi de la escuela<br/>o el celu del profe" --> N["💻 Notebook<br/>Bingo + lona"]
+    N -- HDMI --> P["📽️ Proyector → lona"]
+    N -- "cable de red" --> F["🖥️ PC de la IA<br/>(debajo de la mesa)"]
+    A["📱 A32 = la cámara"] -- USB --> F
+    F --> V1["🖥️ Pantalla del público"]
+    F --> V2["🖥️ Pantalla del equipo"]
+    J["🎮 PC de juegos<br/>(sin internet)"]
+    I -- WiFi --> T["📲 Tablet + 🖨️ Q15"]
+    G["🙋 Celus del público"] -- "sus propios datos" --> I
+    style F fill:#2b8a3e,color:#fff
+    style N fill:#1c6ea4,color:#fff`} />
+
+Tres ideas para quedarse:
+
+1. **El público nunca usa nuestra red.** Los cartones, los catálogos, la encuesta y su foto los abre
+   cada uno **con sus datos**. Así, aunque haya 200 personas, la red del stand no se satura.
+2. **La PC de la IA está en el stand**, debajo de la mesa. La inteligencia artificial corre **ahí
+   adentro**, en su placa de video: no se le paga a ninguna empresa por cada foto y las fotos no se
+   mandan a ningún lado para dibujarlas.
+3. **Internet se usa poco.** Para subir la foto aprobada (así la persona la baja con un QR), para
+   avisar que empezó una ronda del Bingo y para la barra de la cooperadora. Si se corta, casi todo
+   sigue andando (lo vemos más abajo).
+
+<OpcionMultiple
+  titulo="¿Por qué no se satura?"
+  fundamental
+  opciones={[
+    { texto: "Porque el público usa sus propios datos, no la red del stand", correcta: true, explicacion: "Exacto: la red del stand solo la usan la notebook, la PC de la IA y la tablet. Son tres aparatos, no doscientos." },
+    { texto: "Porque el WiFi de la escuela es muy rápido", explicacion: "No contamos con eso: con toda la Expo conectada, seguramente ande lento. Por eso el público no depende de él." },
+    { texto: "Porque la IA corre en internet", explicacion: "Al revés: la IA corre en la PC del stand. Por internet viaja solo la foto terminada." },
+  ]}
+>
+  Va a haber cientos de personas escaneando QR en el stand. ¿Por qué eso no satura nuestra conexión?
+</OpcionMultiple>
+
+## 📸 Estación 1: Fotos con IA
+
+**Qué ve la gente:** una pantalla grande con su imagen en vivo (como un espejo), y arriba un celular
+fijo que es la cámara. Del otro lado de la mesa, alguien del equipo maneja todo con el teclado mirando
+**otra** pantalla, la del equipo.
+
+**El recorrido de una foto:**
+
+<Mermaid code={`flowchart LR
+    A["Espacio<br/>cuenta 3-2-1"] --> B["La foto<br/>llega del celu"]
+    B --> C{"¿Hay varias<br/>caras?"}
+    C -- sí --> D["Elegís la de<br/>quien se la lleva (1-9)"]
+    C -- no --> E
+    D --> E["Estilo con las flechas<br/>Enter = generar"]
+    E --> F["~10 s después,<br/>la imagen nueva"]
+    F --> G["Q = QR para llevársela<br/>A = imprimirla"]`} />
+
+| Tecla | Qué hace |
+|---|---|
+| <kbd>Espacio</kbd> | Saca la foto (cuenta 3-2-1 en las dos pantallas y en el celu) |
+| <kbd>1</kbd>–<kbd>9</kbd> | Elige la cara, si salió más de una persona |
+| <kbd>G</kbd> | Modo grupo (la foto entera, sin elegir cara) |
+| <kbd>M</kbd> | Modo mascota u objeto (hay que escribir qué es) |
+| <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd> | Elegir el estilo |
+| <kbd>Enter</kbd> / <kbd>R</kbd> | Generar / otra versión del mismo estilo |
+| <kbd>Q</kbd> | QR grande en la pantalla del público para llevársela al celu |
+| <kbd>A</kbd> | Aprobar e imprimir: el QR para la tablet sale **solo en la pantalla del equipo** |
+
+**Cómo explicarlo** (con tus palabras, esto es una guía):
+
+> La IA no copia tu foto ni la pinta encima. Arranca desde **puro ruido**, como una tele sin señal,
+> y en cuatro pasos lo va convirtiendo en una imagen nueva. Tu foto le sirve de **guía**: dónde
+> están tus ojos, tu nariz, tu boca. Por eso te parecés, pero con otra ropa y en otro lugar.
+
+Si alguien quiere verlo más despacio, en la página de la Expo está la animación
+<a href={b + 'expo/'}>¿Cómo dibuja una compu tu cara?</a>.
+
+**Lo que siempre preguntan:**
+
+- *¿Dónde queda mi foto?* En la PC del stand, y se borra. Si te la llevás con el QR, queda en
+  internet **hasta el 16/11** y después se borra sola. La impresa es tuya.
+- *¿Cuánto tarda?* Unos 10 segundos. La primera del día tarda más: el modelo se carga en la placa al
+  abrir el estudio, por eso el profe lo abre antes de que llegue la gente.
+- *¿Puedo aprender a hacer esto?* ¡Sí! En 2027 el CFP abre el **curso de IA generativa**.
+
+<OpcionMultiple
+  titulo="Dos caras en la foto"
+  opciones={[
+    { texto: "Elegir con el número la cara de quien se lleva la foto", correcta: true, explicacion: "Eso: la IA toma una sola cara como guía. Si no le decimos cuál, agarra la más grande, que no siempre es la de quien se la saca." },
+    { texto: "Generar igual: la IA se da cuenta sola", explicacion: "No se da cuenta: usa la cara más grande, y con gente atrás puede salir otra persona." },
+    { texto: "Pasar a modo mascota", explicacion: "El modo mascota no busca caras: la imagen no se va a parecer a nadie." },
+  ]}
+>
+  Una chica se saca la foto y atrás pasa su papá, que sale más cerca de la cámara. ¿Qué hacés?
+</OpcionMultiple>
+
+## 🎱 Estación 2: el Bingo
+
+**Qué ve la gente:** las bolillas en la lona y un QR para pedir el cartón en el celular. El cartón
+también se puede imprimir (se cobra, va para la cooperadora).
+
+Lo maneja la notebook desde la **página del operador**, que solo ve el equipo:
+
+| Tecla | Qué hace |
+|---|---|
+| <kbd>N</kbd> | Ronda nueva |
+| <kbd>Espacio</kbd> / <kbd>A</kbd> | Sacar una bolilla / modo automático |
+| <kbd>V</kbd> y <kbd>Enter</kbd> | Validar el código del cartón de quien canta Bingo |
+| <kbd>M</kbd> | Desempate con la moneda (al 50 %) |
+| <kbd>Ctrl</kbd> + flechas | Mover lo que se ve en la lona |
+
+**Cómo explicarlo:** cada cartón trae un **código de 8 letras** que lo arma una computadora con una
+clave secreta. Cuando alguien canta Bingo, el operador escribe ese código y la notebook comprueba,
+**sin internet**, que el cartón es legítimo y que se pidió antes de la primera bolilla. Inventarse un
+cartón ganador no sirve: el código no coincidiría.
+
+Y el Bingo lo programaron ustedes: el cartón y quién gana son las piezas de la clase
+<a href={b + 'preparando-expo/bingo/'}>Juegos II</a>. Contalo así: *"esto lo hicimos en clase"*.
+
+**El Bingo no es lo principal del stand:** es la invitación del final. Mostramos las fotos con IA y
+el sistema, y a quien se quede le decimos *"en un rato arranca una ronda, pedí tu cartón"*.
+
+## 🎮 Estación 3: juegos hechos con IA
+
+Cada uno de ustedes arma **un juego chiquito conversando con una IA**, y todos van a una PC del stand
+con un menú para elegir. La PC **no tiene internet**: los juegos tienen que andar solos.
+
+### Cómo hacer tu juego
+
+1. Entrá a [claude.ai](https://claude.ai) con tu cuenta y abrí una conversación nueva.
+2. Copiá el prompt de abajo **entero** (el botón de copiar está arriba a la derecha del recuadro),
+   cambiá la parte de **MI IDEA** y mandalo.
+3. Guardá el código que te da en un archivo con el nombre del juego, sin espacios ni tildes y
+   terminado en `.html` (por ejemplo `carrera-de-caracoles.html`). Abrilo con doble clic para jugarlo.
+4. Si algo no anda o querés cambiar algo, decíselo en la misma conversación: *"cuando choco no pasa
+   nada"*, *"que sea más lento al principio"*, *"agregá un récord"*. Probalo después de cada cambio.
+5. Cuando te guste, leé la explicación que te da al final: **en la Expo te van a preguntar cómo
+   funciona**.
+6. Mandale el archivo `.html` al profe.
+
+```text title="Prompt para tu juego (copialo entero)"
+Soy estudiante de un curso de programación y quiero hacer un juego para mostrar en la Expo de mi
+escuela. Se va a jugar en una computadora del stand, sin internet, con el teclado.
+
+MI IDEA: [contá acá tu juego: de qué se trata, qué hace el jugador, cómo se gana o se pierde.
+Por ejemplo: "un caracol que esquiva hojas que caen; cada hoja esquivada suma un punto y la
+velocidad va subiendo"]
+
+Hacelo cumpliendo TODO esto:
+
+1. Un solo archivo HTML con todo adentro (HTML, CSS y JavaScript). Sin librerías, sin fuentes,
+   sin imágenes ni sonidos de internet: la computadora no tiene conexión. Los dibujos hacelos
+   con canvas, formas o emojis.
+2. Se juega SOLO con el teclado: flechas, WASD, Espacio y Enter. Si es de 2 jugadores, uno usa
+   WASD y el otro las flechas, en el mismo teclado.
+3. NO uses la tecla Escape para nada: está reservada para volver al menú de juegos.
+4. Pantalla de inicio con el título, los controles explicados y "Enter para jugar".
+   Al terminar, mostrá el puntaje y "Enter para jugar de nuevo".
+5. Partidas cortas, de 1 a 3 minutos: hay gente esperando para jugar.
+6. Que ocupe toda la ventana, que se adapte si cambia el tamaño y que se lea bien desde un metro
+   de distancia (letras grandes).
+7. Apto para todo público: nada de sangre, violencia fuerte ni palabras feas.
+8. Si tiene sonido, que sea con la Web Audio API, bajito, y que la tecla M lo silencie.
+9. No uses alert, confirm, prompt ni ventanas emergentes, y no abras otras páginas.
+10. Todo el texto en español.
+11. En el <head> poné:
+    <title>NOMBRE DEL JUEGO</title>
+    <meta name="description" content="Una frase que invite a jugarlo">
+    <meta name="autor" content="TU NOMBRE O UN APODO">
+12. Dame el código completo en un solo bloque, listo para guardar como .html.
+
+Después del código, explicame en no más de 8 renglones cómo funciona: dónde está el bucle del
+juego, cómo se detectan los choques o los puntos, y qué parte cambiaría para hacerlo más difícil.
+```
+
+:::note[Tu nombre en el menú]
+Lo que pongas en `<meta name="autor">` aparece debajo del juego en el menú. Vos decidís si va tu
+nombre, un apodo o nada.
+:::
+
+**En el stand:** el menú se maneja con las flechas y Enter. Para volver al menú desde un juego, se
+aprieta **Esc dos veces seguidas** (por eso tu juego no puede usar Esc). Si nadie toca nada en 3
+minutos, vuelve solo.
+
+<OpcionMultiple
+  titulo="El juego que no anda"
+  opciones={[
+    { texto: "Porque usa algo de internet (una librería o una imagen) y la PC del stand no tiene", correcta: true, explicacion: "Es el error más común: en tu casa anda porque hay internet. Por eso el prompt pide todo adentro de un solo archivo." },
+    { texto: "Porque los juegos con IA solo andan en el celular", explicacion: "No: es un archivo HTML, anda en cualquier navegador." },
+    { texto: "Porque el menú le borra el código", explicacion: "El menú hace una copia del juego y solo le agrega la vuelta con Esc Esc." },
+  ]}
+>
+  Tu juego anda perfecto en tu casa, pero en la PC del stand aparece en blanco. ¿Qué es lo más probable?
+</OpcionMultiple>
+
+## 🧾 La caja y la impresora
+
+- La **impresora térmica (Q15)** imprime en papel de ticket, sin tinta. Se maneja desde la **tablet**
+  con la app Fun Print: la tablet escanea el QR de impresión que aparece en la pantalla del equipo,
+  baja la foto y la manda a la impresora.
+- La impresora y la tablet tienen que estar **en la misma red WiFi**.
+- **Precios:** una impresión $100, dos por $150. Los cartones digitales son gratis.
+- **Todo lo que se cobra va para la cooperadora.** La barra de la lona muestra cuánto se juntó.
+- En la lona también está el QR de la **encuesta 2027**: días y horarios que prefiere la gente para
+  los cursos del año que viene. Invitá a completarla: es anónima y tarda un minuto.
+
+## 🚨 Si algo falla
+
+| Pasa esto | Qué sigue andando | Qué hacer |
+|---|---|---|
+| Se corta el WiFi de la escuela | El Bingo, las fotos, los juegos | Avisale al profe: prende la zona WiFi de su celular. Mientras tanto, las fotos se generan igual; el QR y la impresión esperan |
+| No llega la foto del celular | Todo lo demás | Fijate que el A32 tenga la página de la cámara abierta y el cable puesto. En la pantalla del equipo, elegí otra cámara o "Subir una foto" |
+| La foto salió con la cara de otro | — | Otra foto, y esta vez elegí bien la cara con el número |
+| Un juego se colgó | Los otros juegos | Esc dos veces vuelve al menú. Si no, Alt+F4 y abrí el menú de nuevo |
+| La tablet no encuentra la impresora | El resto | Las dos en el mismo WiFi. Apagá y prendé la impresora |
+
+<OpcionMultiple
+  titulo="Se cortó internet"
+  opciones={[
+    { texto: "Sí: el Bingo valida los cartones sin internet", correcta: true, explicacion: "El código del cartón se comprueba en la notebook misma. Y el público pide su cartón con sus propios datos." },
+    { texto: "No: sin internet no se puede validar nada", explicacion: "La validación no necesita internet: la notebook tiene la clave para comprobar el código." },
+  ]}
+>
+  Se corta el WiFi justo en medio de una ronda. ¿Se puede terminar la ronda y validar al ganador?
+</OpcionMultiple>
+
+## 🗣️ Qué contar del curso
+
+El stand también es la vidriera de los **cursos 2027**. Cuando alguien pregunte qué se hace acá:
+
+- **Lo que hicimos este año:** Python desde cero, catálogos web de sus emprendimientos, juegos, la
+  planificación de un sistema real para la escuela.
+- **Lo que viene:** el curso de **IA generativa** (lo de las fotos y los juegos, pero aprendiendo a
+  hacerlo) y el de **Programador Web**.
+- **La encuesta:** *"Contanos qué días y horarios te quedan cómodos, así armamos los horarios"*.
+
+## 📌 Para llevar
+
+- [ ] Sé explicar las fotos con IA: **ruido → imagen, con tu foto de guía**.
+- [ ] Sé elegir la cara correcta y sacar el QR para llevársela.
+- [ ] Sé explicar por qué el Bingo no se puede trampear.
+- [ ] Mi juego está hecho, probado sin internet, y se lo mandé al profe.
+- [ ] Sé qué hacer si se corta el WiFi.
+- [ ] Sé qué cursos abre el CFP en 2027.
