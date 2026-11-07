@@ -14,6 +14,10 @@
  *   ←/→  pasa el carrusel
  *   ↑    lo que muestra el carrusel pasa a la pantalla grande; otra vez, a toda la lona
  *   ↓    un paso atrás: deja la lona entera, y después vuelve a lo automático
+ *
+ * Los sponsors: cuando pasan 10 minutos sin ronda del Bingo y sin que nadie toque el operador, ocupan
+ * toda la lona unos 35 segundos (una pantalla por cada principal y una con los demás). Cualquier tecla
+ * del operador los saltea, y si se abre una ronda se van solos. Para verlos ya: ?sponsors en la dirección.
  */
 import Expo from '../../layouts/Expo.astro';
 import { qr, direccion, vidriera, vidrieraDeEjemplo } from '../../data/expo/expo';
@@ -22,8 +26,24 @@ const catalogos = await Promise.all(vidriera.map(async (e) => ({ ...e, qr: await
 const qrExpo = await qr(direccion(Astro.site, 'expo/'));
 const qrEncuesta = await qr(direccion(Astro.site, 'expo/encuesta/'));
 
-// Los que apoyan el stand: si hay más de uno, se turnan cada 8 segundos
-const sponsors = ['Puerto Informático'];
+// Los que apoyan el stand. Los principales aportaron más: tienen su propia pantalla, más grande
+const instagram = (usuario: string) => `https://www.instagram.com/${usuario}/`;
+const logos = import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/sponsors/';
+const principales = await Promise.all(
+  [
+    { nombre: 'Puerto Informático', logo: 'puerto-informatico.png', usuario: 'puertoinformatico', texto: 'Sponsor principal del stand: ¡gracias por apoyar al curso!' },
+    { nombre: 'La Gráfica', logo: 'la-grafica.png', usuario: 'lagrafica.ensenada', texto: 'Nos donó el papel térmico: cada foto y cada cartón que te llevás impreso sale gracias a La Gráfica.' },
+  ].map(async (x) => ({ ...x, qr: await qr(instagram(x.usuario)) })),
+);
+const otros = await Promise.all(
+  [
+    { nombre: 'Dylcell', logo: 'dylcell.png', usuario: 'dylcell' },
+    { nombre: 'CLC Accesorios', logo: 'clc.png', usuario: 'clc_accesorios_' },
+    { nombre: 'Tecno Cell', logo: 'tecnocell.png', usuario: 'telefoniaexpress_' },
+  ].map(async (x) => ({ ...x, qr: await qr(instagram(x.usuario)) })),
+);
+// En el pie se turnan los nombres cada 8 segundos
+const sponsors = [...principales, ...otros].map((x) => x.nombre);
 ---
 
 <Expo titulo="Proyector · Expo CFP 401" descripcion="La pantalla del proyector del stand de Pensamiento Computacional.">
@@ -153,6 +173,34 @@ const sponsors = ['Puerto Informático'];
     </footer>
   </div>
 
+  <!-- ============ Los sponsors, a pantalla completa cuando la lona está quieta ============ -->
+  <div class="sponsors" data-sponsors hidden>
+    {principales.map((x) => (
+      <section class="sponsors__pantalla" data-pantalla hidden>
+        <p class="sponsors__etiqueta">Sponsor principal</p>
+        <div class="sponsors__principal">
+          <img class="sponsors__logo" src={logos + x.logo} alt={x.nombre} />
+          <span class="sponsors__qr" set:html={x.qr} role="img" aria-label={`QR del Instagram de ${x.nombre}`} />
+        </div>
+        <p class="sponsors__texto">{x.texto}</p>
+        <p class="sponsors__ig">Seguilos en Instagram: <strong>@{x.usuario}</strong></p>
+      </section>
+    ))}
+    <section class="sponsors__pantalla" data-pantalla hidden>
+      <p class="sponsors__etiqueta">También nos apoyan</p>
+      <div class="sponsors__otros">
+        {otros.map((x) => (
+          <figure>
+            <img src={logos + x.logo} alt={x.nombre} />
+            <span class="sponsors__qr" set:html={x.qr} role="img" aria-label={`QR del Instagram de ${x.nombre}`} />
+            <figcaption>@{x.usuario}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+    <p class="sponsors__pie">Si vas a sus locales o les escribís, contales que venís de parte del CFP 401 💚</p>
+  </div>
+
   <p class="ayuda" data-ayuda>Pasá esta ventana a la pantalla del proyector y apretá <kbd>F11</kbd></p>
 </Expo>
 
@@ -189,6 +237,36 @@ const sponsors = ['Puerto Informático'];
   let bingoActivo = false;
   let reloj: ReturnType<typeof setInterval> | null = null;
   let grandeEntreRondas: 'sistema' | 'fotos' = 'sistema';
+
+  // ---------- Los sponsors a pantalla completa, cuando la lona está quieta ----------
+  const SPONSORS_CADA = 10 * 60 * 1000; // 10 minutos sin ronda y sin tocar el operador
+  const DURACION = [12000, 12000, 11000]; // cada pantalla: los dos principales y los demás
+  const sponsorsCaja = $('[data-sponsors]');
+  const pantallas = [...sponsorsCaja.querySelectorAll<HTMLElement>('[data-pantalla]')];
+  let quietoDesde = Date.now();
+  let mostrando: ReturnType<typeof setTimeout> | null = null;
+
+  function ocultarSponsors() {
+    if (mostrando) clearTimeout(mostrando);
+    mostrando = null;
+    sponsorsCaja.hidden = true;
+    quietoDesde = Date.now(); // la próxima vez, en otros 10 minutos
+  }
+  function mostrarSponsors(i = 0) {
+    if (i >= pantallas.length) return ocultarSponsors();
+    sponsorsCaja.hidden = false;
+    pantallas.forEach((pantalla, k) => (pantalla.hidden = k !== i));
+    mostrando = setTimeout(() => mostrarSponsors(i + 1), DURACION[i] ?? 11000);
+  }
+  setInterval(() => {
+    if (bingoActivo) {
+      if (mostrando) ocultarSponsors();
+      quietoDesde = Date.now();
+    } else if (!mostrando && Date.now() - quietoDesde >= SPONSORS_CADA) {
+      mostrarSponsors();
+    }
+  }, 5000);
+  if (new URLSearchParams(location.search).has('sponsors')) mostrarSponsors();
 
   const principal = () => forzada ?? (bingoActivo ? 'bingo' : grandeEntreRondas);
   const delCarrusel = () => ORDEN.filter((n) => n !== principal());
@@ -227,6 +305,9 @@ const sponsors = ['Puerto Informático'];
   }
 
   function mover(accion: string) {
+    // Con los sponsors en pantalla, cualquier tecla del operador solo los saltea
+    if (mostrando) return ocultarSponsors();
+    quietoDesde = Date.now();
     if (accion === 'anterior' || accion === 'siguiente') {
       pasar(accion === 'anterior' ? -1 : 1);
       arrancarCarrusel(); // a mano: el próximo cambio solo, recién en 12 segundos
@@ -639,6 +720,114 @@ const sponsors = ['Puerto Informático'];
   }
   .apoyo__nombre[hidden] {
     display: none;
+  }
+
+  /* ---------- Los sponsors a pantalla completa ---------- */
+  .sponsors {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 4vh 4vw 3vh;
+    background: radial-gradient(ellipse at 50% 30%, #1d2433, var(--fondo) 70%);
+    animation: aparece 0.6s ease-out;
+  }
+  .sponsors[hidden],
+  .sponsors__pantalla[hidden] {
+    display: none;
+  }
+  .sponsors__pantalla {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3vh;
+    text-align: center;
+    animation: aparece 0.6s ease-out;
+  }
+  .sponsors__etiqueta {
+    margin: 0;
+    color: var(--oro);
+    font-size: clamp(1rem, 3.4vh, 2.6rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .sponsors__principal {
+    display: flex;
+    align-items: center;
+    gap: 4vw;
+  }
+  .sponsors__logo {
+    max-width: 46vw;
+    max-height: 36vh;
+    padding: 3vh 2.5vw;
+    border-radius: var(--radio);
+    background: #fff;
+    border: 4px solid var(--oro);
+    object-fit: contain;
+  }
+  .sponsors__qr {
+    display: block;
+    width: 34vh;
+    height: 34vh;
+    padding: 1vh;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .sponsors__qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .sponsors__texto {
+    margin: 0;
+    max-width: 60ch;
+    font-size: clamp(1rem, 3.6vh, 2.8rem);
+    font-weight: 700;
+    text-wrap: balance;
+  }
+  .sponsors__ig {
+    margin: 0;
+    color: var(--suave);
+    font-size: clamp(0.9rem, 3vh, 2.2rem);
+  }
+  .sponsors__ig strong {
+    color: var(--menta);
+  }
+  .sponsors__otros {
+    display: flex;
+    justify-content: center;
+    gap: 5vw;
+  }
+  .sponsors__otros figure {
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 2vh;
+  }
+  .sponsors__otros img {
+    width: 22vh;
+    height: 22vh;
+    border-radius: 18%;
+    object-fit: cover;
+  }
+  .sponsors__otros .sponsors__qr {
+    width: 24vh;
+    height: 24vh;
+  }
+  .sponsors__otros figcaption {
+    color: var(--menta);
+    font-size: clamp(0.9rem, 2.8vh, 2rem);
+    font-weight: 700;
+  }
+  .sponsors__pie {
+    margin: 0;
+    text-align: center;
+    font-size: clamp(0.9rem, 3vh, 2.2rem);
+    font-weight: 700;
+    color: var(--texto);
   }
 
   /* ---------- Las tarjetas ---------- */

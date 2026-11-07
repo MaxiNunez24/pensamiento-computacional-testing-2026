@@ -185,14 +185,15 @@ function texto(valor, maximo) {
     return String(valor ?? '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, maximo);
 }
 
-/* Qué parte de la foto se ve en el círculo: x e y en porcentaje (50 es el centro) y cuánto se acerca. */
+/* Qué parte de la foto se ve en el círculo: x e y en porcentaje (50 es el centro) y de qué tamaño. Con zoom 1
+ * la foto llena el círculo; con más se acerca y con menos se aleja (hasta 0.2), para verla entera. */
 function limpiarEncuadre(e) {
     if (!e || typeof e !== 'object') return undefined;
     const numero = (v, min, max, siNo) => {
         const n = Number(v);
         return Number.isFinite(n) ? Math.min(max, Math.max(min, Math.round(n * 100) / 100)) : siNo;
     };
-    const r = { x: numero(e.x, 0, 100, 50), y: numero(e.y, 0, 100, 50), zoom: numero(e.zoom, 1, 3, 1) };
+    const r = { x: numero(e.x, 0, 100, 50), y: numero(e.y, 0, 100, 50), zoom: numero(e.zoom, 0.2, 3, 1) };
     return r.x === 50 && r.y === 50 && r.zoom === 1 ? undefined : r;
 }
 
