@@ -92,7 +92,8 @@ Esto es lo que hay que decidir, no lo que hay que hacer. Ordenado por cuándo ap
       planilla y Python al catálogo publicado, el editor con código que lo cambia desde el
       celular, y el Worker en el medio. Con la diferencia de que este ya está en uso. Se hace en
       el repo del motor (prompt aparte), y se suma a `/expo/` y a la lona.
-- [ ] **Comprar un divisor HDMI 1 a 2** para la lona y el monitor de las bolillas.
+- [x] ~~Comprar un divisor HDMI 1 a 2~~: descartado el 6/11, sin monitor aparte para las bolillas.
+- [x] ~~Conseguir un HDMI de 5 m~~ (10/11), de la notebook al proyector. El de 3 m se devuelve a la tienda.
 
 ### Decisiones tomadas que conviene no volver a discutir
 

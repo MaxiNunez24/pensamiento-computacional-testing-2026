@@ -35,23 +35,44 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="columna">
           <!-- ===== La ronda ===== -->
           <section class="tarjeta">
-            <h2>Ronda <span class="codigo" data-ronda>—</span></h2>
+            <h2>Ronda <span class="codigo" data-ronda>—</span> <span class="sello" data-sello hidden>con premio</span></h2>
+            <p class="nota" data-ronda-premio></p>
+            <fieldset class="armar">
+              <legend data-armar-titulo>La que viene</legend>
+              <div class="fila">
+                <label for="jugadores">¿Cuántos juegan, más o menos?</label>
+                <input id="jugadores" type="number" min="1" max="200" value="10" class="corto" />
+                <span data-tamano-elegido></span>
+              </div>
+              <div class="fila">
+                <label for="premio">Se juega por</label>
+                <input id="premio" maxlength="60" list="premios-quedan" />
+                <datalist id="premios-quedan" data-premios-quedan></datalist>
+              </div>
+              <label class="fila-chica"><input type="checkbox" id="solo-caja" /> <span>Con premio de sponsor: cartones <strong>solo en la caja</strong> (la lona no muestra el QR)</span></label>
+            </fieldset>
             <div class="fila">
-              <label for="jugadores">¿Cuántos juegan, más o menos?</label>
-              <input id="jugadores" type="number" min="1" max="200" value="10" class="corto" />
-              <span data-tamano-elegido></span>
+              <button type="button" class="boton boton--oro" data-nueva>Ronda nueva <kbd>N</kbd></button>
+              <button type="button" class="boton" data-preparar>Reservar la próxima <kbd>P</kbd></button>
             </div>
+            <p class="nota" data-nueva-aviso></p>
+            <div class="proxima" data-proxima hidden>
+              <p><strong>Próxima reservada: <span class="codigo" data-proxima-ronda></span></strong> <span data-proxima-texto></span></p>
+              <p class="nota">"Ronda nueva" arranca esta, tal cual. <button type="button" class="enlace" data-descartar>Descartarla</button></p>
+            </div>
+            <details data-imprimir hidden>
+              <summary data-imprimir-titulo>Cartones impresos: QR para el celular de la caja</summary>
+              <div class="qr-imprimir" data-qr-imprimir></div>
+              <p class="nota">Se escanea con el celular de la impresora. Si hay una próxima reservada, es el de esa: así la caja vende e imprime mientras se juega esta. Cada cartón vale si se pidió <strong>antes</strong> de la primera bolilla de su ronda.</p>
+            </details>
             <div class="fila">
-              <label for="impreso">Debajo del QR</label>
+              <label for="impreso">En la lona, ronda gratis</label>
               <input id="impreso" maxlength="60" />
             </div>
-            <button type="button" class="boton boton--oro" data-nueva>Ronda nueva <kbd>N</kbd></button>
-            <p class="nota" data-nueva-aviso></p>
-            <details data-imprimir hidden>
-              <summary>Cartones impresos: QR para el celular del stand</summary>
-              <div class="qr-imprimir" data-qr-imprimir></div>
-              <p class="nota">Se escanea con el celular de la impresora. Cada cartón se pide <strong>antes</strong> de la primera bolilla.</p>
-            </details>
+            <div class="fila">
+              <label for="precio">En la lona, ronda con premio</label>
+              <input id="precio" maxlength="60" />
+            </div>
           </section>
 
           <!-- ===== Las bolillas ===== -->
@@ -83,6 +104,53 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
             </form>
             <div class="resultado" data-resultado aria-live="polite"></div>
             <ol class="ganadores" data-ganadores></ol>
+
+            <!-- Aparece al validar un Bingo: el contacto de quien ganó, para entregar el premio sin confusiones -->
+            <form class="anotar" data-anotar hidden>
+              <h3>Anotar a quien ganó <span class="codigo" data-anotar-codigo></span></h3>
+              <div class="fila">
+                <label for="ganador-premio">Premio</label>
+                <select id="ganador-premio" data-ganador-premio></select>
+              </div>
+              <div class="fila">
+                <label for="ganador-nombre">Nombre y apellido</label>
+                <input id="ganador-nombre" autocomplete="off" maxlength="80" />
+              </div>
+              <div class="fila">
+                <label for="ganador-telefono">Teléfono</label>
+                <input id="ganador-telefono" type="tel" autocomplete="off" maxlength="30" />
+              </div>
+              <div class="fila">
+                <label for="ganador-nota">Nota <small>número del vale, etc.</small></label>
+                <input id="ganador-nota" autocomplete="off" maxlength="80" />
+              </div>
+              <div class="fila">
+                <button type="submit" class="boton boton--oro">Anotar</button>
+                <button type="button" class="enlace" data-anotar-cerrar>Ahora no</button>
+              </div>
+              <p class="nota">Con el nombre <strong>o</strong> el teléfono alcanza. Queda guardado solo en esta notebook: no va a la lona ni a internet.</p>
+            </form>
+          </section>
+
+          <!-- ===== Los premios ===== -->
+          <section class="tarjeta">
+            <details class="premios" data-premios-caja open>
+              <summary><h2>Premios <small data-premios-cuenta></small></h2></summary>
+              <ul class="lista-premios" data-premios></ul>
+              <form class="fila" data-premio-nuevo>
+                <input id="premio-nombre" placeholder="Premio nuevo" maxlength="60" aria-label="Premio nuevo" />
+                <input id="premio-sponsor" placeholder="De quién" maxlength="40" aria-label="Sponsor del premio" />
+                <button type="submit" class="boton">Agregar</button>
+              </form>
+              <h3>Ganadores</h3>
+              <ol class="lista-ganadores" data-lista-ganadores></ol>
+              <div class="fila">
+                <button type="button" class="boton" data-copiar-ganadores>Copiar la lista</button>
+                <button type="button" class="boton" data-bajar-ganadores>Bajar planilla (CSV)</button>
+                <button type="button" class="enlace" data-borrar-ganadores>Borrar todo</button>
+              </div>
+              <p class="nota" data-premios-aviso aria-live="polite"></p>
+            </details>
           </section>
 
           <!-- ===== La moneda ===== -->
@@ -118,7 +186,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <section class="tarjeta atajos">
         <h2>Atajos <small>F9 los prende y los apaga</small></h2>
         <ul>
-          <li><kbd>Espacio</kbd> bolilla · <kbd>A</kbd> automático · <kbd>N</kbd> ronda nueva (dos veces si hay una en juego)</li>
+          <li><kbd>Espacio</kbd> bolilla · <kbd>A</kbd> automático · <kbd>N</kbd> ronda nueva (dos veces si hay una en juego) · <kbd>P</kbd> reservar la próxima</li>
           <li><kbd>V</kbd> escribir un código · <kbd>Enter</kbd> validarlo · <kbd>Esc</kbd> salir del casillero</li>
           <li><kbd>M</kbd> desempate · <kbd>C</kbd> / <kbd>X</kbd> moneda libre · <kbd>0</kbd>–<kbd>9</kbd> probabilidad (0 = 100 %) · <kbd>Esc</kbd> sacar la moneda</li>
           <li><kbd>Ctrl</kbd> + <kbd>←</kbd> <kbd>→</kbd> pasar el carrusel de la lona · <kbd>Ctrl</kbd> + <kbd>↑</kbd> a la pantalla grande (otra vez: toda la lona) · <kbd>Ctrl</kbd> + <kbd>↓</kbd> un paso atrás</li>
@@ -229,11 +297,32 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     $('[data-tamano-elegido]').textContent = '→ ' + describirTamano(tamanoElegido());
   });
   jugadores.dispatchEvent(new Event('input'));
+  const premio = $<HTMLInputElement>('#premio');
+  const soloCaja = $<HTMLInputElement>('#solo-caja');
+  const precio = $<HTMLInputElement>('#precio');
+  // Al recargar, "La que viene" arranca como la actual, salvo que la actual sea con premio
+  premio.value = estado.soloCaja ? ESTADO_INICIAL.premio : estado.premio;
   impreso.value = estado.impreso;
+  precio.value = estado.precio;
   impreso.addEventListener('change', () => {
     estado.impreso = impreso.value.trim();
     cambiar();
   });
+  precio.addEventListener('change', () => {
+    estado.precio = precio.value.trim();
+    cambiar();
+  });
+
+  // Lo que está escrito en "La que viene": de ahí salen la próxima reservada o la ronda nueva
+  // Cada premio de sponsor se juega una vez: después de usarlo, el formulario vuelve a "ronda gratis"
+  const armada = () => {
+    const ronda = { ronda: nuevaRonda(), tamano: tamanoElegido(), premio: premio.value.trim(), soloCaja: soloCaja.checked };
+    if (ronda.soloCaja) {
+      premio.value = ESTADO_INICIAL.premio;
+      soloCaja.checked = false;
+    }
+    return ronda;
+  };
 
   function rondaNueva() {
     const enJuego = estado.ronda && estado.sorteadas.length > 0 && estado.ganadores.length === 0;
@@ -245,10 +334,39 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     pararAuto();
     $('[data-nueva-aviso]').textContent = '';
     $('[data-resultado]').replaceChildren();
-    estado = { ...estado, ronda: nuevaRonda(), tamano: tamanoElegido(), sorteadas: [], inicio: null, ganadores: [], moneda: null };
+    // Si había una reservada, arranca esa tal cual: sus cartones ya están impresos
+    const nueva = estado.proxima ?? armada();
+    estado = { ...estado, ...nueva, proxima: null, sorteadas: [], inicio: null, ganadores: [], moneda: null };
     cambiar();
   }
   $('[data-nueva]').addEventListener('click', rondaNueva);
+
+  function preparar() {
+    if (estado.proxima) {
+      $('[data-nueva-aviso]').textContent = `Ya hay una próxima reservada (${estado.proxima.ronda}). Para cambiarla, primero descartala.`;
+      return;
+    }
+    $('[data-nueva-aviso]').textContent = '';
+    estado.proxima = armada();
+    cambiar();
+  }
+  $('[data-preparar]').addEventListener('click', preparar);
+
+  const descartar = $('[data-descartar]');
+  descartar.addEventListener('click', () => {
+    if (!descartar.dataset.seguro) {
+      descartar.dataset.seguro = '1';
+      descartar.textContent = '¿Seguro? Los cartones que ya se imprimieron para esa no van a valer';
+      return;
+    }
+    delete descartar.dataset.seguro;
+    descartar.textContent = 'Descartarla';
+    estado.proxima = null;
+    cambiar();
+  });
+
+  const textoDeRonda = (r: { tamano: string; premio: string; soloCaja: boolean }) =>
+    `${describirTamano(r.tamano)} · ${r.premio ? 'por ' + r.premio : 'sin premio anotado'} · ${r.soloCaja ? 'cartones solo en la caja' : 'QR en la lona'}`;
 
   // ---------- Las bolillas ----------
   // Con la primera bolilla, el Worker deja de dar cartones de esta ronda: a quien escanea tarde le dice
@@ -345,7 +463,265 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     codigo.value = '';
     codigo.blur();
     cambiar();
+    abrirAnotar(carton.codigo);
   });
+
+  // ---------- Los premios y quién ganó cada uno ----------
+  // Viven solo en esta notebook (localStorage), APARTE del estado: el estado viaja a la lona por el
+  // canal, y los nombres y teléfonos no tienen que aparecer ahí. Al final del día se copia la lista
+  // (para pasársela a cada sponsor y que no haya vales "de más") y se borra.
+  interface Premio {
+    id: string;
+    nombre: string;
+    sponsor: string;
+    salio: boolean;
+  }
+  interface Anotado {
+    id: string;
+    premioId: string;
+    premio: string;
+    sponsor: string;
+    ronda: string;
+    codigo: string;
+    nombre: string;
+    telefono: string;
+    nota: string;
+    hora: number;
+  }
+  const FOTO = ESTADO_INICIAL.premio;
+  // Los del formulario de la Expo (7-8/11). Se pueden editar, borrar y agregar desde la página.
+  const PREMIOS_INICIALES: [string, string][] = [
+    ['Auricular', 'Tecno Cell'],
+    ['Cargador rápido', 'CLC'],
+    ['Limpiador de pantalla', 'Dylcell'],
+    ['Parlante', 'Puerto Informático'],
+    ['Teclado (1 de 2)', 'Puerto Informático'],
+    ['Teclado (2 de 2)', 'Puerto Informático'],
+    ['Vale de $15.000 (1 de 2)', 'Puerto Informático'],
+    ['Vale de $15.000 (2 de 2)', 'Puerto Informático'],
+  ];
+  const nuevoId = () => crypto.randomUUID().slice(0, 8);
+  let premios: { lista: Premio[]; ganadores: Anotado[] } = {
+    lista: PREMIOS_INICIALES.map(([nombre, sponsor]) => ({ id: nuevoId(), nombre, sponsor, salio: false })),
+    ganadores: [],
+  };
+  try {
+    const guardados = JSON.parse(localStorage.getItem('bingo:premios') || 'null');
+    if (guardados?.lista) premios = { lista: guardados.lista, ganadores: guardados.ganadores ?? [] };
+  } catch {
+    /* empieza con la lista de fábrica */
+  }
+  function guardarPremios() {
+    try {
+      localStorage.setItem('bingo:premios', JSON.stringify(premios));
+    } catch {
+      $('[data-premios-aviso]').textContent = 'No se pudo guardar en esta notebook: copiá la lista ya, por las dudas.';
+    }
+    dibujarPremios();
+  }
+  // "Auricular (Tecno Cell)". Ojo: en un Anotado, `nombre` es el de la PERSONA; el premio va en `premio`
+  const conSponsor = (premio: string, sponsor: string) => `${premio}${sponsor ? ` (${sponsor})` : ''}`;
+
+  function boton(texto: string, clase: string, accion: () => void, titulo = '') {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = clase;
+    b.textContent = texto;
+    if (titulo) b.title = b.ariaLabel = titulo;
+    b.addEventListener('click', accion);
+    return b;
+  }
+
+  function dibujarPremios() {
+    const quedan = premios.lista.filter((p) => !p.salio);
+    $('[data-premios-cuenta]').textContent = `· quedan ${quedan.length} de ${premios.lista.length}`;
+
+    $('[data-premios]').replaceChildren(
+      ...premios.lista.map((p) => {
+        const li = document.createElement('li');
+        li.classList.toggle('salio', p.salio);
+        const marca = document.createElement('input');
+        marca.type = 'checkbox';
+        marca.checked = p.salio;
+        marca.title = marca.ariaLabel = `${p.nombre}: ya salió`;
+        marca.addEventListener('change', () => {
+          const tiene = premios.ganadores.some((g) => g.premioId === p.id);
+          if (!marca.checked && tiene && !confirm(`"${p.nombre}" ya tiene ganador anotado. ¿Lo marcás como que no salió? (el ganador queda en la lista)`)) {
+            marca.checked = true;
+            return;
+          }
+          p.salio = marca.checked;
+          guardarPremios();
+        });
+        const texto = document.createElement('span');
+        texto.textContent = conSponsor(p.nombre, p.sponsor);
+        const quien = premios.ganadores.find((g) => g.premioId === p.id);
+        if (quien) {
+          const chico = document.createElement('small');
+          chico.textContent = ` → ${quien.nombre || quien.telefono} · ${quien.codigo}`;
+          texto.append(chico);
+        }
+        li.append(marca, texto);
+        if (!p.salio) {
+          li.append(
+            boton('Jugar en la que viene', 'enlace', () => {
+              premio.value = p.nombre;
+              soloCaja.checked = true;
+              $('[data-premios-aviso]').textContent = `"${p.nombre}" quedó en "La que viene", con cartones solo en la caja.`;
+            }),
+          );
+        }
+        li.append(
+          boton('✎', 'enlace', () => {
+            const nombre = prompt('Nombre del premio', p.nombre);
+            if (nombre === null) return;
+            const sponsor = prompt('De quién es (el sponsor)', p.sponsor);
+            if (sponsor === null) return;
+            p.nombre = nombre.trim() || p.nombre;
+            p.sponsor = sponsor.trim();
+            guardarPremios();
+          }, `Editar ${p.nombre}`),
+        );
+        if (!quien) {
+          li.append(
+            boton('✕', 'enlace', () => {
+              if (!confirm(`¿Sacar "${p.nombre}" de la lista?`)) return;
+              premios.lista = premios.lista.filter((x) => x !== p);
+              guardarPremios();
+            }, `Sacar ${p.nombre}`),
+          );
+        }
+        return li;
+      }),
+    );
+
+    // Lo que se puede elegir en "Se juega por": la foto y los premios que quedan
+    $('[data-premios-quedan]').replaceChildren(
+      ...[FOTO, ...quedan.map((p) => p.nombre)].map((nombre) => Object.assign(document.createElement('option'), { value: nombre })),
+    );
+
+    $('[data-lista-ganadores]').replaceChildren(
+      ...premios.ganadores.map((g) => {
+        const li = document.createElement('li');
+        const hora = new Date(g.hora).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        li.textContent = `${conSponsor(g.premio, g.sponsor)}: ${[g.nombre, g.telefono].filter(Boolean).join(' · ')} — cartón ${g.codigo}, ronda ${g.ronda}, ${hora}${g.nota ? ` · ${g.nota}` : ''}`;
+        li.append(
+          boton('✕', 'enlace', () => {
+            if (!confirm(`¿Borrar a ${g.nombre || g.telefono} de los ganadores?`)) return;
+            premios.ganadores = premios.ganadores.filter((x) => x !== g);
+            guardarPremios();
+          }, 'Borrar este ganador'),
+        );
+        return li;
+      }),
+    );
+  }
+
+  const anotar = $<HTMLFormElement>('[data-anotar]');
+  const selectPremio = $<HTMLSelectElement>('[data-ganador-premio]');
+  function abrirAnotar(codigoGanador: string) {
+    const ya = premios.ganadores.find((g) => g.codigo === codigoGanador && g.ronda === estado.ronda);
+    if (ya) {
+      $('[data-premios-aviso]').textContent = `${codigoGanador} ya está anotado: ${ya.nombre || ya.telefono}, ${ya.premio}.`;
+      return;
+    }
+    anotar.dataset.codigo = codigoGanador;
+    $('[data-anotar-codigo]').textContent = codigoGanador;
+    const opciones = [
+      ...premios.lista.filter((p) => !p.salio).map((p) => ({ value: p.id, text: conSponsor(p.nombre, p.sponsor) })),
+      { value: 'foto', text: FOTO },
+      { value: 'otro', text: 'Otro (lo dice la nota)' },
+    ];
+    selectPremio.replaceChildren(...opciones.map((o) => Object.assign(document.createElement('option'), o)));
+    // Por defecto, el premio por el que se jugaba esta ronda
+    const deLaRonda = premios.lista.find((p) => !p.salio && p.nombre === estado.premio);
+    selectPremio.value = deLaRonda ? deLaRonda.id : estado.premio === FOTO || !estado.premio ? 'foto' : 'otro';
+    anotar.hidden = false;
+    $<HTMLInputElement>('#ganador-nombre').focus();
+  }
+  function cerrarAnotar() {
+    anotar.hidden = true;
+    anotar.reset();
+  }
+  $('[data-anotar-cerrar]').addEventListener('click', cerrarAnotar);
+  anotar.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nombre = $<HTMLInputElement>('#ganador-nombre').value.trim();
+    const telefono = $<HTMLInputElement>('#ganador-telefono').value.trim();
+    if (!nombre && !telefono) {
+      $('[data-premios-aviso]').textContent = 'Falta el nombre o el teléfono de quien ganó.';
+      return;
+    }
+    const elegido = premios.lista.find((p) => p.id === selectPremio.value);
+    if (elegido) elegido.salio = true;
+    premios.ganadores.push({
+      id: nuevoId(),
+      premioId: elegido?.id ?? selectPremio.value,
+      premio: elegido?.nombre ?? (selectPremio.value === 'foto' ? FOTO : 'Otro'),
+      sponsor: elegido?.sponsor ?? '',
+      ronda: estado.ronda ?? '',
+      codigo: anotar.dataset.codigo ?? '',
+      nombre,
+      telefono,
+      nota: $<HTMLInputElement>('#ganador-nota').value.trim(),
+      hora: Date.now(),
+    });
+    $('[data-premios-aviso]').textContent = `Anotado: ${nombre || telefono}.`;
+    cerrarAnotar();
+    guardarPremios();
+  });
+
+  $('[data-premio-nuevo]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nombre = $<HTMLInputElement>('#premio-nombre').value.trim();
+    if (!nombre) return;
+    premios.lista.push({ id: nuevoId(), nombre, sponsor: $<HTMLInputElement>('#premio-sponsor').value.trim(), salio: false });
+    (e.target as HTMLFormElement).reset();
+    guardarPremios();
+  });
+
+  // La lista para mandar por WhatsApp (a cada sponsor, o para el profe) y la planilla
+  function textoGanadores() {
+    if (!premios.ganadores.length) return '';
+    return [
+      '*Ganadores del Bingo · Expo CFP 401*',
+      ...premios.ganadores.map(
+        (g) => `• ${conSponsor(g.premio, g.sponsor)}: ${[g.nombre, g.telefono].filter(Boolean).join(', ')} (cartón ${g.codigo}, ronda ${g.ronda}${g.nota ? `, ${g.nota}` : ''})`,
+      ),
+    ].join('\n');
+  }
+  $('[data-copiar-ganadores]').addEventListener('click', async () => {
+    const texto = textoGanadores();
+    if (!texto) return ($('[data-premios-aviso]').textContent = 'Todavía no hay ganadores anotados.');
+    try {
+      await navigator.clipboard.writeText(texto);
+      $('[data-premios-aviso]').textContent = 'Copiada: pegala en WhatsApp.';
+    } catch {
+      $('[data-premios-aviso]').textContent = 'No pude copiar: usá "Bajar planilla".';
+    }
+  });
+  $('[data-bajar-ganadores]').addEventListener('click', () => {
+    const celda = (v: string | number) => `"${String(v).replace(/"/g, '""')}"`;
+    const filas = [
+      ['Premio', 'Sponsor', 'Nombre', 'Teléfono', 'Cartón', 'Ronda', 'Hora', 'Nota'],
+      ...premios.ganadores.map((g) => [g.premio, g.sponsor, g.nombre, g.telefono, g.codigo, g.ronda, new Date(g.hora).toLocaleString('es-AR'), g.nota]),
+    ];
+    // Con BOM y ; para que Excel en castellano lo abra con los acentos y las columnas bien
+    const csv = '﻿' + filas.map((f) => f.map(celda).join(';')).join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'ganadores-bingo-expo.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  $('[data-borrar-ganadores]').addEventListener('click', () => {
+    if (!confirm('¿Borrar TODOS los ganadores y volver a la lista de premios de fábrica? Antes copiá o bajá la lista.')) return;
+    if (!confirm('Seguro: no se puede deshacer.')) return;
+    localStorage.removeItem('bingo:premios');
+    premios = { lista: PREMIOS_INICIALES.map(([nombre, sponsor]) => ({ id: nuevoId(), nombre, sponsor, salio: false })), ganadores: [] };
+    guardarPremios();
+  });
+  dibujarPremios();
 
   // ---------- La moneda ----------
   const prob = $<HTMLInputElement>('#prob');
@@ -396,7 +772,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     $('[data-cuenta]').textContent = estado.ronda
       ? estado.sorteadas.length
         ? `Bolilla ${estado.sorteadas.length} · ${describirTamano(estado.tamano)}`
-        : `Ronda abierta: el QR está en la lona · ${describirTamano(estado.tamano)}`
+        : estado.soloCaja
+          ? `Ronda abierta: cartones en la caja · ${describirTamano(estado.tamano)}`
+          : `Ronda abierta: el QR está en la lona · ${describirTamano(estado.tamano)}`
       : 'Todavía no hay ronda';
     $('[data-salieron]').textContent = estado.sorteadas.length ? 'Salieron: ' + estado.sorteadas.join(', ') : '';
 
@@ -415,11 +793,26 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     $<HTMLButtonElement>('[data-desempate]').disabled = !hayEmpate;
     $('[data-desempate]').classList.toggle('llama', hayEmpate);
 
+    $('[data-sello]').hidden = !estado.ronda || !estado.soloCaja;
+    $('[data-ronda-premio]').textContent = estado.ronda ? textoDeRonda(estado) : '';
+    const { proxima } = estado;
+    $('[data-proxima]').hidden = !proxima;
+    $('[data-armar-titulo]').textContent = proxima ? 'La siguiente a la reservada' : 'La que viene';
+    if (proxima) {
+      $('[data-proxima-ronda]').textContent = proxima.ronda;
+      $('[data-proxima-texto]').textContent = textoDeRonda(proxima);
+    }
+
+    // El QR de la caja: el de la próxima si hay una reservada; si no, el de la actual
+    const paraImprimir = proxima ?? (estado.ronda ? { ronda: estado.ronda, tamano: estado.tamano } : null);
     const detalles = $('[data-imprimir]');
-    detalles.hidden = !estado.ronda;
-    if (estado.ronda && qrImprimirDe !== estado.ronda + estado.tamano) {
-      qrImprimirDe = estado.ronda + estado.tamano;
-      $('[data-qr-imprimir]').innerHTML = await QRCode.toString(linkDeRonda(estado.ronda, estado.tamano, true), {
+    detalles.hidden = !paraImprimir;
+    if (paraImprimir) {
+      $('[data-imprimir-titulo]').textContent = `Cartones impresos de la ronda ${paraImprimir.ronda}${proxima ? ' (la próxima)' : ''}: QR para el celular de la caja`;
+    }
+    if (paraImprimir && qrImprimirDe !== paraImprimir.ronda + paraImprimir.tamano) {
+      qrImprimirDe = paraImprimir.ronda + paraImprimir.tamano;
+      $('[data-qr-imprimir]').innerHTML = await QRCode.toString(linkDeRonda(paraImprimir.ronda, paraImprimir.tamano, true), {
         type: 'svg',
         margin: 1,
         color: { dark: '#10131a', light: '#ffffff' },
@@ -456,6 +849,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       sacar();
     } else if (tecla === 'a') alternarAuto();
     else if (tecla === 'n') rondaNueva();
+    else if (tecla === 'p') preparar();
     else if (tecla === 'v') {
       evento.preventDefault();
       codigo.focus();
@@ -534,6 +928,146 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     align-items: center;
     gap: 6px;
     color: var(--suave);
+  }
+  .armar {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 12px 12px;
+    border: 1px dashed var(--borde);
+    border-radius: 10px;
+  }
+  #premio,
+  #impreso,
+  #precio {
+    flex: 1;
+    min-width: 12rem;
+  }
+  .anotar {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    border: 2px solid var(--oro);
+    border-radius: 10px;
+  }
+  .anotar label {
+    min-width: 9rem;
+  }
+  .anotar input,
+  .anotar select {
+    flex: 1;
+    min-width: 12rem;
+  }
+  select {
+    font: inherit;
+    color: inherit;
+    background: var(--fondo);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+  h3 {
+    margin: 4px 0 0;
+    font-size: 1rem;
+  }
+  .premios {
+    display: grid;
+    gap: 10px;
+  }
+  .premios > summary {
+    cursor: pointer;
+    list-style-position: inside;
+  }
+  .premios > summary h2 {
+    display: inline;
+  }
+  .premios[open] > *:not(summary) + * {
+    margin-top: 10px;
+  }
+  .lista-premios,
+  .lista-ganadores {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+  }
+  .lista-premios {
+    list-style: none;
+  }
+  .lista-ganadores {
+    padding-left: 1.4rem;
+    font-size: 0.92rem;
+  }
+  /* Las filas las arma el script: sin :global, los estilos de Astro no las alcanzan */
+  .lista-premios :global(li) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--borde);
+  }
+  .lista-premios :global(li > span) {
+    flex: 1;
+    min-width: 10rem;
+  }
+  .lista-premios :global(li.salio > span) {
+    text-decoration: line-through;
+    color: var(--suave);
+  }
+  .lista-premios :global(small) {
+    display: inline-block;
+    color: var(--oro);
+  }
+  .lista-premios :global(input[type='checkbox']) {
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: var(--oro);
+  }
+  .lista-premios :global(.enlace),
+  .lista-ganadores :global(.enlace) {
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+    border: 0;
+    padding: 2px 4px;
+    background: none;
+    color: var(--menta);
+    text-decoration: underline;
+  }
+  .lista-ganadores :global(.enlace) {
+    margin-left: 6px;
+    text-decoration: none;
+    color: var(--coral);
+  }
+  #premio-nombre {
+    flex: 2;
+    min-width: 10rem;
+  }
+  #premio-sponsor {
+    flex: 1;
+    min-width: 8rem;
+  }
+  .armar legend {
+    padding: 0 6px;
+    color: var(--suave);
+    font-size: 0.88rem;
+  }
+  .sello {
+    font-size: 0.8rem;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--oro);
+    color: #10131a;
+    vertical-align: middle;
+  }
+  .proxima {
+    display: grid;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border-left: 4px solid var(--oro);
+    background: var(--fondo);
   }
   .barra {
     display: flex;

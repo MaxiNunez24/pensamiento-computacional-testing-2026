@@ -2,7 +2,7 @@
  * Lo que comparten las páginas del Bingo de la Expo (src/pages/expo/):
  *
  *   /expo/bingo/operador/  la notebook (pantalla privada): saca bolillas, valida y tira la moneda
- *   /expo/proyector/       la otra salida de la notebook → divisor HDMI → lona + monitor
+ *   /expo/proyector/       la otra salida de la notebook → HDMI → proyector y lona
  *   /expo/bingo/           el cartón en el celular de quien juega (y el impreso, con ?imprimir)
  *
  * El operador y el proyector son dos ventanas de la MISMA notebook: se hablan con un
@@ -55,6 +55,25 @@ export interface Estado {
   moneda: Moneda | null;
   /** Lo que dice la lona debajo del QR, para quien no tiene celular. */
   impreso: string;
+  /** Por qué se juega esta ronda: lo dice la lona. */
+  premio: string;
+  /** Ronda con premio: los cartones salen solo de la caja (impresos) y la lona no muestra el QR. */
+  soloCaja: boolean;
+  /** Lo que dice la lona en una ronda con premio, en vez del QR. */
+  precio: string;
+  /**
+   * La ronda que viene, ya reservada: la caja imprime sus cartones mientras se juega la actual.
+   * Con "Ronda nueva", pasa a ser la actual tal cual (mismo código, tamaño y premio): si cambiara
+   * algo, los cartones que ya se imprimieron dejarían de valer.
+   */
+  proxima: Proxima | null;
+}
+
+export interface Proxima {
+  ronda: string;
+  tamano: string;
+  premio: string;
+  soloCaja: boolean;
 }
 
 export const ESTADO_INICIAL: Estado = {
@@ -65,6 +84,10 @@ export const ESTADO_INICIAL: Estado = {
   ganadores: [],
   moneda: null,
   impreso: '¿Sin celular? Pedí tu cartón impreso',
+  premio: 'una foto con IA impresa',
+  soloCaja: false,
+  precio: 'Cartón $100 · 2 por $150',
+  proxima: null,
 };
 
 /** Lo que viaja por el canal. */
@@ -84,6 +107,26 @@ export function linkDeRonda(ronda: string, tamano: string, imprimir = false) {
   // En desarrollo, el celular también tiene que usar el Worker local
   if (WORKER !== 'https://catalogos.maxinunez434.workers.dev') url.searchParams.set('worker', WORKER);
   return url.href;
+}
+
+/**
+ * El QR chiquito de cada cartón impreso: abre ESE cartón en el celular para marcarlo tocando.
+ * Lleva todo en un solo parámetro (código, ronda, tamaño y números), así el celular no le pide
+ * nada al Worker. Si alguien cambia los números, solo se engaña a sí mismo: al cantar Bingo, el
+ * operador rearma el cartón desde el código, y el código está firmado.
+ */
+export function linkDePapel(codigo: string, ronda: string, tamano: string, numeros: number[]) {
+  const url = new URL(import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/bingo/', location.origin);
+  url.searchParams.set('p', [codigo, ronda, tamano, numeros.join('.')].join('_'));
+  return url.href;
+}
+
+/** Lo contrario de linkDePapel: null si el parámetro no tiene la forma esperada. */
+export function leerPapel(texto: string) {
+  const [codigo, ronda, tamano, numeros] = texto.toUpperCase().split('_');
+  if (!/^[0-9A-Z]{4}-[0-9A-Z]{4}$/.test(codigo || '') || !/^[0-9A-Z]{4}$/.test(ronda || '')) return null;
+  if (!/^\d+-\d+$/.test(tamano || '') || !/^\d+(\.\d+)*$/.test(numeros || '')) return null;
+  return { codigo, ronda, tamano, numeros: numeros.split('.').map(Number) };
 }
 
 /** "6-30" → "6 números del 1 al 30" */

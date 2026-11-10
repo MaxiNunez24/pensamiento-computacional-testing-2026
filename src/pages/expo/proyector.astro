@@ -2,8 +2,9 @@
 /**
  * La pantalla del proyector en la Expo: /expo/proyector/
  *
- * Va en la segunda salida de la notebook (pantalla extendida): de ahí, por el divisor HDMI, a la
- * lona y al monitor de las bolillas. La maneja la página del operador (/expo/bingo/operador/), que
+ * Va en la segunda salida de la notebook (pantalla extendida): de ahí, por su único HDMI (el cable de
+ * 5 m), al proyector y a la lona. No hay monitor aparte para las bolillas: se descartó el 6/11, sin
+ * divisor HDMI. La maneja la página del operador (/expo/bingo/operador/), que
  * queda en la pantalla de la notebook: nadie tiene que apuntarle con el mouse a esta.
  *
  * El diseño elegido (boceto 2 + la idea del 5): una pantalla grande a la izquierda y un carrusel a la
@@ -60,14 +61,16 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
 
       <div class="bingo__espera">
         <p class="bingo__grande">Ya empieza<br />una ronda</p>
-        <p class="bingo__chico">Jugá gratis desde tu celular</p>
+        <p class="bingo__chico">Rondas gratis con el celular y rondas con premio, con cartón de la caja</p>
       </div>
 
       <div class="bingo__abierta">
         <span class="bingo__qr" data-qr></span>
+        <span class="bingo__caja" aria-hidden="true">🎟️</span>
         <div class="bingo__textos">
-          <p class="bingo__grande bingo__llamado">¡Sumate!</p>
-          <p class="bingo__chico"><strong>Escaneá y jugá gratis</strong><br /><span data-tamano></span></p>
+          <p class="bingo__grande bingo__llamado" data-llamado>¡Sumate!</p>
+          <p class="bingo__premio" data-premio></p>
+          <p class="bingo__chico"><strong data-como>Escaneá y jugá gratis</strong><br /><span data-tamano></span></p>
           <p class="bingo__nota" data-impreso></p>
         </div>
       </div>
@@ -75,7 +78,10 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       <div class="bingo__jugando">
         <div class="bingo__arriba">
           <span class="bolilla" data-ultima></span>
-          <p class="bingo__cuenta" data-cuenta></p>
+          <div>
+            <p class="bingo__cuenta" data-cuenta></p>
+            <p class="bingo__nota" data-premio-jugando></p>
+          </div>
         </div>
         <ol class="tablero" data-tablero></ol>
       </div>
@@ -150,7 +156,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
         </g>
       </svg>
       <ul class="stand__lista">
-        <li><span>🎱</span> Bingo gratis</li>
+        <li><span>🎱</span> Bingo con premios</li>
         <li><span>🛍️</span> Catálogos de emprendedores</li>
         <li><span>🖨️</span> Tu foto impresa</li>
         <li><span>🧩</span> El sistema del CFP</li>
@@ -451,7 +457,16 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       });
     }
     $('[data-tamano]').textContent = describirTamano(tamano);
-    $('[data-impreso]').textContent = nuevo.impreso;
+    // Ronda con premio: sin QR (los cartones salen de la caja) y el premio en grande
+    const caja = !!nuevo.soloCaja;
+    bingo.classList.toggle('bingo--caja', caja);
+    $('[data-llamado]').textContent = caja ? '¡Ronda con premio!' : '¡Sumate!';
+    // "Teclado (1 de 2)" es para la lista del operador; el público lee "Teclado"
+    const premioLona = (nuevo.premio || '').replace(/\s*\(\d+ de \d+\)\s*$/, '');
+    $('[data-premio]').textContent = premioLona ? 'Se juega por ' + premioLona : '';
+    $('[data-como]').textContent = caja ? 'Pedí tu cartón en la caja' : 'Escaneá y jugá gratis';
+    $('[data-impreso]').textContent = caja ? nuevo.precio ?? '' : nuevo.impreso;
+    $('[data-premio-jugando]').textContent = premioLona ? 'Se juega por ' + premioLona : '';
 
     // El tablero: todos los números de la ronda, con los que salieron pintados
     const maximo = Number(tamano.split('-')[1]);
@@ -1025,6 +1040,28 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     display: flex;
     align-items: center;
     gap: 4cqmin;
+    text-align: center;
+  }
+  .bingo__premio {
+    margin: 0;
+    font-size: 6.5cqmin;
+    font-weight: 800;
+    color: var(--oro);
+  }
+  .bingo__premio:empty {
+    display: none;
+  }
+  /* Ronda con premio: los cartones salen de la caja, así que en vez del QR va un ticket */
+  .bingo__caja {
+    display: none;
+    font-size: 34cqmin;
+    line-height: 1;
+  }
+  .bingo--caja .bingo__qr {
+    display: none;
+  }
+  .bingo--caja .bingo__caja {
+    display: block;
   }
   .bingo__cuenta {
     margin: 0;

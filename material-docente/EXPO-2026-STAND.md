@@ -3,6 +3,10 @@
 > Viernes **13 de noviembre**. Documento de trabajo, teacher-only.
 > Escrito el 20/8/2026. Quedan **25 clases** hasta la Expo (la Expo es una de ellas).
 
+> ⚠️ **Histórico (8/11):** es la idea de agosto y muchas cosas cambiaron. Lo vigente está en el
+> modelo del stand (`src/pages/expo/stand.astro`, con el lugar medido y la lista de qué conseguir)
+> y en la clase para los alumnos (`src/content/docs/preparando-expo/el-stand.mdx`).
+
 ---
 
 ## 1. La regla que ordena todo lo demás
@@ -110,7 +114,7 @@ stand hay lugar para todos y nadie tiene que exponerse más de lo que quiere.
 - [ ] **Notebook** con todo instalado y probado (la del 11/11, no otra)
 - [ ] **Impresora** + papel **Oficio** (la planilla es Legal apaisada)
 - [ ] Zapatilla y alargue
-- [ ] **Comprar divisor HDMI 1 a 2** (lona y monitor de bolillas) y HDMI largo
+- [x] ~~Comprar divisor HDMI 1 a 2~~ (descartado el 6/11) · HDMI de 5 m: ya está (10/11)
 - [ ] Cartel con QR (A4 o A3)
 - [ ] 10 planillas impresas de repuesto
 - [ ] Datos de demo **inventados** — nunca alumnos reales
@@ -146,7 +150,8 @@ stand hay lugar para todos y nadie tiene que exponerse más de lo que quiere.
 |---|---|
 | `Espacio` | Sacar una bolilla |
 | `A` | Automático: saca sola cada tantos segundos (se frena al validar un Bingo) |
-| `N` | Ronda nueva (dos veces si hay una en juego) |
+| `N` | Ronda nueva (dos veces si hay una en juego). Si hay una reservada, arranca esa tal cual |
+| `P` | Reservar la próxima: la caja imprime sus cartones mientras se juega la actual |
 | `V` | Ir al casillero del código · `Enter` lo valida · `Esc` sale |
 | `M` | Moneda de desempate (siempre 50 %) |
 | `C` / `X` | Moneda libre: la persona eligió cara / cruz |
@@ -155,6 +160,21 @@ stand hay lugar para todos y nadie tiene que exponerse más de lo que quiere.
 | `Ctrl` + `←` `→` | Pasar el carrusel de la lona |
 | `Ctrl` + `↑` | Lo del carrusel pasa a la pantalla grande; otra vez, a toda la lona |
 | `Ctrl` + `↓` | Un paso atrás: deja la lona entera, y después vuelve a lo automático |
+
+**Dos tipos de ronda (9/11):** *gratis* (QR en la lona, se juega por una foto con IA impresa) y
+*con premio* (casilla "solo en la caja": la lona muestra el premio y el precio, sin QR; los cartones
+salen solo de la caja). Después de una ronda con premio, el formulario vuelve solo a "gratis".
+
+**La caja imprime de a tandas:** vende durante la ronda, y con la próxima reservada (`P`) el celular
+de la caja escanea su QR, pone cuántos y arma **una sola tira** con todos (línea punteada para
+cortar). Cada cartón impreso trae un QR chiquito para jugarlo también en el celular. Imprimir 3 o 4
+de más; los que sobran no sirven para otra ronda.
+
+**Premios y ganadores (10/11):** en el operador, la tarjeta *Premios* tiene la lista (se edita,
+se tildan los que salieron, y "Jugar en la que viene" lo pone en la próxima ronda con premio). Al
+validar un Bingo aparece *Anotar a quien ganó*: premio, nombre y/o teléfono y una nota (el número
+del vale). Queda **solo en la notebook**; al final, *Copiar la lista* (para WhatsApp: a Puerto
+Informático, quién ganó cada vale) o *Bajar planilla*, y después *Borrar todo*.
 
 **Reglas que conviene saber:** un cartón pedido después de la primera bolilla **no vale** (lo
 rechaza el operador solo, y desde la primera bolilla el QR ya no da cartones de esa ronda). Cada

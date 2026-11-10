@@ -7,9 +7,13 @@
  * mismo. Las bolillas se miran en la pantalla grande y los números se marcan tocándolos, como en
  * papel: el celular no consulta nada mientras se juega.
  *
- * Con &imprimir=1 es la página del celular de la impresora: cada "Cartón nuevo" arma una imagen de
- * 57 mm (384 puntos, lo que imprime la térmica) para mandarla a Fun Print. Los que se imprimieron
- * quedan en ese celular (localStorage), por si hay que reimprimir uno.
+ * Con &imprimir=1 es la página del celular de la caja: arma de una vez una TIRA de 57 mm (384
+ * puntos, lo que imprime la térmica) con todos los cartones que se vendieron, para mandarla a Fun
+ * Print en una sola impresión. Los que se imprimieron quedan en ese celular (localStorage), por si
+ * hay que reimprimir uno.
+ *
+ * Con ?p=… es el QR chiquito de un cartón impreso: muestra ESE cartón para marcarlo en el celular,
+ * sin pedirle nada al Worker (ver linkDePapel en src/scripts/bingo-expo.ts).
  *
  * Desde la primera bolilla, el Worker ya no da cartones de esa ronda (responde 409): igual no valdrían.
  */
@@ -38,7 +42,16 @@ import Expo from '../../../layouts/Expo.astro';
 
     <!-- ===== Para imprimir (el celular del stand) ===== -->
     <section class="imprimir" data-imprimir hidden>
-      <button type="button" class="boton" data-nuevo>Cartón nuevo</button>
+      <div class="tanda">
+        <label for="cuantos">¿Cuántos cartones?</label>
+        <div class="contador">
+          <button type="button" class="boton boton--borde" data-menos aria-label="Uno menos">−</button>
+          <input id="cuantos" type="number" min="1" max="30" value="1" inputmode="numeric" />
+          <button type="button" class="boton boton--borde" data-mas aria-label="Uno más">+</button>
+        </div>
+        <button type="button" class="boton" data-nuevo>Armar los cartones</button>
+        <p class="ayuda">Salen todos en una sola tira, separados por una línea para cortar. Cada uno tiene su QR para jugarlo también en el celular.</p>
+      </div>
       <img class="vista" data-vista alt="" hidden />
       <div class="acciones" data-acciones hidden>
         <button type="button" class="boton" data-compartir>Mandar a Fun Print</button>
@@ -55,14 +68,17 @@ import Expo from '../../../layouts/Expo.astro';
 </Expo>
 
 <script>
+  import QRCode from 'qrcode';
   import { RONDA_OK, TAMANOS } from '../../../scripts/bingo-cartones.js';
-  import { WORKER, describirTamano } from '../../../scripts/bingo-expo';
+  import { WORKER, describirTamano, leerPapel, linkDePapel } from '../../../scripts/bingo-expo';
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
   const parametros = new URLSearchParams(location.search);
-  const ronda = (parametros.get('r') || '').toUpperCase();
-  const tamano = parametros.get('t') || '';
-  const imprimir = parametros.has('imprimir');
+  // ?p=… es el QR de un cartón impreso: trae el cartón entero y no se le pide nada al Worker
+  const papel = leerPapel(parametros.get('p') || '');
+  const ronda = papel?.ronda ?? (parametros.get('r') || '').toUpperCase();
+  const tamano = papel?.tamano ?? (parametros.get('t') || '');
+  const imprimir = !papel && parametros.has('imprimir');
 
   interface Carton {
     codigo: string;
@@ -93,7 +109,8 @@ import Expo from '../../../layouts/Expo.astro';
   }
 
   // ---------- Para jugar ----------
-  const guardado = `bingo:carton:${ronda}-${tamano}`;
+  // El de papel se guarda aparte: el mismo celular puede tener uno digital y otro impreso
+  const guardado = papel ? `bingo:papel:${papel.codigo}` : `bingo:carton:${ronda}-${tamano}`;
 
   function guardar(carton: Carton) {
     try {
@@ -107,7 +124,8 @@ import Expo from '../../../layouts/Expo.astro';
   function mostrarCambiar(carton: Carton) {
     const boton = $<HTMLButtonElement>('[data-cambiar]');
     const quedan = CAMBIOS - (carton.cambios ?? 0);
-    boton.hidden = quedan <= 0 || (carton.marcados?.length ?? 0) > 0;
+    // El impreso no se cambia: es el que se pagó
+    boton.hidden = !!papel || quedan <= 0 || (carton.marcados?.length ?? 0) > 0;
     boton.textContent = `Cambiar mi cartón (te ${quedan === 1 ? 'queda 1' : `quedan ${quedan}`})`;
   }
 
@@ -149,10 +167,10 @@ import Expo from '../../../layouts/Expo.astro';
       /* nada */
     }
     if (!carton) {
-      carton = await pedirCarton();
+      carton = papel ? { codigo: papel.codigo, numeros: papel.numeros } : await pedirCarton();
       guardar(carton);
     }
-    estado.textContent = describirTamano(tamano);
+    estado.textContent = papel ? `Tu cartón impreso · ${describirTamano(tamano)}` : describirTamano(tamano);
     $('[data-juego]').hidden = false;
     dibujar(carton);
 
@@ -182,47 +200,107 @@ import Expo from '../../../layouts/Expo.astro';
     });
   }
 
-  // ---------- Para imprimir: la imagen de 57 mm ----------
+  // ---------- Para imprimir: una tira de 57 mm con todos los cartones ----------
   // 384 puntos de ancho es lo que imprime la térmica. Solo negro sobre blanco: los grises salen
-  // como puntitos y los números se leen peor.
-  function imagen(carton: Carton, deRonda = ronda) {
-    const ancho = 384;
-    const cantidad = carton.numeros.length;
-    const celda = Math.floor(ancho / cantidad);
-    const alto = 34 + celda + 44;
-    const lienzo = document.createElement('canvas');
-    lienzo.width = ancho;
-    lienzo.height = alto;
-    const c = lienzo.getContext('2d')!;
-    c.fillStyle = '#fff';
-    c.fillRect(0, 0, ancho, alto);
+  // como puntitos y los números se leen peor. Todos van en UNA imagen, así Fun Print imprime una
+  // sola vez y la tira se corta con la sierrita de la impresora.
+  const ANCHO = 384;
+  const MODULO = 3; // cada cuadradito del QR, en puntos (3 = 0,37 mm: el celular lo lee bien)
+
+  interface Impreso extends Carton {
+    ronda: string;
+    tamano: string;
+    hora: number;
+  }
+
+  const qrDe = (carton: Impreso) =>
+    QRCode.create(linkDePapel(carton.codigo, carton.ronda, carton.tamano, carton.numeros), { errorCorrectionLevel: 'L' }).modules;
+
+  // El QR, cuadradito por cuadradito: sin suavizado, que en la térmica se vería borroso
+  function dibujarQR(c: CanvasRenderingContext2D, modulos: ReturnType<typeof qrDe>, x: number, y: number) {
+    const lado = modulos.size;
     c.fillStyle = '#000';
+    for (let fila = 0; fila < lado; fila++) {
+      for (let col = 0; col < lado; col++) {
+        if (modulos.data[fila * lado + col]) c.fillRect(x + col * MODULO, y + fila * MODULO, MODULO, MODULO);
+      }
+    }
+  }
+
+  function altoDeCarton(carton: Impreso) {
+    const celda = Math.floor(ANCHO / carton.numeros.length);
+    return 34 + celda + 12 + qrDe(carton).size * MODULO + 8;
+  }
+
+  function dibujarCarton(c: CanvasRenderingContext2D, carton: Impreso, y0: number) {
+    const cantidad = carton.numeros.length;
+    const celda = Math.floor(ANCHO / cantidad);
+    c.fillStyle = '#000';
+    c.strokeStyle = '#000';
     c.textBaseline = 'middle';
     c.font = '700 22px system-ui, sans-serif';
     c.textAlign = 'left';
-    c.fillText('BINGO · CFP 401', 4, 16);
+    c.fillText('BINGO · CFP 401', 4, y0 + 16);
     c.textAlign = 'right';
-    c.fillText('Ronda ' + deRonda, ancho - 4, 16);
+    c.fillText('Ronda ' + carton.ronda, ANCHO - 4, y0 + 16);
     c.textAlign = 'center';
     c.lineWidth = 4;
     carton.numeros.forEach((n, i) => {
-      const x = (ancho - celda * cantidad) / 2 + celda * i + celda / 2;
-      const y = 34 + celda / 2;
+      const x = (ANCHO - celda * cantidad) / 2 + celda * i + celda / 2;
+      const y = y0 + 34 + celda / 2;
       c.beginPath();
       c.arc(x, y, celda / 2 - 4, 0, Math.PI * 2);
       c.stroke();
       c.font = `800 ${Math.round(celda * 0.5)}px system-ui, sans-serif`;
       c.fillText(String(n), x, y + 2);
     });
-    c.font = '700 28px ui-monospace, Consolas, monospace';
-    c.fillText(carton.codigo, ancho / 2, 34 + celda + 24);
-    return lienzo;
+    // Abajo: el código a la izquierda (es lo que se dicta al cantar Bingo) y el QR a la derecha
+    const yAbajo = y0 + 34 + celda + 12;
+    const modulos = qrDe(carton);
+    const lado = modulos.size * MODULO;
+    dibujarQR(c, modulos, ANCHO - 4 - lado, yAbajo);
+    const xTexto = (ANCHO - 4 - lado) / 2;
+    c.fillStyle = '#000';
+    c.textAlign = 'center';
+    c.font = '700 30px ui-monospace, Consolas, monospace';
+    c.fillText(carton.codigo, xTexto, yAbajo + lado / 2 - 18);
+    c.font = '600 17px system-ui, sans-serif';
+    c.fillText('Jugalo en el celular →', xTexto, yAbajo + lado / 2 + 14);
+    c.fillText('¡BINGO! y mostrá el código', xTexto, yAbajo + lado / 2 + 36);
   }
 
-  interface Impreso extends Carton {
-    ronda: string;
-    tamano: string;
-    hora: number;
+  // La línea para cortar entre cartón y cartón
+  const CORTE = 28;
+  function dibujarCorte(c: CanvasRenderingContext2D, y: number) {
+    c.save();
+    c.setLineDash([10, 8]);
+    c.lineWidth = 2;
+    c.beginPath();
+    c.moveTo(0, y + CORTE / 2);
+    c.lineTo(ANCHO, y + CORTE / 2);
+    c.stroke();
+    c.restore();
+  }
+
+  function imagen(cartones: Impreso[]) {
+    const altos = cartones.map(altoDeCarton);
+    const alto = altos.reduce((a, b) => a + b, 0) + CORTE * (cartones.length - 1);
+    const lienzo = document.createElement('canvas');
+    lienzo.width = ANCHO;
+    lienzo.height = alto;
+    const c = lienzo.getContext('2d')!;
+    c.fillStyle = '#fff';
+    c.fillRect(0, 0, ANCHO, alto);
+    let y = 0;
+    cartones.forEach((carton, i) => {
+      if (i > 0) {
+        dibujarCorte(c, y);
+        y += CORTE;
+      }
+      dibujarCarton(c, carton, y);
+      y += altos[i];
+    });
+    return lienzo;
   }
   const HISTORIAL = 'bingo:impresos';
   let archivo: File | null = null;
@@ -235,7 +313,7 @@ import Expo from '../../../layouts/Expo.astro';
     }
   }
 
-  // Los de esta ronda primero; se guardan los últimos 100
+  // Los de esta ronda primero; se guardan los últimos 200
   function dibujarHistorial() {
     const lista = leerHistorial();
     const deEsta = lista.filter((x) => x.ronda === ronda).length;
@@ -255,21 +333,22 @@ import Expo from '../../../layouts/Expo.astro';
         boton.type = 'button';
         boton.className = 'boton boton--borde boton--chico';
         boton.textContent = 'Reimprimir';
-        boton.addEventListener('click', () => mostrarImagen(x, x.ronda));
+        boton.addEventListener('click', () => mostrarImagen([{ ...x, tamano: x.tamano || tamano }]));
         li.append(texto, boton);
         return li;
       }),
     );
   }
 
-  async function mostrarImagen(carton: Carton, deRonda: string) {
-    const lienzo = imagen(carton, deRonda);
+  async function mostrarImagen(cartones: Impreso[]) {
+    const lienzo = imagen(cartones);
     const blob = await new Promise<Blob>((ok) => lienzo.toBlob((b) => ok(b!), 'image/png'));
-    archivo = new File([blob], `bingo-${deRonda}-${carton.codigo}.png`, { type: 'image/png' });
+    const nombre = cartones.length === 1 ? cartones[0].codigo : `${cartones.length}-cartones`;
+    archivo = new File([blob], `bingo-${cartones[0].ronda}-${nombre}.png`, { type: 'image/png' });
     const url = URL.createObjectURL(blob);
     const vista = $<HTMLImageElement>('[data-vista]');
     vista.src = url;
-    vista.alt = `Cartón ${carton.codigo}: ${carton.numeros.join(', ')}`;
+    vista.alt = cartones.map((x) => `Cartón ${x.codigo}: ${x.numeros.join(', ')}`).join('. ');
     vista.hidden = false;
     const bajar = $<HTMLAnchorElement>('[data-bajar]');
     bajar.href = url;
@@ -279,33 +358,54 @@ import Expo from '../../../layouts/Expo.astro';
     vista.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  async function cartonNuevo() {
+  const cuantos = $<HTMLInputElement>('#cuantos');
+  const MAXIMO_TANDA = 30;
+  const leerCuantos = () => Math.min(MAXIMO_TANDA, Math.max(1, Math.round(Number(cuantos.value) || 1)));
+  $('[data-menos]').addEventListener('click', () => (cuantos.value = String(Math.max(1, leerCuantos() - 1))));
+  $('[data-mas]').addEventListener('click', () => (cuantos.value = String(Math.min(MAXIMO_TANDA, leerCuantos() + 1))));
+
+  // Los pide de a uno, como si fueran varios celulares: el Worker firma cada uno y no guarda nada.
+  // Si se corta a mitad de camino, arma la tira con los que llegaron y avisa.
+  async function tanda() {
     const boton = $<HTMLButtonElement>('[data-nuevo]');
+    const total = leerCuantos();
+    cuantos.value = String(total);
     boton.disabled = true;
-    estado.textContent = 'Pidiendo el cartón…';
-    try {
-      const carton = await pedirCarton();
-      const lista = leerHistorial();
-      lista.push({ codigo: carton.codigo, numeros: carton.numeros, ronda, tamano, hora: Date.now() });
+    const llegaron: Impreso[] = [];
+    let problema = '';
+    for (let i = 0; i < total; i++) {
+      estado.textContent = `Pidiendo ${total === 1 ? 'el cartón' : `los cartones: ${i + 1} de ${total}`}…`;
       try {
-        localStorage.setItem(HISTORIAL, JSON.stringify(lista.slice(-100)));
+        const carton = await pedirCarton();
+        llegaron.push({ codigo: carton.codigo, numeros: carton.numeros, ronda, tamano, hora: Date.now() });
+      } catch (error) {
+        problema =
+          error instanceof RondaEmpezada
+            ? 'Esta ronda ya arrancó: los cartones nuevos son para la próxima (escaneá el QR nuevo del operador).'
+            : '¿Hay internet? Cuando vuelva la señal, tocá otra vez "Armar los cartones".';
+        // Lo que falta queda puesto, para pedirlo de nuevo con un toque (salvo que la ronda ya arrancó)
+        if (!(error instanceof RondaEmpezada) && llegaron.length) cuantos.value = String(total - llegaron.length);
+        break;
+      }
+    }
+    if (llegaron.length) {
+      try {
+        localStorage.setItem(HISTORIAL, JSON.stringify([...leerHistorial(), ...llegaron].slice(-200)));
       } catch {
         /* sin historial: se imprime igual */
       }
-      await mostrarImagen(carton, ronda);
+      await mostrarImagen(llegaron);
       dibujarHistorial();
-      estado.textContent = `${describirTamano(tamano)} · se piden antes de la primera bolilla`;
-    } catch (error) {
-      estado.textContent =
-        error instanceof RondaEmpezada
-          ? 'Esta ronda ya arrancó: los cartones nuevos son para la próxima (escaneá el QR nuevo del operador).'
-          : 'No se pudo pedir el cartón: ' + (error instanceof Error ? error.message : '¿hay internet?');
-    } finally {
-      boton.disabled = false;
     }
+    estado.textContent = problema
+      ? llegaron.length
+        ? `Llegaron ${llegaron.length} de ${total} (ya están en la tira, para imprimir). Faltan ${total - llegaron.length}. ${problema}`
+        : 'No se pudo pedir ningún cartón. ' + problema
+      : `${llegaron.length === 1 ? 'Listo el cartón' : `Listos los ${llegaron.length} cartones`} · ${describirTamano(tamano)}`;
+    boton.disabled = false;
   }
 
-  $('[data-nuevo]').addEventListener('click', cartonNuevo);
+  $('[data-nuevo]').addEventListener('click', tanda);
   $('[data-borrar-historial]').addEventListener('click', () => {
     if (!confirm('¿Borrar la lista de cartones impresos de este celular?')) return;
     try {
@@ -455,6 +555,41 @@ import Expo from '../../../layouts/Expo.astro';
   .acciones {
     display: grid;
     gap: 10px;
+  }
+  .tanda {
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+  }
+  .tanda label {
+    font-weight: 700;
+  }
+  .contador {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .contador .boton {
+    width: 3.2rem;
+    padding: 8px 0;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .contador input {
+    width: 5rem;
+    font: 800 1.8rem system-ui, sans-serif;
+    text-align: center;
+    color: inherit;
+    background: transparent;
+    border: 2px solid currentColor;
+    border-radius: 12px;
+    padding: 6px;
+  }
+  /* En la tira larga, la vista previa no ocupa toda la pantalla: se scrollea adentro */
+  .vista {
+    max-height: 70vh;
+    object-fit: contain;
+    object-position: top;
   }
   .historial {
     display: grid;

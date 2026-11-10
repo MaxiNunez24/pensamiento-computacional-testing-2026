@@ -51,11 +51,20 @@ const curso = base + '/preparando-expo/';
                     <div class="pines" id="pines"></div>
                 </div>
                 <aside class="panel">
+                    <div class="casillas">
+                        <label><input id="personas" type="checkbox" checked /> Personas</label>
+                        <label><input id="haz" type="checkbox" checked /> Haz de luz</label>
+                        <label><input id="numeros" type="checkbox" checked /> Números</label>
+                        <label><input id="pines-ver" type="checkbox" /> Nombres</label>
+                    </div>
+                    <ol class="referencias" id="referencias"></ol>
                     <div class="lectura">
                         <span class="nota">El lugar, medido</span>
                         <strong>2,75 × 3,86 m</strong>
                         <p class="nota">Frente × fondo. Tres mesas de escuela adelante y una atrás, frente a la puerta izquierda (no se usa).</p>
                     </div>
+                </aside>
+                <div class="medidas">
                     <div class="campo">
                         <label for="dist">Proyector a la lona <output id="dist-v"></output></label>
                         <input id="dist" type="range" min="1.5" max="2.8" step="0.05" value="2.7" />
@@ -68,19 +77,17 @@ const curso = base + '/preparando-expo/';
                     <div class="lectura">
                         <span class="nota">Imagen sobre la lona</span>
                         <strong id="imagen"></strong>
-                        <span class="nota">HDMI, de la notebook al proyector (tenés uno de 3 m)</span>
+                    </div>
+                    <div class="lectura">
+                        <span class="nota">HDMI de 5 m, de la notebook al proyector</span>
                         <strong id="hdmi"></strong>
+                    </div>
+                    <div class="lectura">
                         <span class="nota">Cable de red, de la notebook a la PC de la IA</span>
                         <strong id="cable"></strong>
-                        <p class="aviso" id="avisos"></p>
                     </div>
-                    <div class="casillas">
-                        <label><input id="personas" type="checkbox" checked /> Personas</label>
-                        <label><input id="haz" type="checkbox" checked /> Haz de luz</label>
-                        <label><input id="pines-ver" type="checkbox" checked /> Nombres</label>
-                    </div>
-                    <ol class="referencias" id="referencias"></ol>
-                </aside>
+                    <p class="aviso" id="avisos"></p>
+                </div>
             </section>
 
             <div class="dos">
@@ -176,8 +183,8 @@ const curso = base + '/preparando-expo/';
                 if (c.imgA > LONA.a - 0.05) a.push('La imagen es más ancha que la lona.');
                 if (c.imgH > LONA.h - 0.05) a.push('La imagen es más alta que la lona.');
                 if (c.hueco < 0.3) a.push('El proyector queda pegado a las mesas del frente: no se puede pasar.');
-                if (c.hdmi.recto > 3) a.push('El HDMI de 3 m no llega ni en línea recta.');
-                else if (c.hdmi.piso > 3) a.push('El HDMI de 3 m llega yendo directo de la mesa al soporte del proyector (pegado con cinta); si se lo baja al piso y se lo vuelve a subir, no.');
+                if (c.hdmi.recto > 5) a.push('El HDMI de 5 m no llega ni en línea recta.');
+                else if (c.hdmi.piso > 5) a.push('El HDMI de 5 m llega yendo directo de la mesa al soporte del proyector (pegado con cinta); si se lo baja al piso y se lo vuelve a subir, no.');
                 if (c.imgA < 1.2) a.push('La imagen queda chica: de lejos no se va a leer.');
                 return a.join(' ');
             }
@@ -186,7 +193,7 @@ const curso = base + '/preparando-expo/';
                 $('#dist-v').textContent = coma(P.dist, 2) + ' m';
                 $('#rel-v').textContent = coma(P.rel) + ':1';
                 $('#imagen').textContent = coma(c.imgA, 2) + ' × ' + coma(c.imgH, 2) + ' m';
-                const largo = (m) => coma(m.recto) + ' m recto · ' + coma(m.piso) + ' m por el piso';
+                const largo = (m) => coma(m.recto) + ' m recto, ' + coma(m.piso) + ' por el piso';
                 $('#cable').textContent = largo(c.cable);
                 $('#hdmi').textContent = largo(c.hdmi);
                 $('#avisos').textContent = avisos(c);
@@ -200,7 +207,7 @@ const curso = base + '/preparando-expo/';
                     ['Proyector', 1, 'confirmar', 'Con la luz del salón, cuanto más brillo mejor.'],
                     ['Soporte articulado del proyector', 1, 'ya', 'Lo armó el instructor de Carpintería. Faltan las cuñas impresas en 3D.'],
                     ['Notebook', 1, 'ya', 'Bingo y lona, por su único HDMI. En la mesa de atrás.'],
-                    ['Cable HDMI de 3 m', 1, 'ya', 'Notebook → proyector: ' + coma(c.hdmi.recto) + ' m en línea recta, ' + coma(c.hdmi.piso) + ' m por el piso. Pegalo con cinta donde se pisa.'],
+                    ['Cable HDMI de 5 m', 1, 'ya', 'Notebook → proyector: ' + coma(c.hdmi.recto) + ' m en línea recta, ' + coma(c.hdmi.piso) + ' m por el piso, así que sobra. Pegalo con cinta donde se pisa.'],
                     ['Adaptador USB a Ethernet', 1, 'ya', 'Para la notebook: la PC de la IA no tiene WiFi.'],
                     ['Cable de red', 1, 'confirmar', 'Notebook → PC de la IA: ' + coma(c.cable.recto) + ' m en línea recta, ' + coma(c.cable.piso) + ' m por el piso.'],
                     ['PC de la IA', 1, 'ya', 'Debajo de la mesa de las fotos, en la esquina del paso del equipo, tapada por los manteles.'],
@@ -274,7 +281,7 @@ const curso = base + '/preparando-expo/';
                 return [
                     { n: 'Lona', v: [c.lonaX, LONA.y + LONA.h + 0.12, 0.1] },
                     { n: 'Proyector, en el soporte de Carpintería', v: [c.lonaX, ALTO_PROY + 0.15, c.zProy] },
-                    { n: 'Notebook: Bingo y lona', v: [ab.x + ab.s * 0.05, MESA.h + 0.25, ab.z + 0.12] },
+                    { n: 'Notebook: Bingo y lona', v: [ab.x + ab.s * 0.05, MESA.h + 0.25, ab.z + 0.17] },
                     { n: 'Q15, A35 y la plata', v: [ab.x, MESA.h + 0.15, ab.z - 0.2] },
                     { n: 'Juegos hechos con IA', v: [juegos.x, 1.3, c.zMesa + 0.05] },
                     { n: 'Muestra: la foto plastificada', v: [muestra.x, MESA.h + 0.3, c.zMesa + 0.05] },
@@ -287,8 +294,14 @@ const curso = base + '/preparando-expo/';
                 ];
             };
 
+            /* La lista al costado: al pasar el mouse (o el foco) por un nombre, su número se resalta en el modelo
+             * y muestra el nombre, aunque los nombres estén apagados. */
             function pintarReferencias(c) {
-                $('#referencias').innerHTML = REFS(c).map((r, i) => `<li><span>${i + 1}</span><span>${r.n}</span></li>`).join('');
+                $('#referencias').innerHTML = REFS(c).map((r, i) =>
+                    `<li tabindex="0" data-i="${i}"><span>${i + 1}</span><span>${r.n}</span></li>`).join('');
+            }
+            function resaltar(i) {
+                pinesData.forEach((p, k) => p.el.classList.toggle('activo', k === i));
             }
 
             /* ---------- 3D ---------- */
@@ -506,12 +519,13 @@ const curso = base + '/preparando-expo/';
                 // La mesa de atrás, frente a una puerta: la notebook mirando al centro, la Q15 con el A35 y la plata
                 const ab = c.atras, sl = ab.s;
                 mesaEscuela(ab.x, ab.z, true);
-                caja(0.2, 0.018, 0.3, '#3c4546', ab.x + sl * 0.04, MESA.h + 0.01, ab.z + 0.12);
-                const tapa = caja(0.012, 0.19, 0.3, '#3c4546', ab.x - sl * 0.08, MESA.h + 0.1, ab.z + 0.12);
+                // De la puerta hacia la reja: notebook en la punta, después la lata de la plata y al final la Q15 con el A35
+                caja(0.2, 0.018, 0.3, '#3c4546', ab.x + sl * 0.04, MESA.h + 0.01, ab.z + 0.17);
+                const tapa = caja(0.012, 0.19, 0.3, '#3c4546', ab.x - sl * 0.08, MESA.h + 0.1, ab.z + 0.17);
                 tapa.rotation.z = sl * 0.25;
                 caja(0.12, 0.1, 0.12, '#f2f1ec', ab.x - sl * 0.05, MESA.h + 0.05, ab.z - 0.2);
                 caja(0.16, 0.008, 0.075, '#101418', ab.x + sl * 0.12, MESA.h + 0.004, ab.z - 0.22);
-                caja(0.12, 0.07, 0.1, '#c9a227', ab.x - sl * 0.06, MESA.h + 0.035, ab.z - 0.05);
+                caja(0.12, 0.07, 0.1, '#c9a227', ab.x + sl * 0.1, MESA.h + 0.035, ab.z - 0.07);
 
                 // El proyector en el soporte articulado de madera que armó el instructor de Carpintería
                 const MADERA_CLARA = '#c49a6c', yP = ALTO_PROY;
@@ -552,9 +566,12 @@ const curso = base + '/preparando-expo/';
                 if (!render3d) return;
                 render3d.render(escena, camara);
                 const caj = $('#visor').getBoundingClientRect();
-                const ver = $('#pines-ver').checked;
-                $('#pines').hidden = !ver;
-                if (!ver) return;
+                const numeros = $('#numeros').checked, nombres = $('#pines-ver').checked;
+                const pines = $('#pines');
+                pines.classList.toggle('sin-numeros', !numeros);
+                pines.classList.toggle('con-nombres', nombres);
+                pines.hidden = !numeros && !nombres && !pinesData.some((p) => p.el.classList.contains('activo'));
+                if (pines.hidden) return;
                 pinesData.forEach((p) => {
                     const q = p.v.clone().project(camara);
                     p.el.hidden = q.z > 1;
@@ -655,6 +672,13 @@ const curso = base + '/preparando-expo/';
             $('#personas').addEventListener('change', (e) => { if (gente) gente.visible = e.target.checked; dibujar(); });
             $('#haz').addEventListener('change', (e) => { if (hazGrupo) hazGrupo.visible = e.target.checked; dibujar(); });
             $('#pines-ver').addEventListener('change', dibujar);
+            $('#numeros').addEventListener('change', dibujar);
+            const lista = $('#referencias');
+            const cual = (e) => { const li = e.target.closest('li'); return li ? +li.dataset.i : -1; };
+            lista.addEventListener('mouseover', (e) => { resaltar(cual(e)); dibujar(); });
+            lista.addEventListener('focusin', (e) => { resaltar(cual(e)); dibujar(); });
+            lista.addEventListener('mouseleave', () => { resaltar(-1); dibujar(); });
+            lista.addEventListener('focusout', () => { resaltar(-1); dibujar(); });
 
             actualizar();
             iniciar3D();
@@ -702,12 +726,27 @@ const curso = base + '/preparando-expo/';
     h1, h2 { font-family: var(--titulo); font-weight: 700; line-height: 1.1; margin: 0; text-wrap: balance; }
     h1 { font-size: clamp(30px, 5vw, 44px); }
     h2 { font-size: 24px; }
-    .trabajo { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+    /* El modelo se estira hasta el alto del panel: así no queda un hueco vacío debajo. El canvas va absoluto
+     * para que su tamaño no empuje el alto de la fila. */
+    .trabajo {
+        display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: stretch;
+        grid-template-areas: "visor panel" "medidas medidas";
+    }
+    .visor { grid-area: visor; }
+    .panel { grid-area: panel; align-content: start; }
+    /* Las medidas, en una franja debajo del modelo: los dos controles y las tres lecturas, lado a lado */
+    .medidas {
+        grid-area: medidas; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px 20px;
+        background: var(--superficie); border: 1px solid var(--linea); padding: 14px 16px; align-items: start;
+    }
+    .medidas .lectura { border-top: 0; padding-top: 0; }
+    .medidas .lectura strong { font-size: 16px; }
+    .medidas .aviso { grid-column: 1 / -1; }
     .visor {
-        position: relative; height: min(68vh, 620px); min-height: 380px; background: var(--escena);
+        position: relative; min-height: max(min(72vh, 680px), 380px); background: var(--escena);
         border: 1px solid var(--linea); overflow: hidden;
     }
-    .visor canvas { display: block; width: 100%; height: 100%; }
+    .visor canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
     .vistas { position: absolute; left: 10px; top: 10px; display: flex; flex-wrap: wrap; gap: 6px; z-index: 3; max-width: calc(100% - 20px); }
     .vistas button {
         font: 500 13px/1 var(--cuerpo); color: var(--texto); background: var(--superficie);
@@ -721,7 +760,17 @@ const curso = base + '/preparando-expo/';
         font: 500 11px/1 var(--dato); color: #16292b; background: rgba(255, 255, 255, .9); padding: 3px 6px 3px 3px;
         border: 1px solid rgba(22, 41, 43, .25);
     }
-    .pin b { background: #0c7f8a; color: #fff; min-width: 16px; height: 16px; display: grid; place-items: center; font-weight: 500; }
+    .pin b { background: #0c7f8a; color: #fff; min-width: 18px; height: 18px; display: grid; place-items: center; font-weight: 500; }
+    /* Por defecto, solo el número: el nombre está en la lista del costado */
+    .pin span { display: none; }
+    .pin:not(.activo) { padding: 2px; }
+    .con-nombres .pin span, .pin.activo span { display: inline; }
+    .con-nombres .pin { padding: 3px 6px 3px 3px; }
+    .sin-numeros .pin:not(.activo) b { display: none; }
+    .sin-numeros .pin:not(.activo) { padding: 3px 6px; }
+    .sin-numeros:not(.con-nombres) .pin:not(.activo) { display: none; }
+    .pin.activo { z-index: 1; background: #fff; border-color: #0c7f8a; box-shadow: 0 0 0 2px #0c7f8a; }
+    .pin.activo b { background: #b04a22; }
     .sin3d { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; }
     .panel { display: grid; gap: 18px; background: var(--superficie); border: 1px solid var(--linea); padding: 16px; min-width: 0; }
     .campo { display: grid; gap: 4px; }
@@ -735,8 +784,9 @@ const curso = base + '/preparando-expo/';
     .aviso:empty { display: none; }
     .casillas { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; }
     .casillas label { display: flex; align-items: center; gap: 6px; }
-    .referencias { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 14px; border-top: 1px solid var(--linea); padding-top: 12px; }
-    .referencias li { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: baseline; }
+    .referencias { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; font-size: 14px; }
+    .referencias li { display: grid; grid-template-columns: 26px minmax(0, 1fr); align-items: baseline; padding: 3px 4px; cursor: default; }
+    .referencias li:hover, .referencias li:focus-visible { background: color-mix(in srgb, var(--mantel) 14%, transparent); }
     .referencias span:first-child { font: 500 12px var(--dato); color: var(--mantel); }
     .dos { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px; align-items: start; }
     .bloque { display: grid; gap: 12px; min-width: 0; }
@@ -764,6 +814,9 @@ const curso = base + '/preparando-expo/';
     .estado.falta { color: var(--azulejo); }
     .pie { text-align: center; color: var(--suave); font-size: 0.85rem; padding: 16px 16px 32px; }
     .pie a { color: var(--mantel); font-weight: 600; }
-    @media (max-width: 960px) { .trabajo, .dos { grid-template-columns: minmax(0, 1fr); } }
-    @media (max-width: 640px) { .pin span { display: none; } .pin { padding: 2px; } .visor { height: 58vh; } }
+    @media (max-width: 960px) {
+        .trabajo, .dos { grid-template-columns: minmax(0, 1fr); }
+        .trabajo { grid-template-areas: "visor" "panel" "medidas"; }
+    }
+    @media (max-width: 640px) { .visor { min-height: 58vh; } }
 </style>
