@@ -60,70 +60,79 @@ export function aTermica(fuente: CanvasImageSource & { width: number; height: nu
 
 /**
  * El pie de cada impresión del stand: La Gráfica donó el papel térmico, y se le prometió su marca
- * al pie de todo lo que sale por la Q15 (las fotos y los cartones del Bingo): "Impreso gracias a" y
- * su logo. Devuelve un lienzo nuevo, con la imagen arriba y el pie abajo, separado por una línea.
+ * al pie de todo lo que sale por la Q15 (las fotos y los cartones del Bingo). Un solo renglón, para
+ * gastar poco papel: "Impreso gracias a", la G del logo y "LA GRÁFICA". Devuelve un lienzo nuevo,
+ * con la imagen arriba y el pie abajo, separado por una línea.
  */
 const LOGO = import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/sponsors/la-grafica.png';
-let logoNegro: Promise<HTMLCanvasElement | null> | null = null;
+// La G sola, sin el nombre de abajo (medido en el PNG de 600 x 448): el nombre va escrito, que en
+// chiquito se lee mejor que el del logo
+const G = { x: 131, y: 12, ancho: 338, alto: 327 };
+let gNegra: Promise<HTMLCanvasElement | null> | null = null;
 
 // El logo es de colores: en la térmica, todo lo que no es blanco va negro. Quedan los cortes blancos
 // entre los gajos de la G, así que se sigue reconociendo.
-function cargarLogo(alto: number) {
-  logoNegro ??= new Promise((listo) => {
-    const img = new Image();
-    img.onload = () => {
-      const ancho = Math.round((img.width * alto) / img.height);
-      const lienzo = document.createElement('canvas');
-      lienzo.width = ancho;
-      lienzo.height = alto;
-      const c = lienzo.getContext('2d', { willReadFrequently: true })!;
-      c.fillStyle = '#fff';
-      c.fillRect(0, 0, ancho, alto);
-      c.drawImage(img, 0, 0, ancho, alto);
-      const datos = c.getImageData(0, 0, ancho, alto);
-      const p = datos.data;
-      for (let i = 0; i < p.length; i += 4) {
-        const v = 0.299 * p[i] + 0.587 * p[i + 1] + 0.114 * p[i + 2] > 215 ? 255 : 0;
-        p[i] = p[i + 1] = p[i + 2] = v;
-        p[i + 3] = 255;
-      }
-      c.putImageData(datos, 0, 0);
-      listo(lienzo);
-    };
-    img.onerror = () => listo(null); // sin el logo, va solo el texto
-    img.src = LOGO;
-  });
-  return logoNegro;
+function cargarG(alto: number) {
+    gNegra ??= new Promise((listo) => {
+        const img = new Image();
+        img.onload = () => {
+            const ancho = Math.round((G.ancho * alto) / G.alto);
+            const lienzo = document.createElement('canvas');
+            lienzo.width = ancho;
+            lienzo.height = alto;
+            const c = lienzo.getContext('2d', { willReadFrequently: true })!;
+            c.fillStyle = '#fff';
+            c.fillRect(0, 0, ancho, alto);
+            c.drawImage(img, G.x, G.y, G.ancho, G.alto, 0, 0, ancho, alto);
+            const datos = c.getImageData(0, 0, ancho, alto);
+            const p = datos.data;
+            for (let i = 0; i < p.length; i += 4) {
+                const v = 0.299 * p[i] + 0.587 * p[i + 1] + 0.114 * p[i + 2] > 215 ? 255 : 0;
+                p[i] = p[i + 1] = p[i + 2] = v;
+                p[i + 3] = 255;
+            }
+            c.putImageData(datos, 0, 0);
+            listo(lienzo);
+        };
+        img.onerror = () => listo(null); // sin el logo, va solo el texto
+        img.src = LOGO;
+    });
+    return gNegra;
 }
 
 export async function conPie(imagen: HTMLCanvasElement): Promise<HTMLCanvasElement> {
-  const ALTO_LOGO = 96; // con menos, las letras "LA GRÁFICA" del logo no se leen en el papel
-  const alto = ALTO_LOGO + 26;
-  const logo = await cargarLogo(ALTO_LOGO);
-  const lienzo = document.createElement('canvas');
-  lienzo.width = imagen.width;
-  lienzo.height = imagen.height + alto;
-  const c = lienzo.getContext('2d')!;
-  c.fillStyle = '#fff';
-  c.fillRect(0, 0, lienzo.width, lienzo.height);
-  c.drawImage(imagen, 0, 0);
-  c.fillStyle = '#000';
-  c.fillRect(40, imagen.height + 8, lienzo.width - 80, 2);
-  const medio = imagen.height + 8 + (alto - 8) / 2;
-  c.textBaseline = 'middle';
-  if (!logo) {
-    c.font = '600 20px system-ui, sans-serif';
-    c.textAlign = 'center';
-    c.fillText('Impreso gracias a La Gráfica', lienzo.width / 2, medio);
+    const ALTO_G = 40;
+    const alto = ALTO_G + 22;
+    const g = await cargarG(ALTO_G);
+    const lienzo = document.createElement('canvas');
+    lienzo.width = imagen.width;
+    lienzo.height = imagen.height + alto;
+    const c = lienzo.getContext('2d')!;
+    c.fillStyle = '#fff';
+    c.fillRect(0, 0, lienzo.width, lienzo.height);
+    c.drawImage(imagen, 0, 0);
+    c.fillStyle = '#000';
+    c.fillRect(40, imagen.height + 6, lienzo.width - 80, 2);
+    const medio = imagen.height + 8 + (alto - 8) / 2;
+    c.textBaseline = 'middle';
+    c.textAlign = 'left';
+    // "Impreso gracias a", la G y "LA GRÁFICA", en un renglón centrado
+    const texto = 'Impreso gracias a';
+    const marca = 'LA GRÁFICA';
+    c.font = '600 18px system-ui, sans-serif';
+    const anchoTexto = c.measureText(texto + ' ').width;
+    c.font = '800 22px system-ui, sans-serif';
+    const anchoMarca = c.measureText(marca).width;
+    const anchoG = g ? g.width + 6 : 0;
+    let x = Math.round((lienzo.width - (anchoTexto + anchoG + anchoMarca)) / 2);
+    c.font = '600 18px system-ui, sans-serif';
+    c.fillText(texto, x, medio);
+    x += anchoTexto;
+    if (g) {
+        c.drawImage(g, x, Math.round(medio - g.height / 2));
+        x += anchoG;
+    }
+    c.font = '800 22px system-ui, sans-serif';
+    c.fillText(marca, x, medio + 1);
     return lienzo;
-  }
-  // "Impreso gracias a" y el logo, en un renglón centrado
-  c.font = '600 19px system-ui, sans-serif';
-  c.textAlign = 'left';
-  const texto = 'Impreso gracias a';
-  const anchoTexto = c.measureText(texto).width;
-  const x = Math.round((lienzo.width - (anchoTexto + 14 + logo.width)) / 2);
-  c.fillText(texto, x, medio);
-  c.drawImage(logo, x + anchoTexto + 14, Math.round(medio - logo.height / 2));
-  return lienzo;
 }
