@@ -68,12 +68,12 @@ const LOGO = import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/sponsors/la-gr
 // La G sola, sin el nombre de abajo (medido en el PNG de 600 x 448): el nombre va escrito, que en
 // chiquito se lee mejor que el del logo
 const G = { x: 131, y: 12, ancho: 338, alto: 327 };
-let gNegra: Promise<HTMLCanvasElement | null> | null = null;
+const gNegra = new Map<number, Promise<HTMLCanvasElement | null>>(); // una por alto
 
 // El logo es de colores: en la térmica, todo lo que no es blanco va negro. Quedan los cortes blancos
 // entre los gajos de la G, así que se sigue reconociendo.
 function cargarG(alto: number) {
-    gNegra ??= new Promise((listo) => {
+    if (!gNegra.has(alto)) gNegra.set(alto, new Promise((listo) => {
         const img = new Image();
         img.onload = () => {
             const ancho = Math.round((G.ancho * alto) / G.alto);
@@ -96,14 +96,41 @@ function cargarG(alto: number) {
         };
         img.onerror = () => listo(null); // sin el logo, va solo el texto
         img.src = LOGO;
-    });
-    return gNegra;
+    }));
+    return gNegra.get(alto)!;
+}
+
+/**
+ * El renglón "Impreso gracias a [G] LA GRÁFICA", centrado en `medio`. Con `chico`, la versión que va
+ * debajo de cada cartón del Bingo (cada cartón se corta y se lleva por separado).
+ */
+export async function renglonGrafica(c: CanvasRenderingContext2D, ancho: number, medio: number, chico = false) {
+    const [altoG, tamTexto, tamMarca] = chico ? [28, 14, 17] : [40, 18, 22];
+    const g = await cargarG(altoG);
+    c.fillStyle = '#000';
+    c.textBaseline = 'middle';
+    c.textAlign = 'left';
+    const texto = 'Impreso gracias a';
+    const marca = 'LA GRÁFICA';
+    c.font = `600 ${tamTexto}px system-ui, sans-serif`;
+    const anchoTexto = c.measureText(texto + ' ').width;
+    c.font = `800 ${tamMarca}px system-ui, sans-serif`;
+    const anchoMarca = c.measureText(marca).width;
+    const anchoG = g ? g.width + 5 : 0;
+    let x = Math.round((ancho - (anchoTexto + anchoG + anchoMarca)) / 2);
+    c.font = `600 ${tamTexto}px system-ui, sans-serif`;
+    c.fillText(texto, x, medio);
+    x += anchoTexto;
+    if (g) {
+        c.drawImage(g, x, Math.round(medio - g.height / 2));
+        x += anchoG;
+    }
+    c.font = `800 ${tamMarca}px system-ui, sans-serif`;
+    c.fillText(marca, x, medio + 1);
 }
 
 export async function conPie(imagen: HTMLCanvasElement): Promise<HTMLCanvasElement> {
-    const ALTO_G = 40;
-    const alto = ALTO_G + 22;
-    const g = await cargarG(ALTO_G);
+    const alto = 62;
     const lienzo = document.createElement('canvas');
     lienzo.width = imagen.width;
     lienzo.height = imagen.height + alto;
@@ -113,26 +140,6 @@ export async function conPie(imagen: HTMLCanvasElement): Promise<HTMLCanvasEleme
     c.drawImage(imagen, 0, 0);
     c.fillStyle = '#000';
     c.fillRect(40, imagen.height + 6, lienzo.width - 80, 2);
-    const medio = imagen.height + 8 + (alto - 8) / 2;
-    c.textBaseline = 'middle';
-    c.textAlign = 'left';
-    // "Impreso gracias a", la G y "LA GRÁFICA", en un renglón centrado
-    const texto = 'Impreso gracias a';
-    const marca = 'LA GRÁFICA';
-    c.font = '600 18px system-ui, sans-serif';
-    const anchoTexto = c.measureText(texto + ' ').width;
-    c.font = '800 22px system-ui, sans-serif';
-    const anchoMarca = c.measureText(marca).width;
-    const anchoG = g ? g.width + 6 : 0;
-    let x = Math.round((lienzo.width - (anchoTexto + anchoG + anchoMarca)) / 2);
-    c.font = '600 18px system-ui, sans-serif';
-    c.fillText(texto, x, medio);
-    x += anchoTexto;
-    if (g) {
-        c.drawImage(g, x, Math.round(medio - g.height / 2));
-        x += anchoG;
-    }
-    c.font = '800 22px system-ui, sans-serif';
-    c.fillText(marca, x, medio + 1);
+    await renglonGrafica(c, lienzo.width, imagen.height + 8 + (alto - 8) / 2);
     return lienzo;
 }

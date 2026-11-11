@@ -71,7 +71,7 @@ import Expo from '../../../layouts/Expo.astro';
   import QRCode from 'qrcode';
   import { RONDA_OK, TAMANOS } from '../../../scripts/bingo-cartones.js';
   import { WORKER, describirTamano, leerPapel, linkDePapel } from '../../../scripts/bingo-expo';
-  import { conPie } from '../../../scripts/termica';
+  import { renglonGrafica } from '../../../scripts/termica';
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
   const parametros = new URLSearchParams(location.search);
@@ -283,8 +283,10 @@ import Expo from '../../../layouts/Expo.astro';
     c.restore();
   }
 
-  function imagen(cartones: Impreso[]) {
-    const altos = cartones.map(altoDeCarton);
+  // Cada cartón se corta y se lleva por separado: el agradecimiento a La Gráfica va debajo de cada uno
+  const PIE = 34;
+  async function imagen(cartones: Impreso[]) {
+    const altos = cartones.map((x) => altoDeCarton(x) + PIE);
     const alto = altos.reduce((a, b) => a + b, 0) + CORTE * (cartones.length - 1);
     const lienzo = document.createElement('canvas');
     lienzo.width = ANCHO;
@@ -293,14 +295,15 @@ import Expo from '../../../layouts/Expo.astro';
     c.fillStyle = '#fff';
     c.fillRect(0, 0, ANCHO, alto);
     let y = 0;
-    cartones.forEach((carton, i) => {
+    for (const [i, carton] of cartones.entries()) {
       if (i > 0) {
         dibujarCorte(c, y);
         y += CORTE;
       }
       dibujarCarton(c, carton, y);
+      await renglonGrafica(c, ANCHO, y + altos[i] - PIE / 2, true);
       y += altos[i];
-    });
+    }
     return lienzo;
   }
   const HISTORIAL = 'bingo:impresos';
@@ -342,8 +345,7 @@ import Expo from '../../../layouts/Expo.astro';
   }
 
   async function mostrarImagen(cartones: Impreso[]) {
-    // Un solo pie al final de la tira (no uno por cartón: gastaría papel de más)
-    const lienzo = await conPie(imagen(cartones));
+    const lienzo = await imagen(cartones);
     const blob = await new Promise<Blob>((ok) => lienzo.toBlob((b) => ok(b!), 'image/png'));
     const nombre = cartones.length === 1 ? cartones[0].codigo : `${cartones.length}-cartones`;
     archivo = new File([blob], `bingo-${cartones[0].ronda}-${nombre}.png`, { type: 'image/png' });

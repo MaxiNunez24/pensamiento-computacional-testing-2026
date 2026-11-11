@@ -8,11 +8,19 @@ En menu/ quedan:
   juegos/*.html     una copia de cada juego con la vuelta al menú agregada
                     (Escape dos veces seguidas, o 3 minutos sin tocar nada)
   abrir-juegos.bat  abre el menú en modo kiosco en Windows (Chrome, si no Edge)
+  estilos-juegos.json  el <meta name="premio"> de cada juego, como estilos para el estudio de fotos
+                    (si existe D:/Programas/ia-fotos/estudio, se copia ahí también)
+
+Récords y premios: cada juego guarda sus 5 mejores en localStorage, con la clave "expo-records:" +
+su título. El menú muestra al primero de cada juego, y con Ctrl+Alt+P abre la pantalla de PREMIOS
+(quién va primero en cada juego; N dos veces = premios entregados: guarda a los ganadores y los
+récords arrancan de cero para el período siguiente).
 
 No necesita internet ni nada instalado aparte de Python. La carpeta menu/ se copia entera a la PC
 del stand.
 """
 import html
+import json
 import re
 import shutil
 import sys
@@ -24,6 +32,7 @@ AQUI = Path(__file__).parent
 ORIGEN = Path(sys.argv[1]) if len(sys.argv) > 1 else AQUI / "juegos"
 SALIDA = AQUI / "menu"
 MINUTOS_SIN_TOCAR = 3
+ESTUDIO = Path(r"D:\Programas\ia-fotos\estudio")  # el estudio de fotos (en la PC del profe)
 
 # Se agrega al principio del <head> de cada juego: así su escucha se registra antes que las del
 # juego y ve el Escape aunque el juego frene el evento.
@@ -56,7 +65,7 @@ class Datos(HTMLParser):
 
     def __init__(self):
         super().__init__()
-        self.titulo, self.descripcion, self.autor = "", "", ""
+        self.titulo, self.descripcion, self.autor, self.premio = "", "", "", ""
         self._en_titulo = False
 
     def handle_starttag(self, tag, attrs):
@@ -67,6 +76,8 @@ class Datos(HTMLParser):
             self.descripcion = (a.get("content") or "").strip()
         elif tag == "meta" and a.get("name", "").lower() == "autor":
             self.autor = (a.get("content") or "").strip()
+        elif tag == "meta" and a.get("name", "").lower() == "premio":
+            self.premio = " ".join((a.get("content") or "").split())
 
     def handle_endtag(self, tag):
         if tag == "title":
@@ -102,9 +113,12 @@ def con_vuelta(codigo: str, ident: str) -> str:
 
 def tarjeta(j) -> str:
     autor = f'<span class="autor">por {html.escape(j["autor"])}</span>' if j["autor"] else ""
-    return (f'<a class="juego" id="{j["id"]}" href="juegos/{j["id"]}.html" style="--tono: {j["tono"]}">'
+    clave = html.escape("expo-records:" + j["titulo"], quote=True)
+    return (f'<a class="juego" id="{j["id"]}" href="juegos/{j["id"]}.html" style="--tono: {j["tono"]}"'
+            f' data-clave="{clave}" data-premio="{"si" if j["premio"] else ""}">'
             f'<span class="titulo">{html.escape(j["titulo"])}</span>'
-            f'<span class="descripcion">{html.escape(j["descripcion"])}</span>{autor}</a>')
+            f'<span class="descripcion">{html.escape(j["descripcion"])}</span>{autor}'
+            f'<span class="lider" hidden></span></a>')
 
 
 MENU = """<!DOCTYPE html>
@@ -148,6 +162,17 @@ MENU = """<!DOCTYPE html>
     footer { display: flex; flex-wrap: wrap; gap: 10px 28px; color: var(--suave); font-size: 1.05rem; }
     kbd { font: inherit; font-weight: 700; color: var(--texto); padding: 1px 8px; border-radius: 6px; border: 2px solid #3a4a5c; }
     .vacio { color: var(--suave); }
+    .lider { font-weight: 700; color: #ffd36b; font-size: 1.05rem; }
+    .premios {
+        position: fixed; inset: 0; z-index: 10; padding: 36px 48px; overflow: auto;
+        background: rgb(8 12 18 / .97); display: grid; gap: 18px; align-content: start;
+    }
+    .premios h2 { margin: 0; font-size: 2.4rem; color: #ffd36b; }
+    .premios table { border-collapse: collapse; font-size: 1.25rem; }
+    .premios th, .premios td { text-align: left; padding: 8px 18px 8px 0; border-bottom: 1px solid #2c3a4a; }
+    .premios th { color: var(--suave); font-weight: 600; }
+    .premios p { margin: 0; color: var(--suave); }
+    .premios .ojo { color: #ff9b7a; }
     @media (prefers-reduced-motion: reduce) { .juego { transition: none; } .juego:focus { transform: none; } }
 </style>
 </head>
@@ -159,6 +184,15 @@ MENU = """<!DOCTYPE html>
 <main class="grilla">
 __TARJETAS__
 </main>
+<section class="premios" hidden aria-live="polite">
+    <h2>🏆 Premios</h2>
+    <p>Quien va primero en cada juego se lleva su foto con IA adentro del juego: en el estudio de fotos, elegí el estilo 🎮 con el nombre del juego.</p>
+    <table><thead><tr><th>Juego</th><th>Primero</th><th>Puntos</th><th>Segundo</th></tr></thead><tbody data-tabla></tbody></table>
+    <p><kbd>N</kbd> <kbd>N</kbd> premios entregados: se anotan los ganadores y los récords arrancan de cero · <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> cerrar</p>
+    <p class="ojo" data-aviso></p>
+    <h2 style="font-size:1.6rem">Ganadores anteriores</h2>
+    <table><tbody data-historial></tbody></table>
+</section>
 <footer>
     <span><kbd>← ↑ → ↓</kbd> elegir</span>
     <span><kbd>Enter</kbd> jugar</span>
@@ -174,12 +208,66 @@ __TARJETAS__
     };
     addEventListener('keydown', (e) => {
         const paso = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: columnas(), ArrowUp: -columnas() }[e.key];
-        if (paso === undefined) return;
+        if (paso === undefined || !premios.hidden) return;
         e.preventDefault();
         if (!juegos.includes(document.activeElement)) return elegir(0);
         const i = actual() + paso;
         elegir(Math.min(Math.max(i, 0), juegos.length - 1));
     });
+    // Los récords los guarda cada juego (todos los archivos de esta carpeta comparten el localStorage)
+    const leer = (clave, vacio) => { try { return JSON.parse(localStorage.getItem(clave)) ?? vacio; } catch { return vacio; } };
+    const records = (j) => {
+        const lista = leer(j.dataset.clave, []);
+        return Array.isArray(lista) ? lista.filter((r) => r && typeof r.puntos === 'number').sort((a, b) => b.puntos - a.puntos) : [];
+    };
+    const titulo = (j) => j.querySelector('.titulo').textContent;
+    function mostrarLideres() {
+        for (const j of juegos) {
+            const [primero] = records(j);
+            const lugar = j.querySelector('.lider');
+            lugar.hidden = !primero;
+            if (primero) lugar.textContent = `🏆 ${primero.apodo || '???'} · ${primero.puntos} puntos`;
+        }
+    }
+    const premios = document.querySelector('.premios');
+    function mostrarPremios() {
+        const fila = (celdas) => { const tr = document.createElement('tr'); for (const c of celdas) tr.append(Object.assign(document.createElement('td'), { textContent: c })); return tr; };
+        document.querySelector('[data-tabla]').replaceChildren(...juegos.map((j) => {
+            const [a, b] = records(j);
+            return fila([titulo(j) + (j.dataset.premio ? '' : ' (sin estilo de premio)'), a ? a.apodo || '???' : '—', a ? a.puntos : '', b ? `${b.apodo || '???'} (${b.puntos})` : '—']);
+        }));
+        const historial = leer('expo-ganadores', []);
+        document.querySelector('[data-historial]').replaceChildren(...historial.slice().reverse().map((g) => fila([g.hora, g.juego, g.apodo, g.puntos])));
+    }
+    let ultimaN = 0;
+    addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'p') {
+            e.preventDefault();
+            premios.hidden = !premios.hidden;
+            if (!premios.hidden) mostrarPremios();
+            return;
+        }
+        if (premios.hidden || e.key.toLowerCase() !== 'n') return;
+        const aviso = document.querySelector('[data-aviso]');
+        if (Date.now() - ultimaN > 3000) {
+            ultimaN = Date.now();
+            aviso.textContent = 'Apretá N otra vez para anotar a los ganadores y empezar los récords de cero.';
+            return;
+        }
+        ultimaN = 0;
+        const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+        const historial = leer('expo-ganadores', []);
+        for (const j of juegos) {
+            const [a] = records(j);
+            if (a) historial.push({ hora, juego: titulo(j), apodo: a.apodo || '???', puntos: a.puntos });
+            try { localStorage.removeItem(j.dataset.clave); } catch {}
+        }
+        try { localStorage.setItem('expo-ganadores', JSON.stringify(historial)); } catch {}
+        aviso.textContent = `Listo (${hora}): ganadores anotados y récords en cero.`;
+        mostrarPremios();
+        mostrarLideres();
+    }, true);
+    mostrarLideres();
     const desde = document.getElementById(decodeURIComponent(location.hash.slice(1)));
     elegir(desde ? juegos.indexOf(desde) : 0);
 </script>
@@ -221,12 +309,23 @@ def main():
         if re.search(r"\b(alert|confirm|prompt)\s*\(", codigo):
             avisos.append(f"  {archivo.name}: usa alert/confirm/prompt; en el kiosco puede trabar.")
         (SALIDA / "juegos" / f"{ident}.html").write_text(con_vuelta(codigo, ident), encoding="utf-8")
+        if not datos.premio or "{quien}" not in datos.premio:
+            avisos.append(f"  {archivo.name}: no tiene <meta name=\"premio\"> con {{quien}}; su ganador no tiene estilo de foto.")
         juegos.append({"id": ident, "titulo": titulo, "descripcion": datos.descripcion,
-                       "autor": datos.autor, "tono": f"hsl({(i * 137) % 360} 70% 58%)"})
+                       "autor": datos.autor, "premio": datos.premio if "{quien}" in datos.premio else "",
+                       "tono": f"hsl({(i * 137) % 360} 70% 58%)"})
 
     tarjetas = "\n".join(tarjeta(j) for j in juegos)
     (SALIDA / "index.html").write_text(MENU.replace("__TARJETAS__", tarjetas), encoding="utf-8")
     (SALIDA / "abrir-juegos.bat").write_text(BAT.replace("\n", "\r\n"), encoding="utf-8")
+
+    estilos = [{"clave": f"juego-{j['id']}", "titulo": f"🎮 {j['titulo']}", "texto": j["premio"]}
+               for j in juegos if j["premio"]]
+    texto = json.dumps(estilos, ensure_ascii=False, indent=2)
+    (SALIDA / "estilos-juegos.json").write_text(texto, encoding="utf-8")
+    if ESTUDIO.is_dir():
+        (ESTUDIO / "estilos-juegos.json").write_text(texto, encoding="utf-8")
+        print(f"Estilos de premio copiados al estudio ({len(estilos)}): reiniciá el estudio para que aparezcan.")
 
     print(f"Menú armado con {len(juegos)} juego(s) en {SALIDA}")
     for j in juegos:
