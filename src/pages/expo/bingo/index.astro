@@ -71,6 +71,7 @@ import Expo from '../../../layouts/Expo.astro';
   import QRCode from 'qrcode';
   import { RONDA_OK, TAMANOS } from '../../../scripts/bingo-cartones.js';
   import { WORKER, describirTamano, leerPapel, linkDePapel } from '../../../scripts/bingo-expo';
+  import { conPie } from '../../../scripts/termica';
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
   const parametros = new URLSearchParams(location.search);
@@ -341,7 +342,8 @@ import Expo from '../../../layouts/Expo.astro';
   }
 
   async function mostrarImagen(cartones: Impreso[]) {
-    const lienzo = imagen(cartones);
+    // Un solo pie al final de la tira (no uno por cartón: gastaría papel de más)
+    const lienzo = await conPie(imagen(cartones));
     const blob = await new Promise<Blob>((ok) => lienzo.toBlob((b) => ok(b!), 'image/png'));
     const nombre = cartones.length === 1 ? cartones[0].codigo : `${cartones.length}-cartones`;
     archivo = new File([blob], `bingo-${cartones[0].ronda}-${nombre}.png`, { type: 'image/png' });

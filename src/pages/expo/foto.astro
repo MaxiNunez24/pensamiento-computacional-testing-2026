@@ -45,7 +45,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <script>
   import { WORKER } from '../../scripts/bingo-expo';
-  import { aTermica, type ModoTermica } from '../../scripts/termica';
+  import { aTermica, conPie, type ModoTermica } from '../../scripts/termica';
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
   const parametros = new URLSearchParams(location.search);
@@ -67,7 +67,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     }
     let blob = await r.blob();
     if (imprimir) {
-      const lienzo = aTermica(await createImageBitmap(blob), trazo);
+      const lienzo = await conPie(aTermica(await createImageBitmap(blob), trazo));
       blob = await new Promise<Blob>((ok) => lienzo.toBlob((b) => ok(b!), 'image/png'));
       $('[data-titulo]').textContent = 'Para imprimir';
       estado.textContent = 'Así sale en la térmica: mandala a Fun Print.';
