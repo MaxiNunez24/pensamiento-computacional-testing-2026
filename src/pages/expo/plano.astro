@@ -63,7 +63,7 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
                             role={s.servicio ? undefined : 'button'}
                             aria-label={s.servicio ? undefined : s.nombre}
                         >
-                            <rect x={s.x} y={s.y} width={s.ancho} height={s.alto} rx="6" style={`fill:${s.color}`} />
+                            <rect class="caja" x={s.x} y={s.y} width={s.ancho} height={s.alto} rx="6" style={`fill:${s.color}`} />
                             <text
                                 x={cx}
                                 y={cy - ((s.renglones.length - 1) * salto) / 2}
@@ -161,7 +161,7 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
     // El pin se pone al costado del stand que tenga lugar: prueba derecha, izquierda, abajo y arriba, y se
     // queda con el primero cuyo cartel no tapa otro stand ni se sale del plano (si ninguno, el que menos tapa).
     type Caja = { x: number; y: number; w: number; h: number };
-    const cajaDe = (r: SVGRectElement): Caja => ({ x: r.x.baseVal.value, y: r.y.baseVal.value, w: r.width.baseVal.value, h: r.height.baseVal.value });
+    const cajaDe = (r: SVGGraphicsElement): Caja => { const b = r.getBBox(); return { x: b.x, y: b.y, w: b.width, h: b.height }; };
     const PINES = {
         // punta: dónde toca el stand · caja: lo que ocupa el pin entero, medido desde la punta · dibujo
         derecha: { punta: (c: Caja) => [c.x + c.w, c.y + c.h / 2], caja: { x: 0, y: -22, w: 204, h: 44 },
@@ -174,11 +174,11 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             dibujo: '<path d="M0 0 l-14 -24 a16 16 0 1 1 28 0 z"/><circle cy="-34" r="6"/><rect x="-74" y="-92" width="148" height="40" rx="20"/><text y="-65">📍 Estás acá</text>' },
     };
     const lugar = (() => {
-        const sel = aca === 'entrada' ? '.entrada rect' : `.stand:not(.servicio)[data-stand="${CSS.escape(aca ?? '')}"] rect`;
-        const r = aca ? document.querySelector<SVGRectElement>(sel) : null;
+        const sel = aca === 'entrada' ? '.entrada rect' : `.stand:not(.servicio)[data-stand="${CSS.escape(aca ?? '')}"] .caja`;
+        const r = aca ? document.querySelector<SVGGraphicsElement>(sel) : null;
         if (!r) return null;
         const propia = cajaDe(r);
-        const otras = [...document.querySelectorAll<SVGRectElement>('.stand rect, .entrada rect')].filter((x) => x !== r).map(cajaDe);
+        const otras = [...document.querySelectorAll<SVGGraphicsElement>('.stand .caja, .entrada rect')].filter((x) => x !== r).map(cajaDe);
         const vista = (document.querySelector('.mapa svg') as SVGSVGElement).viewBox.baseVal;
         const pisa = (a: Caja, b: Caja) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
         const opciones = Object.entries(PINES).map(([lado, p]) => {
@@ -345,18 +345,18 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
         cursor: pointer;
         outline: none;
     }
-    .stand rect {
+    .stand .caja {
         stroke: #10131a;
         stroke-width: 2;
         stroke-dasharray: 7 5;
         transition: stroke-width 0.15s;
     }
-    .stand:hover rect,
-    .stand:focus-visible rect {
+    .stand:hover .caja,
+    .stand:focus-visible .caja {
         stroke-width: 5;
         stroke-dasharray: none;
     }
-    .stand.elegido rect {
+    .stand.elegido .caja {
         stroke: var(--oro);
         stroke-width: 7;
         stroke-dasharray: none;

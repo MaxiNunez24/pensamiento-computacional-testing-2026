@@ -53,7 +53,11 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       <h1>Pensamiento Computacional y Testing de Aplicaciones 2026</h1>
     </header>
 
-    <nav class="carrusel__nombres" data-nombres aria-hidden="true"></nav>
+    <!-- Lo que se ve en el carrusel y cuánto falta para que cambie (antes eran todos los nombres en pastillas) -->
+    <div class="carrusel__nombres" aria-hidden="true">
+      <span data-nombre-actual></span>
+      <i class="carrusel__tiempo"><b data-tiempo></b></i>
+    </div>
 
     <!-- ============ El Bingo ============ -->
     <section class="panel bingo" data-tarjeta="bingo" data-nombre="Bingo" data-fase="espera" aria-label="Bingo">
@@ -109,7 +113,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       <h2 class="panel__titulo">¿Qué construimos?</h2>
       <p class="panel__bajada">Animaciones de catálogo y sistema de gestión</p>
       <div class="panel__escena">
-        <motor-escena escena="expo-siges" loop autoplay sin-controles sin-lupa sin-sonido tema="oscuro" movimiento="completo"></motor-escena>
+        <motor-escena escena="expo-siges" loop autoplay sin-controles sin-lupa sin-sonido movimiento="completo"></motor-escena>
       </div>
       <p class="panel__esquina"><span class="qr-chico" set:html={qrExpo} aria-hidden="true" /> Todo en tu celular</p>
     </section>
@@ -119,7 +123,12 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       <h2 class="panel__titulo">Tu foto con IA</h2>
       <p class="panel__bajada">Sacate una foto y llevátela impresa</p>
       <div class="panel__escena">
-        <motor-escena escena="expo-fotos-ia" loop autoplay sin-controles sin-lupa sin-sonido tema="oscuro" movimiento="completo"></motor-escena>
+        <motor-escena escena="expo-fotos-ia" loop autoplay sin-controles sin-lupa sin-sonido movimiento="completo"></motor-escena>
+        <!-- Las fotos de quienes aceptaron salir en el stand: las trae el estudio (por Tailscale), nunca internet -->
+        <div class="vitrina-lona" data-vitrina hidden>
+          <img alt="" data-vitrina-foto />
+          <p>📺 Ya se sacaron la suya</p>
+        </div>
       </div>
       <p class="panel__esquina"><span class="qr-chico" set:html={qrEncuesta} aria-hidden="true" /> Cursos 2027: ¿qué días podés?</p>
     </section>
@@ -229,6 +238,61 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     }
   };
 
+  // ---------- La vitrina del estudio: las fotos que la gente aceptó mostrar ----------
+  // El estudio corre en la PC del stand y la lona en la notebook: las fotos viajan por Tailscale (como el
+  // operador desde la notebook) y nunca pasan por internet. La dirección se pasa UNA vez con
+  // ?estudio=https://<la PC>.<tu red>.ts.net y queda guardada en este navegador.
+  const ESTUDIO = (() => {
+    const pedida = new URLSearchParams(location.search).get('estudio');
+    try {
+      if (pedida) localStorage.setItem('proyector:estudio', pedida);
+      return (pedida ?? localStorage.getItem('proyector:estudio') ?? '').replace(/\/$/, '');
+    } catch {
+      return (pedida ?? '').replace(/\/$/, '');
+    }
+  })();
+  if (ESTUDIO) {
+    const caja = $('[data-vitrina]');
+    const animacion = $('[data-tarjeta="fotos"] motor-escena');
+    const foto = $<HTMLImageElement>('[data-vitrina-foto]');
+    let fotos: string[] = [];
+    let cual = 0;
+    const mostrarFoto = () => {
+      const hay = fotos.length > 0;
+      caja.hidden = !hay;
+      animacion.hidden = hay; // sin fotos todavía, la animación de siempre
+      if (!hay) return;
+      cual %= fotos.length;
+      foto.src = `${ESTUDIO}/vitrina/${encodeURIComponent(fotos[cual])}`;
+      foto.style.animation = 'none';
+      void foto.offsetWidth;
+      foto.style.animation = '';
+    };
+    const leerFotos = async () => {
+      try {
+        const r = await fetch(`${ESTUDIO}/api/vitrina`, { cache: 'no-store' });
+        if (r.ok) {
+          const lista: string[] = await r.json();
+          if (lista.join() !== fotos.join()) {
+            fotos = lista;
+            cual = 0; // la más nueva primero
+            mostrarFoto();
+          }
+        }
+      } catch {
+        /* el estudio cerrado o sin Tailscale: queda lo último que se vio */
+      }
+    };
+    leerFotos();
+    setInterval(leerFotos, 15000);
+    setInterval(() => {
+      if (fotos.length > 1) {
+        cual += 1;
+        mostrarFoto();
+      }
+    }, 4000);
+  }
+
   // ---------- Dónde va cada tarjeta: la pantalla grande o el carrusel ----------
   const lona = $('[data-lona]');
   const tarjetas = new Map([...document.querySelectorAll<HTMLElement>('[data-tarjeta]')].map((t) => [t.dataset.tarjeta!, t]));
@@ -285,14 +349,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       tarjeta.dataset.lugar = nombre === grande ? 'escenario' : nombre === enCarrusel && !completa ? 'carrusel' : 'oculta';
     }
     lona.classList.toggle('completa', completa);
-    $('[data-nombres]').replaceChildren(
-      ...opciones.map((n) => {
-        const s = document.createElement('span');
-        s.textContent = tarjetas.get(n)!.dataset.nombre!;
-        s.classList.toggle('activo', n === enCarrusel);
-        return s;
-      }),
-    );
+    $('[data-nombre-actual]').textContent = tarjetas.get(enCarrusel)!.dataset.nombre!;
     try {
       localStorage.setItem('proyector:vista', JSON.stringify({ forzada, completa }));
     } catch {
@@ -300,14 +357,23 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     }
   }
 
+  // La barra se llena en CADA milisegundos: se reinicia cada vez que el carrusel arranca a contar de nuevo
+  function reiniciarBarra() {
+    const barra = $('[data-tiempo]');
+    barra.style.animation = 'none';
+    void barra.offsetWidth; // para que la animación vuelva a arrancar
+    barra.style.animation = `llenar ${CADA}ms linear`;
+  }
   function pasar(paso: number) {
     const opciones = delCarrusel();
     enCarrusel = opciones[(opciones.indexOf(enCarrusel) + paso + opciones.length) % opciones.length];
     ubicar();
+    reiniciarBarra();
   }
   function arrancarCarrusel() {
     if (reloj) clearInterval(reloj);
     reloj = setInterval(() => pasar(1), CADA);
+    reiniciarBarra();
   }
 
   function mover(accion: string) {
@@ -640,24 +706,36 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
   }
   .carrusel__nombres {
     grid-area: nombres;
-    display: flex;
-    gap: 0.4vw;
-    font-size: clamp(0.7rem, 1.7vh, 1.4rem);
-  }
-  .carrusel__nombres :global(span) {
-    padding: 0.35em 0.9em;
-    border-radius: 999px;
-    border: 1px solid var(--borde);
-    color: var(--suave);
-    transition:
-      background 0.3s,
-      color 0.3s;
-  }
-  .carrusel__nombres :global(span.activo) {
-    background: var(--oro);
-    border-color: var(--oro);
-    color: #10131a;
+    display: grid;
+    align-content: center;
+    gap: 0.6vh;
+    font-size: clamp(0.8rem, 2.2vh, 1.8rem);
     font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .carrusel__tiempo {
+    display: block;
+    height: 0.6vh;
+    min-height: 3px;
+    border-radius: 999px;
+    background: var(--borde);
+    overflow: hidden;
+  }
+  .carrusel__tiempo b {
+    display: block;
+    height: 100%;
+    background: var(--oro);
+    transform-origin: left;
+  }
+  @keyframes llenar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
   }
 
   /* El pie: lo recaudado para la cooperadora y los que apoyan (boceto 1) */
@@ -881,6 +959,29 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
   .panel[data-lugar='escenario'] .panel__bajada {
     font-size: 3.4cqmin;
   }
+  .vitrina-lona {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    justify-items: center;
+    gap: 1.5cqmin;
+  }
+  .vitrina-lona img {
+    height: 100%;
+    min-height: 0;
+    max-width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 2cqmin;
+    border: 0.6cqmin solid var(--borde);
+    animation: aparece 0.6s ease-out;
+  }
+  .vitrina-lona p {
+    margin: 0;
+    font-size: 4cqmin;
+    font-weight: 700;
+    color: var(--suave);
+  }
   .panel__escena {
     flex: 1;
     width: 100%;
@@ -891,6 +992,9 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
   .panel__escena motor-escena {
     width: 100%;
     max-height: 100%;
+  }
+  .panel__escena motor-escena[hidden] {
+    display: none;
   }
   .panel__esquina {
     position: absolute;

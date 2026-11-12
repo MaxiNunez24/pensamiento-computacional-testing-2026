@@ -137,7 +137,7 @@ MENU = """<!DOCTYPE html>
             --tecla: #3a4a5c; --oro: #ffd36b; --capa: rgb(8 12 18 / .97); --linea: #2c3a4a; --ojo: #ff9b7a; }
     /* Con mucha luz: Ctrl+Alt+O (queda guardado en este navegador) */
     :root[data-tema='claro'] { color-scheme: light; --fondo: #eef1f6; --texto: #10131a; --suave: #4a5466; --brillo: #ffffff; --tarjeta: #ffffff;
-            --parrafo: #2a3242; --tecla: #b9c1ce; --oro: #9a6a00; --capa: rgb(243 245 248 / .97); --linea: #cfd6e2; --ojo: #c8402f; }
+            --parrafo: #2a3242; --tecla: #b9c1ce; --oro: #cf8a00; --capa: rgb(243 245 248 / .97); --linea: #cfd6e2; --ojo: #c8402f; }
     * { box-sizing: border-box; }
     /* Sin esto, el display: grid de .premios le gana a hidden y la pantalla de Premios tapa el menú */
     [hidden] { display: none !important; }

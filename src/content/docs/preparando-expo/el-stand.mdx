@@ -3,6 +3,7 @@ title: "El stand, pieza por pieza"
 description: "Última clase antes de la Expo: cómo está armado y conectado el stand, qué hace cada estación, cómo se explica al público y qué hacer si algo falla. Y el prompt para hacer tu juego con IA."
 ---
 
+import Animacion from '../../../components/Animacion.astro';
 import Mermaid from '../../../components/Mermaid.astro';
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 
@@ -198,19 +199,27 @@ con un menú para elegir. La PC **no tiene internet**: los juegos tienen que and
 
 ### Cómo hacer tu juego
 
+Primero mirá la animación: son 7 pasos, de copiar el prompt a mandarme el archivo. Lo que más se
+traba no es la IA, es guardarlo bien y mandarlo.
+
+<Animacion escena="expo-tu-juego" />
+
 1. Entrá a [claude.ai](https://claude.ai) con tu cuenta y abrí una conversación nueva.
 2. Copiá el prompt de abajo **entero** (el botón de copiar está arriba a la derecha del recuadro),
    pegalo y mandalo. **No hace falta cambiar nada:** la IA te va a preguntar tu nombre o apodo y
    te va a ayudar a encontrar tu idea, de a una pregunta por vez. (Si ya la tenés, podés escribirla
    en los dos primeros renglones antes de mandarlo.)
 3. Contestale con tus palabras. Cuando te resuma el juego y te guste, decile *"dale"*.
-4. Guardá el código que te da en un archivo con el nombre del juego, sin espacios ni tildes y
-   terminado en `.html` (por ejemplo `carrera-de-caracoles.html`). Abrilo con doble clic para jugarlo.
+4. Copiá el código que te da, pegalo en el **Bloc de notas** y guardalo (*Archivo → Guardar como*)
+   con el nombre del juego, sin espacios ni tildes y terminado en `.html` (por ejemplo
+   `carrera-de-caracoles.html`). En *Tipo* elegí **Todos los archivos**: si queda *Documentos de
+   texto*, se guarda como `.txt` y no anda. (Si la IA te muestra un botón *Descargar*, mejor: te baja
+   el `.html` listo.) Abrilo con doble clic para jugarlo.
 5. Si algo no anda o querés cambiar algo, decíselo en la misma conversación: *"cuando choco no pasa
    nada"*, *"que sea más lento al principio"*. Probalo después de cada cambio.
 6. Cuando te guste, leé la explicación que te da al final: **en la Expo te van a preguntar cómo
    funciona**.
-7. Mandale el archivo `.html` al profe.
+7. Mandale el archivo `.html` al profe por WhatsApp, con el clip 📎 → **Documento** (no como foto).
 
 ```text title="Prompt para tu juego (copialo entero)"
 MI NOMBRE O APODO:

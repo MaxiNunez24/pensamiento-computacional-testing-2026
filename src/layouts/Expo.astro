@@ -43,6 +43,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           try { localStorage.setItem(CLAVE, tema); } catch { /* sin guardar: igual cambia */ }
         }, true);
         addEventListener('storage', (e) => { if (e.key === CLAVE) aplicar(e.newValue); });
+        // Las animaciones (<motor-escena>) toman el tema del sitio al armarse, pero no se enteran si
+        // cambia después: cambie por donde cambie (atajo, botón, otra pestaña), se les pasa el nuevo
+        const animaciones = () => {
+          const tema = document.documentElement.dataset.tema === 'claro' ? 'claro' : 'oscuro';
+          document.querySelectorAll('motor-escena').forEach((m) => { if (m.getAttribute('tema') !== tema) m.setAttribute('tema', tema); });
+        };
+        new MutationObserver(animaciones).observe(document.documentElement, { attributes: true, attributeFilter: ['data-tema'] });
+        addEventListener('DOMContentLoaded', animaciones);
       })();
     </script>
   </head>
@@ -73,7 +81,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     --borde: #cfd6e2;
     --texto: #10131a;
     --suave: #4a5466;
-    --oro: #a87500;
+    --oro: #cf8a00;
     --menta: #0d8a6f;
     --coral: #c8402f;
   }
