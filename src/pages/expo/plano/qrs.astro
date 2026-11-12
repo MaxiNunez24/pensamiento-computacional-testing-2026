@@ -1,0 +1,101 @@
+---
+/**
+ * Los QR "Estás acá" del plano: /expo/plano/qrs/
+ *
+ * Arriba, la lista de stands con su código (el ?aca= del plano) para tenerla a mano; abajo, un QR por
+ * stand para imprimir y pegar (dos por hoja A4). Todo sale de src/data/expo/plano.ts: si se agrega o
+ * se renombra un stand ahí, su QR aparece acá solo, sin tocar esta página.
+ *
+ * Los QR apuntan siempre al sitio publicado, aunque la página se abra desde una copia local.
+ */
+import QRCode from 'qrcode';
+import { STANDS } from '../../../data/expo/plano';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const plano = new URL(base + '/expo/plano/', Astro.site).href;
+const lugares = [
+    { id: 'entrada', nombre: 'Entrada de la Expo', detalle: 'Para la entrada y los puntos de paso: el pin queda en la entrada.' },
+    ...STANDS.filter((s) => !s.servicio).map((s) => ({ id: s.id, nombre: s.nombre, detalle: s.detalle })),
+];
+const conQR = await Promise.all(
+    lugares.map(async (l) => {
+        const url = `${plano}?aca=${l.id}`;
+        const svg = await QRCode.toString(url, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' });
+        return { ...l, url, svg };
+    }),
+);
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>QR del plano · Expo CFP 401</title>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: system-ui, sans-serif; background: #eee; color: #111; }
+        .lista { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+        h1 { margin: 0 0 4px; }
+        .lista p { margin: 0 0 16px; color: #444; line-height: 1.5; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+        code { font-size: 1rem; font-weight: 700; }
+        td a { word-break: break-all; font-size: 0.85rem; }
+        .boton { display: inline-block; margin: 0 0 16px; padding: 10px 18px; border: 0; border-radius: 999px; background: #111; color: #fff; font: 600 1rem system-ui, sans-serif; cursor: pointer; }
+        .hojas { display: grid; justify-content: center; gap: 16px; padding: 16px; }
+        .hoja { width: 210mm; height: 297mm; background: #fff; display: grid; grid-template-rows: 1fr 1fr; }
+        .cartel { display: grid; justify-items: center; align-content: center; gap: 4mm; padding: 10mm; border-bottom: 0.4mm dashed #999; text-align: center; }
+        .cartel:last-child { border-bottom: 0; }
+        .cartel .titulo { margin: 0; font-size: 30pt; font-weight: 800; }
+        .cartel .qr { width: 85mm; height: 85mm; }
+        .cartel .qr :global(svg) { width: 100%; height: 100%; }
+        .cartel .stand { margin: 0; font-size: 20pt; font-weight: 700; }
+        .cartel .pie { margin: 0; font-size: 12pt; color: #333; }
+        @media print {
+            body { background: #fff; }
+            .lista { display: none; }
+            .hojas { padding: 0; gap: 0; }
+            .hoja { break-after: page; }
+        }
+    </style>
+</head>
+<body>
+    <section class="lista">
+        <h1>📍 QR "Estás acá" del plano</h1>
+        <p>Cada stand tiene su <strong>código</strong>: el plano con <code>?aca=código</code> marca ese stand con
+            "📍 Estás acá". La lista sale del plano: si se agrega un stand ahí, aparece acá con su QR.
+            Para imprimir: <strong>Ctrl+P</strong>, A4 vertical, márgenes ninguno (sale una hoja cada dos QR).</p>
+        <button type="button" class="boton" onclick="print()">🖨️ Imprimir los QR</button>
+        <table>
+            <thead><tr><th>Código</th><th>Stand</th><th>Link del QR</th></tr></thead>
+            <tbody>
+                {conQR.map((l) => (
+                    <tr>
+                        <td><code>{l.id}</code></td>
+                        <td>{l.nombre}</td>
+                        <td><a href={l.url}>{l.url}</a></td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="hojas">
+        {Array.from({ length: Math.ceil(conQR.length / 2) }, (_, i) => conQR.slice(i * 2, i * 2 + 2)).map((par) => (
+            <div class="hoja">
+                {par.map((l) => (
+                    <div class="cartel">
+                        <p class="titulo">📍 ¿Dónde estás?</p>
+                        <div class="qr" set:html={l.svg} />
+                        <p class="stand">{l.nombre}</p>
+                        <p class="pie">Escaneá y mirá el plano de la Expo con las muestras activas</p>
+                    </div>
+                ))}
+            </div>
+        ))}
+    </section>
+</body>
+</html>
