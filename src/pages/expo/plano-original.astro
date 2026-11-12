@@ -1,0 +1,458 @@
+---
+/**
+ * La versión ANTERIOR del plano (la del plano oficial del CFP, sin la vista satelital): /expo/plano-original/
+ *
+ * Se guardó tal cual para mostrársela a los directivos. No está linkeada ni en el mapa del sitio; la
+ * que usa el público es /expo/plano/. Sus datos están congelados en src/data/expo/plano-original.ts.
+ *
+ * Público y sin el menú del curso: lo miran visitantes, directivos y otros instructores desde el
+ * celular. Los stands y los horarios salen de src/data/expo/plano.ts; los horarios de ejemplo se
+ * marcan como tales hasta que lleguen los confirmados.
+ */
+import Expo from '../../layouts/Expo.astro';
+import { STANDS, ENTRADA, PAREDES, MUESTRAS, DIA, ABRE, CIERRA } from '../../data/expo/plano-original';
+
+// El nombre de cada stand partido en renglones (en " · ") y con la letra más grande que entra en su
+// caja. Los nombres largos se parten en el rótulo de plano.ts: así la letra crece en vez de achicarse.
+const rotulos = STANDS.map((s) => {
+    const renglones = (s.rotulo ?? s.nombre).split(' · ');
+    const largo = s.vertical ? s.alto : s.ancho;
+    const corto = s.vertical ? s.ancho : s.alto;
+    const masLargo = Math.max(...renglones.map((r) => r.length));
+    const tam = Math.max(12, Math.min(24, (largo - 10) / (masLargo * 0.6), (corto - 8) / (renglones.length * 1.2)));
+    return { ...s, renglones, tam: Math.round(tam) };
+});
+const nombreDe = Object.fromEntries(STANDS.map((s) => [s.id, s.nombre]));
+const muestras = [...MUESTRAS].sort((a, b) => a.hora.localeCompare(b.hora));
+const hayEjemplos = muestras.some((m) => m.ejemplo);
+const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA };
+---
+
+<Expo titulo="Plano de la Expo · CFP 401" descripcion="El plano de la Expo del CFP 401 del viernes 13/11, con los stands y los horarios de las muestras activas.">
+    <main class="hoja">
+        <header>
+            <p class="etiqueta">Expo CFP 401 · Viernes 13 de noviembre · {ABRE.slice(0, 2)} a {CIERRA.slice(0, 2)} h</p>
+            <h1>Plano y muestras activas</h1>
+        </header>
+
+        <section class="ahora" aria-live="polite">
+            <div><span>Ahora</span><strong data-ahora>—</strong></div>
+            <div><span>Después</span><strong data-despues>—</strong></div>
+        </section>
+
+        <p class="deslizar">Deslizá el plano para verlo entero → · Tocá un stand para ver su muestra</p>
+        <div class="mapa">
+            <svg viewBox="70 120 1130 770" role="img" aria-label="Plano de la Expo: tocá un stand para ver qué muestra y a qué hora">
+                {PAREDES.map(([x1, y1, x2, y2]) => <line class="pared" x1={x1} y1={y1} x2={x2} y2={y2} />)}
+                <path class="flecha" d="M1120 195 h28 v-18 l36 33 l-36 33 v-18 h-28 z" />
+                <g class="entrada">
+                    <path class="flecha" d="M637 790 v-68 h-18 l35 -50 l35 50 h-18 v68 z" />
+                    <rect x={ENTRADA.x} y={ENTRADA.y} width={ENTRADA.ancho} height={ENTRADA.alto} rx="6" />
+                    <text x={ENTRADA.x + ENTRADA.ancho / 2} y={ENTRADA.y + 33}>Entrada</text>
+                    <text x={ENTRADA.x + ENTRADA.ancho / 2} y={ENTRADA.y + 58} class="chico">calle H. Irigoyen</text>
+                </g>
+                {rotulos.map((s) => {
+                    const cx = s.x + s.ancho / 2;
+                    const cy = s.y + s.alto / 2;
+                    const salto = s.tam * 1.2;
+                    return (
+                        <g
+                            class:list={['stand', { servicio: s.servicio, nuestro: s.nuestro }]}
+                            data-stand={s.id}
+                            tabindex={s.servicio ? undefined : '0'}
+                            role={s.servicio ? undefined : 'button'}
+                            aria-label={s.servicio ? undefined : s.nombre}
+                        >
+                            <rect x={s.x} y={s.y} width={s.ancho} height={s.alto} rx="6" style={`fill:${s.color}`} />
+                            <text
+                                x={cx}
+                                y={cy - ((s.renglones.length - 1) * salto) / 2}
+                                font-size={s.tam}
+                                transform={s.vertical ? `rotate(-90 ${cx} ${cy})` : undefined}
+                            >
+                                {s.renglones.map((r, i) => <tspan x={cx} dy={i === 0 ? 0 : salto}>{r}</tspan>)}
+                            </text>
+                        </g>
+                    );
+                })}
+            </svg>
+        </div>
+
+        <section class="ficha" aria-live="polite">
+            <p class="etiqueta">Stand</p>
+            <h2 data-ficha-nombre>Tocá un stand en el plano</h2>
+            <p data-ficha-detalle>Acá vas a ver qué curso es y si tiene una muestra activa.</p>
+            <ul data-ficha-muestras hidden></ul>
+            <a class="boton" data-ficha-catalogo hidden target="_blank" rel="noopener">🛍️ Ver qué hay en este stand</a>
+        </section>
+
+        <section class="cronograma">
+            <h2>Muestras activas</h2>
+            {hayEjemplos && <p class="aviso">⏳ Los horarios todavía no están confirmados: los de esta lista son <strong>de ejemplo</strong>.</p>}
+            <ol>
+                {muestras.map((m) => (
+                    <li data-muestra={m.stand} data-hora={m.hora}>
+                        <time>{m.hora}</time>
+                        <div>
+                            <strong>{m.titulo}</strong>
+                            <span>{nombreDe[m.stand]} · {m.minutos} min{m.ejemplo && <em> · horario de ejemplo</em>}</span>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </section>
+    </main>
+</Expo>
+
+<script is:inline type="application/json" id="datos-plano" set:html={JSON.stringify(datos)}></script>
+
+<script>
+    interface Muestra { stand: string; titulo: string; hora: string; minutos: number; ejemplo?: boolean }
+    interface Stand { id: string; nombre: string; detalle: string; servicio?: boolean; nuestro?: boolean; catalogo?: string }
+    const { stands, muestras, dia, abre, cierra } = JSON.parse(document.getElementById('datos-plano')!.textContent!) as { stands: Stand[]; muestras: Muestra[]; dia: string; abre: string; cierra: string };
+    const $ = (sel: string) => document.querySelector<HTMLElement>(sel)!;
+    const aMinutos = (hora: string) => Number(hora.slice(0, 2)) * 60 + Number(hora.slice(3));
+    const nombre = (id: string) => stands.find((s) => s.id === id)?.nombre ?? '';
+
+    function elegir(id: string) {
+        const s = stands.find((x) => x.id === id);
+        if (!s || s.servicio) return;
+        document.querySelectorAll('.stand').forEach((g) => g.classList.toggle('elegido', (g as HTMLElement).dataset.stand === id));
+        $('[data-ficha-nombre]').textContent = s.nombre;
+        $('[data-ficha-detalle]').textContent = s.detalle;
+        // Con el QR pegado en el stand (?aca=ID): la ficha de ESE stand dice dónde estás
+        const estaAca = id === new URLSearchParams(location.search).get('aca');
+        $('.ficha .etiqueta').textContent = estaAca ? '📍 Estás acá' : 'Stand';
+        if (estaAca && s.nuestro) $('[data-ficha-detalle]').textContent = '¡Gracias por visitar nuestro stand! ' + s.detalle;
+        const catalogo = $('[data-ficha-catalogo]') as HTMLAnchorElement;
+        catalogo.hidden = !s.catalogo;
+        if (s.catalogo) catalogo.href = s.catalogo;
+        const suyas = muestras.filter((m) => m.stand === id);
+        $('[data-ficha-muestras]').hidden = false;
+        $('[data-ficha-muestras]').replaceChildren(
+            ...(suyas.length
+                ? suyas.map((m) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${m.hora} · ${m.titulo}${m.ejemplo ? ' (horario de ejemplo)' : ''}`;
+                    return li;
+                })
+                : [Object.assign(document.createElement('li'), { textContent: 'Sin muestra activa anotada.', className: 'nada' })]),
+        );
+        document.querySelectorAll<HTMLElement>('[data-muestra]').forEach((li) => li.classList.toggle('marcada', li.dataset.muestra === id));
+    }
+
+    document.querySelectorAll<HTMLElement>('.stand:not(.servicio)').forEach((g) => {
+        g.addEventListener('click', () => elegir(g.dataset.stand!));
+        g.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                elegir(g.dataset.stand!);
+            }
+        });
+    });
+    document.querySelectorAll<HTMLElement>('[data-muestra]').forEach((li) => li.addEventListener('click', () => {
+        elegir(li.dataset.muestra!);
+        document.querySelector('.mapa')!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }));
+
+    // ---- "Estás acá": el QR pegado en cada stand abre el plano con ?aca=ID (o ?aca=entrada) ----
+    const aca = new URLSearchParams(location.search).get('aca');
+    const lugar = (() => {
+        const sel = aca === 'entrada' ? '.entrada rect' : `.stand:not(.servicio)[data-stand="${CSS.escape(aca ?? '')}"] rect`;
+        const r = aca ? document.querySelector<SVGRectElement>(sel) : null;
+        if (!r) return null;
+        const x = r.x.baseVal.value + r.width.baseVal.value / 2;
+        // Pegado al borde de arriba del plano no entra el cartel: va debajo del stand, apuntando hacia arriba
+        const arriba = r.y.baseVal.value < 230;
+        return { x, y: arriba ? r.y.baseVal.value + r.height.baseVal.value : r.y.baseVal.value, arriba };
+    })();
+    if (lugar) {
+        // Un pin con el cartel encima del stand: se dibuja después del resto para quedar arriba
+        const svg = document.querySelector('.mapa svg')!;
+        const ns = 'http://www.w3.org/2000/svg';
+        const pin = document.createElementNS(ns, 'g');
+        pin.setAttribute('class', 'aca');
+        pin.setAttribute('transform', `translate(${lugar.x} ${lugar.y})`);
+        pin.innerHTML = lugar.arriba
+            ? '<path d="M0 0 l-14 24 a16 16 0 1 0 28 0 z"/><circle cy="34" r="6"/>'
+                + '<rect x="-74" y="52" width="148" height="40" rx="20"/><text y="79">📍 Estás acá</text>'
+            : '<path d="M0 0 l-14 -24 a16 16 0 1 1 28 0 z"/><circle cy="-34" r="6"/>'
+                + '<rect x="-74" y="-92" width="148" height="40" rx="20"/><text y="-65">📍 Estás acá</text>';
+        svg.append(pin);
+        if (aca === 'entrada') {
+            $('.ficha .etiqueta').textContent = '📍 Estás acá';
+            $('[data-ficha-nombre]').textContent = 'Entrada de la Expo';
+            $('[data-ficha-detalle]').textContent = 'Tocá un stand en el plano para ver qué curso es y si tiene una muestra activa.';
+        } else {
+            elegir(aca!);
+        }
+    }
+
+    // "Ahora" y "Después", con la hora de Argentina
+    function reloj() {
+        const partes = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+        const p = Object.fromEntries(partes.map((x) => [x.type, x.value]));
+        const hoy = `${p.year}-${p.month}-${p.day}`;
+        const ahora = Number(p.hour) * 60 + Number(p.minute);
+        const texto = (m: Muestra) => `${m.hora} · ${m.titulo} (${nombre(m.stand)})`;
+        let enCurso = '—';
+        let proxima = '—';
+        if (hoy < dia) {
+            enCurso = `La Expo es el viernes 13/11, de ${abre.slice(0, 2)} a ${cierra.slice(0, 2)} h`;
+            if (muestras[0]) proxima = texto(muestras[0]);
+        } else if (hoy > dia || ahora >= aMinutos(cierra)) {
+            enCurso = 'La Expo ya terminó. ¡Gracias por venir!';
+        } else if (ahora < aMinutos(abre)) {
+            enCurso = `Hoy abrimos a las ${abre}`;
+            if (muestras[0]) proxima = texto(muestras[0]);
+        } else {
+            const actual = muestras.find((m) => ahora >= aMinutos(m.hora) && ahora < aMinutos(m.hora) + m.minutos);
+            const siguiente = muestras.find((m) => aMinutos(m.hora) > ahora);
+            enCurso = actual ? texto(actual) : 'Recorré los stands';
+            proxima = siguiente ? texto(siguiente) : 'No hay más muestras hoy';
+            document.querySelectorAll<HTMLElement>('[data-hora]').forEach((li) => {
+                const m = aMinutos(li.dataset.hora!);
+                li.classList.toggle('pasada', ahora >= m + 15);
+            });
+        }
+        $('[data-ahora]').textContent = enCurso;
+        $('[data-despues]').textContent = proxima;
+    }
+    reloj();
+    setInterval(reloj, 30_000);
+</script>
+
+<style>
+    .hoja {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 20px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px));
+        display: grid;
+        gap: 18px;
+    }
+    header {
+        display: grid;
+        gap: 4px;
+    }
+    .etiqueta {
+        margin: 0;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--suave);
+    }
+    h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        line-height: 1.1;
+        color: var(--oro);
+    }
+    .ahora {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 10px;
+    }
+    .ahora div {
+        display: grid;
+        gap: 2px;
+        padding: 12px 14px;
+        border: 1px solid var(--borde);
+        border-radius: 12px;
+        background: var(--superficie);
+    }
+    .ahora span {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--menta);
+    }
+    .mapa {
+        overflow-x: auto;
+        border: 1px solid var(--borde);
+        border-radius: var(--radio);
+        background: #12171f;
+        padding: 6px;
+    }
+    .mapa svg {
+        display: block;
+        width: 100%;
+        min-width: 720px; /* en el celular se desliza: si entra entero, los nombres no se leen */
+        height: auto;
+    }
+    .deslizar {
+        margin: 0 0 -10px;
+        font-size: 0.85rem;
+        color: var(--suave);
+    }
+    @media (min-width: 600px) {
+        .deslizar {
+            font-size: 0;
+        }
+        .deslizar::after {
+            content: 'Tocá un stand para ver su muestra';
+            font-size: 0.85rem;
+        }
+    }
+    .pared {
+        stroke: #5b6578;
+        stroke-width: 3;
+        stroke-linecap: round;
+    }
+    .flecha {
+        fill: #5b6578;
+    }
+    .entrada rect {
+        fill: #bcd5ee;
+    }
+    .entrada text,
+    .stand text {
+        fill: #10131a;
+        font-weight: 800;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        font-family: system-ui, sans-serif;
+        pointer-events: none;
+    }
+    .entrada text {
+        font-size: 22px;
+    }
+    .entrada .chico {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .stand {
+        cursor: pointer;
+        outline: none;
+    }
+    .stand rect {
+        stroke: #10131a;
+        stroke-width: 2;
+        stroke-dasharray: 7 5;
+        transition: stroke-width 0.15s;
+    }
+    .stand:hover rect,
+    .stand:focus-visible rect {
+        stroke-width: 5;
+        stroke-dasharray: none;
+    }
+    .stand.elegido rect {
+        stroke: var(--oro);
+        stroke-width: 7;
+        stroke-dasharray: none;
+    }
+    /* El pin de "Estás acá" lo agrega el script: sin la marca de Astro, va con :global */
+    :global(.aca) {
+        pointer-events: none;
+    }
+    :global(.aca path),
+    :global(.aca rect) {
+        fill: #e53935;
+        stroke: #fff;
+        stroke-width: 3;
+    }
+    :global(.aca circle) {
+        fill: #fff;
+    }
+    :global(.aca text) {
+        fill: #fff;
+        font: 800 22px system-ui, sans-serif;
+        text-anchor: middle;
+    }
+    .stand.servicio {
+        cursor: default;
+        opacity: 0.6;
+    }
+    .boton {
+        justify-self: start;
+        margin-top: 6px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: var(--oro);
+        color: #10131a;
+        font-weight: 800;
+        text-decoration: none;
+    }
+    .boton:focus-visible {
+        outline: 3px solid var(--menta);
+        outline-offset: 2px;
+    }
+    .ficha {
+        padding: 16px 18px;
+        border: 2px solid var(--oro);
+        border-radius: var(--radio);
+        background: var(--superficie);
+        display: grid;
+        gap: 6px;
+    }
+    .ficha h2,
+    .cronograma h2 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+    .ficha p {
+        margin: 0;
+        color: var(--suave);
+    }
+    .ficha ul {
+        margin: 4px 0 0;
+        padding-left: 20px;
+    }
+    .ficha .nada {
+        color: var(--suave);
+        list-style: none;
+        margin-left: -20px;
+    }
+    .cronograma {
+        display: grid;
+        gap: 10px;
+    }
+    .aviso {
+        margin: 0;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: #3a2f12;
+        color: #ffe3a0;
+    }
+    .cronograma ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+    }
+    .cronograma li {
+        display: grid;
+        grid-template-columns: 4.2em 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 14px;
+        border: 1px solid var(--borde);
+        border-radius: 12px;
+        background: var(--superficie);
+        cursor: pointer;
+    }
+    .cronograma li.marcada {
+        border-color: var(--oro);
+    }
+    .cronograma li.pasada {
+        opacity: 0.5;
+    }
+    .cronograma time {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--oro);
+        font-variant-numeric: tabular-nums;
+    }
+    .cronograma li div {
+        display: grid;
+        min-width: 0;
+    }
+    .cronograma li span {
+        color: var(--suave);
+        font-size: 0.9rem;
+    }
+    .cronograma em {
+        color: #ffcf66;
+        font-style: normal;
+    }
+</style>

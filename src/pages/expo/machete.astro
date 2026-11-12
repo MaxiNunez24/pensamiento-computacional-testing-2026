@@ -64,6 +64,7 @@ const SECCIONES: { titulo: string; items: Item[] }[] = [
         titulo: '🎮 PC de juegos',
         items: [
             { k: 'Esc Esc', v: 'volver al menú (o 3 min sin tocar nada)' },
+            { k: 'Ctrl+Alt+O', v: 'modo claro / oscuro' },
             { k: 'Ctrl+Alt+P', v: 'pantalla de Premios (quién va ganando)' },
             { k: 'Ctrl+Alt+N → Y', v: 'premios entregados: récords a cero (N cancela)' },
             { k: 'Alt+F4', v: 'salir del modo kiosco' },
@@ -73,6 +74,7 @@ const SECCIONES: { titulo: string; items: Item[] }[] = [
     {
         titulo: '🆘 Si algo falla',
         items: [
+            { k: 'No se ve (mucha luz)', v: 'Ctrl+Alt+O: modo claro / oscuro, en cualquier pantalla del stand' },
             { k: 'A32 en negro', v: 'cerrar Chrome del celu y abrir UNA sola pestaña de la cámara' },
             { k: 'Clave mal tipeada', v: 'cerrar la ventana del estudio y abrir abrir-estudio.bat de nuevo' },
             { k: '"ComfyUI no responde"', v: 'abrir-estudio.bat (tarda ~1 min en arrancar)' },
@@ -90,23 +92,42 @@ const SECCIONES: { titulo: string; items: Item[] }[] = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Machete del stand · Expo CFP 401</title>
+    <script is:inline>
+        // El tema de todas las pantallas del stand: Ctrl+Alt+O (guardado en este navegador)
+        (() => {
+            const CLAVE = 'expo:tema';
+            const aplicar = (tema) => { document.documentElement.dataset.tema = tema === 'claro' ? 'claro' : 'oscuro'; };
+            try { aplicar(localStorage.getItem(CLAVE)); } catch { aplicar('oscuro'); }
+            window.cambiarTema = () => {
+                const tema = document.documentElement.dataset.tema === 'claro' ? 'oscuro' : 'claro';
+                aplicar(tema);
+                try { localStorage.setItem(CLAVE, tema); } catch { /* sin guardar */ }
+            };
+            addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'o') { e.preventDefault(); window.cambiarTema(); }
+            });
+            addEventListener('storage', (e) => { if (e.key === CLAVE) aplicar(e.newValue); });
+        })();
+    </script>
     <style>
-        :root { color-scheme: dark; }
+        :root { color-scheme: dark; --fondo: #0e1117; --caja: #161b24; --linea: #2a3140; --tecla: #3a4356; --texto: #e8ecf3; --suave: #a3adbd; --oro: #f2c14e; --link: #7fd4ff; }
+        /* Con mucha luz: Ctrl+Alt+O (o el botón) lo pasa a claro */
+        :root[data-tema='claro'] { color-scheme: light; --fondo: #f3f5f8; --caja: #fff; --linea: #cfd6e2; --tecla: #b9c1ce; --texto: #10131a; --suave: #4a5466; --oro: #a87500; --link: #0b5fa5; }
         * { box-sizing: border-box; }
-        body { margin: 0; background: #0e1117; color: #e8ecf3; font: 16px/1.45 system-ui, sans-serif; }
+        body { margin: 0; background: var(--fondo); color: var(--texto); font: 16px/1.45 system-ui, sans-serif; }
         main { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; display: grid; gap: 18px; }
-        h1 { margin: 0; color: #f2c14e; font-size: 1.8rem; }
-        .bajada { margin: 4px 0 0; color: #a3adbd; }
+        h1 { margin: 0; color: var(--oro); font-size: 1.8rem; }
+        .bajada { margin: 4px 0 0; color: var(--suave); }
         .acciones { display: flex; flex-wrap: wrap; gap: 10px; }
-        .boton { padding: 10px 18px; border: 0; border-radius: 999px; background: #f2c14e; color: #10131a; font: 700 1rem system-ui, sans-serif; cursor: pointer; text-decoration: none; }
-        .boton.borde { background: transparent; color: #f2c14e; border: 2px solid #f2c14e; }
-        section { background: #161b24; border: 1px solid #2a3140; border-radius: 14px; padding: 14px 16px; }
+        .boton { padding: 10px 18px; border: 0; border-radius: 999px; background: var(--oro); color: #10131a; font: 700 1rem system-ui, sans-serif; cursor: pointer; text-decoration: none; }
+        .boton.borde { background: transparent; color: var(--oro); border: 2px solid var(--oro); }
+        section { background: var(--caja); border: 1px solid var(--linea); border-radius: 14px; padding: 14px 16px; }
         h2 { margin: 0 0 8px; font-size: 1.15rem; }
         dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
         dt { font-weight: 700; white-space: nowrap; }
-        dt kbd, dt span { display: inline-block; padding: 1px 8px; border: 1px solid #3a4356; border-radius: 6px; background: #0e1117; font: 700 0.9rem ui-monospace, monospace; }
-        dd { margin: 0; color: #c9d1de; overflow-wrap: anywhere; }
-        dd a { color: #7fd4ff; }
+        dt kbd, dt span { display: inline-block; padding: 1px 8px; border: 1px solid var(--tecla); border-radius: 6px; background: var(--fondo); font: 700 0.9rem ui-monospace, monospace; }
+        dd { margin: 0; color: var(--texto); overflow-wrap: anywhere; }
+        dd a { color: var(--link); }
         .vista { width: 100%; max-width: 384px; border-radius: 8px; background: #fff; }
         [hidden] { display: none !important; }
         @media (max-width: 480px) { dl { grid-template-columns: 1fr; gap: 2px; } dd { margin-bottom: 8px; } }
@@ -127,6 +148,7 @@ const SECCIONES: { titulo: string; items: Item[] }[] = [
         </header>
         <div class="acciones">
             <button type="button" class="boton" data-termica>🧾 Imprimir en la térmica</button>
+            <button type="button" class="boton borde" onclick="cambiarTema()" title="Ctrl+Alt+O">🌓 Claro / oscuro</button>
             <button type="button" class="boton borde" data-compartir hidden>Mandar a Fun Print</button>
             <a class="boton borde" data-bajar download="machete-expo.png" hidden>Guardar la imagen</a>
         </div>

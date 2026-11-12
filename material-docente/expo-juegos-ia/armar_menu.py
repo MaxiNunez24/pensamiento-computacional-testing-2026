@@ -128,12 +128,22 @@ MENU = """<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Juegos hechos con IA</title>
+<script>
+    // Antes de dibujar: el tema guardado (Ctrl+Alt+O lo cambia, ver abajo)
+    try { if (localStorage.getItem('expo:tema') === 'claro') document.documentElement.dataset.tema = 'claro'; } catch { /* oscuro */ }
+</script>
 <style>
-    :root { --fondo: #10161f; --texto: #f2f5f7; --suave: #9fb0bf; }
+    :root { --fondo: #10161f; --texto: #f2f5f7; --suave: #9fb0bf; --brillo: #1d2a3a; --tarjeta: #18212c; --parrafo: #d5dee6;
+            --tecla: #3a4a5c; --oro: #ffd36b; --capa: rgb(8 12 18 / .97); --linea: #2c3a4a; --ojo: #ff9b7a; }
+    /* Con mucha luz: Ctrl+Alt+O (queda guardado en este navegador) */
+    :root[data-tema='claro'] { color-scheme: light; --fondo: #eef1f6; --texto: #10131a; --suave: #4a5466; --brillo: #ffffff; --tarjeta: #ffffff;
+            --parrafo: #2a3242; --tecla: #b9c1ce; --oro: #9a6a00; --capa: rgb(243 245 248 / .97); --linea: #cfd6e2; --ojo: #c8402f; }
     * { box-sizing: border-box; }
+    /* Sin esto, el display: grid de .premios le gana a hidden y la pantalla de Premios tapa el menú */
+    [hidden] { display: none !important; }
     html, body { height: 100%; margin: 0; }
     body {
-        background: radial-gradient(circle at 50% 0%, #1d2a3a, var(--fondo) 70%);
+        background: radial-gradient(circle at 50% 0%, var(--brillo), var(--fondo) 70%);
         color: var(--texto);
         font: 20px/1.4 "Segoe UI", system-ui, sans-serif;
         display: grid; grid-template-rows: auto 1fr auto; gap: 24px;
@@ -153,27 +163,27 @@ MENU = """<!DOCTYPE html>
     .juego {
         display: grid; gap: 8px; align-content: start; min-height: 170px;
         padding: 22px 24px; border-radius: 16px; text-decoration: none; color: var(--texto);
-        background: color-mix(in srgb, var(--tono) 22%, #18212c);
+        background: color-mix(in srgb, var(--tono) 22%, var(--tarjeta));
         border: 3px solid transparent; transition: transform .12s, border-color .12s;
     }
-    .juego:focus, .juego:hover { outline: none; border-color: var(--tono); transform: scale(1.04); background: color-mix(in srgb, var(--tono) 38%, #18212c); }
+    .juego:focus, .juego:hover { outline: none; border-color: var(--tono); transform: scale(1.04); background: color-mix(in srgb, var(--tono) 38%, var(--tarjeta)); }
     .titulo { font-size: 1.6rem; font-weight: 700; line-height: 1.15; }
-    .descripcion { color: #d5dee6; }
+    .descripcion { color: var(--parrafo); }
     .autor { color: var(--suave); font-size: .95rem; margin-top: auto; }
     footer { display: flex; flex-wrap: wrap; gap: 10px 28px; color: var(--suave); font-size: 1.05rem; }
-    kbd { font: inherit; font-weight: 700; color: var(--texto); padding: 1px 8px; border-radius: 6px; border: 2px solid #3a4a5c; }
+    kbd { font: inherit; font-weight: 700; color: var(--texto); padding: 1px 8px; border-radius: 6px; border: 2px solid var(--tecla); }
     .vacio { color: var(--suave); }
-    .lider { font-weight: 700; color: #ffd36b; font-size: 1.05rem; }
+    .lider { font-weight: 700; color: var(--oro); font-size: 1.05rem; }
     .premios {
         position: fixed; inset: 0; z-index: 10; padding: 36px 48px; overflow: auto;
-        background: rgb(8 12 18 / .97); display: grid; gap: 18px; align-content: start;
+        background: var(--capa); display: grid; gap: 18px; align-content: start;
     }
-    .premios h2 { margin: 0; font-size: 2.4rem; color: #ffd36b; }
+    .premios h2 { margin: 0; font-size: 2.4rem; color: var(--oro); }
     .premios table { border-collapse: collapse; font-size: 1.25rem; }
-    .premios th, .premios td { text-align: left; padding: 8px 18px 8px 0; border-bottom: 1px solid #2c3a4a; }
+    .premios th, .premios td { text-align: left; padding: 8px 18px 8px 0; border-bottom: 1px solid var(--linea); }
     .premios th { color: var(--suave); font-weight: 600; }
     .premios p { margin: 0; color: var(--suave); }
-    .premios .ojo { color: #ff9b7a; }
+    .premios .ojo { color: var(--ojo); }
     @media (prefers-reduced-motion: reduce) { .juego { transition: none; } .juego:focus { transform: none; } }
 </style>
 </head>
@@ -198,6 +208,7 @@ __TARJETAS__
     <span><kbd>← ↑ → ↓</kbd> elegir</span>
     <span><kbd>Enter</kbd> jugar</span>
     <span><kbd>Esc</kbd> <kbd>Esc</kbd> volver acá desde un juego</span>
+    <span><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>O</kbd> claro / oscuro</span>
 </footer>
 <script>
     const juegos = [...document.querySelectorAll('.juego')];
@@ -251,6 +262,13 @@ __TARJETAS__
             e.stopImmediatePropagation();
             if (tecla === 'y' || tecla === 's') { preguntando = false; entregar(aviso); }
             else if (tecla === 'n' || tecla === 'escape') { preguntando = false; aviso.textContent = 'Cancelado: no se borró nada.'; }
+            return;
+        }
+        if (e.ctrlKey && e.altKey && tecla === 'o') {
+            e.preventDefault();
+            const tema = document.documentElement.dataset.tema === 'claro' ? 'oscuro' : 'claro';
+            document.documentElement.dataset.tema = tema;
+            try { localStorage.setItem('expo:tema', tema); } catch { /* sin guardar */ }
             return;
         }
         if (e.ctrlKey && e.altKey && tecla === 'p') {

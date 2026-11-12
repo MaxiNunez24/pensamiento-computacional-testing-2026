@@ -324,6 +324,13 @@ const links = [
                 pintarTema();
             });
             pintarTema();
+            // El mismo atajo que en todas las pantallas del stand
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'o') {
+                    e.preventDefault();
+                    $('#tema').click();
+                }
+            });
 
             // ---------- La clave ----------
             interface Consulta {

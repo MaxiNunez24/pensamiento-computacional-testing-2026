@@ -108,5 +108,7 @@ juego, cómo se detectan los choques o los puntos, y qué parte cambiaría para 
 - Entregados los premios, en el menú apretá `Ctrl` + `Alt` + `N` y confirmá con `Y` (`N` o `Esc`
   cancela): anota a los ganadores en "Ganadores anteriores" y los récords arrancan de cero para el
   período siguiente. No usa letras sueltas, así no choca con los controles de ningún juego.
+- Si hay mucha luz y no se ve: `Ctrl` + `Alt` + `O` pasa el menú a modo claro (y vuelve). Es el mismo
+  atajo en todas las pantallas del stand (Bingo, proyector, estudio, plano).
 - Los récords quedan en el perfil del kiosco (`%TEMP%\expo-juegos`): no se borran al cerrar Chrome,
   pero sí si se limpia esa carpeta.

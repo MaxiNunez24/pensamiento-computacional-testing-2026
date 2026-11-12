@@ -677,7 +677,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     padding: 0.8vh 1.2vw;
     border: 1px solid var(--borde);
     border-radius: var(--radio);
-    background: rgb(22 27 37 / 0.7);
+    background: color-mix(in srgb, var(--superficie) 70%, transparent);
   }
   .barra__que {
     margin: 0;
@@ -857,7 +857,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     padding: 3cqmin;
     border: 2px solid var(--borde);
     border-radius: var(--radio);
-    background: rgb(22 27 37 / 0.7);
+    background: color-mix(in srgb, var(--superficie) 70%, transparent);
     container-type: size;
     overflow: hidden;
     text-align: center;
@@ -1121,7 +1121,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     font-size: 5cqmin;
     font-weight: 700;
     color: #5d6779;
-    background: rgb(255 255 255 / 0.04);
+    background: color-mix(in srgb, var(--texto) 4%, transparent);
   }
   .tablero :global(li.salio) {
     color: #10131a;
@@ -1141,7 +1141,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     justify-content: center;
     gap: 3cqmin;
     padding: 4cqmin;
-    background: rgb(13 16 23 / 0.94);
+    background: color-mix(in srgb, var(--fondo) 94%, transparent);
   }
   .bingo__aviso[hidden],
   .bingo__moneda[hidden] {

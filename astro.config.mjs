@@ -290,7 +290,7 @@ export default defineConfig({
       ],
     }),
     // El sitemap lo pone Starlight solo, salvo que ya esté acá: así se pueden dejar afuera las páginas
-    // a las que se llega con un link impreso (el machete de la Expo).
-    sitemap({ filter: (pagina) => !pagina.includes('/expo/machete/') }),
+    // a las que se llega con un link impreso (el machete de la Expo) o que no son para el público.
+    sitemap({ filter: (pagina) => !['/expo/machete/', '/expo/plano-original/'].some((p) => pagina.includes(p)) }),
   ],
 });

@@ -4,8 +4,12 @@
  * aparte del de las clases. Sin el menú del curso: quien llega por un QR del
  * stand no viene a cursar, viene a mirar treinta segundos.
  *
- * Oscuro siempre (en un salón iluminado y en una lona, el fondo oscuro cansa
- * menos), con las letras del sistema: nada que se baje de internet.
+ * Oscuro de entrada (en una lona, el fondo oscuro cansa menos), con las letras
+ * del sistema: nada que se baje de internet. Si hay mucha luz y no se ve,
+ * Ctrl+Alt+O lo pasa a claro (y vuelve): queda guardado en ese navegador, y las
+ * otras pestañas abiertas se enteran solas (el operador del Bingo cambia el
+ * proyector). La O es de "oscuro"; Ctrl+Alt+L y Ctrl+Alt+T los usa el Kubuntu
+ * de la notebook (bloquear y terminal).
  */
 interface Props {
   titulo: string;
@@ -24,6 +28,23 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <meta name="theme-color" content="#0d1017" />
     <link rel="icon" href={`${base}/favicon.ico`} />
     <title>{titulo}</title>
+    <script is:inline>
+      // Antes de dibujar nada, así no parpadea en oscuro al cargar en claro
+      (() => {
+        const CLAVE = 'expo:tema';
+        const aplicar = (tema) => { document.documentElement.dataset.tema = tema === 'claro' ? 'claro' : 'oscuro'; };
+        try { aplicar(localStorage.getItem(CLAVE)); } catch { aplicar('oscuro'); }
+        addEventListener('keydown', (e) => {
+          if (!e.ctrlKey || !e.altKey || e.key.toLowerCase() !== 'o') return;
+          e.preventDefault();
+          e.stopImmediatePropagation(); // que no lo tome ningún atajo de la página
+          const tema = document.documentElement.dataset.tema === 'claro' ? 'oscuro' : 'claro';
+          aplicar(tema);
+          try { localStorage.setItem(CLAVE, tema); } catch { /* sin guardar: igual cambia */ }
+        }, true);
+        addEventListener('storage', (e) => { if (e.key === CLAVE) aplicar(e.newValue); });
+      })();
+    </script>
   </head>
   <body>
     <slot />
@@ -43,6 +64,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     --coral: #ff7a6b;
     --radio: 18px;
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  /* El modo claro (Ctrl+Alt+O): el oro y la menta, más oscuros, para que se lean sobre blanco */
+  html[data-tema='claro'] {
+    color-scheme: light;
+    --fondo: #f3f5f8;
+    --superficie: #ffffff;
+    --borde: #cfd6e2;
+    --texto: #10131a;
+    --suave: #4a5466;
+    --oro: #a87500;
+    --menta: #0d8a6f;
+    --coral: #c8402f;
   }
   *,
   *::before,
