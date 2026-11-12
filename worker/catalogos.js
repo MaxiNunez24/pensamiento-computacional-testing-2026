@@ -398,6 +398,13 @@ export default {
             const carton = await emitirCarton(await claveBingo(env.ADMIN_CLAVE), ronda, tamano, Date.now());
             return respuesta({ ...carton, ronda, tamano }, 200, cabeceras, { 'Cache-Control': 'no-store' });
         }
+        // Si la ronda ya terminó: el cartón (digital o el QR del impreso) muestra el agradecimiento.
+        if (publico && url.pathname === '/bingo/ronda') {
+            const ronda = url.searchParams.get('ronda') || '';
+            if (!RONDA_OK.test(ronda)) return respuesta({ error: 'Esa no es una ronda.' }, 400, cabeceras);
+            const termino = Number(await env.CATALOGOS.get('bingo:termino:' + ronda)) || null;
+            return respuesta({ ronda, termino }, 200, cabeceras, { 'Cache-Control': 'no-store' });
+        }
         // La hora del Worker: el operador la compara con la de la notebook, que puede estar corrida.
         if (publico && url.pathname === '/bingo/hora') {
             return respuesta({ ahora: Date.now() }, 200, cabeceras, { 'Cache-Control': 'no-store' });
@@ -628,6 +635,14 @@ export default {
                 const inicio = Number(url.searchParams.get('inicio')) || Date.now();
                 await env.CATALOGOS.put('bingo:empezo:' + ronda, String(inicio), { expirationTtl: 12 * 60 * 60 });
                 return respuesta({ ronda, empezo: inicio }, 200, cabeceras);
+            }
+            /* Una ronda que ya se jugó y quedó atrás ("Ronda nueva"): desde ahí sus cartones muestran el
+             * agradecimiento. Dura una semana; después de la Expo la página ya lo muestra sola. */
+            if (url.pathname === '/admin/bingo/termino' && request.method === 'POST') {
+                const ronda = url.searchParams.get('ronda') || '';
+                if (!RONDA_OK.test(ronda)) return respuesta({ error: 'Esa no es una ronda.' }, 400, cabeceras);
+                await env.CATALOGOS.put('bingo:termino:' + ronda, String(Date.now()), { expirationTtl: 7 * 24 * 60 * 60 });
+                return respuesta({ ronda, termino: true }, 200, cabeceras);
             }
             const datos = (await cuerpoJson(request)) || {};
             const slug = String(datos.slug || '').trim().toLowerCase();

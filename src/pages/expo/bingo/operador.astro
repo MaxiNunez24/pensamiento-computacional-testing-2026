@@ -334,6 +334,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     pararAuto();
     $('[data-nueva-aviso]').textContent = '';
     $('[data-resultado]').replaceChildren();
+    // La que se jugó queda atrás: sus cartones pasan a mostrar el agradecimiento
+    if (estado.ronda && estado.sorteadas.length > 0) avisarTermino(estado.ronda);
     // Si había una reservada, arranca esa tal cual: sus cartones ya están impresos
     const nueva = estado.proxima ?? armada();
     estado = { ...estado, ...nueva, proxima: null, sorteadas: [], inicio: null, ganadores: [], moneda: null };
@@ -377,6 +379,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     url.searchParams.set('ronda', ronda);
     if (inicio) url.searchParams.set('inicio', String(inicio));
     fetch(url, { method: inicio ? 'POST' : 'DELETE', headers: { 'X-Admin': claveTexto } }).catch(() => {});
+  }
+  // Sin internet tampoco pasa nada: el cartón viejo sigue mostrándose como cartón
+  function avisarTermino(ronda: string) {
+    const url = new URL(WORKER + '/admin/bingo/termino');
+    url.searchParams.set('ronda', ronda);
+    fetch(url, { method: 'POST', headers: { 'X-Admin': claveTexto } }).catch(() => {});
   }
 
   function sacar() {

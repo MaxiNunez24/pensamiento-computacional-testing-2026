@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cartel de premios de los juegos</title>
+    <!--
+        Cartel para la PC de juegos de la Expo (13/11, de 16 a 21 h). Se imprime en A4 vertical,
+        blanco y negro: abrilo en Chrome y Ctrl+P (márgenes: ninguno). Los horarios de las entregas
+        están en la lista HORAS de abajo, por si cambian.
+    -->
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; background: #fff; color: #000; }
+        body { font-family: "Segoe UI", system-ui, sans-serif; }
+        .hoja {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            padding: 16mm 15mm;
+            display: flex;
+            flex-direction: column;
+            gap: 9mm;
+            border: 3mm solid #000;
+        }
+        h1 { margin: 0; font-size: 58pt; line-height: 1; letter-spacing: -0.02em; }
+        .bajada { margin: 0; font-size: 21pt; line-height: 1.3; }
+        .horas { display: flex; flex-direction: column; gap: 4mm; }
+        .horas h2 { margin: 0; font-size: 20pt; text-transform: uppercase; letter-spacing: 0.08em; }
+        .lista { display: flex; gap: 5mm; }
+        .lista span {
+            flex: 1;
+            text-align: center;
+            padding: 6mm 0;
+            border: 1.2mm solid #000;
+            border-radius: 5mm;
+            font-size: 44pt;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+        ol { margin: 0; padding-left: 12mm; font-size: 19pt; line-height: 1.35; display: flex; flex-direction: column; gap: 3mm; }
+        .pie { margin-top: auto; font-size: 15pt; border-top: 0.8mm solid #000; padding-top: 5mm; }
+        @media screen { body { background: #ccc; padding: 10px; } .hoja { background: #fff; } }
+    </style>
+</head>
+<body>
+    <main class="hoja">
+        <h1>🏆 Jugá y ganate tu foto con IA</h1>
+        <p class="bajada">Quien tenga <strong>el mejor puntaje de cada juego</strong> se lleva una foto suya
+            <strong>adentro del juego</strong>, dibujada por una inteligencia artificial.</p>
+
+        <section class="horas">
+            <h2>Entregas de premios</h2>
+            <div class="lista" id="horas"></div>
+        </section>
+
+        <ol>
+            <li>Elegí un juego y jugá.</li>
+            <li>Al terminar, <strong>escribí tu apodo</strong>: queda en la tabla de récords.</li>
+            <li>En cada entrega, quien va <strong>primero</strong> en cada juego pasa por el estudio de fotos.</li>
+            <li>Después de cada entrega los récords vuelven a cero: <strong>siempre hay chance</strong>.</li>
+        </ol>
+
+        <p class="pie">Los juegos los inventaron los estudiantes de Pensamiento Computacional y los
+            programaron conversando con una inteligencia artificial.</p>
+    </main>
+    <script>
+        const HORAS = ['17:30', '19:00', '20:30'];
+        document.getElementById('horas').replaceChildren(...HORAS.map((h) => Object.assign(document.createElement('span'), { textContent: h })));
+    </script>
+</body>
+</html>

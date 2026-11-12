@@ -99,11 +99,14 @@ juego, cómo se detectan los choques o los puntos, y qué parte cambiaría para 
 - **Cortes de premios** (anunciados en el cartel de la PC de juegos, cada hora y media más o menos):
   en el menú, `Ctrl` + `Alt` + `P` abre la pantalla de **Premios** con el primero y el segundo de
   cada juego. Quien va primero pasa por el estudio de fotos (si no está, el segundo).
-- En el estudio se elige el estilo **🎮 Nombre del juego**: `armar_menu.py` lo saca del
+- En el estudio, los estilos 🎮 están **escondidos**: son el premio. `Ctrl` + `Alt` + `P` en el
+  operador del estudio los desbloquea para UNA foto (se vuelven a esconder al aprobarla, a los 5
+  minutos o con el mismo atajo) y se elige **🎮 Nombre del juego**. `armar_menu.py` lo saca del
   `<meta name="premio">` de cada juego y lo copia a `D:\Programas\ia-fotos\estudio\estilos-juegos.json`
   (reiniciá el estudio después de armar el menú). **No hace falta conectar la PC de juegos a nada**:
   los estilos viajan antes de la Expo y los ganadores se leen en la pantalla de Premios.
-- Entregados los premios, en esa pantalla apretá `N` dos veces: anota a los ganadores en "Ganadores
-  anteriores" y los récords arrancan de cero para el período siguiente.
+- Entregados los premios, en el menú apretá `Ctrl` + `Alt` + `N` y confirmá con `Y` (`N` o `Esc`
+  cancela): anota a los ganadores en "Ganadores anteriores" y los récords arrancan de cero para el
+  período siguiente. No usa letras sueltas, así no choca con los controles de ningún juego.
 - Los récords quedan en el perfil del kiosco (`%TEMP%\expo-juegos`): no se borran al cerrar Chrome,
   pero sí si se limpia esa carpeta.

@@ -13,8 +13,9 @@ En menu/ quedan:
 
 Récords y premios: cada juego guarda sus 5 mejores en localStorage, con la clave "expo-records:" +
 su título. El menú muestra al primero de cada juego, y con Ctrl+Alt+P abre la pantalla de PREMIOS
-(quién va primero en cada juego; N dos veces = premios entregados: guarda a los ganadores y los
-récords arrancan de cero para el período siguiente).
+(quién va primero en cada juego). Ctrl+Alt+N = premios entregados: pide confirmar con Y (N o Esc
+cancela), guarda a los ganadores y los récords arrancan de cero para el período siguiente. En el
+estudio de fotos, los estilos 🎮 están escondidos: Ctrl+Alt+P los desbloquea para una sola foto.
 
 No necesita internet ni nada instalado aparte de Python. La carpeta menu/ se copia entera a la PC
 del stand.
@@ -186,9 +187,9 @@ __TARJETAS__
 </main>
 <section class="premios" hidden aria-live="polite">
     <h2>🏆 Premios</h2>
-    <p>Quien va primero en cada juego se lleva su foto con IA adentro del juego: en el estudio de fotos, elegí el estilo 🎮 con el nombre del juego.</p>
+    <p>Quien va primero en cada juego se lleva su foto con IA adentro del juego: en el estudio de fotos, <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> desbloquea los estilos 🎮 y se elige el del juego.</p>
     <table><thead><tr><th>Juego</th><th>Primero</th><th>Puntos</th><th>Segundo</th></tr></thead><tbody data-tabla></tbody></table>
-    <p><kbd>N</kbd> <kbd>N</kbd> premios entregados: se anotan los ganadores y los récords arrancan de cero · <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> cerrar</p>
+    <p><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>N</kbd> premios entregados (pide confirmar con <kbd>Y</kbd>): se anotan los ganadores y los récords arrancan de cero · <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> cerrar</p>
     <p class="ojo" data-aviso></p>
     <h2 style="font-size:1.6rem">Ganadores anteriores</h2>
     <table><tbody data-historial></tbody></table>
@@ -239,22 +240,34 @@ __TARJETAS__
         const historial = leer('expo-ganadores', []);
         document.querySelector('[data-historial]').replaceChildren(...historial.slice().reverse().map((g) => fila([g.hora, g.juego, g.apodo, g.puntos])));
     }
-    let ultimaN = 0;
+    // Ctrl+Alt+N pregunta, y recién con Y (o S) anota a los ganadores; N o Esc cancela.
+    // Mientras pregunta, se traga todas las teclas: así nada más se mueve por accidente.
+    let preguntando = false;
     addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'p') {
+        const tecla = e.key.toLowerCase();
+        const aviso = document.querySelector('[data-aviso]');
+        if (preguntando) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (tecla === 'y' || tecla === 's') { preguntando = false; entregar(aviso); }
+            else if (tecla === 'n' || tecla === 'escape') { preguntando = false; aviso.textContent = 'Cancelado: no se borró nada.'; }
+            return;
+        }
+        if (e.ctrlKey && e.altKey && tecla === 'p') {
             e.preventDefault();
             premios.hidden = !premios.hidden;
             if (!premios.hidden) mostrarPremios();
             return;
         }
-        if (premios.hidden || e.key.toLowerCase() !== 'n') return;
-        const aviso = document.querySelector('[data-aviso]');
-        if (Date.now() - ultimaN > 3000) {
-            ultimaN = Date.now();
-            aviso.textContent = 'Apretá N otra vez para anotar a los ganadores y empezar los récords de cero.';
-            return;
+        if (e.ctrlKey && e.altKey && tecla === 'n') {
+            e.preventDefault();
+            premios.hidden = false;
+            mostrarPremios();
+            preguntando = true;
+            aviso.textContent = '¿Premios entregados? Se anotan los ganadores y los récords vuelven a cero. Y = sí · N = no';
         }
-        ultimaN = 0;
+    }, true);
+    function entregar(aviso) {
         const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
         const historial = leer('expo-ganadores', []);
         for (const j of juegos) {
@@ -266,7 +279,7 @@ __TARJETAS__
         aviso.textContent = `Listo (${hora}): ganadores anotados y récords en cero.`;
         mostrarPremios();
         mostrarLideres();
-    }, true);
+    }
     mostrarLideres();
     const desde = document.getElementById(decodeURIComponent(location.hash.slice(1)));
     elegir(desde ? juegos.indexOf(desde) : 0);

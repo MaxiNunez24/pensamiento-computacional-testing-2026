@@ -26,6 +26,12 @@ export const WORKER = (() => {
   return worker;
 })();
 
+/**
+ * Adonde apuntan los QR: el sitio publicado, aunque la página se haya abierto desde una copia local
+ * (astro preview o dev). Un QR con 127.0.0.1 no le sirve al celular de nadie.
+ */
+const PUBLICO = import.meta.env.SITE || 'https://maxinunez24.github.io';
+
 export interface Ganador {
   codigo: string;
   numeros: number[];
@@ -100,7 +106,9 @@ export const canal = new BroadcastChannel('expo-bingo');
 
 /** La dirección del cartón de una ronda: es lo que lleva el QR. */
 export function linkDeRonda(ronda: string, tamano: string, imprimir = false) {
-  const url = new URL(import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/bingo/', location.origin);
+  // Con el Worker local (pruebas) el celular va a esta misma compu; si no, siempre al sitio publicado
+  const origen = WORKER === 'https://catalogos.maxinunez434.workers.dev' ? PUBLICO : location.origin;
+  const url = new URL(import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/bingo/', origen);
   url.searchParams.set('r', ronda);
   url.searchParams.set('t', tamano);
   if (imprimir) url.searchParams.set('imprimir', '1');
@@ -116,7 +124,8 @@ export function linkDeRonda(ronda: string, tamano: string, imprimir = false) {
  * operador rearma el cartón desde el código, y el código está firmado.
  */
 export function linkDePapel(codigo: string, ronda: string, tamano: string, numeros: number[]) {
-  const url = new URL(import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/bingo/', location.origin);
+  // Siempre al sitio publicado: el papel se lo lleva la gente, y su celular no ve esta compu
+  const url = new URL(import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/bingo/', PUBLICO);
   url.searchParams.set('p', [codigo, ronda, tamano, numeros.join('.')].join('_'));
   return url.href;
 }

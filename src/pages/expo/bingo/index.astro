@@ -29,6 +29,16 @@ import Expo from '../../../layouts/Expo.astro';
 
     <p class="estado" data-estado aria-live="polite">Buscando tu cartón…</p>
 
+    <!-- ===== La ronda ya terminó (o la Expo): el papel queda de recuerdo ===== -->
+    <section class="gracias" data-gracias hidden>
+      <p class="gracias-emoji" aria-hidden="true">🎉</p>
+      <h2>¡Gracias por participar!</h2>
+      <p>Gracias por venir a la <strong>Expo del CFP N°401</strong> y al stand de
+        <strong>Pensamiento Computacional</strong>.</p>
+      <p>Los esperamos el año que viene en las <strong>inscripciones</strong> o en la próxima Expo.</p>
+      <button type="button" class="boton boton--borde boton--chico" data-ver-igual>Ver mi cartón igual</button>
+    </section>
+
     <!-- ===== Para jugar ===== -->
     <section class="juego" data-juego hidden>
       <ol class="carton" data-carton></ol>
@@ -433,14 +443,55 @@ import Expo from '../../../layouts/Expo.astro';
       $('[data-imprimir]').hidden = false;
       dibujarHistorial();
     } else {
-      jugar().catch((error) => {
-        estado.textContent =
-          error instanceof RondaEmpezada
-            ? error.message
-            : 'No pude traer tu cartón. ¿Tenés internet? Si no, pedí uno impreso en el stand.';
+      terminada().then((fin) => {
+        if (fin) return agradecer();
+        jugar().catch((error) => {
+          estado.textContent =
+            error instanceof RondaEmpezada
+              ? error.message
+              : 'No pude traer tu cartón. ¿Tenés internet? Si no, pedí uno impreso en el stand.';
+        });
+        // Quien vuelve a la pestaña más tarde, con la ronda ya jugada, también ve el agradecimiento
+        document.addEventListener('visibilitychange', async () => {
+          if (document.visibilityState === 'visible' && !$('[data-juego]').hidden && !document.body.dataset.vioIgual && (await terminada())) agradecer();
+        });
       });
     }
   }
+
+  // ---------- Después de la ronda ----------
+  // Pregunta al Worker si el operador ya pasó a otra ronda. Sin internet (o si tarda), se juega igual.
+  // La Expo termina el 13/11 a las 21 (hora argentina): de ahí en más, sin preguntarle a nadie.
+  // (La fecha va adentro: la función se llama más arriba, antes de que corra un const de acá abajo.)
+  async function terminada() {
+    if (Date.now() >= Date.parse('2026-11-13T21:00:00-03:00')) return true;
+    try {
+      const url = new URL(WORKER + '/bingo/ronda');
+      url.searchParams.set('ronda', ronda);
+      const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
+      return r.ok && !!(await r.json()).termino;
+    } catch {
+      return false;
+    }
+  }
+
+  function agradecer() {
+    $('[data-juego]').hidden = true;
+    $('[data-gracias]').hidden = false;
+    estado.textContent = `La ronda ${ronda} ya terminó`;
+  }
+
+  $('[data-ver-igual]').addEventListener('click', () => {
+    document.body.dataset.vioIgual = '1'; // ya lo vio: no se lo volvemos a tapar
+    $('[data-gracias]').hidden = true;
+    if ($('[data-carton]').childElementCount) {
+      $('[data-juego]').hidden = false;
+      estado.textContent = `Tu cartón de la ronda ${ronda} (ya terminó)`;
+    } else {
+      // Nunca se dibujó: solo se puede mostrar el de papel o el que quedó guardado en el celular
+      jugar().catch(() => (estado.textContent = 'Ese cartón ya no está en este celular.'));
+    }
+  });
 </script>
 
 <style>
@@ -481,6 +532,27 @@ import Expo from '../../../layouts/Expo.astro';
   }
   [hidden] {
     display: none !important;
+  }
+  .gracias {
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+    padding: 24px 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--superficie);
+  }
+  .gracias h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--oro);
+  }
+  .gracias p {
+    margin: 0;
+    line-height: 1.5;
+  }
+  .gracias-emoji {
+    font-size: 3rem;
   }
   .carton {
     list-style: none;
