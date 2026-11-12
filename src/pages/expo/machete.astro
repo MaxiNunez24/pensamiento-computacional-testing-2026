@@ -1,0 +1,239 @@
+---
+/**
+ * El machete de la Expo: /expo/machete/
+ *
+ * Todos los links y los atajos del stand en una página, para el profe y para los alumnos cuando el
+ * profe no está. NO está linkeada desde ningún lado ni en el mapa del sitio (ver astro.config.mjs):
+ * se llega con el link impreso. No tiene nada secreto (ni el PIN del estudio ni la clave de los
+ * catálogos), así que no hace falta protegerla.
+ *
+ * Todo sale de SECCIONES: la misma lista arma la página y la tira de 57 mm para la Q15 ("Imprimir en
+ * la térmica"). Para agregar algo, se agrega acá y aparece en las dos.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const sitio = new URL(base + '/', Astro.site).href.replace(/\/$/, '');
+const corto = (url: string) => url.replace('https://', '');
+// Las demás páginas del stand, sin el principio largo (es el mismo que el de esta página)
+const ruta = (camino: string) => '…/' + camino;
+
+interface Item { k: string; v: string; link?: string }
+const SECCIONES: { titulo: string; items: Item[] }[] = [
+    {
+        titulo: '🔗 Links',
+        items: [
+            { k: 'Esta página', v: corto(`${sitio}/expo/machete/`), link: `${sitio}/expo/machete/` },
+            { k: 'La Expo (público)', v: ruta('expo/'), link: `${sitio}/expo/` },
+            { k: 'Plano y muestras', v: ruta('expo/plano/'), link: `${sitio}/expo/plano/` },
+            { k: 'QR "Estás acá"', v: ruta('expo/plano/qrs/'), link: `${sitio}/expo/plano/qrs/` },
+            { k: 'Panel del stand', v: ruta('expo/panel/'), link: `${sitio}/expo/panel/` },
+            { k: 'Operador del Bingo', v: ruta('expo/bingo/operador/'), link: `${sitio}/expo/bingo/operador/` },
+            { k: 'Encuesta 2027', v: ruta('expo/encuesta/'), link: `${sitio}/expo/encuesta/` },
+            { k: 'Catálogos', v: 'cfp401-ensenada.github.io/catalogos', link: 'https://cfp401-ensenada.github.io/catalogos/' },
+            { k: 'Estudio (en la PC)', v: '127.0.0.1:8791 · abrir-estudio.bat' },
+            { k: 'Cámara (en el A32)', v: 'localhost:8791/camara' },
+        ],
+    },
+    {
+        titulo: '📸 Estudio de fotos',
+        items: [
+            { k: 'Espacio', v: 'sacar la foto (cuenta 3-2-1)' },
+            { k: '← ↑ ↓ →', v: 'elegir el estilo (el público lo ve)' },
+            { k: 'Enter', v: 'generar' },
+            { k: 'R', v: 'otra versión del mismo estilo' },
+            { k: 'G / M', v: 'modo grupo / mascota u objeto' },
+            { k: 'A', v: 'aprobar e imprimir' },
+            { k: 'Q', v: 'QR para llevársela (sale grande en la pantalla del público)' },
+            { k: 'I', v: 'volver a ver el QR de la impresora' },
+            { k: 'Esc', v: 'cerrar los QR' },
+            { k: 'Ctrl+Alt+P', v: 'estilos 🎮 de premio (una foto, 5 min)' },
+        ],
+    },
+    {
+        titulo: '🎱 Bingo (operador)',
+        items: [
+            { k: 'Espacio / A', v: 'bolilla / automático' },
+            { k: 'N', v: 'ronda nueva (dos veces si hay una en juego)' },
+            { k: 'P', v: 'reservar la próxima' },
+            { k: 'V → Enter', v: 'escribir un código y validarlo' },
+            { k: 'M', v: 'desempate · C / X moneda libre' },
+            { k: 'Ctrl + ← →', v: 'carrusel de la lona' },
+            { k: 'F9', v: 'mostrar u ocultar los atajos' },
+        ],
+    },
+    {
+        titulo: '🎮 PC de juegos',
+        items: [
+            { k: 'Esc Esc', v: 'volver al menú (o 3 min sin tocar nada)' },
+            { k: 'Ctrl+Alt+P', v: 'pantalla de Premios (quién va ganando)' },
+            { k: 'Ctrl+Alt+N → Y', v: 'premios entregados: récords a cero (N cancela)' },
+            { k: 'Alt+F4', v: 'salir del modo kiosco' },
+            { k: 'Entregas', v: '17:30 · 19:00 · 20:30' },
+        ],
+    },
+    {
+        titulo: '🆘 Si algo falla',
+        items: [
+            { k: 'A32 en negro', v: 'cerrar Chrome del celu y abrir UNA sola pestaña de la cámara' },
+            { k: 'Clave mal tipeada', v: 'cerrar la ventana del estudio y abrir abrir-estudio.bat de nuevo' },
+            { k: '"ComfyUI no responde"', v: 'abrir-estudio.bat (tarda ~1 min en arrancar)' },
+            { k: 'Sin internet', v: 'el estudio genera igual; el QR y la impresión esperan a que vuelva. El Bingo se juega en papel' },
+            { k: 'Juego trabado', v: 'Esc dos veces' },
+        ],
+    },
+];
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Machete del stand · Expo CFP 401</title>
+    <style>
+        :root { color-scheme: dark; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #0e1117; color: #e8ecf3; font: 16px/1.45 system-ui, sans-serif; }
+        main { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; display: grid; gap: 18px; }
+        h1 { margin: 0; color: #f2c14e; font-size: 1.8rem; }
+        .bajada { margin: 4px 0 0; color: #a3adbd; }
+        .acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+        .boton { padding: 10px 18px; border: 0; border-radius: 999px; background: #f2c14e; color: #10131a; font: 700 1rem system-ui, sans-serif; cursor: pointer; text-decoration: none; }
+        .boton.borde { background: transparent; color: #f2c14e; border: 2px solid #f2c14e; }
+        section { background: #161b24; border: 1px solid #2a3140; border-radius: 14px; padding: 14px 16px; }
+        h2 { margin: 0 0 8px; font-size: 1.15rem; }
+        dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
+        dt { font-weight: 700; white-space: nowrap; }
+        dt kbd, dt span { display: inline-block; padding: 1px 8px; border: 1px solid #3a4356; border-radius: 6px; background: #0e1117; font: 700 0.9rem ui-monospace, monospace; }
+        dd { margin: 0; color: #c9d1de; overflow-wrap: anywhere; }
+        dd a { color: #7fd4ff; }
+        .vista { width: 100%; max-width: 384px; border-radius: 8px; background: #fff; }
+        [hidden] { display: none !important; }
+        @media (max-width: 480px) { dl { grid-template-columns: 1fr; gap: 2px; } dd { margin-bottom: 8px; } }
+        @media print {
+            :root { color-scheme: light; }
+            body { background: #fff; color: #000; }
+            section { background: #fff; border-color: #999; break-inside: avoid; }
+            h1 { color: #000; } dd, .bajada { color: #000; } dd a { color: #000; }
+            .acciones, .vista { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>📋 Machete del stand</h1>
+            <p class="bajada">Expo CFP 401 · viernes 13/11, de 16 a 21 h · Pensamiento Computacional</p>
+        </header>
+        <div class="acciones">
+            <button type="button" class="boton" data-termica>🧾 Imprimir en la térmica</button>
+            <button type="button" class="boton borde" data-compartir hidden>Mandar a Fun Print</button>
+            <a class="boton borde" data-bajar download="machete-expo.png" hidden>Guardar la imagen</a>
+        </div>
+        <img class="vista" data-vista alt="La tira para la térmica" hidden />
+
+        {SECCIONES.map((s) => (
+            <section>
+                <h2>{s.titulo}</h2>
+                <dl>
+                    {s.items.map((i) => (
+                        <>
+                            <dt><span>{i.k}</span></dt>
+                            <dd>{i.link ? <a href={i.link}>{i.v}</a> : i.v}</dd>
+                        </>
+                    ))}
+                </dl>
+            </section>
+        ))}
+    </main>
+
+    <script is:inline type="application/json" id="secciones" set:html={JSON.stringify(SECCIONES)}></script>
+    <script>
+        // La tira de 57 mm: 384 puntos de ancho, solo negro sobre blanco (los grises salen como puntitos)
+        interface Item { k: string; v: string }
+        const secciones = JSON.parse(document.getElementById('secciones')!.textContent!) as { titulo: string; items: Item[] }[];
+        const ANCHO = 384, MARGEN = 8;
+        const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+        let archivo: File | null = null;
+
+        // Parte un texto en renglones que entren en el ancho
+        function renglones(c: CanvasRenderingContext2D, texto: string, ancho: number) {
+            const salida: string[] = [];
+            let actual = '';
+            // Una palabra más ancha que el papel (un link) se corta por letra
+            const palabras = texto.split(' ').flatMap((p) => {
+                if (c.measureText(p).width <= ancho) return [p];
+                const trozos: string[] = [];
+                let trozo = '';
+                for (const letra of p) {
+                    if (c.measureText(trozo + letra).width > ancho) { trozos.push(trozo); trozo = letra; } else trozo += letra;
+                }
+                return [...trozos, trozo];
+            });
+            for (const palabra of palabras) {
+                const prueba = actual ? actual + ' ' + palabra : palabra;
+                if (c.measureText(prueba).width > ancho && actual) { salida.push(actual); actual = palabra; }
+                else actual = prueba;
+            }
+            if (actual) salida.push(actual);
+            return salida;
+        }
+
+        // Se dibuja dos veces: la primera solo mide el alto, la segunda pinta
+        function dibujar(c: CanvasRenderingContext2D | null, medir: CanvasRenderingContext2D) {
+            let y = 10;
+            const ctx = c ?? medir;
+            const texto = (t: string, fuente: string, x: number, ancho: number, salto: number) => {
+                ctx.font = fuente;
+                // Sin emojis: en la térmica salen como una mancha de puntitos
+                for (const r of renglones(ctx, t.replace(/\p{Extended_Pictographic}️?\s?/gu, ''), ancho)) {
+                    y += salto;
+                    if (c) c.fillText(r, x, y);
+                }
+            };
+            texto('MACHETE DEL STAND', '900 30px system-ui, sans-serif', MARGEN, ANCHO - 2 * MARGEN, 32);
+            texto('Expo CFP 401 · 13/11 · 16 a 21 h', '600 18px system-ui, sans-serif', MARGEN, ANCHO - 2 * MARGEN, 24);
+            for (const s of secciones) {
+                y += 14;
+                if (c) c.fillRect(MARGEN, y, ANCHO - 2 * MARGEN, 3);
+                y += 4;
+                // Los emojis no salen en la térmica: el título va sin ellos
+                texto(s.titulo.replace(/^[^\p{L}"]+/u, '').toUpperCase(), '900 22px system-ui, sans-serif', MARGEN, ANCHO - 2 * MARGEN, 28);
+                for (const i of s.items) {
+                    y += 4;
+                    texto(i.k, '800 19px system-ui, sans-serif', MARGEN, ANCHO - 2 * MARGEN, 22);
+                    texto(i.v, '500 18px system-ui, sans-serif', MARGEN + 14, ANCHO - 2 * MARGEN - 14, 21);
+                }
+            }
+            return y + 24;
+        }
+
+        $('[data-termica]').addEventListener('click', () => {
+            const medir = document.createElement('canvas').getContext('2d')!;
+            const lienzo = document.createElement('canvas');
+            lienzo.width = ANCHO;
+            lienzo.height = dibujar(null, medir);
+            const c = lienzo.getContext('2d')!;
+            c.fillStyle = '#fff';
+            c.fillRect(0, 0, lienzo.width, lienzo.height);
+            c.fillStyle = '#000';
+            c.textBaseline = 'alphabetic';
+            dibujar(c, medir);
+            const url = lienzo.toDataURL('image/png');
+            $<HTMLImageElement>('[data-vista]').src = url;
+            $('[data-vista]').hidden = false;
+            const bajar = $<HTMLAnchorElement>('[data-bajar]');
+            bajar.href = url;
+            bajar.hidden = false;
+            lienzo.toBlob((blob) => {
+                if (!blob) return;
+                archivo = new File([blob], 'machete-expo.png', { type: 'image/png' });
+                $('[data-compartir]').hidden = !navigator.canShare?.({ files: [archivo] });
+            });
+        });
+        $('[data-compartir]').addEventListener('click', () => {
+            if (archivo) navigator.share({ files: [archivo] }).catch(() => {});
+        });
+    </script>
+</body>
+</html>

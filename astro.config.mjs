@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
+import sitemap from '@astrojs/sitemap';
 
 // Las dos mitades del curso comparten un mismo GitHub Pages:
 //   /pensamiento-computacional-testing-2026/            → MkDocs (teoría)
@@ -288,5 +289,8 @@ export default defineConfig({
         ),
       ],
     }),
+    // El sitemap lo pone Starlight solo, salvo que ya esté acá: así se pueden dejar afuera las páginas
+    // a las que se llega con un link impreso (el machete de la Expo).
+    sitemap({ filter: (pagina) => !pagina.includes('/expo/machete/') }),
   ],
 });
