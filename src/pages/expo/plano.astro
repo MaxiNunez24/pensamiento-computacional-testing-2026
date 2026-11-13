@@ -24,6 +24,8 @@ const rotulos = STANDS.map((s) => {
 });
 const nombreDe = Object.fromEntries(STANDS.map((s) => [s.id, s.nombre]));
 const muestras = [...MUESTRAS].sort((a, b) => a.hora.localeCompare(b.hora));
+const conHora = muestras.filter((m) => !m.todaLaTarde);
+const todaLaTarde = muestras.filter((m) => m.todaLaTarde);
 const hayEjemplos = muestras.some((m) => m.ejemplo);
 const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA };
 ---
@@ -40,7 +42,36 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             <div><span>Después</span><strong data-despues>—</strong></div>
         </section>
 
-        <p class="deslizar">Deslizá el plano para verlo entero → · Tocá un stand para ver su muestra</p>
+        <section class="cronograma">
+            <h2>Muestras activas</h2>
+            <p class="pista">👆 Tocá una muestra y te llevamos a su stand en el plano.</p>
+            {hayEjemplos && <p class="aviso">⏳ Los horarios todavía no están confirmados: los de esta lista son <strong>de ejemplo</strong>.</p>}
+            <ol>
+                {conHora.map((m) => (
+                    <li data-muestra={m.stand} data-hora={m.hora} class:list={{ general: !m.stand }}>
+                        <time>{m.desde && <small>desde</small>}{m.hora}</time>
+                        <div>
+                            <strong>{m.titulo}</strong>
+                            <span>{m.stand ? nombreDe[m.stand] : 'Toda la Expo'}{!m.desde && ` · ${m.minutos} min`}{m.ejemplo && <em> · horario de ejemplo</em>}</span>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+            {todaLaTarde.length > 0 && <h3>Durante toda la tarde</h3>}
+            <ol>
+                {todaLaTarde.map((m) => (
+                    <li data-muestra={m.stand}>
+                        <time class="siempre">🕓</time>
+                        <div>
+                            <strong>{m.titulo}</strong>
+                            <span>{m.stand && nombreDe[m.stand]}</span>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </section>
+
+        <p class="deslizar">Deslizá el plano de costado para verlo entero → · Tocá un stand para ver su muestra</p>
         <div class="mapa">
             <svg viewBox={`${VISTA.x} ${VISTA.y} ${VISTA.ancho} ${VISTA.alto}`} role="img" aria-label="Plano de la Expo: tocá un stand para ver qué muestra y a qué hora">
                 <!-- La vista satelital, desenfocada: los techos dan la forma del edificio -->
@@ -63,7 +94,9 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
                             role={s.servicio ? undefined : 'button'}
                             aria-label={s.servicio ? undefined : s.nombre}
                         >
-                            <rect class="caja" x={s.x} y={s.y} width={s.ancho} height={s.alto} rx="6" style={`fill:${s.color}`} />
+                            {s.forma
+                                ? <path class="caja" d={s.forma} style={`fill:${s.color}`} />
+                                : <rect class="caja" x={s.x} y={s.y} width={s.ancho} height={s.alto} rx="6" style={`fill:${s.color}`} />}
                             <text
                                 x={cx}
                                 y={cy - ((s.renglones.length - 1) * salto) / 2}
@@ -75,6 +108,13 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
                         </g>
                     );
                 })}
+                <!-- En el celular el plano no entra: en el patio (que está vacío) avisa que hay más a la derecha -->
+                <g class="pista-deslizar" aria-hidden="true" transform="translate(515 470)">
+                    <rect x="-128" y="-74" width="256" height="148" rx="24" />
+                    <text y="-36">Deslizá</text>
+                    <text y="0">para ver más</text>
+                    <path class="pista-flecha" d="M-62 36 h96 v-13 l30 20 l-30 20 v-13 h-96 z" />
+                </g>
             </svg>
         </div>
         <p class="fuente">Vista satelital: Esri, Maxar, Earthstar Geographics</p>
@@ -87,33 +127,20 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             <a class="boton" data-ficha-catalogo hidden target="_blank" rel="noopener">🛍️ Ver qué hay en este stand</a>
         </section>
 
-        <section class="cronograma">
-            <h2>Muestras activas</h2>
-            {hayEjemplos && <p class="aviso">⏳ Los horarios todavía no están confirmados: los de esta lista son <strong>de ejemplo</strong>.</p>}
-            <ol>
-                {muestras.map((m) => (
-                    <li data-muestra={m.stand} data-hora={m.hora}>
-                        <time>{m.hora}</time>
-                        <div>
-                            <strong>{m.titulo}</strong>
-                            <span>{nombreDe[m.stand]} · {m.minutos} min{m.ejemplo && <em> · horario de ejemplo</em>}</span>
-                        </div>
-                    </li>
-                ))}
-            </ol>
-        </section>
     </main>
 </Expo>
 
 <script is:inline type="application/json" id="datos-plano" set:html={JSON.stringify(datos)}></script>
 
 <script>
-    interface Muestra { stand: string; titulo: string; hora: string; minutos: number; ejemplo?: boolean }
+    interface Muestra { stand?: string; titulo: string; hora: string; minutos: number; detalle?: string; desde?: boolean; todaLaTarde?: boolean; ejemplo?: boolean }
     interface Stand { id: string; nombre: string; detalle: string; servicio?: boolean; nuestro?: boolean; catalogo?: string }
     const { stands, muestras, dia, abre, cierra } = JSON.parse(document.getElementById('datos-plano')!.textContent!) as { stands: Stand[]; muestras: Muestra[]; dia: string; abre: string; cierra: string };
     const $ = (sel: string) => document.querySelector<HTMLElement>(sel)!;
     const aMinutos = (hora: string) => Number(hora.slice(0, 2)) * 60 + Number(hora.slice(3));
-    const nombre = (id: string) => stands.find((s) => s.id === id)?.nombre ?? '';
+    const nombre = (id?: string) => stands.find((s) => s.id === id)?.nombre ?? '';
+    // "Ahora" y "Después" miran solo las que tienen hora: las de toda la tarde estarían siempre "ahora"
+    const conHora = muestras.filter((m) => !m.todaLaTarde);
 
     function elegir(id: string) {
         const s = stands.find((x) => x.id === id);
@@ -134,13 +161,33 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             ...(suyas.length
                 ? suyas.map((m) => {
                     const li = document.createElement('li');
-                    li.textContent = `${m.hora} · ${m.titulo}${m.ejemplo ? ' (horario de ejemplo)' : ''}`;
+                    const cuando = m.todaLaTarde ? 'Toda la tarde' : (m.desde ? 'Desde las ' : '') + m.hora;
+                    li.append(Object.assign(document.createElement('strong'), { textContent: `${cuando} · ${m.titulo}${m.ejemplo ? ' (horario de ejemplo)' : ''}` }));
+                    if (m.detalle) li.append(Object.assign(document.createElement('span'), { textContent: ' ' + m.detalle }));
                     return li;
                 })
                 : [Object.assign(document.createElement('li'), { textContent: 'Sin muestra activa anotada.', className: 'nada' })]),
         );
         document.querySelectorAll<HTMLElement>('[data-muestra]').forEach((li) => li.classList.toggle('marcada', li.dataset.muestra === id));
+        centrar(`.stand[data-stand="${CSS.escape(id)}"] .caja`);
     }
+
+    // En el celular el plano se desliza de costado: lo elegido (Soldadura está a la derecha de todo) se
+    // trae al centro, para no tener que buscarlo
+    const mapa = $('.mapa');
+    function centrar(sel: string) {
+        const el = document.querySelector(sel);
+        if (!el || mapa.scrollWidth <= mapa.clientWidth) return;
+        const r = el.getBoundingClientRect();
+        const m = mapa.getBoundingClientRect();
+        mapa.scrollTo({ left: mapa.scrollLeft + r.left + r.width / 2 - (m.left + m.width / 2), behavior: 'smooth' });
+    }
+    // La flecha del patio: solo si el plano no entra, y se va cuando ya se deslizó
+    const pista = document.querySelector<SVGGElement>('.pista-deslizar')!;
+    const verPista = () => pista.classList.toggle('oculta', mapa.scrollWidth <= mapa.clientWidth + 4 || mapa.scrollLeft > 40);
+    mapa.addEventListener('scroll', verPista, { passive: true });
+    addEventListener('resize', verPista);
+    verPista();
 
     document.querySelectorAll<HTMLElement>('.stand:not(.servicio)').forEach((g) => {
         g.addEventListener('click', () => elegir(g.dataset.stand!));
@@ -152,7 +199,8 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
         });
     });
     document.querySelectorAll<HTMLElement>('[data-muestra]').forEach((li) => li.addEventListener('click', () => {
-        elegir(li.dataset.muestra!);
+        if (!li.dataset.muestra) return; // la apertura no es de un stand
+        elegir(li.dataset.muestra);
         document.querySelector('.mapa')!.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }));
 
@@ -203,6 +251,7 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             $('.ficha .etiqueta').textContent = '📍 Estás acá';
             $('[data-ficha-nombre]').textContent = 'Entrada de la Expo';
             $('[data-ficha-detalle]').textContent = 'Tocá un stand en el plano para ver qué curso es y si tiene una muestra activa.';
+            centrar('.entrada rect');
         } else {
             elegir(aca!);
         }
@@ -214,7 +263,8 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
         const p = Object.fromEntries(partes.map((x) => [x.type, x.value]));
         const hoy = `${p.year}-${p.month}-${p.day}`;
         const ahora = Number(p.hour) * 60 + Number(p.minute);
-        const texto = (m: Muestra) => `${m.hora} · ${m.titulo} (${nombre(m.stand)})`;
+        const texto = (m: Muestra) => `${m.hora} · ${m.titulo}${m.stand ? ` (${nombre(m.stand)})` : ''}`;
+        const muestras = conHora;
         let enCurso = '—';
         let proxima = '—';
         if (hoy < dia) {
@@ -315,6 +365,43 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
     }
     .flecha {
         fill: #cfd6e2;
+    }
+    .pista {
+        margin: -4px 0 0;
+        color: var(--menta);
+        font-weight: 600;
+    }
+    .pista-deslizar {
+        pointer-events: none;
+        transition: opacity 0.4s;
+    }
+    .pista-deslizar.oculta {
+        opacity: 0;
+    }
+    .pista-deslizar rect {
+        fill: rgba(13, 16, 23, 0.82);
+        stroke: #ffffff;
+        stroke-width: 3;
+    }
+    .pista-deslizar text {
+        fill: #ffffff;
+        font: 800 30px system-ui, sans-serif;
+        text-anchor: middle;
+        dominant-baseline: middle;
+    }
+    .pista-flecha {
+        fill: #f2c14e;
+        animation: empujar 1.2s ease-in-out infinite;
+    }
+    @keyframes empujar {
+        50% {
+            transform: translateX(16px);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .pista-flecha {
+            animation: none;
+        }
     }
     .fuente {
         margin: -14px 0 0;
@@ -457,6 +544,26 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
     }
     .cronograma li.pasada {
         opacity: 0.5;
+    }
+    .cronograma h3 {
+        margin: 8px 0 0;
+        font-size: 1.1rem;
+    }
+    .cronograma li.general {
+        cursor: default;
+    }
+    .cronograma time small {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+    .cronograma time.siempre {
+        text-align: center;
+    }
+    .ficha li span {
+        color: var(--suave);
     }
     .cronograma time {
         font-size: 1.3rem;

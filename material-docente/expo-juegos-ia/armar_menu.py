@@ -101,6 +101,8 @@ def identificador(nombre: str, usados: set) -> str:
 
 
 def con_vuelta(codigo: str, ident: str) -> str:
+    # Si el juego viene de un menú ya armado, trae la vuelta puesta: se saca para no ponerla dos veces
+    codigo = re.sub(r"\n?<script>\n/\* Agregado por armar_menu\.py.*?</script>\n", "", codigo, flags=re.S)
     script = VOLVER.replace("__ID__", ident).replace("__MS__", str(MINUTOS_SIN_TOCAR * 60_000))
     # Después del <meta charset>, si lo hay: tiene que quedar en los primeros 1024 bytes
     cabeza = re.search(r"<meta[^>]*charset[^>]*>", codigo, re.I) or re.search(r"<head[^>]*>", codigo, re.I)

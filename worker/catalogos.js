@@ -242,7 +242,8 @@ function limpiarAspecto(a) {
         acento: color(a.acento),
         marca: color(a.marca),
         sobreAcento: color(a.sobreAcento),
-        imagen: /^w:[a-z0-9]{12,32}$/.test(a.imagen || '') ? a.imagen : '',
+        // "pagina": la foto de fondo con que se armó la página (su fondo.jpg), que no pasa por acá
+        imagen: /^w:[a-z0-9]{12,32}$/.test(a.imagen || '') || a.imagen === 'pagina' ? a.imagen : '',
         velo: Math.min(0.9, Math.max(0, Number(a.velo) || 0)),
     };
     // Qué parte de la foto de fondo se ve, como en las fotos de los productos
