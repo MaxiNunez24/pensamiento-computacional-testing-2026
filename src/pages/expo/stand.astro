@@ -33,6 +33,15 @@ const curso = base + '/preparando-expo/';
             if (new URLSearchParams(location.search).has('lona')) {
                 document.documentElement.classList.add('lona');
                 document.documentElement.dataset.tema = 'oscuro';
+                // Adentro de la lona, el mismo tema que ella (Ctrl+Alt+O la pasa a claro)
+                try {
+                    const lona = parent !== window ? parent.document.documentElement : null;
+                    if (lona) {
+                        const seguir = () => { document.documentElement.dataset.tema = lona.dataset.tema === 'claro' ? 'claro' : 'oscuro'; };
+                        seguir();
+                        new MutationObserver(seguir).observe(lona, { attributes: true, attributeFilter: ['data-tema'] });
+                    }
+                } catch (e) {}
             }
         </script>
     </head>
