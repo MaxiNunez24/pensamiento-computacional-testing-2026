@@ -1,0 +1,568 @@
+(function(){"use strict";const _="https://cdn.jsdelivr.net/pyodide/v0.29.4/full/",y=`
+import sys, io, traceback, json, linecache, importlib, os, ast, unicodedata
+
+# La carpeta actual en sys.path: así un ejercicio puede importar el módulo
+# (archivo .py) que escribió otro ejercicio antes. Es lo que permite "tener
+# clases en distintos archivos".
+if "." not in sys.path:
+    sys.path.insert(0, ".")
+
+
+# ---------------------------------------------------------------------------
+# Comparaciones que EXPLICAN por qué no coinciden
+#
+# El caso que más frena a los alumnos: el print tiene que salir textual, y
+# 'Ana tiene 30 anos' vs 'Ana tiene 30 años' se ven casi iguales. Mirar dos
+# strings caracter por caracter para encontrar una tilde es un ejercicio de
+# paciencia, no de programación.
+#
+# Cada 'assert a == b' de los tests se reescribe (más abajo, con ast) para que
+# al fallar diga QUÉ difiere: los acentos, las mayúsculas, un espacio de más, o
+# en qué caracter exacto se separan.
+# ---------------------------------------------------------------------------
+
+def _sin_tildes(s):
+    return "".join(
+        c for c in unicodedata.normalize("NFD", s)
+        if unicodedata.category(c) != "Mn"
+    )
+
+def _pista_texto(a, b):
+    """La diferencia entre dos strings, en criollo. '' si no hay nada útil."""
+    # El más frecuente de todos y el que peor se explica solo: no salió nada.
+    if a == "":
+        return "👉 Tu programa no mostró nada. ¿Le falta el print(), o el print quedó adentro de un if que no se cumple?"
+    sa, sb = _sin_tildes(a), _sin_tildes(b)
+    if sa == sb:
+        return "👉 Es el mismo texto salvo por los ACENTOS y la ñ. Si el texto sale del enunciado, lo más cómodo es tocarlo para copiarlo y pegarlo."
+    if a.lower() == b.lower():
+        return "👉 Es el mismo texto pero cambian las MAYÚSCULAS y minúsculas."
+    if sa.lower() == sb.lower():
+        return "👉 Es el mismo texto salvo por los ACENTOS y las MAYÚSCULAS."
+    if a.strip() == b.strip():
+        return "👉 El texto está bien: sobra (o falta) un espacio o un salto de línea al principio o al final."
+    if a.split() == b.split():
+        return "👉 Las palabras están bien: lo que no coincide son los ESPACIOS del medio."
+
+    # Uno está adentro del otro: sobra o falta un pedazo. Va ANTES de buscar la
+    # primera diferencia, porque si sobra algo al principio ese cálculo dice
+    # "difieren en el caracter 1" y no ayuda a nadie.
+    def _bordes(entero, parte):
+        i = entero.index(parte)
+        antes, despues = entero[:i], entero[i + len(parte):]
+        trozos = []
+        if antes:
+            trozos.append("al principio " + repr(antes))
+        if despues:
+            trozos.append("al final " + repr(despues))
+        return " y ".join(trozos)
+
+    if b and b in a:
+        donde = _bordes(a, b)
+        if donde:
+            return "👉 Lo que hay que mostrar está adentro de tu texto, pero te SOBRA " + donde + "."
+    if a and a in b:
+        donde = _bordes(b, a)
+        if donde:
+            return "👉 Lo que escribiste está bien pero INCOMPLETO: te falta " + donde + "."
+
+    # Dónde se separan, que es lo primero que uno mira.
+    n = min(len(a), len(b))
+    i = 0
+    while i < n and a[i] == b[i]:
+        i += 1
+    if i == n and len(a) != len(b):
+        if len(a) > len(b):
+            return "👉 Empieza igual, pero al final te SOBRA: " + repr(a[n:])
+        return "👉 Empieza igual, pero al final te FALTA: " + repr(b[n:])
+    if i > 0:
+        return ("👉 Coinciden hasta " + repr(a[:i]) + ". La primera diferencia está en el caracter "
+                + str(i + 1) + ": vos pusiste " + repr(a[i]) + " y va " + repr(b[i]) + ".")
+    return "👉 No se parecen desde el arranque. ¿Estás mostrando lo que se pide?"
+
+def _explicar(obtenido, esperado, texto):
+    lineas = []
+    if texto:
+        lineas.append(str(texto))
+    ro, resp = repr(obtenido), repr(esperado)
+    # Si el mensaje del ejercicio ya muestra el valor, no lo repetimos.
+    faltan = []
+    if not texto or ro not in texto:
+        faltan.append("Vos diste:   " + ro)
+    if not texto or resp not in texto:
+        faltan.append("Se esperaba: " + resp)
+    if faltan:
+        if lineas:
+            lineas.append("")
+        lineas.extend(faltan)
+    if isinstance(obtenido, str) and isinstance(esperado, str):
+        pista = _pista_texto(obtenido, esperado)
+        if pista:
+            lineas.append("")
+            lineas.append(pista)
+    return "\\n".join(lineas) or "Ese caso no dio el resultado esperado."
+
+def _igual(obtenido, esperado, msg=None):
+    if obtenido == esperado:
+        return
+    texto = None
+    if msg is not None:
+        # El mensaje llega como lambda y se evalúa SOLO acá: varios tests hacen
+        # correr(...) adentro de su f-string, y evaluarlo siempre significaría
+        # ejecutar el código del alumno de nuevo en cada assert que pasa.
+        try:
+            texto = msg()
+        except Exception:
+            texto = None
+    raise AssertionError(_explicar(obtenido, esperado, texto))
+
+class _ReescribirAsserts(ast.NodeTransformer):
+    """assert a == b, msg   ->   _igual(a, b, lambda: msg)
+
+    Solo el == simple. Todo lo demás (assert not x, a != b, comparaciones
+    encadenadas) queda intacto y sigue funcionando como siempre.
+    """
+
+    def visit_Assert(self, nodo):
+        prueba = nodo.test
+        if not isinstance(prueba, ast.Compare):
+            return nodo
+        if len(prueba.ops) != 1 or not isinstance(prueba.ops[0], ast.Eq):
+            return nodo
+        if nodo.msg is None:
+            mensaje = ast.Constant(value=None)
+        else:
+            mensaje = ast.Lambda(
+                args=ast.arguments(
+                    posonlyargs=[], args=[], vararg=None,
+                    kwonlyargs=[], kw_defaults=[], kwarg=None, defaults=[],
+                ),
+                body=nodo.msg,
+            )
+        llamada = ast.Call(
+            func=ast.Name(id="_igual", ctx=ast.Load()),
+            args=[prueba.left, prueba.comparators[0], mensaje],
+            keywords=[],
+        )
+        return ast.copy_location(ast.Expr(value=llamada), nodo)
+
+def _compilar_tests(tests):
+    # Los números de línea se preservan, así el traceback sigue apuntando a la
+    # línea real del test que escribió el profe.
+    arbol = _ReescribirAsserts().visit(ast.parse(tests, "los_tests", "exec"))
+    ast.fix_missing_locations(arbol)
+    return compile(arbol, "los_tests", "exec")
+
+def _mk_input(cola):
+    """Devuelve un input() que consume respuestas ya cargadas.
+
+    Pyodide corre en un Web Worker y no puede frenarse a esperar que el alumno
+    teclee (haría falta SharedArrayBuffer, que necesita cabeceras que GitHub
+    Pages no deja poner). Así que las respuestas vienen de antemano y este
+    input() las va sacando de la cola.
+
+    El detalle que hace que se sienta real: imprime el prompt SEGUIDO del valor,
+    que es exactamente lo que se ve en una terminal cuando alguien escribe y
+    aprieta Enter.
+    """
+    def _input(prompt=""):
+        if not cola:
+            raise EOFError(
+                "Tu programa pidió más datos de los que hay cargados en 'Entradas'. "
+                "Agregá una línea más ahí abajo, o revisá si te quedó un input() de más."
+            )
+        valor = cola.pop(0)
+        print(str(prompt) + valor)
+        return valor
+    return _input
+
+def _run_user(code, tests="", archivo="", datos="", entradas_json=""):
+    # Registramos el código en linecache para que el traceback pueda mostrar
+    # la línea EXACTA que falló (sin esto, al venir de un string, queda en blanco).
+    linecache.cache["tu_codigo"] = (len(code), None, code.splitlines(keepends=True), "tu_codigo")
+    linecache.cache["los_tests"] = (len(tests), None, tests.splitlines(keepends=True), "los_tests")
+
+    propios = {"tu_codigo", "los_tests"}
+    mod_name = ""
+    if archivo:
+        # Este ejercicio "es" un archivo .py: lo guardamos en el disco virtual
+        # para que otros ejercicios puedan importarlo.
+        with open(archivo, "w", encoding="utf-8") as fh:
+            fh.write(code)
+        linecache.cache[archivo] = (len(code), None, code.splitlines(keepends=True), archivo)
+        propios.add(archivo)
+        mod_name = archivo[:-3] if archivo.endswith(".py") else archivo
+        sys.modules.pop(mod_name, None)   # que un re-run tome la versión nueva
+        importlib.invalidate_caches()
+
+    _entradas = json.loads(entradas_json) if entradas_json else []
+
+    buf = io.StringIO()
+    old = sys.stdout
+    sys.stdout = buf
+    ns = {}
+    ok = True
+    err = ""
+
+    # Con qué variables lo reprobó el test la última vez, y de qué tamaño eran
+    # las originales. Sirve para poder decirle al alumno "lo probamos con una
+    # lista más chica" en vez de dejarlo adivinando por qué su código, que se ve
+    # bien, falla. Se llenan más abajo; van acá porque el except los necesita.
+    _ultima_corrida = [None]
+    _tam_base = {}
+
+    def _describir(variables):
+        partes = []
+        for nombre, valor in variables.items():
+            try:
+                n = len(valor)
+            except TypeError:
+                partes.append(nombre + " = " + repr(valor))
+                continue
+            m = _tam_base.get(nombre)
+            if m is None or m == n:
+                partes.append(nombre + " con " + str(n) + " elementos")
+            else:
+                cual = "más chica" if n < m else "más grande"
+                partes.append(nombre + " " + cual + ": " + str(n) + " en vez de " + str(m))
+        return ", ".join(partes)
+
+    try:
+        # 'datos' son las variables que el ejercicio le REGALA al alumno (por
+        # ejemplo, una edad ya cargada). Se ejecutan antes que su código, así el
+        # botón Ejecutar funciona sin que él tenga que definirlas.
+        if datos:
+            exec(compile(datos, "los_datos", "exec"), ns)
+            # Los tamaños se anotan ACÁ y no después, porque el código del
+            # alumno puede hacer append y correrlos.
+            for _n, _v in ns.items():
+                try:
+                    _tam_base[_n] = len(_v)
+                except TypeError:
+                    pass
+        ns["input"] = _mk_input(list(_entradas))
+        if archivo:
+            importlib.import_module(mod_name)   # valida que el archivo del alumno cargue bien
+        else:
+            exec(compile(code, "tu_codigo", "exec"), ns)
+        if tests:
+            # --- Modo "programa" (sin funciones) -------------------------------
+            # Hasta que el curso llegue a Funciones, los ejercicios no pueden
+            # pedir 'def'. Para poder verificarlos igual, los tests reciben:
+            #
+            #   salida            -> lo que el programa imprimió (string)
+            #   correr(**vars)    -> vuelve a correr el código del alumno con
+            #                        otras variables ya definidas, y devuelve
+            #                        lo que imprimió esta vez
+            #
+            # Con 'correr' un mismo programa se puede probar con varias entradas
+            # sin que el alumno tenga que escribir una función.
+            ns["salida"] = buf.getvalue()
+
+            def _correr(entradas=None, **variables):
+                # Queda anotado para el except: si el código del alumno revienta
+                # acá adentro, poder decirle CON QUÉ datos lo reprobamos.
+                _ultima_corrida[0] = variables
+                _ns = {}
+                if datos:
+                    exec(compile(datos, "los_datos", "exec"), _ns)
+                _ns.update(variables)   # lo que pide el test pisa al valor regalado
+                # 'entradas' es lo que el alumno "tecleará" en esta corrida.
+                _ns["input"] = _mk_input(list(_entradas if entradas is None else entradas))
+                _buf = io.StringIO()
+                _old = sys.stdout
+                sys.stdout = _buf
+                try:
+                    exec(compile(code, "tu_codigo", "exec"), _ns)
+                finally:
+                    sys.stdout = _old
+                return _buf.getvalue()
+
+            ns["correr"] = _correr
+            ns["_igual"] = _igual
+            exec(_compilar_tests(tests), ns)
+    except SyntaxError as e:
+        ok = False
+        if e.filename in propios:
+            donde = "los tests" if e.filename == "los_tests" else "tu código"
+            err = f"Error de sintaxis en {donde}, línea {e.lineno}: {e.msg}"
+        else:
+            # No viene de compilar código: viene de que los tests intentaron
+            # INTERPRETAR la salida (ast.literal_eval) y no había nada que
+            # interpretar. Decirle "error de sintaxis en tu código" acá lo manda
+            # a buscar un error que no existe.
+            _mostrado = buf.getvalue().rstrip()
+            if not _mostrado.strip():
+                err = ("Tu programa todavía no muestra nada en pantalla.\\n"
+                       "El verificador corrige mirando lo que imprimís: "
+                       "fijate si te falta el print().")
+            else:
+                err = ("El verificador no pudo entender lo que mostraste.\\n"
+                       f"Mostró esto:\\n{_mostrado}")
+            # (mismo criterio que el IndexError de más abajo)
+    except ModuleNotFoundError as e:
+        ok = False
+        err = (f"No encontré el módulo '{e.name}'.\\n"
+               f"¿Ejecutaste primero el ejercicio donde se define ({e.name}.py)? "
+               f"Hacelo y volvé a intentar.")
+    except IndexError as e:
+        # Casi todos los ejercicios "de programa" verifican mirando las últimas
+        # líneas de la salida (splitlines()[-1]). Si el alumno todavía no puso
+        # el print, esa lista viene vacía y el corchete revienta DENTRO DEL
+        # TEST. Sin esto, lo que ve es "IndexError: list index out of range"
+        # señalando código nuestro: un error que él no escribió, en un archivo
+        # que no puede abrir.
+        ok = False
+        _tb = traceback.extract_tb(sys.exc_info()[2])
+        # Solo hablamos de "la salida" si la línea que reventó estaba MIRANDO la
+        # salida. Un test que hace c.alumnos[0] también tira IndexError, y ahí
+        # decirle al alumno que le falta un print sería mandarlo al lugar
+        # equivocado.
+        #
+        # OJO al editar este archivo: todo esto vive adentro de un template
+        # literal de TypeScript, así que un acento grave en un comentario Python
+        # CIERRA el literal y rompe el worker entero. El build de Astro pasa
+        # igual; se ve recién en el navegador como "falló el worker de Python".
+        # Se comprueba con:
+        #     npx esbuild src/scripts/pyodide-worker.ts --format=esm --outfile=w.js
+        # La señal no es la línea que reventó sino QUÉ MIRA el ejercicio para
+        # corregir. Un test que usa correr(), salida o splitlines corrige por lo
+        # que el alumno imprime; ahí, sin salida, lo que falta es el print. Uno
+        # que no los usa es de escribir una función, nadie espera un print, y un
+        # que revienta en un c.alumnos[0] es otra cosa completamente.
+        # El ÚLTIMO frame propio, no si hay alguno: correr() se llama DESDE el
+        # test, así que siempre hay un frame de los_tests en la pila aunque la
+        # excepción haya explotado en el código del alumno. Con any() todo
+        # IndexError del alumno se reportaba como "te falta el print".
+        _propios_tb = [f for f in _tb if f.filename in propios]
+        _en_test = bool(_propios_tb) and _propios_tb[-1].filename == "los_tests"
+        _mira_la_salida = "correr(" in tests or "salida" in tests or "splitlines" in tests
+        _sobre_la_salida = _en_test and _mira_la_salida
+        _mostrado = buf.getvalue().rstrip()
+        if _sobre_la_salida and not _mostrado.strip():
+            err = ("Tu programa todavía no muestra nada en pantalla.\\n"
+                   "El verificador corrige mirando lo que imprimís: "
+                   "fijate si te falta el print().")
+        elif _sobre_la_salida:
+            err = ("Tu programa muestra menos líneas de las que pide el ejercicio.\\n"
+                   f"Mostró esto:\\n{_mostrado}")
+        else:
+            partes = []
+            for f in _tb:
+                if f.filename in propios:
+                    donde = "los tests" if f.filename == "los_tests" else "tu código"
+                    linea = (f.line or "").strip()
+                    partes.append(f"En {donde}, línea {f.lineno}:  {linea}" if linea
+                                  else f"En {donde}, línea {f.lineno}")
+            partes.append(f"IndexError: {e}")
+            if _ultima_corrida[0]:
+                # El test lo reprobó con otros datos. Decirlo es la mitad del
+                # ejercicio: su código anda con la lista que él ve y se rompe
+                # con otra, que es justamente lo que se está enseñando.
+                partes.insert(0, "Al probarlo con una lista de otro tamaño ("
+                              + _describir(_ultima_corrida[0]) + "), "
+                              "tu código usa un índice que no existe.")
+                partes.insert(1, "")
+            else:
+                partes.append("Estás pidiendo una posición que no existe en esa lista o texto.")
+            err = "\\n".join(partes)
+    except Exception as e:
+        ok = False
+        tb = traceback.extract_tb(sys.exc_info()[2])
+        partes = []
+        for f in tb:
+            if f.filename in propios:
+                donde = "los tests" if f.filename == "los_tests" else "tu código"
+                linea = (f.line or "").strip()
+                if linea:
+                    partes.append(f"En {donde}, línea {f.lineno}:  {linea}")
+                else:
+                    partes.append(f"En {donde}, línea {f.lineno}")
+        msg = str(e)
+        if isinstance(e, AssertionError):
+            partes.append(msg if msg else "Ese caso no dio el resultado esperado.")
+        else:
+            tipo = type(e).__name__
+            partes.append(f"{tipo}: {msg}" if msg else tipo)
+        err = "\\n".join(partes)
+    finally:
+        sys.stdout = old
+    return json.dumps({"ok": ok, "out": buf.getvalue(), "err": err})
+
+
+class _TopeDePasos(Exception):
+    """El código del alumno superó el máximo de pasos que estamos dispuestos a contar."""
+
+
+def _medir(code, datos, escenarios_json, tope):
+    """Cuenta cuántas LÍNEAS de código ejecuta la solución del alumno.
+
+    Ese número es la métrica de eficiencia del curso. Es honesto y, sobre todo,
+    ENTENDIBLE: no hace falta hablar de notación O-grande para que se vea que
+    una solución hace 30 pasos y otra 500.000 con los mismos datos.
+
+    Cómo: sys.settrace con un tracer que solo se engancha a los frames cuyo
+    archivo es "tu_codigo". Así no contamos ni el armado del escenario ni las
+    entrañas de Python.
+
+    Efecto de borde buscado: sum(), max(), sorted() y compañía están escritos en
+    C, así que valen UN paso. Es exactamente la lección que queremos dar —
+    apoyarse en las herramientas del lenguaje sale más barato que reescribirlas.
+
+    El tope corta los bucles desbocados: trazar es lento y sin él una solución
+    de fuerza bruta se comería el timeout entero.
+    """
+    linecache.cache["tu_codigo"] = (len(code), None, code.splitlines(keepends=True), "tu_codigo")
+    escenarios = json.loads(escenarios_json)
+    resultados = []
+    err = ""
+    buf = io.StringIO()
+    old = sys.stdout
+    sys.stdout = buf
+    try:
+        for esc in escenarios:
+            ns = {}
+            if datos:
+                exec(compile(datos, "los_datos", "exec"), ns)
+            # Las definiciones se ejecutan ANTES de empezar a contar: lo que se
+            # mide es resolver el problema, no declarar la función.
+            exec(compile(code, "tu_codigo", "exec"), ns)
+
+            cuenta = [0]
+
+            def _local(frame, event, arg, _c=cuenta, _t=tope):
+                if event == "line":
+                    _c[0] += 1
+                    if _c[0] > _t:
+                        raise _TopeDePasos()
+                return _local
+
+            def _global(frame, event, arg):
+                if frame.f_code.co_filename == "tu_codigo":
+                    return _local
+                return None
+
+            cortado = False
+            sys.settrace(_global)
+            try:
+                exec(compile(esc["codigo"], "el_escenario", "exec"), ns)
+            except _TopeDePasos:
+                cortado = True
+            finally:
+                sys.settrace(None)
+
+            resultados.append({
+                "etiqueta": esc.get("etiqueta", ""),
+                "tamano": esc.get("tamano", 0),
+                "pasos": cuenta[0],
+                "cortado": cortado,
+            })
+    except Exception as e:
+        tipo = type(e).__name__
+        msg = str(e)
+        err = f"{tipo}: {msg}" if msg else tipo
+    finally:
+        sys.settrace(None)
+        sys.stdout = old
+    return json.dumps({"ok": err == "", "err": err, "escenarios": resultados})
+`,v=`
+import ast as _ast
+import json as _json
+
+_NL = chr(10)
+
+
+def _sugerir_llamada(codigo, tests):
+    try:
+        programa = _ast.parse(codigo).body
+        definidos = {n.name for n in programa
+                     if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef, _ast.ClassDef))}
+        arbol = _ast.parse(tests)
+    except SyntaxError:
+        return ""
+    if not definidos:
+        return ""
+
+    def llamadas(nodo):
+        return [n for n in _ast.walk(nodo)
+                if isinstance(n, _ast.Call) and isinstance(n.func, _ast.Name) and n.func.id in definidos]
+
+    # Si el programa ya usa sus funciones (un "para probar: opcion_alta(con)"
+    # al final), no hace falta agregar nada.
+    if any(llamadas(st) for st in programa
+           if not isinstance(st, (_ast.FunctionDef, _ast.AsyncFunctionDef, _ast.ClassDef))):
+        return ""
+
+    def usa(nodo):
+        return {n.id for n in _ast.walk(nodo) if isinstance(n, _ast.Name) and isinstance(n.ctx, _ast.Load)}
+
+    def asigna(nodo):
+        return {n.id for n in _ast.walk(nodo) if isinstance(n, _ast.Name) and isinstance(n.ctx, _ast.Store)}
+
+    def solo_lo_necesario(lineas):
+        # Las líneas que llaman a algo del alumno, las que usan lo que esas
+        # dejaron (a.marcar("P") después de a = Alumno(...)), y las que preparan
+        # lo que usan (dia = {...} antes de estado_de(dia, ...)).
+        sirve = [bool(llamadas(st)) for st, _ in lineas]
+        hechos = set()
+        for i, (st, _) in enumerate(lineas):
+            if not sirve[i] and usa(st) & hechos:
+                sirve[i] = True
+            if sirve[i]:
+                hechos |= asigna(st)
+        hace_falta = set()
+        for i in range(len(lineas) - 1, -1, -1):
+            st = lineas[i][0]
+            if not sirve[i] and asigna(st) & hace_falta:
+                sirve[i] = True
+            if sirve[i]:
+                hace_falta |= usa(st)
+        return [linea for linea, ok in zip(lineas, sirve) if ok]
+
+    # Las líneas sueltas de los tests (asignaciones y llamadas), hasta el primer
+    # assert que llama a algo del alumno. Lo compuesto (for, try, def) no se
+    # copia: se saltea.
+    lineas = []
+    for st in arbol.body:
+        texto = _ast.get_source_segment(tests, st) or ""
+        if "correr(" in texto or isinstance(st, (_ast.Import, _ast.ImportFrom)):
+            continue
+        if isinstance(st, _ast.Assert):
+            hay = llamadas(st.test)
+            if not hay:
+                continue
+            if any(llamadas(s) for s, _ in lineas):
+                break
+            llamada = _ast.get_source_segment(tests, hay[0])
+            previas = solo_lo_necesario(lineas + [(_ast.parse(llamada).body[0], llamada)])[:-1]
+            return _NL.join([t for _, t in previas] + ["print(" + llamada + ")"])
+        if isinstance(st, (_ast.Assign, _ast.AugAssign, _ast.AnnAssign, _ast.Expr)):
+            lineas.append((st, texto))
+        elif any(llamadas(s) for s, _ in lineas):
+            break
+    lineas = solo_lo_necesario(lineas)[:6]
+    if not any(llamadas(st) for st, _ in lineas):
+        return ""
+    ultima = lineas[-1][0]
+    textos = [t for _, t in lineas]
+    if (isinstance(ultima, _ast.Assign) and len(ultima.targets) == 1
+            and isinstance(ultima.targets[0], _ast.Name) and isinstance(ultima.value, _ast.Call)):
+        textos.append("print(" + ultima.targets[0].id + ")")
+    return _NL.join(textos)
+
+
+def _ver_como_corre(codigo, tests, datos, llamada, sugerir, entradas_json, max_pasos):
+    if sugerir:
+        llamada = _sugerir_llamada(codigo, tests)
+    partes = []
+    if datos.strip():
+        partes.append("# Esto ya estaba cargado:" + _NL + datos.strip())
+    partes.append(codigo.rstrip())
+    if llamada.strip():
+        partes.append("# Probar con:" + _NL + llamada.strip())
+    programa = (_NL + _NL).join(partes)
+    traza = _json.loads(_motor_trazar(programa, max_pasos, _json.loads(entradas_json)))
+    return _json.dumps({"llamada": llamada, "traza": traza}, ensure_ascii=False)
+`;let l=null,d=null,c=null,e=null;async function q(){const a=await(await import(`${_}pyodide.mjs`)).loadPyodide({indexURL:_});e=a,a.runPython(y),d=a.globals.get("_run_user"),c=a.globals.get("_medir"),postMessage({type:"ready"})}const x=q().catch(o=>{postMessage({type:"init-error",error:String(o)})});self.onmessage=async o=>{const{id:a,code:r,tests:u,archivo:h,datos:n,entradas:g,archivos:p,modo:t,escenarios:E,tope:b,trazador:j,llamada:N,sugerir:A}=o.data;if(await x,!d||!c)return;const m=Object.keys(p||{});if(e&&m.length){for(const i of m)e.FS.writeFile(i,p[i]);const s=m.map(i=>i.replace(/\.py$/,""));e.runPython(["import sys, importlib","for _m in "+JSON.stringify(s)+":","    sys.modules.pop(_m, None)","importlib.invalidate_caches()"].join(`
+`))}if(e&&t!=="medir")try{const s=[n||"",r,u,...Object.values(p||{})].join(`
+`);await e.loadPackagesFromImports(s,{messageCallback:()=>{}})}catch{}let f;try{t==="trazar"&&!l&&e&&(e.runPython(j||""),e.runPython(v),l=e.globals.get("_ver_como_corre")),f=t==="trazar"?l(r,u,n||"",N||"",!!A,JSON.stringify(g||[]),b||400):t==="medir"?c(r,n||"",JSON.stringify(E||[]),b||2e5):d(r,u,h||"",n||"",JSON.stringify(g||[]))}catch(s){f=JSON.stringify({ok:!1,out:"",err:String(s)})}postMessage({type:"result",id:a,raw:f})}})();
