@@ -160,6 +160,11 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       <!-- El modelo 3D de verdad (/expo/stand/), girando solo: el mismo que se recorre desde el celu -->
       <div class="panel__escena stand3d">
         <iframe src={standLona} title="El stand en 3D" loading="lazy" tabindex="-1"></iframe>
+        <!-- Al final de su turno (grande o en el carrusel): el QR grande, para recorrerlo en el celu -->
+        <div class="stand3d__qr" aria-hidden="true">
+          <span class="stand3d__codigo" set:html={qrStand} />
+          <p>📱 Escaneá y recorrelo en 3D</p>
+        </div>
       </div>
       <p class="panel__esquina"><span class="qr-chico" set:html={qrStand} aria-hidden="true" /> Recorrelo en 3D</p>
     </section>
@@ -353,7 +358,9 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
   }
 
   // La barra se llena en CADA milisegundos: se reinicia cada vez que el carrusel arranca a contar de nuevo
+  let inicioTurno = Date.now();
   function reiniciarBarra() {
+    inicioTurno = Date.now();
     const barra = $('[data-tiempo]');
     barra.style.animation = 'none';
     void barra.offsetWidth; // para que la animación vuelva a arrancar
@@ -365,6 +372,15 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     ubicar();
     reiniciarBarra();
   }
+  // El QR grande del Stand: en los últimos 4 segundos de cada turno de 12, esté grande o en el carrusel
+  const QR_STAND = 4000;
+  setInterval(() => {
+    const stand = tarjetas.get('stand');
+    if (!stand) return;
+    const fase = (Date.now() - inicioTurno) % CADA;
+    stand.classList.toggle('con-qr', stand.dataset.lugar !== 'oculta' && fase >= CADA - QR_STAND);
+  }, 250);
+
   function arrancarCarrusel() {
     if (reloj) clearInterval(reloj);
     reloj = setInterval(() => pasar(1), CADA);
@@ -1023,6 +1039,45 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
   }
 
   /* El stand en 3D: la página del modelo en modo lona (sin botones, girando sola) */
+  .stand3d {
+    position: relative;
+  }
+  .stand3d__qr {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 2cqmin;
+    border-radius: 1.6cqmin;
+    background: color-mix(in srgb, var(--fondo) 70%, transparent);
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+  }
+  .con-qr .stand3d__qr {
+    opacity: 1;
+    transform: none;
+  }
+  .stand3d__codigo {
+    display: block;
+    width: min(60cqmin, 80%);
+    padding: 2cqmin;
+    border-radius: 2cqmin;
+    background: #fff;
+  }
+  .stand3d__codigo :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .stand3d__qr p {
+    margin: 0;
+    font-size: 5cqmin;
+    font-weight: 800;
+    color: var(--texto);
+  }
   .stand3d iframe {
     width: 100%;
     height: 100%;

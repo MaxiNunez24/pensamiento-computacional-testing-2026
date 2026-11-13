@@ -657,18 +657,29 @@ const curso = base + '/preparando-expo/';
                 controles.minDistance = 1; controles.maxDistance = 16;
                 controles.addEventListener('change', dibujar);
                 if (document.documentElement.classList.contains('lona')) {
-                    // Gira solo, despacio, a unos 30 cuadros por segundo: la notebook también mueve el resto de la lona
+                    // Se mece desde arriba (la vista general): unos 20° para cada lado y apenas arriba y abajo,
+                    // sin dar la vuelta. A unos 30 cuadros por segundo: la notebook también mueve el resto de la lona.
                     render3d.setPixelRatio(1);
-                    controles.autoRotate = true;
-                    controles.autoRotateSpeed = 0.8;
-                    let antes = 0;
-                    const girar = (ahora) => {
-                        requestAnimationFrame(girar);
+                    controles.enabled = false;
+                    let antes = 0, base = null;
+                    const AMPLITUD = 20 * Math.PI / 180, VUELTA = 14000; // un ida y vuelta cada 14 segundos
+                    const mecer = (ahora) => {
+                        requestAnimationFrame(mecer);
                         if (ahora - antes < 33) return;
                         antes = ahora;
-                        controles.update();
+                        // El punto de partida es donde dejó la cámara irA('general'), que corre después de esto
+                        if (!base) base = new THREE.Spherical().setFromVector3(camara.position.clone().sub(controles.target));
+                        const fase = (ahora / VUELTA) * Math.PI * 2;
+                        const s = base.clone();
+                        s.theta += AMPLITUD * Math.sin(fase);
+                        s.phi += 0.05 * Math.sin(fase * 0.5);
+                        // En una ventana angosta (la tarjeta del carrusel) la cámara se aleja para que entre el stand entero
+                        s.radius *= Math.pow(Math.max(1, 1.25 / camara.aspect), 0.85);
+                        camara.position.copy(controles.target).add(new THREE.Vector3().setFromSpherical(s));
+                        camara.lookAt(controles.target);
+                        dibujar();
                     };
-                    requestAnimationFrame(girar);
+                    requestAnimationFrame(mecer);
                 }
                 const ajustar = () => {
                     const r = visor.getBoundingClientRect();
