@@ -171,8 +171,8 @@ def armar_hoja(cuadros, dichos, titulo, ruta, columnas=5, miniatura=360):
         y = 60 + (k // columnas) * (alto_min + sep)
         img = img.resize((miniatura, round(img.height * miniatura / img.width)))
         hoja.paste(img, (x, y))
-        etiqueta = reloj(t) + ('  ↻' if cambio > 28 else '')  # ↻: la imagen cambió mucho (un giro)
-        dib.rectangle([x, y, x + 92, y + 30], fill='#000000')
+        etiqueta = reloj(t) + ('  giro' if cambio > 40 else '')  # la imagen cambió mucho (un giro o un paso grande)
+        dib.rectangle([x, y, x + 132, y + 30], fill='#000000')
         dib.text((x + 6, y + 2), etiqueta, font=f_hora, fill='#ffd54f')
     y = 60 + filas * (alto_min + sep) + 12
     for r in renglones:
@@ -210,7 +210,7 @@ def main():
     (salida / 'hojas').mkdir(exist_ok=True)
     fin = cuadros[-1][0] if cuadros else 0
     indice = [f'# {video.name}\n', f'Un cuadro cada {args.cada:g} s, hojas de {args.tramo:g} s. '
-              '↻ en un cuadro = la imagen cambió mucho (un giro o un paso grande).\n']
+              '"giro" en un cuadro = la imagen cambió mucho (un giro o un paso grande).\n']
     n = 0
     t0 = 0.0
     while t0 <= fin:

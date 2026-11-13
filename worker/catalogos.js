@@ -249,6 +249,15 @@ function limpiarAspecto(a) {
     // Qué parte de la foto de fondo se ve, como en las fotos de los productos
     const encuadre = r.imagen ? limpiarEncuadre(a.encuadre) : undefined;
     if (encuadre) r.encuadre = encuadre;
+    // El diseño (letras, botones, productos y adornos): solo los nombres que conoce catalogo.js
+    const de = (valor, opciones) => (opciones.includes(valor) ? valor : undefined);
+    const letras = de(a.letras, ['elegante', 'moderna', 'artesanal', 'divertida', 'clasica']);
+    const botones = de(a.botones, ['pildora', 'relleno', 'redondeado', 'recto']);
+    const tarjetas = de(a.tarjetas, ['clasica', 'sombra', 'borde', 'plana']);
+    if (letras) r.letras = letras;
+    if (botones) r.botones = botones;
+    if (tarjetas) r.tarjetas = tarjetas;
+    if (a.adornos === false) r.adornos = false;
     return r.fondo && r.texto && r.acento && r.marca && r.sobreAcento ? r : null;
 }
 

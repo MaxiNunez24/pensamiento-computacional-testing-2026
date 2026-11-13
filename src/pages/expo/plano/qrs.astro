@@ -24,6 +24,9 @@ const conQR = await Promise.all(
         return { ...l, url, svg };
     }),
 );
+// La entrada va sola, en la hoja entera (se ve de lejos al llegar); los stands, de a dos por hoja
+const [entrada, ...stands] = conQR;
+const hojas = [[entrada], ...Array.from({ length: Math.ceil(stands.length / 2) }, (_, i) => stands.slice(i * 2, i * 2 + 2))];
 ---
 
 <!doctype html>
@@ -54,6 +57,12 @@ const conQR = await Promise.all(
         .cartel .qr :global(svg) { width: 100%; height: 100%; }
         .cartel .stand { margin: 0; font-size: 20pt; font-weight: 700; }
         .cartel .pie { margin: 0; font-size: 12pt; color: #333; }
+        .hoja.sola { grid-template-rows: 1fr; }
+        .sola .cartel { gap: 8mm; padding: 16mm; }
+        .sola .cartel .titulo { font-size: 46pt; }
+        .sola .cartel .qr { width: 165mm; height: 165mm; }
+        .sola .cartel .stand { font-size: 34pt; }
+        .sola .cartel .pie { font-size: 18pt; }
         @media print {
             body { background: #fff; }
             .lista { display: none; }
@@ -67,7 +76,7 @@ const conQR = await Promise.all(
         <h1>📍 QR "Estás acá" del plano</h1>
         <p>Cada stand tiene su <strong>código</strong>: el plano con <code>?aca=código</code> marca ese stand con
             "📍 Estás acá". La lista sale del plano: si se agrega un stand ahí, aparece acá con su QR.
-            Para imprimir: <strong>Ctrl+P</strong>, A4 vertical, márgenes ninguno (sale una hoja cada dos QR).</p>
+            Para imprimir: <strong>Ctrl+P</strong>, A4 vertical, márgenes ninguno (la entrada sale en una hoja entera y los stands, de a dos por hoja).</p>
         <button type="button" class="boton" onclick="print()">🖨️ Imprimir los QR</button>
         <table>
             <thead><tr><th>Código</th><th>Stand</th><th>Link del QR</th></tr></thead>
@@ -84,8 +93,8 @@ const conQR = await Promise.all(
     </section>
 
     <section class="hojas">
-        {Array.from({ length: Math.ceil(conQR.length / 2) }, (_, i) => conQR.slice(i * 2, i * 2 + 2)).map((par) => (
-            <div class="hoja">
+        {hojas.map((par) => (
+            <div class:list={['hoja', { sola: par.length === 1 && par[0].id === 'entrada' }]}>
                 {par.map((l) => (
                     <div class="cartel">
                         <p class="titulo">📍 ¿Dónde estás?</p>

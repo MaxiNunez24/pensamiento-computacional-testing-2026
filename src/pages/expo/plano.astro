@@ -42,35 +42,6 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             <div><span>Después</span><strong data-despues>—</strong></div>
         </section>
 
-        <section class="cronograma">
-            <h2>Muestras activas</h2>
-            <p class="pista">👆 Tocá una muestra y te llevamos a su stand en el plano.</p>
-            {hayEjemplos && <p class="aviso">⏳ Los horarios todavía no están confirmados: los de esta lista son <strong>de ejemplo</strong>.</p>}
-            <ol>
-                {conHora.map((m) => (
-                    <li data-muestra={m.stand} data-hora={m.hora} class:list={{ general: !m.stand }}>
-                        <time>{m.desde && <small>desde</small>}{m.hora}</time>
-                        <div>
-                            <strong>{m.titulo}</strong>
-                            <span>{m.stand ? nombreDe[m.stand] : 'Toda la Expo'}{!m.desde && ` · ${m.minutos} min`}{m.ejemplo && <em> · horario de ejemplo</em>}</span>
-                        </div>
-                    </li>
-                ))}
-            </ol>
-            {todaLaTarde.length > 0 && <h3>Durante toda la tarde</h3>}
-            <ol>
-                {todaLaTarde.map((m) => (
-                    <li data-muestra={m.stand}>
-                        <time class="siempre">🕓</time>
-                        <div>
-                            <strong>{m.titulo}</strong>
-                            <span>{m.stand && nombreDe[m.stand]}</span>
-                        </div>
-                    </li>
-                ))}
-            </ol>
-        </section>
-
         <p class="deslizar">Deslizá el plano de costado para verlo entero → · Tocá un stand para ver su muestra</p>
         <div class="mapa">
             <svg viewBox={`${VISTA.x} ${VISTA.y} ${VISTA.ancho} ${VISTA.alto}`} role="img" aria-label="Plano de la Expo: tocá un stand para ver qué muestra y a qué hora">
@@ -109,11 +80,13 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
                     );
                 })}
                 <!-- En el celular el plano no entra: en el patio (que está vacío) avisa que hay más a la derecha -->
-                <g class="pista-deslizar" aria-hidden="true" transform="translate(515 470)">
-                    <rect x="-128" y="-74" width="256" height="148" rx="24" />
-                    <text y="-36">Deslizá</text>
-                    <text y="0">para ver más</text>
-                    <path class="pista-flecha" d="M-62 36 h96 v-13 l30 20 l-30 20 v-13 h-96 z" />
+                <g class="pista-deslizar" aria-hidden="true" transform="translate(515 450)">
+                    <rect x="-128" y="-86" width="256" height="226" rx="24" />
+                    <text y="-50">Deslizá</text>
+                    <text y="-14">para ver más</text>
+                    <path class="pista-flecha" d="M-62 20 h96 v-13 l30 20 l-30 20 v-13 h-96 z" />
+                    <!-- La mano arrastra hacia la izquierda: así se mueve el plano para ver lo de la derecha -->
+                    <g class="pista-mano"><circle class="pista-toque" cx="-4" cy="72" r="16" /><text class="pista-dedo" y="104">👆</text></g>
                 </g>
             </svg>
         </div>
@@ -125,6 +98,35 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             <p data-ficha-detalle>Acá vas a ver qué curso es y si tiene una muestra activa.</p>
             <ul data-ficha-muestras hidden></ul>
             <a class="boton" data-ficha-catalogo hidden target="_blank" rel="noopener">🛍️ Ver qué hay en este stand</a>
+        </section>
+
+        <section class="cronograma">
+            <h2>Muestras activas</h2>
+            <p class="pista">👆 Tocá una muestra y te llevamos a su stand en el plano.</p>
+            {hayEjemplos && <p class="aviso">⏳ Los horarios todavía no están confirmados: los de esta lista son <strong>de ejemplo</strong>.</p>}
+            <ol>
+                {conHora.map((m) => (
+                    <li data-muestra={m.stand} data-hora={m.hora} class:list={{ general: !m.stand }}>
+                        <time>{m.desde && <small>desde</small>}{m.hora}</time>
+                        <div>
+                            <strong>{m.titulo}</strong>
+                            <span>{m.stand ? nombreDe[m.stand] : 'Toda la Expo'}{!m.desde && ` · ${m.minutos} min`}{m.ejemplo && <em> · horario de ejemplo</em>}</span>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+            {todaLaTarde.length > 0 && <h3>Durante toda la tarde</h3>}
+            <ol>
+                {todaLaTarde.map((m) => (
+                    <li data-muestra={m.stand}>
+                        <time class="siempre">🕓</time>
+                        <div>
+                            <strong>{m.titulo}</strong>
+                            <span>{m.stand && nombreDe[m.stand]}</span>
+                        </div>
+                    </li>
+                ))}
+            </ol>
         </section>
 
     </main>
@@ -247,6 +249,8 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
         pin.setAttribute('transform', `translate(${lugar.x} ${lugar.y})`);
         pin.innerHTML = lugar.dibujo;
         svg.append(pin);
+        // Se va solo a los 20 segundos: ya se ubicaron y no tapa el plano mientras lo recorren
+        setTimeout(() => pin.classList.add('oculto'), 20_000);
         if (aca === 'entrada') {
             $('.ficha .etiqueta').textContent = '📍 Estás acá';
             $('[data-ficha-nombre]').textContent = 'Entrada de la Expo';
@@ -294,6 +298,9 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
 
 <style>
     .hoja {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
         max-width: 980px;
         margin: 0 auto;
         padding: 20px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px));
@@ -398,8 +405,38 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
             transform: translateX(16px);
         }
     }
+    .pista-deslizar .pista-dedo {
+        font-size: 58px;
+    }
+    .pista-toque {
+        fill: rgba(242, 193, 78, 0.55);
+    }
+    /* Apoya el dedo a la derecha, arrastra a la izquierda, lo levanta y vuelve */
+    .pista-mano {
+        animation: arrastrar 2.4s ease-in-out infinite;
+    }
+    @keyframes arrastrar {
+        0% {
+            transform: translateX(70px);
+            opacity: 0;
+        }
+        15% {
+            transform: translateX(70px);
+            opacity: 1;
+        }
+        65% {
+            transform: translateX(-70px);
+            opacity: 1;
+        }
+        80%,
+        100% {
+            transform: translateX(-70px);
+            opacity: 0;
+        }
+    }
     @media (prefers-reduced-motion: reduce) {
-        .pista-flecha {
+        .pista-flecha,
+        .pista-mano {
             animation: none;
         }
     }
@@ -451,6 +488,10 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
     /* El pin de "Estás acá" lo agrega el script: sin la marca de Astro, va con :global */
     :global(.aca) {
         pointer-events: none;
+        transition: opacity 1.2s;
+    }
+    :global(.aca.oculto) {
+        opacity: 0;
     }
     :global(.aca path),
     :global(.aca rect) {
