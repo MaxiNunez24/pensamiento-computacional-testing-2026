@@ -21,11 +21,14 @@
  * del operador los saltea, y si se abre una ronda se van solos. Para verlos ya: ?sponsors en la dirección.
  */
 import Expo from '../../layouts/Expo.astro';
+import CharlaKahoot from '../../components/expo/CharlaKahoot.astro';
 import { qr, direccion, vidriera, vidrieraDeEjemplo } from '../../data/expo/expo';
 
 const catalogos = await Promise.all(vidriera.map(async (e) => ({ ...e, qr: await qr(e.link) })));
 const qrExpo = await qr(direccion(Astro.site, 'expo/'));
 const qrEncuesta = await qr(direccion(Astro.site, 'expo/encuesta/'));
+const qrStand = await qr(direccion(Astro.site, 'expo/stand/'));
+const standLona = import.meta.env.BASE_URL.replace(/\/$/, '') + '/expo/stand/?lona';
 
 // Los que apoyan el stand. Los principales aportaron más: tienen su propia pantalla, más grande
 const instagram = (usuario: string) => `https://www.instagram.com/${usuario}/`;
@@ -113,7 +116,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       <h2 class="panel__titulo">¿Qué construimos?</h2>
       <p class="panel__bajada">Animaciones de catálogo y sistema de gestión</p>
       <div class="panel__escena">
-        <motor-escena escena="expo-siges" loop autoplay sin-controles sin-lupa sin-sonido movimiento="completo"></motor-escena>
+        <motor-escena escena="expo-siges-lona" loop autoplay sin-subtitulos sin-controles sin-lupa sin-sonido movimiento="completo"></motor-escena>
       </div>
       <p class="panel__esquina"><span class="qr-chico" set:html={qrExpo} aria-hidden="true" /> Todo en tu celular</p>
     </section>
@@ -123,7 +126,7 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
       <h2 class="panel__titulo">Tu foto con IA</h2>
       <p class="panel__bajada">Sacate una foto y llevátela impresa</p>
       <div class="panel__escena">
-        <motor-escena escena="expo-fotos-ia" loop autoplay sin-controles sin-lupa sin-sonido movimiento="completo"></motor-escena>
+        <motor-escena escena="expo-fotos-ia-lona" loop autoplay sin-subtitulos sin-controles sin-lupa sin-sonido movimiento="completo"></motor-escena>
         <!-- Las fotos de quienes aceptaron salir en el stand: las trae el estudio (por Tailscale), nunca internet -->
         <div class="vitrina-lona" data-vitrina hidden>
           <img alt="" data-vitrina-foto />
@@ -154,23 +157,15 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     <section class="panel" data-tarjeta="stand" data-nombre="Stand 3D" aria-label="El stand en 3D">
       <h2 class="panel__titulo">El stand</h2>
       <p class="panel__bajada">Qué vas a encontrar acá</p>
-      <svg class="stand" viewBox="0 0 400 260" aria-hidden="true">
-        <g stroke="#a3adbd" stroke-width="2" fill="none" stroke-linejoin="round">
-          <path d="M60 170L200 230L340 170L200 110Z" fill="#1d2433" />
-          <path d="M60 170V80L200 20V110" fill="#141a26" />
-          <path d="M200 20L340 80V170" fill="#10151f" />
-          <path d="M95 112l60-26v34l-60 26z" fill="#f2c14e33" stroke="#f2c14e" />
-          <path d="M150 175l40 17l40-17l-40-17z" fill="#4fd1b544" stroke="#4fd1b5" />
-          <path d="M235 158l30 13l30-13l-30-13z" fill="#7aa7ff44" stroke="#7aa7ff" />
-        </g>
-      </svg>
-      <ul class="stand__lista">
-        <li><span>🎱</span> Bingo con premios</li>
-        <li><span>🛍️</span> Catálogos de emprendedores</li>
-        <li><span>🖨️</span> Tu foto impresa</li>
-        <li><span>🧩</span> El sistema del CFP</li>
-      </ul>
+      <!-- El modelo 3D de verdad (/expo/stand/), girando solo: el mismo que se recorre desde el celu -->
+      <div class="panel__escena stand3d">
+        <iframe src={standLona} title="El stand en 3D" loading="lazy" tabindex="-1"></iframe>
+      </div>
+      <p class="panel__esquina"><span class="qr-chico" set:html={qrStand} aria-hidden="true" /> Recorrelo en 3D</p>
     </section>
+
+    <!-- La mini clase antes del Kahoot: tapa todo con Ctrl+Alt+K (o desde el teleprompter del operador) -->
+    <CharlaKahoot />
 
     <!-- ============ Abajo: lo recaudado para la cooperadora y los que apoyan ============ -->
     <footer class="pie">
@@ -1027,24 +1022,13 @@ const sponsors = [...principales, ...otros].map((x) => x.nombre);
     height: auto;
   }
 
-  /* El stand: un dibujo y lo que hay (cuando el modelo 3D esté cerrado, va el de verdad) */
-  .stand {
-    flex: 1;
-    min-height: 0;
-    width: 90%;
-  }
-  .stand__lista {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1.5cqmin;
-    font-size: 5cqmin;
-    text-align: left;
-  }
-  .stand__lista span {
-    display: inline-block;
-    width: 1.5em;
+  /* El stand en 3D: la página del modelo en modo lona (sin botones, girando sola) */
+  .stand3d iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 1.6cqmin;
+    pointer-events: none;
   }
 
   /* ---------- El Bingo ---------- */

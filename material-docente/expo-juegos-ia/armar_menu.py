@@ -34,6 +34,13 @@ ORIGEN = Path(sys.argv[1]) if len(sys.argv) > 1 else AQUI / "juegos"
 SALIDA = AQUI / "menu"
 MINUTOS_SIN_TOCAR = 3
 ESTUDIO = Path(r"D:\Programas\ia-fotos\estudio")  # el estudio de fotos (en la PC del profe)
+# Estilos de premio que no son de un juego: van escondidos con los demás (Ctrl+Alt+P en el operador).
+# La clave empieza con "juego-" porque así el estudio sabe que es un premio y lo esconde.
+PREMIOS_EXTRA = [
+    {"clave": "juego-kahoot", "titulo": "🏆 Podio del Kahoot",
+     "texto": "{quien} as a victorious quiz show champion on a glowing podium holding a golden trophy, colorful "
+              "confetti and stage lights, purple and gold game show studio, video game art, bright colors, no text"},
+]
 
 # Se agrega al principio del <head> de cada juego: así su escucha se registra antes que las del
 # juego y ve el Escape aunque el juego frene el evento.
@@ -175,7 +182,11 @@ MENU = """<!DOCTYPE html>
     footer { display: flex; flex-wrap: wrap; gap: 10px 28px; color: var(--suave); font-size: 1.05rem; }
     kbd { font: inherit; font-weight: 700; color: var(--texto); padding: 1px 8px; border-radius: 6px; border: 2px solid var(--tecla); }
     .vacio { color: var(--suave); }
-    .lider { font-weight: 700; color: var(--oro); font-size: 1.05rem; }
+    /* El primero de cada juego: una pastilla propia, separada del borde y legible sobre cualquier tono */
+    .lider {
+        justify-self: start; margin-top: 6px; padding: 5px 14px; border-radius: 999px;
+        background: rgb(0 0 0 / .4); color: var(--oro); font-weight: 700; font-size: 1.05rem;
+    }
     .premios {
         position: fixed; inset: 0; z-index: 10; padding: 36px 48px; overflow: auto;
         background: var(--capa); display: grid; gap: 18px; align-content: start;
@@ -354,6 +365,7 @@ def main():
 
     estilos = [{"clave": f"juego-{j['id']}", "titulo": f"🎮 {j['titulo']}", "texto": j["premio"]}
                for j in juegos if j["premio"]]
+    estilos += PREMIOS_EXTRA
     texto = json.dumps(estilos, ensure_ascii=False, indent=2)
     (SALIDA / "estilos-juegos.json").write_text(texto, encoding="utf-8")
     if ESTUDIO.is_dir():

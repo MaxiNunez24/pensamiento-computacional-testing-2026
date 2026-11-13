@@ -21,6 +21,7 @@
 // módulo para el curso: el import en vez del Motor global. Si la escena
 // cambia en el motor, se vuelve a copiar con el mismo script.
 
+import { registrarConLona } from './lona.js';
 import { caja, texto, flecha, tabla, celular, camara, contador, cilindro, registrar } from 'motor-animaciones';
 
 const ALUMNOS = ['GÓMEZ, L.', 'ALVAREZ, N.', 'BENITEZ, M.', 'CABRERA, J.'];
@@ -28,7 +29,7 @@ const LLEGADAS = ['17:58', '18:02', '18:21', '—'];
 const LISTA = ['P', 'P', 'T', 'A'];
 const COLOR_LISTA = { P: 'exito', T: 'alerta', A: 'error' };
 
-registrar('expo-siges', function (disposicion) {
+registrarConLona('expo-siges', function (disposicion, { lona = false } = {}) {
     const angosta = disposicion.nombre === 'angosta';
     const W = angosta ? 640 : 1600;
     const H = angosta ? 1140 : 900;

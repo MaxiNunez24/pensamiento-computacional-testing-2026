@@ -14,6 +14,7 @@
 // Lo de adentro (el "mundo") se arma en coordenadas de 1600 × 900, como expo-siges.js: en ancho se
 // ve entero; en angosto la cámara se acerca a la parte que se cuenta.
 
+import { registrarConLona } from './lona.js';
 import { caja, texto, flecha, tabla, camara, contador, registrar, definirPieza, el, poner } from 'motor-animaciones';
 
 // La "huella" de la cara: en la de verdad son 512 números; acá, los primeros
@@ -154,7 +155,7 @@ const mosaico = definirPieza({
     tamano: (p) => ({ ancho: p.lado + 20, alto: p.lado + 20 }),
 });
 
-registrar('expo-fotos-ia', function (disposicion) {
+registrarConLona('expo-fotos-ia', function (disposicion, { lona = false } = {}) {
     const angosta = disposicion.nombre === 'angosta';
     const W = angosta ? 640 : 1600;
     const H = angosta ? 1140 : 900;
@@ -243,7 +244,7 @@ registrar('expo-fotos-ia', function (disposicion) {
         { pieza: 'mosaico', a: { paso: k }, dur: 1.1, curva: 'suave' },
         { pieza: 'pasoTexto', a: { texto: PASOS[k] }, dur: 0, en: '<' },
         { pieza: 'cuenta', a: { valor: Math.round((9 * k) / 4) }, dur: 1.1, curva: 'lineal', en: '<' },
-        { espera: 0.9 },
+        { espera: lona ? 0.3 : 0.9 }, // en la lona, sin quedarse quieta entre paso y paso
     ];
 
     const puntos = [0, 1, 2, 3, 4].map((i) => 'punto' + i);

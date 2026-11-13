@@ -33,7 +33,7 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
 <Expo titulo="Plano de la Expo · CFP 401" descripcion="El plano de la Expo del CFP 401 del viernes 13/11, con los stands y los horarios de las muestras activas.">
     <main class="hoja">
         <header>
-            <p class="etiqueta">Expo CFP 401 · Viernes 13 de noviembre · {ABRE.slice(0, 2)} a {CIERRA.slice(0, 2)} h</p>
+            <p class="etiqueta">Expo CFP 401 · Viernes 13 de noviembre · {ABRE} a {CIERRA.slice(0, 2)} h</p>
             <h1>Plano y muestras activas</h1>
         </header>
 
@@ -272,7 +272,7 @@ const datos = { stands: STANDS, muestras, dia: DIA, abre: ABRE, cierra: CIERRA }
         let enCurso = '—';
         let proxima = '—';
         if (hoy < dia) {
-            enCurso = `La Expo es el viernes 13/11, de ${abre.slice(0, 2)} a ${cierra.slice(0, 2)} h`;
+            enCurso = `La Expo es el viernes 13/11, de ${abre} a ${cierra.slice(0, 2)} h`;
             if (muestras[0]) proxima = texto(muestras[0]);
         } else if (hoy > dia || ahora >= aMinutos(cierra)) {
             enCurso = 'La Expo ya terminó. ¡Gracias por venir!';

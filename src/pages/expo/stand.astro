@@ -29,6 +29,11 @@ const curso = base + '/preparando-expo/';
                 const tema = localStorage.getItem('stand:tema');
                 if (tema) document.documentElement.dataset.tema = tema;
             } catch (e) {}
+            // ?lona: para la lona del stand (va adentro de la tarjeta "El stand"): solo el modelo, girando
+            if (new URLSearchParams(location.search).has('lona')) {
+                document.documentElement.classList.add('lona');
+                document.documentElement.dataset.tema = 'oscuro';
+            }
         </script>
     </head>
     <body>
@@ -642,6 +647,20 @@ const curso = base + '/preparando-expo/';
                 controles.maxPolarAngle = Math.PI / 2 - 0.03;
                 controles.minDistance = 1; controles.maxDistance = 16;
                 controles.addEventListener('change', dibujar);
+                if (document.documentElement.classList.contains('lona')) {
+                    // Gira solo, despacio, a unos 30 cuadros por segundo: la notebook también mueve el resto de la lona
+                    render3d.setPixelRatio(1);
+                    controles.autoRotate = true;
+                    controles.autoRotateSpeed = 0.8;
+                    let antes = 0;
+                    const girar = (ahora) => {
+                        requestAnimationFrame(girar);
+                        if (ahora - antes < 33) return;
+                        antes = ahora;
+                        controles.update();
+                    };
+                    requestAnimationFrame(girar);
+                }
                 const ajustar = () => {
                     const r = visor.getBoundingClientRect();
                     render3d.setSize(r.width, r.height, false);
@@ -710,6 +729,11 @@ const curso = base + '/preparando-expo/';
     }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
+    /* Modo lona: solo el modelo, a pantalla entera */
+    .lona body { margin: 0; overflow: hidden; }
+    .lona .cabeza, .lona .panel, .lona .medidas, .lona .dos, .lona .pie, .lona .tema, .lona .vistas, .lona .pines { display: none !important; }
+    .lona .hoja, .lona .trabajo { display: block; max-width: none; margin: 0; padding: 0; }
+    .lona .visor { position: fixed; inset: 0; min-height: 0; border: 0; }
     body { margin: 0; background: var(--fondo); color: var(--texto); font: 400 15px/1.5 var(--cuerpo); }
     .tema {
         position: fixed; top: 12px; right: 12px; z-index: 5; width: 44px; height: 44px; border-radius: 50%;
