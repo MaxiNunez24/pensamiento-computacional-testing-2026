@@ -515,7 +515,9 @@ export default {
                     const pagina = await env.CATALOGOS.list({ prefix: 'cat:', cursor });
                     for (const k of pagina.keys) {
                         const cat = await leerCatalogo(env, k.name.slice(4));
-                        if (cat) lista.push({ slug: cat.slug, nombre: cat.nombre, productos: cat.productos.length, actualizado: cat.actualizado });
+                        // Con su link: sin él, el Admin busca la página en la organización y los
+                        // catálogos de la cuenta de un alumno parecen "todavía no publicados"
+                        if (cat) lista.push({ slug: cat.slug, nombre: cat.nombre, enlace: cat.enlace || '', productos: cat.productos.length, actualizado: cat.actualizado });
                     }
                     cursor = pagina.list_complete ? null : pagina.cursor;
                 } while (cursor);
@@ -682,6 +684,23 @@ export default {
                 await env.CATALOGOS.delete('hash:' + slug);
                 await env.CATALOGOS.delete('cat:' + slug);
                 return respuesta({ slug, nombre: cat.nombre }, 200, cabeceras);
+            }
+            /* Cambiar el nombre o el link de un catálogo ya dado de alta (la dirección no se cambia:
+             * es la clave de todo). El link vacío lo vuelve a la carpeta de la organización. */
+            if (request.method === 'POST' && url.pathname === '/admin/editar') {
+                const cat = await leerCatalogo(env, slug);
+                if (!cat) return respuesta({ error: 'No existe ese catálogo' }, 404, cabeceras);
+                const pedido = String(datos.enlace || '').trim();
+                if (pedido && !/^https:\/\/[^\s"'<>]{4,200}$/.test(pedido)) {
+                    return respuesta({ error: 'El link tiene que empezar con https://' }, 400, cabeceras);
+                }
+                const nuevo = {
+                    ...cat,
+                    nombre: texto(datos.nombre, 80) || cat.nombre,
+                    enlace: pedido || `https://cfp401-ensenada.github.io/catalogos/${slug}/`,
+                };
+                await env.CATALOGOS.put('cat:' + slug, JSON.stringify(nuevo));
+                return respuesta({ slug, nombre: nuevo.nombre, enlace: nuevo.enlace }, 200, cabeceras);
             }
             if (request.method === 'POST' && url.pathname === '/admin/codigo') {
                 if (!(await leerCatalogo(env, slug))) return respuesta({ error: 'No existe ese catálogo' }, 404, cabeceras);
