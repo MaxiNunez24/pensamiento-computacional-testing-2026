@@ -34,17 +34,18 @@ export interface Clase {
     despues: Item[];        // lo que queda para después de la clase
 }
 
+const SQLITE = '/pensamiento-computacional-testing-2026/ejercicios/clases/sqlite/';
+
 export const CLASE: Clase = {
     fecha: '2026-11-18',
     dia: 'Miércoles 18/11',
-    titulo: 'De vuelta al sistema: del objeto a la página',
+    titulo: 'De vuelta al sistema: repaso de POO y, si llegamos, SQLite',
     leccion: 'clases/de-vuelta-al-sistema/',
     inicio: '13:20',
     antes: [
         { texto: 'Abrir la lección en el proyector', link: 'leccion' },
         { texto: 'Arrancar la grabación (OBS) y chequear que la imagen se mueva', nota: 'El 2/10 se congeló y se perdió la segunda parte.' },
-        { texto: '¿Hay internet en el CFP?', nota: 'La Parte 3 necesita pip install flask. Si no hay, la Parte 3 va por el proyector.' },
-        { texto: 'Flask instalado en la notebook, con modelo.py y app.py listos', nota: 'El plan B si no hay internet, y la demo si alguno se traba.' },
+        { texto: '¿Hay internet en el CFP?', nota: 'SQLite corre en la plataforma, pero el primer ejercicio baja la parte de bases de datos (unos segundos, una vez).' },
         { texto: 'Tomar asistencia' },
     ],
     bloques: [
@@ -61,7 +62,7 @@ export const CLASE: Clase = {
             minutos: 5,
             items: [
                 { texto: 'El Alumno vive en una sola compu; la preceptora quiere verlo en el navegador', ancla: 'el-problema' },
-                { texto: 'Mostrar a dónde llegamos hoy: 127.0.0.1:5000/alumnos', nota: 'Los tres pasos: repasar, convertir a HTML, Flask.' },
+                { texto: 'Mostrar el camino: repasar los objetos, convertirlos en HTML, y que se guarden (SQLite)', nota: 'La Parte 3 (Flask en la compu) queda de tarea: se retoma el miércoles 25/11.' },
             ],
         },
         {
@@ -90,24 +91,24 @@ export const CLASE: Clase = {
             ],
         },
         {
-            titulo: '🌐 Parte 3 · Flask en la compu',
+            titulo: '🗃️ Si llegamos: arrancar SQLite',
             minutos: 60,
             items: [
-                { texto: 'El diagrama: el navegador pide, Flask llama a tu función, la función devuelve el HTML', ancla: 'parte-3--flask-la-página-se-arma-cuando-alguien-la-pide', nota: 'La diferencia con el catálogo: la página se arma CADA VEZ que alguien entra.' },
-                { texto: 'Paso 1 · Carpeta, entorno virtual y pip install flask', ancla: 'paso-1--la-carpeta-y-el-entorno-virtual', nota: 'Si PowerShell no deja activar: la flechita al lado del + → Command Prompt (como en el bot).' },
-                { texto: 'Paso 2 y 3 · Copiar modelo.py y app.py', ancla: 'paso-2--el-modelo', nota: 'Lo único nuevo es @app.route: "cuando pidan esta dirección, llamá a esta función".' },
-                { texto: 'Paso 4 · python app.py y probar las 4 direcciones', ancla: 'paso-4--correrlo', nota: 'Que prueben /alumno/99999999: el 404 sale del if de un_alumno(). Ctrl + C para frenarlo.' },
-                { texto: 'Chequeo: ¿quién arma la página?', nota: 'Tu función pagina(). Flask solo atiende la puerta.' },
-                { texto: 'Desafíos, si sobra tiempo', nota: 'El 3 (un link por alumno) muestra por qué conviene tener fila() aparte.' },
+                { texto: 'El problema: los objetos viven en memoria; al cerrar el programa, se pierde todo', link: `${SQLITE}#el-problema`, nota: 'Y con archivos, dos preceptoras guardando a la vez pierden marcas sin ningún error. SQLite viene con Python: no se instala nada.' },
+                { texto: 'Chequeo: ¿por qué una base?', link: `${SQLITE}#ej-chequeo-por-que-una-base` },
+                { texto: 'Una tabla es una planilla con reglas · Tu primera tabla', link: `${SQLITE}#una-tabla-es-una-planilla-con-reglas` },
+                { texto: 'Agregar un alumno (el signo de pregunta)', link: `${SQLITE}#ej-agregar-un-alumno`, fundamental: true, nota: 'Por qué ? y no un f-string: el dato nunca se mezcla con la orden.' },
+                { texto: 'Leer con SELECT · Buscar por DNI', link: `${SQLITE}#ej-buscar-por-dni`, fundamental: true, nota: 'Hasta donde lleguemos: el resto de SQLite sigue el viernes.' },
             ],
         },
         {
             titulo: '📌 Cierre',
             minutos: 10,
             items: [
-                { texto: 'Los datos viven en memoria: si cierran app.py, las marcas se pierden', ancla: 'para-llevar', nota: 'Eso lo resuelve SQLite, la clase del viernes.' },
+                { texto: 'Repasar lo de hoy: el Alumno y el Curso, el HTML que sale de los objetos', ancla: 'para-llevar' },
                 { texto: 'Tarea: los ⭐ que falten, y POO II y el bot si quedaron' },
-                { texto: 'Avisar: el viernes 20/11, SQLite', nota: 'Confirmar antes si hay clase (el feriado se corre al lunes 23).' },
+                { texto: 'Tarea optativa: la Parte 3 (Flask en la compu)', ancla: 'parte-3--flask-la-página-se-arma-cuando-alguien-la-pide', nota: 'Necesita pip install flask. Se retoma el 25/11, y las dudas se consultan en clase.' },
+                { texto: 'Avisar: el viernes 20/11 seguimos con SQLite', nota: 'Confirmar antes si hay clase (el feriado se corre al lunes 23).' },
                 { texto: 'Avisar: inscripciones 2027 del 1 al 4/12 (IA generativa y Programador/a Web)', nota: 'Requisitos: 2 fotocopias del DNI y la cooperadora.' },
             ],
         },
