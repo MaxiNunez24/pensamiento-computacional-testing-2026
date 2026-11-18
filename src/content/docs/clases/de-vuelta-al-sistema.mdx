@@ -197,47 +197,8 @@ En el `Alumno`, ¿por qué las marcas se guardan en `self._marcas` y no en `self
   titulo="El Alumno completo"
   fundamental
   dificultad="🌿"
-  starter={`class Alumno:
-    def __init__(self, dni, apellido, nombre):
-        # si el DNI no es solo números o no tiene 7 u 8: ValueError (el mensaje dice DNI)
-        self.dni = dni
-        self.apellido = apellido
-        self.nombre = nombre
-        self._marcas = []
-
-    # marcar(estado): agrega la marca si es "P", "A", "T" o "J".
-    #                 Si es otra cosa: ValueError (y la marca NO se agrega)
-
-    # porcentaje(): qué porcentaje vino. La "T" cuenta como que vino. Sin marcas: 0
-
-    # __str__: devuelve  <apellido>, <nombre> — <porcentaje con 1 decimal>%
-`}
-  tests={`ana = Alumno("30111222", "Perez", "Ana")
-assert ana.porcentaje() == 0, "sin marcas, el porcentaje es 0 (y no un error de dividir por cero)"
-ana.marcar("P")
-ana.marcar("A")
-assert ana.porcentaje() == 50, f"con una P y una A, vino la mitad: 50. Dio {ana.porcentaje()}"
-assert str(ana) == "Perez, Ana — 50.0%", f"print(ana) tendría que mostrar 'Perez, Ana — 50.0%' y mostró '{ana}'"
-ana.marcar("T")
-assert round(ana.porcentaje(), 1) == 66.7, "con P, A y T vino 2 de 3: la tardanza cuenta como que vino"
-try:
-    ana.marcar("X")
-    raise AssertionError("marcar('X') no levantó nada: en POO II la marca mala se ignoraba en silencio, ahora tiene que avisar con un ValueError")
-except ValueError:
-    pass
-assert round(ana.porcentaje(), 1) == 66.7, "después de la marca 'X' el porcentaje cambió: la marca mala no se tiene que guardar"
-try:
-    Alumno("30.111.222", "Perez", "Ana")
-    raise AssertionError("con el DNI '30.111.222' el alumno se creó igual: tiene que levantar ValueError")
-except ValueError as e:
-    assert "DNI" in str(e), f"el mensaje tiene que decir DNI, para saber qué dato estaba mal. Dijo: {e}"
-try:
-    Alumno("1234", "Gomez", "Beto")
-    raise AssertionError("un DNI de 4 números tampoco sirve: tienen 7 u 8")
-except ValueError:
-    pass
-print("¡El Alumno está completo!")
-`}
+  starter={`class Alumno:\n    def __init__(self, dni, apellido, nombre):\n        # si el DNI no es solo números o no tiene 7 u 8: ValueError (el mensaje dice DNI)\n        self.dni = dni\n        self.apellido = apellido\n        self.nombre = nombre\n        self._marcas = []\n\n    # marcar(estado): agrega la marca si es "P", "A", "T" o "J".\n    #                 Si es otra cosa: ValueError (y la marca NO se agrega)\n\n    # porcentaje(): qué porcentaje vino. La "T" cuenta como que vino. Sin marcas: 0\n\n    # __str__: devuelve  <apellido>, <nombre> — <porcentaje con 1 decimal>%\n`}
+  tests={`ana = Alumno("30111222", "Perez", "Ana")\nassert ana.porcentaje() == 0, "sin marcas, el porcentaje es 0 (y no un error de dividir por cero)"\nana.marcar("P")\nana.marcar("A")\nassert ana.porcentaje() == 50, f"con una P y una A, vino la mitad: 50. Dio {ana.porcentaje()}"\nassert str(ana) == "Perez, Ana — 50.0%", f"print(ana) tendría que mostrar 'Perez, Ana — 50.0%' y mostró '{ana}'"\nana.marcar("T")\nassert round(ana.porcentaje(), 1) == 66.7, "con P, A y T vino 2 de 3: la tardanza cuenta como que vino"\ntry:\n    ana.marcar("X")\n    raise AssertionError("marcar('X') no levantó nada: en POO II la marca mala se ignoraba en silencio, ahora tiene que avisar con un ValueError")\nexcept ValueError:\n    pass\nassert round(ana.porcentaje(), 1) == 66.7, "después de la marca 'X' el porcentaje cambió: la marca mala no se tiene que guardar"\ntry:\n    Alumno("30.111.222", "Perez", "Ana")\n    raise AssertionError("con el DNI '30.111.222' el alumno se creó igual: tiene que levantar ValueError")\nexcept ValueError as e:\n    assert "DNI" in str(e), f"el mensaje tiene que decir DNI, para saber qué dato estaba mal. Dijo: {e}"\ntry:\n    Alumno("1234", "Gomez", "Beto")\n    raise AssertionError("un DNI de 4 números tampoco sirve: tienen 7 u 8")\nexcept ValueError:\n    pass\nprint("¡El Alumno está completo!")\n`}
   pistas={[
     'En POO II, una marca equivocada se ignoraba sin decir nada. ¿Qué gana la preceptora si en vez de eso el sistema le avisa que se equivocó?',
     'Si todavía no hay ninguna marca, ¿por cuánto estarías dividiendo para sacar el porcentaje?',
@@ -276,39 +237,8 @@ así encontrar a uno es directo:
   fundamental
   dificultad="🌿"
   archivos={{ 'alumno.py': ALUMNO_PY }}
-  starter={`from alumno import Alumno
-
-
-class Curso:
-    def __init__(self, nombre):
-        self.nombre = nombre
-        self._alumnos = {}   # DNI -> Alumno
-
-    # agregar(alumno): lo guarda. Si ya había uno con ese DNI: ValueError (el mensaje dice DNI)
-
-    # buscar(dni): devuelve el Alumno con ese DNI, o None si no está
-
-    # alumnos(): devuelve la LISTA de alumnos, en el orden en que se agregaron
-`}
-  tests={`c = Curso("1° A")
-assert c.alumnos() == [], "un curso recién creado no tiene alumnos: alumnos() devuelve una lista vacía"
-ana = Alumno("30111222", "Perez", "Ana")
-beto = Alumno("28999888", "Gomez", "Beto")
-c.agregar(ana)
-c.agregar(beto)
-assert isinstance(c.alumnos(), list), "alumnos() tiene que devolver una lista (después la vamos a recorrer con un for)"
-assert c.alumnos() == [ana, beto], "alumnos() tiene que devolver a Ana y a Beto, en el orden en que se agregaron"
-assert c.buscar("28999888") is beto, "buscar('28999888') tiene que devolver el objeto de Beto"
-assert c.buscar("11111111") is None, "si el DNI no está, buscar() devuelve None (y no un error: que no esté es una respuesta válida)"
-try:
-    c.agregar(Alumno("30111222", "Perez", "Ana María"))
-    raise AssertionError("se agregó un segundo alumno con el DNI 30111222: dos personas no pueden tener el mismo DNI")
-except ValueError as e:
-    assert "DNI" in str(e), f"el mensaje tiene que decir DNI. Dijo: {e}"
-assert c.buscar("30111222").nombre == "Ana", "el alumno repetido pisó al que ya estaba: hay que frenarlo ANTES de guardar"
-assert len(c.alumnos()) == 2, "después del repetido tiene que seguir habiendo 2 alumnos"
-print("¡El Curso guarda, busca y no acepta repetidos!")
-`}
+  starter={`from alumno import Alumno\n\n\nclass Curso:\n    def __init__(self, nombre):\n        self.nombre = nombre\n        self._alumnos = {}   # DNI -> Alumno\n\n    # agregar(alumno): lo guarda. Si ya había uno con ese DNI: ValueError (el mensaje dice DNI)\n\n    # buscar(dni): devuelve el Alumno con ese DNI, o None si no está\n\n    # alumnos(): devuelve la LISTA de alumnos, en el orden en que se agregaron\n`}
+  tests={`c = Curso("1° A")\nassert c.alumnos() == [], "un curso recién creado no tiene alumnos: alumnos() devuelve una lista vacía"\nana = Alumno("30111222", "Perez", "Ana")\nbeto = Alumno("28999888", "Gomez", "Beto")\nc.agregar(ana)\nc.agregar(beto)\nassert isinstance(c.alumnos(), list), "alumnos() tiene que devolver una lista (después la vamos a recorrer con un for)"\nassert c.alumnos() == [ana, beto], "alumnos() tiene que devolver a Ana y a Beto, en el orden en que se agregaron"\nassert c.buscar("28999888") is beto, "buscar('28999888') tiene que devolver el objeto de Beto"\nassert c.buscar("11111111") is None, "si el DNI no está, buscar() devuelve None (y no un error: que no esté es una respuesta válida)"\ntry:\n    c.agregar(Alumno("30111222", "Perez", "Ana María"))\n    raise AssertionError("se agregó un segundo alumno con el DNI 30111222: dos personas no pueden tener el mismo DNI")\nexcept ValueError as e:\n    assert "DNI" in str(e), f"el mensaje tiene que decir DNI. Dijo: {e}"\nassert c.buscar("30111222").nombre == "Ana", "el alumno repetido pisó al que ya estaba: hay que frenarlo ANTES de guardar"\nassert len(c.alumnos()) == 2, "después del repetido tiene que seguir habiendo 2 alumnos"\nprint("¡El Curso guarda, busca y no acepta repetidos!")\n`}
   pistas={[
     'Antes de guardar a un alumno, ¿cómo te enterás si ese DNI ya estaba en el diccionario?',
     'Si le pedís a un diccionario una clave que no tiene, ¿qué pasa? ¿Hay una forma de pedírsela que no tire un error?',
@@ -340,35 +270,8 @@ aprendiste en Excepciones va acá: **una fila mala no puede frenar la carga de t
   fundamental
   dificultad="🌿"
   archivos={{ 'modelo.py': MODELO_PY }}
-  starter={`from modelo import Alumno, Curso
-
-
-def cargar(curso, filas):
-    # Agregá al curso cada fila que se pueda.
-    # Las rotas no frenan la carga: por cada una, anotá "<dni>: <mensaje del error>"
-    # en una lista de errores, y al final devolvé esa lista.
-    pass
-`}
-  tests={`filas = [
-    ("30111222", "Perez", "Ana"),
-    ("30.111", "Gomez", "Beto"),
-    ("28999888", "Paz", "Mateo"),
-    ("30111222", "Perez", "Ana"),
-    ("27555666", "Rios", "Lola"),
-]
-c = Curso("1° A")
-errores = cargar(c, filas)
-assert errores is not None, "cargar() no devolvió nada: tiene que devolver la lista de errores"
-dnis = [a.dni for a in c.alumnos()]
-assert "27555666" in dnis, "Lola (la última fila) no se cargó: una fila rota en el medio frenó todo lo que venía después"
-assert dnis == ["30111222", "28999888", "27555666"], f"tendrían que quedar cargados Ana, Mateo y Lola. Quedaron: {dnis}"
-assert len(errores) == 2, f"hay 2 filas rotas (el DNI con puntos y el repetido) y anotaste {len(errores)} errores"
-assert errores[0].startswith("30.111:"), f"el primer error tiene que empezar con el DNI de la fila: '30.111: ...'. Fue: {errores[0]}"
-assert "DNI" in errores[0], "el error tiene que traer el mensaje de la excepción, que dice qué pasó"
-assert errores[1].startswith("30111222:"), f"el segundo error es el DNI repetido: '30111222: ...'. Fue: {errores[1]}"
-assert cargar(Curso("2° B"), []) == [], "con una planilla vacía no hay errores: lista vacía"
-print("¡La planilla se carga entera, y los errores quedan anotados!")
-`}
+  starter={`from modelo import Alumno, Curso\n\n\ndef cargar(curso, filas):\n    # Agregá al curso cada fila que se pueda.\n    # Las rotas no frenan la carga: por cada una, anotá "<dni>: <mensaje del error>"\n    # en una lista de errores, y al final devolvé esa lista.\n    pass\n`}
+  tests={`filas = [\n    ("30111222", "Perez", "Ana"),\n    ("30.111", "Gomez", "Beto"),\n    ("28999888", "Paz", "Mateo"),\n    ("30111222", "Perez", "Ana"),\n    ("27555666", "Rios", "Lola"),\n]\nc = Curso("1° A")\nerrores = cargar(c, filas)\nassert errores is not None, "cargar() no devolvió nada: tiene que devolver la lista de errores"\ndnis = [a.dni for a in c.alumnos()]\nassert "27555666" in dnis, "Lola (la última fila) no se cargó: una fila rota en el medio frenó todo lo que venía después"\nassert dnis == ["30111222", "28999888", "27555666"], f"tendrían que quedar cargados Ana, Mateo y Lola. Quedaron: {dnis}"\nassert len(errores) == 2, f"hay 2 filas rotas (el DNI con puntos y el repetido) y anotaste {len(errores)} errores"\nassert errores[0].startswith("30.111:"), f"el primer error tiene que empezar con el DNI de la fila: '30.111: ...'. Fue: {errores[0]}"\nassert "DNI" in errores[0], "el error tiene que traer el mensaje de la excepción, que dice qué pasó"\nassert errores[1].startswith("30111222:"), f"el segundo error es el DNI repetido: '30111222: ...'. Fue: {errores[1]}"\nassert cargar(Curso("2° B"), []) == [], "con una planilla vacía no hay errores: lista vacía"\nprint("¡La planilla se carga entera, y los errores quedan anotados!")\n`}
   pistas={[
     'Un DNI con puntos y un DNI repetido, ¿qué excepción levanta cada uno? ¿Hace falta atajarlos por separado?',
     '¿Dónde va el try: alrededor de todo el for, o adentro, por cada fila? ¿Qué pasa con las filas que vienen después de una rota en cada caso?',
@@ -412,27 +315,8 @@ pena hacerlo bien.
   dificultad="🌱"
   archivos={{ 'modelo.py': MODELO_PY }}
   vista={ESTILOS}
-  starter={`from modelo import Alumno
-
-
-def fila(alumno):
-    # devuelve el alumno adentro de un <li>
-    pass
-
-
-ana = Alumno("30111222", "Perez", "Ana")
-ana.marcar("P")
-print("<ul>" + str(fila(ana)) + "</ul>")
-`}
-  tests={`ana = Alumno("30111222", "Perez", "Ana")
-ana.marcar("P")
-r = fila(ana)
-assert r is not None, "fila() no devolvió nada: si usaste print, el renglón se muestra pero no se puede usar para armar la página. Hace falta return"
-assert r == "<li>Perez, Ana — 100.0%</li>", f"esperaba '<li>Perez, Ana — 100.0%</li>' y salió '{r}'"
-beto = Alumno("28999888", "Gomez", "Beto")
-assert fila(beto) == "<li>Gomez, Beto — 0.0%</li>", "con Beto (sin marcas) tiene que salir '<li>Gomez, Beto — 0.0%</li>'"
-print("¡Cada alumno ya sabe convertirse en un renglón!")
-`}
+  starter={`from modelo import Alumno\n\n\ndef fila(alumno):\n    # devuelve el alumno adentro de un <li>\n    pass\n\n\nana = Alumno("30111222", "Perez", "Ana")\nana.marcar("P")\nprint("<ul>" + str(fila(ana)) + "</ul>")\n`}
+  tests={`ana = Alumno("30111222", "Perez", "Ana")\nana.marcar("P")\nr = fila(ana)\nassert r is not None, "fila() no devolvió nada: si usaste print, el renglón se muestra pero no se puede usar para armar la página. Hace falta return"\nassert r == "<li>Perez, Ana — 100.0%</li>", f"esperaba '<li>Perez, Ana — 100.0%</li>' y salió '{r}'"\nbeto = Alumno("28999888", "Gomez", "Beto")\nassert fila(beto) == "<li>Gomez, Beto — 0.0%</li>", "con Beto (sin marcas) tiene que salir '<li>Gomez, Beto — 0.0%</li>'"\nprint("¡Cada alumno ya sabe convertirse en un renglón!")\n`}
   pistas={[
     '¿Qué muestra print(alumno)? ¿Y qué pasa si ponés el alumno entre llaves adentro de un f-string?',
     'Esta función, ¿tiene que mostrar el renglón o entregarlo para que otra lo junte con los demás?',
@@ -453,44 +337,8 @@ Tocá **Ejecutar** y vas a ver el renglón como página, abajo del código.
   dificultad="🌿"
   archivos={{ 'modelo.py': MODELO_PY }}
   vista={ESTILOS}
-  starter={`from modelo import Alumno, Curso
-
-
-def fila(alumno):
-    return f"<li>{alumno}</li>"
-
-
-def pagina(curso):
-    # <h1> con el nombre del curso, y después una <ul> con una fila por alumno.
-    # Si el curso no tiene alumnos: el <h1> y después <p>Todavía no hay alumnos</p>
-    pass
-
-
-curso = Curso("1° A")
-ana = Alumno("30111222", "Perez", "Ana")
-ana.marcar("P")
-ana.marcar("A")
-curso.agregar(ana)
-curso.agregar(Alumno("28999888", "Gomez", "Beto"))
-print(pagina(curso))
-`}
-  tests={`c = Curso("1° A")
-ana = Alumno("30111222", "Perez", "Ana")
-ana.marcar("P")
-ana.marcar("A")
-c.agregar(ana)
-c.agregar(Alumno("28999888", "Gomez", "Beto"))
-r = pagina(c)
-assert r is not None, "pagina() no devolvió nada: Flask necesita que la función ENTREGUE el HTML, para mandarlo al navegador"
-r = r.replace(chr(10), "")
-assert r.startswith("<h1>1° A</h1>"), f"la página arranca con el nombre del curso en un <h1>: '<h1>1° A</h1>'. Arrancó con: {r[:30]}"
-assert "<ul>" in r and r.endswith("</ul>"), "los alumnos van adentro de una <ul>, que se abre después del <h1> y se cierra al final"
-assert r.count("<li>") == 2, f"el curso tiene 2 alumnos y la página tiene {r.count('<li>')} renglones"
-assert r.index("Perez, Ana — 50.0%") < r.index("Gomez, Beto — 0.0%"), "los alumnos tienen que aparecer en el orden del curso: Ana y después Beto"
-vacio = pagina(Curso("2° B")).replace(chr(10), "")
-assert vacio == "<h1>2° B</h1><p>Todavía no hay alumnos</p>", f"un curso vacío muestra el <h1> y '<p>Todavía no hay alumnos</p>', sin una lista vacía. Salió: {vacio}"
-print("¡La página del curso sale de los objetos!")
-`}
+  starter={`from modelo import Alumno, Curso\n\n\ndef fila(alumno):\n    return f"<li>{alumno}</li>"\n\n\ndef pagina(curso):\n    # <h1> con el nombre del curso, y después una <ul> con una fila por alumno.\n    # Si el curso no tiene alumnos: el <h1> y después <p>Todavía no hay alumnos</p>\n    pass\n\n\ncurso = Curso("1° A")\nana = Alumno("30111222", "Perez", "Ana")\nana.marcar("P")\nana.marcar("A")\ncurso.agregar(ana)\ncurso.agregar(Alumno("28999888", "Gomez", "Beto"))\nprint(pagina(curso))\n`}
+  tests={`c = Curso("1° A")\nana = Alumno("30111222", "Perez", "Ana")\nana.marcar("P")\nana.marcar("A")\nc.agregar(ana)\nc.agregar(Alumno("28999888", "Gomez", "Beto"))\nr = pagina(c)\nassert r is not None, "pagina() no devolvió nada: Flask necesita que la función ENTREGUE el HTML, para mandarlo al navegador"\nr = r.replace(chr(10), "")\nassert r.startswith("<h1>1° A</h1>"), f"la página arranca con el nombre del curso en un <h1>: '<h1>1° A</h1>'. Arrancó con: {r[:30]}"\nassert "<ul>" in r and r.endswith("</ul>"), "los alumnos van adentro de una <ul>, que se abre después del <h1> y se cierra al final"\nassert r.count("<li>") == 2, f"el curso tiene 2 alumnos y la página tiene {r.count('<li>')} renglones"\nassert r.index("Perez, Ana — 50.0%") < r.index("Gomez, Beto — 0.0%"), "los alumnos tienen que aparecer en el orden del curso: Ana y después Beto"\nvacio = pagina(Curso("2° B")).replace(chr(10), "")\nassert vacio == "<h1>2° B</h1><p>Todavía no hay alumnos</p>", f"un curso vacío muestra el <h1> y '<p>Todavía no hay alumnos</p>', sin una lista vacía. Salió: {vacio}"\nprint("¡La página del curso sale de los objetos!")\n`}
   pistas={[
     '¿Cuántos renglones tiene que tener la lista? ¿De dónde sacás a cada alumno, uno por uno?',
     'En el catálogo, ¿cómo ibas juntando las tarjetas en un solo texto?',
