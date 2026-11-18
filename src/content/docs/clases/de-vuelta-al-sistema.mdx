@@ -1,0 +1,649 @@
+---
+title: De vuelta al sistema — del objeto a la página
+description: "La vuelta de la Expo: qué queda hasta el 18/12, un repaso con práctica de POO y Excepciones armando el Alumno y el Curso del sistema, el HTML que sale de esos objetos, y el primer vistazo a Flask para verlo en el navegador."
+---
+
+import { Code } from '@astrojs/starlight/components';
+import EjercicioPython from '../../../components/EjercicioPython.astro';
+import Mermaid from '../../../components/Mermaid.astro';
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+{/* alumno.py: solo el Alumno de la Parte 1, para el ejercicio del Curso
+    (si viniera con el Curso adentro, la solución quedaría a la vista). */}
+export const ALUMNO_PY = `"""El Alumno del sistema: POO I, POO II y Excepciones, todo junto."""
+
+
+class Alumno:
+    def __init__(self, dni, apellido, nombre):
+        if not dni.isdigit() or len(dni) not in (7, 8):
+            raise ValueError("el DNI tiene que ser de 7 u 8 números, sin puntos")
+        self.dni = dni
+        self.apellido = apellido
+        self.nombre = nombre
+        self._marcas = []
+
+    def marcar(self, estado):
+        if estado not in ("P", "A", "T", "J"):
+            raise ValueError("la marca tiene que ser P, A, T o J")
+        self._marcas.append(estado)
+
+    def porcentaje(self):
+        if not self._marcas:
+            return 0
+        vino = 0
+        for marca in self._marcas:
+            if marca in ("P", "T"):
+                vino += 1
+        return vino * 100 / len(self._marcas)
+
+    def __str__(self):
+        return f"{self.apellido}, {self.nombre} — {self.porcentaje():.1f}%"
+`;
+
+{/* modelo.py: el Alumno y el Curso juntos. Es el mismo archivo que se copia
+    para el proyecto de Flask del final. */}
+export const MODELO_PY = ALUMNO_PY.replace(
+  '"""El Alumno del sistema: POO I, POO II y Excepciones, todo junto."""',
+  '"""El modelo del sistema: el Alumno y el Curso, como los armamos en la clase."""',
+) + `
+
+class Curso:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self._alumnos = {}
+
+    def agregar(self, alumno):
+        if alumno.dni in self._alumnos:
+            raise ValueError(f"ya hay un alumno con el DNI {alumno.dni}")
+        self._alumnos[alumno.dni] = alumno
+
+    def buscar(self, dni):
+        return self._alumnos.get(dni)
+
+    def alumnos(self):
+        return list(self._alumnos.values())
+`;
+
+export const ESTILOS = `body { font-family: system-ui, sans-serif; padding: 16px; }
+h1 { font-size: 1.4rem; margin: 0 0 8px; }
+li { padding: 4px 0; }
+`;
+
+export const APP_PY = `from flask import Flask
+from modelo import Alumno, Curso
+
+app = Flask(__name__)
+
+# Los datos, por ahora, en memoria (en la clase de SQLite pasan a una base)
+curso = Curso("1° A")
+ana = Alumno("30111222", "Perez", "Ana")
+ana.marcar("P")
+ana.marcar("A")
+curso.agregar(ana)
+curso.agregar(Alumno("28999888", "Gomez", "Beto"))
+
+
+def fila(alumno):
+    return f"<li>{alumno}</li>"
+
+
+def pagina(curso):
+    html = f"<h1>{curso.nombre}</h1>"
+    if not curso.alumnos():
+        return html + "<p>Todavía no hay alumnos</p>"
+    html += "<ul>"
+    for alumno in curso.alumnos():
+        html += fila(alumno)
+    return html + "</ul>"
+
+
+@app.route("/")
+def inicio():
+    return "<h1>¡Hola desde el sistema del CFP!</h1><a href='/alumnos'>Ver los alumnos</a>"
+
+
+@app.route("/alumnos")
+def lista_de_alumnos():
+    return pagina(curso)
+
+
+@app.route("/alumno/<dni>")
+def un_alumno(dni):
+    alumno = curso.buscar(dni)
+    if alumno is None:
+        return f"<h1>No hay ningún alumno con el DNI {dni}</h1>", 404
+    return f"<h1>{alumno}</h1>"
+
+
+app.run(debug=True)
+`;
+
+:::tip[Antes de empezar]
+Las partes 1 y 2 son interactivas, como siempre: escribís, ejecutás y los tests te dicen si está
+bien. La parte 3 es **en tu compu**, con VS Code: ahí el sistema sale de la plataforma por primera
+vez.
+:::
+
+## 🗓️ De acá al 18 de diciembre
+
+La Expo salió muy bien, pero nos comió dos semanas. Quedan **10 clases**, y la idea es una sola:
+**que el sistema de asistencias ande de verdad**, desde el navegador y en la red del CFP.
+
+| Fecha | Clase |
+|---|---|
+| **Mié 18/11** | **Hoy:** repaso con práctica y el primer vistazo a Flask |
+| Vie 20/11 | SQLite: los datos en una base |
+| Mié 25/11 | Taller: el sistema por consola |
+| Vie 27/11 | Flask I: rutas y plantillas |
+| Mié 2/12 | Flask II: formularios |
+| Vie 4/12 | Taller: migrar el sistema a Flask |
+| Mié 9/12 | El sistema en la red del CFP |
+| Vie 11/12 | Login: contraseñas y sesiones |
+| Mié 16/12 | Testing: probar en serio |
+| **Vie 18/12** | **Cierre:** el sistema andando |
+
+:::note[¿Y si me quedó algo de atrás?]
+**POO II** y **el bot del SiGeS** quedaron de tarea antes de la Expo. La parte 1 de hoy repasa lo
+de POO II, así que si no la habías terminado, hoy la ponés al día. El bot podés seguirlo en casa:
+no hace falta para lo que viene.
+:::
+
+## El problema
+
+El `Alumno` ya existe: lo armamos en POO, le pusimos control de DNI en Excepciones. Pero vive
+**adentro de un programa que corre en una sola compu**, y lo ve solo quien lo corre.
+
+La preceptora no va a abrir VS Code. Quiere **abrir el navegador, entrar a una dirección y ver la
+lista del curso**. Hoy vamos a llegar a eso, en tres pasos:
+
+1. **Repasar** el `Alumno` y armar el `Curso`, con todo lo que vimos de POO y Excepciones.
+2. Hacer que esos objetos **se conviertan en HTML**, como hiciste con el catálogo.
+3. Que **Flask** le mande ese HTML al navegador cuando alguien lo pida.
+
+Al final de la clase, en tu compu, esto va a andar:
+
+```text
+http://127.0.0.1:5000/alumnos
+```
+
+```text
+1° A
+  • Perez, Ana — 50.0%
+  • Gomez, Beto — 0.0%
+```
+
+## Parte 1 · El Alumno y el Curso
+
+Un repaso rápido de lo que ya sabés, antes de usarlo:
+
+| Lo que vimos | Para qué sirve en el sistema |
+|---|---|
+| `class` y `__init__` | El molde del Alumno y los datos con que nace |
+| `self` | "Este alumno": el objeto que está ejecutando el método |
+| `_marcas` (con guion bajo) | Un dato que no se toca de afuera: se cambia solo con `marcar()` |
+| `__str__` | Cómo se ve el alumno cuando lo imprimís |
+| `raise ValueError(...)` | Frenar todo cuando un dato no sirve |
+| `try` / `except` | Atajar ese error y seguir |
+
+<OpcionMultiple titulo="Chequeo: ¿por qué _marcas?" opciones={[
+  { texto: "Para que nadie le agregue una marca cualquiera: la única puerta es marcar(), que controla.", correcta: true, explicacion: "Eso es el encapsulamiento. Si cualquiera pudiera hacer alumno._marcas.append(\"Z\"), el control de marcar() no serviría de nada. El guion bajo es un acuerdo: \"esto no se toca de afuera\"." },
+  { texto: "Porque Python no deja usar nombres sin guion bajo adentro de una clase.", explicacion: "Sí deja: self.nombre no tiene guion bajo. El guion bajo es una señal para quien usa la clase, no una regla de Python." },
+  { texto: "Para que las marcas no se guarden.", explicacion: "Se guardan igual. El guion bajo no cambia lo que hace Python: avisa que ese dato es interno." },
+]}>
+En el `Alumno`, ¿por qué las marcas se guardan en `self._marcas` y no en `self.marcas`?
+</OpcionMultiple>
+
+<EjercicioPython
+  titulo="El Alumno completo"
+  fundamental
+  dificultad="🌿"
+  starter={`class Alumno:
+    def __init__(self, dni, apellido, nombre):
+        # si el DNI no es solo números o no tiene 7 u 8: ValueError (el mensaje dice DNI)
+        self.dni = dni
+        self.apellido = apellido
+        self.nombre = nombre
+        self._marcas = []
+
+    # marcar(estado): agrega la marca si es "P", "A", "T" o "J".
+    #                 Si es otra cosa: ValueError (y la marca NO se agrega)
+
+    # porcentaje(): qué porcentaje vino. La "T" cuenta como que vino. Sin marcas: 0
+
+    # __str__: devuelve  <apellido>, <nombre> — <porcentaje con 1 decimal>%
+`}
+  tests={`ana = Alumno("30111222", "Perez", "Ana")
+assert ana.porcentaje() == 0, "sin marcas, el porcentaje es 0 (y no un error de dividir por cero)"
+ana.marcar("P")
+ana.marcar("A")
+assert ana.porcentaje() == 50, f"con una P y una A, vino la mitad: 50. Dio {ana.porcentaje()}"
+assert str(ana) == "Perez, Ana — 50.0%", f"print(ana) tendría que mostrar 'Perez, Ana — 50.0%' y mostró '{ana}'"
+ana.marcar("T")
+assert round(ana.porcentaje(), 1) == 66.7, "con P, A y T vino 2 de 3: la tardanza cuenta como que vino"
+try:
+    ana.marcar("X")
+    raise AssertionError("marcar('X') no levantó nada: en POO II la marca mala se ignoraba en silencio, ahora tiene que avisar con un ValueError")
+except ValueError:
+    pass
+assert round(ana.porcentaje(), 1) == 66.7, "después de la marca 'X' el porcentaje cambió: la marca mala no se tiene que guardar"
+try:
+    Alumno("30.111.222", "Perez", "Ana")
+    raise AssertionError("con el DNI '30.111.222' el alumno se creó igual: tiene que levantar ValueError")
+except ValueError as e:
+    assert "DNI" in str(e), f"el mensaje tiene que decir DNI, para saber qué dato estaba mal. Dijo: {e}"
+try:
+    Alumno("1234", "Gomez", "Beto")
+    raise AssertionError("un DNI de 4 números tampoco sirve: tienen 7 u 8")
+except ValueError:
+    pass
+print("¡El Alumno está completo!")
+`}
+  pistas={[
+    'En POO II, una marca equivocada se ignoraba sin decir nada. ¿Qué gana la preceptora si en vez de eso el sistema le avisa que se equivocó?',
+    'Si todavía no hay ninguna marca, ¿por cuánto estarías dividiendo para sacar el porcentaje?',
+    'Una tardanza, ¿es que vino o que no vino? ¿Y una justificada?',
+  ]}
+>
+Es el `Alumno` de POO II, con lo que aprendimos en Excepciones. Tiene que:
+
+- **No crearse** si el DNI no es de 7 u 8 números: `ValueError` con un mensaje que diga **DNI**.
+- `marcar(estado)` acepta solo `"P"`, `"A"`, `"T"` o `"J"`. Con cualquier otra cosa levanta
+  `ValueError`, y la marca **no se guarda**.
+- `porcentaje()` dice qué porcentaje vino. La `"T"` cuenta como que vino. Sin marcas, `0`.
+- Al imprimirlo se ve así:
+
+```python
+ana = Alumno("30111222", "Perez", "Ana")
+ana.marcar("P")
+ana.marcar("A")
+print(ana)          # Perez, Ana — 50.0%
+ana.marcar("X")     # ValueError: la marca tiene que ser P, A, T o J
+```
+</EjercicioPython>
+
+Ahora, el `Curso`: el que guarda a los alumnos. Guarda un **diccionario** con el DNI como clave,
+así encontrar a uno es directo:
+
+```python
+{
+    "30111222": <el objeto Alumno de Ana>,
+    "28999888": <el objeto Alumno de Beto>,
+}
+```
+
+<EjercicioPython
+  titulo="El Curso que guarda a los alumnos"
+  fundamental
+  dificultad="🌿"
+  archivos={{ 'alumno.py': ALUMNO_PY }}
+  starter={`from alumno import Alumno
+
+
+class Curso:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self._alumnos = {}   # DNI -> Alumno
+
+    # agregar(alumno): lo guarda. Si ya había uno con ese DNI: ValueError (el mensaje dice DNI)
+
+    # buscar(dni): devuelve el Alumno con ese DNI, o None si no está
+
+    # alumnos(): devuelve la LISTA de alumnos, en el orden en que se agregaron
+`}
+  tests={`c = Curso("1° A")
+assert c.alumnos() == [], "un curso recién creado no tiene alumnos: alumnos() devuelve una lista vacía"
+ana = Alumno("30111222", "Perez", "Ana")
+beto = Alumno("28999888", "Gomez", "Beto")
+c.agregar(ana)
+c.agregar(beto)
+assert isinstance(c.alumnos(), list), "alumnos() tiene que devolver una lista (después la vamos a recorrer con un for)"
+assert c.alumnos() == [ana, beto], "alumnos() tiene que devolver a Ana y a Beto, en el orden en que se agregaron"
+assert c.buscar("28999888") is beto, "buscar('28999888') tiene que devolver el objeto de Beto"
+assert c.buscar("11111111") is None, "si el DNI no está, buscar() devuelve None (y no un error: que no esté es una respuesta válida)"
+try:
+    c.agregar(Alumno("30111222", "Perez", "Ana María"))
+    raise AssertionError("se agregó un segundo alumno con el DNI 30111222: dos personas no pueden tener el mismo DNI")
+except ValueError as e:
+    assert "DNI" in str(e), f"el mensaje tiene que decir DNI. Dijo: {e}"
+assert c.buscar("30111222").nombre == "Ana", "el alumno repetido pisó al que ya estaba: hay que frenarlo ANTES de guardar"
+assert len(c.alumnos()) == 2, "después del repetido tiene que seguir habiendo 2 alumnos"
+print("¡El Curso guarda, busca y no acepta repetidos!")
+`}
+  pistas={[
+    'Antes de guardar a un alumno, ¿cómo te enterás si ese DNI ya estaba en el diccionario?',
+    'Si le pedís a un diccionario una clave que no tiene, ¿qué pasa? ¿Hay una forma de pedírsela que no tire un error?',
+    'El diccionario tiene claves y valores. ¿Cuál de los dos son los alumnos?',
+  ]}
+>
+El `Curso` tiene un nombre y guarda a sus alumnos en `self._alumnos`, un diccionario con el DNI
+como clave:
+
+- `agregar(alumno)` lo guarda. Si ya había uno con ese DNI, levanta `ValueError` con un mensaje
+  que diga **DNI**, y no pisa al que estaba.
+- `buscar(dni)` devuelve el `Alumno`, o `None` si no está.
+- `alumnos()` devuelve la **lista** de alumnos, en el orden en que se agregaron.
+
+```python
+c = Curso("1° A")
+c.agregar(Alumno("30111222", "Perez", "Ana"))
+c.buscar("30111222")   # el Alumno de Ana
+c.buscar("11111111")   # None
+c.alumnos()            # [<Ana>]
+```
+</EjercicioPython>
+
+Los datos del CFP vienen de planillas, y en una planilla siempre hay alguna fila rota. Lo que
+aprendiste en Excepciones va acá: **una fila mala no puede frenar la carga de todo el curso**.
+
+<EjercicioPython
+  titulo="Cargar la planilla sin que se caiga"
+  fundamental
+  dificultad="🌿"
+  archivos={{ 'modelo.py': MODELO_PY }}
+  starter={`from modelo import Alumno, Curso
+
+
+def cargar(curso, filas):
+    # Agregá al curso cada fila que se pueda.
+    # Las rotas no frenan la carga: por cada una, anotá "<dni>: <mensaje del error>"
+    # en una lista de errores, y al final devolvé esa lista.
+    pass
+`}
+  tests={`filas = [
+    ("30111222", "Perez", "Ana"),
+    ("30.111", "Gomez", "Beto"),
+    ("28999888", "Paz", "Mateo"),
+    ("30111222", "Perez", "Ana"),
+    ("27555666", "Rios", "Lola"),
+]
+c = Curso("1° A")
+errores = cargar(c, filas)
+assert errores is not None, "cargar() no devolvió nada: tiene que devolver la lista de errores"
+dnis = [a.dni for a in c.alumnos()]
+assert "27555666" in dnis, "Lola (la última fila) no se cargó: una fila rota en el medio frenó todo lo que venía después"
+assert dnis == ["30111222", "28999888", "27555666"], f"tendrían que quedar cargados Ana, Mateo y Lola. Quedaron: {dnis}"
+assert len(errores) == 2, f"hay 2 filas rotas (el DNI con puntos y el repetido) y anotaste {len(errores)} errores"
+assert errores[0].startswith("30.111:"), f"el primer error tiene que empezar con el DNI de la fila: '30.111: ...'. Fue: {errores[0]}"
+assert "DNI" in errores[0], "el error tiene que traer el mensaje de la excepción, que dice qué pasó"
+assert errores[1].startswith("30111222:"), f"el segundo error es el DNI repetido: '30111222: ...'. Fue: {errores[1]}"
+assert cargar(Curso("2° B"), []) == [], "con una planilla vacía no hay errores: lista vacía"
+print("¡La planilla se carga entera, y los errores quedan anotados!")
+`}
+  pistas={[
+    'Un DNI con puntos y un DNI repetido, ¿qué excepción levanta cada uno? ¿Hace falta atajarlos por separado?',
+    '¿Dónde va el try: alrededor de todo el for, o adentro, por cada fila? ¿Qué pasa con las filas que vienen después de una rota en cada caso?',
+    'Para anotar el error necesitás el mensaje de la excepción. ¿Cómo lo atrapás en el except para poder usarlo?',
+  ]}
+>
+`cargar(curso, filas)` recibe una lista de tuplas `(dni, apellido, nombre)` y agrega al curso cada
+alumno que se pueda crear. Las filas rotas **no frenan la carga**: por cada una anotá
+`"<dni>: <mensaje del error>"` en una lista, y al final devolvé esa lista.
+
+```python
+filas = [
+    ("30111222", "Perez", "Ana"),
+    ("30.111", "Gomez", "Beto"),       # DNI roto
+    ("28999888", "Paz", "Mateo"),
+    ("30111222", "Perez", "Ana"),      # repetido
+]
+c = Curso("1° A")
+cargar(c, filas)
+# ['30.111: el DNI tiene que ser de 7 u 8 números, sin puntos',
+#  '30111222: ya hay un alumno con el DNI 30111222']
+# y en el curso quedaron Ana y Mateo
+```
+</EjercicioPython>
+
+## Parte 2 · Del objeto a la página
+
+¿Te acordás del catálogo? Python armaba **texto**, y ese texto era HTML: el navegador lo dibujaba
+como página. Con el curso es exactamente lo mismo. Un alumno se convierte en un renglón de una
+lista:
+
+```python
+f"<li>{alumno}</li>"   # <li>Perez, Ana — 50.0%</li>
+```
+
+El `{alumno}` adentro del f-string usa el `__str__` que hiciste en la parte 1. Por eso valía la
+pena hacerlo bien.
+
+<EjercicioPython
+  titulo="Un alumno, un renglón"
+  dificultad="🌱"
+  archivos={{ 'modelo.py': MODELO_PY }}
+  vista={ESTILOS}
+  starter={`from modelo import Alumno
+
+
+def fila(alumno):
+    # devuelve el alumno adentro de un <li>
+    pass
+
+
+ana = Alumno("30111222", "Perez", "Ana")
+ana.marcar("P")
+print("<ul>" + str(fila(ana)) + "</ul>")
+`}
+  tests={`ana = Alumno("30111222", "Perez", "Ana")
+ana.marcar("P")
+r = fila(ana)
+assert r is not None, "fila() no devolvió nada: si usaste print, el renglón se muestra pero no se puede usar para armar la página. Hace falta return"
+assert r == "<li>Perez, Ana — 100.0%</li>", f"esperaba '<li>Perez, Ana — 100.0%</li>' y salió '{r}'"
+beto = Alumno("28999888", "Gomez", "Beto")
+assert fila(beto) == "<li>Gomez, Beto — 0.0%</li>", "con Beto (sin marcas) tiene que salir '<li>Gomez, Beto — 0.0%</li>'"
+print("¡Cada alumno ya sabe convertirse en un renglón!")
+`}
+  pistas={[
+    '¿Qué muestra print(alumno)? ¿Y qué pasa si ponés el alumno entre llaves adentro de un f-string?',
+    'Esta función, ¿tiene que mostrar el renglón o entregarlo para que otra lo junte con los demás?',
+  ]}
+>
+`fila(alumno)` devuelve el alumno adentro de un `<li>`:
+
+```python
+fila(ana)    # '<li>Perez, Ana — 100.0%</li>'
+```
+
+Tocá **Ejecutar** y vas a ver el renglón como página, abajo del código.
+</EjercicioPython>
+
+<EjercicioPython
+  titulo="La página del curso"
+  fundamental
+  dificultad="🌿"
+  archivos={{ 'modelo.py': MODELO_PY }}
+  vista={ESTILOS}
+  starter={`from modelo import Alumno, Curso
+
+
+def fila(alumno):
+    return f"<li>{alumno}</li>"
+
+
+def pagina(curso):
+    # <h1> con el nombre del curso, y después una <ul> con una fila por alumno.
+    # Si el curso no tiene alumnos: el <h1> y después <p>Todavía no hay alumnos</p>
+    pass
+
+
+curso = Curso("1° A")
+ana = Alumno("30111222", "Perez", "Ana")
+ana.marcar("P")
+ana.marcar("A")
+curso.agregar(ana)
+curso.agregar(Alumno("28999888", "Gomez", "Beto"))
+print(pagina(curso))
+`}
+  tests={`c = Curso("1° A")
+ana = Alumno("30111222", "Perez", "Ana")
+ana.marcar("P")
+ana.marcar("A")
+c.agregar(ana)
+c.agregar(Alumno("28999888", "Gomez", "Beto"))
+r = pagina(c)
+assert r is not None, "pagina() no devolvió nada: Flask necesita que la función ENTREGUE el HTML, para mandarlo al navegador"
+r = r.replace(chr(10), "")
+assert r.startswith("<h1>1° A</h1>"), f"la página arranca con el nombre del curso en un <h1>: '<h1>1° A</h1>'. Arrancó con: {r[:30]}"
+assert "<ul>" in r and r.endswith("</ul>"), "los alumnos van adentro de una <ul>, que se abre después del <h1> y se cierra al final"
+assert r.count("<li>") == 2, f"el curso tiene 2 alumnos y la página tiene {r.count('<li>')} renglones"
+assert r.index("Perez, Ana — 50.0%") < r.index("Gomez, Beto — 0.0%"), "los alumnos tienen que aparecer en el orden del curso: Ana y después Beto"
+vacio = pagina(Curso("2° B")).replace(chr(10), "")
+assert vacio == "<h1>2° B</h1><p>Todavía no hay alumnos</p>", f"un curso vacío muestra el <h1> y '<p>Todavía no hay alumnos</p>', sin una lista vacía. Salió: {vacio}"
+print("¡La página del curso sale de los objetos!")
+`}
+  pistas={[
+    '¿Cuántos renglones tiene que tener la lista? ¿De dónde sacás a cada alumno, uno por uno?',
+    'En el catálogo, ¿cómo ibas juntando las tarjetas en un solo texto?',
+    '¿Cómo te das cuenta de que el curso está vacío, antes de abrir la lista?',
+  ]}
+>
+`pagina(curso)` devuelve el HTML de todo el curso: el nombre en un `<h1>` y los alumnos en una
+`<ul>`, con un `fila()` por cada uno. Si el curso no tiene alumnos, en lugar de la lista va
+`<p>Todavía no hay alumnos</p>`.
+
+```python
+pagina(curso)
+# '<h1>1° A</h1><ul><li>Perez, Ana — 50.0%</li><li>Gomez, Beto — 0.0%</li></ul>'
+
+pagina(Curso("2° B"))
+# '<h1>2° B</h1><p>Todavía no hay alumnos</p>'
+```
+</EjercicioPython>
+
+## Parte 3 · Flask: la página se arma cuando alguien la pide
+
+Ya tenés una función que **devuelve la página**. Lo que falta es alguien que, cuando el navegador
+pide `/alumnos`, **llame a esa función y le mande lo que devuelve**. Eso es **Flask**.
+
+<Mermaid code={`sequenceDiagram
+    participant N as Navegador
+    participant F as Flask (app.py)
+    participant M as Tus funciones
+    N->>F: Pido /alumnos
+    F->>M: pagina(curso)
+    M-->>F: El HTML, como texto
+    F-->>N: Te mando la página
+`} />
+
+La diferencia con el catálogo es **cuándo** se arma el HTML. El catálogo lo armabas una vez y
+quedaba guardado en un archivo. Con Flask, se arma **cada vez que alguien entra**. Por eso, si Ana
+tiene una marca nueva, el que recarga la página la ve.
+
+:::caution[Esta parte necesita internet]
+Flask no viene con Python: hay que instalarlo con `pip`, como Playwright en la clase del bot. Si en
+el CFP no hay internet, seguí con el proyector y hacelo en casa: es copiar dos archivos.
+:::
+
+### Paso 1 · La carpeta y el entorno virtual
+
+Igual que con el bot. Creá una carpeta `sistema-web`, abrila en VS Code, y en la terminal:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install flask
+```
+
+Cuando la línea de la terminal empieza con **`(.venv)`**, el entorno está activo.
+
+:::tip[Si dice que "la ejecución de scripts está deshabilitada"]
+Lo mismo que en el bot: tocá la flechita al lado del **+** de la terminal y elegí
+**Command Prompt**. Ahí `.venv\Scripts\activate` anda.
+:::
+
+### Paso 2 · El modelo
+
+Creá un archivo `modelo.py` y pegá esto. Es el `Alumno` y el `Curso` de la parte 1, juntos:
+
+<Code code={MODELO_PY} lang="python" title="modelo.py" />
+
+### Paso 3 · La aplicación
+
+Creá `app.py` al lado y pegá esto:
+
+<Code code={APP_PY} lang="python" title="app.py" />
+
+Hay una sola cosa nueva, las líneas con **`@`**:
+
+```python
+@app.route("/alumnos")
+def lista_de_alumnos():
+    return pagina(curso)
+```
+
+Se lee así: *"cuando el navegador pida `/alumnos`, llamá a esta función, y lo que devuelva es la
+página"*. Cada `@app.route` es una **dirección** que el sistema atiende.
+
+### Paso 4 · Correrlo
+
+```bash
+python app.py
+```
+
+La terminal se queda esperando y muestra algo así:
+
+```text
+ * Running on http://127.0.0.1:5000
+```
+
+Abrí el navegador en **http://127.0.0.1:5000**. Esa página la está armando **tu Python**. Probá
+también:
+
+- http://127.0.0.1:5000/alumnos
+- http://127.0.0.1:5000/alumno/30111222
+- http://127.0.0.1:5000/alumno/99999999, uno que no existe
+
+Para frenarlo: **Ctrl + C** en la terminal.
+
+<OpcionMultiple titulo="Chequeo: ¿quién arma la página?" opciones={[
+  { texto: "Tu función pagina(): Flask solo la llama y manda lo que devuelve.", correcta: true, explicacion: "Exacto. Flask es el que atiende la puerta: recibe el pedido, llama a tu función y entrega la respuesta. El HTML lo sigue armando el mismo código que probaste en la parte 2." },
+  { texto: "Flask: lee los objetos y dibuja la página solo.", explicacion: "Flask no sabe nada de alumnos. Sin tu función pagina(), no tendría nada para mandar." },
+  { texto: "El navegador: recibe los objetos y los convierte en HTML.", explicacion: "Al navegador no le llegan objetos de Python: le llega texto, el HTML que devolvió tu función." },
+]}>
+Cuando entrás a `/alumnos`, ¿quién arma el HTML que ves?
+</OpcionMultiple>
+
+### 🧩 Desafíos, si te sobra tiempo
+
+Con Flask andando, cada cambio se ve al **guardar y recargar** el navegador. El `debug=True` hace
+que se reinicie solo.
+
+1. **Una marca más.** En `app.py`, agregale una `"P"` a Beto. Guardá, recargá `/alumnos`: ¿cambió el
+   porcentaje?
+2. **Un alumno más.** Agregá un tercer alumno al curso. ¿Aparece en `/alumnos` sin tocar
+   `pagina()`?
+3. **Un link por alumno.** Hacé que cada renglón de `/alumnos` sea un link a `/alumno/<su dni>`.
+   ¿Qué función tenés que cambiar, y por qué alcanza con cambiar esa sola?
+4. **Que se vea mejor.** Agregá un `<style>` al principio de lo que devuelve `pagina()`, con lo que
+   aprendiste de CSS.
+
+:::note[¿Y desde el celular?]
+Por ahora el sistema lo ve **solo tu compu**: `127.0.0.1` quiere decir "esta misma compu". Que lo
+vea el celular de la preceptora, o el tótem del pasillo, es la clase **El sistema en la red del
+CFP**.
+:::
+
+## Para llevar
+
+```python
+# Excepciones adentro de los objetos
+raise ValueError("el DNI tiene que ser de 7 u 8 números")   # el dato no sirve: frenar
+
+try:
+    curso.agregar(Alumno(dni, apellido, nombre))
+except ValueError as e:                                      # atajar, anotar y seguir
+    errores.append(f"{dni}: {e}")
+
+# Del objeto al HTML
+f"<li>{alumno}</li>"                                         # usa el __str__
+
+# Flask: una dirección, una función
+@app.route("/alumnos")
+def lista_de_alumnos():
+    return pagina(curso)                                     # lo que devuelve es la página
+```
+
+- El HTML de una página web **es texto**, y Python sabe armar texto.
+- **Flask** atiende los pedidos del navegador: por cada dirección llama a una función tuya.
+- Los datos todavía viven **en memoria**: si cerrás `app.py`, las marcas nuevas se pierden. Eso lo
+  resuelve **SQLite**, la clase que viene.

@@ -248,6 +248,23 @@
 | Mié 21/10 | Seguimos con **Tu catálogo con Python** | [🛍️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web/catalogo/) |
 | Vie 23/10 | Seguimos con **Tu catálogo con Python**. Costó entender el recorrido entre **las funciones que ya vienen definidas y las llamadas** a esas funciones: qué hace cada una y quién llama a quién. El miércoles se termina, y arranca la preparación de la **Expo** | [🛍️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web/catalogo/) |
 
+### 🎪 Preparando la Expo
+
+!!! tip "Dos semanas para el stand"
+    Antes de la **Expo del CFP del 13/11** el grupo armó el stand del curso: los **catálogos** de
+    los emprendimientos, el **Bingo**, las **fotos con IA** y los **juegos hechos con IA**. Fue
+    práctica de verdad, con gente de verdad del otro lado. A cambio, el temario casi no avanzó:
+    **POO II** y el **bot del SiGeS** quedaron de tarea. **Excepciones** ya se había terminado.
+
+| Fecha | Tema | |
+|-------|------|--|
+| Mié 28/10 | Cerramos **Tu catálogo con Python** y arranca la preparación de la **Expo** | [🛍️](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web/catalogo/) |
+| Vie 30/10 | Preparación de la Expo: los **catálogos** de los emprendimientos | [🎪](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/preparando-expo/) |
+| Mié 4/11 | Preparación de la Expo | [🎪](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/preparando-expo/) |
+| Vie 6/11 | Preparación de la Expo: **el stand, pieza por pieza** (qué hace cada estación y cómo se conecta) y los **juegos hechos con IA** | [🎪](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/preparando-expo/el-stand/) |
+| Mié 11/11 | Preparación de la Expo: los últimos ajustes del stand | [🎪](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/preparando-expo/) |
+| Vie 13/11 | 🎪 **Expo del CFP**: el stand del curso | [🎪](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/expo/) |
+
 <!-- Plan post-receso (definido 1/8):
      El 17/7 se usó para cerrar Git/GitHub (quedó COMPLETO ✅) + picnic de cierre.
      ARCHIVOS quedó flojo: se dio el 8/7 con varios alumnos ausentes y el grupo se perdió bastante.

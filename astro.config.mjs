@@ -198,6 +198,7 @@ export default defineConfig({
                   { label: '🛡️ POO II — Encapsulamiento', link: '/clases/poo-2/' },
                   { label: '🤖 El bot del SiGeS', link: '/clases/bot-siges/' },
                   { label: '🚨 Excepciones', link: '/clases/excepciones/' },
+                  { label: '🔧 De vuelta al sistema', link: '/clases/de-vuelta-al-sistema/' },
                   { label: '🗃️ SQLite — los datos en una base', link: '/clases/sqlite/' },
                   { label: '🚀 Taller: el sistema por consola', link: '/clases/taller-consola/' },
                 ],
