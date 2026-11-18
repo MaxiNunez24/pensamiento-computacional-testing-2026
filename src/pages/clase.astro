@@ -1,0 +1,164 @@
+---
+/**
+ * El checklist del profe para la clase de hoy: /clase/
+ *
+ * Es un espejo de la lección del día, con lo que hay que recordar, para ir tildando mientras se da.
+ * El link es siempre el mismo: antes de cada clase se cambia src/data/clase.ts y listo.
+ *
+ * Lo tildado se guarda en este navegador, con la fecha de la clase: una clase nueva arranca vacía.
+ * No está en el menú ni en el mapa del sitio (ver astro.config.mjs), pero no tiene nada privado.
+ */
+import { CLASE, type Item } from '../data/clase';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const leccion = `${base}/${CLASE.leccion}`;
+
+// La hora a la que debería arrancar cada bloque, sumando los minutos desde el inicio
+const [h0, m0] = CLASE.inicio.split(':').map(Number);
+let acumulado = h0 * 60 + m0;
+const hora = (min: number) => `${Math.floor(min / 60)}:${String(min % 60).padStart(2, '0')}`;
+const bloques = CLASE.bloques.map((b) => {
+    const desde = hora(acumulado);
+    acumulado += b.minutos;
+    return { ...b, desde };
+});
+const fin = hora(acumulado);
+
+const href = (it: Item) => (it.link === 'leccion' ? leccion : it.link ?? (it.ancla ? `${leccion}#${it.ancla}` : undefined));
+const total = CLASE.antes.length + CLASE.bloques.reduce((n, b) => n + b.items.length, 0) + CLASE.despues.length;
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Clase de hoy · {CLASE.dia}</title>
+    <script is:inline>
+        // El mismo tema que el resto del curso (el selector de Starlight lo guarda así)
+        (() => {
+            let tema = '';
+            try { tema = localStorage.getItem('starlight-theme') || ''; } catch { /* sin guardar */ }
+            if (tema !== 'light' && tema !== 'dark') tema = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            document.documentElement.dataset.theme = tema;
+        })();
+    </script>
+    <style>
+        :root { color-scheme: dark; --fondo: #0e1117; --caja: #161b24; --linea: #2a3140; --texto: #e8ecf3; --suave: #a3adbd; --oro: #f2c14e; --link: #7fd4ff; --hecho: #4fd1b5; }
+        :root[data-theme='light'] { color-scheme: light; --fondo: #f3f5f8; --caja: #fff; --linea: #cfd6e2; --texto: #10131a; --suave: #4a5466; --oro: #b07600; --link: #0b5fa5; --hecho: #0d8a6f; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--fondo); color: var(--texto); font: 17px/1.45 system-ui, sans-serif; }
+        main { max-width: 760px; margin: 0 auto; padding: 16px 16px 64px; display: grid; gap: 16px; }
+        header { position: sticky; top: 0; z-index: 2; background: var(--fondo); padding: 10px 0 12px; border-bottom: 1px solid var(--linea); }
+        .dia { margin: 0; color: var(--suave); font-size: 0.95rem; }
+        h1 { margin: 2px 0 10px; color: var(--oro); font-size: 1.45rem; line-height: 1.2; }
+        .barra { height: 10px; background: var(--linea); border-radius: 999px; overflow: hidden; }
+        .barra span { display: block; height: 100%; width: 0; background: var(--hecho); transition: width 0.3s; }
+        .estado { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; color: var(--suave); font-size: 0.9rem; }
+        .acciones { display: flex; flex-wrap: wrap; gap: 8px; }
+        .boton { padding: 8px 14px; border: 2px solid var(--oro); border-radius: 999px; background: transparent; color: var(--oro); font: 700 0.95rem system-ui, sans-serif; cursor: pointer; text-decoration: none; }
+        .boton.lleno { background: var(--oro); color: #10131a; }
+        section { background: var(--caja); border: 1px solid var(--linea); border-radius: 14px; padding: 12px 14px; }
+        section.ahora { border-color: var(--oro); box-shadow: 0 0 0 1px var(--oro); }
+        section.listo { opacity: 0.6; }
+        h2 { margin: 0 0 6px; font-size: 1.1rem; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+        h2 small { color: var(--suave); font-weight: 500; font-size: 0.85rem; white-space: nowrap; }
+        ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+        label { display: grid; grid-template-columns: 28px 1fr; gap: 6px; padding: 8px 4px; border-radius: 8px; cursor: pointer; }
+        label:hover { background: color-mix(in srgb, var(--linea) 40%, transparent); }
+        input[type='checkbox'] { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--hecho); cursor: pointer; }
+        .texto { font-weight: 600; }
+        .texto a { color: var(--link); }
+        input:checked + span .texto { text-decoration: line-through; color: var(--suave); }
+        .nota { display: block; margin-top: 2px; color: var(--suave); font-size: 0.88rem; font-weight: 400; }
+        .estrella { color: var(--oro); }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <p class="dia">{CLASE.dia} · {CLASE.inicio} a {fin} h</p>
+            <h1>{CLASE.titulo}</h1>
+            <div class="barra" aria-hidden="true"><span id="barra"></span></div>
+            <div class="estado"><span id="cuenta">0 de {total}</span><span id="reloj"></span></div>
+        </header>
+
+        <div class="acciones">
+            <a class="boton lleno" href={leccion} target="_blank" rel="noopener">Abrir la lección ↗</a>
+            <button class="boton" type="button" id="reiniciar">Destildar todo</button>
+        </div>
+
+        {[
+            { titulo: '🧰 Antes de empezar', items: CLASE.antes, clave: 'antes', desde: undefined as string | undefined, minutos: 0 },
+            ...bloques.map((b, i) => ({ titulo: b.titulo, items: b.items, clave: `b${i}`, desde: b.desde, minutos: b.minutos })),
+            { titulo: '🏁 Después de la clase', items: CLASE.despues, clave: 'despues', desde: undefined, minutos: 0 },
+        ].map((s) => (
+            <section data-desde={s.desde} data-minutos={s.minutos}>
+                <h2>{s.titulo}{s.desde && <small>{s.desde} · {s.minutos} min</small>}</h2>
+                <ul>
+                    {s.items.map((it, j) => (
+                        <li>
+                            <label>
+                                <input type="checkbox" data-id={`${s.clave}-${j}`} />
+                                <span>
+                                    <span class="texto">
+                                        {it.fundamental && <span class="estrella" title="Fundamental">⭐ </span>}
+                                        {href(it) ? <a href={href(it)} target="_blank" rel="noopener">{it.texto}</a> : it.texto}
+                                    </span>
+                                    {it.nota && <span class="nota">{it.nota}</span>}
+                                </span>
+                            </label>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        ))}
+    </main>
+
+    <script is:inline define:vars={{ fecha: CLASE.fecha, total }}>
+        const CLAVE = `clase:${fecha}`;
+        const cajas = [...document.querySelectorAll('input[type=checkbox]')];
+        let hechos = [];
+        try { hechos = JSON.parse(localStorage.getItem(CLAVE) || '[]'); } catch { hechos = []; }
+        for (const c of cajas) c.checked = hechos.includes(c.dataset.id);
+
+        const pintar = () => {
+            const n = cajas.filter((c) => c.checked).length;
+            document.getElementById('cuenta').textContent = `${n} de ${total}`;
+            document.getElementById('barra').style.width = `${(n * 100) / total}%`;
+            for (const s of document.querySelectorAll('section')) {
+                const propias = [...s.querySelectorAll('input')];
+                s.classList.toggle('listo', propias.length > 0 && propias.every((c) => c.checked));
+            }
+        };
+        const guardar = () => {
+            const ids = cajas.filter((c) => c.checked).map((c) => c.dataset.id);
+            try { localStorage.setItem(CLAVE, JSON.stringify(ids)); } catch { /* sin guardar */ }
+            pintar();
+        };
+        for (const c of cajas) c.addEventListener('change', guardar);
+        document.getElementById('reiniciar').addEventListener('click', () => {
+            if (!confirm('¿Destildar todo?')) return;
+            for (const c of cajas) c.checked = false;
+            guardar();
+        });
+
+        // El reloj y el bloque que toca ahora, según el horario (solo el día de la clase)
+        const hoy = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+        const marcarAhora = () => {
+            const d = new Date();
+            const min = d.getHours() * 60 + d.getMinutes();
+            document.getElementById('reloj').textContent = `🕐 ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
+            for (const s of document.querySelectorAll('section[data-desde]')) {
+                const [h, m] = s.dataset.desde.split(':').map(Number);
+                const desde = h * 60 + m;
+                s.classList.toggle('ahora', hoy() === fecha && min >= desde && min < desde + Number(s.dataset.minutos));
+            }
+        };
+        pintar();
+        marcarAhora();
+        setInterval(marcarAhora, 30000);
+    </script>
+</body>
+</html>
