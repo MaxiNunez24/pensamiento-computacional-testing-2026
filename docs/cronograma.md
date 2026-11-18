@@ -36,12 +36,13 @@
 | ✅ **Mié 23/9** | **El equipo directivo** avaló el mapa de cómo trabaja cada uno. La reunión quedó corta: la próxima, **cuando haya sistema para mostrar** |
 | 🤖 **Fecha a confirmar** | **Demo del bot del SiGeS con un alumno real**, junto con preceptoría. Esperando poder entrar al SiGeS |
 | 🎉 **24 y 26/9** | **Nerdearla** — salida educativa al Ciudad Cultural Konex. (El evento va del 22 al 26; el 22 y 23 son online y lo presencial arranca el jueves 24.) |
-| ✅ **Fecha a confirmar** | Segundo hito: **Sistema de Asistencias en CLI**, guardando en **SQLite** |
-| 🧪 **Oct** | **Testing** (teoría + `pytest` sobre el proyecto) y migración del sistema a **web (Flask)** |
-| 🚀 **Vie 6/11** | Tercer hito: **el sistema andando en la red del CFP**, usable desde el celular de cualquiera conectado al wifi del centro |
-| 🏆 **Vie 13/11** | **Expo CFP 2026** — presentamos el **Sistema de Asistencias** 🎪 |
-| 🤖 **Mié 25/11** | Arranque del **proyecto final con IA** |
-| 🎓 **Vie 18/12** | Última clase y celebración de cierre |
+| 🏆 **Vie 13/11** | **Expo CFP 2026** — el stand del curso: catálogos, Bingo, fotos con IA y juegos hechos con IA 🎪 |
+| 🔧 **Mié 18/11** | Vuelta de la Expo: repaso de POO y Excepciones, del objeto al HTML y el primer vistazo a **Flask** |
+| 🗃️ **Vie 20/11** | **SQLite**: el sistema guarda en una base |
+| 🌐 **Mié 25/11** | **Flask** sobre la base: la lista, el alta y la asistencia desde el navegador |
+| 📶 **Vie 27/11** | **El sistema en la red del CFP**: usable desde el celular de cualquiera conectado al wifi |
+| 🎓 **Mié 2/12** | **Testing** y **cierre**: la última clase del año |
+| 📝 **1 al 4/12** | **Inscripciones 2027**: Usuaria/o de IA generativa y Programador/a Web |
 
 ---
 

@@ -80,36 +80,22 @@ queda señalada con **estás acá**.
       { clase: 'de-vuelta-al-sistema', nombre: 'De vuelta al sistema: del objeto a la página', estado: 'ahora',
         nota: 'La vuelta de la Expo: repaso con práctica y el primer vistazo a Flask' },
       { clase: 'sqlite', nombre: 'SQLite: los datos en una base', estado: 'viene',
-        nota: 'Donde el sistema guarda todo' },
-      { clase: 'taller-consola', nombre: 'Taller: el sistema por consola', estado: 'viene',
-        nota: 'La primera versión que anda de verdad: el mismo código que después usa la web' },
+        nota: 'Vie 20/11. Donde el sistema guarda todo' },
     ],
   },
   {
-    // Arranca por Páginas web, que ya existe y se dio; las de Flask todavía no
-    // existen: van "en preparación" para que se vea lo que falta. El orden sale
-    // del plan de octubre y noviembre.
+    // Arranca por Páginas web, que ya existe y se dio. El 18/11 el cierre pasó al
+    // 2/12 (el 4/12 son las inscripciones 2027): las tres clases de Flask quedaron
+    // en una, y la red del CFP en otra. Van "en preparación" hasta que existan.
     nombre: 'Llevarlo a la web',
     meta: 'De qué está hecha una página, y el mismo sistema desde el navegador y el celular',
     paradas: [
       CATALOGO,
       ...BLOQUES_WEB,
-      { clase: 'flask-1', nombre: 'Flask I: rutas y plantillas', estado: 'preparacion',
-        nota: 'Arranca por cómo funciona la web: pedido y respuesta, con su animación. Accesible desde el primer template: el tótem lo usa todo el CFP' },
-      { clase: 'flask-2', nombre: 'Flask II: formularios', estado: 'preparacion',
-        nota: 'El alta de alumnos, por web' },
-      { clase: 'migrar-a-flask', nombre: 'Taller: migrar el sistema a Flask', estado: 'preparacion' },
-      { clase: 'login', nombre: 'Login: contraseñas y sesiones', estado: 'preparacion' },
+      { clase: 'flask', nombre: 'Flask sobre la base', estado: 'preparacion',
+        nota: 'Mié 25/11. La lista, el alta y la asistencia, desde el navegador' },
       { clase: 'red-del-cfp', nombre: 'El sistema en la red del CFP', estado: 'preparacion',
-        nota: 'Hito: andando el 6/11, una semana antes de la Expo' },
-    ],
-  },
-  {
-    nombre: 'Afinar el código',
-    meta: 'Cuando el sistema ya anda: escribir lo mismo con menos',
-    paradas: [
-      { clase: 'lo-que-python-hace-por-vos', nombre: 'Lo que Python hace por vos', estado: 'viene',
-        nota: 'Los atajos que vas a ver en el código de otros' },
+        nota: 'Vie 27/11. Entrar desde el celular de cualquiera conectado al wifi' },
     ],
   },
   {
@@ -117,9 +103,7 @@ queda señalada con **estás acá**.
     meta: 'La otra mitad del nombre del curso',
     paradas: [
       { clase: 'testing-1', nombre: 'Testing I: probar en serio', estado: 'viene',
-        nota: 'Los tests se van escribiendo en cada clase del proyecto' },
-      { clase: 'glosario-testing', nombre: 'Todo lo que probaste', estado: 'preparacion',
-        nota: 'El glosario de testing: lo que ya hiciste, con su nombre' },
+        nota: 'Mié 2/12, la última clase: los tests del sistema y el cierre' },
     ],
   },
   {
@@ -128,6 +112,10 @@ queda señalada con **estás acá**.
     nombre: '🎁 Para ir más allá',
     meta: 'No hacen falta para el proyecto, pero están buenas',
     paradas: [
+      { clase: 'taller-consola', nombre: 'Taller: el sistema por consola', estado: 'optativa',
+        nota: 'De tarea: el mismo sistema con un menú en la terminal' },
+      { clase: 'lo-que-python-hace-por-vos', nombre: 'Lo que Python hace por vos', estado: 'optativa',
+        nota: 'Los atajos que vas a ver en el código de otros' },
       { clase: 'archivos', nombre: 'Manejo de archivos', estado: 'optativa',
         nota: 'Lo que hace falta de archivos (leer un CSV) se ve con el bot' },
       { clase: 'json', nombre: 'JSON', estado: 'optativa' },

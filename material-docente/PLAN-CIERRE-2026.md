@@ -15,28 +15,37 @@ Antes de la Expo, del 28/10 al 13/11, todo fue preparación del stand. Así qued
 | POO II | De tarea |
 | Bot del SiGeS | De tarea |
 
-## Las 10 clases
+## Las clases que quedan
 
-| Fecha | Clase | Estado |
-|---|---|---|
-| Mié 18/11 | **De vuelta al sistema**: el plan, un repaso con práctica (Alumno, Curso, cargar con excepciones), del objeto al HTML, y el primer vistazo a Flask en la compu | ✅ escrita (`clases/de-vuelta-al-sistema`) |
-| Vie 20/11 | SQLite: los datos en una base. El feriado se corre al lunes 23; **confirmar** que hay clase | ✅ escrita |
-| Mié 25/11 | Taller: el sistema por consola | ✅ escrita |
-| Vie 27/11 | Flask I: rutas y plantillas | ✍️ a escribir |
-| Mié 2/12 | Flask II: formularios | ✍️ |
-| Vie 4/12 | Taller: migrar el sistema a Flask | ✍️ |
-| Mié 9/12 | El sistema en la red del CFP: un servidor y los tótems como clientes | ✍️ |
-| Vie 11/12 | Login: contraseñas y sesiones | ✍️ |
-| Mié 16/12 | Testing I, más el glosario "Todo lo que probaste" | ✅ escrita + ✍️ |
-| **Vie 18/12** | **Cierre:** el sistema andando en el CFP | — |
+**Cambio del 18/11:** la última clase es el **mié 2/12**, porque el vie 4/12 Maxi inscribe para
+2027. Después de la del 18/11 quedan **4 clases**. Lo que no entra en clase va **de tarea**, y cada
+clase arranca con las consultas de la tarea.
 
-- **Si se atrasa algo:** Login pasa a optativa. Los tótems funcionan sin login, y así el sistema en
-  la red llega al cierre.
-- **"Lo que Python hace por vos"** pasa a optativa: el sistema no la necesita.
+| Fecha | Clase | Tarea para casa | Estado |
+|---|---|---|---|
+| Mié 18/11 | **De vuelta al sistema**: el plan, un repaso con práctica (Alumno, Curso, cargar con excepciones), del objeto al HTML y el primer vistazo a Flask en la compu | Los ⭐ que falten; POO II y el bot si quedaron | ✅ escrita (`clases/de-vuelta-al-sistema`) |
+| Vie 20/11 | **SQLite**: el sistema guarda en una base (con `repositorio.py`). Confirmar que hay clase: el feriado se corre al lunes 23 | Terminar SQLite | ✅ escrita |
+| Mié 25/11 | **Flask sobre la base**: lo que en el plan eran Flask I, Flask II y Migrar a Flask, en una sola clase. La lista sale de SQLite, más un formulario de alta y otro para marcar asistencia | Terminar el sistema web | ✍️ a escribir (`clases/flask`) |
+| Vie 27/11 | **El sistema en la red del CFP**: correrlo en una compu (`host="0.0.0.0"`), la IP, el firewall, y entrar desde el celular. La pantalla del tótem: marcar presente con el DNI | Probarlo en casa con el celular y el wifi de casa | ✍️ a escribir (`clases/red-del-cfp`) |
+| **Mié 2/12** | **Testing y cierre**: Testing I, más lo que ya probaron con nombre (lo que iba a ser el glosario), el sistema andando, y qué sigue (las optativas y las inscripciones 2027 del 4/12) | — | ✅ Testing I escrita; el cierre, a escribir |
 
-**Sobre Flask I:** la clase del 18/11 ya muestra `@app.route`, devolver HTML desde una función y la
-ruta con un dato (`/alumno/<dni>`). Flask I puede arrancar desde ahí y sumar las plantillas
-(Jinja), sin repetir el "hola mundo".
+**Pasan a tarea u optativa:**
+- **Taller: el sistema por consola** queda de tarea, porque Flask reemplaza al menú de consola.
+- **Lo que Python hace por vos** queda como optativa.
+- **Login** queda para el que quiera ir más allá; si se escribe, va como optativa.
+- **El glosario** se absorbe en la clase del 2/12.
+
+**Sobre Flask (25/11):** la clase del 18/11 ya mostró varias cosas, así que esta arranca desde ahí,
+sin repetir el "hola mundo":
+- `@app.route`.
+- Devolver HTML desde una función.
+- La ruta con un dato (`/alumno/<dni>`).
+- El 404.
+
+Lo nuevo de esta clase es:
+- `render_template`, con una plantilla mínima.
+- Formularios con `request.form` y `redirect`.
+- Los datos desde `repositorio.py`, en lugar de la memoria.
 
 ## Optativas: "Para seguir después del curso"
 
@@ -61,7 +70,8 @@ Una sección nueva del camino, aparte de "Para ir más allá". Hay dos tipos de 
 | Regex: buscar patrones en texto (DNI, mails, teléfonos) | 🌐 |
 | Fechas con datetime: calcular días, cumpleaños, vencimientos | 🌐 |
 
-Se escriben después de las clases del sistema, en los huecos de diciembre.
+Se escriben después de las clases del sistema. Como el curso termina el 2/12, quedan para que los
+alumnos las hagan solos después del curso.
 
 ## 2027
 

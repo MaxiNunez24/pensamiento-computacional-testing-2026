@@ -49,10 +49,10 @@ export const CLASE: Clase = {
     ],
     bloques: [
         {
-            titulo: '🗓️ De acá al 18/12',
+            titulo: '🗓️ De acá al 2/12',
             minutos: 10,
             items: [
-                { texto: 'Mostrar la tabla de las 10 clases', ancla: '️-de-acá-al-18-de-diciembre', nota: 'La meta es una sola: que el sistema de asistencias ande de verdad, en el navegador y en la red del CFP.' },
+                { texto: 'Mostrar la tabla: quedan 4 clases, la última el 2/12', ancla: '️-de-acá-al-2-de-diciembre', nota: 'El 4/12 son las inscripciones 2027. Lo que no entra en clase va de tarea, y cada clase arranca con consultas.' },
                 { texto: 'Preguntar quién terminó POO II y el bot (quedaron de tarea)', nota: 'El bot se sigue en casa: no hace falta para lo que viene. POO II se repasa hoy.' },
             ],
         },
@@ -108,6 +108,7 @@ export const CLASE: Clase = {
                 { texto: 'Los datos viven en memoria: si cierran app.py, las marcas se pierden', ancla: 'para-llevar', nota: 'Eso lo resuelve SQLite, la clase del viernes.' },
                 { texto: 'Tarea: los ⭐ que falten, y POO II y el bot si quedaron' },
                 { texto: 'Avisar: el viernes 20/11, SQLite', nota: 'Confirmar antes si hay clase (el feriado se corre al lunes 23).' },
+                { texto: 'Avisar: inscripciones 2027 del 1 al 4/12 (IA generativa y Programador/a Web)', nota: 'Requisitos: 2 fotocopias del DNI y la cooperadora.' },
             ],
         },
     ],
