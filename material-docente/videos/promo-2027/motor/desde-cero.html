@@ -14,6 +14,7 @@
     <motor-escena escena="desde-cero" estilo="neon" video></motor-escena>
 
     <script src="motor.min.js"></script>
+    <script src="golpe.js"></script>
     <script>
         const { contador, texto, caja } = Motor;
 
@@ -34,7 +35,7 @@
                 b2: ladrillo('LA', 1270, 'acento2'),
                 b1: ladrillo('BASE', 1440, 'exito'),
             },
-            linea: [
+            linea: alTempo([
                 { pieza: 'n', a: { escala: 1 }, dur: 0.35, curva: 'resorte', en: 0, sonido: 'whoosh' },
                 { pieza: 't', a: { opacidad: 1 }, dur: 0.3, en: 0.15 },
                 // Baja cada vez más rápido y frena seco en 0
@@ -45,8 +46,8 @@
                 { pieza: 'b1', a: { y: 1440 }, dur: 0.42, curva: 'rebote', en: 2.0, sonido: 'golpe' },
                 { pieza: 'b2', a: { y: 1270 }, dur: 0.42, curva: 'rebote', en: 2.5, sonido: 'golpe' },
                 { pieza: 'b3', a: { y: 1100 }, dur: 0.42, curva: 'rebote', en: 3.0, sonido: 'golpe' },
-                { espera: 0.6 },
-            ],
+                { espera: 1.0 },
+            ]),
         });
     </script>
 </body>

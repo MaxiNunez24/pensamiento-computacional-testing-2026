@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>De etiquetas a página</title>
+    <style>
+        html, body { margin: 0; background: #07060f; }
+        motor-escena { display: block; width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <!-- Escena del video de promoción 2027: las etiquetas <h1>, <p> e <img> caen dentro de un
+         celular y se vuelven una página con productos, que se publica. Dura 16 golpes. -->
+    <motor-escena escena="web" estilo="neon" video></motor-escena>
+
+    <script src="motor.min.js"></script>
+    <script src="golpe.js"></script>
+    <script>
+        const { caja, texto, celular } = Motor;
+
+        // Las etiquetas caen desde arriba de la pantalla hasta el celular: [id, texto, x, color]
+        const ETIQUETAS = [['t1', '<h1>', 300, 'acento'], ['t2', '<p>', 540, 'acento2'], ['t3', '<img>', 790, 'exito']];
+        // Los productos, adentro de la pantalla del celular (que siempre mide 360 × 740)
+        const PRODUCTOS = [
+            ['p1', '🍰', 'Tortas', 95, 395], ['p2', '🧁', 'Cupcakes', 265, 395],
+            ['p3', '🍪', 'Cookies', 95, 575], ['p4', '🍩', 'Donas', 265, 575],
+        ];
+
+        const piezas = {
+            cel: celular({ x: 540, y: 1010, alto: 900, escala: 0 }),
+            url: caja({
+                dentro: 'cel', x: 180, y: 70, ancho: 330, alto: 40, radio: 20, relleno: 'fondo', borde: 'borde', grosorBorde: 2,
+                texto: '🔒 tuemprendimiento.github.io', tamano: 15, peso: 600, color: 'suave', escrito: 0,
+            }),
+            h1: texto({ dentro: 'cel', x: 180, y: 160, texto: 'Tu emprendimiento', tamano: 34, peso: 900, color: 'acento', opacidad: 0, escala: 1.6 }),
+            p: texto({ dentro: 'cel', x: 180, y: 215, texto: 'Hecho en Ensenada · pedí por WhatsApp', tamano: 16, peso: 600, color: 'suave', opacidad: 0, escrito: 0 }),
+            publicada: caja({
+                x: 540, y: 1530, ancho: 520, alto: 110, radio: 55, relleno: 'exito', borde: 'exito',
+                texto: '✓ Publicada', tamano: 52, peso: 900, color: 'fondo', escala: 0,
+            }),
+        };
+        ETIQUETAS.forEach(([id, etiqueta, x, color]) => {
+            piezas[id] = caja({
+                x, y: -200, ancho: 220, alto: 110, radio: 18, texto: etiqueta, tamano: 54, peso: 800,
+                color, borde: color, grosorBorde: 5,
+            });
+        });
+        PRODUCTOS.forEach(([id, icono, nombre, x, y]) => {
+            piezas[id] = caja({
+                dentro: 'cel', x, y, ancho: 150, alto: 160, radio: 18, relleno: 'papel', borde: 'marco', grosorBorde: 2,
+                icono, tamanoIcono: 60, texto: nombre, tamano: 20, peso: 800, escala: 0,
+            });
+        });
+
+        const linea = [
+            // Entra el celular, vacío (golpes 0 a 1)
+            { pieza: 'cel', a: { escala: 1 }, dur: 0.4, curva: 'resorte', en: 0, sonido: 'whoosh' },
+            // Una etiqueta por golpe: cae, pega y se convierte (golpes 1 a 4)
+            ...ETIQUETAS.flatMap(([id], i) => [
+                { pieza: id, a: { y: 760, x: 540 }, dur: 0.35, curva: 'entrar', en: 0.5 + i * 0.5 },
+                { pieza: id, a: { escala: 1.4, opacidad: 0 }, dur: 0.15, curva: 'salir', en: 0.85 + i * 0.5, sonido: 'golpe' },
+            ]),
+            { pieza: 'h1', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 0.85 },
+            { pieza: 'p', a: { opacidad: 1 }, dur: 0.1, en: 1.35 },
+            { pieza: 'p', a: { escrito: 1 }, dur: 0.6, curva: 'lineal', en: 1.35 },
+            // Los productos, uno por corchea (golpes 4 a 6)
+            ...PRODUCTOS.map(([id], i) => (
+                { pieza: id, a: { escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.85 + i * 0.25, sonido: 'pop', tono: i * 2 }
+            )),
+            // La dirección se escribe (golpes 8 a 10) y se publica (golpe 12)
+            { pieza: 'url', a: { escrito: 1 }, dur: 1.0, curva: 'lineal', en: 4.0, sonido: 'clic' },
+            { pieza: 'url', a: { resaltado: 1 }, dur: 0.3, en: 5.0 },
+            { pieza: 'publicada', a: { escala: 1 }, dur: 0.4, curva: 'resorte', en: 6.0, sonido: 'exito' },
+            { pieza: 'cel', a: { escala: 1.04 }, dur: 0.1, curva: 'salir', en: 6.0 },
+            { pieza: 'cel', a: { escala: 1 }, dur: 0.4, curva: 'gelatina', en: 6.1 },
+            { espera: 2.2 },
+        ];
+
+        Motor.registrar('web', { titulo: 'De etiquetas a página', ancho: 1080, alto: 1920, piezas, linea: alTempo(linea) });
+    </script>
+</body>
+</html>

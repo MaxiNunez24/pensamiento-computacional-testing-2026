@@ -10,3 +10,6 @@ node_modules/
 # Los arma "hyperframes init" para los agentes: no van al repo
 hf/CLAUDE.md
 hf/AGENTS.md
+versiones/
+!hf/assets/logo-cfp.png
+hf/assets/*.descripcion.txt

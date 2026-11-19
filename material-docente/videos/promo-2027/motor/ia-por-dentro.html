@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>La IA por dentro</title>
+    <style>
+        html, body { margin: 0; background: #07060f; }
+        motor-escena { display: block; width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <!-- Escena del video de promoción 2027: un pedido se parte en tokens, la atención une los que
+         importan y la respuesta sale de a poco. Dura 16 golpes. Se graba con el video.js del motor. -->
+    <motor-escena escena="ia-por-dentro" estilo="neon" video></motor-escena>
+
+    <script src="motor.min.js"></script>
+    <script src="golpe.js"></script>
+    <script>
+        const { caja, texto, flecha } = Motor;
+
+        // Los tokens del pedido: [id, texto, x, fila]. "pastelería" se parte en dos, como de verdad.
+        const TOKENS = [
+            ['k1', 'Haceme', 195, 0], ['k2', 'un', 405, 0], ['k3', 'catálogo', 645, 0],
+            ['k4', 'para', 915, 0], ['k5', 'mi', 300, 1], ['k6', 'pastel', 510, 1], ['k7', 'ería', 750, 1],
+        ];
+        const FILAS = [920, 1070];
+        const COLORES = ['acento', 'acento2', 'exito', 'alerta', 'acento', 'acento2', 'exito'];
+
+        const piezas = {
+            pedido: caja({
+                x: 540, y: 680, ancho: 980, alto: 160, radio: 80, texto: 'Haceme un catálogo para mi pastelería',
+                tamano: 48, peso: 700, borde: 'acento', grosorBorde: 4, escrito: 0, opacidad: 0,
+            }),
+            rotTokens: texto({ x: 540, y: 1215, texto: 'tokens', tamano: 50, peso: 700, color: 'suave', opacidad: 0, fuente: 'mono' }),
+            rotAtencion: texto({ x: 540, y: 1215, texto: 'atención', tamano: 50, peso: 700, color: 'acento2', opacidad: 0, fuente: 'mono' }),
+            respuesta: caja({
+                x: 540, y: 1430, ancho: 980, alto: 280, radio: 28, relleno: 'papel', borde: 'exito', grosorBorde: 4,
+                texto: '¡Dale! Tu catálogo:\n🍰 Tortas · 🧁 Cupcakes · 🍪 Cookies', tamano: 50, peso: 800,
+                escrito: 0, opacidad: 0, escala: 0.9,
+            }),
+        };
+        TOKENS.forEach(([id, palabra, x, fila], i) => {
+            piezas[id] = caja({
+                x, y: FILAS[fila], ancho: palabra.length * 30 + 70, alto: 120, radio: 22, texto: palabra,
+                tamano: 52, peso: 800, color: COLORES[i], borde: COLORES[i], grosorBorde: 4, opacidad: 0, escala: 0.4,
+            });
+        });
+        // La atención: desde el último token hacia los que le dan sentido
+        [['a1', 'k3', 0.5], ['a2', 'k6', -0.6], ['a3', 'k1', 0.35]].forEach(([id, hasta, curvatura]) => {
+            piezas[id] = flecha({ desde: 'k7', hasta, curvatura, grosor: 6, color: 'acento2', progreso: 0 });
+        });
+
+        const linea = [
+            // El pedido se escribe solo (golpes 0 a 2)
+            { pieza: 'pedido', a: { opacidad: 1 }, dur: 0.15, en: 0, sonido: 'whoosh' },
+            { pieza: 'pedido', a: { escrito: 1 }, dur: 1.0, curva: 'lineal', en: 0.1 },
+            // Se parte en tokens: uno por corchea (golpes 2,5 a 6)
+            ...TOKENS.map(([id], i) => (
+                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.25 + i * 0.25, sonido: 'pop', tono: i }
+            )),
+            { pieza: 'pedido', a: { opacidad: 0.25 }, dur: 0.4, en: 1.25 },
+            { pieza: 'rotTokens', a: { opacidad: 1 }, dur: 0.2, en: 1.5 },
+            // La atención: una flecha por golpe (golpes 6 a 9)
+            { pieza: 'rotTokens', a: { opacidad: 0 }, dur: 0.15, en: 3.0 },
+            { pieza: 'rotAtencion', a: { opacidad: 1 }, dur: 0.2, en: 3.0 },
+            { pieza: 'a1', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 3.0, sonido: 'whoosh' },
+            { pieza: 'k3', a: { resaltado: 1 }, dur: 0.25, en: 3.3 },
+            { pieza: 'a2', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 3.5 },
+            { pieza: 'k6', a: { resaltado: 1 }, dur: 0.25, en: 3.8 },
+            { pieza: 'a3', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 4.0 },
+            { pieza: 'k1', a: { resaltado: 1 }, dur: 0.25, en: 4.3 },
+            // La respuesta, de a poco (golpes 10 a 15)
+            { pieza: 'respuesta', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 5.0, sonido: 'pop' },
+            { pieza: 'respuesta', a: { escrito: 1 }, dur: 2.2, curva: 'lineal', en: 5.2 },
+            { pieza: 'respuesta', a: { resaltado: 1 }, dur: 0.3, en: 7.4, sonido: 'ding' },
+            { espera: 1.0 },
+        ];
+
+        Motor.registrar('ia-por-dentro', { titulo: 'La IA por dentro', ancho: 1080, alto: 1920, piezas, linea: alTempo(linea) });
+    </script>
+</body>
+</html>

@@ -18,7 +18,22 @@ redes antes de las inscripciones (1 al 4/12).
 - **Nada de fotos de la Expo:** van trabajos terminados (catálogos, páginas del curso). Maxi los manda.
 - **Al cierre va la encuesta de horarios:** *"Si te interesa, ayudanos completando esta encuesta para saber tu disponibilidad horaria"*.
 - **El logo del CFP** solo lo tiene en baja calidad: lo manda y se ve si se puede mejorar.
-- **La música:** Maxi elige entre 4 pistas de Pixabay. Después, `npx hyperframes beats` detecta los golpes y se ajusta la grilla.
+- **La música:** *Glitch Hop*, de The_Mountain (Pixabay), desde su último drop. Hay una segunda versión con *Standard Glitch Hop 02*, de vjgalaxy. `armar-version.py` arma cualquiera de las dos.
+
+**Cómo quedó armado (19/11), en golpes de la música** (130 BPM: un golpe dura 0,46 s; 128 golpes son 59 s):
+
+| Golpes | Escena | Transición de entrada |
+|---|---|---|
+| 0 – 8 | Gancho: el catálogo en el celular y "Esto lo hizo alguien que en marzo no sabía programar" | — |
+| 8 – 16 | Desde cero (motor): el contador baja a 0 y se apila DESDE LA BASE | glitch (el drop) |
+| 16 – 20 | PARTE 1 · IA generativa | destello |
+| 20 – 36 | La IA por dentro (motor): tokens, atención y la respuesta de a poco | zoom |
+| 36 – 48 | Pedirle bien las cosas (ChatGPT, Gemini, Claude) · crear textos e imágenes · darte cuenta cuándo se equivoca | paneo rápido |
+| 48 – 52 | PARTE 2 · WEB programación | glitch |
+| 52 – 68 | De etiquetas a página publicada (motor) | zoom |
+| 68 – 84 | Hecho este año en el curso: tres celulares con trabajos (**provisorio**) | paneo rápido |
+| 84 – 96 | El giro: todo era una animación dentro de una lección · "Las clases son así" | separación de color |
+| 96 – 128 | Cierre: el nombre del curso, inscripción, requisitos y la encuesta con QR | destello |
 
 **La idea que lo ordena:** el video **es** una clase animada. Al final se revela que está hecho con
 el mismo motor de las clases, y eso es la prueba de lo que promete.
