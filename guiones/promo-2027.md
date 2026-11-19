@@ -12,6 +12,14 @@ redes antes de las inscripciones (1 al 4/12).
 | **Subtítulos** | **Siempre en pantalla.** En Instagram la mayoría lo mira sin sonido |
 | **Música** | Pegadiza, de 100 a 120 BPM. Los cambios de escena caen en el golpe |
 
+**Decidido el 19/11 (a la madrugada):**
+- **Motor + HyperFrames**: el motor anima las escenas y HyperFrames las une con transiciones con shaders, texto cinético y música. El plan detallado (la grilla de golpes y el vocabulario de transiciones) está en la conversación del 18-19/11, y el prototipo, en `material-docente/videos/promo-2027/`.
+- **Un solo gancho:** *"Esto lo hizo alguien que en marzo no sabía programar"*. El de *"¿Cuánto tardás en hacer la página de tu negocio?"* se probó y se sacó el 19/11, porque no se entendía.
+- **Nada de fotos de la Expo:** van trabajos terminados (catálogos, páginas del curso). Maxi los manda.
+- **Al cierre va la encuesta de horarios:** *"Si te interesa, ayudanos completando esta encuesta para saber tu disponibilidad horaria"*.
+- **El logo del CFP** solo lo tiene en baja calidad: lo manda y se ve si se puede mejorar.
+- **La música:** Maxi elige entre 4 pistas de Pixabay. Después, `npx hyperframes beats` detecta los golpes y se ajusta la grilla.
+
 **La idea que lo ordena:** el video **es** una clase animada. Al final se revela que está hecho con
 el mismo motor de las clases, y eso es la prueba de lo que promete.
 

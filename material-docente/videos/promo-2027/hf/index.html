@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- Prototipo del video de promoción 2027: los primeros 13 segundos.
+         Grilla: 120 BPM, un golpe cada 0,5 s y un compás cada 2 s. -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/shader-transitions@0.9.68/dist/index.global.js"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;900&family=JetBrains+Mono:wght@700&family=Pacifico&display=block");
+
+        /* La misma paleta que el estilo neón del motor, así las escenas grabadas y estas son una sola pieza */
+        :root {
+            --fondo: #07060f;
+            --superficie: #120f24;
+            --texto: #f3f0ff;
+            --suave: #a59ccc;
+            --cian: #22e3ff;
+            --magenta: #ff3dc8;
+            --verde: #39ff9c;
+            --amarillo: #ffe14d;
+            --titular: "Anton", sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--fondo); }
+        #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Inter", sans-serif; color: var(--texto); }
+
+        .escena { position: absolute; inset: 0; overflow: hidden; }
+        .fondo-neon { background: radial-gradient(circle at 50% 42%, #1a1240 0%, var(--fondo) 70%); }
+        .grilla {
+            position: absolute; inset: -200px;
+            background-image:
+                linear-gradient(rgba(34, 227, 255, 0.07) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(34, 227, 255, 0.07) 2px, transparent 2px);
+            background-size: 90px 90px;
+        }
+
+        /* Los titulares: todo el texto vive entre y=250 y y=1580 (lo que no tapa Instagram) */
+        .frase {
+            position: absolute; left: 70px; right: 70px; top: 300px;
+            font-family: var(--titular); font-size: 150px; line-height: 0.98;
+            text-transform: uppercase; text-align: center; letter-spacing: 1px;
+            text-shadow: 0 0 30px rgba(34, 227, 255, 0.35);
+        }
+        .frase .marca { color: var(--magenta); text-shadow: 0 0 40px rgba(255, 61, 200, 0.7); }
+        .frase .cian { color: var(--cian); }
+
+        /* El celular con el catálogo */
+        .celular {
+            position: absolute; left: 270px; top: 760px; width: 540px; height: 1100px;
+            border-radius: 72px; background: #000; border: 16px solid #1c1836;
+            box-shadow: 0 0 0 3px rgba(34, 227, 255, 0.6), 0 0 90px rgba(34, 227, 255, 0.35);
+            overflow: hidden;
+        }
+        .celular .isla { position: absolute; top: 18px; left: 50%; width: 150px; height: 40px; margin-left: -75px; border-radius: 30px; background: #000; z-index: 3; }
+        .catalogo { position: absolute; left: 0; right: 0; top: 0; background: linear-gradient(180deg, #2b1b3d, #4a2547 40%, #1d1430); padding: 90px 30px 60px; }
+        .catalogo h2 { font-family: "Pacifico", cursive; font-weight: 400; font-size: 64px; text-align: center; color: #fff; }
+        .catalogo .linea { width: 200px; height: 4px; background: #ffd1ec; margin: 14px auto 30px; border-radius: 2px; }
+        .catalogo .sub { text-align: center; font-size: 24px; color: #ffd1ec; margin-bottom: 30px; }
+        .productos { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+        .producto { background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 209, 236, 0.35); border-radius: 26px; padding: 18px; text-align: center; }
+        .producto .foto { height: 150px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 90px; margin-bottom: 12px; }
+        .producto .nombre { font-size: 24px; font-weight: 700; color: #fff; }
+        .producto .precio { font-size: 26px; font-weight: 900; color: var(--amarillo); margin-top: 4px; }
+        .whatsapp { margin-top: 30px; border-radius: 40px; padding: 22px; text-align: center; font-weight: 900; font-size: 28px; background: #25d366; color: #05210f; }
+
+        /* El cronómetro */
+        .reloj { position: absolute; left: 0; right: 0; top: 880px; text-align: center; }
+        .reloj svg { width: 640px; height: 640px; }
+        .reloj .numeros {
+            position: absolute; left: 0; right: 0; top: 250px;
+            font-family: "JetBrains Mono", monospace; font-size: 96px; font-weight: 700;
+            color: var(--texto); text-shadow: 0 0 30px rgba(255, 61, 200, 0.6);
+        }
+        .remate {
+            position: absolute; left: 70px; right: 70px; top: 1450px; text-align: center;
+            font-family: var(--titular); font-size: 88px; text-transform: uppercase; color: var(--cian);
+            text-shadow: 0 0 30px rgba(34, 227, 255, 0.6);
+        }
+
+        /* La escena grabada con el motor */
+        .clip-motor { position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover; }
+        .rotulo {
+            position: absolute; left: 70px; right: 70px; top: 290px; text-align: center;
+            font-family: var(--titular); font-size: 84px; text-transform: uppercase; color: var(--texto);
+        }
+
+        /* La entrada a la Parte 1 */
+        .parte { position: absolute; left: 0; right: 0; top: 520px; text-align: center; font-family: "JetBrains Mono", monospace; font-size: 56px; color: var(--cian); letter-spacing: 12px; }
+        .ia { position: absolute; left: 0; right: 0; top: 600px; text-align: center; font-family: var(--titular); font-size: 520px; line-height: 1; color: var(--texto); text-shadow: -10px 0 0 rgba(255, 61, 200, 0.85), 10px 0 0 rgba(34, 227, 255, 0.85); }
+        .generativa { position: absolute; left: 0; right: 0; top: 1160px; text-align: center; font-family: var(--titular); font-size: 140px; color: var(--magenta); text-transform: uppercase; text-shadow: 0 0 40px rgba(255, 61, 200, 0.6); }
+    </style>
+</head>
+<body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1080" data-height="1920">
+
+        <!-- 1 · Gancho: el resultado primero (0 a 4 s) -->
+        <div id="e1" class="scene escena fondo-neon clip" data-start="0" data-duration="4.2">
+            <div class="grilla" id="grilla1"></div>
+            <div class="celular" id="cel1">
+                <div class="isla"></div>
+                <div class="catalogo" id="catalogo1">
+                    <h2>Dulces del Río</h2>
+                    <div class="linea"></div>
+                    <div class="sub">Pastelería casera · Ensenada</div>
+                    <div class="productos">
+                        <div class="producto"><div class="foto" style="background:#ffb3d9">🍰</div><div class="nombre">Torta de frutillas</div><div class="precio">$18.000</div></div>
+                        <div class="producto"><div class="foto" style="background:#ffe0a3">🍪</div><div class="nombre">Cookies x 6</div><div class="precio">$4.500</div></div>
+                        <div class="producto"><div class="foto" style="background:#c9b3ff">🧁</div><div class="nombre">Cupcakes x 4</div><div class="precio">$6.000</div></div>
+                        <div class="producto"><div class="foto" style="background:#a3f0ff">🍩</div><div class="nombre">Donas x 6</div><div class="precio">$5.200</div></div>
+                        <div class="producto"><div class="foto" style="background:#ffd1a3">🥧</div><div class="nombre">Tarta de manzana</div><div class="precio">$12.000</div></div>
+                        <div class="producto"><div class="foto" style="background:#b3ffcf">🍫</div><div class="nombre">Alfajores x 12</div><div class="precio">$9.600</div></div>
+                    </div>
+                    <div class="whatsapp">Pedí por WhatsApp</div>
+                </div>
+            </div>
+            <div class="frase" id="f1a">Esto lo hizo<br>alguien que</div>
+            <div class="frase" id="f1b">en marzo<br><span class="cian">no sabía</span></div>
+            <div class="frase" id="f1c" style="font-size: 190px; top: 380px;"><span class="marca">programar</span></div>
+        </div>
+
+        <!-- (El segundo gancho, "¿Cuánto tardás en hacer la página de tu negocio?", se sacó el 19/11:
+             no se entendía.) -->
+
+        <!-- 2 · Desde cero: la escena grabada con el motor (4 a 8 s) -->
+        <!-- Sin tiempo propio: el video manda (un contenedor con data-start le correría los cuadros).
+             Se prende y se apaga desde la línea de tiempo. -->
+        <div id="e3" class="scene escena" style="background: var(--fondo); visibility: hidden;">
+            <video id="video-desde-cero" class="clip-motor clip" src="assets/desde-cero.mp4" data-start="3.85" data-duration="4.15" data-has-audio="true"></video>
+            <div class="rotulo" id="rotulo3">No hace falta saber nada</div>
+        </div>
+
+        <!-- 3 · Entrada a la Parte 1 (8 a 10 s) -->
+        <div id="e4" class="scene escena fondo-neon clip" data-start="7.85" data-duration="2.15">
+            <div class="grilla"></div>
+            <div class="parte" id="parte">PARTE 1</div>
+            <div class="ia" id="ia">IA</div>
+            <div class="generativa" id="generativa">generativa</div>
+        </div>
+    </div>
+
+    <script>
+        const tl = gsap.timeline({ paused: true });
+        const G = 0.5; // un golpe
+
+        // ---- 1 · Gancho ----
+        // El celular entra de costado con un latigazo, cae en su lugar y el catálogo se recorre solo
+        tl.fromTo("#cel1", { x: 900, rotation: 24, scale: 0.8 }, { x: 0, rotation: -3, scale: 1, duration: 0.38, ease: "expo.out" }, 0);
+        tl.to("#cel1", { rotation: 0, duration: 0.5, ease: "power2.out" }, 0.38);
+        tl.fromTo("#catalogo1", { y: 0 }, { y: -560, duration: 3.2, ease: "power1.inOut" }, 0.5);
+        tl.fromTo("#grilla1", { y: 0 }, { y: 180, duration: 4.2, ease: "none" }, 0);
+        // Las frases: cada una entra de golpe (grande a su tamaño) y se va hacia arriba con la siguiente
+        tl.fromTo("#f1a", { scale: 1.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, ease: "power4.out" }, 0.05);
+        tl.to("#f1a", { y: -60, opacity: 0, duration: 0.14, ease: "power2.in" }, 2 * G - 0.1);
+        tl.fromTo("#f1b", { scale: 1.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, ease: "power4.out" }, 2 * G);
+        tl.to("#f1b", { y: -60, opacity: 0, duration: 0.14, ease: "power2.in" }, 4 * G - 0.1);
+        tl.fromTo("#f1c", { scale: 2.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.22, ease: "power4.out" }, 4 * G);
+        // "PROGRAMAR" pega: el celular salta hacia la cámara en cada golpe
+        tl.to("#cel1", { scale: 1.07, duration: 0.08, ease: "power2.out" }, 4 * G);
+        tl.to("#cel1", { scale: 1, duration: 0.3, ease: "power2.out" }, 4 * G + 0.08);
+        tl.to("#cel1", { scale: 1.07, duration: 0.08, ease: "power2.out" }, 5 * G);
+        tl.to("#cel1", { scale: 1, duration: 0.3, ease: "power2.out" }, 5 * G + 0.08);
+        tl.to("#f1c", { scale: 1.12, duration: 0.6, ease: "power1.in" }, 6 * G);
+        tl.to("#cel1", { scale: 1.35, y: -120, duration: 0.7, ease: "power2.in" }, 6 * G + 0.2);
+
+        // ---- 2 · Desde cero (la animación viene del motor) ----
+        tl.set("#e3", { visibility: "visible" }, 3.85);
+        tl.set("#e3", { visibility: "hidden" }, 8.15);
+        tl.fromTo("#rotulo3", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: "power3.out" }, 4.05);
+        tl.to("#rotulo3", { opacity: 0, duration: 0.2 }, 5.8);
+
+        // ---- 3 · Parte 1 ----
+        tl.fromTo("#parte", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, 8.0);
+        tl.fromTo("#ia", { scale: 3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.22, ease: "power4.out" }, 8.0 + G);
+        tl.fromTo("#generativa", { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: "power3.out" }, 8.0 + 2 * G);
+        tl.to("#ia", { scale: 1.06, duration: 1.0, ease: "none" }, 8.0 + 2 * G);
+
+        // Las transiciones: glitch de "programar" a "desde cero", destello a la Parte 1
+        HyperShader.init({
+            bgColor: "#07060f",
+            accentColor: "#22e3ff",
+            scenes: ["e1", "e3", "e4"],
+            transitions: [
+                { time: 3.85, shader: "glitch", duration: 0.3 },
+                { time: 7.85, shader: "flash-through-white", duration: 0.3 },
+            ],
+            timeline: tl,
+        });
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+    </script>
+</body>
+</html>

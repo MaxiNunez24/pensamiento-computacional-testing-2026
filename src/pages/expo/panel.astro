@@ -29,7 +29,7 @@ const paginas = [
 const links = [
     { titulo: 'La Expo', para: 'Público · directivos', url: `${sitio}expo/`, nota: 'Vidriera de catálogos y juegos' },
     { titulo: 'El recorrido del stand', para: 'Alumnos · directivos', url: `${sitio}expo/recorrido/`, nota: 'Cómo se armó todo, con las pruebas' },
-    { titulo: 'Encuesta cursos 2027', para: 'Público · interesados', url: `${sitio}expo/encuesta/`, nota: 'Qué días y horarios prefieren' },
+    { titulo: 'Encuesta curso 2027', para: 'Público · interesados', url: `${sitio}expo/encuesta/`, nota: 'Qué días y horarios prefieren' },
     { titulo: 'El curso', para: 'Alumnos', url: sitio, nota: 'Los ejercicios y el camino' },
     { titulo: 'Preparando la Expo', para: 'Alumnos', url: `${sitio}preparando-expo/`, nota: 'Las clases de la Expo' },
     { titulo: 'Armá tu catálogo', para: 'Emprendedores', url: `${sitio}armar-tu-catalogo/`, nota: 'El primer paso para tener catálogo' },
@@ -207,7 +207,7 @@ const links = [
                 <p class="nota">Qué días y horarios prefieren los interesados en los cursos del año que viene. El QR está en el proyector (tarjeta de las fotos con IA) y en la página pública de la Expo.</p>
                 <div class="botones">
                     <a href={`${base}/expo/encuesta/`} target="_blank" rel="noopener">Abrir la encuesta</a>
-                    <button type="button" data-qr-de={`${sitio}expo/encuesta/`} data-titulo="Cursos 2027: ¿qué días podés?">QR</button>
+                    <button type="button" data-qr-de={`${sitio}expo/encuesta/`} data-titulo="Curso 2027: ¿qué días podés?">QR</button>
                     <button type="button" id="encuesta-actualizar">Actualizar</button>
                     <button type="button" id="encuesta-csv">Descargar CSV</button>
                 </div>
@@ -868,8 +868,8 @@ const links = [
                 if (!candidatas.length) listaMejores.append(nuevo('li', { className: 'nota', textContent: 'Todavía nada.' }));
                 mejores.append(listaMejores);
                 $('#encuesta-conteos').replaceChildren(
-                    // "Los dos" cuenta para los dos cursos y también se muestra aparte
-                    conteo('Curso', CURSOS, (r) => (r.c === 'los-dos' ? ['ia', 'web', 'los-dos'] : [r.c])),
+                    // Desde el 19/11 todas llegan como el curso único ('los-dos'); 'ia' y 'web' son de la Expo
+                    conteo('Curso', CURSOS, (r) => [r.c]),
                     conteo('Días', DIAS, (r) => r.d),
                     mejores,
                 );

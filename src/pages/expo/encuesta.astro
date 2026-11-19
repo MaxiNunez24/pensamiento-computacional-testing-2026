@@ -1,36 +1,34 @@
 ---
 /**
- * La encuesta de los cursos 2027: /expo/encuesta/
+ * La encuesta del curso 2027: /expo/encuesta/
  *
- * Para saber qué días y horarios le sirven a la gente interesada en los cursos del año que viene
- * (Usuaria/o de IA generativa y Programador/a Web). Es anónima: nombre y WhatsApp son opcionales y
+ * Para saber qué días y horarios le sirven a la gente interesada en el curso del año que viene
+ * (Usuaria/o de IA generativa y Programación Web: es uno solo, así que no se pregunta cuál; ver
+ * CURSO_2027 en src/data/expo/encuesta.ts). Es anónima: nombre y WhatsApp son opcionales y
  * solo se guardan si la persona marca que se los podemos guardar para avisarle de las inscripciones.
  * Las respuestas las guarda el Worker de los catálogos (POST /encuesta) y se cuentan en el panel.
  */
 import Expo from '../../layouts/Expo.astro';
-import { CURSOS, DIAS, HORARIO } from '../../data/expo/encuesta';
+import { CURSO_2027, DIAS, HORARIO } from '../../data/expo/encuesta';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<Expo titulo="Cursos 2027 · CFP 401" descripcion="¿Qué días y horarios te sirven para los cursos 2027 del CFP 401? Contestá en un minuto.">
+<Expo titulo="Curso 2027 · CFP 401" descripcion="Si te interesa el curso Usuaria/o de IA generativa y Programación Web, ayudanos completando esta encuesta para saber tu disponibilidad horaria el año que viene.">
   <main class="hoja">
     <header>
-      <p class="etiqueta">CFP 401 · Ensenada · Cursos 2027</p>
+      <p class="etiqueta">CFP 401 · Ensenada · Curso 2027</p>
       <h1>¿Cuándo podrías cursar?</h1>
-      <p class="bajada">Estamos armando los horarios del año que viene. Contestá en un minuto: <strong>es anónima</strong>.</p>
+      <p class="bajada">Si te interesa, ayudanos completando esta encuesta para saber tu disponibilidad horaria el año que viene. Tarda un minuto y <strong>es anónima</strong>.</p>
     </header>
 
     <form class="formulario" data-form>
-      <fieldset>
-        <legend>¿Qué curso te interesa?</legend>
-        {CURSOS.map((c) => (
-          <label class="opcion">
-            <input type="radio" name="curso" value={c.codigo} required />
-            <span><strong>{c.texto}</strong>{c.detalle && <small>{c.detalle}</small>}</span>
-          </label>
-        ))}
-      </fieldset>
+      <!-- Es un solo curso: se presenta y se manda solo, sin preguntar -->
+      <div class="curso-2027">
+        <strong>{CURSO_2027.texto}</strong>
+        <small>{CURSO_2027.detalle}</small>
+      </div>
+      <input type="hidden" name="curso" value={CURSO_2027.codigo} />
 
       <fieldset>
         <legend>¿Qué días podrías? <small>marcá todos los que te sirvan</small></legend>
@@ -291,6 +289,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--suave);
     font-weight: 400;
     font-size: 0.85rem;
+  }
+  .curso-2027 {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 2px solid var(--oro);
+    border-radius: 14px;
+  }
+  .curso-2027 small {
+    color: var(--suave);
+    font-size: 0.9rem;
   }
   .opcion {
     display: flex;

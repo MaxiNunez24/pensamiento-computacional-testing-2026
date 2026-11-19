@@ -1,0 +1,12 @@
+# Lo que se regenera: los videos, los cuadros para revisar y las capturas grandes
+*.mp4
+*.wav
+*.mp3
+revisar/
+hf/renders/
+hf/.hyperframes/
+hf/assets/*.png
+node_modules/
+# Los arma "hyperframes init" para los agentes: no van al repo
+hf/CLAUDE.md
+hf/AGENTS.md

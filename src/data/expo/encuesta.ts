@@ -4,10 +4,21 @@
  * los mismos códigos en ENCUESTA (worker/catalogos.js): si se agrega uno acá, va también allá.
  */
 
+/**
+ * Desde el 19/11 es un solo curso, "Usuaria/o de IA generativa y Programación Web", y la encuesta ya
+ * no pregunta cuál: manda siempre CURSO_2027. Se usa el código 'los-dos' (la IA y la web juntas) para
+ * que el Worker lo acepte sin cambios y las respuestas viejas de 'ia' o 'web' sigan contando.
+ */
+export const CURSO_2027 = {
+    codigo: 'los-dos',
+    texto: 'Usuaria/o de IA generativa y Programación Web',
+    detalle: 'Desde cero: primero la IA para estudiar, trabajar y emprender, y después páginas web publicadas en internet',
+} as const;
+
 export const CURSOS = [
-    { codigo: 'ia', texto: 'Usuaria/o de IA generativa', detalle: 'Usar la IA para escribir, dibujar, estudiar y trabajar' },
-    { codigo: 'web', texto: 'Programador/a Web', detalle: 'Hacer páginas y aplicaciones web de cero' },
-    { codigo: 'los-dos', texto: 'Los dos', detalle: '' },
+    { codigo: 'ia', texto: 'Solo IA generativa (respuestas de la Expo)', detalle: '' },
+    { codigo: 'web', texto: 'Solo web (respuestas de la Expo)', detalle: '' },
+    { codigo: CURSO_2027.codigo, texto: CURSO_2027.texto, detalle: '' },
 ] as const;
 
 export const DIAS = [

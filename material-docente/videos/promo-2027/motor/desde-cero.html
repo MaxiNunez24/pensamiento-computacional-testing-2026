@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Desde cero</title>
+    <style>
+        html, body { margin: 0; background: #07060f; }
+        motor-escena { display: block; width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <!-- Escena del video de promoción 2027: el contador de "conocimientos previos" baja a 0 y
+         "DESDE LA BASE" se apila como ladrillos. Se graba con el video.js del motor (ver LEEME). -->
+    <motor-escena escena="desde-cero" estilo="neon" video></motor-escena>
+
+    <script src="motor.min.js"></script>
+    <script>
+        const { contador, texto, caja } = Motor;
+
+        // Los ladrillos caen desde arriba de la pantalla hasta su lugar en la pila
+        const ladrillo = (palabra, y, color) => caja({
+            x: 540, y: y - 2200, ancho: 760, alto: 150, radio: 18,
+            texto: palabra, tamano: 92, peso: 900, color, borde: color, grosorBorde: 5,
+        });
+
+        Motor.registrar('desde-cero', {
+            titulo: 'Desde cero',
+            ancho: 1080,
+            alto: 1920,
+            piezas: {
+                n: contador({ x: 540, y: 640, valor: 100, sufijo: '%', tamano: 330, peso: 900, color: 'texto', escala: 0 }),
+                t: texto({ x: 540, y: 880, texto: 'conocimientos previos', tamano: 64, peso: 700, color: 'suave', opacidad: 0 }),
+                b3: ladrillo('DESDE', 1100, 'acento'),
+                b2: ladrillo('LA', 1270, 'acento2'),
+                b1: ladrillo('BASE', 1440, 'exito'),
+            },
+            linea: [
+                { pieza: 'n', a: { escala: 1 }, dur: 0.35, curva: 'resorte', en: 0, sonido: 'whoosh' },
+                { pieza: 't', a: { opacidad: 1 }, dur: 0.3, en: 0.15 },
+                // Baja cada vez más rápido y frena seco en 0
+                { pieza: 'n', a: { valor: 0 }, dur: 1.15, curva: 'entrar', en: 0.35 },
+                { pieza: 'n', a: { escala: 1.28, color: 'acento' }, dur: 0.12, curva: 'salir', en: 1.5, sonido: 'golpe' },
+                { pieza: 'n', a: { escala: 1 }, dur: 0.4, curva: 'gelatina', en: 1.62 },
+                // Uno por golpe de la música (120 BPM: cada 0,5 s)
+                { pieza: 'b1', a: { y: 1440 }, dur: 0.42, curva: 'rebote', en: 2.0, sonido: 'golpe' },
+                { pieza: 'b2', a: { y: 1270 }, dur: 0.42, curva: 'rebote', en: 2.5, sonido: 'golpe' },
+                { pieza: 'b3', a: { y: 1100 }, dur: 0.42, curva: 'rebote', en: 3.0, sonido: 'golpe' },
+                { espera: 0.6 },
+            ],
+        });
+    </script>
+</body>
+</html>

@@ -114,6 +114,10 @@ diciembre.
 > **Inscripción:** del 1 al 4 de diciembre. Para mayores de 16, con 2 fotocopias del DNI y el
 > aporte a la cooperadora. Días y horarios a confirmar (probablemente lunes o martes, y viernes).
 > El cupo se define según la inscripción.
+>
+> **¿Te interesa?** Ayudanos completando esta encuesta de un minuto, para saber qué días y horarios
+> te quedan bien el año que viene:
+> https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/expo/encuesta/
 
 **Borrador de módulos** (a charlar):
 
