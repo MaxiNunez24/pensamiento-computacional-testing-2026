@@ -7,7 +7,7 @@
  * viernes a la lista FERIADOS (formato "AAAA-MM-DD"). El receso ya está contemplado.
  */
 (function () {
-  var FIN = '2026-12-18'; // última clase del año
+  var FIN = '2026-12-02'; // última clase del año (el 4/12 son las inscripciones 2027)
   var RECESO_DESDE = '2026-07-22'; // receso invernal (inclusive)
   var RECESO_HASTA = '2026-08-01';
   var FERIADOS = [

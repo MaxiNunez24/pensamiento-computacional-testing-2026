@@ -119,7 +119,7 @@ export const CLASE: Clase = {
                 { texto: 'Repasar lo de hoy', ancla: 'para-llevar' },
                 { texto: 'Tarea: terminar SQLite (los ⭐ que falten)', nota: 'El miércoles arranca con las consultas.' },
                 { texto: 'Avisar: el miércoles 25/11, Flask sobre la base', nota: 'La lista sale de SQLite, con un formulario de alta y otro para marcar asistencia.' },
-                { texto: 'Avisar: inscripciones 2027 del 1 al 4/12 (IA generativa y Programador/a Web)', nota: 'Requisitos: 2 fotocopias del DNI y la cooperadora, mayores de 16. Que lo pasen a quien le pueda interesar.' },
+                { texto: 'Avisar: inscripciones 2027 del 1 al 4/12 (Usuaria/o de IA generativa y Programación Web, desde cero)', nota: 'Requisitos: 2 fotocopias del DNI y la cooperadora, mayores de 16. Que lo pasen a quien le pueda interesar.' },
             ],
         },
     ],

@@ -42,7 +42,7 @@
 | 🌐 **Mié 25/11** | **Flask** sobre la base: la lista, el alta y la asistencia desde el navegador |
 | 📶 **Vie 27/11** | **El sistema en la red del CFP**: usable desde el celular de cualquiera conectado al wifi |
 | 🎓 **Mié 2/12** | **Testing** y **cierre**: la última clase del año |
-| 📝 **1 al 4/12** | **Inscripciones 2027**: Usuaria/o de IA generativa y Programador/a Web |
+| 📝 **1 al 4/12** | **Inscripciones 2027**: un solo curso, **Usuaria/o de IA generativa y Programación Web** (desde cero) |
 
 ---
 
