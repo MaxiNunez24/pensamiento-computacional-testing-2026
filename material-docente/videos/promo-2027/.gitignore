@@ -13,3 +13,5 @@ hf/AGENTS.md
 versiones/
 !hf/assets/logo-cfp.png
 hf/assets/*.descripcion.txt
+# Los links a los catálogos de los alumnos (sus usuarios de GitHub son sus nombres)
+trabajos.local.json

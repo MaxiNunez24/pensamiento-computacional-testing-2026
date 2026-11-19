@@ -241,12 +241,12 @@
             <div class="rotulo" id="rotulo8b">Publicadas<br><span class="verde">en internet</span></div>
         </div>
 
-        <!-- 8 · Trabajos terminados (golpes 68 a 84). PROVISORIO: faltan los trabajos que manda Maxi -->
+        <!-- 8 · Trabajos terminados (golpes 68 a 84): catálogos de los alumnos (capturar.mjs) y un ejercicio resuelto -->
         <div id="e9" class="scene escena fondo-neon clip" data-start="31.232" data-duration="7.684" data-b0="68" data-d0="-0.15" data-b1="84" data-d1="0.15">
             <div class="grilla"></div>
             <div class="rotulo" id="rotulo9">Hecho este año<br><span class="verde">en el curso</span></div>
-            <div class="marco" id="m1"><img id="i1" src="assets/catalogos.png" alt="Catálogos de emprendimientos" /></div>
-            <div class="marco" id="m2"><img id="i2" src="assets/catalogo-prueba.png" alt="Un catálogo" /></div>
+            <div class="marco" id="m1"><img id="i1" src="assets/trabajo-bambu.png" alt="El catálogo de Bambú costuras" /></div>
+            <div class="marco" id="m2"><img id="i2" src="assets/trabajo-yummi.png" alt="El catálogo de Yummi" /></div>
             <div class="marco" id="m3"><img id="i3" src="assets/ejercicio-resuelto.png" alt="Un ejercicio de Python resuelto" /></div>
             <div class="etiqueta" id="l1">Catálogos de emprendimientos</div>
             <div class="etiqueta" id="l2">Cada uno, con su diseño</div>
@@ -379,8 +379,8 @@
 
         // ---- 8 · Trabajos terminados: un celular por compás, y al final los tres juntos ----
         tl.fromTo("#rotulo9", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: "power3.out" }, b(68));
-        // Cuánto baja cada captura adentro del celular (alto de la captura a 472 px de ancho, menos 872 de pantalla)
-        const RECORRIDO = [-150, -150, -158];
+        // Cuánto baja cada captura adentro del celular (como mucho: alto de la captura a 472 px de ancho, menos 872 de pantalla)
+        const RECORRIDO = [-1900, -260, -158];
         ["1", "2", "3"].forEach((n, i) => {
             const en = b(68 + i * 4);
             tl.fromTo(`#m${n}`, { x: 1100, rotation: 14 }, { x: 0, rotation: 0, duration: 0.3, ease: "expo.out" }, en);
