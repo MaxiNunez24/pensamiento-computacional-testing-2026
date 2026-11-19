@@ -75,8 +75,15 @@ alumnos las hagan solos después del curso.
 
 ## 2027
 
-Los cursos son **Usuaria/o de IA generativa**, en el lugar de Pensamiento Computacional, y
-**Programador/a Web**, en el lugar de Testing. Son anuales; las fechas todavía no están.
+**Nombre (18/11):** **Usuaria/o de IA generativa y Programación Web**. Es un solo curso anual:
+arranca con IA generativa y sigue con la web. Es desde cero, sin conocimientos previos, porque si
+no se pierden muchos alumnos.
+
+- **Horarios:** a definir según la facultad de Maxi. Serían más o menos lunes o martes, y casi
+  seguro los viernes, que es el día más libre del CFP.
+- **Cupo:** se ve según cuántos se inscriban.
+- **Clases animadas:** con el motor de animaciones y ejercicios como los de este año, que corrigen
+  solos.
 
 **Plataforma:** solo Astro, con la teoría y los ejercicios en el mismo lugar. Se define cerca de
 diciembre.
@@ -88,8 +95,25 @@ diciembre.
 - Requisitos: 2 fotocopias del DNI y la cooperadora.
 - Para mayores de 16 años.
 
-**Video de promoción para Instagram:** pendiente, en una charla aparte. Tiene que estar antes del
-1/12, porque las inscripciones arrancan ese día.
+**Video de promoción para Instagram:** se planifica desde el 18/11. Tiene que estar listo el
+**viernes 20/11**, para que se comparta en las redes antes de las inscripciones.
+
+**Texto para los preceptores** (18/11, para que puedan contar de qué trata el curso):
+
+> **Usuaria/o de IA generativa y Programación Web** · CFP 401 · curso anual 2027
+>
+> Un curso para empezar desde cero: no hace falta saber nada de programación ni tener
+> experiencia con la computadora. Primero se aprende a usar la inteligencia artificial (ChatGPT,
+> Gemini, Claude) para estudiar, trabajar y emprender: pedirle bien las cosas, crear textos e
+> imágenes, y darse cuenta cuándo se equivoca. Después, con esa ayuda, se aprende a crear páginas
+> web y a publicarlas en internet, como la de un emprendimiento propio o del barrio. Las clases son
+> con animaciones y con ejercicios en la computadora que se corrigen al instante. Este año, los
+> alumnos del curso armaron catálogos web para emprendimientos de la zona y los mostraron en la
+> Expo.
+>
+> **Inscripción:** del 1 al 4 de diciembre. Para mayores de 16, con 2 fotocopias del DNI y el
+> aporte a la cooperadora. Días y horarios a confirmar (probablemente lunes o martes, y viernes).
+> El cupo se define según la inscripción.
 
 **Borrador de módulos** (a charlar):
 
