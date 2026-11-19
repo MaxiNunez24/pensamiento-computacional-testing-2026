@@ -136,12 +136,13 @@
         .titulo-curso .t3 { font-size: 104px; color: var(--cian); }
         .datos { position: absolute; left: 0; right: 0; top: 880px; display: flex; justify-content: center; gap: 18px; }
         .datos .chip { font-size: 34px; }
-        .inscripcion { position: absolute; left: 0; right: 0; top: 985px; text-align: center; }
-        .inscripcion .cuando { font-family: var(--titular); font-size: 96px; color: var(--amarillo); text-transform: uppercase; text-shadow: 0 0 30px rgba(255, 225, 77, 0.45); }
-        .inscripcion .requisitos { font-size: 36px; font-weight: 700; color: var(--suave); margin-top: 10px; }
-        .encuesta { position: absolute; left: 70px; right: 70px; top: 1195px; height: 380px; border-radius: 36px; background: var(--superficie); border: 4px solid var(--verde);
+        .inscripcion { position: absolute; left: 0; right: 0; top: 975px; text-align: center; }
+        .inscripcion .rot { font-family: var(--mono); font-size: 40px; color: var(--cian); letter-spacing: 8px; }
+        .inscripcion .cuando { font-family: var(--titular); font-size: 100px; line-height: 1.05; color: var(--amarillo); text-transform: uppercase; text-shadow: 0 0 30px rgba(255, 225, 77, 0.45); }
+        .inscripcion .requisitos { font-size: 36px; font-weight: 700; color: var(--suave); margin-top: 6px; }
+        .encuesta { position: absolute; left: 70px; right: 70px; top: 1210px; height: 360px; border-radius: 36px; background: var(--superficie); border: 4px solid var(--verde);
             display: flex; align-items: center; gap: 40px; padding: 30px; box-shadow: 0 0 60px rgba(57, 255, 156, 0.25); }
-        .encuesta .qr { width: 320px; height: 320px; flex: none; background: #fff; border-radius: 20px; padding: 14px; }
+        .encuesta .qr { width: 304px; height: 304px; flex: none; background: #fff; border-radius: 20px; padding: 14px; }
         .encuesta .qr img { width: 100%; height: 100%; }
         .encuesta .texto { font-size: 40px; font-weight: 700; line-height: 1.25; }
         .encuesta .texto b { display: block; font-family: var(--titular); font-weight: 400; font-size: 64px; color: var(--verde); text-transform: uppercase; margin-bottom: 12px; }
@@ -285,7 +286,8 @@
                 <div class="chip" id="d3">Clases animadas</div>
             </div>
             <div class="inscripcion">
-                <div class="cuando" id="cuando">Inscripciones: 1 al 4 de diciembre</div>
+                <div class="rot" id="rot-insc">INSCRIPCIONES</div>
+                <div class="cuando" id="cuando">1 al 4 de diciembre</div>
                 <div class="requisitos" id="requisitos">Mayores de 16 · 2 fotocopias del DNI</div>
             </div>
             <div class="encuesta" id="encuesta">
@@ -352,7 +354,7 @@
         // Crear textos e imágenes: la imagen se arma de a pedacitos, uno por semicorchea
         entra("#f6b", b(40));
         tl.fromTo("#imagen", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.8)" }, b(40));
-        [4, 0, 8, 2, 6, 1, 7, 3, 5].forEach((n, i) => tl.to(`#imagen .tesela:nth-of-type(${n + 1})`, { scale: 0, rotation: 90, duration: 0.18, ease: "power2.in" }, b(40.5 + i * 0.25)));
+        [4, 0, 8, 2, 6, 1, 7, 3, 5].forEach((n, i) => tl.to(`#imagen .tesela:nth-of-type(${n + 2})`, { scale: 0, rotation: 90, duration: 0.18, ease: "power2.in" }, b(40.5 + i * 0.25)));
         late("#imagen", b(43), 1.05);
         sale("#f6b", b(44) - 0.1);
         tl.to("#imagen", { scale: 0, rotation: -12, duration: 0.18, ease: "power3.in" }, b(44) - 0.12);
@@ -413,6 +415,7 @@
         tl.fromTo("#logo", { opacity: 0, scale: 0.6, rotation: -6 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2)" }, b(96));
         entra("#t1", b(96)); entra("#t2", b(97), 2.2); entra("#t3", b(98));
         ["#d1", "#d2", "#d3"].forEach((sel, i) => tl.fromTo(sel, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2.5)" }, b(100 + i)));
+        tl.fromTo("#rot-insc", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2 }, b(104));
         entra("#cuando", b(104), 1.5);
         tl.fromTo("#requisitos", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25 }, b(106));
         tl.fromTo("#encuesta", { y: 500, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, b(110));

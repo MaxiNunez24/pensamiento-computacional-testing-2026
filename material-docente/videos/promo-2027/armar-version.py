@@ -3,6 +3,7 @@
     python armar-version.py glitch-hop              (o standard-02, melodic-dubstep, o todas)
     python armar-version.py glitch-hop --base       (además deja hf/ armado con esa pista)
     python armar-version.py glitch-hop --sin-grabar (usa las escenas del motor ya grabadas)
+    python armar-version.py glitch-hop --solo=web   (graba solo esas escenas, separadas por coma)
 
 Para cada pista:
 1. Graba las escenas del motor (motor/*.html) al tempo de la pista (?golpe=...).
@@ -47,12 +48,12 @@ def npx(*args, cwd):
     subprocess.run(['npx', '-y', 'hyperframes@0.9.69', *args], cwd=cwd, check=True, shell=(sys.platform == 'win32'))
 
 
-def grabar_motor(nombre, golpe):
+def grabar_motor(nombre, golpe, solo=None):
     servidor = subprocess.Popen([sys.executable, '-m', 'http.server', str(PUERTO), '--bind', '127.0.0.1'],
                                 cwd=AQUI / 'motor', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         time.sleep(1.5)
-        for escena in ESCENAS_MOTOR:
+        for escena in (solo or ESCENAS_MOTOR):
             salida = HF / 'assets' / f'{escena}-{nombre}.mp4'
             subprocess.run(['node', 'herramientas/video.js', '--base', f'http://127.0.0.1:{PUERTO}',
                             '--url', f'{escena}.html?golpe={golpe}', '--ancho', '1080', '--alto', '1920',
@@ -89,10 +90,10 @@ def poner_tiempos(html, p):
     return html
 
 
-def armar(nombre, base=False, grabar=True):
+def armar(nombre, base=False, grabar=True, solo=None):
     p = PISTAS[nombre]
     if grabar:
-        grabar_motor(nombre, p['golpe'])
+        grabar_motor(nombre, p['golpe'], solo)
 
     carpeta = AQUI / 'versiones' / nombre
     if carpeta.exists():
@@ -128,4 +129,5 @@ if __name__ == '__main__':
     opciones = [a for a in sys.argv[1:] if a.startswith('--')]
     pedidas = [a for a in sys.argv[1:] if not a.startswith('--')] or ['todas']
     for nombre in (PISTAS if pedidas == ['todas'] else pedidas):
-        armar(nombre, base='--base' in opciones, grabar='--sin-grabar' not in opciones)
+        solo = next((o.split('=', 1)[1].split(',') for o in opciones if o.startswith('--solo=')), None)
+        armar(nombre, base='--base' in opciones, grabar='--sin-grabar' not in opciones, solo=solo)

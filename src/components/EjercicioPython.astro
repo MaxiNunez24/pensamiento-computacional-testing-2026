@@ -156,6 +156,14 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
       aria-pressed="false"
       title="Mostrar u ocultar la barra de símbolos"
     >⌨️ Símbolos</button>
+    {/* El Asistente va al lado de Símbolos (los dos son cortos y en el celular comparten
+        renglón), y Enviar a mi profe, que es el más ancho, queda solo abajo. */}
+    <button
+      type="button"
+      class="ejercicio__btn ejercicio__btn--asistente"
+      data-asistente
+      title="Abre el asistente del curso (Claude) con tu ejercicio"
+    >🤖 Asistente</button>
     {/* Botón partido: el cuerpo publica en Discord, la flecha abre las otras
         vías. Ver conectarEnvio en scripts/editor-comun.ts. */}
     <span class="ejercicio__enviar">
@@ -174,12 +182,6 @@ const enc = (s: string) => Buffer.from(s, 'utf-8').toString('base64');
         title="Mandarlo por mail o copiar el mensaje"
       >▾</button>
     </span>
-    <button
-      type="button"
-      class="ejercicio__btn ejercicio__btn--asistente"
-      data-asistente
-      title="Abre el asistente del curso (Claude) con tu ejercicio"
-    >🤖 Asistente</button>
   </div>
 
   {/* El asistente: un panel y no un prompt(), para que el clic en "Copiar y
