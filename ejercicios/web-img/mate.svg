@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Un mate con bombilla">
+  <rect width="400" height="300" fill="#f1ece4"/>
+  <ellipse cx="200" cy="250" rx="110" ry="14" fill="#e2d9cb"/>
+  <path d="M130 120 Q120 250 200 252 Q280 250 270 120 Z" fill="#8a5a2b"/>
+  <ellipse cx="200" cy="120" rx="70" ry="18" fill="#a8733d"/>
+  <ellipse cx="200" cy="120" rx="58" ry="12" fill="#5b8c3a"/>
+  <path d="M150 170 Q200 185 250 170" stroke="#6e4520" stroke-width="5" fill="none"/>
+  <rect x="214" y="40" width="9" height="90" rx="4" fill="#c9ccd1" transform="rotate(18 218 85)"/>
+</svg>
