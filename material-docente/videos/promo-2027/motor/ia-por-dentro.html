@@ -18,13 +18,25 @@
     <script>
         const { caja, texto, flecha } = Motor;
 
-        // Los tokens del pedido: [id, texto, x, fila]. "pastelería" se parte en dos, como de verdad.
+        // Los tokens del pedido: [id, texto, fila]. Como en los modelos de verdad, las palabras largas o
+        // poco comunes se parten en pedazos ("Hace|me", "cat|á|logo", "paste|le|ría"); las cortas van enteras.
+        // Los pedazos de una misma palabra van pegaditos; entre palabras queda más aire.
         const TOKENS = [
-            ['k1', 'Haceme', 195, 0], ['k2', 'un', 405, 0], ['k3', 'catálogo', 645, 0],
-            ['k4', 'para', 915, 0], ['k5', 'mi', 300, 1], ['k6', 'pastel', 510, 1], ['k7', 'ería', 750, 1],
+            ['k1', 'Hace', 0], ['k2', 'me', 0, true], ['k3', 'un', 0], ['k4', 'cat', 0], ['k5', 'á', 0, true], ['k6', 'logo', 0, true],
+            ['k7', 'para', 1], ['k8', 'mi', 1], ['k9', 'paste', 1], ['k10', 'le', 1, true], ['k11', 'ría', 1, true],
         ];
         const FILAS = [920, 1070];
-        const COLORES = ['acento', 'acento2', 'exito', 'alerta', 'acento', 'acento2', 'exito'];
+        const COLORES = ['acento', 'acento2', 'exito', 'alerta', 'acento', 'acento2', 'exito', 'alerta', 'acento', 'acento2', 'exito'];
+        const ancho = (palabra) => palabra.length * 30 + 66;
+        // Las x de cada token: centrados por fila, 8 de separación dentro de una palabra y 26 entre palabras
+        const xs = {};
+        [0, 1].forEach((fila) => {
+            const deLaFila = TOKENS.filter((tk) => tk[2] === fila);
+            const huecos = deLaFila.map((tk, i) => (i === 0 ? 0 : (tk[3] ? 8 : 26)));
+            const total = deLaFila.reduce((s, tk, i) => s + ancho(tk[1]) + huecos[i], 0);
+            let x = 540 - total / 2;
+            deLaFila.forEach((tk, i) => { x += huecos[i]; xs[tk[0]] = x + ancho(tk[1]) / 2; x += ancho(tk[1]); });
+        });
 
         const piezas = {
             pedido: caja({
@@ -39,24 +51,24 @@
                 escrito: 0, opacidad: 0, escala: 0.9,
             }),
         };
-        TOKENS.forEach(([id, palabra, x, fila], i) => {
+        TOKENS.forEach(([id, palabra, fila], i) => {
             piezas[id] = caja({
-                x, y: FILAS[fila], ancho: palabra.length * 30 + 70, alto: 120, radio: 22, texto: palabra,
+                x: xs[id], y: FILAS[fila], ancho: ancho(palabra), alto: 120, radio: 22, texto: palabra,
                 tamano: 52, peso: 800, color: COLORES[i], borde: COLORES[i], grosorBorde: 4, opacidad: 0, escala: 0.4,
             });
         });
         // La atención: desde el último token hacia los que le dan sentido
-        [['a1', 'k3', 0.5], ['a2', 'k6', -0.6], ['a3', 'k1', 0.35]].forEach(([id, hasta, curvatura]) => {
-            piezas[id] = flecha({ desde: 'k7', hasta, curvatura, grosor: 6, color: 'acento2', progreso: 0 });
+        [['a1', 'k6', 0.5], ['a2', 'k9', -0.6], ['a3', 'k1', 0.35]].forEach(([id, hasta, curvatura]) => {
+            piezas[id] = flecha({ desde: 'k11', hasta, curvatura, grosor: 6, color: 'acento2', progreso: 0 });
         });
 
         const linea = [
             // El pedido se escribe solo (golpes 0 a 2)
             { pieza: 'pedido', a: { opacidad: 1 }, dur: 0.15, en: 0, sonido: 'whoosh' },
             { pieza: 'pedido', a: { escrito: 1 }, dur: 1.0, curva: 'lineal', en: 0.1 },
-            // Se parte en tokens: uno por corchea (golpes 2,5 a 6)
+            // Se parte en tokens, uno tras otro (golpes 2,5 a 5,5)
             ...TOKENS.map(([id], i) => (
-                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.25 + i * 0.25, sonido: 'pop', tono: i }
+                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.25 + i * 0.15, sonido: 'pop', tono: i }
             )),
             { pieza: 'pedido', a: { opacidad: 0.25 }, dur: 0.4, en: 1.25 },
             { pieza: 'rotTokens', a: { opacidad: 1 }, dur: 0.2, en: 1.5 },
@@ -64,9 +76,9 @@
             { pieza: 'rotTokens', a: { opacidad: 0 }, dur: 0.15, en: 3.0 },
             { pieza: 'rotAtencion', a: { opacidad: 1 }, dur: 0.2, en: 3.0 },
             { pieza: 'a1', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 3.0, sonido: 'whoosh' },
-            { pieza: 'k3', a: { resaltado: 1 }, dur: 0.25, en: 3.3 },
+            { pieza: 'k6', a: { resaltado: 1 }, dur: 0.25, en: 3.3 },
             { pieza: 'a2', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 3.5 },
-            { pieza: 'k6', a: { resaltado: 1 }, dur: 0.25, en: 3.8 },
+            { pieza: 'k9', a: { resaltado: 1 }, dur: 0.25, en: 3.8 },
             { pieza: 'a3', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 4.0 },
             { pieza: 'k1', a: { resaltado: 1 }, dur: 0.25, en: 4.3 },
             // La respuesta, de a poco (golpes 10 a 15)

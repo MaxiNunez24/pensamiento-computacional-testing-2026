@@ -61,9 +61,6 @@ def grabar_motor(nombre, golpe, solo=None):
                             '--salida', str(salida)], cwd=MOTOR, check=True)
     finally:
         servidor.terminate()
-    # El último cuadro de la escena web es la "animación" de la lección del giro
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-sseof', '-0.1', '-i', str(HF / 'assets' / f'web-{nombre}.mp4'),
-                    '-frames:v', '1', str(HF / 'assets' / f'web-final-{nombre}.png')], check=True)
 
 
 def poner_tiempos(html, p):
@@ -102,9 +99,8 @@ def armar(nombre, base=False, grabar=True, solo=None):
     for archivo in ['hyperframes.json', 'meta.json', 'package.json']:
         shutil.copy(HF / archivo, carpeta / archivo)
     for imagen in list((HF / 'assets').glob('*.png')) + list((HF / 'assets').glob('*.svg')):
-        if not re.search(r'-(glitch-hop|standard-02|melodic-dubstep)\.png$', imagen.name):
-            shutil.copy(imagen, carpeta / 'assets' / imagen.name)
-    propios = {f'{e}-{nombre}.mp4': f'{e}.mp4' for e in ESCENAS_MOTOR} | {f'web-final-{nombre}.png': 'web-final.png'}
+        shutil.copy(imagen, carpeta / 'assets' / imagen.name)
+    propios = {f'{e}-{nombre}.mp4': f'{e}.mp4' for e in ESCENAS_MOTOR}
     for origen, destino in propios.items():
         shutil.copy(HF / 'assets' / origen, carpeta / 'assets' / destino)
         if base:

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Curso 2027 · Usuaria/o de IA generativa y Programación Web</title>
+    <!-- El texto para las preceptoras, para imprimir en A4. El PDF sale con: node armar-pdf.mjs -->
+    <style>
+        @page { size: A4; margin: 16mm 18mm; }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; background: #fff; color: #1d1a26; font-family: "Segoe UI", system-ui, sans-serif; }
+        body { font-size: 11.6pt; line-height: 1.5; }
+
+        .cabecera { display: flex; align-items: center; gap: 18px; padding-bottom: 12px; border-bottom: 3px solid #7b3fa0; }
+        .cabecera img { width: 128px; }
+        .cabecera .curso { font-size: 10pt; letter-spacing: 2px; text-transform: uppercase; color: #6b6480; }
+        h1 { margin: 2px 0 0; font-size: 23pt; line-height: 1.12; color: #3a1d55; }
+        h1 span { color: #b0308e; }
+
+        p { margin: 14px 0 0; text-align: justify; hyphens: auto; }
+        .destacado { margin-top: 16px; padding: 12px 16px; border-left: 5px solid #b0308e; background: #f7f0f8; border-radius: 0 10px 10px 0; }
+        .destacado p { margin: 0; }
+        h2 { margin: 0 0 4px; font-size: 13pt; color: #3a1d55; }
+
+        .encuesta { display: flex; align-items: center; gap: 24px; margin-top: 22px; padding: 18px; border: 2px solid #2a8a5c; border-radius: 14px; }
+        .encuesta img { width: 62mm; height: 62mm; flex: none; }
+        .encuesta h2 { color: #1f6b47; font-size: 16pt; }
+        .encuesta p { margin: 4px 0 0; text-align: left; }
+        .encuesta .link { margin-top: 10px; font-size: 9pt; color: #4b4560; }
+    </style>
+</head>
+<body>
+    <header class="cabecera">
+        <img src="logo-cfp.png" alt="CFP N° 401 Ensenada · Laura Vicuña">
+        <div>
+            <div class="curso">CFP 401 · curso anual 2027</div>
+            <h1>Usuaria/o de <span>IA generativa</span><br>y Programación Web</h1>
+        </div>
+    </header>
+
+    <p>Un curso para empezar desde cero: no hace falta saber nada de programación ni tener experiencia
+    con la computadora. Primero se aprende qué es y cómo usar la inteligencia artificial (ChatGPT,
+    Gemini, Claude, etc.) para estudiar, trabajar y emprender: pedirle bien las cosas, crear textos e
+    imágenes, y darse cuenta cuándo se equivoca. Después, con esa ayuda, se aprende a crear páginas web
+    y a publicarlas en internet, como la de un emprendimiento propio o del barrio, junto con el
+    vocabulario y las tecnologías que se usan hoy en el ámbito profesional.</p>
+
+    <p>Las clases son con animaciones y con ejercicios en la computadora o el celular que se corrigen al
+    instante (quien no tenga computadora puede usar las del aula). Este año, los alumnos del curso
+    armaron catálogos web para emprendimientos de la zona, un bingo y el sistema de gestión de alumnos
+    del CFP, entre otros juegos y proyectos, y los mostraron en la Expo.</p>
+
+    <div class="destacado">
+        <h2>Inscripción: del 1 al 4 de diciembre</h2>
+        <p>Para mayores de 16, con 2 fotocopias del DNI y el aporte a la cooperadora ($4.000). Días y
+        horarios a confirmar (probablemente lunes o martes, y viernes). El cupo se define según la
+        inscripción. Si quedan dudas sobre el curso, el <strong>viernes 4 de diciembre</strong> el
+        instructor va a estar en el CFP para responderlas.</p>
+    </div>
+
+    <div class="encuesta">
+        <img src="qr-encuesta.svg" alt="QR de la encuesta de horarios">
+        <div>
+            <h2>¿Te interesa?</h2>
+            <p>Ayudanos completando esta encuesta de un minuto, para saber qué días y horarios te quedan
+            bien el año que viene. Escaneá el código con la cámara del celular.</p>
+            <div class="link">maxinunez24.github.io/<wbr>pensamiento-computacional-testing-2026/<wbr>ejercicios/<wbr>expo/<wbr>encuesta/</div>
+        </div>
+    </div>
+</body>
+</html>

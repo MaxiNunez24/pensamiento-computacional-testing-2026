@@ -36,7 +36,8 @@
                 b1: ladrillo('BASE', 1440, 'exito'),
             },
             linea: alTempo([
-                { pieza: 'n', a: { escala: 1 }, dur: 0.35, curva: 'resorte', en: 0, sonido: 'whoosh' },
+                // Sin sonido propio: arranca justo en el drop de la música, que ya pega
+                { pieza: 'n', a: { escala: 1 }, dur: 0.35, curva: 'resorte', en: 0 },
                 { pieza: 't', a: { opacidad: 1 }, dur: 0.3, en: 0.15 },
                 // Baja cada vez más rápido y frena seco en 0
                 { pieza: 'n', a: { valor: 0 }, dur: 1.15, curva: 'entrar', en: 0.35 },

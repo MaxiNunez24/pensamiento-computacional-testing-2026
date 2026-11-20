@@ -91,8 +91,8 @@ diciembre.
 **Inscripciones 2027**, según la publicación del CFP en Instagram:
 
 - Del **martes 1/12 al viernes 4/12**.
-- Cada curso tiene un día y horario propio de inscripción. **Averiguar el de los nuestros.**
-- Requisitos: 2 fotocopias del DNI y la cooperadora.
+- Se puede inscribir cualquier día del 1 al 4. **El viernes 4/12 está Maxi** en el CFP para las consultas del curso.
+- Requisitos: 2 fotocopias del DNI y la cooperadora ($4.000).
 - Para mayores de 16 años.
 
 **Video de promoción para Instagram:** se planifica desde el 18/11. Tiene que estar listo el
@@ -103,17 +103,20 @@ diciembre.
 > **Usuaria/o de IA generativa y Programación Web** · CFP 401 · curso anual 2027
 >
 > Un curso para empezar desde cero: no hace falta saber nada de programación ni tener
-> experiencia con la computadora. Primero se aprende a usar la inteligencia artificial (ChatGPT,
-> Gemini, Claude) para estudiar, trabajar y emprender: pedirle bien las cosas, crear textos e
-> imágenes, y darse cuenta cuándo se equivoca. Después, con esa ayuda, se aprende a crear páginas
-> web y a publicarlas en internet, como la de un emprendimiento propio o del barrio. Las clases son
-> con animaciones y con ejercicios en la computadora que se corrigen al instante. Este año, los
-> alumnos del curso armaron catálogos web para emprendimientos de la zona y los mostraron en la
-> Expo.
+> experiencia con la computadora. Primero se aprende qué es y cómo usar la inteligencia artificial
+> (ChatGPT, Gemini, Claude, etc.) para estudiar, trabajar y emprender: pedirle bien las cosas, crear
+> textos e imágenes, y darse cuenta cuándo se equivoca. Después, con esa ayuda, se aprende a crear
+> páginas web y a publicarlas en internet, como la de un emprendimiento propio o del barrio, junto
+> con el vocabulario y las tecnologías que se usan hoy en el ámbito profesional. Las clases son con
+> animaciones y con ejercicios en la computadora o el celular que se corrigen al instante (quien no
+> tenga computadora puede usar las del aula). Este año, los alumnos del curso armaron catálogos web
+> para emprendimientos de la zona, un bingo y el sistema de gestión de alumnos del CFP, entre otros
+> juegos y proyectos, y los mostraron en la Expo.
 >
 > **Inscripción:** del 1 al 4 de diciembre. Para mayores de 16, con 2 fotocopias del DNI y el
-> aporte a la cooperadora. Días y horarios a confirmar (probablemente lunes o martes, y viernes).
-> El cupo se define según la inscripción.
+> aporte a la cooperadora ($4.000). Días y horarios a confirmar (probablemente lunes o martes, y
+> viernes). El cupo se define según la inscripción. Si quedan dudas sobre el curso, el **viernes 4
+> de diciembre** el instructor va a estar en el CFP para responderlas.
 >
 > **¿Te interesa?** Ayudanos completando esta encuesta de un minuto, para saber qué días y horarios
 > te quedan bien el año que viene:

@@ -12,6 +12,8 @@ const PAGINAS = [
     ['catalogo-prueba', 'https://cfp401-ensenada.github.io/catalogos/prueba/'],
     ['curso-camino', 'https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/camino/'],
     ['curso-sqlite', 'https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/sqlite/#ej-agregar-un-alumno'],
+    // El cartón del Bingo de la Expo, en el celular (una ronda cualquiera)
+    ['trabajo-bingo', 'https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/expo/bingo/?r=CFP4&t=6-30'],
     // Los catálogos de los alumnos están en sus cuentas de GitHub: el usuario suele ser su nombre, así
     // que la lista va en trabajos.local.json, que no se sube ([["trabajo-x", "https://..."], ...]).
     ...(existsSync('trabajos.local.json') ? JSON.parse(readFileSync('trabajos.local.json', 'utf8')) : []),
@@ -32,6 +34,9 @@ for (const [nombre, url] of PAGINAS.filter(([n]) => !pedidas.length || pedidas.i
     const pagina = await contexto.newPage();
     await pagina.goto(url, { waitUntil: 'networkidle' });
     await pagina.waitForTimeout(2500);
+    // El Bingo de la Expo ya terminó: el cartón se ve con "Ver mi cartón igual"
+    const igual = pagina.getByText('Ver mi cartón igual');
+    if (await igual.count()) { await igual.first().click(); await pagina.waitForTimeout(2000); }
     await pagina.screenshot({ path: `hf/assets/${nombre}.png`, fullPage: true });
     console.log('ok', nombre);
     await pagina.close();
