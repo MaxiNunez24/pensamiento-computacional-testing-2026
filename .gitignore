@@ -35,3 +35,6 @@ contenido-privado/
 
 # Estado local y temporales de wrangler (Worker de los catálogos)
 .wrangler/
+
+# Evaluaciones de fin de año: el repo es público y los alumnos no tienen que verlas antes
+material-docente/parciales/

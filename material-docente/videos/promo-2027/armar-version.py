@@ -42,7 +42,11 @@ PISTAS = {
     'glitch-hop': {'archivo': 'glitch-hop-the-mountain.mp3', 'golpe': 0.4615, 'drop': 103.415,
                    'tramos': [(99.725, 147.725), (118.195, 138.505)],
                    'credito': 'Glitch Hop, de The_Mountain (Pixabay)'},
+    # En esta pista el detector de golpes se pierde después del drop (el tema tiene un tempo fijo), así
+    # que los tramos salen de la grilla desde el drop: [drop - 8G, drop + 88G] y [drop + 24G, drop + 76G].
+    # El segundo arranca en el mismo lugar de la frase donde cortó el primero (6 compases adentro).
     'standard-02': {'archivo': 'standard-glitch-hop-02.mp3', 'golpe': 0.4245, 'drop': 142.035,
+                    'tramos': [(138.639, 179.391), (152.223, 174.297)],
                     'credito': 'Standard Glitch Hop 02, de vjgalaxy (Pixabay)'},
     'melodic-dubstep': {'archivo': 'melodic-dubstep-berrydeep.mp3', 'golpe': 0.415, 'drop': 92.735,
                         'credito': 'Melodic Dubstep, de BerryDeep (Pixabay)'},
