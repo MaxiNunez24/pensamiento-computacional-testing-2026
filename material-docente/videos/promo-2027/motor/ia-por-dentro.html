@@ -10,7 +10,7 @@
 </head>
 <body>
     <!-- Escena del video de promoción 2027: un pedido se parte en tokens, la atención une los que
-         importan y la respuesta sale de a poco. Dura 16 golpes. Se graba con el video.js del motor. -->
+         importan y la respuesta sale de a poco. Dura 20 golpes. Se graba con el video.js del motor. -->
     <motor-escena escena="ia-por-dentro" estilo="neon" video></motor-escena>
 
     <script src="motor.min.js"></script>
@@ -25,7 +25,7 @@
             ['k1', 'Hace', 0], ['k2', 'me', 0, true], ['k3', 'un', 0], ['k4', 'cat', 0], ['k5', 'á', 0, true], ['k6', 'logo', 0, true],
             ['k7', 'para', 1], ['k8', 'mi', 1], ['k9', 'paste', 1], ['k10', 'le', 1, true], ['k11', 'ría', 1, true],
         ];
-        const FILAS = [920, 1070];
+        const FILAS = [860, 1130];
         const COLORES = ['acento', 'acento2', 'exito', 'alerta', 'acento', 'acento2', 'exito', 'alerta', 'acento', 'acento2', 'exito'];
         const ancho = (palabra) => palabra.length * 30 + 66;
         // Las x de cada token: centrados por fila, 8 de separación dentro de una palabra y 26 entre palabras
@@ -43,10 +43,10 @@
                 x: 540, y: 680, ancho: 980, alto: 160, radio: 80, texto: 'Haceme un catálogo para mi pastelería',
                 tamano: 40, peso: 700, borde: 'acento', grosorBorde: 4, escrito: 0, opacidad: 0,
             }),
-            rotTokens: texto({ x: 540, y: 1215, texto: 'tokens', tamano: 50, peso: 700, color: 'suave', opacidad: 0, fuente: 'mono' }),
-            rotAtencion: texto({ x: 540, y: 1215, texto: 'atención', tamano: 50, peso: 700, color: 'acento2', opacidad: 0, fuente: 'mono' }),
+            rotTokens: texto({ x: 540, y: 1265, texto: 'tokens', tamano: 50, peso: 700, color: 'suave', opacidad: 0, fuente: 'mono' }),
+            rotAtencion: texto({ x: 540, y: 1265, texto: 'atención', tamano: 50, peso: 700, color: 'acento2', opacidad: 0, fuente: 'mono' }),
             respuesta: caja({
-                x: 540, y: 1430, ancho: 980, alto: 280, radio: 28, relleno: 'papel', borde: 'exito', grosorBorde: 4,
+                x: 540, y: 1460, ancho: 980, alto: 240, radio: 28, relleno: 'papel', borde: 'exito', grosorBorde: 4,
                 texto: '¡Dale! Tu catálogo:\n🍰 Tortas · 🧁 Cupcakes · 🍪 Cookies', tamano: 50, peso: 800,
                 escrito: 0, opacidad: 0, escala: 0.9,
             }),
@@ -57,35 +57,60 @@
                 tamano: 52, peso: 800, color: COLORES[i], borde: COLORES[i], grosorBorde: 4, opacidad: 0, escala: 0.4,
             });
         });
-        // La atención: desde el último token hacia los que le dan sentido
-        [['a1', 'k6', 0.5], ['a2', 'k9', -0.6], ['a3', 'k1', 0.35]].forEach(([id, hasta, curvatura]) => {
-            piezas[id] = flecha({ desde: 'k11', hasta, curvatura, grosor: 6, color: 'acento2', progreso: 0 });
+        // Para la atención, los pedazos se juntan de nuevo en sus palabras: así las flechas van entre
+        // palabras que se entienden ("pastelería" mira a "catálogo"), no entre pedazos sueltos.
+        const PALABRAS = [
+            ['w1', 'Haceme', ['k1', 'k2'], 0, 'acento'],
+            ['w2', 'catálogo', ['k4', 'k5', 'k6'], 0, 'exito'],
+            ['w3', 'pastelería', ['k9', 'k10', 'k11'], 1, 'acento2'],
+        ];
+        const anchoDe = Object.fromEntries(TOKENS.map(([id, palabra]) => [id, ancho(palabra)]));
+        const centroDe = {};
+        PALABRAS.forEach(([id, palabra, partes, fila, color]) => {
+            const izq = xs[partes[0]] - anchoDe[partes[0]] / 2;
+            const der = xs[partes[partes.length - 1]] + anchoDe[partes[partes.length - 1]] / 2;
+            centroDe[id] = (izq + der) / 2;
+            piezas[id] = caja({
+                x: centroDe[id], y: FILAS[fila], ancho: der - izq, alto: 120, radio: 22, texto: palabra,
+                tamano: 52, peso: 800, color, borde: color, grosorBorde: 5, opacidad: 0, escala: 0.6,
+            });
+        });
+        // La atención: desde "pastelería" hacia las palabras que le dan sentido
+        [['a1', 'w2', 0.35], ['a2', 'w1', -0.3], ['a3', 'k8', 0.9]].forEach(([id, hasta, curvatura]) => {
+            piezas[id] = flecha({ desde: 'w3', hasta, curvatura, grosor: 6, color: 'acento2', progreso: 0 });
         });
 
+        // 20 golpes (a 120 BPM, 10 s). Cada momento tiene tiempo para leerse.
         const linea = [
-            // El pedido se escribe solo (golpes 0 a 2)
+            // El pedido se escribe solo (golpes 0 a 3)
             { pieza: 'pedido', a: { opacidad: 1 }, dur: 0.15, en: 0, sonido: 'whoosh' },
-            { pieza: 'pedido', a: { escrito: 1 }, dur: 1.0, curva: 'lineal', en: 0.1 },
-            // Se parte en tokens, uno tras otro (golpes 2,5 a 5,5)
+            { pieza: 'pedido', a: { escrito: 1 }, dur: 1.2, curva: 'lineal', en: 0.1 },
+            // Se parte en tokens, uno tras otro (golpes 3 a 6)
             ...TOKENS.map(([id], i) => (
-                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.25 + i * 0.15, sonido: 'pop', tono: i }
+                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.5 + i * 0.15, sonido: 'pop', tono: i }
             )),
-            { pieza: 'pedido', a: { opacidad: 0.25 }, dur: 0.4, en: 1.25 },
-            { pieza: 'rotTokens', a: { opacidad: 1 }, dur: 0.2, en: 1.5 },
-            // La atención: una flecha por golpe (golpes 6 a 9)
-            { pieza: 'rotTokens', a: { opacidad: 0 }, dur: 0.15, en: 3.0 },
-            { pieza: 'rotAtencion', a: { opacidad: 1 }, dur: 0.2, en: 3.0 },
-            { pieza: 'a1', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 3.0, sonido: 'whoosh' },
-            { pieza: 'k6', a: { resaltado: 1 }, dur: 0.25, en: 3.3 },
-            { pieza: 'a2', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 3.5 },
-            { pieza: 'k9', a: { resaltado: 1 }, dur: 0.25, en: 3.8 },
-            { pieza: 'a3', a: { progreso: 1 }, dur: 0.35, curva: 'salir', en: 4.0 },
-            { pieza: 'k1', a: { resaltado: 1 }, dur: 0.25, en: 4.3 },
-            // La respuesta, de a poco (golpes 10 a 15)
-            { pieza: 'respuesta', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 5.0, sonido: 'pop' },
-            { pieza: 'respuesta', a: { escrito: 1 }, dur: 2.2, curva: 'lineal', en: 5.2 },
-            { pieza: 'respuesta', a: { resaltado: 1 }, dur: 0.3, en: 7.4, sonido: 'ding' },
-            { espera: 1.0 },
+            { pieza: 'pedido', a: { opacidad: 0.25 }, dur: 0.4, en: 1.5 },
+            { pieza: 'rotTokens', a: { opacidad: 1 }, dur: 0.2, en: 1.6 },
+            // Los pedazos se juntan en sus palabras (golpe 7,5)
+            ...PALABRAS.flatMap(([id, , partes]) => [
+                ...partes.map((parte) => ({ pieza: parte, a: { x: centroDe[id], opacidad: 0, escala: 0.8 }, dur: 0.3, curva: 'entrar', en: 3.75 })),
+                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.35, curva: 'resorte', en: 3.9 },
+            ]),
+            { sonido: 'pop', en: 3.9 },
+            // La atención: una flecha cada dos golpes (golpes 8 a 13)
+            { pieza: 'rotTokens', a: { opacidad: 0 }, dur: 0.15, en: 4.0 },
+            { pieza: 'rotAtencion', a: { opacidad: 1 }, dur: 0.2, en: 4.0 },
+            { pieza: 'a1', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 4.0, sonido: 'whoosh' },
+            { pieza: 'w2', a: { resaltado: 1 }, dur: 0.25, en: 4.35 },
+            { pieza: 'a2', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 5.0 },
+            { pieza: 'w1', a: { resaltado: 1 }, dur: 0.25, en: 5.35 },
+            { pieza: 'a3', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 6.0 },
+            { pieza: 'k8', a: { resaltado: 1 }, dur: 0.25, en: 6.35 },
+            // La respuesta, de a poco (golpes 14 a 19)
+            { pieza: 'respuesta', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 7.0, sonido: 'pop' },
+            { pieza: 'respuesta', a: { escrito: 1 }, dur: 2.2, curva: 'lineal', en: 7.2 },
+            { pieza: 'respuesta', a: { resaltado: 1 }, dur: 0.3, en: 9.6, sonido: 'ding' },
+            { espera: 1.2 },
         ];
 
         Motor.registrar('ia-por-dentro', { titulo: 'La IA por dentro', ancho: 1080, alto: 1920, piezas, linea: alTempo(linea) });

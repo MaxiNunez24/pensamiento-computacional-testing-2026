@@ -35,7 +35,12 @@ PISTAS = {
     # golpe: segundos por golpe en ese tramo · drop: segundo de la pista donde entra con todo.
     # En los glitch hop va el ÚLTIMO drop, el más lleno (pedido de Maxi del 19/11). Los primeros
     # eran 59.105 s (The_Mountain) y 67.665 s (vjgalaxy).
+    # tramos: los pedazos de la pista que forman la música del video, en segundos y siempre en frases
+    # enteras (cada 32 golpes). El video dura 148 golpes y la pista se termina antes: el segundo tramo
+    # repite una frase del medio en vez de caer en el final (casi en silencio), y así termina en un
+    # compás que empalma con el principio (loop de Instagram).
     'glitch-hop': {'archivo': 'glitch-hop-the-mountain.mp3', 'golpe': 0.4615, 'drop': 103.415,
+                   'tramos': [(99.725, 147.725), (118.195, 138.505)],
                    'credito': 'Glitch Hop, de The_Mountain (Pixabay)'},
     'standard-02': {'archivo': 'standard-glitch-hop-02.mp3', 'golpe': 0.4245, 'drop': 142.035,
                     'credito': 'Standard Glitch Hop 02, de vjgalaxy (Pixabay)'},
@@ -63,6 +68,22 @@ def grabar_motor(nombre, golpe, solo=None):
         servidor.terminate()
 
 
+def golpes_del_video(html):
+    return float(re.search(r'id="root"[^>]*data-b1="([\d.]+)"', html).group(1))
+
+
+def armar_musica(p, golpes, salida):
+    """La música del video: los tramos de la pista, uno atrás de otro (sin tramos, de corrido desde
+    8 golpes antes del drop)."""
+    G = p['golpe']
+    tramos = p.get('tramos') or [(p['drop'] - 8 * G, p['drop'] - 8 * G + golpes * G)]
+    partes = ''.join(f'[0:a]atrim=start={a}:end={b},asetpts=PTS-STARTPTS,afade=t=in:d=0.01,'
+                     f'afade=t=out:st={b - a - 0.012:.3f}:d=0.012[t{i}];' for i, (a, b) in enumerate(tramos))
+    filtro = partes + ''.join(f'[t{i}]' for i in range(len(tramos))) + f'concat=n={len(tramos)}:v=0:a=1[m]'
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(HF / 'assets' / 'musica' / p['archivo']),
+                    '-filter_complex', filtro, '-map', '[m]', '-c:a', 'libmp3lame', '-q:a', '2', str(salida)], check=True)
+
+
 def poner_tiempos(html, p):
     """Recalcula data-start/data-duration desde data-b0/data-b1, y pone G y la música."""
     G = p['golpe']
@@ -81,9 +102,9 @@ def poner_tiempos(html, p):
     html = re.sub(r'<[a-z]+ [^>]*data-b0="[^>]*>', etiqueta, html)
     html, n = re.subn(r'const G = [\d.]+;', f'const G = {G};', html)
     assert n == 1, 'no encontré "const G"'
-    html, n = re.subn(r'(<audio id="musica" src="assets/)[^"]+(")', rf'\g<1>{p["archivo"]}\g<2>', html)
+    html, n = re.subn(r'(<audio id="musica" src="assets/)[^"]+(")', r'\g<1>musica.mp3\g<2>', html)
     assert n == 1, 'no encontré el <audio id="musica">'
-    html = re.sub(r'data-media-start="[\d.]+"', f'data-media-start="{p["drop"] - 8 * G:.3f}"', html)
+    html = re.sub(r'data-media-start="[\d.]+"', 'data-media-start="0"', html)
     return html
 
 
@@ -105,11 +126,13 @@ def armar(nombre, base=False, grabar=True, solo=None):
         shutil.copy(HF / 'assets' / origen, carpeta / 'assets' / destino)
         if base:
             shutil.copy(HF / 'assets' / origen, HF / 'assets' / destino)
-    shutil.copy(HF / 'assets' / 'musica' / p['archivo'], carpeta / 'assets' / p['archivo'])
+    original = (HF / 'index.html').read_text(encoding='utf-8')
+    golpes = golpes_del_video(original)
+    armar_musica(p, golpes, carpeta / 'assets' / 'musica.mp3')
     if base:
-        shutil.copy(HF / 'assets' / 'musica' / p['archivo'], HF / 'assets' / p['archivo'])
+        shutil.copy(carpeta / 'assets' / 'musica.mp3', HF / 'assets' / 'musica.mp3')
 
-    html = poner_tiempos((HF / 'index.html').read_text(encoding='utf-8'), p)
+    html = poner_tiempos(original, p)
     (carpeta / 'index.html').write_text(html, encoding='utf-8')
     if base:
         (HF / 'index.html').write_text(html, encoding='utf-8')
@@ -118,7 +141,7 @@ def armar(nombre, base=False, grabar=True, solo=None):
     (HF / 'renders').mkdir(exist_ok=True)
     npx('render', '-o', str(HF / 'renders' / f'{nombre}.mp4'), '--quality', 'looks', cwd=carpeta)
     G = p['golpe']
-    print(f'\n{nombre}: {60 / G:.1f} BPM, {128 * G:.2f} s, la pista desde {p["drop"] - 8 * G:.2f} s')
+    print(f'\n{nombre}: {60 / G:.1f} BPM, {golpes:.0f} golpes, {golpes * G:.2f} s')
 
 
 if __name__ == '__main__':

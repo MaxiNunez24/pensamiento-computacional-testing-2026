@@ -10,7 +10,7 @@
 </head>
 <body>
     <!-- Escena del video de promoción 2027: las etiquetas <h1>, <p> e <img> caen dentro de un
-         celular y se vuelven una página con productos, que se publica. Dura 16 golpes. -->
+         celular y se vuelven una página con productos, que se publica. Dura 24 golpes. -->
     <motor-escena escena="web" estilo="neon" video></motor-escena>
 
     <script src="motor.min.js"></script>
@@ -18,8 +18,9 @@
     <script>
         const { caja, texto, celular } = Motor;
 
-        // Las etiquetas caen desde arriba de la pantalla hasta el celular: [id, texto, x, color]
-        const ETIQUETAS = [['t1', '<h1>', 300, 'acento'], ['t2', '<p>', 540, 'acento2'], ['t3', '<img>', 790, 'exito']];
+        // Las etiquetas: cada una baja, se queda arriba un momento con lo que hace (para leerla) y recién
+        // ahí cae dentro del celular: [id, texto, qué hace, color]
+        const ETIQUETAS = [['t1', '<h1>', 'el título', 'acento'], ['t2', '<p>', 'un texto', 'acento2'], ['t3', '<img>', 'una foto', 'exito']];
         // Los productos, adentro de la pantalla del celular (que siempre mide 360 × 740)
         const PRODUCTOS = [
             ['p1', '🍰', 'Tortas', 95, 395], ['p2', '🧁', 'Cupcakes', 265, 395],
@@ -39,11 +40,12 @@
                 texto: '✓ Publicada', tamano: 52, peso: 900, color: 'fondo', escala: 0,
             }),
         };
-        ETIQUETAS.forEach(([id, etiqueta, x, color]) => {
+        ETIQUETAS.forEach(([id, etiqueta, que, color]) => {
             piezas[id] = caja({
-                x, y: -200, ancho: 220, alto: 110, radio: 18, texto: etiqueta, tamano: 54, peso: 800,
-                color, borde: color, grosorBorde: 5,
+                x: 540, y: -200, ancho: 300, alto: 140, radio: 22, texto: etiqueta, tamano: 76, peso: 800,
+                color, borde: color, grosorBorde: 6,
             });
+            piezas[id + 'q'] = texto({ x: 540, y: 520, texto: que, tamano: 54, peso: 700, color: 'texto', opacidad: 0 });
         });
         PRODUCTOS.forEach(([id, icono, nombre, x, y]) => {
             piezas[id] = caja({
@@ -52,28 +54,36 @@
             });
         });
 
+        // 24 golpes (a 120 BPM, 12 s), sin apuro: cada etiqueta tiene su tiempo para leerse
         const linea = [
-            // Entra el celular, vacío (golpes 0 a 1)
+            // Entra el celular, vacío (golpe 0)
             { pieza: 'cel', a: { escala: 1 }, dur: 0.4, curva: 'resorte', en: 0, sonido: 'whoosh' },
-            // Una etiqueta por golpe: cae, pega y se convierte (golpes 1 a 4)
-            ...ETIQUETAS.flatMap(([id], i) => [
-                { pieza: id, a: { y: 760, x: 540 }, dur: 0.35, curva: 'entrar', en: 0.5 + i * 0.5 },
-                { pieza: id, a: { escala: 1.4, opacidad: 0 }, dur: 0.15, curva: 'salir', en: 0.85 + i * 0.5, sonido: 'golpe' },
-            ]),
-            { pieza: 'h1', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 0.85 },
-            { pieza: 'p', a: { opacidad: 1 }, dur: 0.1, en: 1.35 },
-            { pieza: 'p', a: { escrito: 1 }, dur: 0.6, curva: 'lineal', en: 1.35 },
-            // Los productos, uno por corchea (golpes 4 a 6)
+            // Cada etiqueta: baja (golpes 1, 4 y 7), se queda dos golpes y cae al celular (golpes 3, 6 y 9)
+            ...ETIQUETAS.flatMap(([id], i) => {
+                const baja = 0.5 + i * 1.5;
+                const cae = baja + 1.0;
+                return [
+                    { pieza: id, a: { y: 380 }, dur: 0.35, curva: 'pasarse', en: baja, sonido: 'whoosh' },
+                    { pieza: id + 'q', a: { opacidad: 1 }, dur: 0.25, en: baja + 0.2 },
+                    { pieza: id + 'q', a: { opacidad: 0 }, dur: 0.15, en: cae },
+                    { pieza: id, a: { y: 760, escala: 0.75 }, dur: 0.35, curva: 'entrar', en: cae },
+                    { pieza: id, a: { escala: 1.2, opacidad: 0 }, dur: 0.15, curva: 'salir', en: cae + 0.35, sonido: 'golpe' },
+                ];
+            }),
+            // Lo que hace cada una aparece en la página
+            { pieza: 'h1', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.85 },
+            { pieza: 'p', a: { opacidad: 1 }, dur: 0.1, en: 3.35 },
+            { pieza: 'p', a: { escrito: 1 }, dur: 0.8, curva: 'lineal', en: 3.35 },
             ...PRODUCTOS.map(([id], i) => (
-                { pieza: id, a: { escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.85 + i * 0.25, sonido: 'pop', tono: i * 2 }
+                { pieza: id, a: { escala: 1 }, dur: 0.3, curva: 'resorte', en: 4.85 + i * 0.25, sonido: 'pop', tono: i * 2 }
             )),
-            // La dirección se escribe (golpes 8 a 10) y se publica (golpe 12)
-            { pieza: 'url', a: { escrito: 1 }, dur: 1.0, curva: 'lineal', en: 4.0, sonido: 'clic' },
-            { pieza: 'url', a: { resaltado: 1 }, dur: 0.3, en: 5.0 },
-            { pieza: 'publicada', a: { escala: 1 }, dur: 0.4, curva: 'resorte', en: 6.0, sonido: 'exito' },
-            { pieza: 'cel', a: { escala: 1.04 }, dur: 0.1, curva: 'salir', en: 6.0 },
-            { pieza: 'cel', a: { escala: 1 }, dur: 0.4, curva: 'gelatina', en: 6.1 },
-            { espera: 2.2 },
+            // La dirección se escribe (golpes 12 a 14) y se publica (golpe 16)
+            { pieza: 'url', a: { escrito: 1 }, dur: 1.0, curva: 'lineal', en: 6.0, sonido: 'clic' },
+            { pieza: 'url', a: { resaltado: 1 }, dur: 0.3, en: 7.0 },
+            { pieza: 'publicada', a: { escala: 1 }, dur: 0.4, curva: 'resorte', en: 8.0, sonido: 'exito' },
+            { pieza: 'cel', a: { escala: 1.04 }, dur: 0.1, curva: 'salir', en: 8.0 },
+            { pieza: 'cel', a: { escala: 1 }, dur: 0.4, curva: 'gelatina', en: 8.1 },
+            { espera: 4.6 },
         ];
 
         Motor.registrar('web', { titulo: 'De etiquetas a página', ancho: 1080, alto: 1920, piezas, linea: alTempo(linea) });
