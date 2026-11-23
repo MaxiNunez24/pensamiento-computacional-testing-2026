@@ -103,7 +103,8 @@
         .imagen .tesela { position: absolute; width: 200px; height: 200px; background: var(--superficie); border: 2px solid var(--borde); }
         .dato { position: absolute; left: 90px; right: 90px; top: 760px; }
         .dato .burbuja { position: relative; }
-        .tachado { position: absolute; left: 30px; top: 50%; height: 10px; width: 0; background: var(--rojo); border-radius: 5px; box-shadow: 0 0 20px rgba(255, 77, 109, 0.8); }
+        .fecha { position: relative; display: inline-block; }
+        .tachado { position: absolute; left: -8%; top: 50%; margin-top: -5px; height: 10px; width: 0; background: var(--rojo); border-radius: 5px; box-shadow: 0 0 20px rgba(255, 77, 109, 0.8); }
         .alerta { margin: 50px auto 0; width: 640px; padding: 26px; border-radius: 30px; background: var(--amarillo); color: #1b1500; text-align: center; font-weight: 900; font-size: 50px; }
 
         /* Trabajos terminados: capturas dentro de un celular */
@@ -128,8 +129,8 @@
         .titulo-curso div { font-size: 136px; }
         .titulo-curso .t2 { font-size: 172px; color: var(--magenta); text-shadow: 0 0 40px rgba(255, 61, 200, 0.6); }
         .titulo-curso .t3 { font-size: 118px; color: var(--cian); }
-        .datos { position: absolute; left: 0; right: 0; top: 1220px; display: flex; justify-content: center; gap: 20px; }
-        .datos .chip { font-size: 40px; }
+        .datos { position: absolute; left: 0; right: 0; top: 1220px; display: flex; justify-content: center; gap: 16px; }
+        .datos .chip { font-size: 34px; padding: 14px 26px; }
 
         .insc-rot { position: absolute; left: 0; right: 0; top: 320px; text-align: center; font-family: var(--mono); font-size: 54px; color: var(--cian); letter-spacing: 10px; }
         .insc-fecha { position: absolute; left: 0; right: 0; top: 400px; text-align: center; font-family: var(--titular); font-size: 170px; line-height: 1;
@@ -224,7 +225,7 @@
             </div>
             <div class="frase media" id="f6c">Y darte cuenta<br><span class="amarillo">cuándo se equivoca</span></div>
             <div class="dato" id="dato">
-                <div class="burbuja ia" id="mentira">El CFP 401 de Ensenada se fundó en 1810.<div class="tachado" id="tachado"></div></div>
+                <div class="burbuja ia" id="mentira">El CFP 401 de Ensenada se fundó en <span class="fecha">1810<span class="tachado" id="tachado"></span></span>.</div>
                 <div class="alerta" id="alerta">⚠️ Dato inventado</div>
             </div>
         </div>
@@ -372,7 +373,7 @@
         // Darte cuenta cuándo se equivoca (8 golpes: leer el dato, y después tacharlo)
         entra("#f6c", b(52));
         tl.fromTo("#mentira", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: "expo.out" }, b(52.5));
-        tl.to("#tachado", { width: "88%", duration: b(0.5), ease: "power2.out" }, b(55));
+        tl.to("#tachado", { width: "116%", duration: b(0.5), ease: "power2.out" }, b(55));
         tl.fromTo("#mentira", { x: 0 }, { keyframes: [{ x: -18 }, { x: 16 }, { x: -10 }, { x: 0 }], duration: 0.3 }, b(55));
         tl.fromTo("#alerta", { scale: 0, rotation: -8 }, { scale: 1, rotation: -3, duration: 0.3, ease: "back.out(2.5)" }, b(55.5));
 
