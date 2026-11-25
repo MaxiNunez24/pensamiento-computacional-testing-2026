@@ -1,6 +1,6 @@
 ---
 title: "APIs con requests: pedirle datos a internet"
-description: "Tu programa le pide datos a otra compu: fotos de perros y gatos, el dólar de hoy y su historia desde 2011. Y al final, todo en una ventana de Tkinter. Se hace en VS Code."
+description: "Tu programa le pide datos a otra compu: fotos de perros y gatos, los feriados, el dólar y la inflación con ArgentinaDatos. Y al final, todo en una ventana de Tkinter. Se hace en VS Code."
 ---
 
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
@@ -15,7 +15,8 @@ allá lo ejecutás. Necesitás **internet**.
 
 ## El problema
 
-Tu programa sabe solamente lo que vos le escribiste. Si querés que muestre **el dólar de hoy**,
+Tu programa sabe solamente lo que vos le escribiste. Si querés que diga **cuándo es el próximo
+feriado** o muestre **el dólar de hoy**,
 tendrías que cambiar el número a mano todas las mañanas. Y si querés una foto distinta cada vez
 que tocás un botón, tendrías que tener miles de fotos guardadas.
 
@@ -186,29 +187,103 @@ Con el mismo cuidado que el de perros: si no hay conexión, un aviso en vez de c
 Cada API la arma a su manera, y la mitad de los errores salen de suponer cómo viene.
 :::
 
-## Datos de mercado: el dólar
+## ArgentinaDatos: los datos del país
 
-Ahora algo más serio. Hay APIs argentinas, gratis y sin registrarse, con las cotizaciones del
-dólar.
+[ArgentinaDatos](https://argentinadatos.com/) es una API argentina, **gratis y sin registrarse**,
+que junta en un solo lugar un montón de datos públicos: feriados, cotizaciones del dólar,
+inflación, riesgo país, tasas de plazo fijo. Todas sus direcciones empiezan igual,
+`https://api.argentinadatos.com/v1/`, y lo que cambia es el final. La lista completa está en
+[su documentación](https://argentinadatos.com/docs/).
 
-### El dólar de hoy
+Arrancamos por lo más cercano: **los feriados**.
 
-[https://dolarapi.com/v1/dolares/blue](https://dolarapi.com/v1/dolares/blue) devuelve algo así:
+### Arrancamos con los feriados
+
+Abrí [https://api.argentinadatos.com/v1/feriados/2026](https://api.argentinadatos.com/v1/feriados/2026)
+en el navegador:
 
 ```json
-{"moneda": "USD", "casa": "blue", "nombre": "Blue", "compra": 1710, "venta": 1730, "fechaActualizacion": "2026-11-25T17:00:00.000Z"}
+[
+    {"fecha": "2026-01-01", "tipo": "inamovible", "nombre": "Año nuevo"},
+    {"fecha": "2026-02-16", "tipo": "inamovible", "nombre": "Carnaval"},
+    {"fecha": "2026-02-17", "tipo": "inamovible", "nombre": "Carnaval"},
+    ...
+]
 ```
+
+Una lista, con un diccionario por feriado: la **fecha**, el **tipo** (`inamovible`, `trasladable`
+o `puente`) y el **nombre**. Vienen ordenados, del primero al último del año. Cambiando el año del
+final tenés los de otro año, **2027** incluido.
 
 ```python
 import requests
 
-dolar = requests.get("https://dolarapi.com/v1/dolares/blue", timeout=10).json()
-print(f"Dólar {dolar['nombre']}: compra ${dolar['compra']}, venta ${dolar['venta']}")
+anio = 2026
+url = f"https://api.argentinadatos.com/v1/feriados/{anio}"
+feriados = requests.get(url, timeout=10).json()
+
+print(f"En {anio} hay {len(feriados)} feriados:")
+for feriado in feriados:
+    print(feriado["fecha"], "-", feriado["nombre"])
 ```
 
-Cambiando el final de la dirección tenés los otros: `oficial`, `bolsa` (el MEP), `tarjeta`. Y
-[https://dolarapi.com/v1/dolares](https://dolarapi.com/v1/dolares) los trae **todos juntos**, en
-una lista.
+### ¿Cuándo es el próximo?
+
+Para eso hay que comparar cada fecha con la de hoy. `date.today()` ya lo usaste en
+<a href={b + 'clases/bot-siges/'}>el bot</a>. Lo nuevo es **`date.fromisoformat`**, que convierte
+el texto `"2026-12-08"` en una **fecha de verdad**, de las que se pueden comparar y restar:
+
+```python
+import requests
+from datetime import date
+
+feriados = requests.get("https://api.argentinadatos.com/v1/feriados/2026", timeout=10).json()
+hoy = date.today()
+
+for feriado in feriados:
+    fecha = date.fromisoformat(feriado["fecha"])
+    if fecha > hoy:
+        faltan = (fecha - hoy).days
+        print(f"El próximo feriado es el {feriado['fecha']}: {feriado['nombre']}")
+        print(f"Faltan {faltan} días")
+        break
+```
+
+:::note[📦 Lo nuevo de las fechas]
+- **`date.fromisoformat("2026-12-08")`** pasa el texto a fecha. Anda con fechas escritas
+  año-mes-día, que es como vienen casi todas las APIs.
+- **Restar dos fechas** da la distancia entre las dos, y **`.days`** es esa distancia en días.
+- Una fecha sabe sus partes: **`fecha.year`**, **`fecha.month`**, **`fecha.day`**. Y
+  **`fecha.weekday()`** dice el día de la semana, con un número: 0 es lunes y 6 es domingo.
+
+Como los feriados vienen ordenados, el primero que está después de hoy **es** el próximo: ahí
+el `break` corta el bucle, porque no hace falta seguir mirando.
+:::
+
+<OpcionMultiple titulo="Chequeo: el fin de año" opciones={[
+  { texto: "Nada: ningún feriado de 2026 es posterior, así que el for termina sin entrar nunca al if.", correcta: true, explicacion: "Exacto. El programa no se rompe, pero tampoco avisa nada: la pantalla queda vacía. Arreglar eso es el primer ejercicio de abajo." },
+  { texto: "Navidad, que es el último del año.", explicacion: "Navidad ya pasó el 26: no es mayor que hoy, así que no entra al if." },
+  { texto: "Un error, porque no encuentra ninguno.", explicacion: "Un for que no encuentra nada no da error: simplemente termina." },
+]}>
+Si ejecutás este programa el **26 de diciembre**, ¿qué muestra?
+</OpcionMultiple>
+
+### Probá con los feriados
+
+- **Que siempre conteste algo.** Si no queda ningún feriado este año, que lo diga y muestre el
+  primero del año que viene. Cuando termina el `for`, ¿cómo sabés si encontraste uno o no? ¿Qué
+  podrías ir guardando mientras recorrés?
+- **¿Cuántos hay de cada tipo?** Inamovibles, trasladables y puentes. ¿Qué estructura usaste
+  otras veces para contar cosas por categoría?
+- **Los de un mes.** Pedí un mes con `input` (por ejemplo, `11`) y mostrá solo los feriados de
+  ese mes. ¿Qué parte de la fecha te dice el mes?
+- **Los fines de semana largos.** ¿Qué feriados caen lunes o viernes? ¿Qué números devuelve
+  `weekday()` para esos dos días?
+
+### Y después, la información
+
+Con el resto de ArgentinaDatos se hace exactamente lo mismo: **cambiás el final de la dirección,
+mirás cómo viene la respuesta y la recorrés**.
 
 ### La historia del dólar
 
@@ -249,29 +324,90 @@ print("Promedio del mes:", round(sum(ventas) / len(ventas)))
 :::note[Algo nuevo: `historial[-30:]`]
 Con los dos puntos adentro de los corchetes no pedís **un** elemento sino **un pedazo** de la
 lista. `historial[-30:]` es "desde el trigésimo contando del final, hasta el final": los últimos
-30. Otros ejemplos: `lista[:3]` son los tres primeros, y `texto[:10]` los primeros 10 caracteres
+30. Otros ejemplos: `lista[:3]` son los tres primeros, y `texto[:7]` los primeros 7 caracteres
 de un texto.
 :::
+
+Cambiando `blue` por `oficial`, `bolsa` (el MEP) o `mayorista` tenés la historia de los otros.
+
+### La inflación, mes por mes
+
+[https://api.argentinadatos.com/v1/finanzas/indices/inflacion](https://api.argentinadatos.com/v1/finanzas/indices/inflacion)
+trae la inflación de **cada mes desde 1943**. Cada dato tiene la fecha del último día del mes y el
+porcentaje que subieron los precios ese mes:
+
+```json
+[
+    {"fecha": "1943-03-31", "valor": 1.6},
+    ...
+    {"fecha": "2026-10-31", "valor": 2.2}
+]
+```
+
+```python
+import requests
+
+url = "https://api.argentinadatos.com/v1/finanzas/indices/inflacion"
+inflacion = requests.get(url, timeout=20).json()
+
+print("La inflación de los últimos 12 meses:")
+for mes in inflacion[-12:]:
+    print(mes["fecha"][:7], "→", mes["valor"], "%")
+```
+
+`mes["fecha"][:7]` se queda con `"2026-10"`: el año y el mes, sin el día, que acá no dice nada.
+
+### Más para explorar
+
+| Dirección (después de `/v1/`) | Qué trae | Cómo viene |
+|---|---|---|
+| `finanzas/indices/riesgo-pais/ultimo` | El riesgo país de hoy | Un diccionario solo |
+| `finanzas/indices/riesgo-pais` | El riesgo país de cada día | Una lista |
+| `finanzas/tasas/plazoFijo` | Cuánto paga cada banco por un plazo fijo | Una lista de bancos |
+| `cotizaciones/dolares` | La historia de **todos** los dólares juntos | Una lista larguísima |
+
+### Probá con la información
+
+- **¿Qué día fue el máximo del mes?** El `max` te da el número, pero no la fecha. ¿Cómo hacés para
+  quedarte con el **día entero** (el diccionario) que tiene la venta más alta, en vez de solo el
+  número?
+- **¿Cuánto subió el dólar en el año?** Buscá el primer día de 2026 y comparalo con hoy, en
+  porcentaje. ¿Cómo reconocés un día de 2026 mirando su `"fecha"`?
+- **El mes con más inflación** de los últimos 12. ¿Y desde 1943? Ese número te va a sorprender:
+  preguntale a alguien grande qué pasaba ese año.
+- **El oficial y el blue:** ¿cuál fue la diferencia entre los dos, hoy?
+
+Y si querés **verlo en un gráfico**, eso es matplotlib, en
+<a href={b + 'mas-alla/aplicaciones/'}>Aplicaciones de Python</a>: la historia del dólar y la de
+la inflación son ejemplos perfectos.
+
+## El dólar de hoy, al momento
+
+ArgentinaDatos guarda **un dato por día**. Para la cotización **del momento**, que se actualiza
+varias veces durante el día, hay otra API: **DolarApi**. Es la que vamos a usar en la ventana.
+
+[https://dolarapi.com/v1/dolares/blue](https://dolarapi.com/v1/dolares/blue) devuelve algo así:
+
+```json
+{"moneda": "USD", "casa": "blue", "nombre": "Blue", "compra": 1710, "venta": 1730, "fechaActualizacion": "2026-11-25T17:00:00.000Z"}
+```
+
+```python
+import requests
+
+dolar = requests.get("https://dolarapi.com/v1/dolares/blue", timeout=10).json()
+print(f"Dólar {dolar['nombre']}: compra ${dolar['compra']}, venta ${dolar['venta']}")
+```
+
+Cambiando el final de la dirección tenés los otros: `oficial`, `bolsa` (el MEP), `tarjeta`. Y
+[https://dolarapi.com/v1/dolares](https://dolarapi.com/v1/dolares) los trae **todos juntos**, en
+una lista.
 
 :::tip[Dos fuentes, dos números]
 Si comparás el blue de hoy de las dos APIs, puede que no coincidan: cada una lo toma de un lugar
 distinto y a una hora distinta. Es normal. Cuando uses datos de internet, **decí siempre de dónde
 salen**.
 :::
-
-### Probá
-
-- **¿Qué día fue el máximo del mes?** El `max` te da el número, pero no la fecha. ¿Cómo hacés para
-  quedarte con el **día entero** (el diccionario) que tiene la venta más alta, en vez de solo el
-  número?
-- **¿Cuánto subió en el año?** Buscá el primer día de 2026 y comparalo con hoy, en porcentaje.
-  ¿Cómo reconocés un día de 2026 mirando su `"fecha"`?
-- **El oficial y el blue:** cambiá `blue` por `oficial` en la dirección. ¿Cuál fue la diferencia
-  entre los dos, hoy?
-
-Y si querés **verlo en un gráfico**, eso es matplotlib, en
-<a href={b + 'mas-alla/aplicaciones/'}>Aplicaciones de Python</a>: la historia del dólar es el
-ejemplo perfecto.
 
 ## Todo junto: un perro por clic
 
@@ -391,6 +527,8 @@ botón? ¿Y en qué lugar del programa tendría que estar esa llamada para que l
   API de la historia.
 - **Perros a elección.** En la ventana de perros, una caja para escribir la raza. ¿Qué tiene que
   pasar si escriben una que no existe?
+- **La ventana de feriados.** El próximo feriado en letras grandes, con su nombre y cuántos días
+  faltan. ¿Qué cambia de la ventana del dólar, además de la dirección?
 - **Gatos y perros.** Dos botones en la misma ventana. Acordate de que las dos APIs devuelven el
   link de distinta manera.
 
@@ -424,4 +562,4 @@ ultimos = lista[-30:]                                     # un pedazo de una lis
 | [dog.ceo](https://dog.ceo/dog-api/) | Fotos de perros, al azar o por raza |
 | [TheCatAPI](https://thecatapi.com/) | Fotos de gatos |
 | [DolarApi](https://dolarapi.com/) | El dólar de hoy, todas las cotizaciones |
-| [ArgentinaDatos](https://argentinadatos.com/) | La historia del dólar, la inflación, los feriados |
+| [ArgentinaDatos](https://argentinadatos.com/) | Feriados, la historia del dólar, la inflación, el riesgo país, el plazo fijo |
