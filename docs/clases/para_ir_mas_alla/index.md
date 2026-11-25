@@ -14,8 +14,9 @@ Van **en el mismo orden en que se darían en el curso**, así cada una usa lo de
 | 4 | [🧠 Lógica y eficiencia](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/clases/logica-pensar/){ target=_blank } | Pensar antes de escribir, y medir cuánto le cuesta a tu solución |
 | 5 | [🛍️ Tu catálogo con Python](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web/catalogo/){ target=_blank } 🆕 | Un catálogo de productos publicado en internet, con botón de WhatsApp, armado por Python desde una planilla |
 | 6 | [🌐 Páginas web, de cero](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/web/){ target=_blank } 🆕 | HTML, CSS y JavaScript desde la primera etiqueta, en once clases, con la página en vivo mientras escribís |
-| 7 | [📊 Aplicaciones de Python](aplicaciones.md) 🚧 | Datos, gráficos y planillas con las librerías que usa todo el mundo |
-| 8 | [🔗 Referencias](referencias.md) | Adónde seguir por tu cuenta |
+| 7 | [🪟 Tkinter: ventanas con botones](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/mas-alla/tkinter/){ target=_blank } 🆕 | Tu programa con una ventana de verdad: cajas para escribir, botones y carteles. Se hace en VS Code |
+| 8 | [📊 Aplicaciones de Python](aplicaciones.md) 🚧 | Datos, gráficos y planillas con las librerías que usa todo el mundo |
+| 9 | [🔗 Referencias](referencias.md) | Adónde seguir por tu cuenta |
 
 !!! question "¿Por qué Archivos y JSON están acá, si antes eran clases del curso?"
     Porque el sistema de asistencias guarda los datos en una **base de datos** desde el principio.

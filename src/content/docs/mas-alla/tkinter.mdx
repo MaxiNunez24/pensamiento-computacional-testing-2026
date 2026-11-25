@@ -1,0 +1,432 @@
+---
+title: "Tkinter: ventanas con botones"
+description: "Tu programa de Python, con una ventana de verdad: textos, cajas para escribir y botones. Viene incluido con Python y se hace en VS Code."
+---
+
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+:::caution[Esta clase se hace en VS Code, no acá]
+Los ejercicios de la plataforma corren Python **adentro del navegador**, y el navegador no deja que
+un programa abra ventanas propias. Por eso esta clase se hace **en tu compu, con VS Code**: acá
+leés y copiás, y allá lo ejecutás.
+:::
+
+## El problema
+
+El sistema de asistencias por consola anda, pero pensá en quien lo va a usar: una preceptora que
+nunca vio una terminal, frente a un cursor que parpadea esperando que escriba un número de menú.
+
+Lo que esa persona espera es **una ventana**: un lugar donde escribir el DNI, un botón que diga
+**Registrar** y un cartel que conteste. Eso se puede hacer con lo que ya sabés, más una sola
+librería: **Tkinter**.
+
+:::tip[Tkinter ya está en tu compu]
+Viene **incluido con Python**: no hay que instalar nada con `pip` ni armar un entorno virtual. Si
+tenés Python y VS Code, ya está todo.
+:::
+
+## Preparar VS Code
+
+Si ya venís usando VS Code con Python, saltá al paso 4.
+
+1. **Python instalado.** Si no lo tenés, seguí
+   [Instalar Python](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/clases/bloque_1_fundamentos/instalar_python/).
+   Las opciones que vienen marcadas por defecto ya incluyen Tkinter.
+2. **VS Code con la extensión de Python** (la de Microsoft). Está en
+   [Instalar VS Code](https://maxinunez24.github.io/pensamiento-computacional-testing-2026/clases/bloque_1_fundamentos/instalar_vscode/).
+3. **Una carpeta para la clase.** Creá una carpeta nueva, por ejemplo `ventanas`, y abrila con
+   **File → Open Folder** (Archivo → Abrir carpeta).
+4. **Probá que Tkinter ande.** Abrí la terminal de VS Code con **Terminal → New Terminal**
+   (Terminal → Nuevo terminal) y escribí:
+
+   ```
+   py -m tkinter
+   ```
+
+   Tiene que aparecer una ventanita con dos botones, **Click me!** y **QUIT**. Si aparece, está
+   todo listo: cerrala y seguí.
+5. **Creá un archivo nuevo** con el nombre `ventana.py`. Para ejecutarlo, tocá el **▶** que está
+   arriba a la derecha (Run Python File).
+
+:::danger[Nunca le pongas `tkinter.py` a tu archivo]
+Si tu archivo se llama `tkinter.py`, cuando escribas `import tkinter` Python se importa **tu
+archivo** en vez de la librería, y nada anda. Ponele cualquier otro nombre: `ventana.py`,
+`saludo.py`, `asistencia.py`.
+:::
+
+:::note[Si algo no arranca]
+- **No aparece el ▶:** fijate que el archivo termine en `.py` y que la extensión de Python esté
+  instalada.
+- **Dice que no encuentra Python:** apretá `Ctrl+Shift+P`, escribí **Python: Select
+  Interpreter** y elegí el Python que instalaste.
+- **No ves la ventana:** a veces se abre **detrás** de VS Code. Buscala en la barra de tareas o
+  con `Alt+Tab`.
+:::
+
+## Tu primera ventana
+
+Copiá esto en `ventana.py` y tocá el ▶:
+
+```python
+import tkinter as tk
+
+ventana = tk.Tk()
+ventana.title("Mi primera ventana")
+ventana.geometry("400x200")
+
+ventana.mainloop()
+```
+
+Aparece una ventana vacía de 400 de ancho por 200 de alto, con tu título arriba. Línea por línea:
+
+| Línea | Qué hace |
+|---|---|
+| `import tkinter as tk` | Trae la librería, y le da el apodo `tk` para escribir menos |
+| `ventana = tk.Tk()` | Crea la ventana. Es un **objeto**, como los de POO |
+| `ventana.title(...)` | El texto de la barra de arriba |
+| `ventana.geometry("400x200")` | El tamaño: ancho **x** alto, en píxeles |
+| `ventana.mainloop()` | Deja la ventana abierta, esperando que hagas algo |
+
+### Qué hace `mainloop()`
+
+Un programa de consola corre de arriba abajo y termina. Una ventana no puede hacer eso: tiene que
+quedarse **esperando** a que toques algo. `mainloop()` es un bucle que hace justamente eso: se
+queda mirando qué toca el usuario, y no termina hasta que cerrás la ventana.
+
+Se parece a `input()`, que también frena el programa hasta que escribís algo. La diferencia es que
+`input()` espera **una** respuesta, y `mainloop()` espera **todo el tiempo**, cualquier cosa.
+
+<OpcionMultiple titulo="Chequeo: sin mainloop" opciones={[
+  { texto: "La ventana aparece un instante y se cierra sola.", correcta: true, explicacion: "Exacto. Sin el bucle que espera, el programa llega al final y termina, y la ventana se va con él. Es el error más común de la primera clase." },
+  { texto: "La ventana queda abierta igual.", explicacion: "No: lo que la deja abierta es justamente mainloop(). Sin él, el programa termina enseguida." },
+  { texto: "Python muestra un error en rojo.", explicacion: "No hay ningún error: el programa hace todo lo que le pediste y termina. Por eso cuesta darse cuenta de qué falta." },
+]}>
+¿Qué pasa si borrás la última línea, `ventana.mainloop()`, y ejecutás?
+</OpcionMultiple>
+
+## Textos y botones
+
+Las cosas que van adentro de una ventana se llaman **widgets**: un texto, un botón, una caja para
+escribir. Cada uno es un objeto, y se crea diciéndole **en qué ventana va**:
+
+```python
+import tkinter as tk
+
+ventana = tk.Tk()
+ventana.title("Saludo")
+ventana.geometry("400x200")
+
+mensaje = tk.Label(ventana, text="Todavía no tocaste nada", font=("Arial", 14))
+mensaje.pack(pady=20)
+
+boton = tk.Button(ventana, text="Saludar")
+boton.pack()
+
+ventana.mainloop()
+```
+
+- **`tk.Label`** es un texto que el usuario lee pero no puede cambiar.
+- **`tk.Button`** es un botón.
+- **`.pack()`** lo pone en la ventana, uno abajo del otro. Si te olvidás del `.pack()`, el widget
+  existe pero **no se ve**.
+- `pady=20` le deja 20 píxeles de aire arriba y abajo.
+
+Tocá el botón: no pasa nada. Todavía no le dijimos **qué hacer**.
+
+## Que el botón haga algo
+
+Lo que hace un botón es una **función**. Primero la escribís, y después se la das al botón con
+`command`:
+
+```python
+import tkinter as tk
+
+
+def saludar():
+    mensaje.config(text="¡Hola! Tocaste el botón.")
+
+
+ventana = tk.Tk()
+ventana.title("Saludo")
+ventana.geometry("400x200")
+
+mensaje = tk.Label(ventana, text="Todavía no tocaste nada", font=("Arial", 14))
+mensaje.pack(pady=20)
+
+boton = tk.Button(ventana, text="Saludar", command=saludar)
+boton.pack()
+
+ventana.mainloop()
+```
+
+`mensaje.config(text=...)` le cambia el texto a un Label que ya existe. Es como cambiarle un
+atributo a un objeto.
+
+Fijate un detalle: dice `command=saludar`, **sin paréntesis**.
+
+<OpcionMultiple titulo="Chequeo: los paréntesis" opciones={[
+  { texto: "Con paréntesis, la función se ejecuta una vez al crear el botón, y después el botón ya no hace nada.", correcta: true, explicacion: "Exacto. Con paréntesis le estás diciendo a Python: ejecutá saludar AHORA, y al botón dale lo que devuelva (None). Sin paréntesis le das la función misma, para que el botón la llame cada vez que lo tocan." },
+  { texto: "Da lo mismo: con o sin paréntesis anda igual.", explicacion: "No da lo mismo. Probalo: con paréntesis, el mensaje cambia apenas se abre la ventana, y el botón queda muerto." },
+  { texto: "Con paréntesis, la función se ejecuta dos veces cada vez que tocás.", explicacion: "No: se ejecuta una sola vez, al crear el botón, y nunca más." },
+]}>
+¿Qué pasaría si escribieras `command=saludar()`, con paréntesis?
+</OpcionMultiple>
+
+:::tip[Esto es nuevo: el programa espera a que lo llames]
+Hasta ahora vos decidías **cuándo** se ejecutaba cada función, llamándola en tu código. Con una
+ventana, la que decide es **la persona que toca el botón**. Vos solo dejás la función preparada y
+le avisás al botón cuál es. A esto se le dice **programación por eventos**: cada clic es un evento.
+:::
+
+## Leer lo que escriben
+
+Para que el usuario escriba, está **`tk.Entry`**: una caja de una línea. Lo que escribió se lee con
+**`.get()`**, que siempre devuelve **texto**, como `input()`:
+
+```python
+import tkinter as tk
+
+
+def saludar():
+    nombre = entrada.get()
+    mensaje.config(text=f"¡Hola, {nombre}!")
+
+
+ventana = tk.Tk()
+ventana.title("Saludo")
+ventana.geometry("400x220")
+
+tk.Label(ventana, text="¿Cómo te llamás?").pack(pady=10)
+
+entrada = tk.Entry(ventana, font=("Arial", 14))
+entrada.pack()
+
+tk.Button(ventana, text="Saludar", command=saludar).pack(pady=10)
+
+mensaje = tk.Label(ventana, text="", font=("Arial", 14))
+mensaje.pack()
+
+ventana.mainloop()
+```
+
+El primer Label y el botón no se guardan en una variable: se crean y se ponen en la misma línea
+con `.pack()`. Se puede hacer cuando no los vas a volver a tocar. A `entrada` y a `mensaje` sí los
+necesitamos después, adentro de `saludar`, y por eso tienen nombre.
+
+### Probá
+
+- ¿Qué pasa si tocás **Saludar** sin escribir nada?
+- Hacé que en ese caso diga `Primero escribí tu nombre`. ¿Con qué comparás lo que devolvió `.get()`
+  para saber que está vacío?
+
+## Números, errores y carteles
+
+Ahora algo del proyecto: el **porcentaje de asistencia**. Se escriben las clases dadas y las
+faltas, y la ventana dice si llega al 85 %.
+
+Como `.get()` devuelve texto, hay que pasarlo a número con `int()`. Y si escriben `diez` en vez
+de `10`, `int()` tira un `ValueError`: lo atrapamos con `try` / `except`, como en la clase de
+Excepciones, y avisamos con un **cartel** (`messagebox`):
+
+```python
+import tkinter as tk
+from tkinter import messagebox
+
+
+def calcular():
+    try:
+        clases = int(entrada_clases.get())
+        faltas = int(entrada_faltas.get())
+    except ValueError:
+        messagebox.showerror("Dato inválido", "Escribí solo números enteros.")
+        return
+
+    if clases <= 0:
+        messagebox.showerror("Dato inválido", "Tiene que haber al menos una clase.")
+        return
+
+    porcentaje = round((clases - faltas) * 100 / clases)
+    if porcentaje >= 85:
+        resultado.config(text=f"{porcentaje} % — Regular", fg="green")
+    else:
+        resultado.config(text=f"{porcentaje} % — Le falta asistencia", fg="red")
+
+
+ventana = tk.Tk()
+ventana.title("Asistencia")
+
+tk.Label(ventana, text="Clases dadas:").grid(row=0, column=0, padx=10, pady=10)
+entrada_clases = tk.Entry(ventana)
+entrada_clases.grid(row=0, column=1, padx=10)
+
+tk.Label(ventana, text="Faltas:").grid(row=1, column=0, padx=10, pady=10)
+entrada_faltas = tk.Entry(ventana)
+entrada_faltas.grid(row=1, column=1, padx=10)
+
+tk.Button(ventana, text="Calcular", command=calcular).grid(row=2, column=0, columnspan=2, pady=10)
+
+resultado = tk.Label(ventana, text="", font=("Arial", 16))
+resultado.grid(row=3, column=0, columnspan=2, pady=10)
+
+ventana.mainloop()
+```
+
+Tres cosas nuevas:
+
+- **`messagebox.showerror(título, mensaje)`** abre un cartel de error con un botón **OK**. Hay
+  también `showinfo` (información) y `showwarning` (advertencia). Se importa aparte, con
+  `from tkinter import messagebox`.
+- **`return`** solo, sin nada, corta la función ahí. Si el dato estaba mal, no tiene sentido
+  seguir calculando.
+- **`.grid()`** en vez de `.pack()`: acomoda los widgets en una **grilla** de filas y columnas,
+  como una planilla. `row` es la fila, `column` la columna (las dos empiezan en 0), y
+  `columnspan=2` hace que el botón ocupe las dos columnas. En una misma ventana usá **o `pack`
+  o `grid`**, no los dos mezclados.
+
+`fg` es el color de las letras (*foreground*): `"green"`, `"red"`, `"blue"`… o un código como
+`"#ff4d6d"`, como en CSS.
+
+<OpcionMultiple titulo="Chequeo: el cero" opciones={[
+  { texto: "Porque sin él, con 0 clases el programa divide por cero y tira un ZeroDivisionError.", correcta: true, explicacion: "Exacto. El try solo atrapa ValueError, así que ese error no lo atraparía nadie. La ventana no se cierra, pero el botón no hace nada y el error aparece en la terminal de VS Code." },
+  { texto: "Porque int() no acepta el 0.", explicacion: "int(\"0\") anda perfecto y da 0. El problema aparece después, en la cuenta." },
+  { texto: "No hace falta: el try ya atrapa cualquier error.", explicacion: "El except dice ValueError: atrapa solo ese. Un ZeroDivisionError pasa de largo." },
+]}>
+¿Para qué está el `if clases <= 0`?
+</OpcionMultiple>
+
+## Manos a la obra: la lista de presentes
+
+Este ejercicio se hace en VS Code, en un archivo nuevo, `presentes.py`. No tiene corrección
+automática: lo probás vos, tocando.
+
+**Lo que tiene que hacer el programa:**
+
+- Una caja para escribir un nombre, un botón **Agregar** y, abajo, la lista de los que ya están.
+- Al tocar **Agregar**, el nombre pasa a la lista y la caja queda **vacía**, lista para el que
+  sigue.
+- Abajo de todo, un texto que diga cuántos hay: `Presentes: 3`.
+- Si tocan **Agregar** con la caja vacía, un cartel de advertencia, y no se agrega nada.
+
+Para la lista hay un widget nuevo, **`tk.Listbox`**:
+
+```python
+lista = tk.Listbox(ventana, width=30, height=8)
+lista.pack()
+
+lista.insert(tk.END, "Ana")   # agrega "Ana" al final de la lista
+lista.size()                  # cuántos elementos tiene
+```
+
+Y para vaciar una caja de texto: `entrada.delete(0, tk.END)`, que borra desde el primer carácter
+(el 0) hasta el final.
+
+Andá por partes, y ejecutá después de cada una:
+
+1. La ventana con la caja, el botón y la lista vacía.
+2. Que el botón agregue el nombre a la lista.
+3. Que la caja se vacíe después de agregar.
+4. El contador de presentes.
+5. El cartel si la caja está vacía.
+
+<details>
+<summary>💡 Pista para el paso 2</summary>
+
+Cuando tocan el botón, ¿de dónde sale el nombre que hay que agregar? ¿Y qué widget lo tiene
+guardado en ese momento?
+
+</details>
+
+<details>
+<summary>💡 Pista para el paso 4</summary>
+
+¿Quién sabe cuántos nombres hay: vos llevando la cuenta en una variable, o la lista misma? ¿Y en
+qué momento cambia ese número, o sea, adentro de qué función tenés que actualizar el texto?
+
+</details>
+
+<details>
+<summary>💡 Pista para el paso 5</summary>
+
+Ya hiciste algo parecido en la calculadora de asistencia. ¿Qué hacía la función cuando el dato
+estaba mal, para no seguir con el resto?
+
+</details>
+
+### Para el que quiera más
+
+- Que tampoco se pueda agregar **dos veces el mismo nombre**. ¿Cómo sabés si ya está, si la lista
+  está en un Listbox y no en una lista de Python? ¿Y si además fueras guardando los nombres en una
+  lista común?
+- Un botón **Quitar** que saque el nombre seleccionado. Buscá qué hacen `lista.curselection()` y
+  `lista.delete(...)`.
+- Que **Enter** también agregue, sin tocar el botón. Buscá `ventana.bind("<Return>", ...)`: ojo,
+  que la función que le pasás recibe un parámetro, el evento.
+
+## Ordenarlo con una clase
+
+Cuando la ventana crece, tantas variables sueltas se vuelven un lío. Lo que ya sabés de **POO**
+lo ordena: la ventana es un objeto, los widgets son sus **atributos** y lo que hacen los botones
+son sus **métodos**. Por ejemplo, un contador de clics:
+
+```python
+import tkinter as tk
+
+
+class Contador:
+    def __init__(self, ventana):
+        self.cantidad = 0
+        self.etiqueta = tk.Label(ventana, text="0", font=("Arial", 40))
+        self.etiqueta.pack(pady=20)
+        tk.Button(ventana, text="Sumar uno", command=self.sumar).pack()
+
+    def sumar(self):
+        self.cantidad = self.cantidad + 1
+        self.etiqueta.config(text=str(self.cantidad))
+
+
+ventana = tk.Tk()
+ventana.title("Contador")
+ventana.geometry("300x220")
+Contador(ventana)
+ventana.mainloop()
+```
+
+- `command=self.sumar`: el método del objeto, otra vez **sin paréntesis**.
+- `self.cantidad` guarda la cuenta entre un clic y el siguiente. Sin la clase, tendría que ser
+  una variable de afuera de la función, y Python no te deja cambiarla desde adentro sin un truco
+  extra (`global`). El objeto la guarda sin vueltas.
+
+**Probá:** agregale un botón **Reiniciar** que vuelva a 0. ¿Qué método nuevo hace falta, y qué
+dos cosas tiene que cambiar?
+
+## Para llevar
+
+```python
+import tkinter as tk
+from tkinter import messagebox
+
+ventana = tk.Tk()                         # la ventana
+ventana.title("Título")
+ventana.geometry("400x300")               # ancho x alto
+
+texto = tk.Label(ventana, text="Hola")    # un texto
+caja = tk.Entry(ventana)                  # una caja para escribir
+boton = tk.Button(ventana, text="OK", command=una_funcion)   # sin paréntesis
+lista = tk.Listbox(ventana)               # una lista
+
+texto.pack()                              # uno abajo del otro…
+caja.grid(row=0, column=1)                # …o en grilla (no los dos juntos)
+
+caja.get()                                # lo que escribieron (siempre texto)
+caja.delete(0, tk.END)                    # vaciar la caja
+texto.config(text="Chau", fg="red")       # cambiar un widget que ya existe
+lista.insert(tk.END, "Ana")               # agregar al final de la lista
+messagebox.showerror("Título", "Mensaje") # también showinfo y showwarning
+
+ventana.mainloop()                        # siempre al final
+```
+
+- Se hace en **VS Code**: la plataforma no puede abrir ventanas.
+- Tu archivo **nunca** se llama `tkinter.py`.
+- Sin `mainloop()` la ventana se cierra sola. Sin `.pack()` o `.grid()`, el widget no se ve.
+- El botón recibe la función **sin paréntesis**: la llama él, cada vez que lo tocan.
