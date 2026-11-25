@@ -5,6 +5,8 @@ description: "Tu programa de Python, con una ventana de verdad: textos, cajas pa
 
 import OpcionMultiple from '../../../components/OpcionMultiple.astro';
 
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
 :::caution[Esta clase se hace en VS Code, no acá]
 Los ejercicios de la plataforma corren Python **adentro del navegador**, y el navegador no deja que
 un programa abra ventanas propias. Por eso esta clase se hace **en tu compu, con VS Code**: acá
@@ -430,3 +432,8 @@ ventana.mainloop()                        # siempre al final
 - Tu archivo **nunca** se llama `tkinter.py`.
 - Sin `mainloop()` la ventana se cierra sola. Sin `.pack()` o `.grid()`, el widget no se ve.
 - El botón recibe la función **sin paréntesis**: la llama él, cada vez que lo tocan.
+
+:::tip[Seguí con: APIs]
+En <a href={b + 'mas-alla/apis/'}>APIs con requests</a>, tu ventana le pide datos a internet: una foto de
+un perro nueva en cada clic, y el dólar de hoy.
+:::

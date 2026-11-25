@@ -1,0 +1,427 @@
+---
+title: "APIs con requests: pedirle datos a internet"
+description: "Tu programa le pide datos a otra compu: fotos de perros y gatos, el dólar de hoy y su historia desde 2011. Y al final, todo en una ventana de Tkinter. Se hace en VS Code."
+---
+
+import OpcionMultiple from '../../../components/OpcionMultiple.astro';
+
+export const b = import.meta.env.BASE_URL.replace(/\/$/, '') + '/';
+
+:::caution[Esta clase se hace en VS Code, no acá]
+Los ejercicios de la plataforma corren Python **adentro del navegador**, y desde ahí no se puede
+usar `requests`. Por eso esta clase se hace **en tu compu, con VS Code**: acá leés y copiás, y
+allá lo ejecutás. Necesitás **internet**.
+:::
+
+## El problema
+
+Tu programa sabe solamente lo que vos le escribiste. Si querés que muestre **el dólar de hoy**,
+tendrías que cambiar el número a mano todas las mañanas. Y si querés una foto distinta cada vez
+que tocás un botón, tendrías que tener miles de fotos guardadas.
+
+Esos datos ya existen, actualizados, **en otras computadoras**. Lo que falta es que tu programa
+se los pueda **pedir**. Para eso están las **APIs**.
+
+## Qué es una API
+
+Una **API** es una dirección de internet que, en vez de devolverte una página para mirar, te
+devuelve **datos** para que los use tu programa.
+
+Pensalo como un mozo: vos no entrás a la cocina, le hacés **un pedido** y te trae **una
+respuesta**. No te importa cómo la cocinaron.
+
+### Probalo en el navegador
+
+Abrí esta dirección en una pestaña nueva:
+[https://dog.ceo/api/breeds/image/random](https://dog.ceo/api/breeds/image/random)
+
+Vas a ver algo así:
+
+```json
+{"message": "https://images.dog.ceo/breeds/beagle/n02088364_16689.jpg", "status": "success"}
+```
+
+Recargá la página: el link cambia. Cada pedido te devuelve **un perro al azar**.
+
+Eso que ves es **JSON**, el idioma en que se mandan datos las computadoras. Y fijate que se
+parece muchísimo a algo que ya conocés: **es un diccionario de Python**, con sus llaves, sus
+claves y sus valores. Si viste la optativa de <a href={b + 'clases/json/'}>JSON</a>, ya lo
+conocés; si no, alcanza con saber diccionarios y listas.
+
+## Preparar VS Code
+
+Esta vez sí hay que instalar algo: **`requests`**, la librería que hace los pedidos, y
+**`pillow`**, que vamos a usar al final para mostrar las fotos en una ventana.
+
+1. Creá una carpeta nueva, por ejemplo `apis`, y abrila con **File → Open Folder**.
+2. Abrí la terminal (**Terminal → New Terminal**) y armá un **entorno virtual**, como hicimos con
+   <a href={b + 'clases/bot-siges/#el-entorno-virtual'}>el bot del SiGeS</a>:
+
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
+
+   La línea de la terminal tiene que empezar con **`(.venv)`**.
+3. Con el `(.venv)` a la vista, instalá las dos librerías:
+
+   ```bash
+   pip install requests pillow
+   ```
+
+4. Creá un archivo `perros.py`. Lo ejecutás con el **▶** de arriba a la derecha.
+
+:::caution[Si dice que "la ejecución de scripts está deshabilitada"]
+Es PowerShell, que por seguridad no deja correr el archivo de activación. No hace falta cambiar
+nada de la compu: en la terminal, tocá la flechita al lado del **+** y elegí **Command Prompt**.
+Ahí `.venv\Scripts\activate` anda sin problema.
+:::
+
+:::note[Si dice `ModuleNotFoundError: No module named 'requests'`]
+El ▶ está usando el Python de la compu y no el del entorno virtual, que es donde instalaste
+`requests`. Apretá `Ctrl+Shift+P`, escribí **Python: Select Interpreter** y elegí el que dice
+**`.venv`**. Después volvé a tocar el ▶.
+:::
+
+## Tu primer pedido
+
+```python
+import requests
+
+respuesta = requests.get("https://dog.ceo/api/breeds/image/random", timeout=10)
+print(respuesta.status_code)
+
+datos = respuesta.json()
+print(datos)
+print(datos["message"])
+```
+
+Ejecutalo un par de veces: cada vez sale un link distinto. Copialo en el navegador y ves el
+perro.
+
+| Línea | Qué hace |
+|---|---|
+| `requests.get(dirección, timeout=10)` | Hace el pedido. `timeout=10` quiere decir: si en 10 segundos no contesta, rendite |
+| `respuesta.status_code` | Un número que dice cómo salió el pedido |
+| `respuesta.json()` | Convierte el JSON de la respuesta en diccionarios y listas de Python |
+
+Los números de `status_code` más comunes:
+
+| Código | Qué quiere decir |
+|---|---|
+| **200** | Salió bien |
+| **404** | Eso que pediste no existe |
+| **500** | Se rompió algo del otro lado: no es culpa tuya |
+
+<OpcionMultiple titulo="Chequeo: qué es datos" opciones={[
+  { texto: "Un diccionario: por eso se le pide el link con datos[\"message\"].", correcta: true, explicacion: "Exacto. .json() convierte las llaves del JSON en un diccionario de Python, y a partir de ahí lo usás como cualquier diccionario." },
+  { texto: "Un texto largo, que hay que cortar para sacar el link.", explicacion: "Eso sería respuesta.text, el texto crudo. .json() ya hace el trabajo de convertirlo en un diccionario." },
+  { texto: "Una lista con dos elementos.", explicacion: "Una lista vendría entre corchetes. Este JSON viene entre llaves: es un diccionario con dos claves, message y status." },
+]}>
+Después de `datos = respuesta.json()`, ¿qué es `datos`?
+</OpcionMultiple>
+
+## Cuando algo sale mal
+
+Hay dos cosas distintas que pueden fallar:
+
+1. **El pedido llega, pero lo que pediste no existe.** Por ejemplo, una raza que no conocen. La
+   respuesta llega igual, con `status_code` **404**.
+2. **El pedido ni siquiera llega:** no hay internet, o el servidor no contesta. Ahí `requests`
+   tira una **excepción**, y si no la atrapás, el programa se corta.
+
+Las dos se atienden distinto. La primera con un `if` y la segunda con `try` / `except`, como en
+<a href={b + 'clases/excepciones/'}>la clase de Excepciones</a>:
+
+```python
+import requests
+
+raza = input("¿Qué raza? (en inglés, por ejemplo beagle): ").lower()
+url = f"https://dog.ceo/api/breed/{raza}/images/random"
+
+try:
+    respuesta = requests.get(url, timeout=10)
+    if respuesta.status_code == 200:
+        print("Tu perro:", respuesta.json()["message"])
+    else:
+        print(f"No conozco la raza {raza}.")
+except requests.exceptions.RequestException:
+    print("No me pude conectar. ¿Tenés internet?")
+```
+
+`requests.exceptions.RequestException` atrapa **todos** los errores de conexión: sin internet,
+servidor caído, demasiada demora.
+
+**Probá:** `beagle`, `pug`, `husky`, y después una que no exista, como `firulais`. Y si te animás,
+desconectá el WiFi y probá de nuevo.
+
+## Ahora vos: gatitos
+
+Hay otra API, de gatos: [https://api.thecatapi.com/v1/images/search](https://api.thecatapi.com/v1/images/search).
+Abrila primero en el navegador y mirá bien la respuesta:
+
+```json
+[{"id": "5mq", "url": "https://cdn2.thecatapi.com/images/5mq.jpg", "width": 5184, "height": 3456}]
+```
+
+<OpcionMultiple titulo="Chequeo: los corchetes" opciones={[
+  { texto: "datos[0][\"url\"]", correcta: true, explicacion: "Exacto. Afuera de todo hay corchetes: es una lista. Adentro, en la posición 0, hay un diccionario, y de ese diccionario querés la clave url." },
+  { texto: "datos[\"url\"]", explicacion: "Fijate qué hay afuera de todo: corchetes, no llaves. datos es una lista, y una lista no tiene claves: tira TypeError." },
+  { texto: "datos[\"message\"]", explicacion: "Esa era la clave de la API de perros. Cada API arma su respuesta a su manera: siempre hay que mirarla primero." },
+]}>
+Si `datos = respuesta.json()`, ¿cómo sacás el link de la foto?
+</OpcionMultiple>
+
+**Ejercicio:** hacé `gatos.py`, que muestre el link de un gato al azar y su tamaño, así:
+
+```text
+Tu gato: https://cdn2.thecatapi.com/images/5mq.jpg
+Mide 5184 x 3456 píxeles
+```
+
+Con el mismo cuidado que el de perros: si no hay conexión, un aviso en vez de cortarse.
+
+:::tip[La regla de oro de las APIs]
+**Antes de escribir código, mirá la respuesta.** Abrila en el navegador o hacé un `print(datos)`.
+Cada API la arma a su manera, y la mitad de los errores salen de suponer cómo viene.
+:::
+
+## Datos de mercado: el dólar
+
+Ahora algo más serio. Hay APIs argentinas, gratis y sin registrarse, con las cotizaciones del
+dólar.
+
+### El dólar de hoy
+
+[https://dolarapi.com/v1/dolares/blue](https://dolarapi.com/v1/dolares/blue) devuelve algo así:
+
+```json
+{"moneda": "USD", "casa": "blue", "nombre": "Blue", "compra": 1710, "venta": 1730, "fechaActualizacion": "2026-11-25T17:00:00.000Z"}
+```
+
+```python
+import requests
+
+dolar = requests.get("https://dolarapi.com/v1/dolares/blue", timeout=10).json()
+print(f"Dólar {dolar['nombre']}: compra ${dolar['compra']}, venta ${dolar['venta']}")
+```
+
+Cambiando el final de la dirección tenés los otros: `oficial`, `bolsa` (el MEP), `tarjeta`. Y
+[https://dolarapi.com/v1/dolares](https://dolarapi.com/v1/dolares) los trae **todos juntos**, en
+una lista.
+
+### La historia del dólar
+
+[https://api.argentinadatos.com/v1/cotizaciones/dolares/blue](https://api.argentinadatos.com/v1/cotizaciones/dolares/blue)
+trae **el blue de cada día desde 2011**: una lista de más de 5000 diccionarios, uno por día, del
+más viejo al más nuevo.
+
+```json
+[
+    {"casa": "blue", "compra": 4, "venta": 4, "fecha": "2011-01-03"},
+    {"casa": "blue", "compra": 4, "venta": 4, "fecha": "2011-01-04"},
+    ...
+]
+```
+
+Sí: en 2011 el blue estaba a 4 pesos.
+
+Con eso, el último mes:
+
+```python
+import requests
+
+url = "https://api.argentinadatos.com/v1/cotizaciones/dolares/blue"
+historial = requests.get(url, timeout=20).json()
+print(f"Hay {len(historial)} días guardados, desde el {historial[0]['fecha']}")
+
+ultimos = historial[-30:]
+ventas = []
+for dia in ultimos:
+    ventas.append(dia["venta"])
+
+print("Hoy:", ventas[-1])
+print("Máximo del mes:", max(ventas))
+print("Mínimo del mes:", min(ventas))
+print("Promedio del mes:", round(sum(ventas) / len(ventas)))
+```
+
+:::note[Algo nuevo: `historial[-30:]`]
+Con los dos puntos adentro de los corchetes no pedís **un** elemento sino **un pedazo** de la
+lista. `historial[-30:]` es "desde el trigésimo contando del final, hasta el final": los últimos
+30. Otros ejemplos: `lista[:3]` son los tres primeros, y `texto[:10]` los primeros 10 caracteres
+de un texto.
+:::
+
+:::tip[Dos fuentes, dos números]
+Si comparás el blue de hoy de las dos APIs, puede que no coincidan: cada una lo toma de un lugar
+distinto y a una hora distinta. Es normal. Cuando uses datos de internet, **decí siempre de dónde
+salen**.
+:::
+
+### Probá
+
+- **¿Qué día fue el máximo del mes?** El `max` te da el número, pero no la fecha. ¿Cómo hacés para
+  quedarte con el **día entero** (el diccionario) que tiene la venta más alta, en vez de solo el
+  número?
+- **¿Cuánto subió en el año?** Buscá el primer día de 2026 y comparalo con hoy, en porcentaje.
+  ¿Cómo reconocés un día de 2026 mirando su `"fecha"`?
+- **El oficial y el blue:** cambiá `blue` por `oficial` en la dirección. ¿Cuál fue la diferencia
+  entre los dos, hoy?
+
+Y si querés **verlo en un gráfico**, eso es matplotlib, en
+<a href={b + 'mas-alla/aplicaciones/'}>Aplicaciones de Python</a>: la historia del dólar es el
+ejemplo perfecto.
+
+## Todo junto: un perro por clic
+
+Ahora se junta con <a href={b + 'mas-alla/tkinter/'}>Tkinter</a>: una ventana con un botón, y
+cada vez que lo tocás aparece **la foto** de un perro nuevo. Archivo nuevo, `ventana_perros.py`:
+
+```python
+import io
+import tkinter as tk
+from tkinter import messagebox
+
+import requests
+from PIL import Image, ImageTk
+
+
+def otro_perro():
+    try:
+        datos = requests.get("https://dog.ceo/api/breeds/image/random", timeout=10).json()
+        imagen = requests.get(datos["message"], timeout=10).content
+    except requests.exceptions.RequestException:
+        messagebox.showerror("Sin conexión", "No me pude conectar. ¿Tenés internet?")
+        return
+
+    foto = Image.open(io.BytesIO(imagen))
+    foto.thumbnail((400, 400))
+    foto_tk = ImageTk.PhotoImage(foto)
+    cuadro.config(image=foto_tk)
+    cuadro.image = foto_tk
+
+
+ventana = tk.Tk()
+ventana.title("Un perro por clic")
+
+cuadro = tk.Label(ventana, text="Tocá el botón 🐶", font=("Arial", 16))
+cuadro.pack(padx=20, pady=20)
+
+tk.Button(ventana, text="Otro perro", font=("Arial", 14), command=otro_perro).pack(pady=10)
+
+ventana.mainloop()
+```
+
+Lo nuevo está todo adentro de `otro_perro`:
+
+- **Dos pedidos.** El primero trae el JSON, que dice **dónde** está la foto. El segundo baja **la
+  foto misma**. Como una foto no es JSON, en vez de `.json()` se usa **`.content`**: los bytes
+  crudos de la imagen.
+- **`Image.open(io.BytesIO(imagen))`.** Tkinter solo no sabe abrir fotos JPG, y por eso está
+  **Pillow** (`PIL`). `Image.open` espera un archivo, y `io.BytesIO` hace que los bytes que
+  bajamos **se comporten como un archivo**, sin guardarlo en el disco.
+- **`foto.thumbnail((400, 400))`** la achica para que entre en 400 × 400 sin deformarla. Algunas
+  fotos vienen enormes.
+- **`ImageTk.PhotoImage`** la convierte a algo que un Label de Tkinter pueda mostrar.
+
+:::danger[La línea que parece que sobra: `cuadro.image = foto_tk`]
+Borrala y probá: el cuadro queda **vacío**. La foto es una variable local de la función, y cuando
+la función termina, Python la tira porque nadie más la usa. Tkinter no cuenta como alguien que la
+usa. Guardándola como atributo del Label, la foto vive mientras viva el Label.
+:::
+
+:::note[La ventana se congela un segundo]
+Mientras baja la foto, la ventana no responde: el programa está esperando la respuesta y no puede
+hacer otra cosa. Con fotos chicas y buen internet casi ni se nota. Arreglarlo del todo se hace con
+**hilos**, y eso queda para más adelante.
+:::
+
+## Manos a la obra: la ventana del dólar
+
+En VS Code, archivo nuevo `ventana_dolar.py`. Lo probás vos, tocando.
+
+**Lo que tiene que hacer:**
+
+- Una ventana con el título **Dólar blue**.
+- Un texto grande con la **compra** y la **venta**, y abajo, más chico, **de cuándo es el dato**:
+  solo la fecha, `2026-11-25`, no toda la tira `2026-11-25T17:00:00.000Z`.
+- Un botón **Actualizar** que vuelve a pedir el dato y cambia los textos.
+- Que el dato aparezca **apenas se abre** la ventana, sin tener que tocar el botón.
+- Si no hay conexión, un cartel de error, y la ventana sigue andando.
+
+Andá por partes, y ejecutá después de cada una:
+
+1. La ventana con los dos textos y el botón, con textos fijos de prueba.
+2. La función que pide el dato y cambia los textos, conectada al botón.
+3. La fecha recortada.
+4. El dato al abrir.
+5. El cartel de error.
+
+<details>
+<summary>💡 Pista para el paso 2</summary>
+
+En la ventana de perros, ¿qué cambiaba la función cuando llegaba la respuesta: creaba un Label
+nuevo, o le cambiaba algo a uno que ya existía?
+
+</details>
+
+<details>
+<summary>💡 Pista para el paso 3</summary>
+
+La fecha que querés son siempre los primeros caracteres de esa tira. ¿Cuántos son? ¿Y qué viste
+hoy para quedarte con un pedazo de una lista, o de un texto?
+
+</details>
+
+<details>
+<summary>💡 Pista para el paso 4</summary>
+
+Tocar el botón hace que se llame a la función. ¿Hay otra forma de llamar a una función, sin
+botón? ¿Y en qué lugar del programa tendría que estar esa llamada para que los textos ya existan?
+
+</details>
+
+### Para el que quiera más
+
+- **Tres botones: Blue, Oficial y MEP.** Cada uno muestra el suyo. ¿Hace falta una función entera
+  por botón, o la parte que pide y muestra puede ser una sola función con un parámetro, y cada
+  botón llamar a una función cortita que la usa?
+- **El mes, en la ventana.** Abajo de todo, el máximo y el mínimo de los últimos 30 días, con la
+  API de la historia.
+- **Perros a elección.** En la ventana de perros, una caja para escribir la raza. ¿Qué tiene que
+  pasar si escriben una que no existe?
+- **Gatos y perros.** Dos botones en la misma ventana. Acordate de que las dos APIs devuelven el
+  link de distinta manera.
+
+## Para llevar
+
+```python
+import requests
+
+try:
+    respuesta = requests.get("https://...", timeout=10)   # el pedido
+    if respuesta.status_code == 200:                      # 200 bien, 404 no existe, 500 falla de ellos
+        datos = respuesta.json()                          # JSON → diccionarios y listas
+    else:
+        print("No existe")
+except requests.exceptions.RequestException:              # sin internet, servidor caído, demora
+    print("No me pude conectar")
+
+bytes_de_la_foto = respuesta.content                      # para fotos y archivos, no .json()
+ultimos = lista[-30:]                                     # un pedazo de una lista
+```
+
+- Se hace en **VS Code**, con un entorno virtual y `pip install requests pillow`.
+- **Antes de escribir código, mirá la respuesta**: en el navegador o con `print(datos)`.
+- Siempre con **`timeout`** y con `try` / `except`: internet falla.
+- Para mostrar una foto en Tkinter: Pillow, y guardar la foto en el Label (`cuadro.image = ...`).
+
+**APIs para seguir probando, gratis y sin registrarse:**
+
+| API | Qué trae |
+|---|---|
+| [dog.ceo](https://dog.ceo/dog-api/) | Fotos de perros, al azar o por raza |
+| [TheCatAPI](https://thecatapi.com/) | Fotos de gatos |
+| [DolarApi](https://dolarapi.com/) | El dólar de hoy, todas las cotizaciones |
+| [ArgentinaDatos](https://argentinadatos.com/) | La historia del dólar, la inflación, los feriados |

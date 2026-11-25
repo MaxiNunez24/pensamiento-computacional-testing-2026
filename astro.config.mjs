@@ -278,6 +278,7 @@ export default defineConfig({
                 { label: '⏱️ Eficiencia', link: '/clases/logica-eficiencia/' },
                 { label: '🏁 Desafíos de optimización', link: '/clases/logica-desafios/' },
                 { label: '🪟 Tkinter: ventanas con botones', link: '/mas-alla/tkinter/', badge: { text: 'nuevo', variant: 'success' } },
+                { label: '🐶 APIs con requests', link: '/mas-alla/apis/', badge: { text: 'nuevo', variant: 'success' } },
                 { label: '📊 Aplicaciones de Python', link: '/mas-alla/aplicaciones/', badge: { text: 'en preparación', variant: 'caution' } },
                 { label: '🔗 Referencias', link: '/mas-alla/referencias/' },
               ],
