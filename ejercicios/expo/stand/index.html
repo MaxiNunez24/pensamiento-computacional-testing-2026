@@ -1,0 +1,618 @@
+<!DOCTYPE html><html lang="es"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Stand Expo · CFP 401</title><meta name="description" content="Modelo a escala del stand de Pensamiento Computacional para la Expo CFP del 13 de noviembre."><meta name="robots" content="noindex"><link rel="icon" href="/pensamiento-computacional-testing-2026/ejercicios/favicon.ico"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600&display=swap"><script>
+            // El tema elegido se aplica antes de pintar, para que no parpadee
+            try {
+                const tema = localStorage.getItem('stand:tema');
+                if (tema) document.documentElement.dataset.tema = tema;
+            } catch (e) {}
+            // ?lona: para la lona del stand (va adentro de la tarjeta "El stand"): solo el modelo, girando
+            if (new URLSearchParams(location.search).has('lona')) {
+                document.documentElement.classList.add('lona');
+                document.documentElement.dataset.tema = 'oscuro';
+                // Adentro de la lona, el mismo tema que ella (Ctrl+Alt+O la pasa a claro)
+                try {
+                    const lona = parent !== window ? parent.document.documentElement : null;
+                    if (lona) {
+                        const seguir = () => { document.documentElement.dataset.tema = lona.dataset.tema === 'claro' ? 'claro' : 'oscuro'; };
+                        seguir();
+                        new MutationObserver(seguir).observe(lona, { attributes: true, attributeFilter: ['data-tema'] });
+                    }
+                } catch (e) {}
+            }
+        </script><link rel="stylesheet" href="/pensamiento-computacional-testing-2026/ejercicios/_astro/stand.D8cmECHq.css"><script type="module" src="/pensamiento-computacional-testing-2026/ejercicios/_astro/page.B_tncCx8.js"></script></head> <body> <button type="button" class="tema" id="tema" aria-label="Cambiar entre modo claro y oscuro">🌙</button> <main class="hoja"> <header class="cabeza"> <span class="etiqueta">Expo · viernes 13 de noviembre · borrador 2, con el lugar medido</span> <h1>Stand de Pensamiento Computacional</h1> <p>Modelo a escala del lugar real: el hueco de 2,75 m de frente y 3,86 m de fondo que da al salón, con la reja al fondo y una puerta en cada pared (cerradas durante la Expo). El público se queda del lado del salón y el equipo trabaja detrás de las mesas.</p> </header> <section class="trabajo" aria-label="Modelo 3D del stand"> <div class="visor" id="visor"> <div class="vistas" id="vistas"> <button type="button" data-vista="general" aria-pressed="true">General</button> <button type="button" data-vista="publico" aria-pressed="false">Desde el público</button> <button type="button" data-vista="arriba" aria-pressed="false">Desde arriba</button> <button type="button" data-vista="equipo" aria-pressed="false">Desde atrás</button> </div> <div class="pines" id="pines"></div> </div> <aside class="panel"> <div class="casillas"> <label><input id="personas" type="checkbox" checked> Personas</label> <label><input id="haz" type="checkbox" checked> Haz de luz</label> <label><input id="numeros" type="checkbox" checked> Números</label> <label><input id="pines-ver" type="checkbox"> Nombres</label> </div> <ol class="referencias" id="referencias"></ol> <div class="lectura"> <span class="nota">El lugar, medido</span> <strong>2,75 × 3,86 m</strong> <p class="nota">Frente × fondo. Tres mesas de escuela adelante y una atrás, frente a la puerta izquierda (no se usa).</p> </div> </aside> <div class="medidas"> <div class="campo"> <label for="dist">Proyector a la lona <output id="dist-v"></output></label> <input id="dist" type="range" min="1.5" max="2.8" step="0.05" value="2.7"> </div> <div class="campo"> <label for="rel">Relación de proyección <output id="rel-v"></output></label> <input id="rel" type="range" min="0.6" max="2" step="0.1" value="1.5"> <small>Sale de la ficha del proyector. 1,5 es un valor común.</small> </div> <div class="lectura"> <span class="nota">Imagen sobre la lona</span> <strong id="imagen"></strong> </div> <div class="lectura"> <span class="nota">HDMI de 5 m, de la notebook al proyector</span> <strong id="hdmi"></strong> </div> <div class="lectura"> <span class="nota">Cable de red, de la notebook a la PC de la IA</span> <strong id="cable"></strong> </div> <p class="aviso" id="avisos"></p> </div> </section> <div class="dos"> <section class="bloque"> <h2>Planta</h2> <div id="planta"></div> <p class="nota">Mesas de escuela de unos 0,7 × 0,5 m. Las puertas de los costados están ubicadas a ojo, por las fotos, y no se usan. La única que puede abrirse es la de la reja.</p> </section> <section class="bloque"> <h2>Qué hay que conseguir</h2> <div class="tabla"> <table> <thead><tr><th>Qué</th><th>Cant.</th><th>Estado</th><th>Nota</th></tr></thead> <tbody id="lista"></tbody> </table> </div> </section> </div> </main> <footer class="pie">Hecho por el curso de <a href="/pensamiento-computacional-testing-2026/ejercicios/preparando-expo/">Pensamiento Computacional</a> del CFP 401</footer> <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script> <script>
+            const $ = (s) => document.querySelector(s);
+            const coma = (n, d = 1) => n.toLocaleString('es-AR', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+            /* El lugar, medido el 7/11 y armado a partir de las fotos. x va de la pared izquierda (0) a la
+             * derecha (A), mirando desde el salón; z va de la reja del fondo (0) a la boca que da al salón (F). */
+            const A = 2.75, F = 3.86;
+            const MESA = { a: 0.7, f: 0.5, h: 0.72 };          // mesa de escuela
+            const LONA = { a: 2.4, h: 1.8, y: 0.75 };           // colgada de la reja
+            const PUERTA_IZQ = { z0: 0.45, z1: 1.25 };          // pared izquierda, cerca de la reja (cerrada)
+            const PUERTA_DER = { z0: 1.5, z1: 2.35 };           // pared derecha, a mitad del fondo (cerrada)
+            const ALTO_PROY = 1.25;                              // el soporte articulado de Carpintería
+            const P = { dist: 2.7, rel: 1.5, lado: 'izq' };
+
+            /* Las tres mesas del frente: pegadas, corridas a la izquierda, para dejar el paso del equipo a la derecha.
+             * Las fotos van junto al paso (ahí está siempre alguien del equipo) y la del medio queda baja, para
+             * que desde el salón se vea la lona. Lo chico y lo que se puede llevar alguien (la Q15, la plata) va atrás. */
+            const ESTACIONES = [
+                { id: 'juegos', nombre: 'Juegos hechos con IA' },
+                { id: 'muestra', nombre: 'Muestra' },
+                { id: 'fotos', nombre: 'Fotos con IA' },
+            ];
+
+            /* ---------- El tema ---------- */
+            (function () {
+                const raiz = document.documentElement;
+                const boton = $('#tema');
+                const oscuro = () =>
+                    raiz.dataset.tema ? raiz.dataset.tema === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+                const pintar = () => (boton.textContent = oscuro() ? '☀️' : '🌙');
+                boton.addEventListener('click', () => {
+                    raiz.dataset.tema = oscuro() ? 'claro' : 'oscuro';
+                    try {
+                        localStorage.setItem('stand:tema', raiz.dataset.tema);
+                    } catch (e) {}
+                    pintar();
+                });
+                pintar();
+            })();
+
+            function calcular() {
+                const izq = 0.08, junta = 0.02;
+                const mesas = ESTACIONES.map((e, i) => ({ ...e, x: izq + MESA.a / 2 + i * (MESA.a + junta) }));
+                const finMesas = izq + 3 * MESA.a + 2 * junta;
+                const zMesa = F - MESA.f / 2 - 0.05;
+                const lonaX = A / 2;
+                const imgA = P.dist / P.rel, imgH = imgA * 9 / 16;
+                const zProy = P.dist + 0.08;
+                // La mesa de atrás, contra la pared izquierda y frente a su puerta (que no se usa), como en las fotos.
+                // Del lado derecho taparía el paso del equipo. s = hacia dónde queda el centro (se deja por si se mueve).
+                const aLaIzq = P.lado === 'izq', s = aLaIzq ? 1 : -1;
+                const puerta = aLaIzq ? PUERTA_IZQ : PUERTA_DER;
+                const atras = { x: aLaIzq ? MESA.f / 2 + 0.02 : A - MESA.f / 2 - 0.02, z: (puerta.z0 + puerta.z1) / 2, s };
+                const hueco = zMesa - MESA.f / 2 - (zProy + 0.21);
+                // Cada cable, de las dos formas: en línea recta (lo mínimo) y por el piso (baja, cruza en diagonal y sube),
+                // que es como conviene pasarlo para que nadie se enganche. 15 cm de margen en las puntas.
+                const borde = atras.x + s * MESA.f / 2;
+                const medir = (x, y, z) => {
+                    const dx = x - borde, dz = z - atras.z;
+                    return { recto: Math.hypot(dx, y - MESA.h, dz) + 0.15, piso: MESA.h + Math.hypot(dx, dz) + y + 0.15 };
+                };
+                const fotos = mesas.find((m) => m.id === 'fotos');
+                const hdmi = medir(lonaX, ALTO_PROY, zProy);
+                const cable = medir(fotos.x + 0.15, 0.3, zMesa - 0.02);
+                return { mesas, finMesas, paso: A - finMesas, zMesa, atras, lonaX, imgA, imgH, zProy, hueco, hdmi, cable };
+            }
+
+            function avisos(c) {
+                const a = [];
+                if (c.imgA > LONA.a - 0.05) a.push('La imagen es más ancha que la lona.');
+                if (c.imgH > LONA.h - 0.05) a.push('La imagen es más alta que la lona.');
+                if (c.hueco < 0.3) a.push('El proyector queda pegado a las mesas del frente: no se puede pasar.');
+                if (c.hdmi.recto > 5) a.push('El HDMI de 5 m no llega ni en línea recta.');
+                else if (c.hdmi.piso > 5) a.push('El HDMI de 5 m llega yendo directo de la mesa al soporte del proyector (pegado con cinta); si se lo baja al piso y se lo vuelve a subir, no.');
+                if (c.imgA < 1.2) a.push('La imagen queda chica: de lejos no se va a leer.');
+                return a.join(' ');
+            }
+
+            function pintarLectura(c) {
+                $('#dist-v').textContent = coma(P.dist, 2) + ' m';
+                $('#rel-v').textContent = coma(P.rel) + ':1';
+                $('#imagen').textContent = coma(c.imgA, 2) + ' × ' + coma(c.imgH, 2) + ' m';
+                const largo = (m) => coma(m.recto) + ' m recto, ' + coma(m.piso) + ' por el piso';
+                $('#cable').textContent = largo(c.cable);
+                $('#hdmi').textContent = largo(c.hdmi);
+                $('#avisos').textContent = avisos(c);
+            }
+
+            function pintarLista(c) {
+                const filas = [
+                    ['Mesas de escuela', 4, 'ya', 'Adelante: juegos, la muestra y las fotos. Atrás, frente a la puerta izquierda: notebook, Q15 y la plata.'],
+                    ['Lona o pantalla, 2,4 × 1,8 m', 1, 'confirmar', 'Se cuelga de la reja del fondo.'],
+                    ['Friselina negra, 6 × 1,5 m', 1, 'confirmar', '$12.000. En dos tiras de 3 m cubre la reja entera (2,75 × 3 m). Que sea negra y mirala contra la luz: si pasa mucha, doblala detrás de la imagen. Dejá suelta la hoja de la reja que se abre.'],
+                    ['Proyector', 1, 'confirmar', 'Con la luz del salón, cuanto más brillo mejor.'],
+                    ['Soporte articulado del proyector', 1, 'ya', 'Lo armó el instructor de Carpintería. Faltan las cuñas impresas en 3D.'],
+                    ['Notebook', 1, 'ya', 'Bingo y lona, por su único HDMI. En la mesa de atrás.'],
+                    ['Cable HDMI de 5 m', 1, 'ya', 'Notebook → proyector: ' + coma(c.hdmi.recto) + ' m en línea recta, ' + coma(c.hdmi.piso) + ' m por el piso, así que sobra. Pegalo con cinta donde se pisa.'],
+                    ['Adaptador USB a Ethernet', 1, 'ya', 'Para la notebook: la PC de la IA no tiene WiFi.'],
+                    ['Cable de red', 1, 'confirmar', 'Notebook → PC de la IA: ' + coma(c.cable.recto) + ' m en línea recta, ' + coma(c.cable.piso) + ' m por el piso.'],
+                    ['PC de la IA', 1, 'ya', 'Debajo de la mesa de las fotos, en la esquina del paso del equipo, tapada por los manteles.'],
+                    ['Monitores para las fotos', 2, 'confirmar', 'El del público y el del equipo, espalda con espalda.'],
+                    ['Soporte para el A32', 1, 'falta', 'Arriba del monitor del público: es la cámara.'],
+                    ['PC de juegos del CFP, con monitor, teclado y mouse', 1, 'confirmar', 'Mesa de la izquierda. Teclado y mouse del lado del público.'],
+                    ['Impresora Q15', 1, 'ya', 'En la mesa de atrás, lejos de las manos del público, con el A35.'],
+                    ['Lata o caja para la plata', 1, 'falta', 'En la mesa de atrás, al lado de la notebook.'],
+                    ['Rollos térmicos de 57 mm', 5, 'ya', 'Cinco de 10 m, donados por La Gráfica.'],
+                    ['Foto del grupo con IA, plastificada', 1, 'falta', 'En la mesa del medio, como muestra de lo que te llevás.'],
+                    ['Manteles para las mesas', 4, 'falta', 'El frente de las tres y el costado de la de las fotos, que da al paso: esconden las PC y los cables.'],
+                    ['Carteles con QR', 6, 'confirmar', 'Los imprime una alumna: el stand, Cursos 2027, Instagram del CFP, la cooperadora, los sponsors y tarjetas.'],
+                    ['Zapatillas de 5 tomas', 3, 'falta', 'Unos 11 enchufes con repuesto. Sumar alargues: ¿dónde está el enchufe más cerca?'],
+                ];
+                const nombre = { ya: 'Ya está', confirmar: 'A confirmar', falta: 'A conseguir' };
+                $('#lista').innerHTML = filas.map(([q, n, e, nota]) =>
+                    `<tr><td>${q}</td><td class="n">${n}</td><td><span class="estado ${e}">${nombre[e]}</span></td><td>${nota}</td></tr>`).join('');
+            }
+
+            function pintarPlanta(c) {
+                const s = 110, mX = 150, mY = 40, lado = 1.35;
+                const W = (A + 2 * lado) * s + 2 * (mX - lado * s) + 40, H = (F + 1.5) * s + mY + 20;
+                const X = (x) => mX + x * s, Z = (z) => mY + z * s;
+                const r = (x, z, a, f, cl) => `<rect class="${cl}" x="${X(x)}" y="${Z(z)}" width="${a * s}" height="${f * s}"/>`;
+                const t = (x, y, txt, cl = '', anc = 'middle') => `<text class="${cl}" x="${x}" y="${y}" text-anchor="${anc}">${txt}</text>`;
+                const g = 0.12; // grosor de las paredes
+                let o = '';
+                o += r(0, 0, A, c.zMesa - MESA.f / 2, 'zona');
+                // Paredes: izquierda y derecha con su puerta, y las del salón a cada lado de la boca
+                o += r(-g, 0, g, PUERTA_IZQ.z0, 'pared') + r(-g, PUERTA_IZQ.z1, g, F - PUERTA_IZQ.z1 + g, 'pared');
+                o += r(A, 0, g, PUERTA_DER.z0, 'pared') + r(A, PUERTA_DER.z1, g, F - PUERTA_DER.z1 + g, 'pared');
+                o += r(-lado, F, lado - g, g, 'pared') + r(A + g, F, lado - g, g, 'pared');
+                o += t(X(-g) - 6, Z((PUERTA_IZQ.z0 + PUERTA_IZQ.z1) / 2) + 4, 'puerta (cerrada)', 'tenue', 'end');
+                o += t(X(A + g) + 6, Z((PUERTA_DER.z0 + PUERTA_DER.z1) / 2) + 4, 'puerta (cerrada)', 'tenue', 'start');
+                // La reja y la lona
+                o += `<path class="reja" d="M${X(0)} ${Z(0)} H${X(A)}"/>`;
+                o += t(X(A / 2), Z(0) - 10, 'reja (su puerta puede abrirse)', 'tenue');
+                o += r(c.lonaX - LONA.a / 2, 0.02, LONA.a, 0.05, 'pieza');
+                o += t(X(c.lonaX), Z(0.24), 'lona');
+                const iz = X(c.lonaX - c.imgA / 2), de = X(c.lonaX + c.imgA / 2);
+                o += `<polygon class="haz" points="${iz},${Z(0.07)} ${de},${Z(0.07)} ${X(c.lonaX)},${Z(c.zProy)}"/>`;
+                // Las mesas: la de atrás contra la pared, el proyector en su soporte, y las tres del frente
+                o += r(c.atras.x - MESA.f / 2, c.atras.z - MESA.a / 2, MESA.f, MESA.a, 'mesa');
+                o += t(X(c.atras.x), Z(c.atras.z - MESA.a / 2) - 22, 'notebook,');
+                o += t(X(c.atras.x), Z(c.atras.z - MESA.a / 2) - 8, 'Q15 y plata');
+                o += r(c.lonaX - 0.15, c.zProy - 0.12, 0.3, 0.24, 'pieza');
+                o += t(X(c.lonaX) + 24, Z(c.zProy) + 4, 'proyector', '', 'start');
+                o += `<path class="cable" d="M${X(c.atras.x + c.atras.s * MESA.f / 2)} ${Z(c.atras.z)} L${X(c.lonaX)} ${Z(c.zProy)}"/>`;
+                c.mesas.forEach((m) => {
+                    o += r(m.x - MESA.a / 2, c.zMesa - MESA.f / 2, MESA.a, MESA.f, 'mesa');
+                    o += t(X(m.x), Z(c.zMesa) + 4, { fotos: 'fotos', juegos: 'juegos', muestra: 'muestra' }[m.id]);
+                });
+                // El cable de red, por el piso: de la notebook a la PC de las fotos
+                const pc = c.mesas.find((m) => m.id === 'fotos');
+                o += `<path class="cable" d="M${X(c.atras.x + c.atras.s * MESA.f / 2)} ${Z(c.atras.z + 0.15)} L${X(pc.x + 0.15)} ${Z(c.zMesa - 0.05)}"/>`;
+                o += `<path class="cota" d="M${X(c.finMesas + c.paso / 2)} ${Z(F) - 4} V${Z(c.zMesa - 0.55)} m-5 7 l5 -7 l5 7"/>`;
+                o += t(X(c.finMesas + c.paso / 2), Z(c.zMesa - 0.62), 'equipo', 'tenue');
+                o += t(X(A / 2), Z(F + 0.8), 'salón: el público', 'tenue');
+                o += t(X(-1.3), Z(F + 1.3), '- - -  cables (HDMI y red)', 'cable-texto', 'start');
+                // Cotas
+                o += `<path class="cota" d="M${X(0)} 16 H${X(A)} M${X(0)} 11 v10 M${X(A)} 11 v10"/>`;
+                o += t(X(A / 2), 12, coma(A, 2) + ' m');
+                o += `<path class="cota" d="M${X(-lado) + 10} ${Z(0)} V${Z(F)} M${X(-lado) + 5} ${Z(0)} h10 M${X(-lado) + 5} ${Z(F)} h10"/>`;
+                o += t(X(-lado) + 18, Z(F / 2), coma(F, 2) + ' m', '', 'start');
+                $('#planta').innerHTML = `<svg class="planta" viewBox="0 0 ${W} ${H}" role="img" aria-label="Planta del stand">${o}</svg>`;
+            }
+
+            const REFS = (c) => {
+                const [juegos, muestra, fotos] = c.mesas;
+                const ab = c.atras;
+                return [
+                    { n: 'Lona', v: [c.lonaX, LONA.y + LONA.h + 0.12, 0.1] },
+                    { n: 'Proyector, en el soporte de Carpintería', v: [c.lonaX, ALTO_PROY + 0.15, c.zProy] },
+                    { n: 'Notebook: Bingo y lona', v: [ab.x + ab.s * 0.05, MESA.h + 0.25, ab.z + 0.17] },
+                    { n: 'Q15, A35 y la plata', v: [ab.x, MESA.h + 0.15, ab.z - 0.2] },
+                    { n: 'Juegos hechos con IA', v: [juegos.x, 1.3, c.zMesa + 0.05] },
+                    { n: 'Muestra: la foto plastificada', v: [muestra.x, MESA.h + 0.3, c.zMesa + 0.05] },
+                    { n: 'Fotos: pantalla del público', v: [fotos.x, 1.32, c.zMesa + 0.05] },
+                    { n: 'A32: la cámara', v: [fotos.x, 1.62, c.zMesa + 0.03] },
+                    { n: 'Pantalla del equipo', v: [fotos.x, 1.2, c.zMesa - 0.25] },
+                    { n: 'PC de la IA, escondida', v: [fotos.x + 0.15, 0.45, c.zMesa - 0.1] },
+                    { n: 'Carteles con QR', v: [muestra.x, 0.42, F] },
+                    { n: 'Paso del equipo', v: [c.finMesas + c.paso / 2, 0.3, c.zMesa] },
+                ];
+            };
+
+            /* La lista al costado: al pasar el mouse (o el foco) por un nombre, su número se resalta en el modelo
+             * y muestra el nombre, aunque los nombres estén apagados. */
+            function pintarReferencias(c) {
+                $('#referencias').innerHTML = REFS(c).map((r, i) =>
+                    `<li tabindex="0" data-i="${i}"><span>${i + 1}</span><span>${r.n}</span></li>`).join('');
+            }
+            function resaltar(i) {
+                pinesData.forEach((p, k) => p.el.classList.toggle('activo', k === i));
+            }
+
+            /* ---------- 3D ---------- */
+            let escena, camara, render3d, controles, mundo, hazGrupo, gente, pinesData = [];
+
+            const textura = (w, h, dibujar) => {
+                const c = document.createElement('canvas');
+                c.width = w; c.height = h;
+                dibujar(c.getContext('2d'), w, h);
+                const t = new THREE.CanvasTexture(c);
+                t.anisotropy = 4;
+                return t;
+            };
+
+            function caja(a, h, f, color, x, y, z, grupo = mundo) {
+                const m = new THREE.Mesh(new THREE.BoxGeometry(a, h, f), new THREE.MeshStandardMaterial({ color, roughness: 0.85 }));
+                m.position.set(x, y, z);
+                m.castShadow = m.receiveShadow = true;
+                grupo.add(m);
+                return m;
+            }
+
+            function plano(a, h, mat, x, y, z, rotX = 0, rotY = 0, grupo = mundo) {
+                const m = new THREE.Mesh(new THREE.PlaneGeometry(a, h), mat);
+                m.position.set(x, y, z);
+                m.rotation.set(rotX, rotY, 0);
+                grupo.add(m);
+                return m;
+            }
+
+            /* Lo que se proyecta: el diseño de /expo/proyector/ (pantalla grande con el sistema, carrusel a la
+             * derecha con el Bingo, y abajo la meta del proyector y los sponsors). */
+            function pantallaLona(ctx, w, h) {
+                const redondo = (x, y, a, b, r, relleno, borde) => {
+                    ctx.beginPath(); ctx.roundRect(x, y, a, b, r);
+                    if (relleno) { ctx.fillStyle = relleno; ctx.fill(); }
+                    if (borde) { ctx.strokeStyle = borde; ctx.lineWidth = 2; ctx.stroke(); }
+                };
+                ctx.fillStyle = '#0d1017'; ctx.fillRect(0, 0, w, h);
+                ctx.textAlign = 'center'; ctx.fillStyle = '#eef1f6';
+                ctx.font = '700 17px "Archivo Narrow", sans-serif';
+                ctx.fillText('PENSAMIENTO COMPUTACIONAL Y TESTING DE APLICACIONES 2026', w / 2, 22);
+                redondo(8, 32, 462, 272, 10, '#161b25', '#262e3d');
+                ctx.font = '700 22px "Archivo Narrow", sans-serif'; ctx.fillText('¿QUÉ CONSTRUIMOS?', 239, 62);
+                [['Tótem', '#4fd1b5', 40], ['Servidor', '#f2c14e', 184], ['Planilla', '#7aa7ff', 328]].forEach(([n, c, x]) => {
+                    redondo(x, 130, 110, 70, 10, '#0d1017', c);
+                    ctx.fillStyle = '#eef1f6'; ctx.font = '700 19px "Archivo Narrow", sans-serif'; ctx.fillText(n, x + 55, 172);
+                });
+                ctx.strokeStyle = '#f2c14e'; ctx.setLineDash([7, 6]); ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(152, 165); ctx.lineTo(182, 165); ctx.moveTo(296, 165); ctx.lineTo(326, 165); ctx.stroke();
+                ctx.setLineDash([]);
+                redondo(478, 32, 154, 272, 10, '#161b25', '#262e3d');
+                ctx.fillStyle = '#f2c14e'; ctx.font = '700 20px "Archivo Narrow", sans-serif'; ctx.fillText('BINGO', 555, 58);
+                const bolilla = ctx.createRadialGradient(538, 88, 4, 548, 98, 32);
+                bolilla.addColorStop(0, '#fff6d6'); bolilla.addColorStop(0.6, '#f2c14e'); bolilla.addColorStop(1, '#b8871a');
+                ctx.fillStyle = bolilla; ctx.beginPath(); ctx.arc(555, 102, 30, 0, 7); ctx.fill();
+                ctx.fillStyle = '#3a2a00'; ctx.font = '800 30px "Archivo Narrow", sans-serif'; ctx.fillText('22', 555, 113);
+                for (let i = 0; i < 30; i++) {
+                    const x = 494 + (i % 6) * 21.5, y = 146 + Math.floor(i / 6) * 18;
+                    redondo(x, y, 18, 15, 3, [3, 8, 12, 17, 22, 27].includes(i) ? '#4fd1b5' : '#232a37');
+                }
+                ctx.fillStyle = '#fff'; ctx.fillRect(531, 244, 48, 48);
+                ctx.fillStyle = '#10131a';
+                for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) if ((i * 3 + j * 5) % 3) ctx.fillRect(534 + i * 7.2, 247 + j * 7.2, 6, 6);
+                redondo(8, 312, 462, 40, 10, '#161b25', '#262e3d');
+                ctx.textAlign = 'left'; ctx.fillStyle = '#eef1f6'; ctx.font = '700 14px "Archivo Narrow", sans-serif';
+                ctx.fillText('Proyector para el CFP', 20, 337);
+                redondo(170, 326, 280, 12, 6, '#0b0e14');
+                const meta = ctx.createLinearGradient(170, 0, 280, 0);
+                meta.addColorStop(0, '#4fd1b5'); meta.addColorStop(1, '#f2c14e');
+                redondo(170, 326, 110, 12, 6, meta);
+                redondo(478, 312, 154, 40, 10, '#161b25', '#262e3d');
+                ctx.textAlign = 'center'; ctx.fillStyle = '#a3adbd'; ctx.font = '600 13px "Archivo Narrow", sans-serif';
+                ctx.fillText('Con el apoyo de', 555, 328); ctx.fillStyle = '#eef1f6'; ctx.fillText('Puerto Informático · La Gráfica', 555, 344);
+            }
+
+            function pantalla(titulo, fondo, chico = '') {
+                return textura(320, 200, (ctx, w, h) => {
+                    ctx.fillStyle = fondo; ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+                    ctx.font = '700 46px "Archivo Narrow", sans-serif';
+                    ctx.fillText(titulo, w / 2, chico ? 96 : 116);
+                    if (chico) { ctx.font = '500 24px "Archivo Narrow", sans-serif'; ctx.fillText(chico, w / 2, 140); }
+                });
+            }
+
+            function cartelQR(i) {
+                return textura(300, 212, (ctx, w, h) => {
+                    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = '#0c7f8a'; ctx.font = '700 36px "Archivo Narrow", sans-serif'; ctx.textAlign = 'left';
+                    const textos = ['Todo en tu celular', 'Cursos 2027', 'La cooperadora'];
+                    textos[i % textos.length].split(' ').forEach((l, k) => ctx.fillText(l, 16, 58 + k * 38));
+                    ctx.fillStyle = '#10272a';
+                    for (let a = 0; a < 11; a++) for (let b = 0; b < 11; b++) if ((a * a + b * 7 + i) % 3 !== 1) ctx.fillRect(166 + a * 11, 44 + b * 11, 10, 10);
+                });
+            }
+
+            /* Una mesa de escuela: tapa clara, patas negras y la parrilla de abajo */
+            function mesaEscuela(x, z, girada = false) {
+                const a = girada ? MESA.f : MESA.a, f = girada ? MESA.a : MESA.f;
+                caja(a, 0.03, f, '#e6e5df', x, MESA.h - 0.015, z);
+                [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([i, j]) =>
+                    caja(0.025, MESA.h - 0.03, 0.025, '#22282b', x + i * (a / 2 - 0.04), (MESA.h - 0.03) / 2, z + j * (f / 2 - 0.04)));
+                caja(a - 0.08, 0.012, f - 0.08, '#2c3336', x, MESA.h - 0.16, z);
+                caja(a - 0.06, 0.02, 0.02, '#22282b', x, 0.18, z + f / 2 - 0.04);
+            }
+
+            /* Un monitor parado en la mesa. mira = 1 hacia el salón, -1 hacia el equipo. */
+            function monitor(x, z, mira, ancho, tex) {
+                const alto = ancho * 0.6, base = MESA.h;
+                caja(0.18, 0.015, 0.14, '#1d2526', x, base + 0.008, z);
+                caja(0.035, 0.12, 0.03, '#1d2526', x, base + 0.07, z - mira * 0.02);
+                caja(ancho + 0.03, alto + 0.03, 0.025, '#1d2526', x, base + 0.13 + alto / 2, z);
+                plano(ancho, alto, new THREE.MeshBasicMaterial({ map: tex }), x, base + 0.13 + alto / 2, z + mira * 0.014, 0, mira > 0 ? 0 : Math.PI);
+                return base + 0.13 + alto;
+            }
+
+            function persona(x, z, color, alto = 1.68) {
+                const g = new THREE.Group();
+                const cuerpo = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, alto - 0.28, 14), new THREE.MeshStandardMaterial({ color, roughness: 0.9 }));
+                cuerpo.position.y = (alto - 0.28) / 2; cuerpo.castShadow = true;
+                const cabeza = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), new THREE.MeshStandardMaterial({ color: '#c99a78', roughness: 0.8 }));
+                cabeza.position.y = alto - 0.13; cabeza.castShadow = true;
+                g.add(cuerpo, cabeza); g.position.set(x, 0, z);
+                gente.add(g);
+            }
+
+            /* Las paredes son láminas que se ven solo de un lado, como una casa de muñecas: desde adentro del
+             * stand se ven, y desde afuera la cámara las atraviesa. Así ninguna vista queda tapada. */
+            const lamina = (color) => new THREE.MeshStandardMaterial({ color, roughness: 0.9, side: THREE.FrontSide });
+
+            /* Una pared lateral (x fija), mirando hacia adentro, con zócalo y una puerta */
+            function paredZ(x, z0, z1, zocalo, puerta) {
+                const giro = x < A / 2 ? Math.PI / 2 : -Math.PI / 2;
+                const adentro = x < A / 2 ? 1 : -1;
+                plano(z1 - z0, 3, lamina('#ece2c4'), x, 1.5, (z0 + z1) / 2, 0, giro);
+                plano(z1 - z0, 1.35, lamina(zocalo), x + adentro * 0.004, 0.675, (z0 + z1) / 2, 0, giro);
+                const zp = (puerta.z0 + puerta.z1) / 2, ap = puerta.z1 - puerta.z0;
+                plano(ap, 2.15, lamina('#5a4a32'), x + adentro * 0.008, 1.075, zp, 0, giro);
+                plano(ap - 0.1, 2.05, lamina('#d9c79a'), x + adentro * 0.012, 1.03, zp, 0, giro);
+                plano(ap * 0.45, 0.9, lamina('#9fb3a8'), x + adentro * 0.016, 1.45, zp, 0, giro);
+            }
+
+            /* Una pared del salón (z = F), mirando al salón, de x0 a x1 */
+            function paredSalon(x0, x1, zocalo) {
+                plano(x1 - x0, 3, lamina('#ece2c4'), (x0 + x1) / 2, 1.5, F);
+                plano(x1 - x0, 1.35, lamina(zocalo), (x0 + x1) / 2, 0.675, F + 0.004);
+            }
+
+            function construir() {
+                if (!escena) return;
+                const c = calcular();
+                if (mundo) escena.remove(mundo);
+                mundo = new THREE.Group();
+                hazGrupo = new THREE.Group();
+                gente = new THREE.Group();
+                mundo.add(hazGrupo, gente);
+                escena.add(mundo);
+                const MADERA = '#6b3d22', AZULEJO = '#9a5a3a', MANTEL = '#0d1017';
+
+                // El piso de granito rosado: el del stand y el del salón
+                const piso = plano(A + 9, F + 9, new THREE.MeshStandardMaterial({ color: '#b9928a', roughness: 0.9 }), A / 2, 0, F / 2 + 2, -Math.PI / 2);
+                piso.receiveShadow = true;
+                plano(A, c.zMesa - MESA.f / 2, new THREE.MeshBasicMaterial({ color: '#1b9aa6', transparent: true, opacity: 0.1 }), A / 2, 0.004, (c.zMesa - MESA.f / 2) / 2, -Math.PI / 2);
+
+                // La reja del fondo, con la galería luminosa detrás
+                const REJA = '#1f4a3a';
+                plano(A, 2.55, new THREE.MeshBasicMaterial({ color: '#f4f7ee' }), A / 2, 1.275, -0.06);
+                for (let y = 0.1; y < 2.55; y += 0.2) caja(A, 0.02, 0.03, REJA, A / 2, y, -0.02);
+                for (let x = 0.03; x < A; x += 0.17) caja(0.02, 2.55, 0.03, REJA, x, 1.275, -0.02);
+                caja(0.06, 2.55, 0.05, REJA, A / 2, 1.275, -0.02);
+                caja(A + 0.24, 0.45, 0.2, '#ece2c4', A / 2, 2.775, -0.05);
+                // Las paredes: madera a la izquierda, azulejo a la derecha (como en las fotos)
+                paredZ(0, -0.1, F + 0.12, MADERA, PUERTA_IZQ);
+                paredZ(A, -0.1, F + 0.12, AZULEJO, PUERTA_DER);
+                // Las paredes del salón, a cada lado de la boca; en la izquierda, el kiosco
+                paredSalon(-1.4, 0, MADERA);
+                paredSalon(A, A + 1.4, AZULEJO);
+
+                // La lona colgada de la reja, con la tela negra detrás
+                caja(A - 0.1, 2.4, 0.01, '#141414', A / 2, 1.25, 0.03);
+                caja(LONA.a, LONA.h, 0.02, '#f6f6f2', c.lonaX, LONA.y + LONA.h / 2, 0.06);
+                const yImg = LONA.y + LONA.h / 2;
+                plano(c.imgA, c.imgH, new THREE.MeshBasicMaterial({ map: textura(640, 360, pantallaLona) }), c.lonaX, yImg, 0.073);
+
+                // Las tres mesas del frente, con mantel y carteles hacia el salón
+                c.mesas.forEach((m, i) => {
+                    mesaEscuela(m.x, c.zMesa);
+                    caja(MESA.a - 0.01, MESA.h - 0.05, 0.012, MANTEL, m.x, (MESA.h - 0.05) / 2 + 0.02, c.zMesa + MESA.f / 2 + 0.01);
+                    plano(0.4, 0.28, new THREE.MeshBasicMaterial({ map: cartelQR(i) }), m.x, 0.4, c.zMesa + MESA.f / 2 + 0.018);
+                });
+                const [juegos, muestra, fotos] = c.mesas;
+                // Juegos: monitor, teclado y mouse para el público, PC abajo
+                monitor(juegos.x, c.zMesa - 0.08, 1, 0.5, pantalla('Juegos', '#5b3fa8', 'hechos con IA'));
+                caja(0.4, 0.018, 0.13, '#2b3334', juegos.x - 0.04, MESA.h + 0.01, c.zMesa + 0.17);
+                caja(0.06, 0.022, 0.1, '#2b3334', juegos.x + 0.25, MESA.h + 0.012, c.zMesa + 0.17);
+                caja(0.19, 0.42, 0.4, '#242c2d', juegos.x, 0.21, c.zMesa - 0.02);
+                // La muestra: todo bajo, para que se vea la lona. La foto plastificada parada y tarjetas con QR
+                const foto = plano(0.21, 0.297, new THREE.MeshBasicMaterial({ map: pantalla('Nuestra foto', '#c8553d', 'con IA') }), muestra.x - 0.1, MESA.h + 0.155, c.zMesa + 0.02, -0.2);
+                foto.castShadow = true;
+                caja(0.21, 0.297, 0.004, '#f2f2f2', muestra.x - 0.1, MESA.h + 0.155, c.zMesa + 0.005).rotation.x = -0.2;
+                [0.12, 0.26].forEach((dx) => {
+                    const t = caja(0.1, 0.14, 0.004, '#ffffff', muestra.x + dx, MESA.h + 0.07, c.zMesa + 0.08);
+                    t.rotation.x = -0.25;
+                });
+                // Fotos con IA: pantalla del público con el A32 arriba, la del equipo de espaldas, y la PC escondida
+                // en la esquina del paso, con mantel adelante y al costado
+                const tope = monitor(fotos.x, c.zMesa + 0.06, 1, 0.56, pantalla('Tu foto con IA', '#2b8a3e', 'Espacio: 3, 2, 1…'));
+                caja(0.075, 0.16, 0.01, '#101418', fotos.x, tope + 0.09, c.zMesa + 0.075);
+                monitor(fotos.x, c.zMesa - 0.14, -1, 0.42, pantalla('Equipo', '#17528a', 'estilos y QR'));
+                caja(0.36, 0.018, 0.12, '#2b3334', fotos.x, MESA.h + 0.01, c.zMesa - 0.2);
+                caja(0.19, 0.42, 0.4, '#242c2d', fotos.x + 0.15, 0.21, c.zMesa - 0.02);
+                caja(0.012, MESA.h - 0.05, MESA.f, MANTEL, fotos.x + MESA.a / 2 + 0.01, (MESA.h - 0.05) / 2 + 0.02, c.zMesa);
+
+                // La mesa de atrás, frente a una puerta: la notebook mirando al centro, la Q15 con el A35 y la plata
+                const ab = c.atras, sl = ab.s;
+                mesaEscuela(ab.x, ab.z, true);
+                // De la puerta hacia la reja: notebook en la punta, después la lata de la plata y al final la Q15 con el A35
+                caja(0.2, 0.018, 0.3, '#3c4546', ab.x + sl * 0.04, MESA.h + 0.01, ab.z + 0.17);
+                const tapa = caja(0.012, 0.19, 0.3, '#3c4546', ab.x - sl * 0.08, MESA.h + 0.1, ab.z + 0.17);
+                tapa.rotation.z = sl * 0.25;
+                caja(0.12, 0.1, 0.12, '#f2f1ec', ab.x - sl * 0.05, MESA.h + 0.05, ab.z - 0.2);
+                caja(0.16, 0.008, 0.075, '#101418', ab.x + sl * 0.12, MESA.h + 0.004, ab.z - 0.22);
+                caja(0.12, 0.07, 0.1, '#c9a227', ab.x + sl * 0.1, MESA.h + 0.035, ab.z - 0.07);
+
+                // El proyector en el soporte articulado de madera que armó el instructor de Carpintería
+                const MADERA_CLARA = '#c49a6c', yP = ALTO_PROY;
+                caja(0.46, 0.04, 0.46, MADERA_CLARA, c.lonaX, 0.02, c.zProy);
+                caja(0.06, yP - 0.12, 0.06, MADERA_CLARA, c.lonaX, (yP - 0.12) / 2 + 0.04, c.zProy + 0.06);
+                const brazo = caja(0.34, 0.03, 0.3, MADERA_CLARA, c.lonaX, yP - 0.06, c.zProy);
+                brazo.rotation.x = 0.06;
+                caja(0.3, 0.1, 0.24, '#e7e7e2', c.lonaX, yP, c.zProy);
+                const lente = new THREE.Vector3(c.lonaX, yP + 0.01, c.zProy - 0.13);
+                const esq = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => new THREE.Vector3(c.lonaX + a * c.imgA / 2, yImg + b * c.imgH / 2, 0.075));
+                const v = [];
+                for (let i = 0; i < 4; i++) v.push(lente, esq[i], esq[(i + 1) % 4]);
+                hazGrupo.add(new THREE.Mesh(new THREE.BufferGeometry().setFromPoints(v),
+                    new THREE.MeshBasicMaterial({ color: '#ffe9a8', transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false })));
+                hazGrupo.visible = $('#haz').checked;
+
+                // Gente: público en el salón, el equipo detrás de las mesas
+                const colores = ['#c8553d', '#3d6fb4', '#d9a02c', '#6b4fa0', '#3e8e6c'];
+                persona(fotos.x, F + 0.5, colores[0]);
+                persona(juegos.x + 0.1, F + 0.45, colores[1], 1.45);
+                persona(muestra.x + 0.2, F + 0.9, colores[2]);
+                persona(juegos.x - 0.3, F + 1.2, colores[3]);
+                persona(c.finMesas + c.paso / 2 - 0.05, c.zMesa - 0.55, '#2e3a3c', 1.72);
+                persona(ab.x + ab.s * (MESA.f / 2 + 0.25), ab.z + 0.15, '#2e3a3c', 1.66);
+                gente.visible = $('#personas').checked;
+
+                pinesData = REFS(c).map((r, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'pin';
+                    el.innerHTML = `<b>${i + 1}</b><span>${r.n}</span>`;
+                    return { el, v: new THREE.Vector3(...r.v) };
+                });
+                $('#pines').replaceChildren(...pinesData.map((p) => p.el));
+                dibujar();
+            }
+
+            function dibujar() {
+                if (!render3d) return;
+                render3d.render(escena, camara);
+                const caj = $('#visor').getBoundingClientRect();
+                const numeros = $('#numeros').checked, nombres = $('#pines-ver').checked;
+                const pines = $('#pines');
+                pines.classList.toggle('sin-numeros', !numeros);
+                pines.classList.toggle('con-nombres', nombres);
+                pines.hidden = !numeros && !nombres && !pinesData.some((p) => p.el.classList.contains('activo'));
+                if (pines.hidden) return;
+                pinesData.forEach((p) => {
+                    const q = p.v.clone().project(camara);
+                    p.el.hidden = q.z > 1;
+                    p.el.style.transform = `translate(${((q.x + 1) / 2 * caj.width).toFixed(1)}px, ${((1 - q.y) / 2 * caj.height).toFixed(1)}px) translate(-8px, -50%)`;
+                });
+            }
+
+            function fondoEscena() {
+                if (!escena) return;
+                escena.background = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--escena').trim());
+                dibujar();
+            }
+
+            const VISTAS = {
+                general: () => ({ p: [A / 2 + 1.5, 4.7, F + 3.1], t: [A / 2 - 0.1, 0.6, F / 2 + 0.2] }),
+                publico: () => ({ p: [A / 2, 1.6, F + 3.2], t: [A / 2, 1.3, 0] }),
+                arriba: () => ({ p: [A / 2 - 0.1, 7.6, F / 2 + 0.55], t: [A / 2 - 0.1, 0, F / 2 + 0.5] }),
+                equipo: () => ({ p: [A / 2 + 0.6, 1.65, 0.5], t: [A / 2 - 0.2, 0.95, F + 0.6] }),
+            };
+
+            function irA(nombre, suave = true) {
+                document.querySelectorAll('#vistas button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.vista === nombre));
+                if (!camara) return;
+                const d = VISTAS[nombre]();
+                const p = new THREE.Vector3(...d.p), t = new THREE.Vector3(...d.t);
+                const quieto = !suave || matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (quieto) { camara.position.copy(p); controles.target.copy(t); controles.update(); dibujar(); return; }
+                const p0 = camara.position.clone(), t0 = controles.target.clone(), ini = performance.now();
+                const paso = (ahora) => {
+                    const u = Math.min(1, (ahora - ini) / 450), e = u * u * (3 - 2 * u);
+                    camara.position.lerpVectors(p0, p, e);
+                    controles.target.lerpVectors(t0, t, e);
+                    controles.update(); dibujar();
+                    if (u < 1) requestAnimationFrame(paso);
+                };
+                requestAnimationFrame(paso);
+            }
+
+            function iniciar3D() {
+                const visor = $('#visor');
+                try {
+                    if (!window.THREE) throw new Error('sin three');
+                    render3d = new THREE.WebGLRenderer({ antialias: true });
+                } catch (e) {
+                    render3d = null;
+                    const a = document.createElement('div');
+                    a.className = 'sin3d';
+                    a.textContent = 'Este dispositivo no puede mostrar el modelo 3D. La planta de abajo tiene las mismas medidas.';
+                    visor.append(a);
+                    $('#vistas').hidden = true;
+                    return;
+                }
+                escena = new THREE.Scene();
+                camara = new THREE.PerspectiveCamera(42, 1.5, 0.05, 80);
+                render3d.setPixelRatio(Math.min(devicePixelRatio, 2));
+                render3d.shadowMap.enabled = true;
+                render3d.shadowMap.type = THREE.PCFSoftShadowMap;
+                visor.prepend(render3d.domElement);
+                escena.add(new THREE.HemisphereLight('#ffffff', '#b8b0a4', 0.85));
+                const sol = new THREE.DirectionalLight('#ffffff', 0.7);
+                sol.position.set(3, 6, 6);
+                sol.castShadow = true;
+                sol.shadow.mapSize.set(2048, 2048);
+                Object.assign(sol.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, far: 20 });
+                sol.shadow.bias = -0.0005;
+                escena.add(sol);
+                controles = new THREE.OrbitControls(camara, render3d.domElement);
+                controles.maxPolarAngle = Math.PI / 2 - 0.03;
+                controles.minDistance = 1; controles.maxDistance = 16;
+                controles.addEventListener('change', dibujar);
+                if (document.documentElement.classList.contains('lona')) {
+                    // Se mece desde arriba (la vista general): unos 20° para cada lado y apenas arriba y abajo,
+                    // sin dar la vuelta. A unos 30 cuadros por segundo: la notebook también mueve el resto de la lona.
+                    render3d.setPixelRatio(1);
+                    controles.enabled = false;
+                    let antes = 0, base = null;
+                    const AMPLITUD = 20 * Math.PI / 180, VUELTA = 14000; // un ida y vuelta cada 14 segundos
+                    const mecer = (ahora) => {
+                        requestAnimationFrame(mecer);
+                        if (ahora - antes < 33) return;
+                        antes = ahora;
+                        // El punto de partida es donde dejó la cámara irA('general'), que corre después de esto
+                        if (!base) base = new THREE.Spherical().setFromVector3(camara.position.clone().sub(controles.target));
+                        const fase = (ahora / VUELTA) * Math.PI * 2;
+                        const s = base.clone();
+                        s.theta += AMPLITUD * Math.sin(fase);
+                        s.phi += 0.05 * Math.sin(fase * 0.5);
+                        // En una ventana angosta (la tarjeta del carrusel) la cámara se aleja para que entre el stand entero
+                        s.radius *= Math.pow(Math.max(1, 1.25 / camara.aspect), 0.85);
+                        camara.position.copy(controles.target).add(new THREE.Vector3().setFromSpherical(s));
+                        camara.lookAt(controles.target);
+                        dibujar();
+                    };
+                    requestAnimationFrame(mecer);
+                }
+                const ajustar = () => {
+                    const r = visor.getBoundingClientRect();
+                    render3d.setSize(r.width, r.height, false);
+                    camara.aspect = r.width / r.height;
+                    camara.updateProjectionMatrix();
+                    dibujar();
+                };
+                new ResizeObserver(ajustar).observe(visor);
+                fondoEscena();
+                new MutationObserver(fondoEscena).observe(document.documentElement, { attributes: true, attributeFilter: ['data-tema'] });
+                matchMedia('(prefers-color-scheme: dark)').addEventListener('change', fondoEscena);
+                construir();
+                irA('general', false);
+                ajustar();
+            }
+
+            function actualizar() {
+                const c = calcular();
+                pintarLectura(c); pintarLista(c); pintarPlanta(c); pintarReferencias(c);
+                construir();
+            }
+
+            ['dist', 'rel'].forEach((id) => {
+                const e = $('#' + id);
+                e.addEventListener('input', () => { P[id] = +e.value; actualizar(); });
+            });
+            $('#vistas').addEventListener('click', (e) => { const v = e.target.dataset.vista; if (v) irA(v); });
+            $('#personas').addEventListener('change', (e) => { if (gente) gente.visible = e.target.checked; dibujar(); });
+            $('#haz').addEventListener('change', (e) => { if (hazGrupo) hazGrupo.visible = e.target.checked; dibujar(); });
+            $('#pines-ver').addEventListener('change', dibujar);
+            $('#numeros').addEventListener('change', dibujar);
+            const lista = $('#referencias');
+            const cual = (e) => { const li = e.target.closest('li'); return li ? +li.dataset.i : -1; };
+            lista.addEventListener('mouseover', (e) => { resaltar(cual(e)); dibujar(); });
+            lista.addEventListener('focusin', (e) => { resaltar(cual(e)); dibujar(); });
+            lista.addEventListener('mouseleave', () => { resaltar(-1); dibujar(); });
+            lista.addEventListener('focusout', () => { resaltar(-1); dibujar(); });
+
+            actualizar();
+            iniciar3D();
+            if (document.fonts) document.fonts.ready.then(construir);
+        </script> </body> </html>

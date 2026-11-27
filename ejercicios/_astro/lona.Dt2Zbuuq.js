@@ -1,0 +1,1 @@
+import{registrar as n}from"./motor.BDnp107R.js";function i(r){const e=r.linea.filter(t=>!t||typeof t!="object"?!0:!(t.espera==="subtitulo"||"subtitulo"in t&&!("pieza"in t)));return{...r,linea:e}}function l(r,e){n(r,t=>e(t,{lona:!1})),n(r+"-lona",t=>i(e(t,{lona:!0})))}export{l as registrarConLona,i as sinSubtitulos};

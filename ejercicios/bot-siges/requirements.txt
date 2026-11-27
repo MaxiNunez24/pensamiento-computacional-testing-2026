@@ -1,0 +1,9 @@
+# Lo único que hay que instalar para el bot.
+#
+#     pip install -r requirements.txt
+#     python -m playwright install chromium
+#
+# El segundo comando NO es opcional: el primero trae la librería de Python, y
+# el segundo baja el navegador que la librería maneja. Sin él, el bot arranca y
+# se frena con "Executable doesn't exist".
+playwright==1.62.0
