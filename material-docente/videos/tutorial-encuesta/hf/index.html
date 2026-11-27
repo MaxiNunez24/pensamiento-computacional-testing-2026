@@ -77,10 +77,10 @@
     </style>
 </head>
 <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="49.118" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="48.349" data-width="1080" data-height="1920">
 
         <!-- 1 · La entrada -->
-        <div id="e1" class="escena fondo-neon clip" data-start="0" data-duration="4.237">
+        <div id="e1" class="escena fondo-neon clip" data-start="0" data-duration="3.615">
             <div class="grilla" id="grilla1"></div>
             <div class="logo" id="logo"><img src="assets/logo-cfp.png" alt="CFP N° 401 Ensenada · Laura Vicuña" /></div>
             <div class="titulo" id="titulo">¿Cómo se completa<br><span class="cian">la encuesta?</span></div>
@@ -101,12 +101,12 @@
             <div class="paso" id="p-enviar"><div class="num">5</div><div class="txt">¡Enviar!</div></div>
             <div class="paso" id="p-gracias"><div class="txt verde">¡Listo! 💚</div></div>
             <div class="pantalla" id="pantalla">
-                <video id="v-pantalla" class="clip" src="assets/pantalla.mp4" data-start="4.037" data-duration="36.667" muted playsinline></video>
+                <video id="v-pantalla" class="clip" src="assets/pantalla.mp4" data-start="3.415" data-duration="36.167" muted playsinline></video>
             </div>
         </div>
 
         <!-- 3 · La salida: el QR para hacerlo -->
-        <div id="e3" class="escena fondo-neon clip" data-start="40.603" data-duration="8.514">
+        <div id="e3" class="escena fondo-neon clip" data-start="39.482" data-duration="8.867">
             <div class="grilla" id="grilla3"></div>
             <div class="fin-titulo" id="fin-titulo">¡Tu turno!</div>
             <div class="fin-texto" id="fin-texto">Completá la encuesta de horarios<br><span class="verde">tarda un minuto</span></div>
@@ -115,15 +115,15 @@
             <div class="insc" id="insc">Inscripciones: <strong>1 al 4 de diciembre</strong></div>
         </div>
 
-        <audio id="musica" src="assets/glitch-hop-the-mountain.mp3" data-start="0" data-duration="49.118" data-media-start="4" data-volume="0.35" data-fade-in="0.5" data-fade-out="1.5"></audio>
+        <audio id="musica" src="assets/glitch-hop-the-mountain.mp3" data-start="0" data-duration="48.349" data-media-start="4" data-volume="0.35" data-fade-in="0.5" data-fade-out="1.5"></audio>
     </div>
 
     <script>
         const tl = gsap.timeline({ paused: true });
         // Dónde empieza la grabación en el video, cuánto dura, y el momento de cada paso adentro de ella
-        const INICIO = 4.037;
-        const VIDEO = 36.667;
-        const PASOS = {"abrir": 0.01, "dias": 2.687, "horario": 6.509, "flechas": 11.93, "agregar": 15.081, "otro": 18.673, "avisar": 23.391, "enviar": 30.553, "gracias": 32.723, "fin": 35.723};
+        const INICIO = 3.415;
+        const VIDEO = 36.167;
+        const PASOS = {"abrir": 0.008, "dias": 2.619, "horario": 6.275, "flechas": 11.28, "agregar": 14.276, "otro": 17.987, "avisar": 22.719, "enviar": 29.231, "gracias": 32.185, "fin": 35.187};
         const FIN = INICIO + VIDEO;   // arranca la salida (con 0,2 s de cruce)
 
         // ---- 1 · La entrada ----

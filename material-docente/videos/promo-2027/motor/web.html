@@ -78,12 +78,13 @@
                 { pieza: id, a: { escala: 1 }, dur: 0.3, curva: 'resorte', en: 4.85 + i * 0.25, sonido: 'pop', tono: i * 2 }
             )),
             // La dirección se escribe (golpes 12 a 14) y se publica (golpe 16)
-            { pieza: 'url', a: { escrito: 1 }, dur: 1.0, curva: 'lineal', en: 6.0, sonido: 'clic' },
-            { pieza: 'url', a: { resaltado: 1 }, dur: 0.3, en: 7.0 },
-            { pieza: 'publicada', a: { escala: 1 }, dur: 0.4, curva: 'resorte', en: 8.0, sonido: 'exito' },
-            { pieza: 'cel', a: { escala: 1.04 }, dur: 0.1, curva: 'salir', en: 8.0 },
-            { pieza: 'cel', a: { escala: 1 }, dur: 0.4, curva: 'gelatina', en: 8.1 },
-            { espera: 4.6 },
+            // (27/11: un golpe antes, para que el "✓ Publicada" caiga cuando la voz dice "las publicás")
+            { pieza: 'url', a: { escrito: 1 }, dur: 0.8, curva: 'lineal', en: 5.6, sonido: 'clic' },
+            { pieza: 'url', a: { resaltado: 1 }, dur: 0.3, en: 6.4 },
+            { pieza: 'publicada', a: { escala: 1 }, dur: 0.4, curva: 'resorte', en: 7.0, sonido: 'exito' },
+            { pieza: 'cel', a: { escala: 1.04 }, dur: 0.1, curva: 'salir', en: 7.0 },
+            { pieza: 'cel', a: { escala: 1 }, dur: 0.4, curva: 'gelatina', en: 7.1 },
+            { espera: 5.6 },
         ];
 
         Motor.registrar('web', { titulo: 'De etiquetas a página', ancho: 1080, alto: 1920, piezas, linea: alTempo(linea) });

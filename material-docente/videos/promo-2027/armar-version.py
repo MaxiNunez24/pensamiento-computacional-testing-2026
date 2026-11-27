@@ -61,8 +61,9 @@ PISTAS = {
 #   00 "en" y "programar" → EN_MARZO y PROGRAMAR en hf/index.html
 #   01 "desde la base" → las cajas de motor/desde-cero.html
 #   04 se parte en tres, una por pantalla: pedirle (golpe 40), crear (44), darte cuenta (50)
-#   06 "armás páginas" con su rótulo (74) y "las publicás" con el suyo (82)
-#   08 "las clases son así" → el giro se acelera (el título entra en el golpe 106.5)
+#   03 la escena del motor sigue a la voz: tokens con "pedacitos", atención con "se fija"
+#   06 arranca antes y "las publicás" cae con el "✓ Publicada" del motor (35,85 s)
+#   08 "las clases son así" → el giro se acelera (el título entra en el golpe 105.6)
 #   10 "el viernes 4" → el cartel del viernes (golpe 134)
 # apretar: los silencios de adentro que pasan de 0,3 s quedan en 0,2 s.
 VOZ = [
@@ -76,13 +77,13 @@ VOZ = [
     ('04-Usos.m4a', 6.25, 8.72, 50, 0.2, {}),
     ('05-Parte 2.m4a', 0.65, 1.40, 60, 0.05, {}),
     ('05-Parte 2.m4a', 1.80, 2.40, 60, 0.86, {}),
-    ('06-Web.m4a', 0.40, 4.00, 74, -0.15, {}),
-    ('06-Web.m4a', 4.60, 6.30, 82, 0.0, {}),
+    ('06-Web.m4a', 0.40, 4.00, 64, 1.9, {}),
+    ('06-Web.m4a', 4.60, 6.30, 64, 6.25, {}),
     ('07-Trabajos.m4a', 0.38, 6.40, 88, 0.1, {}),
-    ('08-El giro.m4a', 0.15, 5.83, 104, 0.05, {'apretar': True}),
+    ('08-El giro.m4a', 0.15, 5.83, 104, -0.45, {'apretar': True}),
     ('09-El curso.m4a', 0.28, 5.68, 116, 0.05, {'apretar': True}),
     ('10-Inscripción.m4a', 0.36, 7.10, 128, 0.05, {}),
-    ('11-Encuesta.m4a', 0.0, 7.74, 144, 0.05, {}),
+    ('11-Encuesta.m4a', 0.0, 8.15, 144, 0.05, {'realce': (7.40, 10)}),   # la "s" de "inscripciones"
 ]
 
 

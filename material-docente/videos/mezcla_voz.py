@@ -31,7 +31,7 @@ CADENA_VOZ = ','.join([
     'equalizer=f=400:t=q:w=1.2:g=-2',         # menos "caja"
     'equalizer=f=3500:t=q:w=1.2:g=1',         # presencia, apenas
     'highshelf=f=9000:g=-1',
-    'deesser=i=0.3:m=0.5:f=0.5',              # las eses
+    'deesser=i=0.2:m=0.5:f=0.5',              # las eses (suave: si no, se comía la "s" final)
     'acompressor=threshold=-22dB:ratio=2:attack=15:release=150:knee=6',
 ])
 # La sala: dos ecos cortos distintos a cada lado (así suena estéreo) y bien por debajo de la voz
@@ -113,6 +113,10 @@ def mezclar(render, clips, salida, temporal, musica_db=-3.0, ducking=3, voz_lufs
             pasos.append('silenceremove=start_periods=1:start_threshold=-40dB:start_silence=0.08')
         if c.get('apretar'):
             pasos.append('silenceremove=stop_periods=-1:stop_duration=0.3:stop_threshold=-38dB:stop_silence=0.2')
+        if c.get('realce'):
+            # agudos de más desde un segundo del trozo: para una "s" final que salió muy suave
+            desde_t, db = c['realce']
+            pasos.append(f"highshelf=f=3500:g={db}:enable='gte(t,{desde_t})'")
         if c.get('tempo'):
             pasos.append(f"atempo={c['tempo']}")
         pasos += [f'volume={ganancia:.2f}dB', f"adelay={round(c['en'] * 1000)}:all=1"]

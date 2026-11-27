@@ -82,35 +82,36 @@
 
         // 20 golpes (a 120 BPM, 10 s). Cada momento tiene tiempo para leerse.
         const linea = [
-            // El pedido se escribe solo (golpes 0 a 3)
+            // Cada momento cae con su frase de la voz (27/11): ver acomodar en armar-version.py.
+            // El pedido se escribe solo mientras dice "vas a entender cómo funciona por dentro"
             { pieza: 'pedido', a: { opacidad: 1 }, dur: 0.15, en: 0, sonido: 'whoosh' },
-            { pieza: 'pedido', a: { escrito: 1 }, dur: 1.2, curva: 'lineal', en: 0.1 },
-            // Se parte en tokens, uno tras otro (golpes 3 a 6)
+            { pieza: 'pedido', a: { escrito: 1 }, dur: 2.4, curva: 'lineal', en: 0.1 },
+            // Se parte en tokens, uno tras otro: "cómo parte lo que le pedís en pedacitos"
             ...TOKENS.map(([id], i) => (
-                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 1.5 + i * 0.15, sonido: 'pop', tono: i }
+                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 3.6 + i * 0.18, sonido: 'pop', tono: i }
             )),
-            { pieza: 'pedido', a: { opacidad: 0.25 }, dur: 0.4, en: 1.5 },
-            { pieza: 'rotTokens', a: { opacidad: 1 }, dur: 0.2, en: 1.6 },
-            // Los pedazos se juntan en sus palabras (golpe 7,5)
+            { pieza: 'pedido', a: { opacidad: 0.25 }, dur: 0.4, en: 3.6 },
+            { pieza: 'rotTokens', a: { opacidad: 1 }, dur: 0.2, en: 3.7 },
+            // Los pedazos se juntan en sus palabras
             ...PALABRAS.flatMap(([id, , partes]) => [
-                ...partes.map((parte) => ({ pieza: parte, a: { x: centroDe[id], opacidad: 0, escala: 0.8 }, dur: 0.3, curva: 'entrar', en: 3.75 })),
-                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.35, curva: 'resorte', en: 3.9 },
+                ...partes.map((parte) => ({ pieza: parte, a: { x: centroDe[id], opacidad: 0, escala: 0.8 }, dur: 0.3, curva: 'entrar', en: 5.85 })),
+                { pieza: id, a: { opacidad: 1, escala: 1 }, dur: 0.35, curva: 'resorte', en: 6.0 },
             ]),
-            { sonido: 'pop', en: 3.9 },
-            // La atención: una flecha cada dos golpes (golpes 8 a 13)
-            { pieza: 'rotTokens', a: { opacidad: 0 }, dur: 0.15, en: 4.0 },
-            { pieza: 'rotAtencion', a: { opacidad: 1 }, dur: 0.2, en: 4.0 },
-            { pieza: 'a1', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 4.0, sonido: 'whoosh' },
-            { pieza: 'w2', a: { resaltado: 1 }, dur: 0.25, en: 4.35 },
-            { pieza: 'a2', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 5.0 },
-            { pieza: 'w1', a: { resaltado: 1 }, dur: 0.25, en: 5.35 },
-            { pieza: 'a3', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 6.0 },
-            { pieza: 'k8', a: { resaltado: 1 }, dur: 0.25, en: 6.35 },
-            // La respuesta, de a poco (golpes 14 a 19)
-            { pieza: 'respuesta', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 7.0, sonido: 'pop' },
-            { pieza: 'respuesta', a: { escrito: 1 }, dur: 2.2, curva: 'lineal', en: 7.2 },
-            { pieza: 'respuesta', a: { resaltado: 1 }, dur: 0.3, en: 9.6, sonido: 'ding' },
-            { espera: 1.2 },
+            { sonido: 'pop', en: 6.0 },
+            // La atención: "en qué se fija"
+            { pieza: 'rotTokens', a: { opacidad: 0 }, dur: 0.15, en: 6.3 },
+            { pieza: 'rotAtencion', a: { opacidad: 1 }, dur: 0.2, en: 6.3 },
+            { pieza: 'a1', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 6.35, sonido: 'whoosh' },
+            { pieza: 'w2', a: { resaltado: 1 }, dur: 0.25, en: 6.7 },
+            { pieza: 'a2', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 6.85 },
+            { pieza: 'w1', a: { resaltado: 1 }, dur: 0.25, en: 7.2 },
+            { pieza: 'a3', a: { progreso: 1 }, dur: 0.4, curva: 'salir', en: 7.35 },
+            { pieza: 'k8', a: { resaltado: 1 }, dur: 0.25, en: 7.7 },
+            // La respuesta, de a poco: "y cómo arma la respuesta"
+            { pieza: 'respuesta', a: { opacidad: 1, escala: 1 }, dur: 0.3, curva: 'resorte', en: 7.95, sonido: 'pop' },
+            { pieza: 'respuesta', a: { escrito: 1 }, dur: 1.9, curva: 'lineal', en: 8.15 },
+            { pieza: 'respuesta', a: { resaltado: 1 }, dur: 0.3, en: 10.05, sonido: 'ding' },
+            { espera: 0.6 },
         ];
 
         Motor.registrar('ia-por-dentro', { titulo: 'La IA por dentro', ancho: 1080, alto: 1920, piezas, linea: alTempo(linea) });

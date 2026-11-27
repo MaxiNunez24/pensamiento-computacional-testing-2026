@@ -328,9 +328,8 @@
         entra("#f1a", 0.05); sale("#f1a", EN_MARZO - 0.1);
         entra("#f1b", EN_MARZO); sale("#f1b", PROGRAMAR - 0.1);
         tl.fromTo("#f1c", { scale: 2.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.22, ease: "power4.out" }, PROGRAMAR);
-        late("#cel1", PROGRAMAR); late("#cel1", PROGRAMAR + 0.46);
-        tl.to("#f1c", { scale: 1.12, duration: b(1.2), ease: "power1.in" }, b(6));
-        tl.to("#cel1", { scale: 1.35, y: -120, duration: b(1.4), ease: "power2.in" }, b(6.4));
+                tl.to("#f1c", { scale: 1.12, duration: b(1.2), ease: "power1.in" }, b(6));
+        tl.to("#cel1", { scale: 1.35, y: -120, duration: C(8) - PROGRAMAR, ease: "power1.in" }, PROGRAMAR);
 
         // ---- 2 · Desde cero ----
         mostrar("#e3", 8, 16);
@@ -351,15 +350,15 @@
         // Pedirle bien las cosas (8 golpes: que se alcance a leer el pedido y la respuesta)
         entra("#f6a", b(40));
         ["#chip1", "#chip2", "#chip3"].forEach((sel, i) => tl.fromTo(sel, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2.5)" }, b(40.5 + i * 0.5)));
-        tl.fromTo("#pide", { x: 300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.25, ease: "expo.out" }, b(41));
-        tl.fromTo("#contesta", { clipPath: "inset(0 100% 0 0)", opacity: 1 }, { clipPath: "inset(0 0% 0 0)", duration: b(1.6), ease: "none" }, b(42));
-        sale("#f6a", b(44) - 0.1);
-        tl.to("#chat", { x: -1100, duration: 0.2, ease: "power3.in" }, b(44) - 0.12);
+        tl.fromTo("#pide", { x: 300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.25, ease: "expo.out" }, b(40.6));
+        tl.fromTo("#contesta", { clipPath: "inset(0 100% 0 0)", opacity: 1 }, { clipPath: "inset(0 0% 0 0)", duration: b(2.4), ease: "none" }, b(44.4));
+        sale("#f6a", b(44.4) - 0.1);
+        tl.to("#chat", { x: -1100, duration: 0.2, ease: "power3.in" }, b(47.4) - 0.12);
         // Crear textos e imágenes: la imagen se arma de a pedacitos
-        entra("#f6b", b(44));
-        tl.fromTo("#imagen", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.8)" }, b(44));
-        [4, 0, 8, 2, 6, 1, 7, 3, 5].forEach((n, i) => tl.to(`#imagen .tesela:nth-of-type(${n + 2})`, { scale: 0, rotation: 90, duration: 0.18, ease: "power2.in" }, b(44.5 + i * 0.4)));
-        late("#imagen", b(48.5), 1.05);
+        entra("#f6b", b(44.4));
+        tl.fromTo("#imagen", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.8)" }, b(47.4));
+        [4, 0, 8, 2, 6, 1, 7, 3, 5].forEach((n, i) => tl.to(`#imagen .tesela:nth-of-type(${n + 2})`, { scale: 0, rotation: 90, duration: 0.18, ease: "power2.in" }, b(47.7 + i * 0.25)));
+        late("#imagen", b(49.4), 1.05);
         sale("#f6b", b(50) - 0.1);
         tl.to("#imagen", { scale: 0, rotation: -12, duration: 0.18, ease: "power3.in" }, b(50) - 0.12);
         // Darte cuenta cuándo se equivoca (8 golpes: leer el dato, y después tacharlo)
@@ -379,8 +378,8 @@
         // ---- 7 · De etiquetas a página publicada (las etiquetas usan la parte de arriba hasta el golpe 74) ----
         mostrar("#e8", 64, 88);
         entra("#rotulo8a", b(74));
-        sale("#rotulo8a", b(82) - 0.1);
-        entra("#rotulo8b", b(82));
+        sale("#rotulo8a", b(77.6) - 0.1);
+        entra("#rotulo8b", b(77.6));
 
         // ---- 8 · Trabajos terminados: un celular por compás, y al final los tres juntos ----
         tl.fromTo("#rotulo9", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: "power3.out" }, b(88));
@@ -407,11 +406,11 @@
         // ---- 9 · El giro: así es una clase ----
         // Arranca de cerca en la tarjeta que armó Python y sube hasta el código y el "✓ Resuelto"
         tl.fromTo("#leccion", { scale: 1.3, x: -162, y: -4495 }, { scale: 1, x: 0, y: 0, duration: b(2.5), ease: "expo.inOut" }, b(104) + 0.05);
-        tl.fromTo("#anillo", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, b(106));
-        late("#anillo", b(107), 1.12);
-        tl.to("#velo", { opacity: 1, duration: 0.3 }, b(106.5) - 0.15);
-        entra("#f10a", b(106.5), 2.2);
-        entra("#f10b", b(108.5));
+        tl.fromTo("#anillo", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, b(105.4));
+        late("#anillo", b(106.4), 1.12);
+        tl.to("#velo", { opacity: 1, duration: 0.3 }, b(105.6) - 0.15);
+        entra("#f10a", b(105.6), 2.2);
+        entra("#f10b", b(107.2));
         late("#f10a", b(112), 1.06);
 
         // ---- 10 · El curso ----
