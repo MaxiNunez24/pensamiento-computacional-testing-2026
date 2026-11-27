@@ -17,6 +17,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <Expo titulo="Curso 2027 · CFP 401" descripcion="Si te interesa el curso Usuaria/o de IA generativa y Programación Web, ayudanos completando esta encuesta para saber tu disponibilidad horaria el año que viene.">
   <main class="hoja">
     <header>
+      <!-- Oscuro de entrada (lo pone el marco Expo); con esto se pasa a claro y vuelve -->
+      <button type="button" class="tema" data-tema-boton aria-label="Cambiar a modo claro">☀️ Claro</button>
       <p class="etiqueta">CFP 401 · Ensenada · Curso 2027</p>
       <h1>¿Cuándo podrías cursar?</h1>
       <p class="bajada">Si te interesa, ayudanos completando esta encuesta para saber tu disponibilidad horaria el año que viene. Tarda un minuto y <strong>es anónima</strong>.</p>
@@ -108,6 +110,24 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
   const form = $<HTMLFormElement>('[data-form]');
+
+  // ---------- Modo claro / oscuro ----------
+  // El marco Expo ya lo aplica antes de dibujar y lo guarda en 'expo:tema' (también con Ctrl+Alt+O);
+  // el botón usa lo mismo y se mantiene al día si el tema cambia por otro lado
+  const botonTema = $<HTMLButtonElement>('[data-tema-boton]');
+  const raiz = document.documentElement;
+  const pintarBoton = () => {
+    const claro = raiz.dataset.tema === 'claro';
+    botonTema.textContent = claro ? '🌙 Oscuro' : '☀️ Claro';
+    botonTema.setAttribute('aria-label', claro ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
+  };
+  botonTema.addEventListener('click', () => {
+    const tema = raiz.dataset.tema === 'claro' ? 'oscuro' : 'claro';
+    raiz.dataset.tema = tema;
+    try { localStorage.setItem('expo:tema', tema); } catch { /* sin guardar: igual cambia */ }
+  });
+  new MutationObserver(pintarBoton).observe(raiz, { attributes: true, attributeFilter: ['data-tema'] });
+  pintarBoton();
 
   // ---------- Los horarios: un bloque de 3 h 20 que se corre por el día ----------
   const largo = HORARIO.hasta - HORARIO.desde;
@@ -243,6 +263,26 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
   header {
     text-align: center;
+    display: grid;
+  }
+  .tema {
+    justify-self: end;
+    margin-bottom: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--superficie);
+    color: var(--texto);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .tema:hover {
+    border-color: var(--menta);
+  }
+  .tema:focus-visible {
+    outline: 2px solid var(--menta);
+    outline-offset: 2px;
   }
   .etiqueta {
     margin: 0;
