@@ -148,12 +148,12 @@
         .enc-qr { position: absolute; left: 50%; top: 660px; width: 560px; height: 560px; margin-left: -280px; padding: 24px; border-radius: 36px; background: #fff;
             box-shadow: 0 0 0 6px var(--verde), 0 0 80px rgba(57, 255, 156, 0.45); }
         .enc-qr img { display: block; width: 100%; height: 100%; }
-        .enc-link { position: absolute; left: 60px; right: 60px; top: 1280px; text-align: center; font-family: var(--mono); font-size: 34px; line-height: 1.35; color: var(--cian); }
+        .enc-link { position: absolute; left: 60px; right: 60px; top: 1280px; text-align: center; font-family: var(--mono); font-size: 46px; line-height: 1.35; color: var(--cian); }
         .enc-desc { position: absolute; left: 0; right: 0; top: 1440px; text-align: center; font-size: 42px; font-weight: 700; color: var(--suave); }
     </style>
 </head>
 <body>
-    <div id="root" data-composition-id="main" data-start="0.000" data-duration="68.302" data-width="1080" data-height="1920" data-b0="0" data-b1="148">
+    <div id="root" data-composition-id="main" data-start="0.000" data-duration="75.686" data-width="1080" data-height="1920" data-b0="0" data-b1="164">
 
         <!-- 1 · Gancho: el resultado primero (golpes 0 a 8) -->
         <div id="e1" class="scene escena fondo-neon clip" data-start="0.000" data-duration="3.892" data-b0="0" data-b1="8" data-d1="0.2">
@@ -268,8 +268,8 @@
             <div class="frase media" id="f10b" style="top: 900px; font-size: 70px;">con ejercicios que se corrigen solos<br><span class="cian">y animadas, como este video</span></div>
         </div>
 
-        <!-- 10 · El curso (golpes 116 a 124) -->
-        <div id="e11" class="scene escena fondo-neon clip" data-start="53.384" data-duration="3.992" data-b0="116" data-d0="-0.15" data-b1="124" data-d1="0.15">
+        <!-- 10 · El curso (golpes 116 a 128) -->
+        <div id="e11" class="scene escena fondo-neon clip" data-start="53.384" data-duration="5.838" data-b0="116" data-d0="-0.15" data-b1="128" data-d1="0.15">
             <div class="grilla" id="grilla11"></div>
             <div class="logo" id="logo"><img src="assets/logo-cfp.png" alt="CFP N° 401 Ensenada · Laura Vicuña" /></div>
             <div class="titulo-curso">
@@ -284,8 +284,8 @@
             </div>
         </div>
 
-        <!-- 11 · La inscripción, con el viernes 4 bien grande (golpes 124 a 132) -->
-        <div id="e12" class="scene escena fondo-neon clip" data-start="57.076" data-duration="3.992" data-b0="124" data-d0="-0.15" data-b1="132" data-d1="0.15">
+        <!-- 11 · La inscripción, con el viernes 4 bien grande (golpes 128 a 144) -->
+        <div id="e12" class="scene escena fondo-neon clip" data-start="58.922" data-duration="7.684" data-b0="128" data-d0="-0.15" data-b1="144" data-d1="0.15">
             <div class="grilla" id="grilla12"></div>
             <div class="insc-rot" id="insc-rot">INSCRIPCIONES</div>
             <div class="insc-fecha" id="insc-fecha">1 al 4 de<br>diciembre</div>
@@ -297,19 +297,19 @@
             </div>
         </div>
 
-        <!-- 12 · La encuesta, y la salida que empalma con el principio (golpes 132 a 148) -->
-        <div id="e13" class="scene escena fondo-neon clip" data-start="60.768" data-duration="7.534" data-b0="132" data-d0="-0.15" data-b1="148">
+        <!-- 12 · La encuesta, y la salida que empalma con el principio (golpes 144 a 164) -->
+        <div id="e13" class="scene escena fondo-neon clip" data-start="66.306" data-duration="9.380" data-b0="144" data-d0="-0.15" data-b1="164">
             <div class="grilla" id="grilla13"></div>
             <div class="enc-titulo" id="enc-titulo">¿Te interesa?</div>
             <div class="enc-texto" id="enc-texto">Completá la encuesta de horarios:<br><span class="verde">tarda un minuto</span></div>
             <div class="enc-qr" id="enc-qr"><img src="assets/qr-encuesta.svg" alt="QR de la encuesta" /></div>
-            <div class="enc-link" id="enc-link">maxinunez24.github.io/pensamiento-computacional-testing-2026/ejercicios/expo/encuesta</div>
+            <div class="enc-link" id="enc-link">cfp401-ensenada.github.io/encuesta</div>
             <div class="enc-desc" id="enc-desc">El link también está en la descripción</div>
         </div>
 
         <!-- La música: arranca 8 golpes antes del drop (así el drop cae en el primer corte) y armar-version.py la arma con
              tramos de la pista para que dure lo mismo que el video y termine en un compás (loop) -->
-        <audio id="musica" src="assets/musica.mp3" data-start="0.000" data-duration="68.302" data-b0="0" data-b1="148" data-media-start="0" data-volume="0.85" data-fade-in="0.02" data-fade-out="0.08"></audio>
+        <audio id="musica" src="assets/musica.mp3" data-start="0.000" data-duration="75.686" data-b0="0" data-b1="164" data-media-start="0" data-volume="0.85" data-fade-in="0.02" data-fade-out="0.08"></audio>
     </div>
 
     <script>
@@ -333,10 +333,13 @@
         tl.to("#cel1", { rotation: 0, duration: 0.5, ease: "power2.out" }, 0.38);
         tl.fromTo("#catalogo1", { y: 0 }, { y: -560, duration: b(6.4), ease: "power1.inOut" }, b(1));
         tl.fromTo("#grilla1", { y: 0 }, { y: 180, duration: C(8) + 0.35, ease: "none" }, 0);
-        entra("#f1a", 0.05); sale("#f1a", b(2) - 0.1);
-        entra("#f1b", b(2)); sale("#f1b", b(4) - 0.1);
-        tl.fromTo("#f1c", { scale: 2.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.22, ease: "power4.out" }, b(4));
-        late("#cel1", b(4)); late("#cel1", b(5));
+        // Las frases entran cuando la voz las dice (no en el golpe): "Esto" en 0,08 s, "en marzo" en
+        // 1,34 s y "programar" en 2,28 s del archivo 00-Gancho, que arranca en 0 (VOZ en armar-version.py)
+        const EN_MARZO = 1.28, PROGRAMAR = 2.22;
+        entra("#f1a", 0.05); sale("#f1a", EN_MARZO - 0.1);
+        entra("#f1b", EN_MARZO); sale("#f1b", PROGRAMAR - 0.1);
+        tl.fromTo("#f1c", { scale: 2.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.22, ease: "power4.out" }, PROGRAMAR);
+        late("#cel1", PROGRAMAR); late("#cel1", PROGRAMAR + 0.46);
         tl.to("#f1c", { scale: 1.12, duration: b(1.2), ease: "power1.in" }, b(6));
         tl.to("#cel1", { scale: 1.35, y: -120, duration: b(1.4), ease: "power2.in" }, b(6.4));
 
@@ -422,32 +425,36 @@
         late("#f10a", b(114), 1.06);
 
         // ---- 10 · El curso ----
-        tl.fromTo("#grilla11", { y: 0 }, { y: 90, duration: b(8), ease: "none" }, b(116));
+        tl.fromTo("#grilla11", { y: 0 }, { y: 90, duration: b(12), ease: "none" }, b(116));
         tl.fromTo("#logo", { opacity: 0, scale: 0.6, rotation: -6 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2)" }, b(116));
         entra("#t1", b(117)); entra("#t2", b(118), 2.2); entra("#t3", b(119));
         ["#d1", "#d2", "#d3"].forEach((sel, i) => tl.fromTo(sel, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2.5)" }, b(120 + i * 0.5)));
         late("#t2", b(122), 1.05);
+        late("#t2", b(126), 1.05);
 
         // ---- 11 · La inscripción ----
-        tl.fromTo("#grilla12", { y: 0 }, { y: 90, duration: b(8), ease: "none" }, b(124));
-        tl.fromTo("#insc-rot", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2 }, b(124));
-        entra("#insc-fecha", b(124) + 0.1, 1.5);
-        tl.fromTo("#insc-req", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25 }, b(125.5));
-        tl.fromTo("#viernes", { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, b(127));
-        late("#viernes", b(129), 1.04);
+        tl.fromTo("#grilla12", { y: 0 }, { y: 90, duration: b(16), ease: "none" }, b(128));
+        tl.fromTo("#insc-rot", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2 }, b(128));
+        entra("#insc-fecha", b(128) + 0.1, 1.5);
+        tl.fromTo("#insc-req", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25 }, b(129.5));
+        tl.fromTo("#viernes", { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, b(131));
+        late("#viernes", b(133), 1.04);
+        late("#viernes", b(137), 1.04);
+        late("#viernes", b(141), 1.04);
 
         // ---- 12 · La encuesta, y la salida en loop ----
         // La grilla termina donde arranca la del principio (corrida 0 de 90 px), así el último cuadro empalma con el primero
-        tl.fromTo("#grilla13", { y: -180 }, { y: 0, duration: b(16), ease: "none" }, b(132));
-        entra("#enc-titulo", b(132), 2);
-        tl.fromTo("#enc-texto", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.25 }, b(133));
-        tl.fromTo("#enc-qr", { scale: 0.4, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.4, ease: "back.out(1.8)" }, b(134));
-        tl.fromTo("#enc-link", { opacity: 0 }, { opacity: 1, duration: 0.3 }, b(135));
-        tl.fromTo("#enc-desc", { opacity: 0 }, { opacity: 1, duration: 0.3 }, b(136));
-        late("#enc-qr", b(140), 1.04);
+        tl.fromTo("#grilla13", { y: -180 }, { y: 0, duration: b(20), ease: "none" }, b(144));
+        entra("#enc-titulo", b(144), 2);
+        tl.fromTo("#enc-texto", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.25 }, b(145));
+        tl.fromTo("#enc-qr", { scale: 0.4, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.4, ease: "back.out(1.8)" }, b(146));
+        tl.fromTo("#enc-link", { opacity: 0 }, { opacity: 1, duration: 0.3 }, b(147));
+        tl.fromTo("#enc-desc", { opacity: 0 }, { opacity: 1, duration: 0.3 }, b(148));
+        late("#enc-qr", b(152), 1.04);
+        late("#enc-qr", b(156), 1.04);
         // Todo sale de golpe hacia la izquierda y queda solo el fondo: el video vuelve a empezar con el celular entrando
         ["#enc-titulo", "#enc-texto", "#enc-qr", "#enc-link", "#enc-desc"].forEach((sel, i) =>
-            tl.to(sel, { x: -1200, duration: 0.3, ease: "power3.in" }, b(146) + i * 0.05));
+            tl.to(sel, { x: -1200, duration: 0.3, ease: "power3.in" }, b(162) + i * 0.05));
 
         // Las transiciones, cada una en un golpe
         HyperShader.init({
@@ -464,8 +471,8 @@
                 { time: C(88), shader: "whip-pan", duration: 0.3 },
                 { time: C(104), shader: "chromatic-split", duration: 0.3 },
                 { time: C(116), shader: "flash-through-white", duration: 0.3 },
-                { time: C(124), shader: "whip-pan", duration: 0.3 },
-                { time: C(132), shader: "cinematic-zoom", duration: 0.3 },
+                { time: C(128), shader: "whip-pan", duration: 0.3 },
+                { time: C(144), shader: "cinematic-zoom", duration: 0.3 },
             ],
             timeline: tl,
         });

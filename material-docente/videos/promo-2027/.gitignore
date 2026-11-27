@@ -15,3 +15,6 @@ versiones/
 hf/assets/*.descripcion.txt
 # Los links a los catálogos de los alumnos (sus usuarios de GitHub son sus nombres)
 trabajos.local.json
+# La voz grabada de Maxi
+voz/
+*.m4a

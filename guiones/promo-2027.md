@@ -35,6 +35,26 @@ redes antes de las inscripciones (1 al 4/12).
 | 84 – 96 | El giro: todo era una animación dentro de una lección · "Las clases son así" | separación de color |
 | 96 – 128 | Cierre: el nombre del curso, inscripción, requisitos y la encuesta con QR | destello |
 
+**La voz (grabada el 26/11).** Doce archivos en `material-docente/videos/promo-2027/voz/` (no se
+suben). `armar-version.py` los pone en su golpe, los limpia y baja la música mientras habla: sale
+`hf/renders/glitch-hop-voz.mp4`. Para que entraran las tres últimas frases, el cierre se estiró:
+**El curso 116 – 128, Inscripción 128 – 144, Encuesta 144 – 164** (el video pasa a 164 golpes, 1:16).
+
+| # | Golpe | Texto grabado |
+|---|---|---|
+| 00 | 0 | Esto lo hizo alguien que en marzo no sabía programar. |
+| 01 | 8 | No hace falta saber nada: arrancamos desde la base. |
+| 02 | 16 | Primero, inteligencia artificial. |
+| 03 | 20 | Vas a entender cómo funciona por dentro: cómo parte lo que le pedís en pedacitos, en qué se fija y cómo arma la respuesta. |
+| 04 | 40 | A pedirle bien las cosas, a crear textos e imágenes, y a darte cuenta cuándo se equivoca. |
+| 05 | 60 | Después, la web. |
+| 06 | 64 | Armás páginas de verdad, con tu diseño y tus productos, y las publicás en internet. |
+| 07 | 88 | Este año armamos catálogos para emprendimientos de la zona, y hasta el Bingo de la Expo. |
+| 08 | 104 | Y las clases son así: con ejercicios que se corrigen solos, y animadas como este video. |
+| 09 | 116 | Usuaria o usuario de IA generativa y Programación Web, en el CFP 401. |
+| 10 | 128 | Inscripciones del 1 al 4 de diciembre. El viernes 4 estoy yo para inscribirte y responder tus dudas. |
+| 11 | 144 | Y si te interesa, por favor completá la encuesta de horarios: tarda un minuto. Te esperamos el viernes 4 en las inscripciones. |
+
 **La idea que lo ordena:** el video **es** una clase animada. Al final se revela que está hecho con
 el mismo motor de las clases, y eso es la prueba de lo que promete.
 
