@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- Tutorial de la encuesta 2027, vertical (WhatsApp e Instagram). La pantalla es la encuesta de
+         verdad, completada sola por grabar.mjs; los títulos de cada paso salen de pasos.json.
+         armar.py pone los tiempos (PASOS, VIDEO y los data-start/data-duration): no se tocan a mano. -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;900&family=JetBrains+Mono:wght@700&display=block");
+
+        /* La paleta del video de promoción (el estilo neón del motor) */
+        :root {
+            --fondo: #07060f;
+            --texto: #f3f0ff;
+            --suave: #a59ccc;
+            --cian: #22e3ff;
+            --magenta: #ff3dc8;
+            --verde: #39ff9c;
+            --amarillo: #ffe14d;
+            --titular: "Anton", sans-serif;
+            --mono: "JetBrains Mono", monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--fondo); }
+        #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Inter", sans-serif; color: var(--texto); }
+        .escena { position: absolute; inset: 0; overflow: hidden; }
+        .fondo-neon { background: radial-gradient(circle at 50% 42%, #1a1240 0%, var(--fondo) 70%); }
+        .grilla {
+            position: absolute; inset: -200px;
+            background-image:
+                linear-gradient(rgba(34, 227, 255, 0.07) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(34, 227, 255, 0.07) 2px, transparent 2px);
+            background-size: 90px 90px;
+        }
+        .cian { color: var(--cian); }
+        .verde { color: var(--verde); }
+        .marca { color: var(--magenta); text-shadow: 0 0 40px rgba(255, 61, 200, 0.7); }
+
+        /* 1 · La entrada */
+        .logo { position: absolute; left: 50%; top: 330px; width: 300px; margin-left: -150px; }
+        .logo img { width: 100%; border-radius: 24px; box-shadow: 0 0 60px rgba(34, 227, 255, 0.35); }
+        .titulo {
+            position: absolute; left: 60px; right: 60px; top: 720px; text-align: center;
+            font-family: var(--titular); font-size: 150px; line-height: 0.98; text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(34, 227, 255, 0.35);
+        }
+        .bajada { position: absolute; left: 60px; right: 60px; top: 1260px; text-align: center; font-size: 52px; font-weight: 700; color: var(--suave); }
+
+        /* 2 · La encuesta de verdad, en una tarjeta, con el paso arriba */
+        .pantalla {
+            position: absolute; left: 90px; top: 470px; width: 900px; height: 1351px;
+            border-radius: 44px; overflow: hidden; background: #0d1017;
+            box-shadow: 0 0 0 4px rgba(34, 227, 255, 0.55), 0 0 90px rgba(34, 227, 255, 0.3);
+        }
+        .pantalla video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .paso {
+            position: absolute; left: 40px; right: 40px; top: 70px; height: 380px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px;
+        }
+        .paso .num {
+            font-family: var(--mono); font-size: 40px; color: var(--fondo); background: var(--cian);
+            padding: 4px 22px; border-radius: 999px; box-shadow: 0 0 30px rgba(34, 227, 255, 0.5);
+        }
+        .paso .txt { font-family: var(--titular); font-size: 80px; line-height: 1.02; text-transform: uppercase; }
+        .paso .nota { font-size: 38px; font-weight: 700; color: var(--suave); }
+
+        /* 3 · La salida */
+        .fin-titulo { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font-family: var(--titular); font-size: 140px; color: var(--verde); text-shadow: 0 0 40px rgba(57, 255, 156, 0.5); }
+        .fin-texto { position: absolute; left: 60px; right: 60px; top: 480px; text-align: center; font-size: 50px; font-weight: 700; line-height: 1.3; }
+        .qr { position: absolute; left: 50%; top: 680px; width: 460px; height: 460px; margin-left: -230px; padding: 30px; background: #fff; border-radius: 36px; box-shadow: 0 0 0 6px var(--verde), 0 0 80px rgba(57, 255, 156, 0.45); }
+        .qr img { width: 100%; height: 100%; display: block; }
+        .link { position: absolute; left: 40px; right: 40px; top: 1200px; text-align: center; font-family: var(--mono); font-size: 46px; color: var(--cian); }
+        .insc { position: absolute; left: 60px; right: 60px; top: 1330px; text-align: center; font-size: 46px; font-weight: 700; color: var(--suave); }
+        .insc strong { color: var(--texto); }
+    </style>
+</head>
+<body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="50.350" data-width="1080" data-height="1920">
+
+        <!-- 1 · La entrada -->
+        <div id="e1" class="escena fondo-neon clip" data-start="0" data-duration="3.750">
+            <div class="grilla" id="grilla1"></div>
+            <div class="logo" id="logo"><img src="assets/logo-cfp.png" alt="CFP N° 401 Ensenada · Laura Vicuña" /></div>
+            <div class="titulo" id="titulo">¿Cómo se completa<br><span class="cian">la encuesta?</span></div>
+            <div class="bajada" id="bajada">Curso 2027 · tarda un minuto</div>
+        </div>
+
+        <!-- 2 · La encuesta, paso a paso -->
+        <!-- Sin data-start: el <video> de adentro tiene sus propios tiempos; la escena se prende y se apaga desde el script -->
+        <div id="e2" class="escena fondo-neon" style="visibility: hidden;">
+            <div class="grilla" id="grilla2"></div>
+            <div class="paso" id="p-abrir"><div class="txt">Abrí el link<br>o escaneá el QR</div></div>
+            <div class="paso" id="p-dias"><div class="num">1</div><div class="txt">Marcá los días<br>que podés</div></div>
+            <div class="paso" id="p-horario"><div class="num">2</div><div class="txt">Tocá la barra en la<br>hora que te sirve</div><div class="nota">cada clase dura 3 h 20</div></div>
+            <div class="paso" id="p-flechas"><div class="num">2</div><div class="txt">Ajustalo con ◀ ▶</div><div class="nota">se corre de a 10 minutos</div></div>
+            <div class="paso" id="p-agregar"><div class="num">3</div><div class="txt">Tocá <span class="cian">+ Agregar<br>este horario</span></div></div>
+            <div class="paso" id="p-otro"><div class="num">3</div><div class="txt">¿Te sirve otro?<br>Agregalo también</div><div class="nota">hasta 5 horarios</div></div>
+            <div class="paso" id="p-avisar"><div class="num">4</div><div class="txt">Si querés, dejá<br>tu WhatsApp</div><div class="nota">opcional: para avisarte de las inscripciones</div></div>
+            <div class="paso" id="p-enviar"><div class="num">5</div><div class="txt">¡Enviar!</div></div>
+            <div class="paso" id="p-gracias"><div class="txt verde">¡Listo! 💚</div></div>
+            <div class="pantalla" id="pantalla">
+                <video id="v-pantalla" class="clip" src="assets/pantalla.mp4" data-start="3.550" data-duration="38.400" muted playsinline></video>
+            </div>
+        </div>
+
+        <!-- 3 · La salida: el QR para hacerlo -->
+        <div id="e3" class="escena fondo-neon clip" data-start="41.850" data-duration="8.500">
+            <div class="grilla" id="grilla3"></div>
+            <div class="fin-titulo" id="fin-titulo">¡Tu turno!</div>
+            <div class="fin-texto" id="fin-texto">Completá la encuesta de horarios<br><span class="verde">tarda un minuto</span></div>
+            <div class="qr" id="qr"><img src="assets/qr-encuesta.svg" alt="QR de la encuesta" /></div>
+            <div class="link" id="link">cfp401-ensenada.github.io/encuesta</div>
+            <div class="insc" id="insc">Inscripciones: <strong>1 al 4 de diciembre</strong></div>
+        </div>
+
+        <audio id="musica" src="assets/glitch-hop-the-mountain.mp3" data-start="0" data-duration="50.350" data-media-start="4" data-volume="0.35" data-fade-in="0.5" data-fade-out="1.5"></audio>
+    </div>
+
+    <script>
+        const tl = gsap.timeline({ paused: true });
+        // Dónde empieza la grabación en el video, cuánto dura, y el momento de cada paso adentro de ella
+        const INICIO = 3.550;
+        const VIDEO = 38.400;
+        const PASOS = {"abrir": 0.003, "dias": 2.627, "horario": 7.284, "flechas": 13.332, "agregar": 16.373, "otro": 20.083, "avisar": 24.879, "enviar": 31.391, "gracias": 34.432, "fin": 37.437};
+        const FIN = INICIO + VIDEO;   // arranca la salida (con 0,2 s de cruce)
+
+        // ---- 1 · La entrada ----
+        tl.fromTo("#grilla1", { y: 0 }, { y: 90, duration: INICIO + 0.2, ease: "none" }, 0);
+        tl.fromTo("#logo", { scale: 0.5, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" }, 0.1);
+        tl.fromTo("#titulo", { scale: 1.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power4.out" }, 0.5);
+        tl.fromTo("#bajada", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 }, 1.1);
+        tl.to(["#logo", "#titulo", "#bajada"], { y: -80, opacity: 0, duration: 0.25, ease: "power2.in", stagger: 0.04 }, INICIO - 0.2);
+
+        // ---- 2 · La encuesta ----
+        tl.set("#e2", { visibility: "visible" }, INICIO - 0.2);
+        tl.set("#e2", { visibility: "hidden" }, FIN + 0.1);
+        tl.fromTo("#grilla2", { y: 0 }, { y: 180, duration: VIDEO, ease: "none" }, INICIO);
+        tl.fromTo("#pantalla", { y: 1500, rotation: 6 }, { y: 0, rotation: 0, duration: 0.5, ease: "expo.out" }, INICIO - 0.2);
+        // Cada paso entra cuando empieza y se va cuando entra el siguiente
+        const orden = ["abrir", "dias", "horario", "flechas", "agregar", "otro", "avisar", "enviar", "gracias"];
+        orden.forEach((id, i) => {
+            const desde = INICIO + PASOS[id];
+            const hasta = INICIO + (i + 1 < orden.length ? PASOS[orden[i + 1]] : PASOS.fin + 0.8);
+            tl.fromTo(`#p-${id}`, { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.22, ease: "power4.out" }, desde);
+            tl.to(`#p-${id}`, { opacity: 0, y: -40, duration: 0.15, ease: "power2.in" }, hasta - 0.15);
+        });
+        tl.to("#pantalla", { y: 1700, rotation: -6, duration: 0.35, ease: "power3.in" }, FIN - 0.35);
+
+        // ---- 3 · La salida ----
+        tl.fromTo("#grilla3", { y: -90 }, { y: 0, duration: 4.8, ease: "none" }, FIN);
+        tl.fromTo("#fin-titulo", { scale: 1.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "power4.out" }, FIN + 0.05);
+        tl.fromTo("#fin-texto", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 }, FIN + 0.35);
+        tl.fromTo("#qr", { scale: 0.4, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(1.8)" }, FIN + 0.6);
+        tl.fromTo("#link", { opacity: 0 }, { opacity: 1, duration: 0.3 }, FIN + 1.0);
+        tl.fromTo("#insc", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3 }, FIN + 1.3);
+        tl.to("#qr", { scale: 1.04, duration: 0.1, ease: "power2.out" }, FIN + 2.4);
+        tl.to("#qr", { scale: 1, duration: 0.3, ease: "power2.out" }, FIN + 2.5);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+    </script>
+</body>
+</html>

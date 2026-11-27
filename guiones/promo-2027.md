@@ -42,7 +42,7 @@ suben). `armar-version.py` los pone en su golpe, los limpia y baja la música mi
 
 | # | Golpe | Texto grabado |
 |---|---|---|
-| 00 | 0 | Esto lo hizo alguien que en marzo no sabía programar. |
+| 00 | 0 | Esto lo hicieron alumnos que en marzo no sabían programar. *(27/11: con "alguien" parecía que el que no sabía era el instructor; y en el celular va el catálogo real de Bambú, no uno inventado)* |
 | 01 | 8 | No hace falta saber nada: arrancamos desde la base. |
 | 02 | 16 | Primero, inteligencia artificial. |
 | 03 | 20 | Vas a entender cómo funciona por dentro: cómo parte lo que le pedís en pedacitos, en qué se fija y cómo arma la respuesta. |

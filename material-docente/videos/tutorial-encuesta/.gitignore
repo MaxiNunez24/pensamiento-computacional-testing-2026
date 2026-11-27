@@ -1,0 +1,13 @@
+# Lo que se regenera: la grabación, los videos y la música (de Pixabay)
+grabacion/
+*.mp4
+*.mp3
+hf/renders/
+hf/.hyperframes/
+hf/CLAUDE.md
+hf/AGENTS.md
+node_modules/
+# La voz grabada de Maxi
+voz/
+*.m4a
+minimos.json

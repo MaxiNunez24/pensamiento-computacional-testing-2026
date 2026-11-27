@@ -43,11 +43,11 @@
                 { pieza: 'n', a: { valor: 0 }, dur: 1.15, curva: 'entrar', en: 0.35 },
                 { pieza: 'n', a: { escala: 1.28, color: 'acento' }, dur: 0.12, curva: 'salir', en: 1.5, sonido: 'golpe' },
                 { pieza: 'n', a: { escala: 1 }, dur: 0.4, curva: 'gelatina', en: 1.62 },
-                // Uno por golpe de la música (120 BPM: cada 0,5 s), en el orden en que se lee:
-                // DESDE, LA, BASE (de abajo para arriba se leía "BASE LA DESDE")
-                { pieza: 'b3', a: { y: 1100 }, dur: 0.42, curva: 'rebote', en: 2.0, sonido: 'golpe' },
-                { pieza: 'b2', a: { y: 1270 }, dur: 0.42, curva: 'rebote', en: 2.5, sonido: 'golpe' },
-                { pieza: 'b1', a: { y: 1440 }, dur: 0.42, curva: 'rebote', en: 3.0, sonido: 'golpe' },
+                // En el orden en que se lee: DESDE, LA, BASE (de abajo para arriba se leía "BASE LA
+                // DESDE"), y cada una cuando la voz dice su palabra (toma del 27/11)
+                { pieza: 'b3', a: { y: 1100 }, dur: 0.42, curva: 'rebote', en: 2.15, sonido: 'golpe' },
+                { pieza: 'b2', a: { y: 1270 }, dur: 0.42, curva: 'rebote', en: 2.53, sonido: 'golpe' },
+                { pieza: 'b1', a: { y: 1440 }, dur: 0.42, curva: 'rebote', en: 2.9, sonido: 'golpe' },
                 { espera: 1.0 },
             ]),
         });

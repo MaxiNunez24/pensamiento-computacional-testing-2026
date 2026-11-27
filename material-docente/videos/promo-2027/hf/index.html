@@ -64,6 +64,7 @@
             overflow: hidden;
         }
         .celular .isla { position: absolute; top: 18px; left: 50%; width: 150px; height: 40px; margin-left: -75px; border-radius: 30px; background: #000; z-index: 3; }
+        .captura-gancho { position: absolute; left: 0; top: 0; width: 100%; }
         .catalogo { position: absolute; left: 0; right: 0; top: 0; background: linear-gradient(180deg, #2b1b3d, #4a2547 40%, #1d1430); padding: 90px 30px 60px; }
         .catalogo h2 { font-family: "Pacifico", cursive; font-weight: 400; font-size: 64px; text-align: center; color: #fff; }
         .catalogo .linea { width: 200px; height: 4px; background: #ffd1ec; margin: 14px auto 30px; border-radius: 2px; }
@@ -160,23 +161,11 @@
             <div class="grilla" id="grilla1"></div>
             <div class="celular" id="cel1">
                 <div class="isla"></div>
-                <div class="catalogo" id="catalogo1">
-                    <h2>Dulces del Río</h2>
-                    <div class="linea"></div>
-                    <div class="sub">Pastelería casera · Ensenada</div>
-                    <div class="productos">
-                        <div class="producto"><div class="foto" style="background:#ffb3d9">🍰</div><div class="nombre">Torta de frutillas</div><div class="precio">$18.000</div></div>
-                        <div class="producto"><div class="foto" style="background:#ffe0a3">🍪</div><div class="nombre">Cookies x 6</div><div class="precio">$4.500</div></div>
-                        <div class="producto"><div class="foto" style="background:#c9b3ff">🧁</div><div class="nombre">Cupcakes x 4</div><div class="precio">$6.000</div></div>
-                        <div class="producto"><div class="foto" style="background:#a3f0ff">🍩</div><div class="nombre">Donas x 6</div><div class="precio">$5.200</div></div>
-                        <div class="producto"><div class="foto" style="background:#ffd1a3">🥧</div><div class="nombre">Tarta de manzana</div><div class="precio">$12.000</div></div>
-                        <div class="producto"><div class="foto" style="background:#b3ffcf">🍫</div><div class="nombre">Alfajores x 12</div><div class="precio">$9.600</div></div>
-                    </div>
-                    <div class="whatsapp">Pedí por WhatsApp</div>
-                </div>
+                <!-- Un catálogo de verdad, hecho por alumnos del curso (27/11: antes era uno inventado) -->
+                <img class="captura-gancho" id="catalogo1" src="assets/trabajo-bambu.png" alt="El catálogo de Bambú costuras" />
             </div>
-            <div class="frase" id="f1a">Esto lo hizo<br>alguien que</div>
-            <div class="frase" id="f1b">en marzo<br><span class="cian">no sabía</span></div>
+            <div class="frase media" id="f1a">Esto lo hicieron<br>alumnos que</div>
+            <div class="frase" id="f1b">en marzo<br><span class="cian">no sabían</span></div>
             <div class="frase" id="f1c" style="font-size: 190px; top: 380px;"><span class="marca">programar</span></div>
         </div>
 
@@ -333,9 +322,9 @@
         tl.to("#cel1", { rotation: 0, duration: 0.5, ease: "power2.out" }, 0.38);
         tl.fromTo("#catalogo1", { y: 0 }, { y: -560, duration: b(6.4), ease: "power1.inOut" }, b(1));
         tl.fromTo("#grilla1", { y: 0 }, { y: 180, duration: C(8) + 0.35, ease: "none" }, 0);
-        // Las frases entran cuando la voz las dice (no en el golpe): "Esto" en 0,08 s, "en marzo" en
-        // 1,34 s y "programar" en 2,28 s del archivo 00-Gancho, que arranca en 0 (VOZ en armar-version.py)
-        const EN_MARZO = 1.28, PROGRAMAR = 2.22;
+        // Las frases entran cuando la voz las dice (no en el golpe): con la toma del 27/11, "en marzo"
+        // cae en 1,40 s y "programar" en 2,52 s del video (VOZ en armar-version.py); entran apenas antes
+        const EN_MARZO = 1.34, PROGRAMAR = 2.46;
         entra("#f1a", 0.05); sale("#f1a", EN_MARZO - 0.1);
         entra("#f1b", EN_MARZO); sale("#f1b", PROGRAMAR - 0.1);
         tl.fromTo("#f1c", { scale: 2.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.22, ease: "power4.out" }, PROGRAMAR);
@@ -362,23 +351,24 @@
         // Pedirle bien las cosas (8 golpes: que se alcance a leer el pedido y la respuesta)
         entra("#f6a", b(40));
         ["#chip1", "#chip2", "#chip3"].forEach((sel, i) => tl.fromTo(sel, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2.5)" }, b(40.5 + i * 0.5)));
-        tl.fromTo("#pide", { x: 300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.25, ease: "expo.out" }, b(42));
-        tl.fromTo("#contesta", { clipPath: "inset(0 100% 0 0)", opacity: 1 }, { clipPath: "inset(0 0% 0 0)", duration: b(2), ease: "none" }, b(44.5));
-        sale("#f6a", b(48) - 0.1);
-        tl.to("#chat", { x: -1100, duration: 0.2, ease: "power3.in" }, b(48) - 0.12);
+        tl.fromTo("#pide", { x: 300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.25, ease: "expo.out" }, b(41));
+        tl.fromTo("#contesta", { clipPath: "inset(0 100% 0 0)", opacity: 1 }, { clipPath: "inset(0 0% 0 0)", duration: b(1.6), ease: "none" }, b(42));
+        sale("#f6a", b(44) - 0.1);
+        tl.to("#chat", { x: -1100, duration: 0.2, ease: "power3.in" }, b(44) - 0.12);
         // Crear textos e imágenes: la imagen se arma de a pedacitos
-        entra("#f6b", b(48));
-        tl.fromTo("#imagen", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.8)" }, b(48));
-        [4, 0, 8, 2, 6, 1, 7, 3, 5].forEach((n, i) => tl.to(`#imagen .tesela:nth-of-type(${n + 2})`, { scale: 0, rotation: 90, duration: 0.18, ease: "power2.in" }, b(48.5 + i * 0.25)));
-        late("#imagen", b(51), 1.05);
-        sale("#f6b", b(52) - 0.1);
-        tl.to("#imagen", { scale: 0, rotation: -12, duration: 0.18, ease: "power3.in" }, b(52) - 0.12);
+        entra("#f6b", b(44));
+        tl.fromTo("#imagen", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.8)" }, b(44));
+        [4, 0, 8, 2, 6, 1, 7, 3, 5].forEach((n, i) => tl.to(`#imagen .tesela:nth-of-type(${n + 2})`, { scale: 0, rotation: 90, duration: 0.18, ease: "power2.in" }, b(44.5 + i * 0.4)));
+        late("#imagen", b(48.5), 1.05);
+        sale("#f6b", b(50) - 0.1);
+        tl.to("#imagen", { scale: 0, rotation: -12, duration: 0.18, ease: "power3.in" }, b(50) - 0.12);
         // Darte cuenta cuándo se equivoca (8 golpes: leer el dato, y después tacharlo)
-        entra("#f6c", b(52));
-        tl.fromTo("#mentira", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: "expo.out" }, b(52.5));
-        tl.to("#tachado", { width: "116%", duration: b(0.5), ease: "power2.out" }, b(55));
-        tl.fromTo("#mentira", { x: 0 }, { keyframes: [{ x: -18 }, { x: 16 }, { x: -10 }, { x: 0 }], duration: 0.3 }, b(55));
-        tl.fromTo("#alerta", { scale: 0, rotation: -8 }, { scale: 1, rotation: -3, duration: 0.3, ease: "back.out(2.5)" }, b(55.5));
+        entra("#f6c", b(50));
+        tl.fromTo("#mentira", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: "expo.out" }, b(50.5));
+        // se tacha cuando la voz dice "se equivoca"
+        tl.to("#tachado", { width: "116%", duration: b(0.5), ease: "power2.out" }, b(54.5));
+        tl.fromTo("#mentira", { x: 0 }, { keyframes: [{ x: -18 }, { x: 16 }, { x: -10 }, { x: 0 }], duration: 0.3 }, b(54.5));
+        tl.fromTo("#alerta", { scale: 0, rotation: -8 }, { scale: 1, rotation: -3, duration: 0.3, ease: "back.out(2.5)" }, b(55));
 
         // ---- 6 · Parte 2 ----
         tl.fromTo("#parte2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, b(60));
@@ -389,8 +379,8 @@
         // ---- 7 · De etiquetas a página publicada (las etiquetas usan la parte de arriba hasta el golpe 74) ----
         mostrar("#e8", 64, 88);
         entra("#rotulo8a", b(74));
-        sale("#rotulo8a", b(80) - 0.1);
-        entra("#rotulo8b", b(80));
+        sale("#rotulo8a", b(82) - 0.1);
+        entra("#rotulo8b", b(82));
 
         // ---- 8 · Trabajos terminados: un celular por compás, y al final los tres juntos ----
         tl.fromTo("#rotulo9", { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: "power3.out" }, b(88));
@@ -416,13 +406,13 @@
 
         // ---- 9 · El giro: así es una clase ----
         // Arranca de cerca en la tarjeta que armó Python y sube hasta el código y el "✓ Resuelto"
-        tl.fromTo("#leccion", { scale: 1.3, x: -162, y: -4495 }, { scale: 1, x: 0, y: 0, duration: b(4), ease: "expo.inOut" }, b(104) + 0.05);
-        tl.fromTo("#anillo", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, b(108));
-        late("#anillo", b(109), 1.12);
-        tl.to("#velo", { opacity: 1, duration: 0.3 }, b(110) - 0.15);
-        entra("#f10a", b(110), 2.2);
-        entra("#f10b", b(112));
-        late("#f10a", b(114), 1.06);
+        tl.fromTo("#leccion", { scale: 1.3, x: -162, y: -4495 }, { scale: 1, x: 0, y: 0, duration: b(2.5), ease: "expo.inOut" }, b(104) + 0.05);
+        tl.fromTo("#anillo", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, b(106));
+        late("#anillo", b(107), 1.12);
+        tl.to("#velo", { opacity: 1, duration: 0.3 }, b(106.5) - 0.15);
+        entra("#f10a", b(106.5), 2.2);
+        entra("#f10b", b(108.5));
+        late("#f10a", b(112), 1.06);
 
         // ---- 10 · El curso ----
         tl.fromTo("#grilla11", { y: 0 }, { y: 90, duration: b(12), ease: "none" }, b(116));
@@ -437,10 +427,9 @@
         tl.fromTo("#insc-rot", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2 }, b(128));
         entra("#insc-fecha", b(128) + 0.1, 1.5);
         tl.fromTo("#insc-req", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25 }, b(129.5));
-        tl.fromTo("#viernes", { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, b(131));
-        late("#viernes", b(133), 1.04);
-        late("#viernes", b(137), 1.04);
-        late("#viernes", b(141), 1.04);
+        tl.fromTo("#viernes", { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, b(134));
+        late("#viernes", b(136), 1.04);
+        late("#viernes", b(140), 1.04);
 
         // ---- 12 · La encuesta, y la salida en loop ----
         // La grilla termina donde arranca la del principio (corrida 0 de 90 px), así el último cuadro empalma con el primero

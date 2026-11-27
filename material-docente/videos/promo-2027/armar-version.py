@@ -54,94 +54,50 @@ PISTAS = {
 }
 
 
-# La voz de Maxi (voz/, no se sube): cada frase entra en el golpe donde arranca su escena, más un
-# respiro en segundos. A cada archivo se le saca el silencio del principio.
+# La voz de Maxi (voz/, no se sube), en trozos: (archivo, desde, hasta (segundos del archivo), golpe
+# del video donde entra, respiro en segundos, opciones). Los cortes salen de los silencios de cada
+# archivo (silencedetect) y de dónde dice cada palabra (faster-whisper), y la animación está corrida
+# para que lo que se ve caiga con lo que se dice (toma del 27/11, voz más grave):
+#   00 "en" y "programar" → EN_MARZO y PROGRAMAR en hf/index.html
+#   01 "desde la base" → las cajas de motor/desde-cero.html
+#   04 se parte en tres, una por pantalla: pedirle (golpe 40), crear (44), darte cuenta (50)
+#   06 "armás páginas" con su rótulo (74) y "las publicás" con el suyo (82)
+#   08 "las clases son así" → el giro se acelera (el título entra en el golpe 106.5)
+#   10 "el viernes 4" → el cartel del viernes (golpe 134)
+# apretar: los silencios de adentro que pasan de 0,3 s quedan en 0,2 s.
 VOZ = [
-    ('00-Gancho.m4a', 0, 0.0),    # las frases del gancho entran con la voz (EN_MARZO, PROGRAMAR en hf/index.html)
-    ('01-Desde cero.m4a', 8, 0.15),
-    ('02-Parte 1.m4a', 16, 0.0),
-    ('03-IA por dentro.m4a', 20, 0.2),
-    ('04-Usos.m4a', 40, 0.1),
-    ('05-Parte 2.m4a', 60, 0.1),
-    ('06-Web.m4a', 64, 0.3),
-    ('07-Trabajos.m4a', 88, 0.1),
-    ('08-El giro.m4a', 104, 0.1),
-    ('09-El curso.m4a', 116, 0.1),
-    ('10-Inscripción.m4a', 128, 0.1),
-    ('11-Encuesta.m4a', 144, 0.1),
+    ('00-Gancho.m4a', 0.45, 3.50, 0, 0.0, {}),
+    ('01-Desde cero.m4a', 0.55, 3.85, 8, 0.05, {}),
+    ('02-Parte 1.m4a', 0.55, 1.20, 16, 0.0, {}),
+    ('02-Parte 1.m4a', 1.42, 2.85, 16, 0.72, {'tempo': 1.06}),
+    ('03-IA por dentro.m4a', 0.68, 9.10, 20, 0.47, {}),
+    ('04-Usos.m4a', 0.60, 2.20, 40, 0.1, {}),
+    ('04-Usos.m4a', 2.78, 5.66, 44, 0.2, {'apretar': True}),
+    ('04-Usos.m4a', 6.25, 8.72, 50, 0.2, {}),
+    ('05-Parte 2.m4a', 0.65, 1.40, 60, 0.05, {}),
+    ('05-Parte 2.m4a', 1.80, 2.40, 60, 0.86, {}),
+    ('06-Web.m4a', 0.40, 4.00, 74, -0.15, {}),
+    ('06-Web.m4a', 4.60, 6.30, 82, 0.0, {}),
+    ('07-Trabajos.m4a', 0.38, 6.40, 88, 0.1, {}),
+    ('08-El giro.m4a', 0.15, 5.83, 104, 0.05, {'apretar': True}),
+    ('09-El curso.m4a', 0.28, 5.68, 116, 0.05, {'apretar': True}),
+    ('10-Inscripción.m4a', 0.36, 7.10, 128, 0.05, {}),
+    ('11-Encuesta.m4a', 0.0, 7.74, 144, 0.05, {}),
 ]
 
 
-def medir_lufs(archivo):
-    """La sonoridad integrada (LUFS) de un audio, con el ebur128 de ffmpeg."""
-    salida = subprocess.run(['ffmpeg', '-hide_banner', '-i', str(archivo), '-af', 'ebur128', '-f', 'null', '-'],
-                            capture_output=True, text=True).stderr
-    return float(re.findall(r'I:\s+(-?[\d.]+) LUFS', salida)[-1])
-
-
-def poner_voz(nombre, musica_db=-1.0):
-    """Mezcla la voz sobre el render y sale <pista>-voz.mp4.
-
-    La voz: sin filtros de ruido (las grabaciones vienen limpias y el reductor la dejaba "en una
-    caja"), un poco de cuerpo en los graves y de presencia, compresión suave y una reverb de sala
-    corta en estéreo (la voz seca queda en el centro y la sala se abre a los costados).
-    La música baja `musica_db` y un poco más mientras se habla (sidechain suave).
-    Los niveles van con ganancias fijas medidas en dos pasadas, no con loudnorm dinámico, que
-    subía y bajaba la música entre frase y frase. Todo termina a -14 LUFS, lo que pide Instagram."""
+def poner_voz(nombre):
+    """Mezcla la voz sobre el render (ver ../mezcla_voz.py: la voz limpia, la música más baja y todo a
+    -14 LUFS). Sale <pista>-voz.mp4."""
+    sys.path.insert(0, str(AQUI.parent))
+    from mezcla_voz import mezclar
     G = PISTAS[nombre]['golpe']
-    render = HF / 'renders' / f'{nombre}.mp4'
-    temporal = HF / 'renders' / '_voz'
-    temporal.mkdir(exist_ok=True)
-    # La voz termina antes que el video: se rellena con silencio, si no el compresor corta ahí
-    dura = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0',
-                                 str(render)], capture_output=True, text=True, check=True).stdout)
-
-    # 1 · La voz sola, en su lugar y procesada (sin la reverb todavía)
-    entradas, filtros = [], []
-    for i, (archivo, golpe, respiro) in enumerate(VOZ):
-        entradas += ['-i', str(AQUI / 'voz' / archivo)]
-        ms = round((golpe * G + respiro) * 1000)
-        filtros.append(f'[{i}:a]aformat=sample_rates=48000:channel_layouts=mono,'
-                       f'silenceremove=start_periods=1:start_threshold=-40dB:start_silence=0.08,'
-                       f'adelay={ms}:all=1[v{i}]')
-    n = len(VOZ)
-    filtros.append(''.join(f'[v{i}]' for i in range(n)) +
-                   f'amix=inputs={n}:normalize=0:duration=longest,apad=whole_dur={dura:.3f},'
-                   'highpass=f=70,'
-                   'equalizer=f=140:t=q:w=0.9:g=3,'      # cuerpo
-                   'equalizer=f=350:t=q:w=1.2:g=-2,'     # menos "caja"
-                   'equalizer=f=3500:t=q:w=1.0:g=2,'     # presencia
-                   'acompressor=threshold=-24dB:ratio=2.5:attack=10:release=120:knee=4[a]')
-    seca = temporal / 'voz-seca.wav'
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', *entradas, '-filter_complex', ';'.join(filtros),
-                    '-map', '[a]', '-c:a', 'pcm_s24le', str(seca)], check=True)
-    voz_db = -16 - medir_lufs(seca)
-
-    # 2 · La mezcla: voz al centro + sala estéreo, y la música que se corre un poco cuando hablás
-    sala_izq = 'aecho=0.8:0.85:19|37|61|89|127:0.32|0.25|0.18|0.12|0.07'
-    sala_der = 'aecho=0.8:0.85:23|43|71|101|139:0.32|0.25|0.18|0.12|0.07'
-    filtro = (f'[1:a]volume={voz_db:.2f}dB,asplit=4[vc][vl][vr][llave];'
-              f'[vl]{sala_izq},highpass=f=250,lowpass=f=7000,volume=0.22[sl];'
-              f'[vr]{sala_der},highpass=f=250,lowpass=f=7000,volume=0.22[sr];'
-              '[sl][sr]join=inputs=2:channel_layout=stereo[sala];'
-              '[vc]aformat=channel_layouts=stereo[centro];'
-              '[centro][sala]amix=inputs=2:normalize=0[voz];'
-              f'[0:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={musica_db}dB[fondo];'
-              '[llave]aformat=channel_layouts=stereo[llave2];'
-              '[fondo][llave2]sidechaincompress=threshold=0.05:ratio=3:attack=30:release=400:knee=4[bajo];'
-              '[bajo][voz]amix=inputs=2:normalize=0:duration=first[a]')
-    mezcla = temporal / 'mezcla.wav'
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(render), '-i', str(seca), '-filter_complex', filtro,
-                    '-map', '[a]', '-c:a', 'pcm_s24le', str(mezcla)], check=True)
-    total_db = -14 - medir_lufs(mezcla)
-
-    # 3 · A -14 LUFS con una sola ganancia, y un limitador para los picos
-    salida = HF / 'renders' / f'{nombre}-voz.mp4'
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(render), '-i', str(mezcla),
-                    '-filter_complex', f'[1:a]volume={total_db:.2f}dB,alimiter=limit=0.84:attack=3:release=60:level=false[a]',
-                    '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k',
-                    '-ar', '48000', str(salida)], check=True)
-    print(f'con voz: {salida} (voz {voz_db:+.1f} dB, total {total_db:+.1f} dB)')
+    clips = [dict(archivo=AQUI / 'voz' / archivo, desde=desde, hasta=hasta, en=golpe * G + respiro, **op)
+             for archivo, desde, hasta, golpe, respiro, op in VOZ]
+    # El glitch hop es denso: con −3 dB la voz quedaba apenas por encima (27/11). Más abajo, y que se
+    # corra un poco más cuando se habla
+    mezclar(HF / 'renders' / f'{nombre}.mp4', clips, HF / 'renders' / f'{nombre}-voz.mp4', HF / 'renders' / '_voz',
+            musica_db=-7.0, ducking=4)
 
 
 def npx(*args, cwd):
